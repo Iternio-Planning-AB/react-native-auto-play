@@ -14,23 +14,16 @@ class AndroidAutoScreen(carContext: CarContext, private val isCluster: Boolean =
     Screen(carContext) {
 
     var template: Template? = null
+    var renderer: VirtualRenderer? = null
 
     override fun onGetTemplate(): Template {
-        template?.let {
-            return it
+        if (renderer == null) {
+            renderer = VirtualRenderer(carContext, marker!!, isCluster)
         }
 
-        if (isCluster) {
-            return NavigationTemplate.Builder().apply {
-                setActionStrip(ActionStrip.Builder().apply { addAction(Action.APP_ICON) }
-                    .build()).build()
-            }.build()
-        }
-
-        val appName = AppInfo.getApplicationLabel(carContext)
-
-        return MessageTemplate.Builder(appName).apply {
-            setIcon(CarIcon.APP_ICON)
+        return NavigationTemplate.Builder().apply {
+            setActionStrip(ActionStrip.Builder().apply { addAction(Action.APP_ICON) }
+                .build()).build()
         }.build()
     }
 }

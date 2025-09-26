@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application>
         <service
             android:name="com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoService"
@@ -28,11 +30,15 @@
                 <data android:scheme="geo" />
             </intent-filter>
         </service>
-        <meta-data android:name="com.google.android.gms.car.application"
+
+        <meta-data
+            android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"
             tools:ignore="MetadataTagInsideApplicationTag" />
         <meta-data
             android:name="androidx.car.app.minCarApiLevel"
             android:value="1" />
+
+        <service android:name="com.margelo.nitro.at.g4rb4g3.autoplay.HeadlessTaskService" />
     </application>
 </manifest>

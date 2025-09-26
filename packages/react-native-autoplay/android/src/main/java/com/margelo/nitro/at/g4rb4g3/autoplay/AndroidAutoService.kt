@@ -1,7 +1,11 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.ApplicationInfo
+import android.os.IBinder
 import androidx.car.app.CarAppService
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
@@ -19,6 +23,7 @@ import kotlinx.coroutines.launch
 class AndroidAutoService : CarAppService() {
     private lateinit var reactContext: ReactContext
 
+    private var isServiceBound = false
     private var isSessionStarted = false
     private var isReactAppStarted = false
 
@@ -80,6 +85,13 @@ class AndroidAutoService : CarAppService() {
     }
 
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            super.onCreate(owner)
+
+            val serviceIntent = Intent(applicationContext, HeadlessTaskService::class.java)
+            bindService(serviceIntent, connection, BIND_AUTO_CREATE)
+        }
+
         override fun onResume(owner: LifecycleOwner) {
             super.onResume(owner)
 
@@ -95,7 +107,24 @@ class AndroidAutoService : CarAppService() {
         override fun onDestroy(owner: LifecycleOwner) {
             super.onDestroy(owner)
 
+            if (isServiceBound) {
+                unbindService(connection)
+                isServiceBound = false
+            }
+
             this@AndroidAutoService.stopForeground(STOP_FOREGROUND_REMOVE)
+        }
+    }
+
+    private val connection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(
+            className: ComponentName, service: IBinder
+        ) {
+            isServiceBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            isServiceBound = false
         }
     }
 
