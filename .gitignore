@@ -1,0 +1,5 @@
+node_modules
+apps/example/ios/Config/Development.xcconfig
+.vscode/
+!.vscode/settings.json
+.DS_Store
