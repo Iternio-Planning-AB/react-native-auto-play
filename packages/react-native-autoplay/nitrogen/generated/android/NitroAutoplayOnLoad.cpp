@@ -16,6 +16,11 @@
 #include <NitroModules/HybridObjectRegistry.hpp>
 
 #include "JHybridAutoPlaySpec.hpp"
+#include "JFunc_void.hpp"
+#include "JFunc_void_PressEvent.hpp"
+#include "JFunc_void_PinchGestureEvent.hpp"
+#include "JFunc_void_PanGestureWithTranslationEvent.hpp"
+#include "JFunc_void_std__optional_TemplateEvent_.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
@@ -28,6 +33,11 @@ int initialize(JavaVM* vm) {
   return facebook::jni::initialize(vm, [] {
     // Register native JNI methods
     margelo::nitro::at::g4rb4g3::autoplay::JHybridAutoPlaySpec::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PressEvent_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PinchGestureEvent_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PanGestureWithTranslationEvent_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_std__optional_TemplateEvent__cxx::registerNatives();
 
     // Register Nitro Hybrid Objects
     HybridObjectRegistry::registerHybridObjectConstructor(

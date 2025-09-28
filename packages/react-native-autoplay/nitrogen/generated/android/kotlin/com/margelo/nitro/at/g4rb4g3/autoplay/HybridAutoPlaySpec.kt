@@ -40,9 +40,77 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   
 
   // Methods
+  abstract fun addListener(eventType: EventName, callback: () -> Unit): () -> Unit
+  
   @DoNotStrip
   @Keep
-  abstract fun add(a: Double, b: Double): Double
+  private fun addListener_cxx(eventType: EventName, callback: Func_void): Func_void {
+    val __result = addListener(eventType, callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerDidPress(callback: (payload: PressEvent) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerDidPress_cxx(callback: Func_void_PressEvent): Func_void {
+    val __result = addListenerDidPress(callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerDidUpdatePinchGesture(callback: (payload: PinchGestureEvent) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerDidUpdatePinchGesture_cxx(callback: Func_void_PinchGestureEvent): Func_void {
+    val __result = addListenerDidUpdatePinchGesture(callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerDidUpdatePanGestureWithTranslation(callback: (payload: PanGestureWithTranslationEvent) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerDidUpdatePanGestureWithTranslation_cxx(callback: Func_void_PanGestureWithTranslationEvent): Func_void {
+    val __result = addListenerDidUpdatePanGestureWithTranslation(callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerWillAppear(templateId: String, callback: (payload: TemplateEvent?) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerWillAppear_cxx(templateId: String, callback: Func_void_std__optional_TemplateEvent_): Func_void {
+    val __result = addListenerWillAppear(templateId, callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerDidAppear(templateId: String, callback: (payload: TemplateEvent?) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerDidAppear_cxx(templateId: String, callback: Func_void_std__optional_TemplateEvent_): Func_void {
+    val __result = addListenerDidAppear(templateId, callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerWillDisappear(templateId: String, callback: (payload: TemplateEvent?) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerWillDisappear_cxx(templateId: String, callback: Func_void_std__optional_TemplateEvent_): Func_void {
+    val __result = addListenerWillDisappear(templateId, callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerDidDisappear(templateId: String, callback: (payload: TemplateEvent?) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerDidDisappear_cxx(templateId: String, callback: Func_void_std__optional_TemplateEvent_): Func_void {
+    val __result = addListenerDidDisappear(templateId, callback)
+    return Func_void_java(__result)
+  }
 
   private external fun initHybrid(): HybridData
 

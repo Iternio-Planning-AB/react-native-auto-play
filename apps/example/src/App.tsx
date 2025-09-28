@@ -1,4 +1,6 @@
 import { AutoPlay } from '@g4rb4g3/react-native-autoplay';
+import type { RemoveListener } from '@g4rb4g3/react-native-autoplay/lib/types/Event';
+import { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,11 +16,28 @@ function App() {
 }
 
 function AppContent() {
-  const result = AutoPlay.add(2, 2);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isRootVisible, setIsRootVisible] = useState(false);
+
+  useEffect(() => {
+    const listeners: Array<RemoveListener> = [];
+
+    listeners.push(AutoPlay.addListener('didConnect', () => setIsConnected(true)));
+    listeners.push(AutoPlay.addListener('didDisconnect', () => setIsConnected(false)));
+    listeners.push(AutoPlay.addListenerDidAppear('root', () => setIsRootVisible(true)));
+    listeners.push(AutoPlay.addListenerWillDisappear('root', () => setIsRootVisible(false)));
+
+    return () => {
+      for (const remove of listeners) {
+        remove();
+      }
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Awesome nitro module addition result: {result}</Text>
+      <Text>Android Auto connected: {String(isConnected)}</Text>
+      <Text>Root template visible: {String(isRootVisible)}</Text>
     </SafeAreaView>
   );
 }

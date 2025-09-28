@@ -17,48 +17,61 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.ref.WeakReference
 import java.util.UUID
+import java.util.WeakHashMap
 
 class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication: ReactApplication) :
     Session() {
-    private lateinit var reactContext: ReactContext
+
 
     private val isCluster = sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER
     private val clusterTemplateId = if (isCluster) UUID.randomUUID().toString() else null
+    private val marker = clusterTemplateId ?: ROOT_SESSION
 
     private lateinit var screen: AndroidAutoScreen
 
     override fun onCreateScreen(intent: Intent): Screen {
-        screen = AndroidAutoScreen(carContext)
-        screen.marker = clusterTemplateId ?: "root"
+        screen = AndroidAutoScreen(carContext, isCluster, marker)
 
-        if (!isCluster) {
-            lifecycle.addObserver(sessionLifecycleObserver)
-            rootCarContext = carContext
-        }
+        sessions.put(
+            marker, ScreenContext(carContext = carContext, session = this, screen = screen)
+        )
+
+        lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                sessions.remove(marker)
+
+                if (isCluster) {
+                    return
+                }
+
+                HybridAutoPlay.emit(EventName.DIDDISCONNECT)
+            }
+        })
 
         CoroutineScope(Dispatchers.Main).launch {
             reactContext = ReactContextResolver.getReactContext(reactApplication)
             reactContext.addLifecycleEventListener(reactLifecycleObserver)
 
-            invokeStartTask()
+            val appRegistry = reactContext.getJSModule(AppRegistry::class.java)
+                ?: throw ClassNotFoundException("could not get AppRegistry instance")
+            val jsAppModuleName = if (isCluster) "AndroidAutoCluster" else "AndroidAuto"
+            val appParams = WritableNativeMap().apply {
+                putMap("initialProps", Arguments.createMap().apply {
+                    putString("id", clusterTemplateId)
+                })
+            }
+
+            appRegistry.runApplication(jsAppModuleName, appParams)
+
+            if (isCluster) {
+                return@launch
+            }
+
+            HybridAutoPlay.emit(EventName.DIDCONNECT)
         }
 
         return screen
-    }
-
-    private fun invokeStartTask() {
-        val appRegistry = reactContext.getJSModule(AppRegistry::class.java)
-            ?: throw ClassNotFoundException("could not get AppRegistry instance")
-        val jsAppModuleName = if (isCluster) "AndroidAutoCluster" else "AndroidAuto"
-        val appParams = WritableNativeMap().apply {
-            putMap("initialProps", Arguments.createMap().apply {
-                putString("id", clusterTemplateId)
-            })
-        }
-
-        appRegistry.runApplication(jsAppModuleName, appParams)
     }
 
     private val reactLifecycleObserver = object : LifecycleEventListener {
@@ -71,74 +84,31 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         }
     }
 
-    private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            super.onCreate(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onCreate(owner)
-            }
-        }
-
-        override fun onStart(owner: LifecycleOwner) {
-            super.onStart(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onStart(owner)
-            }
-        }
-
-        override fun onResume(owner: LifecycleOwner) {
-            super.onResume(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onResume(owner)
-            }
-        }
-
-        override fun onPause(owner: LifecycleOwner) {
-            super.onPause(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onPause(owner)
-            }
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-            super.onStop(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onStop(owner)
-            }
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            super.onDestroy(owner)
-
-            lifecycleObservers.forEach {
-                it.get()?.onDestroy(owner)
-            }
-        }
-    }
+    data class ScreenContext(
+        val carContext: CarContext, val screen: AndroidAutoScreen, val session: AndroidAutoSession
+    )
 
     companion object {
         const val TAG = "AndroidAutoSession"
+        const val ROOT_SESSION = "root"
 
-        private var rootCarContext: CarContext? = null
-        private var lifecycleObservers: ArrayList<WeakReference<DefaultLifecycleObserver>> =
-            arrayListOf()
+        private lateinit var reactContext: ReactContext
+        private val sessions: WeakHashMap<String, ScreenContext> = WeakHashMap(4, 0.5f)
 
-        /**
-         * attach an observer for the main screen session lifecycle
-         */
-        fun addLifecycleObserver(observer: WeakReference<DefaultLifecycleObserver>) {
-            lifecycleObservers.add(observer)
+        fun getIsConnected(): Boolean {
+            return sessions[ROOT_SESSION] != null
         }
 
-        fun removeLifecycleObserver(observer: WeakReference<DefaultLifecycleObserver>) {
-            lifecycleObservers.remove(observer)
+        fun getCarContext(marker: String): CarContext? {
+            return sessions.get(marker)?.carContext
         }
 
-        fun getRootCarContext(): CarContext? = rootCarContext
+        fun getRootContext(): CarContext? {
+            return sessions.get(ROOT_SESSION)?.carContext
+        }
+
+        fun getScreen(marker: String): AndroidAutoScreen? {
+            return sessions.get(marker)?.screen
+        }
     }
 }

@@ -13,9 +13,25 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
+// Forward declaration of `PressEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEvent; }
+// Forward declaration of `PinchGestureEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEvent; }
+// Forward declaration of `PanGestureWithTranslationEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEvent; }
+// Forward declaration of `TemplateEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEvent; }
 
-
-
+#include <functional>
+#include "EventName.hpp"
+#include "PressEvent.hpp"
+#include "PinchGestureEvent.hpp"
+#include "PanGestureWithTranslationEvent.hpp"
+#include <string>
+#include "TemplateEvent.hpp"
+#include <optional>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -48,7 +64,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
 
     public:
       // Methods
-      virtual double add(double a, double b) = 0;
+      virtual std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) = 0;
+      virtual std::function<void()> addListenerDidPress(const std::function<void(const PressEvent& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerDidUpdatePinchGesture(const std::function<void(const PinchGestureEvent& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerDidUpdatePanGestureWithTranslation(const std::function<void(const PanGestureWithTranslationEvent& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerWillAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerDidAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerWillDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerDidDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

@@ -86,27 +86,19 @@ class AndroidAutoService : CarAppService() {
 
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
-            super.onCreate(owner)
-
             val serviceIntent = Intent(applicationContext, HeadlessTaskService::class.java)
             bindService(serviceIntent, connection, BIND_AUTO_CREATE)
         }
 
         override fun onResume(owner: LifecycleOwner) {
-            super.onResume(owner)
-
             isSessionStarted = true
         }
 
         override fun onPause(owner: LifecycleOwner) {
-            super.onPause(owner)
-
             isSessionStarted = false
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
-            super.onDestroy(owner)
-
             if (isServiceBound) {
                 unbindService(connection)
                 isServiceBound = false

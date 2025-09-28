@@ -8,14 +8,38 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
+// Forward declaration of `PanGestureWithTranslationEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEvent; }
+// Forward declaration of `PinchGestureEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEvent; }
+// Forward declaration of `PressEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEvent; }
+// Forward declaration of `TemplateEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEvent; }
+// Forward declaration of `Translation` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
+// Forward declaration of `Velocity` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
 
 // Include C++ defined types
+#include "EventName.hpp"
 #include "HybridAutoPlaySpec.hpp"
+#include "PanGestureWithTranslationEvent.hpp"
+#include "PinchGestureEvent.hpp"
+#include "PressEvent.hpp"
+#include "TemplateEvent.hpp"
+#include "Translation.hpp"
+#include "Velocity.hpp"
 #include <NitroModules/Result.hpp>
 #include <exception>
+#include <functional>
 #include <memory>
+#include <optional>
+#include <string>
 
 // C++ helpers for Swift
 #include "NitroAutoplay-Swift-Cxx-Bridge.hpp"

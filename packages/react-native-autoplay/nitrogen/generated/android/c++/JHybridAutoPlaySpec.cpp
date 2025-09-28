@@ -7,9 +7,43 @@
 
 #include "JHybridAutoPlaySpec.hpp"
 
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
+// Forward declaration of `PressEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEvent; }
+// Forward declaration of `PinchGestureEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEvent; }
+// Forward declaration of `PanGestureWithTranslationEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEvent; }
+// Forward declaration of `Translation` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
+// Forward declaration of `Velocity` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
+// Forward declaration of `TemplateEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEvent; }
 
-
-
+#include <functional>
+#include "JFunc_void.hpp"
+#include "EventName.hpp"
+#include "JEventName.hpp"
+#include "PressEvent.hpp"
+#include "JFunc_void_PressEvent.hpp"
+#include "JPressEvent.hpp"
+#include "PinchGestureEvent.hpp"
+#include "JFunc_void_PinchGestureEvent.hpp"
+#include "JPinchGestureEvent.hpp"
+#include "PanGestureWithTranslationEvent.hpp"
+#include "JFunc_void_PanGestureWithTranslationEvent.hpp"
+#include "JPanGestureWithTranslationEvent.hpp"
+#include "Translation.hpp"
+#include "JTranslation.hpp"
+#include "Velocity.hpp"
+#include <optional>
+#include "JVelocity.hpp"
+#include <string>
+#include "TemplateEvent.hpp"
+#include "JFunc_void_std__optional_TemplateEvent_.hpp"
+#include "JTemplateEvent.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -37,10 +71,125 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
   
 
   // Methods
-  double JHybridAutoPlaySpec::add(double a, double b) {
-    static const auto method = javaClassStatic()->getMethod<double(double /* a */, double /* b */)>("add");
-    auto __result = method(_javaPart, a, b);
-    return __result;
+  std::function<void()> JHybridAutoPlaySpec::addListener(EventName eventType, const std::function<void()>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JEventName> /* eventType */, jni::alias_ref<JFunc_void::javaobject> /* callback */)>("addListener_cxx");
+    auto __result = method(_javaPart, JEventName::fromCpp(eventType), JFunc_void_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerDidPress(const std::function<void(const PressEvent& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_PressEvent::javaobject> /* callback */)>("addListenerDidPress_cxx");
+    auto __result = method(_javaPart, JFunc_void_PressEvent_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerDidUpdatePinchGesture(const std::function<void(const PinchGestureEvent& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_PinchGestureEvent::javaobject> /* callback */)>("addListenerDidUpdatePinchGesture_cxx");
+    auto __result = method(_javaPart, JFunc_void_PinchGestureEvent_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerDidUpdatePanGestureWithTranslation(const std::function<void(const PanGestureWithTranslationEvent& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_PanGestureWithTranslationEvent::javaobject> /* callback */)>("addListenerDidUpdatePanGestureWithTranslation_cxx");
+    auto __result = method(_javaPart, JFunc_void_PanGestureWithTranslationEvent_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerWillAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JFunc_void_std__optional_TemplateEvent_::javaobject> /* callback */)>("addListenerWillAppear_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JFunc_void_std__optional_TemplateEvent__cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerDidAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JFunc_void_std__optional_TemplateEvent_::javaobject> /* callback */)>("addListenerDidAppear_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JFunc_void_std__optional_TemplateEvent__cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerWillDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JFunc_void_std__optional_TemplateEvent_::javaobject> /* callback */)>("addListenerWillDisappear_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JFunc_void_std__optional_TemplateEvent__cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerDidDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JFunc_void_std__optional_TemplateEvent_::javaobject> /* callback */)>("addListenerDidDisappear_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JFunc_void_std__optional_TemplateEvent__cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
   }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay

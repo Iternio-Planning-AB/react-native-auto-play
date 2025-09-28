@@ -13,6 +13,46 @@
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
 
+  // pragma MARK: std::function<void()>
+  Func_void create_Func_void(void* _Nonnull swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)]() mutable -> void {
+      swiftClosure.call();
+    };
+  }
+  
+  // pragma MARK: std::function<void(const PressEvent& /* payload */)>
+  Func_void_PressEvent create_Func_void_PressEvent(void* _Nonnull swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_PressEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PressEvent& payload) mutable -> void {
+      swiftClosure.call(payload);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const PinchGestureEvent& /* payload */)>
+  Func_void_PinchGestureEvent create_Func_void_PinchGestureEvent(void* _Nonnull swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_PinchGestureEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PinchGestureEvent& payload) mutable -> void {
+      swiftClosure.call(payload);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const PanGestureWithTranslationEvent& /* payload */)>
+  Func_void_PanGestureWithTranslationEvent create_Func_void_PanGestureWithTranslationEvent(void* _Nonnull swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_PanGestureWithTranslationEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PanGestureWithTranslationEvent& payload) mutable -> void {
+      swiftClosure.call(payload);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::optional<TemplateEvent>& /* payload */)>
+  Func_void_std__optional_TemplateEvent_ create_Func_void_std__optional_TemplateEvent_(void* _Nonnull swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__optional_TemplateEvent_::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::optional<TemplateEvent>& payload) mutable -> void {
+      swiftClosure.call(payload);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridAutoPlaySpec>
   std::shared_ptr<HybridAutoPlaySpec> create_std__shared_ptr_HybridAutoPlaySpec_(void* _Nonnull swiftUnsafePointer) noexcept {
     NitroAutoplay::HybridAutoPlaySpec_cxx swiftPart = NitroAutoplay::HybridAutoPlaySpec_cxx::fromUnsafe(swiftUnsafePointer);

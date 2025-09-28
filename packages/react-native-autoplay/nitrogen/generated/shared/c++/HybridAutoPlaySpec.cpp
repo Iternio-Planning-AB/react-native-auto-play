@@ -14,7 +14,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     HybridObject::loadHybridMethods();
     // load custom methods/properties
     registerHybrids(this, [](Prototype& prototype) {
-      prototype.registerHybridMethod("add", &HybridAutoPlaySpec::add);
+      prototype.registerHybridMethod("addListener", &HybridAutoPlaySpec::addListener);
+      prototype.registerHybridMethod("addListenerDidPress", &HybridAutoPlaySpec::addListenerDidPress);
+      prototype.registerHybridMethod("addListenerDidUpdatePinchGesture", &HybridAutoPlaySpec::addListenerDidUpdatePinchGesture);
+      prototype.registerHybridMethod("addListenerDidUpdatePanGestureWithTranslation", &HybridAutoPlaySpec::addListenerDidUpdatePanGestureWithTranslation);
+      prototype.registerHybridMethod("addListenerWillAppear", &HybridAutoPlaySpec::addListenerWillAppear);
+      prototype.registerHybridMethod("addListenerDidAppear", &HybridAutoPlaySpec::addListenerDidAppear);
+      prototype.registerHybridMethod("addListenerWillDisappear", &HybridAutoPlaySpec::addListenerWillDisappear);
+      prototype.registerHybridMethod("addListenerDidDisappear", &HybridAutoPlaySpec::addListenerDidDisappear);
     });
   }
 

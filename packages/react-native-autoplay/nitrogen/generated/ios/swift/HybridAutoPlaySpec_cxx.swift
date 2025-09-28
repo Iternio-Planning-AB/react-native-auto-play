@@ -110,14 +110,186 @@ open class HybridAutoPlaySpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func add(a: Double, b: Double) -> bridge.Result_double_ {
+  public final func addListener(eventType: Int32, callback: bridge.Func_void) -> bridge.Result_std__function_void____ {
     do {
-      let __result = try self.__implementation.add(a: a, b: b)
-      let __resultCpp = __result
-      return bridge.create_Result_double_(__resultCpp)
+      let __result = try self.__implementation.addListener(eventType: margelo.nitro.at.g4rb4g3.autoplay.EventName(rawValue: eventType)!, callback: { () -> () -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void(callback)
+        return { () -> Void in
+          __wrappedFunction.call()
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_double_(__exceptionPtr)
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerDidPress(callback: bridge.Func_void_PressEvent) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerDidPress(callback: { () -> (PressEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_PressEvent(callback)
+        return { (__payload: PressEvent) -> Void in
+          __wrappedFunction.call(__payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerDidUpdatePinchGesture(callback: bridge.Func_void_PinchGestureEvent) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerDidUpdatePinchGesture(callback: { () -> (PinchGestureEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_PinchGestureEvent(callback)
+        return { (__payload: PinchGestureEvent) -> Void in
+          __wrappedFunction.call(__payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerDidUpdatePanGestureWithTranslation(callback: bridge.Func_void_PanGestureWithTranslationEvent) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerDidUpdatePanGestureWithTranslation(callback: { () -> (PanGestureWithTranslationEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_PanGestureWithTranslationEvent(callback)
+        return { (__payload: PanGestureWithTranslationEvent) -> Void in
+          __wrappedFunction.call(__payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerWillAppear(templateId: std.string, callback: bridge.Func_void_std__optional_TemplateEvent_) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerWillAppear(templateId: String(templateId), callback: { () -> (TemplateEvent?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_TemplateEvent_(callback)
+        return { (__payload: TemplateEvent?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_TemplateEvent_ in
+            if let __unwrappedValue = __payload {
+              return bridge.create_std__optional_TemplateEvent_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerDidAppear(templateId: std.string, callback: bridge.Func_void_std__optional_TemplateEvent_) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerDidAppear(templateId: String(templateId), callback: { () -> (TemplateEvent?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_TemplateEvent_(callback)
+        return { (__payload: TemplateEvent?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_TemplateEvent_ in
+            if let __unwrappedValue = __payload {
+              return bridge.create_std__optional_TemplateEvent_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerWillDisappear(templateId: std.string, callback: bridge.Func_void_std__optional_TemplateEvent_) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerWillDisappear(templateId: String(templateId), callback: { () -> (TemplateEvent?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_TemplateEvent_(callback)
+        return { (__payload: TemplateEvent?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_TemplateEvent_ in
+            if let __unwrappedValue = __payload {
+              return bridge.create_std__optional_TemplateEvent_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerDidDisappear(templateId: std.string, callback: bridge.Func_void_std__optional_TemplateEvent_) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerDidDisappear(templateId: String(templateId), callback: { () -> (TemplateEvent?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_TemplateEvent_(callback)
+        return { (__payload: TemplateEvent?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_TemplateEvent_ in
+            if let __unwrappedValue = __payload {
+              return bridge.create_std__optional_TemplateEvent_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
     }
   }
 }

@@ -20,7 +20,7 @@ const Content = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'blue' }}>
+    <View style={{ flex: 1 }}>
       <Text>Hello Nitro Android Auto {i}</Text>
     </View>
   );

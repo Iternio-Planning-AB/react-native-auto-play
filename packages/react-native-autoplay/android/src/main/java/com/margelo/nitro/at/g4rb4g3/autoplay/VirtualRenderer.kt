@@ -124,7 +124,7 @@ class VirtualRenderer(
                 val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
                 val reactNativeScale =
                     virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
-                
+
                 reactSurfaceView = ReactSurfaceView(context, reactSurfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()

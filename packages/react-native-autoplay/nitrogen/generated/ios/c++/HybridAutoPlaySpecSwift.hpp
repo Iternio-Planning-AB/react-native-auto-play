@@ -12,9 +12,31 @@
 // Forward declaration of `HybridAutoPlaySpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
+// Forward declaration of `PressEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEvent; }
+// Forward declaration of `PinchGestureEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEvent; }
+// Forward declaration of `PanGestureWithTranslationEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEvent; }
+// Forward declaration of `Translation` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
+// Forward declaration of `Velocity` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
+// Forward declaration of `TemplateEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEvent; }
 
-
-
+#include <functional>
+#include "EventName.hpp"
+#include "PressEvent.hpp"
+#include "PinchGestureEvent.hpp"
+#include "PanGestureWithTranslationEvent.hpp"
+#include "Translation.hpp"
+#include "Velocity.hpp"
+#include <optional>
+#include <string>
+#include "TemplateEvent.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -57,8 +79,64 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
 
   public:
     // Methods
-    inline double add(double a, double b) override {
-      auto __result = _swiftPart.add(std::forward<decltype(a)>(a), std::forward<decltype(b)>(b));
+    inline std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) override {
+      auto __result = _swiftPart.addListener(static_cast<int>(eventType), callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerDidPress(const std::function<void(const PressEvent& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerDidPress(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerDidUpdatePinchGesture(const std::function<void(const PinchGestureEvent& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerDidUpdatePinchGesture(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerDidUpdatePanGestureWithTranslation(const std::function<void(const PanGestureWithTranslationEvent& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerDidUpdatePanGestureWithTranslation(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerWillAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerWillAppear(templateId, callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerDidAppear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerDidAppear(templateId, callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerWillDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerWillDisappear(templateId, callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerDidDisappear(const std::string& templateId, const std::function<void(const std::optional<TemplateEvent>& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerDidDisappear(templateId, callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
