@@ -60,7 +60,7 @@ class AndroidAutoScreen(
 
     fun setTemplate(template: Template, invalidate: Boolean = false, isSurfaceTemplate: Boolean) {
         if (isSurfaceTemplate && virtualRenderer == null) {
-            virtualRenderer = VirtualRenderer(carContext, marker, isCluster)
+            virtualRenderer = VirtualRenderer(carContext, isCluster)
         }
         this.template = template
 

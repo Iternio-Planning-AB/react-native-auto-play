@@ -10,7 +10,7 @@ const AndroidAutoCluster = ({ initialProps: { id } }: { initialProps: { id: stri
   console.log('executing android auto cluster runnable', id);
 };
 
-const Content = (props) => {
+const AutoPlayRoot = (props) => {
   const [i, setI] = useState(0);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const registerRunnable = () => {
 
   AppRegistry.registerRunnable('AndroidAuto', AndroidAuto);
   AppRegistry.registerRunnable('AndroidAutoCluster', AndroidAutoCluster);
-  AppRegistry.registerComponent('root', () => Content);
+  AppRegistry.registerComponent('AutoPlayRoot', () => AutoPlayRoot);
 };
 
 export default registerRunnable;

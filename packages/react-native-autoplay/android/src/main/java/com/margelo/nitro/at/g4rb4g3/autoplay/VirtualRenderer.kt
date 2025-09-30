@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class VirtualRenderer(
-    private val context: CarContext, private val moduleName: String, private val isCluster: Boolean
+    private val context: CarContext, private val isCluster: Boolean
 ) {
     private lateinit var uiManager: FabricUIManager
     private lateinit var display: Display
@@ -161,5 +161,9 @@ class VirtualRenderer(
                 addView(reactSurfaceView)
             })
         }
+    }
+
+    companion object {
+        val moduleName = "AutoPlayRoot"
     }
 }
