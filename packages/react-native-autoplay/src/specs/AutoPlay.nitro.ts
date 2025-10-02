@@ -1,6 +1,6 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { AlertTemplateConfig } from '../templates/AlertTemplate';
-import type { MapTemplateConfig } from '../templates/MapTemplate';
+import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
 import type { EventName, RemoveListener } from '../types/Event';
 import type {
   PanGestureWithTranslationEventPayload,
@@ -65,7 +65,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   /**
    * creates a map template that can render any react component
    */
-  createMapTemplate(config: MapTemplateConfig): void;
+  createMapTemplate(config: NitroMapTemplateConfig): void;
 
   setRootTemplate(templateId: string): void;
 }

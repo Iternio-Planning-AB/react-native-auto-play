@@ -4,18 +4,28 @@ import { AutoPlay } from '..';
 import type { RootComponentInitialProps } from '../types/RootComponent';
 import { Template, type TemplateConfig } from './Template';
 
-export type MapTemplateConfig = TemplateConfig & {};
+export type ClusterTemplateId = string & { __brand: 'uuid' };
+/**
+ * map templates can have only these ids
+ * @AutoPlayRoot is the head unit screen()
+ * @AutoPlayDashboard is the CarPlay dashboard (iOS only)
+ * @ClusterTemplateId is a uuid generated on native side when a cluster screen connects and passed over on the cluster connection listener
+ */
+export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | ClusterTemplateId;
 
-type Config = MapTemplateConfig & {
+export type NitroMapTemplateConfig = TemplateConfig & {};
+
+export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id'> & {
+  id: MapTemplateId;
   component: React.ComponentType<RootComponentInitialProps & { template: MapTemplate }>;
 };
 
-export class MapTemplate extends Template<Config> {
+export class MapTemplate extends Template<MapTemplateConfig> {
   public get type(): string {
     return 'map';
   }
 
-  constructor(config: Config) {
+  constructor(config: MapTemplateConfig) {
     super(config);
 
     // biome-ignore lint/complexity/noUselessThisAlias: we need the template reference when the component gets started from react-native
