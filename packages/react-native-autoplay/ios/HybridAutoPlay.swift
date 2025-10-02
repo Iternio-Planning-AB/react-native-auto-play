@@ -129,7 +129,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         //TODO
     }
 
-    func createMapTemplate(config: TemplateConfig) throws {
+    func createMapTemplate(config: NitroMapTemplateConfig) throws {
         //TODO
     }
 

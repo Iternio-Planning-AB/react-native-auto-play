@@ -7,7 +7,7 @@ import { Template, type TemplateConfig } from './Template';
 export type AutoPlayCluster = string & { __brand: 'uuid' };
 export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayCluster;
 
-export type NitroMapTemplateConfig = TemplateConfig & {};
+export interface NitroMapTemplateConfig extends TemplateConfig {}
 
 export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id'> & {
   /**

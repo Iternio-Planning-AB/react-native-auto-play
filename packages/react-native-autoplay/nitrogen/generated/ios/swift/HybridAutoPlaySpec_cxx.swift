@@ -263,7 +263,7 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func createMapTemplate(config: TemplateConfig) -> bridge.Result_void_ {
+  public final func createMapTemplate(config: NitroMapTemplateConfig) -> bridge.Result_void_ {
     do {
       try self.__implementation.createMapTemplate(config: config)
       return bridge.create_Result_void_()

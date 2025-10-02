@@ -36,8 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 // Forward declaration of `BaseEvent` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
-// Forward declaration of `TemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
+// Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 
 #include <functional>
 #include "EventName.hpp"
@@ -55,7 +55,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
 #include "BaseEvent.hpp"
-#include "TemplateConfig.hpp"
+#include "NitroMapTemplateConfig.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -164,7 +164,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void createMapTemplate(const TemplateConfig& config) override {
+    inline void createMapTemplate(const NitroMapTemplateConfig& config) override {
       auto __result = _swiftPart.createMapTemplate(std::forward<decltype(config)>(config));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());

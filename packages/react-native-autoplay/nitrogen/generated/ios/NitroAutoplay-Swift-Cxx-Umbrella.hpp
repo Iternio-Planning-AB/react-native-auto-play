@@ -20,14 +20,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
+// Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 // Forward declaration of `PanGestureWithTranslationEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEventPayload; }
 // Forward declaration of `PinchGestureEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEventPayload; }
 // Forward declaration of `PressEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEventPayload; }
-// Forward declaration of `TemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 // Forward declaration of `TemplateEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
 // Forward declaration of `Translation` to properly resolve imports.
@@ -44,10 +44,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 #include "BaseEvent.hpp"
 #include "EventName.hpp"
 #include "HybridAutoPlaySpec.hpp"
+#include "NitroMapTemplateConfig.hpp"
 #include "PanGestureWithTranslationEventPayload.hpp"
 #include "PinchGestureEventPayload.hpp"
 #include "PressEventPayload.hpp"
-#include "TemplateConfig.hpp"
 #include "TemplateEventPayload.hpp"
 #include "Translation.hpp"
 #include "Velocity.hpp"

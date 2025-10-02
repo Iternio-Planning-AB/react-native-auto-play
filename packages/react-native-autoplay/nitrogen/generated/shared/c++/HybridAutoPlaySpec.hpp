@@ -27,8 +27,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 // Forward declaration of `AlertTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
-// Forward declaration of `TemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
+// Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 
 #include <functional>
 #include "EventName.hpp"
@@ -39,7 +39,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include "TemplateEventPayload.hpp"
 #include "VisibilityState.hpp"
 #include "AlertTemplateConfig.hpp"
-#include "TemplateConfig.hpp"
+#include "NitroMapTemplateConfig.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -81,7 +81,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       virtual void createAlertTemplate(const AlertTemplateConfig& config) = 0;
       virtual void presentTemplate(const std::string& templateId) = 0;
       virtual void dismissTemplate(const std::string& templateId) = 0;
-      virtual void createMapTemplate(const TemplateConfig& config) = 0;
+      virtual void createMapTemplate(const NitroMapTemplateConfig& config) = 0;
       virtual void setRootTemplate(const std::string& templateId) = 0;
 
     protected:

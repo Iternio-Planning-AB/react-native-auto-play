@@ -23,7 +23,7 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func createAlertTemplate(config: AlertTemplateConfig) throws -> Void
   func presentTemplate(templateId: String) throws -> Void
   func dismissTemplate(templateId: String) throws -> Void
-  func createMapTemplate(config: TemplateConfig) throws -> Void
+  func createMapTemplate(config: NitroMapTemplateConfig) throws -> Void
   func setRootTemplate(templateId: String) throws -> Void
 }
 

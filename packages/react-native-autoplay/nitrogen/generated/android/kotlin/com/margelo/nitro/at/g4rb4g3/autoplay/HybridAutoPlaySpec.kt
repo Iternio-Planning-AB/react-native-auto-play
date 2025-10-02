@@ -108,7 +108,7 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun createMapTemplate(config: TemplateConfig): Unit
+  abstract fun createMapTemplate(config: NitroMapTemplateConfig): Unit
   
   @DoNotStrip
   @Keep

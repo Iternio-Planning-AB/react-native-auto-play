@@ -31,8 +31,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 // Forward declaration of `BaseEvent` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
-// Forward declaration of `TemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
+// Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -69,8 +69,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include "BaseEvent.hpp"
 #include "JFunc_void_BaseEvent.hpp"
 #include "JBaseEvent.hpp"
-#include "TemplateConfig.hpp"
-#include "JTemplateConfig.hpp"
+#include "NitroMapTemplateConfig.hpp"
+#include "JNitroMapTemplateConfig.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -200,9 +200,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("dismissTemplate");
     method(_javaPart, jni::make_jstring(templateId));
   }
-  void JHybridAutoPlaySpec::createMapTemplate(const TemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JTemplateConfig> /* config */)>("createMapTemplate");
-    method(_javaPart, JTemplateConfig::fromCpp(config));
+  void JHybridAutoPlaySpec::createMapTemplate(const NitroMapTemplateConfig& config) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JNitroMapTemplateConfig> /* config */)>("createMapTemplate");
+    method(_javaPart, JNitroMapTemplateConfig::fromCpp(config));
   }
   void JHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
