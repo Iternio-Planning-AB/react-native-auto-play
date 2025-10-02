@@ -18,9 +18,11 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
-
-
+#include <optional>
+#include "VisibilityState.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -29,11 +31,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
    */
   struct TemplateEventPayload {
   public:
-    bool animated     SWIFT_PRIVATE;
+    std::optional<bool> animated     SWIFT_PRIVATE;
+    VisibilityState state     SWIFT_PRIVATE;
 
   public:
     TemplateEventPayload() = default;
-    explicit TemplateEventPayload(bool animated): animated(animated) {}
+    explicit TemplateEventPayload(std::optional<bool> animated, VisibilityState state): animated(animated), state(state) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -46,12 +49,14 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::TemplateEventPayload fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::TemplateEventPayload(
-        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "animated"))
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "animated")),
+        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::VisibilityState>::fromJSI(runtime, obj.getProperty(runtime, "state"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::TemplateEventPayload& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "animated", JSIConverter<bool>::toJSI(runtime, arg.animated));
+      obj.setProperty(runtime, "animated", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.animated));
+      obj.setProperty(runtime, "state", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::VisibilityState>::toJSI(runtime, arg.state));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -59,7 +64,8 @@ namespace margelo::nitro {
         return false;
       }
       jsi::Object obj = value.getObject(runtime);
-      if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "animated"))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "animated"))) return false;
+      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::VisibilityState>::canConvert(runtime, obj.getProperty(runtime, "state"))) return false;
       return true;
     }
   };

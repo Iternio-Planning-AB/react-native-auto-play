@@ -24,10 +24,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslati
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
 // Forward declaration of `Velocity` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
-// Forward declaration of `TemplateState` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class TemplateState; }
 // Forward declaration of `TemplateEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 // Forward declaration of `AlertTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 // Forward declaration of `AlertAction` to properly resolve imports.
@@ -48,8 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include "Velocity.hpp"
 #include <optional>
 #include <string>
-#include "TemplateState.hpp"
 #include "TemplateEventPayload.hpp"
+#include "VisibilityState.hpp"
 #include "AlertTemplateConfig.hpp"
 #include <vector>
 #include "AlertAction.hpp"
@@ -130,8 +130,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::function<void()> addListenerTemplateState(const std::string& templateId, TemplateState templateState, const std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>& callback) override {
-      auto __result = _swiftPart.addListenerTemplateState(templateId, static_cast<int>(templateState), callback);
+    inline std::function<void()> addListenerTemplateState(const std::string& templateId, const std::function<void(const TemplateEventPayload& /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerTemplateState(templateId, callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) override {
+      auto __result = _swiftPart.addListenerRenderState(mapTemplateId, callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

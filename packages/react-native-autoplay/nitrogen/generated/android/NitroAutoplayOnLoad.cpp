@@ -20,7 +20,8 @@
 #include "JFunc_void_PressEventPayload.hpp"
 #include "JFunc_void_PinchGestureEventPayload.hpp"
 #include "JFunc_void_PanGestureWithTranslationEventPayload.hpp"
-#include "JFunc_void_std__optional_TemplateEventPayload_.hpp"
+#include "JFunc_void_TemplateEventPayload.hpp"
+#include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_BaseEvent.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
@@ -38,7 +39,8 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PressEventPayload_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PinchGestureEventPayload_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_PanGestureWithTranslationEventPayload_cxx::registerNatives();
-    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_std__optional_TemplateEventPayload__cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_TemplateEventPayload_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_VisibilityState_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_BaseEvent_cxx::registerNatives();
 
     // Register Nitro Hybrid Objects

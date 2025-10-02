@@ -190,18 +190,32 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func addListenerTemplateState(templateId: std.string, templateState: Int32, callback: bridge.Func_void_std__optional_TemplateEventPayload_) -> bridge.Result_std__function_void____ {
+  public final func addListenerTemplateState(templateId: std.string, callback: bridge.Func_void_TemplateEventPayload) -> bridge.Result_std__function_void____ {
     do {
-      let __result = try self.__implementation.addListenerTemplateState(templateId: String(templateId), templateState: margelo.nitro.at.g4rb4g3.autoplay.TemplateState(rawValue: templateState)!, callback: { () -> (TemplateEventPayload?) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_std__optional_TemplateEventPayload_(callback)
-        return { (__payload: TemplateEventPayload?) -> Void in
-          __wrappedFunction.call({ () -> bridge.std__optional_TemplateEventPayload_ in
-            if let __unwrappedValue = __payload {
-              return bridge.create_std__optional_TemplateEventPayload_(__unwrappedValue)
-            } else {
-              return .init()
-            }
-          }())
+      let __result = try self.__implementation.addListenerTemplateState(templateId: String(templateId), callback: { () -> (TemplateEventPayload) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_TemplateEventPayload(callback)
+        return { (__payload: TemplateEventPayload) -> Void in
+          __wrappedFunction.call(__payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerRenderState(mapTemplateId: std.string, callback: bridge.Func_void_VisibilityState) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerRenderState(mapTemplateId: String(mapTemplateId), callback: { () -> (VisibilityState) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_VisibilityState(callback)
+        return { (__payload: VisibilityState) -> Void in
+          __wrappedFunction.call(__payload.rawValue)
         }
       }())
       let __resultCpp = { () -> bridge.Func_void in

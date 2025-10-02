@@ -18,18 +18,41 @@ public extension TemplateEventPayload {
   /**
    * Create a new instance of `TemplateEventPayload`.
    */
-  init(animated: Bool) {
-    self.init(animated)
+  init(animated: Bool?, state: VisibilityState) {
+    self.init({ () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = animated {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), state)
   }
 
-  var animated: Bool {
+  var animated: Bool? {
     @inline(__always)
     get {
-      return self.__animated
+      return self.__animated.value
     }
     @inline(__always)
     set {
-      self.__animated = newValue
+      self.__animated = { () -> bridge.std__optional_bool_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_bool_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var state: VisibilityState {
+    @inline(__always)
+    get {
+      return self.__state
+    }
+    @inline(__always)
+    set {
+      self.__state = newValue
     }
   }
 }

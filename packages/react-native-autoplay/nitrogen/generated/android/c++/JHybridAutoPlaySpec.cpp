@@ -19,10 +19,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslati
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
 // Forward declaration of `Velocity` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
-// Forward declaration of `TemplateState` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class TemplateState; }
 // Forward declaration of `TemplateEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 // Forward declaration of `AlertTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 // Forward declaration of `AlertAction` to properly resolve imports.
@@ -53,11 +53,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include <optional>
 #include "JVelocity.hpp"
 #include <string>
-#include "TemplateState.hpp"
-#include "JTemplateState.hpp"
 #include "TemplateEventPayload.hpp"
-#include "JFunc_void_std__optional_TemplateEventPayload_.hpp"
+#include "JFunc_void_TemplateEventPayload.hpp"
 #include "JTemplateEventPayload.hpp"
+#include "VisibilityState.hpp"
+#include "JVisibilityState.hpp"
+#include "JFunc_void_VisibilityState.hpp"
 #include "AlertTemplateConfig.hpp"
 #include "JAlertTemplateConfig.hpp"
 #include <vector>
@@ -157,9 +158,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       }
     }();
   }
-  std::function<void()> JHybridAutoPlaySpec::addListenerTemplateState(const std::string& templateId, TemplateState templateState, const std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTemplateState> /* templateState */, jni::alias_ref<JFunc_void_std__optional_TemplateEventPayload_::javaobject> /* callback */)>("addListenerTemplateState_cxx");
-    auto __result = method(_javaPart, jni::make_jstring(templateId), JTemplateState::fromCpp(templateState), JFunc_void_std__optional_TemplateEventPayload__cxx::fromCpp(callback));
+  std::function<void()> JHybridAutoPlaySpec::addListenerTemplateState(const std::string& templateId, const std::function<void(const TemplateEventPayload& /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JFunc_void_TemplateEventPayload::javaobject> /* callback */)>("addListenerTemplateState_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JFunc_void_TemplateEventPayload_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* mapTemplateId */, jni::alias_ref<JFunc_void_VisibilityState::javaobject> /* callback */)>("addListenerRenderState_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(mapTemplateId), JFunc_void_VisibilityState_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);

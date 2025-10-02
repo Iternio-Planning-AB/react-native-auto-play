@@ -76,12 +76,21 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
-  abstract fun addListenerTemplateState(templateId: String, templateState: TemplateState, callback: (payload: TemplateEventPayload?) -> Unit): () -> Unit
+  abstract fun addListenerTemplateState(templateId: String, callback: (payload: TemplateEventPayload) -> Unit): () -> Unit
   
   @DoNotStrip
   @Keep
-  private fun addListenerTemplateState_cxx(templateId: String, templateState: TemplateState, callback: Func_void_std__optional_TemplateEventPayload_): Func_void {
-    val __result = addListenerTemplateState(templateId, templateState, callback)
+  private fun addListenerTemplateState_cxx(templateId: String, callback: Func_void_TemplateEventPayload): Func_void {
+    val __result = addListenerTemplateState(templateId, callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerRenderState(mapTemplateId: String, callback: (payload: VisibilityState) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerRenderState_cxx(mapTemplateId: String, callback: Func_void_VisibilityState): Func_void {
+    val __result = addListenerRenderState(mapTemplateId, callback)
     return Func_void_java(__result)
   }
   

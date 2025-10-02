@@ -4,18 +4,18 @@ import { AutoPlay } from '..';
 import type { RootComponentInitialProps } from '../types/RootComponent';
 import { Template, type TemplateConfig } from './Template';
 
-export type ClusterTemplateId = string & { __brand: 'uuid' };
-/**
- * map templates can have only these ids
- * @AutoPlayRoot is the head unit screen()
- * @AutoPlayDashboard is the CarPlay dashboard (iOS only)
- * @ClusterTemplateId is a uuid generated on native side when a cluster screen connects and passed over on the cluster connection listener
- */
-export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | ClusterTemplateId;
+export type AutoPlayCluster = string & { __brand: 'uuid' };
+export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayCluster;
 
 export type NitroMapTemplateConfig = TemplateConfig & {};
 
 export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id'> & {
+  /**
+   * map templates can have only these ids
+   * @AutoPlayRoot head unit screen
+   * @AutoPlayDashboard CarPlay dashboard (iOS only)
+   * @AutoPlayCluster uuid generated on native side when a cluster screen connects and passed over on the cluster connection listener
+   */
   id: MapTemplateId;
   component: React.ComponentType<RootComponentInitialProps & { template: MapTemplate }>;
 };

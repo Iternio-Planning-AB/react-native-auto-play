@@ -7,7 +7,7 @@ import type {
   PinchGestureEventPayload,
   PressEventPayload,
 } from '../types/GestureEvents';
-import type { TemplateEventPayload, TemplateState } from '../types/TemplateEvents';
+import type { TemplateEventPayload, VisibilityState } from '../types/TemplateEvents';
 
 export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   /**
@@ -45,8 +45,18 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    */
   addListenerTemplateState(
     templateId: string,
-    templateState: TemplateState,
-    callback: (payload: TemplateEventPayload | null) => void
+    callback: (payload: TemplateEventPayload) => void
+  ): RemoveListener;
+
+  /**
+   * adds a listener for the session/scene state
+   * fires willAppear & didAppear when the scene/session is visible
+   * fires willDisappear & didDisappear when the scene/session is not visible
+   * @param mapTemplateId actually type of MapTemplateId but we can not use that one on nitro
+   */
+  addListenerRenderState(
+    mapTemplateId: string,
+    callback: (payload: VisibilityState) => void
   ): RemoveListener;
 
   /**

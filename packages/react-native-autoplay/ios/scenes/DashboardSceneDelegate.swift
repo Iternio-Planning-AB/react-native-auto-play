@@ -8,13 +8,13 @@ import CarPlay
 import UIKit
 
 @objc(DashboardSceneDelegate)
-class DashboardSceneDelegate: UIResponder,
+class DashboardSceneDelegate: AutoPlayScene,
     CPTemplateApplicationDashboardSceneDelegate
 {
-    let moduleName = "AutoPlayDashboard"
-    var window: UIWindow?
-    var initialProperties: [String: Any] = [:]
-
+    override init() {
+        super.init(moduleName: "AutoPlayDashboard")
+    }
+    
     func templateApplicationDashboardScene(
         _ templateApplicationDashboardScene:
             CPTemplateApplicationDashboardScene,
@@ -22,8 +22,8 @@ class DashboardSceneDelegate: UIResponder,
         to window: UIWindow
     ) {
         self.window = window
-        self.initialProperties = [
-            "id": self.moduleName,
+        
+        let props: [String: Any] = [
             "colorScheme": window.screen.traitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
@@ -32,8 +32,8 @@ class DashboardSceneDelegate: UIResponder,
                 "scale": window.screen.scale,
             ],
         ]
-
-        ViewUtils.showLaunchScreen(window: window)
+        
+        connect(props: props)
         // RNCarPlay.connect(withDashboardController: dashboardController, window: window)
     }
 
@@ -44,14 +44,23 @@ class DashboardSceneDelegate: UIResponder,
             CPDashboardController,
         from window: UIWindow
     ) {
+        disconnect()
         // RNCarPlay.disconnectFromDashboardController()
     }
 
+    func sceneWillResignActive(_ scene: UIScene) {
+        setState(state: .willdisappear)
+    }
+
     func sceneDidEnterBackground(_ scene: UIScene) {
-        // RNCarPlay.dashboardStateChanged(false)
+        setState(state: .diddisappear)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        // RNCarPlay.dashboardStateChanged(true)
+        setState(state: .willappear)
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        setState(state: .didappear)
     }
 }

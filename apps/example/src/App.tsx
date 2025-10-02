@@ -25,10 +25,9 @@ function AppContent() {
     listeners.push(AutoPlay.addListener('didConnect', () => setIsConnected(true)));
     listeners.push(AutoPlay.addListener('didDisconnect', () => setIsConnected(false)));
     listeners.push(
-      AutoPlay.addListenerTemplateState('root', 'didAppear', () => setIsRootVisible(true))
-    );
-    listeners.push(
-      AutoPlay.addListenerTemplateState('root', 'willDisappear', () => setIsRootVisible(false))
+      AutoPlay.addListenerRenderState('AutoPlayRoot', (state) =>
+        setIsRootVisible(state === 'didAppear')
+      )
     );
 
     return () => {
@@ -40,8 +39,8 @@ function AppContent() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Android Auto connected: {String(isConnected)}</Text>
-      <Text>Root template visible: {String(isRootVisible)}</Text>
+      <Text>AutoPlay connected: {String(isConnected)}</Text>
+      <Text>Head unit root visible: {String(isRootVisible)}</Text>
     </SafeAreaView>
   );
 }

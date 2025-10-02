@@ -9,14 +9,13 @@ import Foundation
 import React
 
 @objc(HeadUnitSceneDelegate)
-class HeadUnitSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate,
-    AutoPlayScene
+class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate
 {
-    var window: CPWindow?
     var interfaceController: CPInterfaceController?
-
-    var initialProperties: [String: Any] = [:]
-    let moduleName = "AutoPlayRoot"
+    
+    override init() {
+        super.init(moduleName: SceneStore.rootModuleName)
+    }
 
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -25,8 +24,8 @@ class HeadUnitSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate,
     ) {
         self.window = window
         self.interfaceController = interfaceController
-        self.initialProperties = [
-            "id": moduleName,
+                
+        let props: [String: Any] = [
             "colorScheme": window.screen.traitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
@@ -35,10 +34,8 @@ class HeadUnitSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate,
                 "scale": window.screen.scale,
             ],
         ]
-
-        ViewUtils.showLaunchScreen(window: window)
-        SceneStore.addScene(moduleName: moduleName, scene: self)
         
+        connect(props: props)
         HybridAutoPlay.emit(event: .didconnect)
     }
 
@@ -48,52 +45,22 @@ class HeadUnitSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate,
             CPInterfaceController
     ) {
         HybridAutoPlay.emit(event: .diddisconnect)
-        SceneStore.removeScene(moduleName: moduleName)
+        disconnect()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        HybridAutoPlay.emitTemplateState(
-            templateId: moduleName,
-            templateState: .willdisappear
-        )
+        setState(state: .willdisappear)
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        HybridAutoPlay.emitTemplateState(
-            templateId: moduleName,
-            templateState: .diddisappear
-        )
+        setState(state: .diddisappear)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        HybridAutoPlay.emitTemplateState(
-            templateId: moduleName,
-            templateState: .willappear
-        )
+        setState(state: .willappear)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        HybridAutoPlay.emitTemplateState(
-            templateId: moduleName,
-            templateState: .didappear
-        )
-    }
-
-    func setRootTemplate() {
-        DispatchQueue.main.async {
-            guard let window = self.window else {
-                return
-            }
-            
-            guard
-                let rootView = ViewUtils.getRootView(
-                    moduleName: self.moduleName,
-                    initialProps: self.initialProperties
-                )
-            else { return }
-            
-            window.rootViewController = CarPlayViewController(view: rootView)
-            window.makeKeyAndVisible()
-        }
+        setState(state: .didappear)
     }
 }

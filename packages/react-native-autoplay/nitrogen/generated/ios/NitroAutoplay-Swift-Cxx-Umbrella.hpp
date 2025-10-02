@@ -30,12 +30,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEventPayload; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 // Forward declaration of `TemplateEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
-// Forward declaration of `TemplateState` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class TemplateState; }
 // Forward declaration of `Translation` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
 // Forward declaration of `Velocity` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
 // Include C++ defined types
 #include "AlertAction.hpp"
@@ -49,9 +49,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
 #include "PressEventPayload.hpp"
 #include "TemplateConfig.hpp"
 #include "TemplateEventPayload.hpp"
-#include "TemplateState.hpp"
 #include "Translation.hpp"
 #include "Velocity.hpp"
+#include "VisibilityState.hpp"
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>

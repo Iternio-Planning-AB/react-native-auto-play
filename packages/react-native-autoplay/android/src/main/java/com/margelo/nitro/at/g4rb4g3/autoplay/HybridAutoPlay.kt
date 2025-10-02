@@ -1,5 +1,7 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
+import android.util.Log
+
 class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListener(
         eventType: EventName, callback: () -> Unit
@@ -41,21 +43,51 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun addListenerTemplateState(
-        templateId: String, templateState: TemplateState, callback: (TemplateEventPayload?) -> Unit
+        templateId: String, callback: (TemplateEventPayload) -> Unit
     ): () -> Unit {
-        val callbacks = templateStateListeners.getOrPut(templateId) { mutableMapOf() }
-            .getOrPut(templateState) { mutableListOf() }
-        callbacks.add(callback)
+        templateStateListeners[templateId] = callback
 
         return {
-            templateStateListeners[templateId]?.get(templateState)?.removeAll { it === callback }
-            if (templateStateListeners[templateId]?.isEmpty() == true) {
-                templateStateListeners.remove(templateId)
-            }
+            templateStateListeners.remove(templateId)
         }
     }
 
+    override fun addListenerRenderState(
+        mapTemplateId: String, callback: (VisibilityState) -> Unit
+    ): () -> Unit {
+        renderStateListeners[mapTemplateId] = callback
+
+        AndroidAutoSession.getState(mapTemplateId)?.let {
+            callback(it)
+        }
+
+        return {
+            renderStateListeners.remove(mapTemplateId)
+        }
+    }
+
+    override fun createAlertTemplate(config: AlertTemplateConfig) {
+        TODO("Not yet implemented")
+    }
+
+    override fun presentTemplate(templateId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun dismissTemplate(templateId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun createMapTemplate(config: NitroMapTemplateConfig) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setRootTemplate(templateId: String) {
+        TODO("Not yet implemented")
+    }
+
     companion object {
+        val TAG = "HybridAutoPlay"
         private val listeners = mutableMapOf<EventName, MutableList<() -> Unit>>()
         private val didPressListeners = mutableListOf<(PressEventPayload) -> Unit>()
         private val didUpdatePinchGestureListeners =
@@ -63,15 +95,23 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         private val didUpdatePanGestureWithTranslationListeners =
             mutableListOf<(PanGestureWithTranslationEventPayload) -> Unit>()
 
-        private val templateStateListeners =
-            mutableMapOf<String, MutableMap<TemplateState, MutableList<(TemplateEventPayload?) -> Unit>>>()
+        private val templateStateListeners = mutableMapOf<String, (TemplateEventPayload) -> Unit>()
+        private val renderStateListeners = mutableMapOf<String, (VisibilityState) -> Unit>()
 
         fun emit(event: EventName) {
             listeners[event]?.forEach { it() }
         }
 
-        fun emitTemplateState(templateId: String, templateState: TemplateState) {
-            templateStateListeners[templateId]?.get(templateState)?.forEach { it(null) }
+        fun emitTemplateState(templateId: String, templateState: VisibilityState) {
+            templateStateListeners[templateId]?.let {
+                it(TemplateEventPayload(null, templateState))
+            }
+        }
+
+        fun emitRenderState(mapTemplateId: String, state: VisibilityState) {
+            renderStateListeners[mapTemplateId]?.let {
+                it(state)
+            }
         }
     }
 }

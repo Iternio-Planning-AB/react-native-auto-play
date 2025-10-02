@@ -21,10 +21,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct PressEventPayload; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct PinchGestureEventPayload; }
 // Forward declaration of `PanGestureWithTranslationEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct PanGestureWithTranslationEventPayload; }
-// Forward declaration of `TemplateState` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class TemplateState; }
 // Forward declaration of `TemplateEventPayload` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 // Forward declaration of `AlertTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 // Forward declaration of `TemplateConfig` to properly resolve imports.
@@ -36,9 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateConfig; }
 #include "PinchGestureEventPayload.hpp"
 #include "PanGestureWithTranslationEventPayload.hpp"
 #include <string>
-#include "TemplateState.hpp"
 #include "TemplateEventPayload.hpp"
-#include <optional>
+#include "VisibilityState.hpp"
 #include "AlertTemplateConfig.hpp"
 #include "TemplateConfig.hpp"
 
@@ -77,7 +76,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       virtual std::function<void()> addListenerDidPress(const std::function<void(const PressEventPayload& /* payload */)>& callback) = 0;
       virtual std::function<void()> addListenerDidUpdatePinchGesture(const std::function<void(const PinchGestureEventPayload& /* payload */)>& callback) = 0;
       virtual std::function<void()> addListenerDidUpdatePanGestureWithTranslation(const std::function<void(const PanGestureWithTranslationEventPayload& /* payload */)>& callback) = 0;
-      virtual std::function<void()> addListenerTemplateState(const std::string& templateId, TemplateState templateState, const std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerTemplateState(const std::string& templateId, const std::function<void(const TemplateEventPayload& /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) = 0;
       virtual void createAlertTemplate(const AlertTemplateConfig& config) = 0;
       virtual void presentTemplate(const std::string& templateId) = 0;
       virtual void dismissTemplate(const std::string& templateId) = 0;

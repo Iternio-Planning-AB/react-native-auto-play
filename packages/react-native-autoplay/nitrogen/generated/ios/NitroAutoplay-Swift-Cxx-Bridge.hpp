@@ -28,6 +28,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct TemplateEventPayload; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Translation; }
 // Forward declaration of `Velocity` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Velocity; }
+// Forward declaration of `VisibilityState` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridAutoPlaySpec_cxx` to properly resolve imports.
@@ -44,6 +46,7 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 #include "TemplateEventPayload.hpp"
 #include "Translation.hpp"
 #include "Velocity.hpp"
+#include "VisibilityState.hpp"
 #include <NitroModules/FastVectorCopy.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
@@ -162,41 +165,63 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return Func_void_PanGestureWithTranslationEventPayload_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<TemplateEventPayload>
+  // pragma MARK: std::optional<bool>
   /**
-   * Specialized version of `std::optional<TemplateEventPayload>`.
+   * Specialized version of `std::optional<bool>`.
    */
-  using std__optional_TemplateEventPayload_ = std::optional<TemplateEventPayload>;
-  inline std::optional<TemplateEventPayload> create_std__optional_TemplateEventPayload_(const TemplateEventPayload& value) noexcept {
-    return std::optional<TemplateEventPayload>(value);
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
   }
-  inline bool has_value_std__optional_TemplateEventPayload_(const std::optional<TemplateEventPayload>& optional) noexcept {
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
     return optional.has_value();
   }
-  inline TemplateEventPayload get_std__optional_TemplateEventPayload_(const std::optional<TemplateEventPayload>& optional) noexcept {
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
     return *optional;
   }
   
-  // pragma MARK: std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>
+  // pragma MARK: std::function<void(const TemplateEventPayload& /* payload */)>
   /**
-   * Specialized version of `std::function<void(const std::optional<TemplateEventPayload>&)>`.
+   * Specialized version of `std::function<void(const TemplateEventPayload&)>`.
    */
-  using Func_void_std__optional_TemplateEventPayload_ = std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>;
+  using Func_void_TemplateEventPayload = std::function<void(const TemplateEventPayload& /* payload */)>;
   /**
-   * Wrapper class for a `std::function<void(const std::optional<TemplateEventPayload>& / * payload * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const TemplateEventPayload& / * payload * /)>`, this can be used from Swift.
    */
-  class Func_void_std__optional_TemplateEventPayload__Wrapper final {
+  class Func_void_TemplateEventPayload_Wrapper final {
   public:
-    explicit Func_void_std__optional_TemplateEventPayload__Wrapper(std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>&& func): _function(std::make_unique<std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>>(std::move(func))) {}
-    inline void call(std::optional<TemplateEventPayload> payload) const noexcept {
+    explicit Func_void_TemplateEventPayload_Wrapper(std::function<void(const TemplateEventPayload& /* payload */)>&& func): _function(std::make_unique<std::function<void(const TemplateEventPayload& /* payload */)>>(std::move(func))) {}
+    inline void call(TemplateEventPayload payload) const noexcept {
       _function->operator()(payload);
     }
   private:
-    std::unique_ptr<std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>> _function;
+    std::unique_ptr<std::function<void(const TemplateEventPayload& /* payload */)>> _function;
   } SWIFT_NONCOPYABLE;
-  Func_void_std__optional_TemplateEventPayload_ create_Func_void_std__optional_TemplateEventPayload_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__optional_TemplateEventPayload__Wrapper wrap_Func_void_std__optional_TemplateEventPayload_(Func_void_std__optional_TemplateEventPayload_ value) noexcept {
-    return Func_void_std__optional_TemplateEventPayload__Wrapper(std::move(value));
+  Func_void_TemplateEventPayload create_Func_void_TemplateEventPayload(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_TemplateEventPayload_Wrapper wrap_Func_void_TemplateEventPayload(Func_void_TemplateEventPayload value) noexcept {
+    return Func_void_TemplateEventPayload_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(VisibilityState /* payload */)>
+  /**
+   * Specialized version of `std::function<void(VisibilityState)>`.
+   */
+  using Func_void_VisibilityState = std::function<void(VisibilityState /* payload */)>;
+  /**
+   * Wrapper class for a `std::function<void(VisibilityState / * payload * /)>`, this can be used from Swift.
+   */
+  class Func_void_VisibilityState_Wrapper final {
+  public:
+    explicit Func_void_VisibilityState_Wrapper(std::function<void(VisibilityState /* payload */)>&& func): _function(std::make_unique<std::function<void(VisibilityState /* payload */)>>(std::move(func))) {}
+    inline void call(int payload) const noexcept {
+      _function->operator()(static_cast<VisibilityState>(payload));
+    }
+  private:
+    std::unique_ptr<std::function<void(VisibilityState /* payload */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_VisibilityState create_Func_void_VisibilityState(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_VisibilityState_Wrapper wrap_Func_void_VisibilityState(Func_void_VisibilityState value) noexcept {
+    return Func_void_VisibilityState_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::vector<std::string>

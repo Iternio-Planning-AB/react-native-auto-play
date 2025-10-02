@@ -1,6 +1,7 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
 import android.content.Intent
+import android.util.Log
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
@@ -23,7 +24,6 @@ import java.util.WeakHashMap
 class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication: ReactApplication) :
     Session() {
 
-
     private val isCluster = sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER
     private val clusterTemplateId = if (isCluster) UUID.randomUUID().toString() else null
     private val marker = clusterTemplateId ?: ROOT_SESSION
@@ -34,35 +34,14 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         screen = AndroidAutoScreen(carContext, isCluster, marker)
 
         sessions.put(
-            marker, ScreenContext(carContext = carContext, session = this, screen = screen)
+            marker, ScreenContext(carContext = carContext, session = this, screen = screen, state = VisibilityState.DIDDISAPPEAR)
         )
 
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onDestroy(owner: LifecycleOwner) {
-                sessions.remove(marker)
-
-                if (isCluster) {
-                    return
-                }
-
-                HybridAutoPlay.emit(EventName.DIDDISCONNECT)
-            }
-        })
+        lifecycle.addObserver(sessionLifecycleObserver)
 
         CoroutineScope(Dispatchers.Main).launch {
             reactContext = ReactContextResolver.getReactContext(reactApplication)
             reactContext.addLifecycleEventListener(reactLifecycleObserver)
-
-            val appRegistry = reactContext.getJSModule(AppRegistry::class.java)
-                ?: throw ClassNotFoundException("could not get AppRegistry instance")
-            val jsAppModuleName = if (isCluster) "AndroidAutoCluster" else "AndroidAuto"
-            val appParams = WritableNativeMap().apply {
-                putMap("initialProps", Arguments.createMap().apply {
-                    putString("id", clusterTemplateId)
-                })
-            }
-
-            appRegistry.runApplication(jsAppModuleName, appParams)
 
             if (isCluster) {
                 return@launch
@@ -72,6 +51,38 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         }
 
         return screen
+    }
+
+    private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            sessions[marker]?.state = VisibilityState.WILLAPPEAR
+            HybridAutoPlay.emitRenderState(marker, VisibilityState.WILLAPPEAR)
+        }
+
+        override fun onResume(owner: LifecycleOwner) {
+            sessions[marker]?.state = VisibilityState.DIDAPPEAR
+            HybridAutoPlay.emitRenderState(marker, VisibilityState.DIDAPPEAR)
+        }
+
+        override fun onPause(owner: LifecycleOwner) {
+            sessions[marker]?.state = VisibilityState.WILLDISAPPEAR
+            HybridAutoPlay.emitRenderState(marker, VisibilityState.WILLDISAPPEAR)
+        }
+
+        override fun onStop(owner: LifecycleOwner) {
+            sessions[marker]?.state = VisibilityState.DIDDISAPPEAR
+            HybridAutoPlay.emitRenderState(marker, VisibilityState.DIDDISAPPEAR)
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            sessions.remove(marker)
+
+            if (isCluster) {
+                return
+            }
+
+            HybridAutoPlay.emit(EventName.DIDDISCONNECT)
+        }
     }
 
     private val reactLifecycleObserver = object : LifecycleEventListener {
@@ -85,18 +96,22 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
     }
 
     data class ScreenContext(
-        val carContext: CarContext, val screen: AndroidAutoScreen, val session: AndroidAutoSession
+        val carContext: CarContext, val screen: AndroidAutoScreen, val session: AndroidAutoSession, var state: VisibilityState
     )
 
     companion object {
         const val TAG = "AndroidAutoSession"
-        const val ROOT_SESSION = "root"
+        const val ROOT_SESSION = "AutoPlayRoot"
 
         private lateinit var reactContext: ReactContext
         private val sessions: WeakHashMap<String, ScreenContext> = WeakHashMap(4, 0.5f)
 
         fun getIsConnected(): Boolean {
             return sessions[ROOT_SESSION] != null
+        }
+
+        fun getState(marker: String): VisibilityState? {
+            return sessions[marker]?.state
         }
 
         fun getCarContext(marker: String): CarContext? {

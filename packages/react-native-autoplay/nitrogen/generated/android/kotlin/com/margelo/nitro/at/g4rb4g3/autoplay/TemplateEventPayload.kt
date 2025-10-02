@@ -23,7 +23,10 @@ data class TemplateEventPayload
   constructor(
     @DoNotStrip
     @Keep
-    val animated: Boolean
+    val animated: Boolean?,
+    @DoNotStrip
+    @Keep
+    val state: VisibilityState
   ) {
   /* main constructor */
 }

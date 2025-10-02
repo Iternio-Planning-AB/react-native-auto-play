@@ -45,11 +45,19 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const std::optional<TemplateEventPayload>& /* payload */)>
-  Func_void_std__optional_TemplateEventPayload_ create_Func_void_std__optional_TemplateEventPayload_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroAutoplay::Func_void_std__optional_TemplateEventPayload_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const std::optional<TemplateEventPayload>& payload) mutable -> void {
+  // pragma MARK: std::function<void(const TemplateEventPayload& /* payload */)>
+  Func_void_TemplateEventPayload create_Func_void_TemplateEventPayload(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_TemplateEventPayload::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const TemplateEventPayload& payload) mutable -> void {
       swiftClosure.call(payload);
+    };
+  }
+  
+  // pragma MARK: std::function<void(VisibilityState /* payload */)>
+  Func_void_VisibilityState create_Func_void_VisibilityState(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_VisibilityState::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](VisibilityState payload) mutable -> void {
+      swiftClosure.call(static_cast<int>(payload));
     };
   }
   

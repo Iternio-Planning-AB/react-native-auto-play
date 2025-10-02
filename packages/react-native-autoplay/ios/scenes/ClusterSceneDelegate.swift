@@ -9,17 +9,13 @@ import UIKit
 
 @available(iOS 15.4, *)
 @objc(ClusterSceneDelegate)
-class ClusterSceneDelegate: UIResponder,
+class ClusterSceneDelegate: AutoPlayScene,
     CPTemplateApplicationInstrumentClusterSceneDelegate,
     CPInstrumentClusterControllerDelegate
 {
-    let clusterId: String
-    var window: UIWindow?
-    var initialProperties: [String: Any] = [:]
-
     override init() {
-        self.clusterId = UUID().uuidString
-        super.init()
+        let moduleName = UUID().uuidString
+        super.init(moduleName: moduleName)
     }
 
     func templateApplicationInstrumentClusterScene(
@@ -48,8 +44,8 @@ class ClusterSceneDelegate: UIResponder,
         _ instrumentClusterWindow: UIWindow
     ) {
         self.window = instrumentClusterWindow
-        self.initialProperties = [
-            "id": self.clusterId,
+        
+        let props: [String: Any] = [
             "colorScheme": instrumentClusterWindow.screen.traitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
@@ -58,25 +54,33 @@ class ClusterSceneDelegate: UIResponder,
                 "scale": instrumentClusterWindow.screen.scale,
             ],
         ]
-
-        ViewUtils.showLaunchScreen(window: instrumentClusterWindow)
+        
+        connect(props: props)
     }
 
     func instrumentClusterControllerDidDisconnectWindow(
         _ instrumentClusterWindow: UIWindow
     ) {
-        self.window = nil
+        disconnect()
     }
 
     func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {
         //        RNCarPlay.clusterContentStyleDidChange(contentStyle, clusterId: clusterId)
     }
 
+    func sceneWillResignActive(_ scene: UIScene) {
+        setState(state: .willdisappear)
+    }
+
     func sceneDidEnterBackground(_ scene: UIScene) {
-        //        RNCarPlay.clusterStateChanged(clusterId, isVisible: false)
+        setState(state: .diddisappear)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        //        RNCarPlay.clusterStateChanged(clusterId, isVisible: true)
+        setState(state: .willappear)
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        setState(state: .didappear)
     }
 }

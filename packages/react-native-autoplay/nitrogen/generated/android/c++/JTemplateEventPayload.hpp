@@ -10,7 +10,9 @@
 #include <fbjni/fbjni.h>
 #include "TemplateEventPayload.hpp"
 
-
+#include "JVisibilityState.hpp"
+#include "VisibilityState.hpp"
+#include <optional>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -31,10 +33,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     [[nodiscard]]
     TemplateEventPayload toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldAnimated = clazz->getField<jboolean>("animated");
-      jboolean animated = this->getFieldValue(fieldAnimated);
+      static const auto fieldAnimated = clazz->getField<jni::JBoolean>("animated");
+      jni::local_ref<jni::JBoolean> animated = this->getFieldValue(fieldAnimated);
+      static const auto fieldState = clazz->getField<JVisibilityState>("state");
+      jni::local_ref<JVisibilityState> state = this->getFieldValue(fieldState);
       return TemplateEventPayload(
-        static_cast<bool>(animated)
+        animated != nullptr ? std::make_optional(static_cast<bool>(animated->value())) : std::nullopt,
+        state->toCpp()
       );
     }
 
@@ -45,7 +50,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     [[maybe_unused]]
     static jni::local_ref<JTemplateEventPayload::javaobject> fromCpp(const TemplateEventPayload& value) {
       return newInstance(
-        value.animated
+        value.animated.has_value() ? jni::JBoolean::valueOf(value.animated.value()) : nullptr,
+        JVisibilityState::fromCpp(value.state)
       );
     }
   };
