@@ -1,7 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
-import android.util.Log
-
 class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListener(
         eventType: EventName, callback: () -> Unit
@@ -45,24 +43,40 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListenerTemplateState(
         templateId: String, callback: (TemplateEventPayload) -> Unit
     ): () -> Unit {
-        templateStateListeners[templateId] = callback
+        val callbacks = templateStateListeners.getOrPut(templateId) {
+            mutableListOf()
+        }
+        callbacks.add(callback)
 
         return {
-            templateStateListeners.remove(templateId)
+            templateStateListeners[templateId]?.let {
+                it.remove(callback)
+                if (it.isEmpty()) {
+                    templateStateListeners.remove(templateId)
+                }
+            }
         }
     }
 
     override fun addListenerRenderState(
         mapTemplateId: String, callback: (VisibilityState) -> Unit
     ): () -> Unit {
-        renderStateListeners[mapTemplateId] = callback
+        val callbacks = renderStateListeners.getOrPut(mapTemplateId) {
+            mutableListOf()
+        }
+        callbacks.add(callback)
 
         AndroidAutoSession.getState(mapTemplateId)?.let {
             callback(it)
         }
 
         return {
-            renderStateListeners.remove(mapTemplateId)
+            renderStateListeners[mapTemplateId]?.let {
+                it.remove(callback)
+                if (it.isEmpty()) {
+                    renderStateListeners.remove(mapTemplateId)
+                }
+            }
         }
     }
 
@@ -79,7 +93,14 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun createMapTemplate(config: NitroMapTemplateConfig) {
-        // TODO
+        addListenerTemplateState(config.id) { state ->
+            when (state.state) {
+                VisibilityState.WILLAPPEAR -> config.onWillAppear?.let { it() }
+                VisibilityState.DIDAPPEAR -> config.onDidAppear?.let { it() }
+                VisibilityState.WILLDISAPPEAR -> config.onWillDisappear?.let { it() }
+                VisibilityState.DIDDISAPPEAR -> config.onDidDisappear?.let { it() }
+            }
+        }
     }
 
     override fun setRootTemplate(templateId: String) {
@@ -95,21 +116,23 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         private val didUpdatePanGestureWithTranslationListeners =
             mutableListOf<(PanGestureWithTranslationEventPayload) -> Unit>()
 
-        private val templateStateListeners = mutableMapOf<String, (TemplateEventPayload) -> Unit>()
-        private val renderStateListeners = mutableMapOf<String, (VisibilityState) -> Unit>()
+        private val templateStateListeners =
+            mutableMapOf<String, MutableList<(TemplateEventPayload) -> Unit>>()
+        private val renderStateListeners =
+            mutableMapOf<String, MutableList<(VisibilityState) -> Unit>>()
 
         fun emit(event: EventName) {
             listeners[event]?.forEach { it() }
         }
 
         fun emitTemplateState(templateId: String, templateState: VisibilityState) {
-            templateStateListeners[templateId]?.let {
+            templateStateListeners[templateId]?.forEach {
                 it(TemplateEventPayload(null, templateState))
             }
         }
 
         fun emitRenderState(mapTemplateId: String, state: VisibilityState) {
-            renderStateListeners[mapTemplateId]?.let {
+            renderStateListeners[mapTemplateId]?.forEach {
                 it(state)
             }
         }

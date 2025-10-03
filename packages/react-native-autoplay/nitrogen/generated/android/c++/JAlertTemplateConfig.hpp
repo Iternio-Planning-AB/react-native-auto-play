@@ -12,12 +12,9 @@
 
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
-#include "BaseEvent.hpp"
 #include "JAlertAction.hpp"
 #include "JAlertStyle.hpp"
-#include "JBaseEvent.hpp"
 #include "JFunc_void.hpp"
-#include "JFunc_void_BaseEvent.hpp"
 #include <functional>
 #include <optional>
 #include <string>
@@ -48,16 +45,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<jni::JArrayClass<JAlertAction>> actions = this->getFieldValue(fieldActions);
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
-      static const auto fieldOnWillAppear = clazz->getField<JFunc_void_BaseEvent::javaobject>("onWillAppear");
-      jni::local_ref<JFunc_void_BaseEvent::javaobject> onWillAppear = this->getFieldValue(fieldOnWillAppear);
-      static const auto fieldOnWillDisappear = clazz->getField<JFunc_void_BaseEvent::javaobject>("onWillDisappear");
-      jni::local_ref<JFunc_void_BaseEvent::javaobject> onWillDisappear = this->getFieldValue(fieldOnWillDisappear);
-      static const auto fieldOnDidAppear = clazz->getField<JFunc_void_BaseEvent::javaobject>("onDidAppear");
-      jni::local_ref<JFunc_void_BaseEvent::javaobject> onDidAppear = this->getFieldValue(fieldOnDidAppear);
-      static const auto fieldOnDidDisappear = clazz->getField<JFunc_void_BaseEvent::javaobject>("onDidDisappear");
-      jni::local_ref<JFunc_void_BaseEvent::javaobject> onDidDisappear = this->getFieldValue(fieldOnDidDisappear);
-      static const auto fieldOnPoppedToRoot = clazz->getField<JFunc_void_BaseEvent::javaobject>("onPoppedToRoot");
-      jni::local_ref<JFunc_void_BaseEvent::javaobject> onPoppedToRoot = this->getFieldValue(fieldOnPoppedToRoot);
+      static const auto fieldOnWillAppear = clazz->getField<JFunc_void::javaobject>("onWillAppear");
+      jni::local_ref<JFunc_void::javaobject> onWillAppear = this->getFieldValue(fieldOnWillAppear);
+      static const auto fieldOnWillDisappear = clazz->getField<JFunc_void::javaobject>("onWillDisappear");
+      jni::local_ref<JFunc_void::javaobject> onWillDisappear = this->getFieldValue(fieldOnWillDisappear);
+      static const auto fieldOnDidAppear = clazz->getField<JFunc_void::javaobject>("onDidAppear");
+      jni::local_ref<JFunc_void::javaobject> onDidAppear = this->getFieldValue(fieldOnDidAppear);
+      static const auto fieldOnDidDisappear = clazz->getField<JFunc_void::javaobject>("onDidDisappear");
+      jni::local_ref<JFunc_void::javaobject> onDidDisappear = this->getFieldValue(fieldOnDidDisappear);
+      static const auto fieldOnPoppedToRoot = clazz->getField<JFunc_void::javaobject>("onPoppedToRoot");
+      jni::local_ref<JFunc_void::javaobject> onPoppedToRoot = this->getFieldValue(fieldOnPoppedToRoot);
       return AlertTemplateConfig(
         [&]() {
           size_t __size = titleVariants->size();
@@ -80,58 +77,58 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
           return __vector;
         }()) : std::nullopt,
         id->toStdString(),
-        onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(const BaseEvent& /* e */)> {
-          if (onWillAppear->isInstanceOf(JFunc_void_BaseEvent_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_BaseEvent_cxx::javaobject>(onWillAppear);
+        onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onWillAppear->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onWillAppear);
             return downcast->cthis()->getFunction();
           } else {
             auto onWillAppearRef = jni::make_global(onWillAppear);
-            return [onWillAppearRef](BaseEvent e) -> void {
-              return onWillAppearRef->invoke(e);
+            return [onWillAppearRef]() -> void {
+              return onWillAppearRef->invoke();
             };
           }
         }()) : std::nullopt,
-        onWillDisappear != nullptr ? std::make_optional([&]() -> std::function<void(const BaseEvent& /* e */)> {
-          if (onWillDisappear->isInstanceOf(JFunc_void_BaseEvent_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_BaseEvent_cxx::javaobject>(onWillDisappear);
+        onWillDisappear != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onWillDisappear->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onWillDisappear);
             return downcast->cthis()->getFunction();
           } else {
             auto onWillDisappearRef = jni::make_global(onWillDisappear);
-            return [onWillDisappearRef](BaseEvent e) -> void {
-              return onWillDisappearRef->invoke(e);
+            return [onWillDisappearRef]() -> void {
+              return onWillDisappearRef->invoke();
             };
           }
         }()) : std::nullopt,
-        onDidAppear != nullptr ? std::make_optional([&]() -> std::function<void(const BaseEvent& /* e */)> {
-          if (onDidAppear->isInstanceOf(JFunc_void_BaseEvent_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_BaseEvent_cxx::javaobject>(onDidAppear);
+        onDidAppear != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onDidAppear->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onDidAppear);
             return downcast->cthis()->getFunction();
           } else {
             auto onDidAppearRef = jni::make_global(onDidAppear);
-            return [onDidAppearRef](BaseEvent e) -> void {
-              return onDidAppearRef->invoke(e);
+            return [onDidAppearRef]() -> void {
+              return onDidAppearRef->invoke();
             };
           }
         }()) : std::nullopt,
-        onDidDisappear != nullptr ? std::make_optional([&]() -> std::function<void(const BaseEvent& /* e */)> {
-          if (onDidDisappear->isInstanceOf(JFunc_void_BaseEvent_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_BaseEvent_cxx::javaobject>(onDidDisappear);
+        onDidDisappear != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onDidDisappear->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onDidDisappear);
             return downcast->cthis()->getFunction();
           } else {
             auto onDidDisappearRef = jni::make_global(onDidDisappear);
-            return [onDidDisappearRef](BaseEvent e) -> void {
-              return onDidDisappearRef->invoke(e);
+            return [onDidDisappearRef]() -> void {
+              return onDidDisappearRef->invoke();
             };
           }
         }()) : std::nullopt,
-        onPoppedToRoot != nullptr ? std::make_optional([&]() -> std::function<void(const BaseEvent& /* e */)> {
-          if (onPoppedToRoot->isInstanceOf(JFunc_void_BaseEvent_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_BaseEvent_cxx::javaobject>(onPoppedToRoot);
+        onPoppedToRoot != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onPoppedToRoot->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPoppedToRoot);
             return downcast->cthis()->getFunction();
           } else {
             auto onPoppedToRootRef = jni::make_global(onPoppedToRoot);
-            return [onPoppedToRootRef](BaseEvent e) -> void {
-              return onPoppedToRootRef->invoke(e);
+            return [onPoppedToRootRef]() -> void {
+              return onPoppedToRootRef->invoke();
             };
           }
         }()) : std::nullopt
@@ -164,11 +161,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
           return __array;
         }() : nullptr,
         jni::make_jstring(value.id),
-        value.onWillAppear.has_value() ? JFunc_void_BaseEvent_cxx::fromCpp(value.onWillAppear.value()) : nullptr,
-        value.onWillDisappear.has_value() ? JFunc_void_BaseEvent_cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
-        value.onDidAppear.has_value() ? JFunc_void_BaseEvent_cxx::fromCpp(value.onDidAppear.value()) : nullptr,
-        value.onDidDisappear.has_value() ? JFunc_void_BaseEvent_cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
-        value.onPoppedToRoot.has_value() ? JFunc_void_BaseEvent_cxx::fromCpp(value.onPoppedToRoot.value()) : nullptr
+        value.onWillAppear.has_value() ? JFunc_void_cxx::fromCpp(value.onWillAppear.value()) : nullptr,
+        value.onWillDisappear.has_value() ? JFunc_void_cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
+        value.onDidAppear.has_value() ? JFunc_void_cxx::fromCpp(value.onDidAppear.value()) : nullptr,
+        value.onDidDisappear.has_value() ? JFunc_void_cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
+        value.onPoppedToRoot.has_value() ? JFunc_void_cxx::fromCpp(value.onPoppedToRoot.value()) : nullptr
       );
     }
   };

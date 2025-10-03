@@ -21,7 +21,14 @@ const AutoPlayRoot = (props) => {
 };
 
 const registerRunnable = () => {
-  const template = new MapTemplate({ component: AutoPlayRoot, id: 'AutoPlayRoot' });
+  const template = new MapTemplate({
+    component: AutoPlayRoot,
+    id: 'AutoPlayRoot',
+    onWillAppear: () => console.log('onWillAppear'),
+    onDidAppear: () => console.log('onDidAppear'),
+    onWillDisappear: () => console.log('onWillDisappear'),
+    onDidDisappear: () => console.log('onDidDisappear'),
+  });
 
   const onConnect = () => {
     template.setRootTemplate();

@@ -18,11 +18,9 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `BaseEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
+
 
 #include <string>
-#include "BaseEvent.hpp"
 #include <functional>
 #include <optional>
 
@@ -34,15 +32,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
   struct NitroMapTemplateConfig {
   public:
     std::string id     SWIFT_PRIVATE;
-    std::optional<std::function<void(const BaseEvent& /* e */)>> onWillAppear     SWIFT_PRIVATE;
-    std::optional<std::function<void(const BaseEvent& /* e */)>> onWillDisappear     SWIFT_PRIVATE;
-    std::optional<std::function<void(const BaseEvent& /* e */)>> onDidAppear     SWIFT_PRIVATE;
-    std::optional<std::function<void(const BaseEvent& /* e */)>> onDidDisappear     SWIFT_PRIVATE;
-    std::optional<std::function<void(const BaseEvent& /* e */)>> onPoppedToRoot     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onWillAppear     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onWillDisappear     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onDidAppear     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onDidDisappear     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onPoppedToRoot     SWIFT_PRIVATE;
 
   public:
     NitroMapTemplateConfig() = default;
-    explicit NitroMapTemplateConfig(std::string id, std::optional<std::function<void(const BaseEvent& /* e */)>> onWillAppear, std::optional<std::function<void(const BaseEvent& /* e */)>> onWillDisappear, std::optional<std::function<void(const BaseEvent& /* e */)>> onDidAppear, std::optional<std::function<void(const BaseEvent& /* e */)>> onDidDisappear, std::optional<std::function<void(const BaseEvent& /* e */)>> onPoppedToRoot): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPoppedToRoot(onPoppedToRoot) {}
+    explicit NitroMapTemplateConfig(std::string id, std::optional<std::function<void()>> onWillAppear, std::optional<std::function<void()>> onWillDisappear, std::optional<std::function<void()>> onDidAppear, std::optional<std::function<void()>> onDidDisappear, std::optional<std::function<void()>> onPoppedToRoot): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPoppedToRoot(onPoppedToRoot) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -56,21 +54,21 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::NitroMapTemplateConfig(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillAppear")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillDisappear")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidAppear")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onPoppedToRoot"))
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillAppear")),
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillDisappear")),
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidAppear")),
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onPoppedToRoot"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::NitroMapTemplateConfig& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
-      obj.setProperty(runtime, "onWillAppear", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::toJSI(runtime, arg.onWillAppear));
-      obj.setProperty(runtime, "onWillDisappear", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::toJSI(runtime, arg.onWillDisappear));
-      obj.setProperty(runtime, "onDidAppear", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::toJSI(runtime, arg.onDidAppear));
-      obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::toJSI(runtime, arg.onDidDisappear));
-      obj.setProperty(runtime, "onPoppedToRoot", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::toJSI(runtime, arg.onPoppedToRoot));
+      obj.setProperty(runtime, "onWillAppear", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onWillAppear));
+      obj.setProperty(runtime, "onWillDisappear", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onWillDisappear));
+      obj.setProperty(runtime, "onDidAppear", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onDidAppear));
+      obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onDidDisappear));
+      obj.setProperty(runtime, "onPoppedToRoot", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPoppedToRoot));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -79,11 +77,11 @@ namespace margelo::nitro {
       }
       jsi::Object obj = value.getObject(runtime);
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "id"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::canConvert(runtime, obj.getProperty(runtime, "onWillAppear"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::canConvert(runtime, obj.getProperty(runtime, "onWillDisappear"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidAppear"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::BaseEvent&)>>>::canConvert(runtime, obj.getProperty(runtime, "onPoppedToRoot"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onWillAppear"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onWillDisappear"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onDidAppear"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onPoppedToRoot"))) return false;
       return true;
     }
   };

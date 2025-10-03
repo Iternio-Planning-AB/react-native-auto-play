@@ -26,23 +26,23 @@ data class NitroMapTemplateConfig
     val id: String,
     @DoNotStrip
     @Keep
-    val onWillAppear: Func_void_BaseEvent?,
+    val onWillAppear: Func_void?,
     @DoNotStrip
     @Keep
-    val onWillDisappear: Func_void_BaseEvent?,
+    val onWillDisappear: Func_void?,
     @DoNotStrip
     @Keep
-    val onDidAppear: Func_void_BaseEvent?,
+    val onDidAppear: Func_void?,
     @DoNotStrip
     @Keep
-    val onDidDisappear: Func_void_BaseEvent?,
+    val onDidDisappear: Func_void?,
     @DoNotStrip
     @Keep
-    val onPoppedToRoot: Func_void_BaseEvent?
+    val onPoppedToRoot: Func_void?
   ) {
   /**
    * Initialize a new instance of `NitroMapTemplateConfig` from Kotlin.
    */
-  constructor(id: String, onWillAppear: ((e: BaseEvent) -> Unit)?, onWillDisappear: ((e: BaseEvent) -> Unit)?, onDidAppear: ((e: BaseEvent) -> Unit)?, onDidDisappear: ((e: BaseEvent) -> Unit)?, onPoppedToRoot: ((e: BaseEvent) -> Unit)?)
-       : this(id, onWillAppear?.let { Func_void_BaseEvent_java(it) }, onWillDisappear?.let { Func_void_BaseEvent_java(it) }, onDidAppear?.let { Func_void_BaseEvent_java(it) }, onDidDisappear?.let { Func_void_BaseEvent_java(it) }, onPoppedToRoot?.let { Func_void_BaseEvent_java(it) })
+  constructor(id: String, onWillAppear: (() -> Unit)?, onWillDisappear: (() -> Unit)?, onDidAppear: (() -> Unit)?, onDidDisappear: (() -> Unit)?, onPoppedToRoot: (() -> Unit)?)
+       : this(id, onWillAppear?.let { Func_void_java(it) }, onWillDisappear?.let { Func_void_java(it) }, onDidAppear?.let { Func_void_java(it) }, onDidDisappear?.let { Func_void_java(it) }, onPoppedToRoot?.let { Func_void_java(it) })
 }

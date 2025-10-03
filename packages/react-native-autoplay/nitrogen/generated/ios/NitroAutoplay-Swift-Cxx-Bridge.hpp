@@ -12,8 +12,6 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 // Forward declaration of `AlertStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
-// Forward declaration of `BaseEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
 // Forward declaration of `PanGestureWithTranslationEventPayload` to properly resolve imports.
@@ -38,7 +36,6 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 // Include C++ defined types
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
-#include "BaseEvent.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "PanGestureWithTranslationEventPayload.hpp"
 #include "PinchGestureEventPayload.hpp"
@@ -277,40 +274,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::function<void(const BaseEvent& /* e */)>
+  // pragma MARK: std::optional<std::function<void()>>
   /**
-   * Specialized version of `std::function<void(const BaseEvent&)>`.
+   * Specialized version of `std::optional<std::function<void()>>`.
    */
-  using Func_void_BaseEvent = std::function<void(const BaseEvent& /* e */)>;
-  /**
-   * Wrapper class for a `std::function<void(const BaseEvent& / * e * /)>`, this can be used from Swift.
-   */
-  class Func_void_BaseEvent_Wrapper final {
-  public:
-    explicit Func_void_BaseEvent_Wrapper(std::function<void(const BaseEvent& /* e */)>&& func): _function(std::make_unique<std::function<void(const BaseEvent& /* e */)>>(std::move(func))) {}
-    inline void call(BaseEvent e) const noexcept {
-      _function->operator()(e);
-    }
-  private:
-    std::unique_ptr<std::function<void(const BaseEvent& /* e */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_BaseEvent create_Func_void_BaseEvent(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_BaseEvent_Wrapper wrap_Func_void_BaseEvent(Func_void_BaseEvent value) noexcept {
-    return Func_void_BaseEvent_Wrapper(std::move(value));
+  using std__optional_std__function_void____ = std::optional<std::function<void()>>;
+  inline std::optional<std::function<void()>> create_std__optional_std__function_void____(const std::function<void()>& value) noexcept {
+    return std::optional<std::function<void()>>(value);
   }
-  
-  // pragma MARK: std::optional<std::function<void(const BaseEvent& /* e */)>>
-  /**
-   * Specialized version of `std::optional<std::function<void(const BaseEvent& / * e * /)>>`.
-   */
-  using std__optional_std__function_void_const_BaseEvent_____e______ = std::optional<std::function<void(const BaseEvent& /* e */)>>;
-  inline std::optional<std::function<void(const BaseEvent& /* e */)>> create_std__optional_std__function_void_const_BaseEvent_____e______(const std::function<void(const BaseEvent& /* e */)>& value) noexcept {
-    return std::optional<std::function<void(const BaseEvent& /* e */)>>(value);
-  }
-  inline bool has_value_std__optional_std__function_void_const_BaseEvent_____e______(const std::optional<std::function<void(const BaseEvent& /* e */)>>& optional) noexcept {
+  inline bool has_value_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
     return optional.has_value();
   }
-  inline std::function<void(const BaseEvent& /* e */)> get_std__optional_std__function_void_const_BaseEvent_____e______(const std::optional<std::function<void(const BaseEvent& /* e */)>>& optional) noexcept {
+  inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
     return *optional;
   }
   

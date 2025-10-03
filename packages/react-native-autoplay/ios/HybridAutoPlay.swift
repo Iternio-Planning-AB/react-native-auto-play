@@ -7,11 +7,11 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     ]()
 
     private static var templateStateListeners = [
-        String: (TemplateEventPayload) -> Void
+        String: [(TemplateEventPayload) -> Void]
     ]()
 
     private static var renderStateListeners = [
-        String: (VisibilityState) -> Void
+        String: [(VisibilityState) -> Void]
     ]()
 
     private static var isJsReady = false
@@ -51,7 +51,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     {
         let uuid = UUID().uuidString
         HybridAutoPlay.listeners[eventType, default: [:]][uuid] = callback
-        
+
         if eventType == .didconnect && SceneStore.isRootModuleConnected() {
             callback()
         }
@@ -91,12 +91,23 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         templateId: String,
         callback: @escaping (TemplateEventPayload) -> Void
     ) throws -> () -> Void {
-        HybridAutoPlay.templateStateListeners[templateId] = callback
+        if HybridAutoPlay.templateStateListeners[templateId] != nil {
+            HybridAutoPlay.templateStateListeners[templateId]?.append(callback)
+        } else {
+            HybridAutoPlay.templateStateListeners[templateId] = [callback]
+        }
 
         return {
-            HybridAutoPlay.templateStateListeners.removeValue(
-                forKey: templateId
-            )
+            HybridAutoPlay.templateStateListeners[templateId]?.removeAll {
+                $0 as AnyObject === callback as AnyObject
+            }
+            if HybridAutoPlay.templateStateListeners[templateId]?.isEmpty
+                ?? false
+            {
+                HybridAutoPlay.templateStateListeners.removeValue(
+                    forKey: templateId
+                )
+            }
         }
     }
 
@@ -104,16 +115,27 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         mapTemplateId: String,
         callback: @escaping (VisibilityState) -> Void
     ) throws -> () -> Void {
-        HybridAutoPlay.renderStateListeners[mapTemplateId] = callback
-        
+        if HybridAutoPlay.renderStateListeners[mapTemplateId] != nil {
+            HybridAutoPlay.renderStateListeners[mapTemplateId]?.append(callback)
+        } else {
+            HybridAutoPlay.renderStateListeners[mapTemplateId] = [callback]
+        }
+
         if let state = SceneStore.getState(moduleName: mapTemplateId) {
             callback(state)
         }
 
         return {
-            HybridAutoPlay.renderStateListeners.removeValue(
-                forKey: mapTemplateId
-            )
+            HybridAutoPlay.renderStateListeners[mapTemplateId]?.removeAll {
+                $0 as AnyObject === callback as AnyObject
+            }
+            if HybridAutoPlay.renderStateListeners[mapTemplateId]?.isEmpty
+                ?? false
+            {
+                HybridAutoPlay.renderStateListeners.removeValue(
+                    forKey: mapTemplateId
+                )
+            }
         }
     }
 
@@ -153,15 +175,19 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         templateState: VisibilityState,
         animated: Bool = false
     ) {
-        if let callback = HybridAutoPlay.templateStateListeners[templateId] {
-            callback(
-                TemplateEventPayload(animated: animated, state: templateState)
-            )
+        let payload = TemplateEventPayload(
+            animated: animated,
+            state: templateState
+        )
+
+        HybridAutoPlay.templateStateListeners[templateId]?.forEach { callback in
+            callback(payload)
         }
     }
 
     static func emitRenderState(mapTemplateId: String, state: VisibilityState) {
-        if let callback = HybridAutoPlay.renderStateListeners[mapTemplateId] {
+        HybridAutoPlay.renderStateListeners[mapTemplateId]?.forEach {
+            callback in
             callback(state)
         }
     }

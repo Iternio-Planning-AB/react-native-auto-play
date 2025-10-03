@@ -34,8 +34,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 // Forward declaration of `AlertStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
-// Forward declaration of `BaseEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { struct BaseEvent; }
 // Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 
@@ -54,7 +52,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig;
 #include <vector>
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
-#include "BaseEvent.hpp"
 #include "NitroMapTemplateConfig.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"

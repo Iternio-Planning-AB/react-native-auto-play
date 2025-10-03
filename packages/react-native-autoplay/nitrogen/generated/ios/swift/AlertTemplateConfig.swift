@@ -18,7 +18,7 @@ public extension AlertTemplateConfig {
   /**
    * Create a new instance of `AlertTemplateConfig`.
    */
-  init(titleVariants: [String], actions: [AlertAction]?, id: String, onWillAppear: ((_ e: BaseEvent) -> Void)?, onWillDisappear: ((_ e: BaseEvent) -> Void)?, onDidAppear: ((_ e: BaseEvent) -> Void)?, onDidDisappear: ((_ e: BaseEvent) -> Void)?, onPoppedToRoot: ((_ e: BaseEvent) -> Void)?) {
+  init(titleVariants: [String], actions: [AlertAction]?, id: String, onWillAppear: (() -> Void)?, onWillDisappear: (() -> Void)?, onDidAppear: (() -> Void)?, onDidDisappear: (() -> Void)?, onPoppedToRoot: (() -> Void)?) {
     self.init({ () -> bridge.std__vector_std__string_ in
       var __vector = bridge.create_std__vector_std__string_(titleVariants.count)
       for __item in titleVariants {
@@ -33,47 +33,47 @@ public extension AlertTemplateConfig {
       } else {
         return .init()
       }
-    }(), std.string(id), { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+    }(), std.string(id), { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onWillAppear {
-        return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-          let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-          return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+    }(), { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onWillDisappear {
-        return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-          let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-          return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+    }(), { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onDidAppear {
-        return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-          let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-          return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+    }(), { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onDidDisappear {
-        return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-          let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-          return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+    }(), { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onPoppedToRoot {
-        return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-          let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-          return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -139,16 +139,16 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var onWillAppear: ((_ e: BaseEvent) -> Void)? {
+  var onWillAppear: (() -> Void)? {
     @inline(__always)
     get {
-      return { () -> ((_ e: BaseEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_BaseEvent_____e______(self.__onWillAppear) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_BaseEvent_____e______(self.__onWillAppear)
-          return { () -> (BaseEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_BaseEvent(__unwrapped)
-            return { (__e: BaseEvent) -> Void in
-              __wrappedFunction.call(__e)
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onWillAppear) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onWillAppear)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -158,11 +158,11 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onWillAppear = { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+      self.__onWillAppear = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-            let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-            return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
@@ -171,16 +171,16 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var onWillDisappear: ((_ e: BaseEvent) -> Void)? {
+  var onWillDisappear: (() -> Void)? {
     @inline(__always)
     get {
-      return { () -> ((_ e: BaseEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_BaseEvent_____e______(self.__onWillDisappear) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_BaseEvent_____e______(self.__onWillDisappear)
-          return { () -> (BaseEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_BaseEvent(__unwrapped)
-            return { (__e: BaseEvent) -> Void in
-              __wrappedFunction.call(__e)
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onWillDisappear) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onWillDisappear)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -190,11 +190,11 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onWillDisappear = { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+      self.__onWillDisappear = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-            let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-            return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
@@ -203,16 +203,16 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var onDidAppear: ((_ e: BaseEvent) -> Void)? {
+  var onDidAppear: (() -> Void)? {
     @inline(__always)
     get {
-      return { () -> ((_ e: BaseEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_BaseEvent_____e______(self.__onDidAppear) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_BaseEvent_____e______(self.__onDidAppear)
-          return { () -> (BaseEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_BaseEvent(__unwrapped)
-            return { (__e: BaseEvent) -> Void in
-              __wrappedFunction.call(__e)
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onDidAppear) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onDidAppear)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -222,11 +222,11 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onDidAppear = { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+      self.__onDidAppear = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-            let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-            return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
@@ -235,16 +235,16 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var onDidDisappear: ((_ e: BaseEvent) -> Void)? {
+  var onDidDisappear: (() -> Void)? {
     @inline(__always)
     get {
-      return { () -> ((_ e: BaseEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_BaseEvent_____e______(self.__onDidDisappear) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_BaseEvent_____e______(self.__onDidDisappear)
-          return { () -> (BaseEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_BaseEvent(__unwrapped)
-            return { (__e: BaseEvent) -> Void in
-              __wrappedFunction.call(__e)
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onDidDisappear) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onDidDisappear)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -254,11 +254,11 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onDidDisappear = { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+      self.__onDidDisappear = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-            let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-            return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
@@ -267,16 +267,16 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var onPoppedToRoot: ((_ e: BaseEvent) -> Void)? {
+  var onPoppedToRoot: (() -> Void)? {
     @inline(__always)
     get {
-      return { () -> ((_ e: BaseEvent) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_BaseEvent_____e______(self.__onPoppedToRoot) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_BaseEvent_____e______(self.__onPoppedToRoot)
-          return { () -> (BaseEvent) -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void_BaseEvent(__unwrapped)
-            return { (__e: BaseEvent) -> Void in
-              __wrappedFunction.call(__e)
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onPoppedToRoot) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onPoppedToRoot)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -286,11 +286,11 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onPoppedToRoot = { () -> bridge.std__optional_std__function_void_const_BaseEvent_____e______ in
+      self.__onPoppedToRoot = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void_const_BaseEvent_____e______({ () -> bridge.Func_void_BaseEvent in
-            let __closureWrapper = Func_void_BaseEvent(__unwrappedValue)
-            return bridge.create_Func_void_BaseEvent(__closureWrapper.toUnsafe())
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
