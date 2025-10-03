@@ -14,38 +14,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         String: [(VisibilityState) -> Void]
     ]()
 
-    private static var isJsReady = false
-    private static var eventQueue: [EventName] = []
-    private static var jsBundleObserver: NSObjectProtocol?
-
-    override init() {
-        // we listen for the bundle loaded notification to make sure we
-        // emit events that were recevied before js was ready
-        // captures only basic events like connect, disconnect...
-
-        let name =
-            RCTIsNewArchEnabled()
-            ? Notification.Name("RCTInstanceDidLoadBundle")
-            : Notification.Name("RCTJavaScriptDidLoadNotification")
-
-        HybridAutoPlay.jsBundleObserver = NotificationCenter.default
-            .addObserver(
-                forName: name,
-                object: nil,
-                queue: nil,
-            ) { notification in
-                HybridAutoPlay.isJsReady = true
-
-                HybridAutoPlay.eventQueue.forEach {
-                    HybridAutoPlay.emit(event: $0)
-                }
-
-                if let observer = HybridAutoPlay.jsBundleObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
-            }
-    }
-
     func addListener(eventType: EventName, callback: @escaping () -> Void)
         throws -> () -> Void
     {
@@ -160,11 +128,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     static func emit(event: EventName) {
-        if !HybridAutoPlay.isJsReady {
-            HybridAutoPlay.eventQueue.append(event)
-            return
-        }
-
         HybridAutoPlay.listeners[event]?.values.forEach {
             $0()
         }
