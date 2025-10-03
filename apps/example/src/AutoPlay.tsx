@@ -1,8 +1,12 @@
-import { AutoPlay, MapTemplate } from '@g4rb4g3/react-native-autoplay';
+import {
+  AutoPlay,
+  MapTemplate,
+  type RootComponentInitialProps,
+} from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 
-const AutoPlayRoot = (props) => {
+const AutoPlayRoot = (props: RootComponentInitialProps) => {
   const [i, setI] = useState(0);
 
   useEffect(() => {
@@ -16,6 +20,7 @@ const AutoPlayRoot = (props) => {
       <Text>
         Hello Nitro {Platform.OS} {i}
       </Text>
+      <Text>{JSON.stringify(props.window)}</Text>
     </View>
   );
 };
@@ -31,6 +36,11 @@ const registerRunnable = () => {
     onDidUpdatePanGestureWithTranslation: ({ x, y }) => {
       console.log('*** onDidUpdatePanGestureWithTranslation', x, y);
     },
+    onDidUpdateZoomGestureWithCenter: ({ x, y }, scale) => {
+      console.log('*** onDidUpdateZoomGestureWithCenter', x, y, scale);
+    },
+    onClick: ({ x, y }) => console.log('*** onClick', x, y),
+    onDoubleClick: ({ x, y }) => console.log('*** onDoubleClick', x, y),
   });
 
   const onConnect = () => {

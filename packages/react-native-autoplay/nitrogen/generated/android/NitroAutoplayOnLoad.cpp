@@ -20,6 +20,8 @@
 #include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
+#include "JFunc_void_Point_double_std__optional_double_.hpp"
+#include "JFunc_void_Point.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
@@ -36,6 +38,8 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_VisibilityState_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_std__optional_bool__cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_Point_double_std__optional_double__cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::JFunc_void_Point_cxx::registerNatives();
 
     // Register Nitro Hybrid Objects
     HybridObjectRegistry::registerHybridObjectConstructor(

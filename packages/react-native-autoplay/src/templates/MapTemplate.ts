@@ -10,7 +10,34 @@ export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayClust
 type Point = { x: number; y: number };
 
 export interface NitroMapTemplateConfig extends TemplateConfig {
+  /**
+   * callback for single finger pan gesture
+   * @param translation distance in pixels along the x & y axis that has been scrolled since the last touch position during the scroll event
+   * @param velocity the velocity of the pan gesture, iOS only
+   */
   onDidUpdatePanGestureWithTranslation?: (translation: Point, velocity?: Point) => void;
+
+  /**
+   * callback for pinch to zoom gesture
+   * @param center x & y coordinate of the focal point in pixels
+   * @param scale the scaling factor
+   * @param velocity the velocity of the zoom gesture in scale factor per second, iOS only
+   */
+  onDidUpdateZoomGestureWithCenter?: (center: Point, scale: number, velocity?: number) => void;
+
+  /**
+   * single press event callback
+   * @param center coordinates of the click event in pixel
+   * @namespace Android
+   */
+  onClick?: (center: Point) => void;
+
+  /**
+   * double tab event callback
+   * @param center coordinates of the click event in pixel
+   * @namespace Android
+   */
+  onDoubleClick?: (center: Point) => void;
 }
 
 export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id'> & {

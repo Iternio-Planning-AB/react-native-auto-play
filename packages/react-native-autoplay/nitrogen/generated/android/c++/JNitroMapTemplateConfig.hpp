@@ -10,6 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "NitroMapTemplateConfig.hpp"
 
+#include "JFunc_void_Point.hpp"
+#include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JPoint.hpp"
@@ -39,6 +41,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldOnDidUpdatePanGestureWithTranslation = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidUpdatePanGestureWithTranslation");
       jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidUpdatePanGestureWithTranslation = this->getFieldValue(fieldOnDidUpdatePanGestureWithTranslation);
+      static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double_std__optional_double_::javaobject>("onDidUpdateZoomGestureWithCenter");
+      jni::local_ref<JFunc_void_Point_double_std__optional_double_::javaobject> onDidUpdateZoomGestureWithCenter = this->getFieldValue(fieldOnDidUpdateZoomGestureWithCenter);
+      static const auto fieldOnClick = clazz->getField<JFunc_void_Point::javaobject>("onClick");
+      jni::local_ref<JFunc_void_Point::javaobject> onClick = this->getFieldValue(fieldOnClick);
+      static const auto fieldOnDoubleClick = clazz->getField<JFunc_void_Point::javaobject>("onDoubleClick");
+      jni::local_ref<JFunc_void_Point::javaobject> onDoubleClick = this->getFieldValue(fieldOnDoubleClick);
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
       static const auto fieldOnWillAppear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillAppear");
@@ -60,6 +68,39 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
             auto onDidUpdatePanGestureWithTranslationRef = jni::make_global(onDidUpdatePanGestureWithTranslation);
             return [onDidUpdatePanGestureWithTranslationRef](Point translation, std::optional<Point> velocity) -> void {
               return onDidUpdatePanGestureWithTranslationRef->invoke(translation,velocity);
+            };
+          }
+        }()) : std::nullopt,
+        onDidUpdateZoomGestureWithCenter != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)> {
+          if (onDidUpdateZoomGestureWithCenter->isInstanceOf(JFunc_void_Point_double_std__optional_double__cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_Point_double_std__optional_double__cxx::javaobject>(onDidUpdateZoomGestureWithCenter);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onDidUpdateZoomGestureWithCenterRef = jni::make_global(onDidUpdateZoomGestureWithCenter);
+            return [onDidUpdateZoomGestureWithCenterRef](Point center, double scale, std::optional<double> velocity) -> void {
+              return onDidUpdateZoomGestureWithCenterRef->invoke(center,scale,velocity);
+            };
+          }
+        }()) : std::nullopt,
+        onClick != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* center */)> {
+          if (onClick->isInstanceOf(JFunc_void_Point_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_Point_cxx::javaobject>(onClick);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onClickRef = jni::make_global(onClick);
+            return [onClickRef](Point center) -> void {
+              return onClickRef->invoke(center);
+            };
+          }
+        }()) : std::nullopt,
+        onDoubleClick != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* center */)> {
+          if (onDoubleClick->isInstanceOf(JFunc_void_Point_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_Point_cxx::javaobject>(onDoubleClick);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onDoubleClickRef = jni::make_global(onDoubleClick);
+            return [onDoubleClickRef](Point center) -> void {
+              return onDoubleClickRef->invoke(center);
             };
           }
         }()) : std::nullopt,
@@ -130,6 +171,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static jni::local_ref<JNitroMapTemplateConfig::javaobject> fromCpp(const NitroMapTemplateConfig& value) {
       return newInstance(
         value.onDidUpdatePanGestureWithTranslation.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidUpdatePanGestureWithTranslation.value()) : nullptr,
+        value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_std__optional_double__cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
+        value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
+        value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
         jni::make_jstring(value.id),
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,

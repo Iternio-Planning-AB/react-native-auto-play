@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.hardware.display.DisplayManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -82,21 +81,52 @@ class VirtualRenderer(
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
-                val screenManager =
-                    AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)?.screenManager ?: return
-                val marker = screenManager.top.marker ?: return
-                val template = TemplateStore.getTemplate(marker)
-                if (template is MapTemplate) {
-                    template.config.onDidUpdatePanGestureWithTranslation?.let {
-                        it(
-                            Point(
-                                distanceX.toDouble(), distanceY.toDouble()
-                            ), null
-                        )
+                getMapTemplateConfig()?.onDidUpdatePanGestureWithTranslation?.let {
+                    it(
+                        Point((-distanceX / scale).toDouble(), (-distanceY / scale).toDouble()),
+                        null
+                    )
+                }
+            }
+
+            override fun onScale(focusX: Float, focusY: Float, scaleFactor: Float) {
+                val config = getMapTemplateConfig() ?: return
+                val center = Point((focusX / scale).toDouble(), (focusY / scale).toDouble())
+
+                if (scaleFactor == 2f) {
+                    config.onDoubleClick?.let {
+                        it(center)
                     }
+                    return
+                }
+
+                getMapTemplateConfig()?.onDidUpdateZoomGestureWithCenter?.let {
+                    it(
+                        center,
+                        scaleFactor.toDouble(),
+                        null
+                    )
+                }
+            }
+
+            override fun onClick(x: Float, y: Float) {
+                getMapTemplateConfig()?.onClick?.let {
+                    it(Point((x / scale).toDouble(), (y / scale).toDouble()))
                 }
             }
         })
+    }
+
+    private fun getMapTemplateConfig(): NitroMapTemplateConfig? {
+        val screenManager =
+            AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)?.screenManager
+                ?: return null
+        val marker = screenManager.top.marker ?: return null
+        val template = TemplateStore.getTemplate(marker)
+        if (template is MapTemplate) {
+            return template.config
+        }
+        return null
     }
 
     private fun initRenderer() {

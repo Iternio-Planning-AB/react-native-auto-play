@@ -18,12 +18,39 @@ public extension NitroMapTemplateConfig {
   /**
    * Create a new instance of `NitroMapTemplateConfig`.
    */
-  init(onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
+  init(onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
     self.init({ () -> bridge.std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______ in
       if let __unwrappedValue = onDidUpdatePanGestureWithTranslation {
         return bridge.create_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______({ () -> bridge.Func_void_Point_std__optional_Point_ in
           let __closureWrapper = Func_void_Point_std__optional_Point_(__unwrappedValue)
           return bridge.create_Func_void_Point_std__optional_Point_(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______ in
+      if let __unwrappedValue = onDidUpdateZoomGestureWithCenter {
+        return bridge.create_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______({ () -> bridge.Func_void_Point_double_std__optional_double_ in
+          let __closureWrapper = Func_void_Point_double_std__optional_double_(__unwrappedValue)
+          return bridge.create_Func_void_Point_double_std__optional_double_(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_const_Point_____center______ in
+      if let __unwrappedValue = onClick {
+        return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
+          let __closureWrapper = Func_void_Point(__unwrappedValue)
+          return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_const_Point_____center______ in
+      if let __unwrappedValue = onDoubleClick {
+        return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
+          let __closureWrapper = Func_void_Point(__unwrappedValue)
+          return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -106,6 +133,108 @@ public extension NitroMapTemplateConfig {
           return bridge.create_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______({ () -> bridge.Func_void_Point_std__optional_Point_ in
             let __closureWrapper = Func_void_Point_std__optional_Point_(__unwrappedValue)
             return bridge.create_Func_void_Point_std__optional_Point_(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______(self.__onDidUpdateZoomGestureWithCenter) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______(self.__onDidUpdateZoomGestureWithCenter)
+          return { () -> (Point, Double, Double?) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_Point_double_std__optional_double_(__unwrapped)
+            return { (__center: Point, __scale: Double, __velocity: Double?) -> Void in
+              __wrappedFunction.call(__center, __scale, { () -> bridge.std__optional_double_ in
+                if let __unwrappedValue = __velocity {
+                  return bridge.create_std__optional_double_(__unwrappedValue)
+                } else {
+                  return .init()
+                }
+              }())
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onDidUpdateZoomGestureWithCenter = { () -> bridge.std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______({ () -> bridge.Func_void_Point_double_std__optional_double_ in
+            let __closureWrapper = Func_void_Point_double_std__optional_double_(__unwrappedValue)
+            return bridge.create_Func_void_Point_double_std__optional_double_(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onClick: ((_ center: Point) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ center: Point) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_Point_____center______(self.__onClick) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_Point_____center______(self.__onClick)
+          return { () -> (Point) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_Point(__unwrapped)
+            return { (__center: Point) -> Void in
+              __wrappedFunction.call(__center)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onClick = { () -> bridge.std__optional_std__function_void_const_Point_____center______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
+            let __closureWrapper = Func_void_Point(__unwrappedValue)
+            return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onDoubleClick: ((_ center: Point) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ center: Point) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_const_Point_____center______(self.__onDoubleClick) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_Point_____center______(self.__onDoubleClick)
+          return { () -> (Point) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_Point(__unwrapped)
+            return { (__center: Point) -> Void in
+              __wrappedFunction.call(__center)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onDoubleClick = { () -> bridge.std__optional_std__function_void_const_Point_____center______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
+            let __closureWrapper = Func_void_Point(__unwrappedValue)
+            return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()
