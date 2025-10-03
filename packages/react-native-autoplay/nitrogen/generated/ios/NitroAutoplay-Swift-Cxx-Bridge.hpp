@@ -12,6 +12,8 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 // Forward declaration of `AlertStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
+// Forward declaration of `ColorScheme` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -26,6 +28,7 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 // Include C++ defined types
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
+#include "ColorScheme.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "Point.hpp"
 #include "VisibilityState.hpp"
@@ -333,6 +336,43 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const Point& /* center */)> get_std__optional_std__function_void_const_Point_____center______(const std::optional<std::function<void(const Point& /* center */)>>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::function<void(ColorScheme /* colorScheme */)>
+  /**
+   * Specialized version of `std::function<void(ColorScheme)>`.
+   */
+  using Func_void_ColorScheme = std::function<void(ColorScheme /* colorScheme */)>;
+  /**
+   * Wrapper class for a `std::function<void(ColorScheme / * colorScheme * /)>`, this can be used from Swift.
+   */
+  class Func_void_ColorScheme_Wrapper final {
+  public:
+    explicit Func_void_ColorScheme_Wrapper(std::function<void(ColorScheme /* colorScheme */)>&& func): _function(std::make_unique<std::function<void(ColorScheme /* colorScheme */)>>(std::move(func))) {}
+    inline void call(int colorScheme) const noexcept {
+      _function->operator()(static_cast<ColorScheme>(colorScheme));
+    }
+  private:
+    std::unique_ptr<std::function<void(ColorScheme /* colorScheme */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_ColorScheme create_Func_void_ColorScheme(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_ColorScheme_Wrapper wrap_Func_void_ColorScheme(Func_void_ColorScheme value) noexcept {
+    return Func_void_ColorScheme_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(ColorScheme /* colorScheme */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(ColorScheme / * colorScheme * /)>>`.
+   */
+  using std__optional_std__function_void_ColorScheme____colorScheme______ = std::optional<std::function<void(ColorScheme /* colorScheme */)>>;
+  inline std::optional<std::function<void(ColorScheme /* colorScheme */)>> create_std__optional_std__function_void_ColorScheme____colorScheme______(const std::function<void(ColorScheme /* colorScheme */)>& value) noexcept {
+    return std::optional<std::function<void(ColorScheme /* colorScheme */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(ColorScheme /* colorScheme */)> get_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
     return *optional;
   }
   

@@ -6,25 +6,21 @@ export interface TemplateConfig {
 
   /**
    * Fired before template appears
-   * @param e Event
    */
   onWillAppear?(animated?: boolean): void;
 
   /**
    * Fired before template disappears
-   * @param e Event
    */
   onWillDisappear?(animated?: boolean): void;
 
   /**
    * Fired after template appears
-   * @param e Event
    */
   onDidAppear?(animated?: boolean): void;
 
   /**
    * Fired after template disappears
-   * @param e Event
    */
   onDidDisappear?(animated?: boolean): void;
 
@@ -44,5 +40,8 @@ export class Template<P> {
     this.templateId = config.id;
   }
 
+  /**
+   * must be called manually whenever you are sure the template is not needed anymore
+   */
   public destroy() {}
 }

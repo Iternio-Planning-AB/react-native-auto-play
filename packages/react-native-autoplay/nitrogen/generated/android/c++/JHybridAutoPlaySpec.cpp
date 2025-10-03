@@ -21,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
+// Forward declaration of `ColorScheme` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -48,6 +50,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 #include "JPoint.hpp"
 #include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point.hpp"
+#include "ColorScheme.hpp"
+#include "JFunc_void_ColorScheme.hpp"
+#include "JColorScheme.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 

@@ -61,6 +61,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(ColorScheme /* colorScheme */)>
+  Func_void_ColorScheme create_Func_void_ColorScheme(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_ColorScheme::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](ColorScheme colorScheme) mutable -> void {
+      swiftClosure.call(static_cast<int>(colorScheme));
+    };
+  }
+  
   // pragma MARK: std::function<void(const std::optional<std::string>& /* result */)>
   Func_void_std__optional_std__string_ create_Func_void_std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroAutoplay::Func_void_std__optional_std__string_::fromUnsafe(swiftClosureWrapper);

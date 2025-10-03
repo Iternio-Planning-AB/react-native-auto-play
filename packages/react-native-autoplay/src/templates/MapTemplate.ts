@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { AutoPlay } from '..';
-import type { RootComponentInitialProps } from '../types/RootComponent';
+import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import { Template, type TemplateConfig } from './Template';
 
 export type AutoPlayCluster = string & { __brand: 'uuid' };
@@ -33,11 +33,16 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
   onClick?: (center: Point) => void;
 
   /**
-   * double tab event callback
+   * double tap event callback
    * @param center coordinates of the click event in pixel
    * @namespace Android
    */
   onDoubleClick?: (center: Point) => void;
+
+  /**
+   * lets you know when the color scheme changed
+   */
+  onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
 }
 
 export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id'> & {

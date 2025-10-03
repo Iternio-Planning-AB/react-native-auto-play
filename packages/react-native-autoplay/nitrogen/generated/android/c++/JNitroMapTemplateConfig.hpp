@@ -10,6 +10,9 @@
 #include <fbjni/fbjni.h>
 #include "NitroMapTemplateConfig.hpp"
 
+#include "ColorScheme.hpp"
+#include "JColorScheme.hpp"
+#include "JFunc_void_ColorScheme.hpp"
 #include "JFunc_void_Point.hpp"
 #include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
@@ -47,6 +50,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void_Point::javaobject> onClick = this->getFieldValue(fieldOnClick);
       static const auto fieldOnDoubleClick = clazz->getField<JFunc_void_Point::javaobject>("onDoubleClick");
       jni::local_ref<JFunc_void_Point::javaobject> onDoubleClick = this->getFieldValue(fieldOnDoubleClick);
+      static const auto fieldOnAppearanceDidChange = clazz->getField<JFunc_void_ColorScheme::javaobject>("onAppearanceDidChange");
+      jni::local_ref<JFunc_void_ColorScheme::javaobject> onAppearanceDidChange = this->getFieldValue(fieldOnAppearanceDidChange);
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
       static const auto fieldOnWillAppear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillAppear");
@@ -101,6 +106,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
             auto onDoubleClickRef = jni::make_global(onDoubleClick);
             return [onDoubleClickRef](Point center) -> void {
               return onDoubleClickRef->invoke(center);
+            };
+          }
+        }()) : std::nullopt,
+        onAppearanceDidChange != nullptr ? std::make_optional([&]() -> std::function<void(ColorScheme /* colorScheme */)> {
+          if (onAppearanceDidChange->isInstanceOf(JFunc_void_ColorScheme_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_ColorScheme_cxx::javaobject>(onAppearanceDidChange);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onAppearanceDidChangeRef = jni::make_global(onAppearanceDidChange);
+            return [onAppearanceDidChangeRef](ColorScheme colorScheme) -> void {
+              return onAppearanceDidChangeRef->invoke(colorScheme);
             };
           }
         }()) : std::nullopt,
@@ -174,6 +190,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_std__optional_double__cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
         value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
+        value.onAppearanceDidChange.has_value() ? JFunc_void_ColorScheme_cxx::fromCpp(value.onAppearanceDidChange.value()) : nullptr,
         jni::make_jstring(value.id),
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,

@@ -28,7 +28,7 @@ class AutoPlayScene: UIResponder {
 
     func connect(props: [String: Any]) {
         isConnected = true
-        
+
         initialProperties = initialProperties.merging(props) { current, _ in
             current
         }
@@ -78,7 +78,10 @@ class AutoPlayScene: UIResponder {
                 )
             else { return }
 
-            window.rootViewController = CarPlayViewController(view: rootView)
+            window.rootViewController = CarPlayViewController(
+                view: rootView,
+                moduleName: moduleName
+            )
             window.makeKeyAndVisible()
         }
     }

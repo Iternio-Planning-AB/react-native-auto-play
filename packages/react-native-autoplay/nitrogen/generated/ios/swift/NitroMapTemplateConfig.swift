@@ -18,7 +18,7 @@ public extension NitroMapTemplateConfig {
   /**
    * Create a new instance of `NitroMapTemplateConfig`.
    */
-  init(onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
+  init(onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
     self.init({ () -> bridge.std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______ in
       if let __unwrappedValue = onDidUpdatePanGestureWithTranslation {
         return bridge.create_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______({ () -> bridge.Func_void_Point_std__optional_Point_ in
@@ -51,6 +51,15 @@ public extension NitroMapTemplateConfig {
         return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
           let __closureWrapper = Func_void_Point(__unwrappedValue)
           return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_ColorScheme____colorScheme______ in
+      if let __unwrappedValue = onAppearanceDidChange {
+        return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
+          let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
+          return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -235,6 +244,38 @@ public extension NitroMapTemplateConfig {
           return bridge.create_std__optional_std__function_void_const_Point_____center______({ () -> bridge.Func_void_Point in
             let __closureWrapper = Func_void_Point(__unwrappedValue)
             return bridge.create_Func_void_Point(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ colorScheme: ColorScheme) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_ColorScheme____colorScheme______(self.__onAppearanceDidChange) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_ColorScheme____colorScheme______(self.__onAppearanceDidChange)
+          return { () -> (ColorScheme) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_ColorScheme(__unwrapped)
+            return { (__colorScheme: ColorScheme) -> Void in
+              __wrappedFunction.call(__colorScheme.rawValue)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onAppearanceDidChange = { () -> bridge.std__optional_std__function_void_ColorScheme____colorScheme______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
+            let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
+            return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()

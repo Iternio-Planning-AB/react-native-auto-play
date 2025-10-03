@@ -1,8 +1,12 @@
+import type { MapTemplateId } from '../templates/MapTemplate';
+
 export type WindowInformation = {
   width: number;
   height: number;
   scale: number;
 };
+
+export type ColorScheme = 'dark' | 'light';
 
 export type RootComponentInitialProps = {
   /**
@@ -10,14 +14,14 @@ export type RootComponentInitialProps = {
    * AutoPlayDashboard for the CarPlay dashboard (iOS only)
    * or a random uuid for cluster displays
    */
-  id: 'AutoPlayRoot' | 'AutoPlayDashboard' | string;
+  id: MapTemplateId;
   /**
    * react-native rootTag
    */
   rootTag: number;
   /**
-   * this is the initial color scheme, use CarPlay.registerOnAppearanceDidChange to get updates on changes
+   * this is the initial color scheme, add onAppearanceDidChange on MapTemplate to get updates
    */
-  colorScheme: 'dark' | 'light';
+  colorScheme: ColorScheme;
   window: WindowInformation;
 };

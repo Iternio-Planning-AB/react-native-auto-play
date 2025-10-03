@@ -5,12 +5,32 @@
 //
 
 class CarPlayViewController: UIViewController {
-    public init(view: UIView) {
+    let moduleName: String
+
+    public init(view: UIView, moduleName: String) {
+        self.moduleName = moduleName
+
         super.init(nibName: nil, bundle: nil)
+
         self.view = view
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(
+        _ previousTraitCollection: UITraitCollection?
+    ) {
+        guard
+            let template = TemplateStore.getTemplate(templateId: moduleName)
+                as? MapTemplate
+        else {
+            return
+        }
+
+        let isDark = traitCollection.userInterfaceStyle == .dark
+
+        template.config.onAppearanceDidChange?(isDark ? .dark : .light)
     }
 }

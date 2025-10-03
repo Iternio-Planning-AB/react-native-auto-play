@@ -41,13 +41,16 @@ const registerRunnable = () => {
     },
     onClick: ({ x, y }) => console.log('*** onClick', x, y),
     onDoubleClick: ({ x, y }) => console.log('*** onDoubleClick', x, y),
+    onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
   });
 
   const onConnect = () => {
     template.setRootTemplate();
   };
 
-  const onDisconnect = () => {};
+  const onDisconnect = () => {
+    template.destroy();
+  };
 
   AutoPlay.addListener('didConnect', onConnect);
   AutoPlay.addListener('didDisconnect', onDisconnect);

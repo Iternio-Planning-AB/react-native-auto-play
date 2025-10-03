@@ -26,6 +26,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
+// Forward declaration of `ColorScheme` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 
 #include <functional>
 #include "EventName.hpp"
@@ -38,6 +40,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 #include "AlertStyle.hpp"
 #include "NitroMapTemplateConfig.hpp"
 #include "Point.hpp"
+#include "ColorScheme.hpp"
 #include <NitroModules/Promise.hpp>
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"

@@ -12,6 +12,10 @@ class TemplateStore {
     static func getCPTemplate(templateId key: String) -> CPTemplate? {
         return store[key]?.template
     }
+    
+    static func getTemplate(templateId: String) -> Template? {
+        return store[templateId]
+    }
 
     static func addTemplate(template: Template, templateId: String) {
         store[templateId] = template

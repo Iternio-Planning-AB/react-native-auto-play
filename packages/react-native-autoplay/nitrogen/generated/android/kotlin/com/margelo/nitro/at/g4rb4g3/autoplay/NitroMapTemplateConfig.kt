@@ -35,6 +35,9 @@ data class NitroMapTemplateConfig
     val onDoubleClick: Func_void_Point?,
     @DoNotStrip
     @Keep
+    val onAppearanceDidChange: Func_void_ColorScheme?,
+    @DoNotStrip
+    @Keep
     val id: String,
     @DoNotStrip
     @Keep
@@ -55,6 +58,6 @@ data class NitroMapTemplateConfig
   /**
    * Initialize a new instance of `NitroMapTemplateConfig` from Kotlin.
    */
-  constructor(onDidUpdatePanGestureWithTranslation: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double, velocity: Double?) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPoppedToRoot: ((animated: Boolean?) -> Unit)?)
-       : this(onDidUpdatePanGestureWithTranslation?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_std__optional_double__java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPoppedToRoot?.let { Func_void_std__optional_bool__java(it) })
+  constructor(onDidUpdatePanGestureWithTranslation: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double, velocity: Double?) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPoppedToRoot: ((animated: Boolean?) -> Unit)?)
+       : this(onDidUpdatePanGestureWithTranslation?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_std__optional_double__java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPoppedToRoot?.let { Func_void_std__optional_bool__java(it) })
 }
