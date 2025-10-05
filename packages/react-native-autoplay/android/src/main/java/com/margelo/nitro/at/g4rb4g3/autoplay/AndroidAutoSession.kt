@@ -2,20 +2,15 @@ package com.margelo.nitro.at.g4rb4g3.autoplay
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.util.Log
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
-import androidx.car.app.ScreenManager
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.ReactApplication
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
-import com.facebook.react.bridge.WritableNativeMap
-import com.facebook.react.modules.appregistry.AppRegistry
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
@@ -30,13 +25,13 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
     private val isCluster = sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER
     private val clusterTemplateId = if (isCluster) UUID.randomUUID().toString() else null
-    private val marker = clusterTemplateId ?: ROOT_SESSION
+    private val moduleName = clusterTemplateId ?: ROOT_SESSION
 
     override fun onCreateScreen(intent: Intent): Screen {
-        val screen = AndroidAutoScreen(carContext, isCluster, marker)
+        val screen = AndroidAutoScreen(carContext, isCluster, moduleName)
 
         sessions.put(
-            marker, ScreenContext(carContext = carContext, session = this, state = VisibilityState.DIDDISAPPEAR)
+            moduleName, ScreenContext(carContext = carContext, session = this, state = VisibilityState.DIDDISAPPEAR)
         )
 
         lifecycle.addObserver(sessionLifecycleObserver)
@@ -81,27 +76,27 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
-            sessions[marker]?.state = VisibilityState.WILLAPPEAR
-            HybridAutoPlay.emitRenderState(marker, VisibilityState.WILLAPPEAR)
+            sessions[moduleName]?.state = VisibilityState.WILLAPPEAR
+            HybridAutoPlay.emitRenderState(moduleName, VisibilityState.WILLAPPEAR)
         }
 
         override fun onResume(owner: LifecycleOwner) {
-            sessions[marker]?.state = VisibilityState.DIDAPPEAR
-            HybridAutoPlay.emitRenderState(marker, VisibilityState.DIDAPPEAR)
+            sessions[moduleName]?.state = VisibilityState.DIDAPPEAR
+            HybridAutoPlay.emitRenderState(moduleName, VisibilityState.DIDAPPEAR)
         }
 
         override fun onPause(owner: LifecycleOwner) {
-            sessions[marker]?.state = VisibilityState.WILLDISAPPEAR
-            HybridAutoPlay.emitRenderState(marker, VisibilityState.WILLDISAPPEAR)
+            sessions[moduleName]?.state = VisibilityState.WILLDISAPPEAR
+            HybridAutoPlay.emitRenderState(moduleName, VisibilityState.WILLDISAPPEAR)
         }
 
         override fun onStop(owner: LifecycleOwner) {
-            sessions[marker]?.state = VisibilityState.DIDDISAPPEAR
-            HybridAutoPlay.emitRenderState(marker, VisibilityState.DIDDISAPPEAR)
+            sessions[moduleName]?.state = VisibilityState.DIDDISAPPEAR
+            HybridAutoPlay.emitRenderState(moduleName, VisibilityState.DIDDISAPPEAR)
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
-            sessions.remove(marker)
+            sessions.remove(moduleName)
 
             if (isCluster) {
                 return

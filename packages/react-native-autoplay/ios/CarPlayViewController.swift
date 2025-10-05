@@ -33,4 +33,21 @@ class CarPlayViewController: UIViewController {
 
         template.config.onAppearanceDidChange?(isDark ? .dark : .light)
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        guard
+            let template = TemplateStore.getTemplate(templateId: moduleName)
+                as? MapTemplate
+        else { return }
+
+        template.config.onSafeAreaInsetsDidChange?(
+            self.view.safeAreaInsets.top,
+            self.view.safeAreaInsets.left,
+            self.view.safeAreaInsets.right,
+            self.view.safeAreaInsets.bottom,
+            nil
+        )
+    }
 }

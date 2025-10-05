@@ -475,6 +475,43 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return *optional;
   }
   
+  // pragma MARK: std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>
+  /**
+   * Specialized version of `std::function<void(double, double, double, double, std::optional<bool>)>`.
+   */
+  using Func_void_double_double_double_double_std__optional_bool_ = std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>;
+  /**
+   * Wrapper class for a `std::function<void(double / * top * /, double / * left * /, double / * bottom * /, double / * right * /, std::optional<bool> / * isLegacyLayout * /)>`, this can be used from Swift.
+   */
+  class Func_void_double_double_double_double_std__optional_bool__Wrapper final {
+  public:
+    explicit Func_void_double_double_double_double_std__optional_bool__Wrapper(std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>&& func): _function(std::make_unique<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>(std::move(func))) {}
+    inline void call(double top, double left, double bottom, double right, std::optional<bool> isLegacyLayout) const noexcept {
+      _function->operator()(top, left, bottom, right, isLegacyLayout);
+    }
+  private:
+    std::unique_ptr<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_double_double_double_double_std__optional_bool_ create_Func_void_double_double_double_double_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_double_double_double_double_std__optional_bool__Wrapper wrap_Func_void_double_double_double_double_std__optional_bool_(Func_void_double_double_double_double_std__optional_bool_ value) noexcept {
+    return Func_void_double_double_double_double_std__optional_bool__Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(double / * top * /, double / * left * /, double / * bottom * /, double / * right * /, std::optional<bool> / * isLegacyLayout * /)>>`.
+   */
+  using std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______ = std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>;
+  inline std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>> create_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______(const std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>& value) noexcept {
+    return std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______(const std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)> get_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______(const std::optional<std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>>& optional) noexcept {
+    return *optional;
+  }
+  
   // pragma MARK: std::shared_ptr<Promise<std::optional<std::string>>>
   /**
    * Specialized version of `std::shared_ptr<Promise<std::optional<std::string>>>`.

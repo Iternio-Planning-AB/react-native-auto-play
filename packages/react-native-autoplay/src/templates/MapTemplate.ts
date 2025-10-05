@@ -61,20 +61,31 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
   onDoubleClick?: (center: Point) => void;
 
   /**
-   * lets you know when the color scheme changed
+   * callback for color scheme changes
    */
   onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
+
+  /**
+   * callback for safe area insets changes
+   * @param insets the insets that you use to determine the safe area for this view.
+   */
+  onSafeAreaInsetsDidChange?: (
+    top: number,
+    left: number,
+    bottom: number,
+    right: number,
+    /**
+     * legacy layout is considered as anything before Material Expression 3, on these the insets are quite buggy
+     * @namespace Android
+     */
+    isLegacyLayout?: boolean
+  ) => void;
 }
 
-export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons' | 'actions'> & {
-  /**
-   * map templates can have only these ids
-   * @AutoPlayRoot head unit screen
-   * @AutoPlayDashboard CarPlay dashboard (iOS only)
-   * @AutoPlayCluster uuid generated on native side when a cluster screen connects and passed over on the cluster connection listener
-   */
-  id: MapTemplateId;
-
+export type MapTemplateConfig = Omit<
+  NitroMapTemplateConfig,
+  'templateHostId' | 'mapButtons' | 'actions'
+> & {
   /**
    * react component that is rendered
    */
@@ -86,7 +97,7 @@ export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons'
   mapButtons?: Array<MapButton | MapPanButton>;
 
   /**
-   * action buttons
+   * action buttons, usually at the the top right on Android and a top bar on iOS
    */
   actions?: {
     android?: ActionsAndroidMap;

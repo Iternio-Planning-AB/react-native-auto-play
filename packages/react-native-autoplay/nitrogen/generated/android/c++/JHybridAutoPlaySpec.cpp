@@ -73,6 +73,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 #include "ColorScheme.hpp"
 #include "JFunc_void_ColorScheme.hpp"
 #include "JColorScheme.hpp"
+#include "JFunc_void_double_double_double_double_std__optional_bool_.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 

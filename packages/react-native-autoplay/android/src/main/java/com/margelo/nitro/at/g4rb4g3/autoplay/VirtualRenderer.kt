@@ -3,6 +3,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay
 import android.app.Presentation
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.view.Display
@@ -29,9 +30,10 @@ import com.margelo.nitro.autoplay.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.floor
 
 class VirtualRenderer(
-    private val context: CarContext, private val isCluster: Boolean
+    private val context: CarContext, private val moduleName: String, private val isCluster: Boolean
 ) {
     private lateinit var uiManager: FabricUIManager
     private lateinit var display: Display
@@ -61,6 +63,14 @@ class VirtualRenderer(
         }
 
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
+            val areaDebouncer = Debouncer(200)
+
+            // 12dp seems to be the default margin on AA for the ETA widget and the maneuver so use it as fallback
+            val defaultMargin = (12.0 * context.resources.displayMetrics.density).toInt()
+            var minMargin = Int.MAX_VALUE
+            var stableArea = Rect(0, 0, 0, 0)
+            var visibleArea = Rect(0, 0, 0, 0)
+
             override fun onSurfaceAvailable(surfaceContainer: SurfaceContainer) {
                 val name =
                     if (isCluster) "AndroidAutoClusterMapTemplate" else "AndroidAutoMapTemplate"
@@ -103,9 +113,7 @@ class VirtualRenderer(
 
                 getMapTemplateConfig()?.onDidUpdateZoomGestureWithCenter?.let {
                     it(
-                        center,
-                        scaleFactor.toDouble(),
-                        null
+                        center, scaleFactor.toDouble(), null
                     )
                 }
             }
@@ -115,13 +123,91 @@ class VirtualRenderer(
                     it(Point((x / scale).toDouble(), (y / scale).toDouble()))
                 }
             }
+
+            override fun onVisibleAreaChanged(visibleArea: Rect) {
+                this.visibleArea = visibleArea
+                areaDebouncer.submit {
+                    this.minMargin = minMargin.coerceAtMost(
+                        minOf(
+                            visibleArea.top, visibleArea.left, visibleArea.bottom, visibleArea.right
+                        )
+                    )
+                    updateSafeAreaInsets()
+                }
+            }
+
+            override fun onStableAreaChanged(stableArea: Rect) {
+                this.stableArea = stableArea
+                areaDebouncer.submit {
+                    this.minMargin = minMargin.coerceAtMost(
+                        minOf(
+                            stableArea.top, stableArea.left, stableArea.bottom, stableArea.right
+                        )
+                    )
+                    updateSafeAreaInsets()
+                }
+            }
+
+            fun updateSafeAreaInsets() {
+                if (maxOf(
+                        stableArea.top, stableArea.left, stableArea.bottom, stableArea.right
+                    ) == 0
+                ) {
+                    // wait for stable area to be initialized first
+                    return
+                }
+
+                if (maxOf(
+                        visibleArea.top, visibleArea.left, visibleArea.bottom, visibleArea.right
+                    ) == 0
+                ) {
+                    // wait for visible area to be initialized first
+                    return
+                }
+
+                val callback = getMapTemplateConfig()?.onSafeAreaInsetsDidChange ?: return
+
+                if (minMargin == 0) {
+                    // probably legacy AA layout
+                    val additionalMarginLeft =
+                        if (stableArea.left == visibleArea.left) defaultMargin else 0
+                    val additionalMarginRight =
+                        if (stableArea.right == visibleArea.right && visibleArea.right != width) 0 else defaultMargin
+                    val additionalMarginTop =
+                        if (visibleArea.top != stableArea.top || (visibleArea.top > 0 && stableArea.top > 0 && visibleArea.right < width)) 0 else defaultMargin
+                    val additionalMarginBottom =
+                        if (stableArea.bottom == visibleArea.bottom) defaultMargin else 0
+
+                    val top = floor((visibleArea.top + additionalMarginTop) / scale).toDouble()
+                    val bottom =
+                        floor((height - visibleArea.bottom + additionalMarginBottom) / scale).toDouble()
+                    val left = floor((visibleArea.left + additionalMarginLeft) / scale).toDouble()
+                    val right =
+                        floor((width - visibleArea.right + additionalMarginRight) / scale).toDouble()
+                    callback(top, left, bottom, right, true)
+                } else {
+                    // material expression 3 seems to apply always some margin and never reports 0
+                    val additionalMarginLeft =
+                        if (stableArea.left == visibleArea.left) defaultMargin else 0
+                    val additionalMarginRight =
+                        if (stableArea.right == visibleArea.right) defaultMargin else 0
+
+                    val top = floor(visibleArea.top.coerceAtLeast(defaultMargin) / scale).toDouble()
+                    val bottom =
+                        floor((height - visibleArea.bottom).coerceAtLeast(defaultMargin) / scale).toDouble()
+                    val left =
+                        floor((visibleArea.left + additionalMarginLeft).coerceAtLeast(defaultMargin) / scale).toDouble()
+                    val right = floor((width - visibleArea.right + additionalMarginRight).coerceAtLeast(
+                        defaultMargin
+                    ) / scale).toDouble()
+                    callback(top, left, bottom, right, false)
+                }
+            }
         })
     }
 
     private fun getMapTemplateConfig(): NitroMapTemplateConfig? {
-        val screenManager =
-            AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)?.screenManager
-                ?: return null
+        val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
         val marker = screenManager.top.marker ?: return null
         val template = TemplateStore.getTemplate(marker)
         if (template is MapTemplate) {
@@ -190,8 +276,12 @@ class VirtualRenderer(
                     reactSurfaceView,
                     moduleName,
                     Arguments.fromBundle(initialProperties),
-                    MeasureSpec.makeMeasureSpec((width / reactNativeScale).toInt(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec((height / reactNativeScale).toInt(), MeasureSpec.EXACTLY)
+                    MeasureSpec.makeMeasureSpec(
+                        (width / reactNativeScale).toInt(), MeasureSpec.EXACTLY
+                    ),
+                    MeasureSpec.makeMeasureSpec(
+                        (height / reactNativeScale).toInt(), MeasureSpec.EXACTLY
+                    )
                 )
 
                 // remove ui-managers lifecycle listener to not stop rendering when app is not in foreground/phone screen is off
@@ -215,6 +305,5 @@ class VirtualRenderer(
 
     companion object {
         val TAG = "VirtualRenderer"
-        val moduleName = "AutoPlayRoot"
     }
 }

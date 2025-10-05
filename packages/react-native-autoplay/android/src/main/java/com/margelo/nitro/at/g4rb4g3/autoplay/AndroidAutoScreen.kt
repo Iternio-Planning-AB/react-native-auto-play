@@ -15,15 +15,15 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.AppInfo
 
 class AndroidAutoScreen(
-    carContext: CarContext, private val isCluster: Boolean, autoPlayMarker: String
+    carContext: CarContext, private val isCluster: Boolean, private val moduleName: String
 ) : Screen(carContext) {
 
     var template: Template? = null
     var virtualRenderer: VirtualRenderer? = null
 
     init {
-        marker = autoPlayMarker
-        screens.put(autoPlayMarker, this)
+        marker = moduleName
+        screens.put(moduleName, this)
 
         lifecycle.addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(
@@ -31,19 +31,19 @@ class AndroidAutoScreen(
             ) {
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
-                        HybridAutoPlay.emitTemplateState(autoPlayMarker, VisibilityState.WILLAPPEAR)
+                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.WILLAPPEAR)
                     }
 
                     Lifecycle.Event.ON_RESUME -> {
-                        HybridAutoPlay.emitTemplateState(autoPlayMarker, VisibilityState.DIDAPPEAR)
+                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.DIDAPPEAR)
                     }
 
                     Lifecycle.Event.ON_PAUSE -> {
-                        HybridAutoPlay.emitTemplateState(autoPlayMarker, VisibilityState.WILLDISAPPEAR)
+                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.WILLDISAPPEAR)
                     }
 
                     Lifecycle.Event.ON_DESTROY -> {
-                        HybridAutoPlay.emitTemplateState(autoPlayMarker, VisibilityState.DIDDISAPPEAR)
+                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.DIDDISAPPEAR)
                     }
 
                     else -> {}
@@ -56,7 +56,7 @@ class AndroidAutoScreen(
     fun setTemplate(template: Template, invalidate: Boolean = false, isSurfaceTemplate: Boolean) {
         UiThreadUtil.runOnUiThread {
             if (isSurfaceTemplate && virtualRenderer == null) {
-                virtualRenderer = VirtualRenderer(carContext, isCluster)
+                virtualRenderer = VirtualRenderer(carContext, moduleName, isCluster)
             }
             this.template = template
 

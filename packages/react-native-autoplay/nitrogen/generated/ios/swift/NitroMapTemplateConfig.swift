@@ -18,7 +18,7 @@ public extension NitroMapTemplateConfig {
   /**
    * Create a new instance of `NitroMapTemplateConfig`.
    */
-  init(mapButtons: [NitroMapButton]?, actions: [NitroAction]?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
+  init(mapButtons: [NitroMapButton]?, actions: [NitroAction]?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onSafeAreaInsetsDidChange: ((_ top: Double, _ left: Double, _ bottom: Double, _ right: Double, _ isLegacyLayout: Bool?) -> Void)?, id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPoppedToRoot: ((_ animated: Bool?) -> Void)?) {
     self.init({ () -> bridge.std__optional_std__vector_NitroMapButton__ in
       if let __unwrappedValue = mapButtons {
         return bridge.create_std__optional_std__vector_NitroMapButton__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_NitroMapButton_ in
@@ -76,6 +76,15 @@ public extension NitroMapTemplateConfig {
         return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
           let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
           return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______ in
+      if let __unwrappedValue = onSafeAreaInsetsDidChange {
+        return bridge.create_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______({ () -> bridge.Func_void_double_double_double_double_std__optional_bool_ in
+          let __closureWrapper = Func_void_double_double_double_double_std__optional_bool_(__unwrappedValue)
+          return bridge.create_Func_void_double_double_double_double_std__optional_bool_(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -352,6 +361,44 @@ public extension NitroMapTemplateConfig {
           return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
             let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
             return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onSafeAreaInsetsDidChange: ((_ top: Double, _ left: Double, _ bottom: Double, _ right: Double, _ isLegacyLayout: Bool?) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ top: Double, _ left: Double, _ bottom: Double, _ right: Double, _ isLegacyLayout: Bool?) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______(self.__onSafeAreaInsetsDidChange) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______(self.__onSafeAreaInsetsDidChange)
+          return { () -> (Double, Double, Double, Double, Bool?) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_double_double_double_double_std__optional_bool_(__unwrapped)
+            return { (__top: Double, __left: Double, __bottom: Double, __right: Double, __isLegacyLayout: Bool?) -> Void in
+              __wrappedFunction.call(__top, __left, __bottom, __right, { () -> bridge.std__optional_bool_ in
+                if let __unwrappedValue = __isLegacyLayout {
+                  return bridge.create_std__optional_bool_(__unwrappedValue)
+                } else {
+                  return .init()
+                }
+              }())
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onSafeAreaInsetsDidChange = { () -> bridge.std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_double____top_____double____left_____double____bottom_____double____right_____std__optional_bool_____isLegacyLayout______({ () -> bridge.Func_void_double_double_double_double_std__optional_bool_ in
+            let __closureWrapper = Func_void_double_double_double_double_std__optional_bool_(__unwrappedValue)
+            return bridge.create_Func_void_double_double_double_double_std__optional_bool_(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()

@@ -60,6 +60,8 @@ const registerRunnable = () => {
       onClick: ({ x, y }) => console.log('*** onClick', x, y),
       onDoubleClick: ({ x, y }) => console.log('*** onDoubleClick', x, y),
       onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
+      onSafeAreaInsetsDidChange: (top, left, bottom, right, isLegacyLayout) =>
+        console.log('*** onSafeAreaInsetsDidChange', { top, left, bottom, right, isLegacyLayout }),
       mapButtons: [
         {
           type: 'custom',
@@ -86,7 +88,11 @@ const registerRunnable = () => {
         ios: {
           backButton: { type: 'back', onPress: () => console.log('*** back') },
           leadingNavigationBarButtons: [
-            { type: 'image', image: { name: 'home' }, onPress: () => console.log('*** home') },
+            {
+              type: 'image',
+              image: { name: 'home', size: 22 },
+              onPress: () => console.log('*** home'),
+            },
           ],
           trailingNavigationBarButtons: [
             { type: 'text', title: 'work', onPress: () => console.log('*** work') },
