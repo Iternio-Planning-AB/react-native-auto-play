@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry, Platform, processColor } from 'react-native';
 import { AutoPlay } from '..';
-import type { Button, MapButton, MapButtonType } from '../types/Button';
+import type { MapButton, MapButtonType, MapPanButton } from '../types/Button';
 import { glyphMap } from '../types/Glyphmap';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import { Template, type TemplateConfig } from './Template';
@@ -18,10 +18,11 @@ type NitroImage = {
   backgroundColor?: number;
 };
 
-interface NitroMapButton extends Button {
+type NitroMapButton = {
   type: MapButtonType;
-  image: NitroImage;
-}
+  image?: NitroImage;
+  onPress: () => void;
+};
 
 export interface NitroMapTemplateConfig extends TemplateConfig {
   /**
@@ -72,7 +73,7 @@ export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons'
    */
   id: MapTemplateId;
   component: React.ComponentType<RootComponentInitialProps & { template: MapTemplate }>;
-  mapButtons?: Array<MapButton>;
+  mapButtons?: Array<MapButton | MapPanButton>;
 };
 
 export class MapTemplate extends Template<MapTemplateConfig> {
@@ -94,9 +95,20 @@ export class MapTemplate extends Template<MapTemplateConfig> {
       () => (props) => React.createElement(component, { ...props, template })
     );
 
-    const mapConfig = {
+    const mapConfig: NitroMapTemplateConfig = {
       ...baseConfig,
-      mapButtons: mapButtons?.map((button) => {
+      mapButtons: mapButtons?.map<NitroMapButton>((button) => {
+        const { onPress, type } = button;
+
+        if (button.type === 'pan') {
+          if (Platform.OS === 'android') {
+            return { type: 'pan', onPress };
+          }
+          throw new Error(
+            'unsupported platform, pan button can be used on Android only! Use a custom button instead.'
+          );
+        }
+
         const {
           name,
           size = 16,
@@ -104,8 +116,10 @@ export class MapTemplate extends Template<MapTemplateConfig> {
           backgroundColor = 'transparent',
           ...rest
         } = button.image;
+
         return {
-          ...button,
+          type,
+          onPress,
           image: {
             ...rest,
             size,

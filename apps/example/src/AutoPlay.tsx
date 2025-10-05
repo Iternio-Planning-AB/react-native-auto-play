@@ -3,6 +3,7 @@ import {
   MapTemplate,
   type RootComponentInitialProps,
 } from '@g4rb4g3/react-native-autoplay';
+import type { MapButton, MapPanButton } from '@g4rb4g3/react-native-autoplay/lib/types/Button';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 
@@ -27,6 +28,21 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
 };
 
 const registerRunnable = () => {
+  const panButton: MapButton | MapPanButton =
+    Platform.OS === 'android'
+      ? {
+          type: 'pan',
+          onPress: () => console.log('pan button press'),
+        }
+      : {
+          type: 'custom',
+          image: {
+            name: 'drag_pan',
+            size: 22,
+          },
+          onPress: () => console.log('map button on press'),
+        };
+
   const onConnect = () => {
     const template = new MapTemplate({
       component: AutoPlayRoot,
@@ -55,6 +71,7 @@ const registerRunnable = () => {
           },
           onPress: () => console.log('map button on press'),
         },
+        panButton,
       ],
     });
     template.setRootTemplate();

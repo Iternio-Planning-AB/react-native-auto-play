@@ -5,6 +5,7 @@ import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.CarIcon
 import androidx.car.app.navigation.model.NavigationTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
+import com.margelo.nitro.at.g4rb4g3.autoplay.MapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.NitroMapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.SymbolFont
 
@@ -22,17 +23,27 @@ class MapTemplate(
                     addAction(Action.APP_ICON)
                 }.build()
             ).build()
-            context?.let {
+            context?.let { context ->
                 config.mapButtons?.let { buttons ->
                     setMapActionStrip(ActionStrip.Builder().apply {
                         buttons.forEach { button ->
-                            addAction(Action.Builder().apply {
-                                setOnClickListener(button.onPress)
-                                setIcon(
-                                    CarIcon.Builder(SymbolFont.iconFromNitroImage(it, button.image))
-                                        .build()
-                                )
-                            }.build())
+                            if (button.type == MapButtonType.PAN) {
+                                addAction(Action.PAN)
+                                return@forEach
+                            }
+
+                            button.image?.let { image ->
+                                addAction(Action.Builder().apply {
+                                    setOnClickListener(button.onPress)
+                                    setIcon(
+                                        CarIcon.Builder(
+                                            SymbolFont.iconFromNitroImage(
+                                                context, image
+                                            )
+                                        ).build()
+                                    )
+                                }.build())
+                            }
                         }
                     }.build())
                 }

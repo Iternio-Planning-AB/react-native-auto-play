@@ -25,6 +25,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 
 #include "MapButtonType.hpp"
 #include "NitroImage.hpp"
+#include <optional>
 #include <functional>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
@@ -35,12 +36,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
   struct NitroMapButton {
   public:
     MapButtonType type     SWIFT_PRIVATE;
-    NitroImage image     SWIFT_PRIVATE;
+    std::optional<NitroImage> image     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
 
   public:
     NitroMapButton() = default;
-    explicit NitroMapButton(MapButtonType type, NitroImage image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
+    explicit NitroMapButton(MapButtonType type, std::optional<NitroImage> image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -54,14 +55,14 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::NitroMapButton(
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::NitroMapButton& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::toJSI(runtime, arg.type));
-      obj.setProperty(runtime, "image", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
       return obj;
     }
@@ -71,7 +72,7 @@ namespace margelo::nitro {
       }
       jsi::Object obj = value.getObject(runtime);
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
       return true;
     }

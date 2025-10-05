@@ -222,6 +222,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return *optional;
   }
   
+  // pragma MARK: std::optional<NitroImage>
+  /**
+   * Specialized version of `std::optional<NitroImage>`.
+   */
+  using std__optional_NitroImage_ = std::optional<NitroImage>;
+  inline std::optional<NitroImage> create_std__optional_NitroImage_(const NitroImage& value) noexcept {
+    return std::optional<NitroImage>(value);
+  }
+  inline bool has_value_std__optional_NitroImage_(const std::optional<NitroImage>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroImage get_std__optional_NitroImage_(const std::optional<NitroImage>& optional) noexcept {
+    return *optional;
+  }
+  
   // pragma MARK: std::vector<NitroMapButton>
   /**
    * Specialized version of `std::vector<NitroMapButton>`.

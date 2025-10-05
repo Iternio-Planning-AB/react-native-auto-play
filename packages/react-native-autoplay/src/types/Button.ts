@@ -26,6 +26,15 @@ export type ButtonImage = {
 };
 
 export interface MapButton extends Button {
-  type: MapButtonType;
+  type: 'custom';
   image: ButtonImage;
 }
+
+/**
+ * this is a special button only visible on devices that have no touch support
+ * @namespace Android
+ */
+export type MapPanButton = {
+  type: 'pan';
+  onPress: () => void;
+};

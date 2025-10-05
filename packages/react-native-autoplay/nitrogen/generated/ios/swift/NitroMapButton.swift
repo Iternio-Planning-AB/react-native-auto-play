@@ -18,8 +18,14 @@ public extension NitroMapButton {
   /**
    * Create a new instance of `NitroMapButton`.
    */
-  init(type: MapButtonType, image: NitroImage, onPress: @escaping () -> Void) {
-    self.init(type, image, { () -> bridge.Func_void in
+  init(type: MapButtonType, image: NitroImage?, onPress: @escaping () -> Void) {
+    self.init(type, { () -> bridge.std__optional_NitroImage_ in
+      if let __unwrappedValue = image {
+        return bridge.create_std__optional_NitroImage_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.Func_void in
       let __closureWrapper = Func_void(onPress)
       return bridge.create_Func_void(__closureWrapper.toUnsafe())
     }())
@@ -36,14 +42,20 @@ public extension NitroMapButton {
     }
   }
   
-  var image: NitroImage {
+  var image: NitroImage? {
     @inline(__always)
     get {
-      return self.__image
+      return self.__image.value
     }
     @inline(__always)
     set {
-      self.__image = newValue
+      self.__image = { () -> bridge.std__optional_NitroImage_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_NitroImage_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
     }
   }
   

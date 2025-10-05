@@ -45,7 +45,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
       return NitroMapButton(
         type->toCpp(),
-        image->toCpp(),
+        image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
         [&]() -> std::function<void()> {
           if (onPress->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
             auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPress);
@@ -68,7 +68,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
       return newInstance(
         JMapButtonType::fromCpp(value.type),
-        JNitroImage::fromCpp(value.image),
+        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)
       );
     }

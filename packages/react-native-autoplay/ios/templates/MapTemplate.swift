@@ -21,8 +21,13 @@ class MapTemplate: Template, CPMapTemplateDelegate {
             template.mapDelegate = self
             if let mapButtons = config.mapButtons {
                 template.mapButtons = mapButtons.map { button in
-                    let image = SymbolFont.imageFromNitroImage(image: button.image)
-                    return CPMapButton(image: image) { _ in
+                    if let image = button.image {
+                        let icon = SymbolFont.imageFromNitroImage(image: image)
+                        return CPMapButton(image: icon) { _ in
+                            button.onPress()
+                        }
+                    }
+                    return CPMapButton() { _ in
                         button.onPress()
                     }
                 }
