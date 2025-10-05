@@ -16,10 +16,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
-// Forward declaration of `MapButtonType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class MapButtonType; }
+// Forward declaration of `NitroActionType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
+// Forward declaration of `NitroAction` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
+// Forward declaration of `NitroMapButtonType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroMapButtonType; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapButton; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -36,9 +40,11 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 #include "AlertStyle.hpp"
 #include "ColorScheme.hpp"
 #include "HybridAutoPlaySpec.hpp"
-#include "MapButtonType.hpp"
+#include "NitroAction.hpp"
+#include "NitroActionType.hpp"
 #include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
+#include "NitroMapButtonType.hpp"
 #include "Point.hpp"
 #include "VisibilityState.hpp"
 #include <NitroModules/FastVectorCopy.hpp>
@@ -264,6 +270,48 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return *optional;
   }
   
+  // pragma MARK: std::optional<std::string>
+  /**
+   * Specialized version of `std::optional<std::string>`.
+   */
+  using std__optional_std__string_ = std::optional<std::string>;
+  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
+    return std::optional<std::string>(value);
+  }
+  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::vector<NitroAction>
+  /**
+   * Specialized version of `std::vector<NitroAction>`.
+   */
+  using std__vector_NitroAction_ = std::vector<NitroAction>;
+  inline std::vector<NitroAction> copy_std__vector_NitroAction_(const NitroAction* CONTIGUOUS_MEMORY NON_NULL data, size_t size) noexcept {
+    return margelo::nitro::FastVectorCopy<NitroAction>(data, size);
+  }
+  inline const NitroAction* CONTIGUOUS_MEMORY NON_NULL get_data_std__vector_NitroAction_(const std::vector<NitroAction>& vector) noexcept {
+    return vector.data();
+  }
+  
+  // pragma MARK: std::optional<std::vector<NitroAction>>
+  /**
+   * Specialized version of `std::optional<std::vector<NitroAction>>`.
+   */
+  using std__optional_std__vector_NitroAction__ = std::optional<std::vector<NitroAction>>;
+  inline std::optional<std::vector<NitroAction>> create_std__optional_std__vector_NitroAction__(const std::vector<NitroAction>& value) noexcept {
+    return std::optional<std::vector<NitroAction>>(value);
+  }
+  inline bool has_value_std__optional_std__vector_NitroAction__(const std::optional<std::vector<NitroAction>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::vector<NitroAction> get_std__optional_std__vector_NitroAction__(const std::optional<std::vector<NitroAction>>& optional) noexcept {
+    return *optional;
+  }
+  
   // pragma MARK: std::optional<Point>
   /**
    * Specialized version of `std::optional<Point>`.
@@ -424,21 +472,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(ColorScheme /* colorScheme */)> get_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<std::string>
-  /**
-   * Specialized version of `std::optional<std::string>`.
-   */
-  using std__optional_std__string_ = std::optional<std::string>;
-  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
-    return std::optional<std::string>(value);
-  }
-  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
     return *optional;
   }
   

@@ -11,10 +11,10 @@
 #include "NitroMapButton.hpp"
 
 #include "JFunc_void.hpp"
-#include "JMapButtonType.hpp"
 #include "JNitroImage.hpp"
-#include "MapButtonType.hpp"
+#include "JNitroMapButtonType.hpp"
 #include "NitroImage.hpp"
+#include "NitroMapButtonType.hpp"
 #include <functional>
 #include <optional>
 
@@ -37,8 +37,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     [[nodiscard]]
     NitroMapButton toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldType = clazz->getField<JMapButtonType>("type");
-      jni::local_ref<JMapButtonType> type = this->getFieldValue(fieldType);
+      static const auto fieldType = clazz->getField<JNitroMapButtonType>("type");
+      jni::local_ref<JNitroMapButtonType> type = this->getFieldValue(fieldType);
       static const auto fieldImage = clazz->getField<JNitroImage>("image");
       jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
@@ -67,7 +67,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     [[maybe_unused]]
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
       return newInstance(
-        JMapButtonType::fromCpp(value.type),
+        JNitroMapButtonType::fromCpp(value.type),
         value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)
       );

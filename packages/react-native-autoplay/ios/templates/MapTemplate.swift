@@ -27,9 +27,37 @@ class MapTemplate: Template, CPMapTemplateDelegate {
                             button.onPress()
                         }
                     }
-                    return CPMapButton() { _ in
+                    return CPMapButton { _ in
                         button.onPress()
                     }
+                }
+            }
+
+            if let actions = config.actions {
+                actions.forEach { action in
+                    if action.type == .back {
+                        template.backButton = CPBarButton(title: "") { _ in
+                            action.onPress()
+                        }
+                        return
+                    }
+                    let button =
+                        action.image != nil
+                        ? CPBarButton(
+                            image: SymbolFont.imageFromNitroImage(
+                                image: action.image!
+                            )
+                        ) { _ in action.onPress() }
+                    : CPBarButton(title: action.title ?? "") { _ in
+                        action.onPress()
+                    }
+                    
+                    if (action.type == .leading) {
+                        template.leadingNavigationBarButtons.append(button)
+                        return
+                    }
+                    
+                    template.trailingNavigationBarButtons.append(button)
                 }
             }
         }

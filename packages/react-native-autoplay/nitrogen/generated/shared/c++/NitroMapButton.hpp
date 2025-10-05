@@ -18,12 +18,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `MapButtonType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay { enum class MapButtonType; }
+// Forward declaration of `NitroMapButtonType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroMapButtonType; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 
-#include "MapButtonType.hpp"
+#include "NitroMapButtonType.hpp"
 #include "NitroImage.hpp"
 #include <optional>
 #include <functional>
@@ -35,13 +35,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
    */
   struct NitroMapButton {
   public:
-    MapButtonType type     SWIFT_PRIVATE;
+    NitroMapButtonType type     SWIFT_PRIVATE;
     std::optional<NitroImage> image     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
 
   public:
     NitroMapButton() = default;
-    explicit NitroMapButton(MapButtonType type, std::optional<NitroImage> image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
+    explicit NitroMapButton(NitroMapButtonType type, std::optional<NitroImage> image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -54,14 +54,14 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::NitroMapButton fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::NitroMapButton(
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
+        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroMapButtonType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::NitroMapButton& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::toJSI(runtime, arg.type));
+      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroMapButtonType>::toJSI(runtime, arg.type));
       obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
       return obj;
@@ -71,7 +71,7 @@ namespace margelo::nitro {
         return false;
       }
       jsi::Object obj = value.getObject(runtime);
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::MapButtonType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
+      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroMapButtonType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
       return true;

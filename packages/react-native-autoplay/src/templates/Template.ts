@@ -1,3 +1,16 @@
+import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
+
+export type ActionsIos = {
+  backButton?: BackButton;
+  leadingNavigationBarButtons?: [ActionButtonIos, ActionButtonIos] | [ActionButtonIos];
+  trailingNavigationBarButtons?: [ActionButtonIos, ActionButtonIos] | [ActionButtonIos];
+};
+
+export type ActionsAndroid = {
+  startHeaderAction?: BackButton | AppButton;
+  endHeaderAction?: [ActionButtonAndroid, ActionButtonAndroid] | [ActionButtonAndroid];
+};
+
 export interface TemplateConfig {
   /**
    * Specify an id for your template, must be unique.

@@ -18,7 +18,7 @@ public extension NitroMapButton {
   /**
    * Create a new instance of `NitroMapButton`.
    */
-  init(type: MapButtonType, image: NitroImage?, onPress: @escaping () -> Void) {
+  init(type: NitroMapButtonType, image: NitroImage?, onPress: @escaping () -> Void) {
     self.init(type, { () -> bridge.std__optional_NitroImage_ in
       if let __unwrappedValue = image {
         return bridge.create_std__optional_NitroImage_(__unwrappedValue)
@@ -31,7 +31,7 @@ public extension NitroMapButton {
     }())
   }
 
-  var type: MapButtonType {
+  var type: NitroMapButtonType {
     @inline(__always)
     get {
       return self.__type

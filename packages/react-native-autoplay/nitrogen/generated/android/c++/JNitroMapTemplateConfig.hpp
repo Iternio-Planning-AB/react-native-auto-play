@@ -18,13 +18,17 @@
 #include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
-#include "JMapButtonType.hpp"
+#include "JNitroAction.hpp"
+#include "JNitroActionType.hpp"
 #include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
+#include "JNitroMapButtonType.hpp"
 #include "JPoint.hpp"
-#include "MapButtonType.hpp"
+#include "NitroAction.hpp"
+#include "NitroActionType.hpp"
 #include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
+#include "NitroMapButtonType.hpp"
 #include "Point.hpp"
 #include <functional>
 #include <optional>
@@ -52,6 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldMapButtons = clazz->getField<jni::JArrayClass<JNitroMapButton>>("mapButtons");
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
+      static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
+      jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
       static const auto fieldOnDidUpdatePanGestureWithTranslation = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidUpdatePanGestureWithTranslation");
       jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidUpdatePanGestureWithTranslation = this->getFieldValue(fieldOnDidUpdatePanGestureWithTranslation);
       static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double_std__optional_double_::javaobject>("onDidUpdateZoomGestureWithCenter");
@@ -81,6 +87,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             auto __element = mapButtons->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }()) : std::nullopt,
+        actions != nullptr ? std::make_optional([&]() {
+          size_t __size = actions->size();
+          std::vector<NitroAction> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = actions->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
@@ -212,6 +228,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.mapButtons.value()[__i];
             __array->setElement(__i, *JNitroMapButton::fromCpp(__element));
+          }
+          return __array;
+        }() : nullptr,
+        value.actions.has_value() ? [&]() {
+          size_t __size = value.actions.value().size();
+          jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = value.actions.value()[__i];
+            __array->setElement(__i, *JNitroAction::fromCpp(__element));
           }
           return __array;
         }() : nullptr,

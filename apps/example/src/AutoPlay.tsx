@@ -73,6 +73,26 @@ const registerRunnable = () => {
         },
         panButton,
       ],
+      actions: {
+        android: [
+          { type: 'back', onPress: () => console.log('*** back') },
+          { type: 'image', image: { name: 'home' }, onPress: () => console.log('*** home') },
+          {
+            type: 'text',
+            title: 'work',
+            onPress: () => console.log('*** work'),
+          },
+        ],
+        ios: {
+          backButton: { type: 'back', onPress: () => console.log('*** back') },
+          leadingNavigationBarButtons: [
+            { type: 'image', image: { name: 'home' }, onPress: () => console.log('*** home') },
+          ],
+          trailingNavigationBarButtons: [
+            { type: 'text', title: 'work', onPress: () => console.log('*** work') },
+          ],
+        },
+      },
     });
     template.setRootTemplate();
   };

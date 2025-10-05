@@ -23,7 +23,7 @@ data class NitroMapButton
   constructor(
     @DoNotStrip
     @Keep
-    val type: MapButtonType,
+    val type: NitroMapButtonType,
     @DoNotStrip
     @Keep
     val image: NitroImage?,
@@ -34,6 +34,6 @@ data class NitroMapButton
   /**
    * Initialize a new instance of `NitroMapButton` from Kotlin.
    */
-  constructor(type: MapButtonType, image: NitroImage?, onPress: () -> Unit)
+  constructor(type: NitroMapButtonType, image: NitroImage?, onPress: () -> Unit)
        : this(type, image, Func_void_java(onPress))
 }
