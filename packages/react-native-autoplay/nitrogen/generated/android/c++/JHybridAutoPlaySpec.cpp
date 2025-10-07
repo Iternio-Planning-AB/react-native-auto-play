@@ -33,6 +33,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `SafeAreaInsets` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -73,7 +75,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 #include "ColorScheme.hpp"
 #include "JFunc_void_ColorScheme.hpp"
 #include "JColorScheme.hpp"
-#include "JFunc_void_double_double_double_double_std__optional_bool_.hpp"
+#include "SafeAreaInsets.hpp"
+#include "JFunc_void_SafeAreaInsets.hpp"
+#include "JSafeAreaInsets.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -172,6 +176,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         __promise->reject(std::make_exception_ptr(__jniError));
       });
       return __promise;
+    }();
+  }
+  std::function<void()> JHybridAutoPlaySpec::addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_SafeAreaInsets::javaobject> /* callback */)>("addSafeAreaInsetsListener_cxx");
+    auto __result = method(_javaPart, jni::make_jstring(moduleName), JFunc_void_SafeAreaInsets_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
     }();
   }
 

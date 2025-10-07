@@ -165,8 +165,6 @@ class VirtualRenderer(
                     return
                 }
 
-                val callback = getMapTemplateConfig()?.onSafeAreaInsetsDidChange ?: return
-
                 if (minMargin == 0) {
                     // probably legacy AA layout
                     val additionalMarginLeft =
@@ -184,7 +182,7 @@ class VirtualRenderer(
                     val left = floor((visibleArea.left + additionalMarginLeft) / scale).toDouble()
                     val right =
                         floor((width - visibleArea.right + additionalMarginRight) / scale).toDouble()
-                    callback(top, left, bottom, right, true)
+                    HybridAutoPlay.emitSafeAreaInsets(moduleName, top, left, bottom, right, true)
                 } else {
                     // material expression 3 seems to apply always some margin and never reports 0
                     val additionalMarginLeft =
@@ -197,10 +195,12 @@ class VirtualRenderer(
                         floor((height - visibleArea.bottom).coerceAtLeast(defaultMargin) / scale).toDouble()
                     val left =
                         floor((visibleArea.left + additionalMarginLeft).coerceAtLeast(defaultMargin) / scale).toDouble()
-                    val right = floor((width - visibleArea.right + additionalMarginRight).coerceAtLeast(
-                        defaultMargin
-                    ) / scale).toDouble()
-                    callback(top, left, bottom, right, false)
+                    val right = floor(
+                        (width - visibleArea.right + additionalMarginRight).coerceAtLeast(
+                            defaultMargin
+                        ) / scale
+                    ).toDouble()
+                    HybridAutoPlay.emitSafeAreaInsets(moduleName, top, left, bottom, right, false)
                 }
             }
         })

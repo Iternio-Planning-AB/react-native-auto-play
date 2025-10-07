@@ -221,4 +221,24 @@ open class HybridAutoPlaySpec_cxx {
       return bridge.create_Result_std__shared_ptr_Promise_std__optional_std__string____(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func addSafeAreaInsetsListener(moduleName: std.string, callback: bridge.Func_void_SafeAreaInsets) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addSafeAreaInsetsListener(moduleName: String(moduleName), callback: { () -> (SafeAreaInsets) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_SafeAreaInsets(callback)
+        return { (__insets: SafeAreaInsets) -> Void in
+          __wrappedFunction.call(__insets)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
 }

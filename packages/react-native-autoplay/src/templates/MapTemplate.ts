@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { AutoPlay } from '..';
+import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import { NitroAction } from '../utils/NitroAction';
@@ -64,22 +65,6 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
    * callback for color scheme changes
    */
   onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
-
-  /**
-   * callback for safe area insets changes
-   * @param insets the insets that you use to determine the safe area for this view.
-   */
-  onSafeAreaInsetsDidChange?: (
-    top: number,
-    left: number,
-    bottom: number,
-    right: number,
-    /**
-     * legacy layout is considered as anything before Material Expression 3, on these the insets are quite buggy
-     * @namespace Android
-     */
-    isLegacyLayout?: boolean
-  ) => void;
 }
 
 export type MapTemplateConfig = Omit<
@@ -121,7 +106,12 @@ export class MapTemplate extends Template<MapTemplateConfig> {
 
     AppRegistry.registerComponent(
       this.templateId,
-      () => (props) => React.createElement(component, { ...props, template })
+      () => (props) =>
+        React.createElement(SafeAreaInsetsProvider, {
+          moduleName: config.id,
+          // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
+          children: React.createElement(component, { ...props, template }),
+        })
     );
 
     const nitroActions =

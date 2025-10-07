@@ -21,6 +21,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       prototype.registerHybridMethod("dismissTemplate", &HybridAutoPlaySpec::dismissTemplate);
       prototype.registerHybridMethod("createMapTemplate", &HybridAutoPlaySpec::createMapTemplate);
       prototype.registerHybridMethod("setRootTemplate", &HybridAutoPlaySpec::setRootTemplate);
+      prototype.registerHybridMethod("addSafeAreaInsetsListener", &HybridAutoPlaySpec::addSafeAreaInsetsListener);
     });
   }
 

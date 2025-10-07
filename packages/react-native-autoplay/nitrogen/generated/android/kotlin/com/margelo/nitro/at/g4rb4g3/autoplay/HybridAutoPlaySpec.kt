@@ -82,6 +82,15 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun setRootTemplate(templateId: String): Promise<String?>
+  
+  abstract fun addSafeAreaInsetsListener(moduleName: String, callback: (insets: SafeAreaInsets) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addSafeAreaInsetsListener_cxx(moduleName: String, callback: Func_void_SafeAreaInsets): Func_void {
+    val __result = addSafeAreaInsetsListener(moduleName, callback)
+    return Func_void_java(__result)
+  }
 
   private external fun initHybrid(): HybridData
 

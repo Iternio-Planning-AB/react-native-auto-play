@@ -38,6 +38,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `SafeAreaInsets` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 
 #include <functional>
 #include "EventName.hpp"
@@ -57,6 +59,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
 #include "Point.hpp"
 #include "ColorScheme.hpp"
 #include <NitroModules/Promise.hpp>
+#include "SafeAreaInsets.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -143,6 +146,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     }
     inline std::shared_ptr<Promise<std::optional<std::string>>> setRootTemplate(const std::string& templateId) override {
       auto __result = _swiftPart.setRootTemplate(templateId);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) override {
+      auto __result = _swiftPart.addSafeAreaInsetsListener(moduleName, callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

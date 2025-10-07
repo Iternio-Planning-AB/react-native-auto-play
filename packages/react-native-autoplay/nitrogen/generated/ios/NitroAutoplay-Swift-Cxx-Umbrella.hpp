@@ -34,6 +34,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapButton; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
+// Forward declaration of `SafeAreaInsets` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
@@ -51,6 +53,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 #include "NitroMapButtonType.hpp"
 #include "NitroMapTemplateConfig.hpp"
 #include "Point.hpp"
+#include "SafeAreaInsets.hpp"
 #include "VisibilityState.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>

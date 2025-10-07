@@ -17,7 +17,6 @@
 #include "JFunc_void_Point.hpp"
 #include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
-#include "JFunc_void_double_double_double_double_std__optional_bool_.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
@@ -69,8 +68,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void_Point::javaobject> onDoubleClick = this->getFieldValue(fieldOnDoubleClick);
       static const auto fieldOnAppearanceDidChange = clazz->getField<JFunc_void_ColorScheme::javaobject>("onAppearanceDidChange");
       jni::local_ref<JFunc_void_ColorScheme::javaobject> onAppearanceDidChange = this->getFieldValue(fieldOnAppearanceDidChange);
-      static const auto fieldOnSafeAreaInsetsDidChange = clazz->getField<JFunc_void_double_double_double_double_std__optional_bool_::javaobject>("onSafeAreaInsetsDidChange");
-      jni::local_ref<JFunc_void_double_double_double_double_std__optional_bool_::javaobject> onSafeAreaInsetsDidChange = this->getFieldValue(fieldOnSafeAreaInsetsDidChange);
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
       static const auto fieldOnWillAppear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillAppear");
@@ -156,17 +153,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
             auto onAppearanceDidChangeRef = jni::make_global(onAppearanceDidChange);
             return [onAppearanceDidChangeRef](ColorScheme colorScheme) -> void {
               return onAppearanceDidChangeRef->invoke(colorScheme);
-            };
-          }
-        }()) : std::nullopt,
-        onSafeAreaInsetsDidChange != nullptr ? std::make_optional([&]() -> std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)> {
-          if (onSafeAreaInsetsDidChange->isInstanceOf(JFunc_void_double_double_double_double_std__optional_bool__cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_double_double_double_double_std__optional_bool__cxx::javaobject>(onSafeAreaInsetsDidChange);
-            return downcast->cthis()->getFunction();
-          } else {
-            auto onSafeAreaInsetsDidChangeRef = jni::make_global(onSafeAreaInsetsDidChange);
-            return [onSafeAreaInsetsDidChangeRef](double top, double left, double bottom, double right, std::optional<bool> isLegacyLayout) -> void {
-              return onSafeAreaInsetsDidChangeRef->invoke(top,left,bottom,right,isLegacyLayout);
             };
           }
         }()) : std::nullopt,
@@ -259,7 +245,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
         value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
         value.onAppearanceDidChange.has_value() ? JFunc_void_ColorScheme_cxx::fromCpp(value.onAppearanceDidChange.value()) : nullptr,
-        value.onSafeAreaInsetsDidChange.has_value() ? JFunc_void_double_double_double_double_std__optional_bool__cxx::fromCpp(value.onSafeAreaInsetsDidChange.value()) : nullptr,
         jni::make_jstring(value.id),
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,

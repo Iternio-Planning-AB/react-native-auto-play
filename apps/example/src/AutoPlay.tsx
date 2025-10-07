@@ -2,12 +2,15 @@ import {
   AutoPlay,
   MapTemplate,
   type RootComponentInitialProps,
+  useSafeAreaInsets,
 } from '@g4rb4g3/react-native-autoplay';
 import type { MapButton, MapPanButton } from '@g4rb4g3/react-native-autoplay/lib/types/Button';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
+  const safeAreaInsets = useSafeAreaInsets();
+
   const [i, setI] = useState(0);
 
   useEffect(() => {
@@ -17,7 +20,16 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'green' }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'green',
+        paddingTop: safeAreaInsets.top,
+        paddingBottom: safeAreaInsets.bottom,
+        paddingRight: safeAreaInsets.right,
+        paddingLeft: safeAreaInsets.left,
+      }}
+    >
       <Text>
         Hello Nitro {Platform.OS} {i}
       </Text>
@@ -60,8 +72,6 @@ const registerRunnable = () => {
       onClick: ({ x, y }) => console.log('*** onClick', x, y),
       onDoubleClick: ({ x, y }) => console.log('*** onDoubleClick', x, y),
       onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
-      onSafeAreaInsetsDidChange: (top, left, bottom, right, isLegacyLayout) =>
-        console.log('*** onSafeAreaInsetsDidChange', { top, left, bottom, right, isLegacyLayout }),
       mapButtons: [
         {
           type: 'custom',

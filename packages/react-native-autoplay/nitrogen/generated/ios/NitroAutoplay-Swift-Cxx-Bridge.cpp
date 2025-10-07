@@ -69,14 +69,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(double /* top */, double /* left */, double /* bottom */, double /* right */, std::optional<bool> /* isLegacyLayout */)>
-  Func_void_double_double_double_double_std__optional_bool_ create_Func_void_double_double_double_double_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroAutoplay::Func_void_double_double_double_double_std__optional_bool_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](double top, double left, double bottom, double right, std::optional<bool> isLegacyLayout) mutable -> void {
-      swiftClosure.call(top, left, bottom, right, isLegacyLayout);
-    };
-  }
-  
   // pragma MARK: std::function<void(const std::optional<std::string>& /* result */)>
   Func_void_std__optional_std__string_ create_Func_void_std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroAutoplay::Func_void_std__optional_std__string_::fromUnsafe(swiftClosureWrapper);
@@ -90,6 +82,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     auto swiftClosure = NitroAutoplay::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
       swiftClosure.call(error);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const SafeAreaInsets& /* insets */)>
+  Func_void_SafeAreaInsets create_Func_void_SafeAreaInsets(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_SafeAreaInsets::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const SafeAreaInsets& insets) mutable -> void {
+      swiftClosure.call(insets);
     };
   }
   

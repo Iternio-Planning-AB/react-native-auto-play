@@ -42,6 +42,26 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
+
+    override fun addSafeAreaInsetsListener(
+        moduleName: String, callback: (SafeAreaInsets) -> Unit
+    ): () -> Unit {
+        val callbacks = safeAreaInsetsListeners.getOrPut(moduleName) {
+            mutableListOf()
+        }
+        callbacks.add(callback)
+
+        return {
+            safeAreaInsetsListeners[moduleName]?.let {
+                it.remove(callback)
+                if (it.isEmpty()) {
+                    safeAreaInsetsListeners.remove(moduleName)
+                }
+            }
+        }
+    }
+
+
     override fun createAlertTemplate(config: AlertTemplateConfig) {
         // TODO
     }
@@ -92,6 +112,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             mutableMapOf<String, MutableList<(VisibilityState) -> Unit>>()
         private val renderStateListeners =
             mutableMapOf<String, MutableList<(VisibilityState) -> Unit>>()
+        private val safeAreaInsetsListeners =
+            mutableMapOf<String, MutableList<(SafeAreaInsets) -> Unit>>()
 
         fun addListenerTemplateState(
             templateId: String, callback: (VisibilityState) -> Unit
@@ -124,6 +146,26 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         fun emitRenderState(mapTemplateId: String, state: VisibilityState) {
             renderStateListeners[mapTemplateId]?.forEach {
                 it(state)
+            }
+        }
+
+        fun emitSafeAreaInsets(
+            moduleName: String,
+            top: Double,
+            bottom: Double,
+            left: Double,
+            right: Double,
+            isLegacyLayout: Boolean
+        ) {
+            val insets = SafeAreaInsets(
+                top = top,
+                bottom = bottom,
+                left = left,
+                right = right,
+                isLegacyLayout = isLegacyLayout
+            )
+            safeAreaInsetsListeners[moduleName]?.forEach {
+                it(insets)
             }
         }
     }

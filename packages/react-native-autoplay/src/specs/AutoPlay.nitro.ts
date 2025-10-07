@@ -1,7 +1,7 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { AlertTemplateConfig } from '../templates/AlertTemplate';
 import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
-import type { EventName, RemoveListener, VisibilityState } from '../types/Event';
+import type { EventName, RemoveListener, SafeAreaInsets, VisibilityState } from '../types/Event';
 
 export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   /**
@@ -47,4 +47,13 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * Promise might contain an error message in case setting root template failed
    */
   setRootTemplate(templateId: string): Promise<string | null>;
+
+  /**
+   * callback for safe area insets changes
+   * @param insets the insets that you use to determine the safe area for this view.
+   */
+  addSafeAreaInsetsListener(
+    moduleName: string,
+    callback: (insets: SafeAreaInsets) => void
+  ): RemoveListener;
 }

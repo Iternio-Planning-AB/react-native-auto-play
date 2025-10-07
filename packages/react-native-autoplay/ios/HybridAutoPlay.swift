@@ -9,6 +9,9 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var renderStateListeners = [
         String: [(VisibilityState) -> Void]
     ]()
+    private static var safeAreaInsetsListeners = [
+        String: [(SafeAreaInsets) -> Void]
+    ]()
 
     func addListener(eventType: EventName, callback: @escaping () -> Void)
         throws -> () -> Void
@@ -72,6 +75,30 @@ class HybridAutoPlay: HybridAutoPlaySpec {
             {
                 HybridAutoPlay.renderStateListeners.removeValue(
                     forKey: mapTemplateId
+                )
+            }
+        }
+    }
+
+    func addSafeAreaInsetsListener(
+        moduleName: String,
+        callback: @escaping (SafeAreaInsets) -> Void
+    ) throws -> () -> Void {
+        if HybridAutoPlay.safeAreaInsetsListeners[moduleName] != nil {
+            HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.append(callback)
+        } else {
+            HybridAutoPlay.safeAreaInsetsListeners[moduleName] = [callback]
+        }
+
+        return {
+            HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.removeAll {
+                $0 as AnyObject === callback as AnyObject
+            }
+            if HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.isEmpty
+                ?? false
+            {
+                HybridAutoPlay.safeAreaInsetsListeners.removeValue(
+                    forKey: moduleName
                 )
             }
         }
@@ -180,6 +207,22 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         HybridAutoPlay.renderStateListeners[mapTemplateId]?.forEach {
             callback in
             callback(state)
+        }
+    }
+
+    static func emitSafeAreaInsets(
+        moduleName: String,
+        safeAreaInsets: UIEdgeInsets
+    ) {
+        let insets = SafeAreaInsets(
+            top: safeAreaInsets.top,
+            left: safeAreaInsets.left,
+            bottom: safeAreaInsets.bottom,
+            right: safeAreaInsets.right,
+            isLegacyLayout: nil
+        )
+        HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.forEach {
+            callback in callback(insets)
         }
     }
 }
