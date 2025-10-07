@@ -3,6 +3,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
 import com.margelo.nitro.core.Promise
+import java.security.InvalidParameterException
 
 class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListener(
@@ -58,6 +59,23 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                     safeAreaInsetsListeners.remove(moduleName)
                 }
             }
+        }
+    }
+
+    override fun setMapButtons(
+        templateId: String,
+        buttons: Array<NitroMapButton>?
+    ) {
+        val template = TemplateStore.getTemplate(templateId)
+            ?: throw InvalidParameterException("setMapButtons failed, template $templateId not found")
+        val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
+            ?: throw InvalidParameterException("setMapButtons failed, no screen found")
+
+        if (template is MapTemplate) {
+            val config = template.config.copy(mapButtons = buttons)
+            val mapTemplate = MapTemplate(config)
+            TemplateStore.addTemplate(templateId, mapTemplate)
+            screen.setTemplate(mapTemplate.template, true,  true)
         }
     }
 

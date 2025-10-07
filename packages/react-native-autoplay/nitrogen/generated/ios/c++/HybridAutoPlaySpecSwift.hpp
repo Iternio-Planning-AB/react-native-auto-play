@@ -160,6 +160,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline void setMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override {
+      auto __result = _swiftPart.setMapButtons(templateId, buttons);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
 
   private:
     NitroAutoplay::HybridAutoPlaySpec_cxx _swiftPart;

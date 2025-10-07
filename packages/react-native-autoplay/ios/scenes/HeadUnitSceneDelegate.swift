@@ -12,8 +12,6 @@ import React
 class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate,
     CPInterfaceControllerDelegate
 {
-    var interfaceController: CPInterfaceController?
-
     override init() {
         super.init(moduleName: SceneStore.rootModuleName)
     }
@@ -37,7 +35,6 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate,
         ]
 
         interfaceController.delegate = self
-        SceneStore.interfaceController = interfaceController
 
         connect(props: props)
         HybridAutoPlay.emit(event: .didconnect)

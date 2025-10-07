@@ -1,7 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
-import android.content.Context
-
 object TemplateStore {
     private val templates = mutableMapOf<String, AndroidAutoTemplate>()
 

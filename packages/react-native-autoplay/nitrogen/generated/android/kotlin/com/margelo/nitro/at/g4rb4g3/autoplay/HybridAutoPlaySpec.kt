@@ -91,6 +91,15 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     val __result = addSafeAreaInsetsListener(moduleName, callback)
     return Func_void_java(__result)
   }
+  
+  abstract fun setMapButtons(templateId: String, buttons: Array<NitroMapButton>?): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun setMapButtons_cxx(templateId: String, buttons: Array<NitroMapButton>?): Unit {
+    val __result = setMapButtons(templateId, buttons?.let { it })
+    return __result
+  }
 
   private external fun initHybrid(): HybridData
 

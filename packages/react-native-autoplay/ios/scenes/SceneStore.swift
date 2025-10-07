@@ -7,10 +7,12 @@
 
 import CarPlay
 
+enum SceneError: Error {
+    case sceneNotFound(String)
+}
+
 class SceneStore {
     static let rootModuleName = "AutoPlayRoot"
-
-    static var interfaceController: CPInterfaceController?
 
     private static var store: [String: AutoPlayScene] = [:]
 

@@ -5,21 +5,13 @@ import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import { NitroAction } from '../utils/NitroAction';
-import { NitroImage } from '../utils/NitroImage';
+import { NitroMapButton } from '../utils/NitroMapButton';
 import { type ActionsIos, Template, type TemplateConfig } from './Template';
 
 export type AutoPlayCluster = string & { __brand: 'uuid' };
 export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayCluster;
 
 type Point = { x: number; y: number };
-
-type NitroMapButtonType = 'pan' | 'custom';
-
-type NitroMapButton = {
-  type: NitroMapButtonType;
-  image?: NitroImage;
-  onPress: () => void;
-};
 
 export type ActionsAndroidMap =
   | [ActionButtonAndroid, ActionButtonAndroid, ActionButtonAndroid, ActionButtonAndroid]
@@ -67,6 +59,8 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
   onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
 }
 
+export type MapButtons = Array<MapButton | MapPanButton>;
+
 export type MapTemplateConfig = Omit<
   NitroMapTemplateConfig,
   'templateHostId' | 'mapButtons' | 'actions'
@@ -79,7 +73,7 @@ export type MapTemplateConfig = Omit<
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner
    */
-  mapButtons?: Array<MapButton | MapPanButton>;
+  mapButtons?: MapButtons;
 
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -122,24 +116,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     const mapConfig: NitroMapTemplateConfig = {
       ...baseConfig,
       actions: nitroActions,
-      mapButtons: mapButtons?.map<NitroMapButton>((button) => {
-        const { onPress, type } = button;
-
-        if (button.type === 'pan') {
-          if (Platform.OS === 'android') {
-            return { type: 'pan', onPress };
-          }
-          throw new Error(
-            'unsupported platform, pan button can be used on Android only! Use a custom button instead.'
-          );
-        }
-
-        return {
-          type,
-          onPress,
-          image: NitroImage.convert(button.image),
-        };
-      }),
+      mapButtons: NitroMapButton.convert(mapButtons),
     };
 
     this.cleanup = AutoPlay.createMapTemplate(mapConfig);
@@ -147,6 +124,11 @@ export class MapTemplate extends Template<MapTemplateConfig> {
 
   public setRootTemplate() {
     AutoPlay.setRootTemplate(this.templateId);
+  }
+
+  public setMapButtons(mapButtons: Array<MapButton | MapPanButton>) {
+    const buttons = NitroMapButton.convert(mapButtons);
+    AutoPlay.setMapButtons(this.templateId, buttons);
   }
 
   public destroy() {

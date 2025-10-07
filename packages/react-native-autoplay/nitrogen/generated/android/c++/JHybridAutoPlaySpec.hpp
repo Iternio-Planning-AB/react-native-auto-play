@@ -61,6 +61,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     std::function<void()> createMapTemplate(const NitroMapTemplateConfig& config) override;
     std::shared_ptr<Promise<std::optional<std::string>>> setRootTemplate(const std::string& templateId) override;
     std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) override;
+    void setMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override;
 
   private:
     friend HybridBase;

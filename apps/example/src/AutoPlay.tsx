@@ -33,22 +33,48 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   );
 };
 
-const registerRunnable = () => {
-  const panButton: MapButton | MapPanButton =
-    Platform.OS === 'android'
-      ? {
-          type: 'pan',
-          onPress: () => console.log('pan button press'),
-        }
-      : {
-          type: 'custom',
-          image: {
-            name: 'drag_pan',
-            size: 22,
-          },
-          onPress: () => console.log('map button on press'),
-        };
+const mapButtonPan: MapButton | MapPanButton =
+  Platform.OS === 'android'
+    ? {
+        type: 'pan',
+        onPress: () => console.log('pan button press'),
+      }
+    : {
+        type: 'custom',
+        image: {
+          name: 'drag_pan',
+          size: 22,
+        },
+        onPress: () => console.log('map button on press'),
+      };
 
+const mapButtonMoney = (template: MapTemplate): MapButton => ({
+  type: 'custom',
+  image: {
+    name: 'euro_symbol',
+    size: 22,
+    color: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'rgba(66, 66, 66, 0.5)',
+  },
+  onPress: () => {
+    template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
+  },
+});
+
+const mapButtonEv = (template: MapTemplate): MapButton => ({
+  type: 'custom',
+  image: {
+    name: 'ev_station',
+    size: 22,
+    color: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'rgba(66, 66, 66, 0.5)',
+  },
+  onPress: () => {
+    template.setMapButtons([mapButtonPan, mapButtonMoney(template)]);
+  },
+});
+
+const registerRunnable = () => {
   const onConnect = () => {
     const template = new MapTemplate({
       component: AutoPlayRoot,
@@ -66,19 +92,6 @@ const registerRunnable = () => {
       onClick: ({ x, y }) => console.log('*** onClick', x, y),
       onDoubleClick: ({ x, y }) => console.log('*** onDoubleClick', x, y),
       onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
-      mapButtons: [
-        {
-          type: 'custom',
-          image: {
-            name: 'ev_station',
-            size: 22,
-            color: 'rgba(255, 255, 255, 1)',
-            backgroundColor: 'rgba(66, 66, 66, 0.5)',
-          },
-          onPress: () => console.log('map button on press'),
-        },
-        panButton,
-      ],
       actions: {
         android: [
           { type: 'back', onPress: () => console.log('*** back') },
@@ -104,6 +117,7 @@ const registerRunnable = () => {
         },
       },
     });
+    template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
     template.setRootTemplate();
   };
 

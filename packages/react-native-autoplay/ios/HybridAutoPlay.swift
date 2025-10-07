@@ -143,20 +143,23 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func setRootTemplate(templateId: String) throws -> Promise<String?> {
-        return Promise.async {
-            guard
-                let template = TemplateStore.getCPTemplate(
-                    templateId: templateId
-                ),
-                let scene = SceneStore.getScene(
-                    moduleName: SceneStore.rootModuleName
-                ),
-                let interfaceController = SceneStore.interfaceController
-            else {
+        guard
+            let template = TemplateStore.getCPTemplate(
+                templateId: templateId
+            ),
+            let scene = SceneStore.getScene(
+                moduleName: SceneStore.rootModuleName
+            ),
+            let interfaceController = scene.interfaceController
+        else {
+            return Promise.async {
                 return
                     "Failed to set root template: Template or scene or interfaceController not found, did you call a craeteXXXTemplate function?"
             }
 
+        }
+
+        return Promise.async {
             if template is CPMapTemplate {
                 await MainActor.run {
                     scene.initRootView()
@@ -174,6 +177,17 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
             return nil
         }
+    }
+
+    func setMapButtons(templateId: String, buttons: [NitroMapButton]?) throws
+    {
+        guard let mapTemplate = TemplateStore.getTemplate(templateId: templateId) as? MapTemplate else {
+            throw TemplateError.templateNotFound(templateId)
+        }
+        
+        mapTemplate.config.mapButtons = buttons
+        mapTemplate.invalidate()
+        
     }
 
     static func emit(event: EventName) {

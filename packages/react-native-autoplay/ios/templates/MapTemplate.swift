@@ -8,7 +8,7 @@ import CarPlay
 import React
 
 class MapTemplate: Template, CPMapTemplateDelegate {
-    let config: NitroMapTemplateConfig
+    var config: NitroMapTemplateConfig
 
     init(config: NitroMapTemplateConfig) {
         self.config = config
@@ -19,48 +19,62 @@ class MapTemplate: Template, CPMapTemplateDelegate {
 
         if let template = self.template as? CPMapTemplate {
             template.mapDelegate = self
-            if let mapButtons = config.mapButtons {
-                template.mapButtons = mapButtons.map { button in
-                    if let image = button.image {
-                        let icon = SymbolFont.imageFromNitroImage(image: image)
-                        return CPMapButton(image: icon) { _ in
-                            button.onPress()
-                        }
-                    }
-                    return CPMapButton { _ in
+        }
+
+        invalidate()
+    }
+
+    func invalidate() {
+        guard let template = self.template as? CPMapTemplate else { return }
+
+        if let mapButtons = config.mapButtons {
+            template.mapButtons = mapButtons.map { button in
+                if let image = button.image {
+                    let icon = SymbolFont.imageFromNitroImage(image: image)
+                    return CPMapButton(image: icon) { _ in
                         button.onPress()
                     }
                 }
-            }
-
-            if let actions = config.actions {
-                actions.forEach { action in
-                    if action.type == .back {
-                        template.backButton = CPBarButton(title: "") { _ in
-                            action.onPress()
-                        }
-                        return
-                    }
-                    let button =
-                        action.image != nil
-                        ? CPBarButton(
-                            image: SymbolFont.imageFromNitroImage(
-                                image: action.image!
-                            )
-                        ) { _ in action.onPress() }
-                    : CPBarButton(title: action.title ?? "") { _ in
-                        action.onPress()
-                    }
-                    
-                    if (action.type == .leading) {
-                        template.leadingNavigationBarButtons.append(button)
-                        return
-                    }
-                    
-                    template.trailingNavigationBarButtons.append(button)
+                return CPMapButton { _ in
+                    button.onPress()
                 }
             }
         }
+
+        if let actions = config.actions {
+            var leadingNavigationBarButtons: [CPBarButton] = []
+            var trailingNavigationBarButtons: [CPBarButton] = []
+            
+            actions.forEach { action in
+                if action.type == .back {
+                    template.backButton = CPBarButton(title: "") { _ in
+                        action.onPress()
+                    }
+                    return
+                }
+                let button =
+                    action.image != nil
+                    ? CPBarButton(
+                        image: SymbolFont.imageFromNitroImage(
+                            image: action.image!
+                        )
+                    ) { _ in action.onPress() }
+                    : CPBarButton(title: action.title ?? "") { _ in
+                        action.onPress()
+                    }
+
+                if action.type == .leading {
+                    leadingNavigationBarButtons.append(button)
+                    return
+                }
+
+                trailingNavigationBarButtons.append(button)
+            }
+            
+            template.leadingNavigationBarButtons = leadingNavigationBarButtons
+            template.trailingNavigationBarButtons = trailingNavigationBarButtons
+        }
+
     }
 
     // MARK: gestures

@@ -2,6 +2,7 @@ import type { HybridObject } from 'react-native-nitro-modules';
 import type { AlertTemplateConfig } from '../templates/AlertTemplate';
 import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
 import type { EventName, RemoveListener, SafeAreaInsets, VisibilityState } from '../types/Event';
+import type { NitroMapButton } from '../utils/NitroMapButton';
 
 export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   /**
@@ -56,4 +57,9 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
     moduleName: string,
     callback: (insets: SafeAreaInsets) => void
   ): RemoveListener;
+
+  /**
+   * update the map buttons on a map template
+   */
+  setMapButtons(templateId: string, buttons?: Array<NitroMapButton>): void;
 }

@@ -6,6 +6,10 @@
 //
 import CarPlay
 
+enum TemplateError: Error {
+    case templateNotFound(String)
+}
+
 class TemplateStore {
     private static var store: [String: Template] = [:]
 

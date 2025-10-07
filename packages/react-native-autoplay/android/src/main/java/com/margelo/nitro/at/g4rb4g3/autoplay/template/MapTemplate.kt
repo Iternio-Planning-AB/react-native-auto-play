@@ -85,7 +85,7 @@ class MapTemplate(
                                 action.flags?.let {
                                     setFlags(it.toInt())
                                 }
-                                action.onPress?.let {
+                                action.onPress.let {
                                     setOnClickListener(it)
                                 }
                             }.build())

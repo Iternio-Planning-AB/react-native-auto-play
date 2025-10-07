@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import com.margelo.nitro.at.g4rb4g3.autoplay.NitroImage
 import androidx.core.graphics.createBitmap
@@ -20,15 +19,11 @@ object SymbolFont {
     private var typeface: Typeface? = null
 
     fun loadFont(context: Context) {
-        if (typeface != null) return
-
-        try {
-            // Load font from assets
-            typeface = ResourcesCompat.getFont(context, R.font.materialsymbolsoutlined_regular)
-            println("✅ Font registered successfully")
-        } catch (e: Exception) {
-            println("❌ Failed to load font: ${e.message}")
+        if (typeface != null) {
+            return
         }
+
+        typeface = ResourcesCompat.getFont(context, R.font.materialsymbolsoutlined_regular)
     }
 
     fun imageFromGlyph(
@@ -40,10 +35,7 @@ object SymbolFont {
     ): Bitmap? {
         loadFont(context)
 
-        Log.d(TAG, "color: $color, backgroundColor: $backgroundColor")
-
         val font = typeface ?: run {
-            println("❌ Font not loaded")
             return null
         }
 

@@ -193,5 +193,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       }
     }();
   }
+  void JHybridAutoPlaySpec::setMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setMapButtons_cxx");
+    method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
+      size_t __size = buttons.value().size();
+      jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = buttons.value()[__i];
+        __array->setElement(__i, *JNitroMapButton::fromCpp(__element));
+      }
+      return __array;
+    }() : nullptr);
+  }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
