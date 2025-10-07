@@ -179,15 +179,29 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func setMapButtons(templateId: String, buttons: [NitroMapButton]?) throws
-    {
-        guard let mapTemplate = TemplateStore.getTemplate(templateId: templateId) as? MapTemplate else {
+    func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?) throws {
+        guard
+            let mapTemplate = TemplateStore.getTemplate(templateId: templateId)
+                as? MapTemplate
+        else {
             throw TemplateError.templateNotFound(templateId)
         }
-        
+
         mapTemplate.config.mapButtons = buttons
         mapTemplate.invalidate()
-        
+    }
+
+    func setTemplateActions(templateId: String, actions: [NitroAction]?) throws {
+        guard let template = TemplateStore.getTemplate(templateId: templateId)
+        else {
+            throw TemplateError.templateNotFound(templateId)
+        }
+    
+        // TODO: this must be more generic
+        if let template = template as? MapTemplate {
+            template.config.actions = actions
+            template.invalidate()
+        }
     }
 
     static func emit(event: EventName) {

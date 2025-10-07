@@ -11,7 +11,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
-import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
 import kotlinx.coroutines.CoroutineScope
@@ -66,11 +65,11 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
     override fun onCarConfigurationChanged(configuration: Configuration) {
         val marker = AndroidAutoScreen.getScreen(ROOT_SESSION)?.marker ?: return
-        val template = TemplateStore.getTemplate(marker) ?: return
+        val config = TemplateStore.getConfig(marker) ?: return
 
-        if (template is MapTemplate && template.config.onAppearanceDidChange != null) {
+        if (config is NitroMapTemplateConfig && config.onAppearanceDidChange != null) {
             val colorScheme = if (carContext.isDarkMode) ColorScheme.DARK else ColorScheme.LIGHT
-            template.config.onAppearanceDidChange(colorScheme)
+            config.onAppearanceDidChange(colorScheme)
         }
     }
 

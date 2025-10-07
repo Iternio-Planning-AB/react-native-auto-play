@@ -243,13 +243,35 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func setMapButtons(templateId: std.string, buttons: bridge.std__optional_std__vector_NitroMapButton__) -> bridge.Result_void_ {
+  public final func setTemplateMapButtons(templateId: std.string, buttons: bridge.std__optional_std__vector_NitroMapButton__) -> bridge.Result_void_ {
     do {
-      try self.__implementation.setMapButtons(templateId: String(templateId), buttons: { () -> [NitroMapButton]? in
+      try self.__implementation.setTemplateMapButtons(templateId: String(templateId), buttons: { () -> [NitroMapButton]? in
         if bridge.has_value_std__optional_std__vector_NitroMapButton__(buttons) {
           let __unwrapped = bridge.get_std__optional_std__vector_NitroMapButton__(buttons)
           return { () -> [NitroMapButton] in
             let __data = bridge.get_data_std__vector_NitroMapButton_(__unwrapped)
+            let __size = __unwrapped.size()
+            return Array(UnsafeBufferPointer(start: __data, count: __size))
+          }()
+        } else {
+          return nil
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setTemplateActions(templateId: std.string, actions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setTemplateActions(templateId: String(templateId), actions: { () -> [NitroAction]? in
+        if bridge.has_value_std__optional_std__vector_NitroAction__(actions) {
+          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(actions)
+          return { () -> [NitroAction] in
+            let __data = bridge.get_data_std__vector_NitroAction_(__unwrapped)
             let __size = __unwrapped.size()
             return Array(UnsafeBufferPointer(start: __data, count: __size))
           }()

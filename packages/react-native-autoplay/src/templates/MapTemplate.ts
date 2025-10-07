@@ -108,14 +108,9 @@ export class MapTemplate extends Template<MapTemplateConfig> {
         })
     );
 
-    const nitroActions =
-      Platform.OS === 'android'
-        ? NitroAction.convertAndroidMap(actions?.android)
-        : NitroAction.convertIos(actions?.ios);
-
     const mapConfig: NitroMapTemplateConfig = {
       ...baseConfig,
-      actions: nitroActions,
+      actions: convertActions(actions),
       mapButtons: NitroMapButton.convert(mapButtons),
     };
 
@@ -126,9 +121,14 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     AutoPlay.setRootTemplate(this.templateId);
   }
 
-  public setMapButtons(mapButtons: Array<MapButton | MapPanButton>) {
+  public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
     const buttons = NitroMapButton.convert(mapButtons);
-    AutoPlay.setMapButtons(this.templateId, buttons);
+    AutoPlay.setTemplateMapButtons(this.templateId, buttons);
+  }
+
+  public setActions(actions: MapTemplateConfig['actions']) {
+    const nitroActions = convertActions(actions);
+    AutoPlay.setTemplateActions(this.templateId, nitroActions);
   }
 
   public destroy() {
@@ -136,3 +136,9 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     super.destroy();
   }
 }
+
+const convertActions = (actions: MapTemplateConfig['actions']) => {
+  return Platform.OS === 'android'
+    ? NitroAction.convertAndroidMap(actions?.android)
+    : NitroAction.convertIos(actions?.ios);
+};

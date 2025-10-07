@@ -4,6 +4,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.CarIcon
+import androidx.car.app.model.Template
 import androidx.car.app.navigation.model.NavigationTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
 import com.margelo.nitro.at.g4rb4g3.autoplay.NitroActionType
@@ -12,14 +13,13 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.NitroMapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.SymbolFont
 
 class MapTemplate(
-    val config: NitroMapTemplateConfig
-) : AndroidAutoTemplate() {
-
-    init {
+    private val config: NitroMapTemplateConfig
+) {
+    fun parse(): Template {
         val context =
             AndroidAutoSession.getRootContext() //TODO: this should actually use the proper screen/session context
 
-        template = NavigationTemplate.Builder().apply {
+        return NavigationTemplate.Builder().apply {
             setActionStrip(
                 ActionStrip.Builder().apply {
                     addAction(Action.APP_ICON)

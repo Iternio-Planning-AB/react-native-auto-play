@@ -209,9 +209,9 @@ class VirtualRenderer(
     private fun getMapTemplateConfig(): NitroMapTemplateConfig? {
         val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
         val marker = screenManager.top.marker ?: return null
-        val template = TemplateStore.getTemplate(marker)
-        if (template is MapTemplate) {
-            return template.config
+        val config = TemplateStore.getConfig(marker)
+        if (config is NitroMapTemplateConfig) {
+            return config
         }
         return null
     }

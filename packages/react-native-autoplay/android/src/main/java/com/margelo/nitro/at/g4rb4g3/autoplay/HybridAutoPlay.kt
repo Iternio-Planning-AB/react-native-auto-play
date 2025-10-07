@@ -62,20 +62,38 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
-    override fun setMapButtons(
+    override fun setTemplateMapButtons(
         templateId: String,
         buttons: Array<NitroMapButton>?
     ) {
-        val template = TemplateStore.getTemplate(templateId)
+        val config = TemplateStore.getConfig(templateId)
             ?: throw InvalidParameterException("setMapButtons failed, template $templateId not found")
         val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
             ?: throw InvalidParameterException("setMapButtons failed, no screen found")
 
-        if (template is MapTemplate) {
-            val config = template.config.copy(mapButtons = buttons)
-            val mapTemplate = MapTemplate(config)
-            TemplateStore.addTemplate(templateId, mapTemplate)
-            screen.setTemplate(mapTemplate.template, true,  true)
+        if (config is NitroMapTemplateConfig) {
+            val config = config.copy(mapButtons = buttons)
+            val mapTemplate = MapTemplate(config).parse()
+            TemplateStore.setTemplate(templateId, mapTemplate, config)
+            screen.setTemplate(mapTemplate, true,  true)
+        }
+    }
+
+    override fun setTemplateActions(
+        templateId: String,
+        actions: Array<NitroAction>?
+    ) {
+        val config = TemplateStore.getConfig(templateId)
+            ?: throw InvalidParameterException("setMapButtons failed, template $templateId not found")
+        val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
+            ?: throw InvalidParameterException("setMapButtons failed, no screen found")
+
+        // TODO: this must be more generic
+        if (config is NitroMapTemplateConfig) {
+            val config = config.copy(actions = actions)
+            val mapTemplate = MapTemplate(config).parse()
+            TemplateStore.setTemplate(templateId, mapTemplate, config)
+            screen.setTemplate(mapTemplate, true,  true)
         }
     }
 
@@ -102,8 +120,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             }
         }
 
-        val template = MapTemplate(config)
-        TemplateStore.addTemplate(config.id, template)
+        val template = MapTemplate(config).parse()
+        TemplateStore.setTemplate(config.id, template, config)
 
         return {
             removeTemplateStateListener()
@@ -117,7 +135,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             val template = TemplateStore.getTemplate(templateId)
                 ?: return@async "setRootTemplate failed, specified template not found"
 
-            screen.setTemplate(template.template, true, true)
+            screen.setTemplate(template, true, true)
             return@async null
         }
     }

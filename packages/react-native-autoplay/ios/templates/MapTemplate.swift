@@ -44,10 +44,11 @@ class MapTemplate: Template, CPMapTemplateDelegate {
         if let actions = config.actions {
             var leadingNavigationBarButtons: [CPBarButton] = []
             var trailingNavigationBarButtons: [CPBarButton] = []
+            var backButton: CPBarButton?
             
             actions.forEach { action in
                 if action.type == .back {
-                    template.backButton = CPBarButton(title: "") { _ in
+                    backButton = CPBarButton(title: "") { _ in
                         action.onPress()
                     }
                     return
@@ -71,10 +72,10 @@ class MapTemplate: Template, CPMapTemplateDelegate {
                 trailingNavigationBarButtons.append(button)
             }
             
+            template.backButton = backButton
             template.leadingNavigationBarButtons = leadingNavigationBarButtons
             template.trailingNavigationBarButtons = trailingNavigationBarButtons
         }
-
     }
 
     // MARK: gestures

@@ -58,6 +58,36 @@ const mapButtonMoney = (template: MapTemplate): MapButton => ({
   },
   onPress: () => {
     template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
+    template.setActions({
+      android: [
+        {
+          type: 'image',
+          image: { name: 'home', size: 22 },
+          onPress: () => console.log('*** home'),
+        },
+        {
+          type: 'text',
+          title: 'work',
+          onPress: () => console.log('*** work'),
+        },
+      ],
+      ios: {
+        leadingNavigationBarButtons: [
+          {
+            type: 'image',
+            image: { name: 'home', size: 22 },
+            onPress: () => console.log('*** home'),
+          },
+        ],
+        trailingNavigationBarButtons: [
+          {
+            type: 'text',
+            title: 'work',
+            onPress: () => console.log('*** work'),
+          },
+        ],
+      },
+    });
   },
 });
 
@@ -71,6 +101,41 @@ const mapButtonEv = (template: MapTemplate): MapButton => ({
   },
   onPress: () => {
     template.setMapButtons([mapButtonPan, mapButtonMoney(template)]);
+    template.setActions({
+      android: [
+        {
+          type: 'image',
+          image: { name: 'home', size: 22 },
+          onPress: () => console.log('*** home'),
+        },
+        {
+          type: 'image',
+          image: {
+            name: 'vaccines',
+          },
+          onPress: () => console.log('*** vaccines'),
+        },
+      ],
+      ios: {
+        backButton: { type: 'back', onPress: () => console.log('*** back') },
+        leadingNavigationBarButtons: [
+          {
+            type: 'image',
+            image: { name: 'home', size: 22 },
+            onPress: () => console.log('*** home'),
+          },
+        ],
+        trailingNavigationBarButtons: [
+          {
+            type: 'image',
+            image: {
+              name: 'vaccines',
+            },
+            onPress: () => console.log('*** vaccines'),
+          },
+        ],
+      },
+    });
   },
 });
 

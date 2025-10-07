@@ -25,6 +25,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig;
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapButton; }
+// Forward declaration of `NitroAction` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 
 #include <functional>
 #include "EventName.hpp"
@@ -37,6 +39,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapButton; }
 #include "SafeAreaInsets.hpp"
 #include "NitroMapButton.hpp"
 #include <vector>
+#include "NitroAction.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -77,7 +80,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       virtual std::function<void()> createMapTemplate(const NitroMapTemplateConfig& config) = 0;
       virtual std::shared_ptr<Promise<std::optional<std::string>>> setRootTemplate(const std::string& templateId) = 0;
       virtual std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) = 0;
-      virtual void setMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
+      virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
+      virtual void setTemplateActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& actions) = 0;
 
     protected:
       // Hybrid Setup
