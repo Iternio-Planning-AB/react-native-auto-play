@@ -1,6 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
-import androidx.activity.OnBackPressedCallback
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
 import androidx.car.app.model.CarIcon
