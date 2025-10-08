@@ -60,20 +60,9 @@ class Parser {
         var result = text.text
 
         if let distance = text.distance {
-            let formatter = MeasurementFormatter()
-            formatter.unitOptions = .naturalScale
-            formatter.unitStyle = .medium
-            formatter.numberFormatter.minimumFractionDigits = 0
-            formatter.numberFormatter.maximumFractionDigits =  distance > 10000 ? 0 : 2
-            formatter.numberFormatter.roundingMode = .halfUp
-
-            let measurement = Measurement(
-                value: distance,
-                unit: UnitLength.meters
-            )
             result = result.replacingOccurrences(
                 of: "{distance}",
-                with: formatter.string(from: measurement)
+                with: parseDistance(distance: distance)
             )
         }
 
@@ -94,5 +83,37 @@ class Parser {
         }
 
         return result
+    }
+
+    static func parseDistance(distance: Distance) -> String {
+        let formatter = MeasurementFormatter()
+        formatter.unitOptions = .providedUnit
+        formatter.unitStyle = .medium
+        formatter.numberFormatter.minimumFractionDigits = 0
+        formatter.numberFormatter.roundingMode = .halfUp
+
+        var unit: UnitLength
+        
+        switch distance.unit {
+        case .meters:
+            formatter.numberFormatter.maximumFractionDigits = 0
+            unit = UnitLength.meters
+        case .miles:
+            formatter.numberFormatter.maximumFractionDigits = 1
+            unit = UnitLength.miles
+        case .yards:
+            formatter.numberFormatter.maximumFractionDigits = 0
+            unit = UnitLength.yards
+        case .feet:
+            formatter.numberFormatter.maximumFractionDigits = 0
+            unit =  UnitLength.feet
+        case .kilometers:
+            formatter.numberFormatter.maximumFractionDigits = 1
+            unit = UnitLength.kilometers
+        }
+
+        let measurement = Measurement(value: distance.value, unit: unit)
+
+        return formatter.string(from: measurement)
     }
 }

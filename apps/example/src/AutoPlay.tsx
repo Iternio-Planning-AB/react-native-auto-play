@@ -3,6 +3,7 @@ import {
   MapTemplate,
   type RootComponentInitialProps,
   SafeAreaView,
+  TextPlaceholders,
 } from '@g4rb4g3/react-native-autoplay';
 import { ListTemplate } from '@g4rb4g3/react-native-autoplay/lib/templates/ListTemplate';
 import type { MapButton, MapPanButton } from '@g4rb4g3/react-native-autoplay/lib/types/Button';
@@ -77,7 +78,11 @@ const mapButtonEv = (template: MapTemplate): MapButton => ({
 const getListTemplate = () => {
   const template = new ListTemplate({
     id: 'list',
-    title: { text: 'list title {distance}', distance: 1.239 },
+    title: {
+      text: `${TextPlaceholders.Distance} ${TextPlaceholders.Duration}`,
+      distance: { unit: 'meters', value: 1234 },
+      duration: 4711,
+    },
     actions: {
       android: {
         startHeaderAction: {

@@ -18,9 +18,11 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `Distance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Distance; }
 
 #include <string>
+#include "Distance.hpp"
 #include <optional>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
@@ -31,12 +33,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
   struct Text {
   public:
     std::string text     SWIFT_PRIVATE;
-    std::optional<double> distance     SWIFT_PRIVATE;
+    std::optional<Distance> distance     SWIFT_PRIVATE;
     std::optional<double> duration     SWIFT_PRIVATE;
 
   public:
     Text() = default;
-    explicit Text(std::string text, std::optional<double> distance, std::optional<double> duration): text(text), distance(distance), duration(duration) {}
+    explicit Text(std::string text, std::optional<Distance> distance, std::optional<double> duration): text(text), distance(distance), duration(duration) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -50,14 +52,14 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::Text(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "text")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "distance")),
+        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::Distance>>::fromJSI(runtime, obj.getProperty(runtime, "distance")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "duration"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::Text& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "text", JSIConverter<std::string>::toJSI(runtime, arg.text));
-      obj.setProperty(runtime, "distance", JSIConverter<std::optional<double>>::toJSI(runtime, arg.distance));
+      obj.setProperty(runtime, "distance", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::Distance>>::toJSI(runtime, arg.distance));
       obj.setProperty(runtime, "duration", JSIConverter<std::optional<double>>::toJSI(runtime, arg.duration));
       return obj;
     }
@@ -67,7 +69,7 @@ namespace margelo::nitro {
       }
       jsi::Object obj = value.getObject(runtime);
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "text"))) return false;
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "distance"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::Distance>>::canConvert(runtime, obj.getProperty(runtime, "distance"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "duration"))) return false;
       return true;
     }

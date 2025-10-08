@@ -16,6 +16,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `DistanceUnits` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class DistanceUnits; }
+// Forward declaration of `Distance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Distance; }
 // Forward declaration of `EventName` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class EventName; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
@@ -50,6 +54,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 #include "AlertStyle.hpp"
 #include "AlertTemplateConfig.hpp"
 #include "ColorScheme.hpp"
+#include "Distance.hpp"
+#include "DistanceUnits.hpp"
 #include "EventName.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "NitroAction.hpp"

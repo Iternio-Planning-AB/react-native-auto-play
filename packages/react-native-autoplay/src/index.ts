@@ -14,3 +14,4 @@ export * from './templates/Template';
 export * from './types/Event';
 export * from './types/GestureEvents';
 export * from './types/RootComponent';
+export * from './types/Text';

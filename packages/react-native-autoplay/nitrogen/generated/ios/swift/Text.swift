@@ -18,10 +18,10 @@ public extension Text {
   /**
    * Create a new instance of `Text`.
    */
-  init(text: String, distance: Double?, duration: Double?) {
-    self.init(std.string(text), { () -> bridge.std__optional_double_ in
+  init(text: String, distance: Distance?, duration: Double?) {
+    self.init(std.string(text), { () -> bridge.std__optional_Distance_ in
       if let __unwrappedValue = distance {
-        return bridge.create_std__optional_double_(__unwrappedValue)
+        return bridge.create_std__optional_Distance_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -45,16 +45,16 @@ public extension Text {
     }
   }
   
-  var distance: Double? {
+  var distance: Distance? {
     @inline(__always)
     get {
       return self.__distance.value
     }
     @inline(__always)
     set {
-      self.__distance = { () -> bridge.std__optional_double_ in
+      self.__distance = { () -> bridge.std__optional_Distance_ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
+          return bridge.create_std__optional_Distance_(__unwrappedValue)
         } else {
           return .init()
         }

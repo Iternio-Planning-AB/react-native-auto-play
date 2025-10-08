@@ -14,6 +14,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertStyle; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `DistanceUnits` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class DistanceUnits; }
+// Forward declaration of `Distance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct Distance; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -43,6 +47,8 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 #include "AlertAction.hpp"
 #include "AlertStyle.hpp"
 #include "ColorScheme.hpp"
+#include "Distance.hpp"
+#include "DistanceUnits.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -493,6 +499,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(ColorScheme /* colorScheme */)> get_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<Distance>
+  /**
+   * Specialized version of `std::optional<Distance>`.
+   */
+  using std__optional_Distance_ = std::optional<Distance>;
+  inline std::optional<Distance> create_std__optional_Distance_(const Distance& value) noexcept {
+    return std::optional<Distance>(value);
+  }
+  inline bool has_value_std__optional_Distance_(const std::optional<Distance>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline Distance get_std__optional_Distance_(const std::optional<Distance>& optional) noexcept {
     return *optional;
   }
   

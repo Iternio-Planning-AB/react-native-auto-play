@@ -10,6 +10,10 @@
 #include <fbjni/fbjni.h>
 #include "Text.hpp"
 
+#include "Distance.hpp"
+#include "DistanceUnits.hpp"
+#include "JDistance.hpp"
+#include "JDistanceUnits.hpp"
 #include <optional>
 #include <string>
 
@@ -34,13 +38,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldText = clazz->getField<jni::JString>("text");
       jni::local_ref<jni::JString> text = this->getFieldValue(fieldText);
-      static const auto fieldDistance = clazz->getField<jni::JDouble>("distance");
-      jni::local_ref<jni::JDouble> distance = this->getFieldValue(fieldDistance);
+      static const auto fieldDistance = clazz->getField<JDistance>("distance");
+      jni::local_ref<JDistance> distance = this->getFieldValue(fieldDistance);
       static const auto fieldDuration = clazz->getField<jni::JDouble>("duration");
       jni::local_ref<jni::JDouble> duration = this->getFieldValue(fieldDuration);
       return Text(
         text->toStdString(),
-        distance != nullptr ? std::make_optional(distance->value()) : std::nullopt,
+        distance != nullptr ? std::make_optional(distance->toCpp()) : std::nullopt,
         duration != nullptr ? std::make_optional(duration->value()) : std::nullopt
       );
     }
@@ -53,7 +57,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static jni::local_ref<JText::javaobject> fromCpp(const Text& value) {
       return newInstance(
         jni::make_jstring(value.text),
-        value.distance.has_value() ? jni::JDouble::valueOf(value.distance.value()) : nullptr,
+        value.distance.has_value() ? JDistance::fromCpp(value.distance.value()) : nullptr,
         value.duration.has_value() ? jni::JDouble::valueOf(value.duration.value()) : nullptr
       );
     }
