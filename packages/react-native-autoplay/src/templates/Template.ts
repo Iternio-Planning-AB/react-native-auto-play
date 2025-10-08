@@ -1,4 +1,6 @@
+import { AutoPlay } from '..';
 import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
+import { NitroAction } from '../utils/NitroAction';
 
 export type ActionsIos = {
   backButton?: BackButton;
@@ -7,8 +9,13 @@ export type ActionsIos = {
 };
 
 export type ActionsAndroid = {
-  startHeaderAction?: BackButton | AppButton;
-  endHeaderAction?: [ActionButtonAndroid, ActionButtonAndroid] | [ActionButtonAndroid];
+  startHeaderAction?: AppButton | BackButton;
+  endHeaderActions?: [ActionButtonAndroid, ActionButtonAndroid] | [ActionButtonAndroid];
+};
+
+export type Actions = {
+  android?: ActionsAndroid;
+  ios?: ActionsIos;
 };
 
 export interface TemplateConfig {
@@ -43,13 +50,13 @@ export interface TemplateConfig {
   onPoppedToRoot?(animated?: boolean): void;
 }
 
-export class Template<P> {
+export class Template<TemplateConfigType, ActionsType> {
   public get type(): string {
     return 'unset';
   }
   public templateId!: string;
 
-  constructor(config: TemplateConfig & P) {
+  constructor(config: TemplateConfig & TemplateConfigType) {
     this.templateId = config.id;
   }
 
@@ -57,4 +64,17 @@ export class Template<P> {
    * must be called manually whenever you are sure the template is not needed anymore
    */
   public destroy() {}
+
+  public setRootTemplate() {
+    AutoPlay.setRootTemplate(this.templateId);
+  }
+
+  public push() {
+    AutoPlay.pushTemplate(this.templateId);
+  }
+
+  public setActions(actions?: ActionsType) {
+    const nitroActions = NitroAction.convert(actions as Actions);
+    AutoPlay.setTemplateActions(this.templateId, nitroActions);
+  }
 }

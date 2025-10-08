@@ -3,19 +3,17 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.template
 import androidx.car.app.model.Template
 
 object TemplateStore {
-    private val templates = mutableMapOf<String, Template>()
-    private val configs = mutableMapOf<String, Any>()
+    val templates = mutableMapOf<String, AndroidAutoTemplate<*>>()
 
-    fun setTemplate(id: String, template: Template, config: Any) {
+    fun <T> setTemplate(id: String, template: AndroidAutoTemplate<T>,) {
         templates.put(id, template)
-        configs.put(id, config)
     }
 
     fun getTemplate(id: String): Template? {
-        return templates.get(id)
+        return templates[id]?.parse()
     }
 
     fun getConfig(id: String): Any? {
-        return configs.get(id)
+        return templates[id]?.config
     }
 }

@@ -20,6 +20,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroAlignment; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
@@ -44,6 +46,7 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 #include "HybridAutoPlaySpec.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
 #include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
@@ -285,6 +288,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<NitroAlignment>
+  /**
+   * Specialized version of `std::optional<NitroAlignment>`.
+   */
+  using std__optional_NitroAlignment_ = std::optional<NitroAlignment>;
+  inline std::optional<NitroAlignment> create_std__optional_NitroAlignment_(const NitroAlignment& value) noexcept {
+    return std::optional<NitroAlignment>(value);
+  }
+  inline bool has_value_std__optional_NitroAlignment_(const std::optional<NitroAlignment>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroAlignment get_std__optional_NitroAlignment_(const std::optional<NitroAlignment>& optional) noexcept {
     return *optional;
   }
   

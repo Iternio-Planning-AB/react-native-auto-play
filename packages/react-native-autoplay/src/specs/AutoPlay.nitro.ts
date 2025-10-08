@@ -1,7 +1,8 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { AlertTemplateConfig } from '../templates/AlertTemplate';
+import type { NitroListTemplateConfig } from '../templates/ListTemplate';
 import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
-import type { EventName, RemoveListener, SafeAreaInsets, VisibilityState } from '../types/Event';
+import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
 import type { NitroAction } from '../utils/NitroAction';
 import type { NitroMapButton } from '../utils/NitroMapButton';
 
@@ -12,7 +13,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * @param eventType generic events
    * @returns token to remove the listener
    */
-  addListener(eventType: EventName, callback: () => void): RemoveListener;
+  addListener(eventType: EventName, callback: () => void): CleanupCallback;
 
   /**
    * adds a listener for the session/scene state
@@ -23,7 +24,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   addListenerRenderState(
     mapTemplateId: string,
     callback: (payload: VisibilityState) => void
-  ): RemoveListener;
+  ): CleanupCallback;
 
   /**
    * @namespace iOS // add similar thing for Android, probably a MessageTemplate then?
@@ -42,13 +43,23 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * creates a map template that can render any react component
    * @returns a cleanup function, eg: removes attached listeners
    */
-  createMapTemplate(config: NitroMapTemplateConfig): () => void;
+  createMapTemplate(config: NitroMapTemplateConfig): CleanupCallback;
+
+  createListTemplate(config: NitroListTemplateConfig): CleanupCallback;
 
   /**
    * sets the specified template as root template, initializes a new stack
    * Promise might contain an error message in case setting root template failed
+   * can be used on any Android screen/iOS scene
    */
   setRootTemplate(templateId: string): Promise<string | null>;
+
+  /**
+   * push a template to the AutoPlayRoot Android screen/iOS scene
+   */
+  pushTemplate(templateId: string): Promise<string | null>;
+
+  popTemplate(): Promise<string | null>;
 
   /**
    * callback for safe area insets changes
@@ -57,7 +68,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   addSafeAreaInsetsListener(
     moduleName: string,
     callback: (insets: SafeAreaInsets) => void
-  ): RemoveListener;
+  ): CleanupCallback;
 
   /**
    * update the map buttons on a map template

@@ -19,10 +19,6 @@ public extension NitroActionType {
     switch string {
       case "custom":
         self = .custom
-      case "leading":
-        self = .leading
-      case "trailing":
-        self = .trailing
       case "appIcon":
         self = .appicon
       case "back":
@@ -39,10 +35,6 @@ public extension NitroActionType {
     switch self {
       case .custom:
         return "custom"
-      case .leading:
-        return "leading"
-      case .trailing:
-        return "trailing"
       case .appicon:
         return "appIcon"
       case .back:

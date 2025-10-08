@@ -22,12 +22,15 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroAlignment; }
 
 #include <string>
 #include <optional>
 #include "NitroImage.hpp"
 #include <functional>
 #include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay {
 
@@ -41,11 +44,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     std::optional<bool> enabled     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
     NitroActionType type     SWIFT_PRIVATE;
+    std::optional<NitroAlignment> alignment     SWIFT_PRIVATE;
     std::optional<double> flags     SWIFT_PRIVATE;
 
   public:
     NitroAction() = default;
-    explicit NitroAction(std::optional<std::string> title, std::optional<NitroImage> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<double> flags): title(title), image(image), enabled(enabled), onPress(onPress), type(type), flags(flags) {}
+    explicit NitroAction(std::optional<std::string> title, std::optional<NitroImage> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -63,6 +67,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "enabled")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroActionType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
+        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroAlignment>>::fromJSI(runtime, obj.getProperty(runtime, "alignment")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "flags"))
       );
     }
@@ -73,6 +78,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "enabled", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.enabled));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
       obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroActionType>::toJSI(runtime, arg.type));
+      obj.setProperty(runtime, "alignment", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroAlignment>>::toJSI(runtime, arg.alignment));
       obj.setProperty(runtime, "flags", JSIConverter<std::optional<double>>::toJSI(runtime, arg.flags));
       return obj;
     }
@@ -86,6 +92,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "enabled"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::NitroActionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::NitroAlignment>>::canConvert(runtime, obj.getProperty(runtime, "alignment"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "flags"))) return false;
       return true;
     }

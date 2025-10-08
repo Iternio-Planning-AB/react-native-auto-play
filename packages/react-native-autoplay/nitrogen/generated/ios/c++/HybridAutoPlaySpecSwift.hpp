@@ -34,10 +34,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroAlignment; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `NitroListTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroListTemplateConfig; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 
@@ -56,8 +60,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "NitroImage.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
 #include "Point.hpp"
 #include "ColorScheme.hpp"
+#include "NitroListTemplateConfig.hpp"
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 
@@ -144,8 +150,32 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline std::function<void()> createListTemplate(const NitroListTemplateConfig& config) override {
+      auto __result = _swiftPart.createListTemplate(std::forward<decltype(config)>(config));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
     inline std::shared_ptr<Promise<std::optional<std::string>>> setRootTemplate(const std::string& templateId) override {
       auto __result = _swiftPart.setRootTemplate(templateId);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::optional<std::string>>> pushTemplate(const std::string& templateId) override {
+      auto __result = _swiftPart.pushTemplate(templateId);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::optional<std::string>>> popTemplate() override {
+      auto __result = _swiftPart.popTemplate();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

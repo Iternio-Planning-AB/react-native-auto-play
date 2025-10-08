@@ -29,10 +29,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroAlignment; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class ColorScheme; }
+// Forward declaration of `NitroListTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroListTemplateConfig; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 
@@ -67,6 +71,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "JNitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "JNitroActionType.hpp"
+#include "NitroAlignment.hpp"
+#include "JNitroAlignment.hpp"
 #include "Point.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JPoint.hpp"
@@ -75,6 +81,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "ColorScheme.hpp"
 #include "JFunc_void_ColorScheme.hpp"
 #include "JColorScheme.hpp"
+#include "NitroListTemplateConfig.hpp"
+#include "JNitroListTemplateConfig.hpp"
 #include "SafeAreaInsets.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JSafeAreaInsets.hpp"
@@ -162,9 +170,56 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       }
     }();
   }
+  std::function<void()> JHybridAutoPlaySpec::createListTemplate(const NitroListTemplateConfig& config) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JNitroListTemplateConfig> /* config */)>("createListTemplate_cxx");
+    auto __result = method(_javaPart, JNitroListTemplateConfig::fromCpp(config));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
   std::shared_ptr<Promise<std::optional<std::string>>> JHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId));
+    return [&]() {
+      auto __promise = Promise<std::optional<std::string>>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JString>(__boxedResult);
+        __promise->resolve(__result != nullptr ? std::make_optional(__result->toStdString()) : std::nullopt);
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<std::optional<std::string>>> JHybridAutoPlaySpec::pushTemplate(const std::string& templateId) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("pushTemplate");
+    auto __result = method(_javaPart, jni::make_jstring(templateId));
+    return [&]() {
+      auto __promise = Promise<std::optional<std::string>>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JString>(__boxedResult);
+        __promise->resolve(__result != nullptr ? std::make_optional(__result->toStdString()) : std::nullopt);
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<std::optional<std::string>>> JHybridAutoPlaySpec::popTemplate() {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("popTemplate");
+    auto __result = method(_javaPart);
     return [&]() {
       auto __promise = Promise<std::optional<std::string>>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

@@ -79,9 +79,26 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
+  abstract fun createListTemplate(config: NitroListTemplateConfig): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun createListTemplate_cxx(config: NitroListTemplateConfig): Func_void {
+    val __result = createListTemplate(config)
+    return Func_void_java(__result)
+  }
+  
   @DoNotStrip
   @Keep
   abstract fun setRootTemplate(templateId: String): Promise<String?>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun pushTemplate(templateId: String): Promise<String?>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun popTemplate(): Promise<String?>
   
   abstract fun addSafeAreaInsetsListener(moduleName: String, callback: (insets: SafeAreaInsets) -> Unit): () -> Unit
   

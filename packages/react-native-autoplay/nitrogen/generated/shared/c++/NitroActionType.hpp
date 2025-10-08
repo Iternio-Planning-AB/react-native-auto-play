@@ -30,10 +30,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
    */
   enum class NitroActionType {
     CUSTOM      SWIFT_NAME(custom) = 0,
-    LEADING      SWIFT_NAME(leading) = 1,
-    TRAILING      SWIFT_NAME(trailing) = 2,
-    APPICON      SWIFT_NAME(appicon) = 3,
-    BACK      SWIFT_NAME(back) = 4,
+    APPICON      SWIFT_NAME(appicon) = 1,
+    BACK      SWIFT_NAME(back) = 2,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -47,8 +45,6 @@ namespace margelo::nitro {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("custom"): return margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::CUSTOM;
-        case hashString("leading"): return margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::LEADING;
-        case hashString("trailing"): return margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::TRAILING;
         case hashString("appIcon"): return margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::APPICON;
         case hashString("back"): return margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::BACK;
         default: [[unlikely]]
@@ -58,8 +54,6 @@ namespace margelo::nitro {
     static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::NitroActionType arg) {
       switch (arg) {
         case margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::CUSTOM: return JSIConverter<std::string>::toJSI(runtime, "custom");
-        case margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::LEADING: return JSIConverter<std::string>::toJSI(runtime, "leading");
-        case margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::TRAILING: return JSIConverter<std::string>::toJSI(runtime, "trailing");
         case margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::APPICON: return JSIConverter<std::string>::toJSI(runtime, "appIcon");
         case margelo::nitro::at::g4rb4g3::autoplay::NitroActionType::BACK: return JSIConverter<std::string>::toJSI(runtime, "back");
         default: [[unlikely]]
@@ -74,8 +68,6 @@ namespace margelo::nitro {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, value);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("custom"):
-        case hashString("leading"):
-        case hashString("trailing"):
         case hashString("appIcon"):
         case hashString("back"):
           return true;

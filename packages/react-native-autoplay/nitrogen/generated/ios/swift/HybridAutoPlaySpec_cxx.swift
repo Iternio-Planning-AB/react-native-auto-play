@@ -198,9 +198,74 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func createListTemplate(config: NitroListTemplateConfig) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.createListTemplate(config: config)
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_std__optional_std__string____ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__optional_std__string___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__optional_std__string___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__optional_std__string___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__optional_std__string_ in
+              if let __unwrappedValue = __result {
+                return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+              } else {
+                return .init()
+              }
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__optional_std__string____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__optional_std__string____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func pushTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_std__optional_std__string____ {
+    do {
+      let __result = try self.__implementation.pushTemplate(templateId: String(templateId))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__optional_std__string___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__optional_std__string___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__optional_std__string___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__optional_std__string_ in
+              if let __unwrappedValue = __result {
+                return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+              } else {
+                return .init()
+              }
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__optional_std__string____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__optional_std__string____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func popTemplate() -> bridge.Result_std__shared_ptr_Promise_std__optional_std__string____ {
+    do {
+      let __result = try self.__implementation.popTemplate()
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__optional_std__string___ in
         let __promise = bridge.create_std__shared_ptr_Promise_std__optional_std__string___()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__optional_std__string___(__promise)

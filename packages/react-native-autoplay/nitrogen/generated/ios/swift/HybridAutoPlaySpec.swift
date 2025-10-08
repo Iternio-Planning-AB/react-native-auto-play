@@ -20,7 +20,10 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func presentTemplate(templateId: String) throws -> Void
   func dismissTemplate(templateId: String) throws -> Void
   func createMapTemplate(config: NitroMapTemplateConfig) throws -> () -> Void
+  func createListTemplate(config: NitroListTemplateConfig) throws -> () -> Void
   func setRootTemplate(templateId: String) throws -> Promise<String?>
+  func pushTemplate(templateId: String) throws -> Promise<String?>
+  func popTemplate() throws -> Promise<String?>
   func addSafeAreaInsetsListener(moduleName: String, callback: @escaping (_ insets: SafeAreaInsets) -> Void) throws -> () -> Void
   func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?) throws -> Void
   func setTemplateActions(templateId: String, actions: [NitroAction]?) throws -> Void

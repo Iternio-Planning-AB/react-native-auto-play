@@ -1,9 +1,11 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
+import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession.Companion.ROOT_SESSION
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.ThreadUtil
 import com.margelo.nitro.core.Promise
-import java.security.InvalidParameterException
 
 class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListener(
@@ -63,38 +65,40 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun setTemplateMapButtons(
-        templateId: String,
-        buttons: Array<NitroMapButton>?
+        templateId: String, buttons: Array<NitroMapButton>?
     ) {
-        val config = TemplateStore.getConfig(templateId)
-            ?: throw InvalidParameterException("setMapButtons failed, template $templateId not found")
-        val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
-            ?: throw InvalidParameterException("setMapButtons failed, no screen found")
+        val config = TemplateStore.getConfig(templateId) as NitroMapTemplateConfig?
+            ?: throw IllegalArgumentException("setMapButtons failed, template $templateId not found or not of type MapTemplate")
+        val screen = AndroidAutoScreen.getScreen(ROOT_SESSION)
+            ?: throw IllegalArgumentException("setMapButtons failed, no screen found")
+        val context = AndroidAutoSession.getRootContext()
+            ?: throw IllegalArgumentException("setMapButtons failed, carContext found")
 
-        if (config is NitroMapTemplateConfig) {
-            val config = config.copy(mapButtons = buttons)
-            val mapTemplate = MapTemplate(config).parse()
-            TemplateStore.setTemplate(templateId, mapTemplate, config)
-            screen.setTemplate(mapTemplate, true,  true)
-        }
+        val mapTemplate = MapTemplate(context, config.copy(mapButtons = buttons))
+        TemplateStore.setTemplate(templateId, mapTemplate)
+        screen.setTemplate(mapTemplate.parse(), true)
     }
 
     override fun setTemplateActions(
-        templateId: String,
-        actions: Array<NitroAction>?
+        templateId: String, actions: Array<NitroAction>?
     ) {
         val config = TemplateStore.getConfig(templateId)
-            ?: throw InvalidParameterException("setMapButtons failed, template $templateId not found")
-        val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
-            ?: throw InvalidParameterException("setMapButtons failed, no screen found")
+            ?: throw IllegalArgumentException("setTemplateActions failed, template $templateId not found")
+        val screen = AndroidAutoScreen.getScreen(ROOT_SESSION)
+            ?: throw IllegalArgumentException("setTemplateActions failed, no screen found")
+        val context = AndroidAutoSession.getRootContext()
+            ?: throw IllegalArgumentException("setTemplateActions failed, carContext found")
 
-        // TODO: this must be more generic
-        if (config is NitroMapTemplateConfig) {
-            val config = config.copy(actions = actions)
-            val mapTemplate = MapTemplate(config).parse()
-            TemplateStore.setTemplate(templateId, mapTemplate, config)
-            screen.setTemplate(mapTemplate, true,  true)
-        }
+        val template = if (config is NitroMapTemplateConfig) {
+            MapTemplate(context, config.copy(actions = actions))
+        } else if (config is NitroListTemplateConfig) {
+            ListTemplate(context, config.copy(actions = actions))
+        } else {
+            null
+        } ?: throw ClassNotFoundException("failed to map ${config::class.simpleName}")
+
+        TemplateStore.setTemplate(templateId, template)
+        screen.setTemplate(template.parse(), true)
     }
 
 
@@ -110,18 +114,57 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         // TODO
     }
 
-    override fun createMapTemplate(config: NitroMapTemplateConfig): () -> Unit {
-        val removeTemplateStateListener = addListenerTemplateState(config.id) { state ->
+    fun addTemplateStateListener(
+        templateId: String,
+        onWillAppear: Func_void_std__optional_bool_?,
+        onDidAppear: Func_void_std__optional_bool_?,
+        onWillDisappear: Func_void_std__optional_bool_?,
+        onDidDisappear: Func_void_std__optional_bool_?
+    ): () -> Unit {
+        return addListenerTemplateState(templateId) { state ->
             when (state) {
-                VisibilityState.WILLAPPEAR -> config.onWillAppear?.let { it(null) }
-                VisibilityState.DIDAPPEAR -> config.onDidAppear?.let { it(null) }
-                VisibilityState.WILLDISAPPEAR -> config.onWillDisappear?.let { it(null) }
-                VisibilityState.DIDDISAPPEAR -> config.onDidDisappear?.let { it(null) }
+                VisibilityState.WILLAPPEAR -> onWillAppear?.let { it(null) }
+                VisibilityState.DIDAPPEAR -> onDidAppear?.let { it(null) }
+                VisibilityState.WILLDISAPPEAR -> onWillDisappear?.let { it(null) }
+                VisibilityState.DIDDISAPPEAR -> onDidDisappear?.let { it(null) }
             }
         }
+    }
 
-        val template = MapTemplate(config).parse()
-        TemplateStore.setTemplate(config.id, template, config)
+    override fun createMapTemplate(config: NitroMapTemplateConfig): () -> Unit {
+        val removeTemplateStateListener = addTemplateStateListener(
+            config.id,
+            config.onWillAppear,
+            config.onDidAppear,
+            config.onWillDisappear,
+            config.onDidDisappear
+        )
+
+        val context = AndroidAutoSession.getCarContext(config.id)
+            ?: throw IllegalArgumentException("createMapTemplate failed, carContext found")
+
+        val template = MapTemplate(context, config)
+        TemplateStore.setTemplate(config.id, template)
+
+        return {
+            removeTemplateStateListener()
+        }
+    }
+
+    override fun createListTemplate(config: NitroListTemplateConfig): () -> Unit {
+        val removeTemplateStateListener = addTemplateStateListener(
+            config.id,
+            config.onWillAppear,
+            config.onDidAppear,
+            config.onWillDisappear,
+            config.onDidDisappear
+        )
+
+        val context = AndroidAutoSession.getRootContext()
+            ?: throw IllegalArgumentException("createListTemplate failed, carContext found")
+
+        val template = ListTemplate(context, config)
+        TemplateStore.setTemplate(config.id, template)
 
         return {
             removeTemplateStateListener()
@@ -130,18 +173,63 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
     override fun setRootTemplate(templateId: String): Promise<String?> {
         return Promise.async {
-            val screen = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)
-                ?: return@async "setRootTemplate failed, no screen found"
+            val screen = AndroidAutoScreen.getScreen(templateId)
+                ?: return@async "setRootTemplate failed, $templateId screen found"
             val template = TemplateStore.getTemplate(templateId)
-                ?: return@async "setRootTemplate failed, specified template not found"
+                ?: return@async "setRootTemplate failed, $templateId template not found"
+            val isCluster = templateId != ROOT_SESSION
+            val carContext = AndroidAutoSession.getCarContext(templateId)
+                ?: return@async "setRootTemplate failed, carContext for $templateId template not found"
 
-            screen.setTemplate(template, true, true)
+            if (virtualScreens[templateId] == null) {
+                val result = ThreadUtil.postOnUiAndAwait {
+                    virtualScreens[templateId] = VirtualRenderer(carContext, templateId, isCluster)
+                }
+                if (result.isFailure) {
+                    return@async result.exceptionOrNull()?.message
+                        ?: "unknown error initializing the virtual screen"
+                }
+            }
+
+            screen.setTemplate(template, true)
             return@async null
+        }
+    }
+
+    override fun pushTemplate(templateId: String): Promise<String?> {
+        return Promise.async {
+            val context = AndroidAutoSession.getRootContext()
+                ?: return@async "pushTemplate failed, carContext not found"
+            val template = TemplateStore.getTemplate(templateId)
+                ?: return@async "pushTemplate failed, template $templateId not found"
+            val screenManager = AndroidAutoScreen.getScreenManager(ROOT_SESSION)
+                ?: return@async "pushTemplate failed, screenManager not found"
+
+            return@async ThreadUtil.postOnUiAndAwait {
+                val screen = AndroidAutoScreen(context, false, templateId, template)
+                screenManager.push(screen)
+            }.exceptionOrNull()?.message
+        }
+    }
+
+    override fun popTemplate(): Promise<String?> {
+        return Promise.async {
+            val screenManager = AndroidAutoScreen.getScreenManager(ROOT_SESSION)
+                ?: return@async "pushTemplate failed, screenManager not found"
+            if (screenManager.stackSize == 0) {
+                return@async null
+            }
+
+            return@async ThreadUtil.postOnUiAndAwait {
+                screenManager.pop()
+            }.exceptionOrNull()?.message
         }
     }
 
     companion object {
         val TAG = "HybridAutoPlay"
+        private val virtualScreens = mutableMapOf<String, VirtualRenderer>()
+
         private val listeners = mutableMapOf<EventName, MutableList<() -> Unit>>()
 
         private val templateStateListeners =

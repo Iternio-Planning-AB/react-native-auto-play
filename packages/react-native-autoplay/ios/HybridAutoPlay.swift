@@ -116,24 +116,60 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         //TODO
     }
 
-    func createMapTemplate(config: NitroMapTemplateConfig) throws -> () -> Void
-    {
-        let removeTemplateStateListener = try? addListenerTemplateState(
-            templateId: config.id
+    func addTemplateStateListener(
+        templateId: String,
+        onWillAppear: ((_ animated: Bool?) -> Void)?,
+        onWillDisappear: ((_ animated: Bool?) -> Void)?,
+        onDidAppear: ((_ animated: Bool?) -> Void)?,
+        onDidDisappear: ((_ animated: Bool?) -> Void)?
+    ) -> (() -> Void)? {
+        return try? addListenerTemplateState(
+            templateId: templateId
         ) { state in
             switch state.state {
             case .willappear:
-                config.onWillAppear?(state.animated)
+                onWillAppear?(state.animated)
             case .didappear:
-                config.onDidAppear?(state.animated)
+                onDidAppear?(state.animated)
             case .willdisappear:
-                config.onWillDisappear?(state.animated)
+                onWillDisappear?(state.animated)
             case .diddisappear:
-                config.onDidDisappear?(state.animated)
+                onDidDisappear?(state.animated)
             }
         }
+    }
+
+    func createMapTemplate(config: NitroMapTemplateConfig) throws -> () -> Void
+    {
+        let removeTemplateStateListener = addTemplateStateListener(
+            templateId: config.id,
+            onWillAppear: config.onWillAppear,
+            onWillDisappear: config.onWillDisappear,
+            onDidAppear: config.onDidAppear,
+            onDidDisappear: config.onDidDisappear
+        )
 
         let template = MapTemplate(config: config)
+        TemplateStore.addTemplate(template: template, templateId: config.id)
+
+        return {
+            removeTemplateStateListener?()
+            TemplateStore.removeTemplate(templateId: config.id)
+        }
+    }
+
+    func createListTemplate(config: NitroListTemplateConfig) throws -> () ->
+        Void
+    {
+        let removeTemplateStateListener = addTemplateStateListener(
+            templateId: config.id,
+            onWillAppear: config.onWillAppear,
+            onWillDisappear: config.onWillDisappear,
+            onDidAppear: config.onDidAppear,
+            onDidDisappear: config.onDidDisappear
+        )
+
+        let template = ListTemplate(config: config)
         TemplateStore.addTemplate(template: template, templateId: config.id)
 
         return {
@@ -154,7 +190,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         else {
             return Promise.async {
                 return
-                    "Failed to set root template: Template or scene or interfaceController not found, did you call a craeteXXXTemplate function?"
+                    "Failed to set root template: Template or scene or interfaceController not found, did you call a createXXXTemplate function?"
             }
 
         }
@@ -179,7 +215,66 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?) throws {
+    func pushTemplate(templateId: String) throws
+        -> NitroModules.Promise<String?>
+    {
+        guard
+            let template = TemplateStore.getCPTemplate(
+                templateId: templateId
+            ),
+            let scene = SceneStore.getScene(
+                moduleName: SceneStore.rootModuleName
+            ),
+            let interfaceController = scene.interfaceController
+        else {
+            return Promise.async {
+                return
+                    "Failed to push template: Template or scene or interfaceController not found, did you call a createXXXTemplate function?"
+            }
+
+        }
+
+        return Promise.async {
+            do {
+                try await interfaceController.pushTemplate(
+                    template,
+                    animated: true
+                )
+            } catch (let error) {
+                return "Failed to push template: \(error)"
+            }
+
+            return nil
+        }
+    }
+
+    func popTemplate() throws -> NitroModules.Promise<String?> {
+        guard
+            let scene = SceneStore.getScene(
+                moduleName: SceneStore.rootModuleName
+            ),
+            let interfaceController = scene.interfaceController
+        else {
+            return Promise.async {
+                return
+                    "Failed to popTemplate: scene or interfaceController not found"
+            }
+        }
+
+        return Promise.async {
+            do {
+                try await interfaceController.popTemplate(animated: true)
+            } catch (let error) {
+                return "Failed to pop template: \(error)"
+            }
+
+            return nil
+        }
+    }
+
+    func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
+        throws
+    {
         guard
             let mapTemplate = TemplateStore.getTemplate(templateId: templateId)
                 as? MapTemplate
@@ -191,16 +286,23 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         mapTemplate.invalidate()
     }
 
-    func setTemplateActions(templateId: String, actions: [NitroAction]?) throws {
+    func setTemplateActions(templateId: String, actions: [NitroAction]?) throws
+    {
         guard let template = TemplateStore.getTemplate(templateId: templateId)
         else {
             throw TemplateError.templateNotFound(templateId)
         }
-    
-        // TODO: this must be more generic
+
         if let template = template as? MapTemplate {
             template.config.actions = actions
             template.invalidate()
+            return
+        }
+        
+        if let template = template as? ListTemplate {
+            template.config.actions = actions;
+            template.invalidate()
+            return
         }
     }
 

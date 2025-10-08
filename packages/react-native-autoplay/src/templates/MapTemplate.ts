@@ -61,10 +61,11 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
 
 export type MapButtons = Array<MapButton | MapPanButton>;
 
-export type MapTemplateConfig = Omit<
-  NitroMapTemplateConfig,
-  'templateHostId' | 'mapButtons' | 'actions'
-> & {
+export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons' | 'actions'> & {
+  /**
+   * since we need to find the proper Android screen/iOS scene only certain ids can be used on this template
+   */
+  id: MapTemplateId;
   /**
    * react component that is rendered
    */
@@ -84,7 +85,13 @@ export type MapTemplateConfig = Omit<
   };
 };
 
-export class MapTemplate extends Template<MapTemplateConfig> {
+const convertActions = (actions: MapTemplateConfig['actions']) => {
+  return Platform.OS === 'android'
+    ? NitroAction.convertAndroidMap(actions?.android)
+    : NitroAction.convertIos(actions?.ios);
+};
+
+export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['actions']> {
   public get type(): string {
     return 'map';
   }
@@ -108,17 +115,13 @@ export class MapTemplate extends Template<MapTemplateConfig> {
         })
     );
 
-    const mapConfig: NitroMapTemplateConfig = {
+    const nitroConfig: NitroMapTemplateConfig = {
       ...baseConfig,
       actions: convertActions(actions),
       mapButtons: NitroMapButton.convert(mapButtons),
     };
 
-    this.cleanup = AutoPlay.createMapTemplate(mapConfig);
-  }
-
-  public setRootTemplate() {
-    AutoPlay.setRootTemplate(this.templateId);
+    this.cleanup = AutoPlay.createMapTemplate(nitroConfig);
   }
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
@@ -126,7 +129,7 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     AutoPlay.setTemplateMapButtons(this.templateId, buttons);
   }
 
-  public setActions(actions: MapTemplateConfig['actions']) {
+  public override setActions(actions: MapTemplateConfig['actions']) {
     const nitroActions = convertActions(actions);
     AutoPlay.setTemplateActions(this.templateId, nitroActions);
   }
@@ -136,9 +139,3 @@ export class MapTemplate extends Template<MapTemplateConfig> {
     super.destroy();
   }
 }
-
-const convertActions = (actions: MapTemplateConfig['actions']) => {
-  return Platform.OS === 'android'
-    ? NitroAction.convertAndroidMap(actions?.android)
-    : NitroAction.convertIos(actions?.ios);
-};

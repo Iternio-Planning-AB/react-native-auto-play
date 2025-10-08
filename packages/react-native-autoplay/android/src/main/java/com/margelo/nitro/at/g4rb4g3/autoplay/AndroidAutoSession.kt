@@ -6,12 +6,19 @@ import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
+import androidx.car.app.model.Action
+import androidx.car.app.model.ActionStrip
+import androidx.car.app.model.CarIcon
+import androidx.car.app.model.MessageTemplate
+import androidx.car.app.model.Template
+import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
+import com.margelo.nitro.at.g4rb4g3.autoplay.utils.AppInfo
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,11 +33,29 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
     private val clusterTemplateId = if (isCluster) UUID.randomUUID().toString() else null
     private val moduleName = clusterTemplateId ?: ROOT_SESSION
 
+    private fun getInitialTemplate(): Template {
+        if (isCluster) {
+            return NavigationTemplate.Builder().apply {
+                setActionStrip(ActionStrip.Builder().apply { addAction(Action.APP_ICON) }
+                    .build()).build()
+            }.build()
+        }
+
+        val appName = AppInfo.getApplicationLabel(carContext)
+
+        return MessageTemplate.Builder(appName).apply {
+            setIcon(CarIcon.APP_ICON)
+        }.build()
+    }
+
     override fun onCreateScreen(intent: Intent): Screen {
-        val screen = AndroidAutoScreen(carContext, isCluster, moduleName)
+        val initialTemplate = getInitialTemplate()
+        val screen = AndroidAutoScreen(carContext, isCluster, moduleName, initialTemplate)
 
         sessions.put(
-            moduleName, ScreenContext(carContext = carContext, session = this, state = VisibilityState.DIDDISAPPEAR)
+            moduleName, ScreenContext(
+                carContext = carContext, session = this, state = VisibilityState.DIDDISAPPEAR
+            )
         )
 
         lifecycle.addObserver(sessionLifecycleObserver)
@@ -65,9 +90,9 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
     override fun onCarConfigurationChanged(configuration: Configuration) {
         val marker = AndroidAutoScreen.getScreen(ROOT_SESSION)?.marker ?: return
-        val config = TemplateStore.getConfig(marker) ?: return
+        val config = TemplateStore.getConfig(marker) as NitroMapTemplateConfig? ?: return
 
-        if (config is NitroMapTemplateConfig && config.onAppearanceDidChange != null) {
+        if (config.onAppearanceDidChange != null) {
             val colorScheme = if (carContext.isDarkMode) ColorScheme.DARK else ColorScheme.LIGHT
             config.onAppearanceDidChange(colorScheme)
         }

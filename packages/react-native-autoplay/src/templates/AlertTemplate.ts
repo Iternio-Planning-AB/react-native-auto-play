@@ -14,7 +14,7 @@ export interface AlertTemplateConfig extends TemplateConfig {
   actions?: AlertAction[];
 }
 
-export class AlertTemplate extends Template<AlertTemplateConfig> {
+export class AlertTemplate extends Template<AlertTemplateConfig, undefined> {
   public get type(): string {
     return 'alert';
   }

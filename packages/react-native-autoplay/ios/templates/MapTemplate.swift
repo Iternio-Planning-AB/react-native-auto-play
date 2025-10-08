@@ -42,39 +42,11 @@ class MapTemplate: Template, CPMapTemplateDelegate {
         }
 
         if let actions = config.actions {
-            var leadingNavigationBarButtons: [CPBarButton] = []
-            var trailingNavigationBarButtons: [CPBarButton] = []
-            var backButton: CPBarButton?
+            let parsedActions = Parser.parseActions(actions: actions)
             
-            actions.forEach { action in
-                if action.type == .back {
-                    backButton = CPBarButton(title: "") { _ in
-                        action.onPress()
-                    }
-                    return
-                }
-                let button =
-                    action.image != nil
-                    ? CPBarButton(
-                        image: SymbolFont.imageFromNitroImage(
-                            image: action.image!
-                        )
-                    ) { _ in action.onPress() }
-                    : CPBarButton(title: action.title ?? "") { _ in
-                        action.onPress()
-                    }
-
-                if action.type == .leading {
-                    leadingNavigationBarButtons.append(button)
-                    return
-                }
-
-                trailingNavigationBarButtons.append(button)
-            }
-            
-            template.backButton = backButton
-            template.leadingNavigationBarButtons = leadingNavigationBarButtons
-            template.trailingNavigationBarButtons = trailingNavigationBarButtons
+            template.backButton = parsedActions.backButton
+            template.leadingNavigationBarButtons = parsedActions.leadingNavigationBarButtons
+            template.trailingNavigationBarButtons = parsedActions.trailingNavigationBarButtons
         }
     }
 

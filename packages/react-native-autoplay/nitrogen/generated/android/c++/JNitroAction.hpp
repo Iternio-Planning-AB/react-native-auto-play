@@ -12,8 +12,10 @@
 
 #include "JFunc_void.hpp"
 #include "JNitroActionType.hpp"
+#include "JNitroAlignment.hpp"
 #include "JNitroImage.hpp"
 #include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
 #include "NitroImage.hpp"
 #include <functional>
 #include <optional>
@@ -48,6 +50,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
       static const auto fieldType = clazz->getField<JNitroActionType>("type");
       jni::local_ref<JNitroActionType> type = this->getFieldValue(fieldType);
+      static const auto fieldAlignment = clazz->getField<JNitroAlignment>("alignment");
+      jni::local_ref<JNitroAlignment> alignment = this->getFieldValue(fieldAlignment);
       static const auto fieldFlags = clazz->getField<jni::JDouble>("flags");
       jni::local_ref<jni::JDouble> flags = this->getFieldValue(fieldFlags);
       return NitroAction(
@@ -66,6 +70,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
           }
         }(),
         type->toCpp(),
+        alignment != nullptr ? std::make_optional(alignment->toCpp()) : std::nullopt,
         flags != nullptr ? std::make_optional(flags->value()) : std::nullopt
       );
     }
@@ -82,6 +87,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         value.enabled.has_value() ? jni::JBoolean::valueOf(value.enabled.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress),
         JNitroActionType::fromCpp(value.type),
+        value.alignment.has_value() ? JNitroAlignment::fromCpp(value.alignment.value()) : nullptr,
         value.flags.has_value() ? jni::JDouble::valueOf(value.flags.value()) : nullptr
       );
     }

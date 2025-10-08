@@ -24,8 +24,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { class HybridAutoPlaySpec; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroAlignment; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroImage; }
+// Forward declaration of `NitroListTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroListTemplateConfig; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroMapButtonType; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -48,7 +52,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 #include "HybridAutoPlaySpec.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
 #include "NitroImage.hpp"
+#include "NitroListTemplateConfig.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "NitroMapTemplateConfig.hpp"

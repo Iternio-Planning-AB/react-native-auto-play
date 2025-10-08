@@ -4,6 +4,7 @@ import {
   type RootComponentInitialProps,
   SafeAreaView,
 } from '@g4rb4g3/react-native-autoplay';
+import { ListTemplate } from '@g4rb4g3/react-native-autoplay/lib/templates/ListTemplate';
 import type { MapButton, MapPanButton } from '@g4rb4g3/react-native-autoplay/lib/types/Button';
 import { useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
@@ -57,36 +58,6 @@ const mapButtonMoney = (template: MapTemplate): MapButton => ({
   },
   onPress: () => {
     template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
-    template.setActions({
-      android: [
-        {
-          type: 'image',
-          image: { name: 'home', size: 22 },
-          onPress: () => console.log('*** home'),
-        },
-        {
-          type: 'text',
-          title: 'work',
-          onPress: () => console.log('*** work'),
-        },
-      ],
-      ios: {
-        leadingNavigationBarButtons: [
-          {
-            type: 'image',
-            image: { name: 'home', size: 22 },
-            onPress: () => console.log('*** home'),
-          },
-        ],
-        trailingNavigationBarButtons: [
-          {
-            type: 'text',
-            title: 'work',
-            onPress: () => console.log('*** work'),
-          },
-        ],
-      },
-    });
   },
 });
 
@@ -100,43 +71,50 @@ const mapButtonEv = (template: MapTemplate): MapButton => ({
   },
   onPress: () => {
     template.setMapButtons([mapButtonPan, mapButtonMoney(template)]);
-    template.setActions({
-      android: [
-        {
-          type: 'image',
-          image: { name: 'home', size: 22 },
-          onPress: () => console.log('*** home'),
-        },
-        {
-          type: 'image',
-          image: {
-            name: 'vaccines',
+  },
+});
+
+const getListTemplate = () => {
+  return new ListTemplate({
+    id: 'list',
+    title: 'list title',
+    actions: {
+      android: {
+        startHeaderAction: {
+          type: 'back',
+          onPress: () => {
+            AutoPlay.popTemplate();
           },
-          onPress: () => console.log('*** vaccines'),
         },
-      ],
-      ios: {
-        backButton: { type: 'back', onPress: () => console.log('*** back') },
-        leadingNavigationBarButtons: [
+        endHeaderActions: [
+          { type: 'image', image: { name: 'close', size: 22 }, onPress: () => {} },
           {
-            type: 'image',
-            image: { name: 'home', size: 22 },
-            onPress: () => console.log('*** home'),
-          },
-        ],
-        trailingNavigationBarButtons: [
-          {
-            type: 'image',
-            image: {
-              name: 'vaccines',
-            },
-            onPress: () => console.log('*** vaccines'),
+            type: 'textImage',
+            image: { name: 'help', size: 22 },
+            title: 'help',
+            onPress: () => {},
           },
         ],
       },
-    });
-  },
-});
+      ios: {
+        backButton: {
+          type: 'back',
+          onPress: () => {
+            AutoPlay.popTemplate();
+          },
+        },
+        trailingNavigationBarButtons: [
+          { type: 'image', image: { name: 'close', size: 22 }, onPress: () => {} },
+          {
+            type: 'text',
+            title: 'help',
+            onPress: () => {},
+          },
+        ],
+      },
+    },
+  });
+};
 
 const registerRunnable = () => {
   const onConnect = () => {
@@ -158,16 +136,31 @@ const registerRunnable = () => {
       onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
       actions: {
         android: [
-          { type: 'back', onPress: () => console.log('*** back') },
+          {
+            type: 'back',
+            onPress: () => {
+              template.setActions({ android: [{ type: 'appIcon' }] });
+            },
+          },
           { type: 'image', image: { name: 'home' }, onPress: () => console.log('*** home') },
           {
             type: 'text',
-            title: 'work',
-            onPress: () => console.log('*** work'),
+            title: 'list',
+            onPress: () => {
+              const listTemplate = getListTemplate();
+              listTemplate.push();
+            },
           },
         ],
         ios: {
-          backButton: { type: 'back', onPress: () => console.log('*** back') },
+          backButton: {
+            type: 'back',
+            onPress: () => {
+              template.setActions({
+                ios: { backButton: { type: 'back', onPress: () => console.log('*** back') } },
+              });
+            },
+          },
           leadingNavigationBarButtons: [
             {
               type: 'image',
@@ -176,7 +169,14 @@ const registerRunnable = () => {
             },
           ],
           trailingNavigationBarButtons: [
-            { type: 'text', title: 'work', onPress: () => console.log('*** work') },
+            {
+              type: 'text',
+              title: 'list',
+              onPress: () => {
+                const listTemplate = getListTemplate();
+                listTemplate.push();
+              },
+            },
           ],
         },
       },

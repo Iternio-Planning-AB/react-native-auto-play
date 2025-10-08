@@ -21,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct AlertTemplateConfig; }
 // Forward declaration of `NitroMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroMapTemplateConfig; }
+// Forward declaration of `NitroListTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroListTemplateConfig; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -34,6 +36,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 #include "VisibilityState.hpp"
 #include "AlertTemplateConfig.hpp"
 #include "NitroMapTemplateConfig.hpp"
+#include "NitroListTemplateConfig.hpp"
 #include <optional>
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
@@ -78,7 +81,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       virtual void presentTemplate(const std::string& templateId) = 0;
       virtual void dismissTemplate(const std::string& templateId) = 0;
       virtual std::function<void()> createMapTemplate(const NitroMapTemplateConfig& config) = 0;
+      virtual std::function<void()> createListTemplate(const NitroListTemplateConfig& config) = 0;
       virtual std::shared_ptr<Promise<std::optional<std::string>>> setRootTemplate(const std::string& templateId) = 0;
+      virtual std::shared_ptr<Promise<std::optional<std::string>>> pushTemplate(const std::string& templateId) = 0;
+      virtual std::shared_ptr<Promise<std::optional<std::string>>> popTemplate() = 0;
       virtual std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) = 0;
       virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
       virtual void setTemplateActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& actions) = 0;

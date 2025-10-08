@@ -1,5 +1,5 @@
 export type EventName = 'didConnect' | 'didDisconnect';
-export type RemoveListener = () => void;
+export type CleanupCallback = () => void;
 export type VisibilityState = 'willAppear' | 'didAppear' | 'willDisappear' | 'didDisappear';
 export type SafeAreaInsets = {
   top: number;

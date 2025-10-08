@@ -42,18 +42,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static jni::alias_ref<JNitroActionType> fromCpp(NitroActionType value) {
       static const auto clazz = javaClassStatic();
       static const auto fieldCUSTOM = clazz->getStaticField<JNitroActionType>("CUSTOM");
-      static const auto fieldLEADING = clazz->getStaticField<JNitroActionType>("LEADING");
-      static const auto fieldTRAILING = clazz->getStaticField<JNitroActionType>("TRAILING");
       static const auto fieldAPPICON = clazz->getStaticField<JNitroActionType>("APPICON");
       static const auto fieldBACK = clazz->getStaticField<JNitroActionType>("BACK");
       
       switch (value) {
         case NitroActionType::CUSTOM:
           return clazz->getStaticFieldValue(fieldCUSTOM);
-        case NitroActionType::LEADING:
-          return clazz->getStaticFieldValue(fieldLEADING);
-        case NitroActionType::TRAILING:
-          return clazz->getStaticFieldValue(fieldTRAILING);
         case NitroActionType::APPICON:
           return clazz->getStaticFieldValue(fieldAPPICON);
         case NitroActionType::BACK:

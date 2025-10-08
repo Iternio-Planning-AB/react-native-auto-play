@@ -2,24 +2,16 @@ package com.margelo.nitro.at.g4rb4g3.autoplay
 
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
-import androidx.car.app.model.Action
-import androidx.car.app.model.ActionStrip
-import androidx.car.app.model.CarIcon
-import androidx.car.app.model.MessageTemplate
+import androidx.car.app.ScreenManager
 import androidx.car.app.model.Template
-import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
-import com.margelo.nitro.at.g4rb4g3.autoplay.utils.AppInfo
 
 class AndroidAutoScreen(
-    carContext: CarContext, private val isCluster: Boolean, private val moduleName: String
+    carContext: CarContext, private val isCluster: Boolean, private val moduleName: String, private var template: Template
 ) : Screen(carContext) {
-
-    var template: Template? = null
-    var virtualRenderer: VirtualRenderer? = null
 
     init {
         marker = moduleName
@@ -53,13 +45,9 @@ class AndroidAutoScreen(
         })
     }
 
-    fun setTemplate(template: Template, invalidate: Boolean = false, isSurfaceTemplate: Boolean) {
+    fun setTemplate(template: Template, invalidate: Boolean = false) {
+        this.template = template
         UiThreadUtil.runOnUiThread {
-            if (isSurfaceTemplate && virtualRenderer == null) {
-                virtualRenderer = VirtualRenderer(carContext, moduleName, isCluster)
-            }
-            this.template = template
-
             if (invalidate) {
                 invalidate()
             }
@@ -67,22 +55,7 @@ class AndroidAutoScreen(
     }
 
     override fun onGetTemplate(): Template {
-        template?.let {
-            return it
-        }
-
-        if (isCluster) {
-            return NavigationTemplate.Builder().apply {
-                setActionStrip(ActionStrip.Builder().apply { addAction(Action.APP_ICON) }
-                    .build()).build()
-            }.build()
-        }
-
-        val appName = AppInfo.getApplicationLabel(carContext)
-
-        return MessageTemplate.Builder(appName).apply {
-            setIcon(CarIcon.APP_ICON)
-        }.build()
+        return template
     }
 
     companion object {
@@ -92,6 +65,10 @@ class AndroidAutoScreen(
 
         fun getScreen(marker: String): AndroidAutoScreen? {
             return screens[marker]
+        }
+
+        fun getScreenManager(marker: String): ScreenManager? {
+            return screens[marker]?.screenManager
         }
     }
 }
