@@ -1,5 +1,6 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
+import androidx.activity.OnBackPressedCallback
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.ScreenManager
@@ -8,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
 
 class AndroidAutoScreen(
     carContext: CarContext, private val moduleName: String, private var template: Template
@@ -42,6 +44,26 @@ class AndroidAutoScreen(
                 }
             }
 
+        })
+
+        carContext.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val config = TemplateStore.getConfig(moduleName)
+                val backButton = when(config) {
+                    is NitroMapTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
+                    is NitroListTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
+                    else -> null
+                }
+
+                if (backButton == null) {
+                    isEnabled = false
+                    carContext.onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                    return
+                }
+
+                backButton.onPress()
+            }
         })
     }
 

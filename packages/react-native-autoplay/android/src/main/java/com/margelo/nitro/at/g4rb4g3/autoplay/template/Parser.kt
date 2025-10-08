@@ -39,13 +39,6 @@ object Parser {
         }
 
         if (action.type == NitroActionType.BACK) {
-            context.onBackPressedDispatcher.addCallback(object :
-                OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    action.onPress()
-                }
-
-            })
             return Action.BACK
         }
 

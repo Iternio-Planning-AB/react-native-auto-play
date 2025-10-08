@@ -1,6 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
-import androidx.activity.OnBackPressedCallback
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
@@ -47,13 +46,6 @@ class MapTemplate(
             actions.forEach { action ->
                 if (action.type == NitroActionType.BACK) {
                     addAction(Action.BACK)
-                    context.onBackPressedDispatcher.addCallback(object :
-                        OnBackPressedCallback(true) {
-                        override fun handleOnBackPressed() {
-                            action.onPress()
-                        }
-
-                    })
                     return@forEach
                 }
                 if (action.type == NitroActionType.APPICON) {
