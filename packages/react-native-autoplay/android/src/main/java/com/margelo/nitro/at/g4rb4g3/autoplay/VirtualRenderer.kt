@@ -23,8 +23,8 @@ import com.facebook.react.runtime.ReactSurfaceView
 import com.facebook.react.uimanager.DisplayMetricsHolder
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
-import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
 import com.margelo.nitro.autoplay.BuildConfig
 import kotlinx.coroutines.CoroutineScope
@@ -209,7 +209,7 @@ class VirtualRenderer(
     private fun getMapTemplateConfig(): NitroMapTemplateConfig? {
         val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
         val marker = screenManager.top.marker ?: return null
-        return TemplateStore.getConfig(marker) as NitroMapTemplateConfig?
+        return AndroidAutoTemplate.getConfig(marker) as NitroMapTemplateConfig?
     }
 
     private fun initRenderer() {
@@ -300,6 +300,6 @@ class VirtualRenderer(
     }
 
     companion object {
-        val TAG = "VirtualRenderer"
+        const val TAG = "VirtualRenderer"
     }
 }

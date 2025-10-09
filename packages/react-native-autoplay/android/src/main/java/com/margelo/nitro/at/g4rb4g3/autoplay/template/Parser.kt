@@ -71,16 +71,16 @@ object Parser {
         ).build()
     }
 
-    val PLACEHOLDER_DISTANCCE = "{distance}"
-    val PLACEHOLDER_DURATION = "{duration}"
+    const val PLACEHOLDER_DISTANCE = "{distance}"
+    const val PLACEHOLDER_DURATION = "{duration}"
 
     fun parseText(text: Text): CarText {
         val span = SpannableString(text.text)
         text.distance?.let { distance ->
             span.setSpan(
                 DistanceSpan.create(parseDistance(distance)),
-                text.text.indexOf(PLACEHOLDER_DISTANCCE),
-                text.text.indexOf(PLACEHOLDER_DISTANCCE) + PLACEHOLDER_DISTANCCE.length,
+                text.text.indexOf(PLACEHOLDER_DISTANCE),
+                text.text.indexOf(PLACEHOLDER_DISTANCE) + PLACEHOLDER_DISTANCE.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }

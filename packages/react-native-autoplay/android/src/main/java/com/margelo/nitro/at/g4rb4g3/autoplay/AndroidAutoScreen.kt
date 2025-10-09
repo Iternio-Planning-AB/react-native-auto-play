@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
-import com.margelo.nitro.at.g4rb4g3.autoplay.template.TemplateStore
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 
 class AndroidAutoScreen(
     carContext: CarContext, private val moduleName: String, private var template: Template
@@ -43,12 +43,11 @@ class AndroidAutoScreen(
                     else -> {}
                 }
             }
-
         })
 
         carContext.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val config = TemplateStore.getConfig(moduleName)
+                val config = AndroidAutoTemplate.getConfig(moduleName)
                 val backButton = when(config) {
                     is NitroMapTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
                     is NitroListTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
