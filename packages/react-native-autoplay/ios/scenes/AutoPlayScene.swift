@@ -80,7 +80,7 @@ class AutoPlayScene: UIResponder {
                 )
             else { return }
 
-            window.rootViewController = CarPlayViewController(
+            window.rootViewController = AutoPlaySceneViewController(
                 view: rootView,
                 moduleName: moduleName
             )

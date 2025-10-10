@@ -4,7 +4,7 @@
 //  Created by Manuel Auer on 30.09.25.
 //
 
-class CarPlayViewController: UIViewController {
+class AutoPlaySceneViewController: UIViewController {
     let moduleName: String
 
     public init(view: UIView, moduleName: String) {
