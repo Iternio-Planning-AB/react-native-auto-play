@@ -1,6 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
-import androidx.car.app.navigation.model.NavigationTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession.Companion.ROOT_SESSION
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.GridTemplate

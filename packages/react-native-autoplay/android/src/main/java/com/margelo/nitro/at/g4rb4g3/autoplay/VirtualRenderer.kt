@@ -24,7 +24,7 @@ import com.facebook.react.uimanager.DisplayMetricsHolder
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
-import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.utils.Debouncer
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ReactContextResolver
 import com.margelo.nitro.autoplay.BuildConfig
 import kotlinx.coroutines.CoroutineScope

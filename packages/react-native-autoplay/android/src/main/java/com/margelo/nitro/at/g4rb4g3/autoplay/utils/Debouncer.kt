@@ -1,4 +1,4 @@
-package com.margelo.nitro.at.g4rb4g3.autoplay
+package com.margelo.nitro.at.g4rb4g3.autoplay.utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

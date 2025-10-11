@@ -24,7 +24,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
-import java.util.WeakHashMap
 
 class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication: ReactApplication) :
     Session() {
