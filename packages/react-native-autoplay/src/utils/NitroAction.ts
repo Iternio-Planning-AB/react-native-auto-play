@@ -163,4 +163,4 @@ function convert(actions?: Actions): Array<NitroAction> | undefined {
   return Platform.OS === 'android' ? convertAndroid(actions?.android) : convertIos(actions?.ios);
 }
 
-export const NitroAction = { convert, convertAndroidMap, convertIos };
+export const NitroActionUtil = { convert, convertAndroidMap, convertIos };

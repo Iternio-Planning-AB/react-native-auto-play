@@ -246,6 +246,17 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func updateGridTemplateButtons(templateId: std.string, buttons: bridge.std__vector_NitroGridButton_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.updateGridTemplateButtons(templateId: String(templateId), buttons: buttons.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))

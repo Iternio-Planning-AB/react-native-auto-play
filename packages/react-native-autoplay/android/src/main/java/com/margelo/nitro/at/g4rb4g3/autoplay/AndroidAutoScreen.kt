@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.GridTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 
@@ -75,6 +76,7 @@ class AndroidAutoScreen(
         when (config) {
             is NitroMapTemplateConfig -> MapTemplate(carContext, config)
             is NitroListTemplateConfig -> ListTemplate(carContext, config)
+            is NitroGridTemplateConfig -> GridTemplate(carContext, config)
             else -> null
         }?.let {
             AndroidAutoTemplate.setTemplate(moduleName, it)

@@ -27,6 +27,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroListTemplateConfig
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroSection; }
 // Forward declaration of `NitroGridTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroGridTemplateConfig; }
+// Forward declaration of `NitroGridButton` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroGridButton; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -45,6 +47,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroAction; }
 #include <vector>
 #include <optional>
 #include "NitroGridTemplateConfig.hpp"
+#include "NitroGridButton.hpp"
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroMapButton.hpp"
@@ -90,6 +93,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       virtual std::function<void()> createListTemplate(const NitroListTemplateConfig& config) = 0;
       virtual void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) = 0;
       virtual std::function<void()> createGridTemplate(const NitroGridTemplateConfig& config) = 0;
+      virtual void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) = 0;
       virtual std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> popTemplate() = 0;

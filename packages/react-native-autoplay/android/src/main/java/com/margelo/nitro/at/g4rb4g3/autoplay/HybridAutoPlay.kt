@@ -192,6 +192,20 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
+    override fun updateGridTemplateButtons(
+        templateId: String,
+        buttons: Array<NitroGridButton>
+    ) {
+        val template = AndroidAutoTemplate.getTemplate(templateId)
+            ?: throw IllegalArgumentException("updateGridTemplateButtons failed, template $templateId not found")
+
+        if (template !is GridTemplate) {
+            throw IllegalArgumentException("updateGridTemplateButtons failed, template $templateId is not of type GridTemplate")
+        }
+
+        template.updateButtons(buttons)
+    }
+
     override fun setRootTemplate(templateId: String): Promise<Unit> {
         return Promise.async {
             val template = AndroidAutoTemplate.getTemplate(templateId)

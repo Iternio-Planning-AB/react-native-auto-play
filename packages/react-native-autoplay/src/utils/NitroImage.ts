@@ -25,7 +25,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
     ...rest,
     size,
     glyph: glyphMap[name],
-    color: processColor(Platform.OS === 'android' ? 'white' : color) as number | undefined,
+    color: processColor(color) as number | undefined,
     backgroundColor: processColor(Platform.OS === 'android' ? 'transparent' : backgroundColor) as
       | number
       | undefined,

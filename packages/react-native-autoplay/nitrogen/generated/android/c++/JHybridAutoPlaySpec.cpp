@@ -244,6 +244,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       }
     }();
   }
+  void JHybridAutoPlaySpec::updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons_cxx");
+    method(_javaPart, jni::make_jstring(templateId), [&]() {
+      size_t __size = buttons.size();
+      jni::local_ref<jni::JArrayClass<JNitroGridButton>> __array = jni::JArrayClass<JNitroGridButton>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = buttons[__i];
+        __array->setElement(__i, *JNitroGridButton::fromCpp(__element));
+      }
+      return __array;
+    }());
+  }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId));

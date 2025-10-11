@@ -106,6 +106,15 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
+  abstract fun updateGridTemplateButtons(templateId: String, buttons: Array<NitroGridButton>): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun updateGridTemplateButtons_cxx(templateId: String, buttons: Array<NitroGridButton>): Unit {
+    val __result = updateGridTemplateButtons(templateId, buttons)
+    return __result
+  }
+  
   @DoNotStrip
   @Keep
   abstract fun setRootTemplate(templateId: String): Promise<Unit>

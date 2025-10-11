@@ -45,4 +45,9 @@ class GridTemplate: Template {
 
         template.updateGridButtons(buttons)
     }
+    
+    func updateButtons(buttons: [NitroGridButton]) {
+        config.buttons = buttons
+        invalidate()
+    }
 }

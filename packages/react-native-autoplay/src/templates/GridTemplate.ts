@@ -1,15 +1,8 @@
 import { AutoPlay } from '..';
-import type { GridButton } from '../types/Button';
 import type { AutoText } from '../types/Text';
-import { NitroAction } from '../utils/NitroAction';
-import { NitroImage } from '../utils/NitroImage';
+import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
+import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
 import { type Actions, Template, type TemplateConfig } from './Template';
-
-type NitroGridButton = {
-  title: AutoText;
-  image: NitroImage;
-  onPress: () => void;
-};
 
 export interface NitroGridTemplateConfig extends TemplateConfig {
   actions?: Array<NitroAction>;
@@ -36,15 +29,15 @@ export class GridTemplate extends Template<GridTemplateConfig, Actions> {
 
     const nitroConfig: NitroGridTemplateConfig = {
       ...rest,
-      actions: NitroAction.convert(actions),
-      buttons: buttons.map<NitroGridButton>((button) => ({
-        title: button.title,
-        image: NitroImage.convert(button.image),
-        onPress: button.onPress,
-      })),
+      actions: NitroActionUtil.convert(actions),
+      buttons: NitroGridUtil.convert(buttons),
     };
 
     this.cleanup = AutoPlay.createGridTemplate(nitroConfig);
+  }
+
+  public updateGrid(buttons: Array<GridButton>) {
+    AutoPlay.updateGridTemplateButtons(this.templateId, NitroGridUtil.convert(buttons));
   }
 
   public destroy() {

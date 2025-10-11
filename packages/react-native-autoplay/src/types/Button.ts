@@ -1,11 +1,4 @@
 import type { AutoImage } from './Image';
-import type { AutoText } from './Text';
-
-export type GridButton = {
-  title: AutoText;
-  image: AutoImage;
-  onPress: () => void;
-};
 
 export type MapButton = {
   type: 'custom';

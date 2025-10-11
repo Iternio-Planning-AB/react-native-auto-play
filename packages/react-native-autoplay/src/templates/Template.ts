@@ -1,6 +1,6 @@
 import { AutoPlay } from '..';
 import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
-import { NitroAction } from '../utils/NitroAction';
+import { NitroActionUtil } from '../utils/NitroAction';
 
 export type ActionsIos = {
   backButton?: BackButton;
@@ -71,7 +71,7 @@ export class Template<TemplateConfigType, ActionsType> {
   }
 
   public setActions(actions?: ActionsType) {
-    const nitroActions = NitroAction.convert(actions as Actions);
+    const nitroActions = NitroActionUtil.convert(actions as Actions);
     AutoPlay.setTemplateActions(this.templateId, nitroActions);
   }
 }

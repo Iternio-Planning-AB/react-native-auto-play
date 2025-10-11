@@ -65,4 +65,4 @@ const convertRow = (item: DefaultRow | RadioRow | ToggleRow): NitroRow => {
   };
 };
 
-export const NitroSection = { convert };
+export const NitroSectionUtil = { convert };

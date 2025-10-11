@@ -5,6 +5,7 @@ import type { NitroListTemplateConfig } from '../templates/ListTemplate';
 import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
 import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
 import type { NitroAction } from '../utils/NitroAction';
+import type { NitroGridButton } from '../utils/NitroGrid';
 import type { NitroMapButton } from '../utils/NitroMapButton';
 
 export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
@@ -53,6 +54,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   ): void;
 
   createGridTemplate(config: NitroGridTemplateConfig): CleanupCallback;
+  updateGridTemplateButtons(templateId: string, buttons: Array<NitroGridButton>): void;
 
   /**
    * sets the specified template as root template, initializes a new stack

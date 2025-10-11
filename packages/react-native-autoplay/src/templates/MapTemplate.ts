@@ -4,7 +4,7 @@ import { AutoPlay } from '..';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
-import { NitroAction } from '../utils/NitroAction';
+import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import { type ActionsIos, Template, type TemplateConfig } from './Template';
 
@@ -87,8 +87,8 @@ export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons'
 
 const convertActions = (actions: MapTemplateConfig['actions']) => {
   return Platform.OS === 'android'
-    ? NitroAction.convertAndroidMap(actions?.android)
-    : NitroAction.convertIos(actions?.ios);
+    ? NitroActionUtil.convertAndroidMap(actions?.android)
+    : NitroActionUtil.convertIos(actions?.ios);
 };
 
 export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['actions']> {

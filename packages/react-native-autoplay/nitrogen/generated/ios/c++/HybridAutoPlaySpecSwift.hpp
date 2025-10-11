@@ -196,6 +196,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override {
+      auto __result = _swiftPart.updateGridTemplateButtons(templateId, buttons);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
     inline std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) override {
       auto __result = _swiftPart.setRootTemplate(templateId);
       if (__result.hasError()) [[unlikely]] {
