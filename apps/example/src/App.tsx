@@ -1,4 +1,4 @@
-import { AutoPlay, type RemoveListener } from '@g4rb4g3/react-native-autoplay';
+import { AutoPlay, type CleanupCallback } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -19,7 +19,7 @@ function AppContent() {
   const [isRootVisible, setIsRootVisible] = useState(false);
 
   useEffect(() => {
-    const listeners: Array<RemoveListener> = [];
+    const listeners: Array<CleanupCallback> = [];
 
     listeners.push(AutoPlay.addListener('didConnect', () => setIsConnected(true)));
     listeners.push(AutoPlay.addListener('didDisconnect', () => setIsConnected(false)));
