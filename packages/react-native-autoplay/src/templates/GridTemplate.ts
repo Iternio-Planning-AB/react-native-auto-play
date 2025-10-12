@@ -14,13 +14,14 @@ export type GridTemplateConfig = Omit<NitroGridTemplateConfig, 'actions' | 'butt
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
-  actions?: Actions;
+  actions?: Actions<GridTemplate>;
 
-  buttons: Array<GridButton>;
+  buttons: Array<GridButton<GridTemplate>>;
 };
 
-export class GridTemplate extends Template<GridTemplateConfig, Actions> {
+export class GridTemplate extends Template<GridTemplateConfig, Actions<GridTemplate>> {
   private cleanup: () => void;
+  private template = this;
 
   constructor(config: GridTemplateConfig) {
     super(config);
@@ -29,15 +30,18 @@ export class GridTemplate extends Template<GridTemplateConfig, Actions> {
 
     const nitroConfig: NitroGridTemplateConfig = {
       ...rest,
-      actions: NitroActionUtil.convert(actions),
-      buttons: NitroGridUtil.convert(buttons),
+      actions: NitroActionUtil.convert(this.template, actions),
+      buttons: NitroGridUtil.convert(this.template, buttons),
     };
 
     this.cleanup = AutoPlay.createGridTemplate(nitroConfig);
   }
 
-  public updateGrid(buttons: Array<GridButton>) {
-    AutoPlay.updateGridTemplateButtons(this.templateId, NitroGridUtil.convert(buttons));
+  public updateGrid(buttons: Array<GridButton<GridTemplate>>) {
+    AutoPlay.updateGridTemplateButtons(
+      this.templateId,
+      NitroGridUtil.convert(this.template, buttons)
+    );
   }
 
   public destroy() {

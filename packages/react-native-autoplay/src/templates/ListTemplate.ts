@@ -11,45 +11,45 @@ type BaseRow = {
   image?: AutoImage;
 };
 
-export type DefaultRow = BaseRow & {
+export type DefaultRow<T> = BaseRow & {
   type: 'default';
   /**
    * adds a chevron at the end of the row
    */
   browsable?: boolean;
-  onPress: () => void;
+  onPress: (template: T) => void;
   detailedText?: AutoText;
 };
 
-export type ToggleRow = BaseRow & {
+export type ToggleRow<T> = BaseRow & {
   type: 'toggle';
   checked: boolean;
-  onPress: (checked: boolean) => void;
+  onPress: (template: T, checked: boolean) => void;
 };
 
-export type RadioRow = BaseRow & {
+export type RadioRow<T> = BaseRow & {
   type: 'radio';
-  onPress: () => void;
+  onPress: (template: T) => void;
 };
 
-export type MultiSection =
+export type MultiSection<T> =
   | {
       type: 'default';
       title: string;
-      items: Array<DefaultRow | ToggleRow>;
+      items: Array<DefaultRow<T> | ToggleRow<T>>;
     }
   | {
       type: 'radio';
       title: string;
-      items: Array<RadioRow>;
+      items: Array<RadioRow<T>>;
       selectedIndex: number;
     };
 
-export type SingleSection = {
-  [K in MultiSection as K['type']]: Omit<K, 'title' | 'detailedText'>;
-}[MultiSection['type']];
+export type SingleSection<T> = {
+  [K in MultiSection<T> as K['type']]: Omit<K, 'title' | 'detailedText'>;
+}[MultiSection<T>['type']];
 
-export type Section = Array<MultiSection> | SingleSection;
+export type Section<T> = Array<MultiSection<T>> | SingleSection<T>;
 
 export interface NitroListTemplateConfig extends TemplateConfig {
   actions?: Array<NitroAction>;
@@ -61,16 +61,17 @@ export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'actions' | 'sect
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
-  actions?: Actions;
+  actions?: Actions<ListTemplate>;
 
   /**
    * a container that groups your list items into sections.
    */
-  sections?: Section;
+  sections?: Section<ListTemplate>;
 };
 
-export class ListTemplate extends Template<ListTemplateConfig, Actions> {
+export class ListTemplate extends Template<ListTemplateConfig, Actions<ListTemplate>> {
   private cleanup: () => void;
+  private template = this;
 
   constructor(config: ListTemplateConfig) {
     super(config);
@@ -79,15 +80,18 @@ export class ListTemplate extends Template<ListTemplateConfig, Actions> {
 
     const nitroConfig: NitroListTemplateConfig = {
       ...rest,
-      actions: NitroActionUtil.convert(actions),
-      sections: NitroSectionUtil.convert(sections),
+      actions: NitroActionUtil.convert(this.template, actions),
+      sections: NitroSectionUtil.convert(this.template, sections),
     };
 
     this.cleanup = AutoPlay.createListTemplate(nitroConfig);
   }
 
-  public updateSections(sections?: Section) {
-    AutoPlay.updateListTemplateSections(this.templateId, NitroSectionUtil.convert(sections));
+  public updateSections(sections?: Section<ListTemplate>) {
+    AutoPlay.updateListTemplateSections(
+      this.templateId,
+      NitroSectionUtil.convert(this.template, sections)
+    );
   }
 
   public destroy() {

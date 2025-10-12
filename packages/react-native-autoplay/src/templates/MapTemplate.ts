@@ -13,11 +13,11 @@ export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayClust
 
 type Point = { x: number; y: number };
 
-export type ActionsAndroidMap =
-  | [ActionButtonAndroid, ActionButtonAndroid, ActionButtonAndroid, ActionButtonAndroid]
-  | [ActionButtonAndroid, ActionButtonAndroid, ActionButtonAndroid]
-  | [ActionButtonAndroid, ActionButtonAndroid]
-  | [ActionButtonAndroid];
+export type ActionsAndroidMap<T> =
+  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>]
+  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>]
+  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>]
+  | [ActionButtonAndroid<T>];
 
 export interface NitroMapTemplateConfig extends TemplateConfig {
   mapButtons?: Array<NitroMapButton>;
@@ -59,7 +59,7 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
   onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
 }
 
-export type MapButtons = Array<MapButton | MapPanButton>;
+export type MapButtons<T> = Array<MapButton<T> | MapPanButton<T>>;
 
 export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons' | 'actions'> & {
   /**
@@ -74,31 +74,30 @@ export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'id' | 'mapButtons'
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner
    */
-  mapButtons?: MapButtons;
+  mapButtons?: MapButtons<MapTemplate>;
 
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
   actions?: {
-    android?: ActionsAndroidMap;
-    ios?: ActionsIos;
+    android?: ActionsAndroidMap<MapTemplate>;
+    ios?: ActionsIos<MapTemplate>;
   };
 };
 
-const convertActions = (actions: MapTemplateConfig['actions']) => {
+const convertActions = (template: MapTemplate, actions: MapTemplateConfig['actions']) => {
   return Platform.OS === 'android'
-    ? NitroActionUtil.convertAndroidMap(actions?.android)
-    : NitroActionUtil.convertIos(actions?.ios);
+    ? NitroActionUtil.convertAndroidMap(template, actions?.android)
+    : NitroActionUtil.convertIos(template, actions?.ios);
 };
 
 export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['actions']> {
   private cleanup: () => void;
+  private template = this;
 
   constructor(config: MapTemplateConfig) {
     super(config);
 
-    // biome-ignore lint/complexity/noUselessThisAlias: we need the template reference when the component gets started from react-native
-    const template = this;
     const { component, mapButtons, actions, ...baseConfig } = config;
 
     AppRegistry.registerComponent(
@@ -107,26 +106,26 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
         React.createElement(SafeAreaInsetsProvider, {
           moduleName: config.id,
           // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-          children: React.createElement(component, { ...props, template }),
+          children: React.createElement(component, { ...props, template: this.template }),
         })
     );
 
     const nitroConfig: NitroMapTemplateConfig = {
       ...baseConfig,
-      actions: convertActions(actions),
-      mapButtons: NitroMapButton.convert(mapButtons),
+      actions: convertActions(this.template, actions),
+      mapButtons: NitroMapButton.convert(this.template, mapButtons),
     };
 
     this.cleanup = AutoPlay.createMapTemplate(nitroConfig);
   }
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
-    const buttons = NitroMapButton.convert(mapButtons);
+    const buttons = NitroMapButton.convert(this.template, mapButtons);
     AutoPlay.setTemplateMapButtons(this.templateId, buttons);
   }
 
   public override setActions(actions: MapTemplateConfig['actions']) {
-    const nitroActions = convertActions(actions);
+    const nitroActions = convertActions(this.template, actions);
     AutoPlay.setTemplateActions(this.templateId, nitroActions);
   }
 

@@ -2,20 +2,20 @@ import { AutoPlay } from '..';
 import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
 import { NitroActionUtil } from '../utils/NitroAction';
 
-export type ActionsIos = {
-  backButton?: BackButton;
-  leadingNavigationBarButtons?: [ActionButtonIos, ActionButtonIos] | [ActionButtonIos];
-  trailingNavigationBarButtons?: [ActionButtonIos, ActionButtonIos] | [ActionButtonIos];
+export type ActionsIos<T> = {
+  backButton?: BackButton<T>;
+  leadingNavigationBarButtons?: [ActionButtonIos<T>, ActionButtonIos<T>] | [ActionButtonIos<T>];
+  trailingNavigationBarButtons?: [ActionButtonIos<T>, ActionButtonIos<T>] | [ActionButtonIos<T>];
 };
 
-export type ActionsAndroid = {
-  startHeaderAction?: AppButton | BackButton;
-  endHeaderActions?: [ActionButtonAndroid, ActionButtonAndroid] | [ActionButtonAndroid];
+export type ActionsAndroid<T> = {
+  startHeaderAction?: AppButton | BackButton<T>;
+  endHeaderActions?: [ActionButtonAndroid<T>, ActionButtonAndroid<T>] | [ActionButtonAndroid<T>];
 };
 
-export type Actions = {
-  android?: ActionsAndroid;
-  ios?: ActionsIos;
+export type Actions<T> = {
+  android?: ActionsAndroid<T>;
+  ios?: ActionsIos<T>;
 };
 
 export interface TemplateConfig {
@@ -70,8 +70,8 @@ export class Template<TemplateConfigType, ActionsType> {
     return AutoPlay.pushTemplate(this.templateId);
   }
 
-  public setActions(actions?: ActionsType) {
-    const nitroActions = NitroActionUtil.convert(actions as Actions);
+  public setActions<T>(actions?: ActionsType) {
+    const nitroActions = NitroActionUtil.convert(actions as Actions<T>);
     AutoPlay.setTemplateActions(this.templateId, nitroActions);
   }
 }

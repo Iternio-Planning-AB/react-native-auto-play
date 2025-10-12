@@ -44,8 +44,8 @@ const getRadioTemplate = (): ListTemplate => {
   return template;
 };
 
-const getMainSection = (template: ListTemplate, showRadios: boolean): Section => {
-  const items: Array<DefaultRow | ToggleRow> = [
+const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
+  const items: Array<DefaultRow<ListTemplate> | ToggleRow<ListTemplate>> = [
     {
       type: 'toggle',
       title: { text: 'row #1' },
@@ -53,8 +53,8 @@ const getMainSection = (template: ListTemplate, showRadios: boolean): Section =>
       image: {
         name: 'alarm',
       },
-      onPress: (checked) => {
-        template.updateSections(getMainSection(template, checked));
+      onPress: (template, checked) => {
+        template.updateSections(getMainSection(checked));
       },
     },
     {
@@ -64,7 +64,7 @@ const getMainSection = (template: ListTemplate, showRadios: boolean): Section =>
       image: {
         name: 'bomb',
       },
-      onPress: (checked) => {
+      onPress: (_template, checked) => {
         console.log('*** toggle', checked);
       },
     },
@@ -104,12 +104,11 @@ const getTemplate = (): ListTemplate => {
       duration: 4711,
     },
     actions: AutoTemplate.actions,
+    sections: getMainSection(true),
     onDidDisappear: () => {
       template.destroy();
     },
   });
-
-  template.updateSections(getMainSection(template, true));
 
   return template;
 };

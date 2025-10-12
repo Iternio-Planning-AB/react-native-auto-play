@@ -55,6 +55,7 @@ class AndroidAutoScreen(
                 val backButton = when (config) {
                     is NitroMapTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
                     is NitroListTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
+                    is NitroGridTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
                     else -> null
                 }
 

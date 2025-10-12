@@ -19,3 +19,4 @@ export * from './types/GestureEvents';
 export * from './types/Image';
 export * from './types/RootComponent';
 export * from './types/Text';
+export type { GridButton } from './utils/NitroGrid';

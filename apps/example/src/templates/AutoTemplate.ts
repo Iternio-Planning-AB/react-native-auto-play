@@ -1,11 +1,13 @@
 import { type Actions, AutoPlay, type BackButton } from '@g4rb4g3/react-native-autoplay';
 
-const backButton: BackButton = {
+// biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
+const backButton: BackButton<any> = {
   type: 'back',
   onPress: () => AutoPlay.popTemplate(),
 };
 
-const actions: Actions = {
+// biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
+const actions: Actions<any> = {
   android: {
     startHeaderAction: backButton,
     endHeaderActions: [

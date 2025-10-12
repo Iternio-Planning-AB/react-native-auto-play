@@ -10,7 +10,7 @@ export type NitroMapButton = {
   onPress: () => void;
 };
 
-const convert = (mapButtons?: MapButtons): Array<NitroMapButton> | undefined => {
+const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButton> | undefined => {
   if (mapButtons == null) {
     return undefined;
   }
@@ -20,7 +20,7 @@ const convert = (mapButtons?: MapButtons): Array<NitroMapButton> | undefined => 
 
     if (button.type === 'pan') {
       if (Platform.OS === 'android') {
-        return { type: 'pan', onPress };
+        return { type: 'pan', onPress: () => onPress(template) };
       }
       throw new Error(
         'unsupported platform, pan button can be used on Android only! Use a custom button instead.'
@@ -29,7 +29,7 @@ const convert = (mapButtons?: MapButtons): Array<NitroMapButton> | undefined => 
 
     return {
       type,
-      onPress,
+      onPress: () => onPress(template),
       image: NitroImage.convert(button.image),
     };
   });

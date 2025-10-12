@@ -35,7 +35,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   );
 };
 
-const mapButtonPan: MapButton | MapPanButton =
+const mapButtonPan: MapButton<MapTemplate> | MapPanButton<MapTemplate> =
   Platform.OS === 'android'
     ? {
         type: 'pan',
@@ -46,32 +46,32 @@ const mapButtonPan: MapButton | MapPanButton =
         image: {
           name: 'drag_pan',
         },
-        onPress: () => console.log('map button on press'),
+        onPress: (template) => console.log('map button on press', template.templateId),
       };
 
-const mapButtonMoney = (template: MapTemplate): MapButton => ({
+const mapButtonMoney: MapButton<MapTemplate> = {
   type: 'custom',
   image: {
     name: 'euro_symbol',
     color: 'rgba(255, 255, 255, 1)',
     backgroundColor: 'rgba(66, 66, 66, 0.5)',
   },
-  onPress: () => {
-    template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
+  onPress: (template) => {
+    template.setMapButtons([mapButtonPan, mapButtonEv]);
   },
-});
+};
 
-const mapButtonEv = (template: MapTemplate): MapButton => ({
+const mapButtonEv: MapButton<MapTemplate> = {
   type: 'custom',
   image: {
     name: 'ev_station',
     color: 'rgba(255, 255, 255, 1)',
     backgroundColor: 'rgba(66, 66, 66, 0.5)',
   },
-  onPress: () => {
-    template.setMapButtons([mapButtonPan, mapButtonMoney(template)]);
+  onPress: (template) => {
+    template.setMapButtons([mapButtonPan, mapButtonMoney]);
   },
-});
+};
 
 const registerRunnable = () => {
   const onConnect = () => {
@@ -96,7 +96,10 @@ const registerRunnable = () => {
           {
             type: 'image',
             image: { name: 'grid_3x3' },
-            onPress: () => AutoGridTemplate.getTemplate().push(),
+            onPress: (t) => {
+              console.log('***', t.templateId);
+              AutoGridTemplate.getTemplate().push();
+            },
           },
           {
             type: 'image',
@@ -125,8 +128,8 @@ const registerRunnable = () => {
           ],
         },
       },
+      mapButtons: [mapButtonPan, mapButtonEv],
     });
-    template.setMapButtons([mapButtonPan, mapButtonEv(template)]);
     template.setRootTemplate();
   };
 

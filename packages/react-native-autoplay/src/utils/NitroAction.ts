@@ -26,12 +26,12 @@ export type NitroAction = {
   flags?: number;
 };
 
-const getImage = (
-  action: ActionButtonIos | TextButton | ImageButton | TextAndImageButton
+const getImage = <T>(
+  action: ActionButtonIos<T> | TextButton<T> | ImageButton<T> | TextAndImageButton<T>
 ): NitroImage | undefined => ('image' in action ? NitroImage.convert(action.image) : undefined);
 
-const getTitle = (
-  action: ActionButtonIos | TextButton | ImageButton | TextAndImageButton
+const getTitle = <T>(
+  action: ActionButtonIos<T> | TextButton<T> | ImageButton<T> | TextAndImageButton<T>
 ): string | undefined => ('title' in action ? action.title : undefined);
 
 // appIcon can not be pressed but we wanna have a non-optional onPress on native side
@@ -41,7 +41,11 @@ const getAppIconAction = (alignment?: NitroAlignment): NitroAction => ({
   alignment,
 });
 
-const convertToNitro = (action: ActionButtonAndroid, alignment?: NitroAlignment): NitroAction => {
+const convertToNitro = <T>(
+  template: T,
+  action: ActionButtonAndroid<T>,
+  alignment?: NitroAlignment
+): NitroAction => {
   const { type } = action;
   if (type === 'appIcon') {
     return getAppIconAction(alignment);
@@ -50,7 +54,7 @@ const convertToNitro = (action: ActionButtonAndroid, alignment?: NitroAlignment)
   const { onPress } = action;
 
   if (type === 'back') {
-    return { type, onPress, alignment };
+    return { type, onPress: () => onPress(template), alignment };
   }
 
   const { enabled, flags } = action;
@@ -59,7 +63,7 @@ const convertToNitro = (action: ActionButtonAndroid, alignment?: NitroAlignment)
   const image = 'image' in action ? NitroImage.convert(action.image) : undefined;
 
   return {
-    onPress,
+    onPress: () => onPress(template),
     type: 'custom' as const,
     enabled,
     flags,
@@ -69,13 +73,16 @@ const convertToNitro = (action: ActionButtonAndroid, alignment?: NitroAlignment)
   };
 };
 
-const convertAndroidMap = (actions?: ActionsAndroidMap): Array<NitroAction> | undefined => {
-  return actions?.map<NitroAction>((action) => convertToNitro(action, undefined));
+const convertAndroidMap = <T>(
+  template: T,
+  actions?: ActionsAndroidMap<T>
+): Array<NitroAction> | undefined => {
+  return actions?.map<NitroAction>((action) => convertToNitro(template, action, undefined));
 };
 
-function convertIos(actions: ActionsIos): Array<NitroAction>;
-function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined;
-function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined {
+function convertIos<T>(template: T, actions: ActionsIos<T>): Array<NitroAction>;
+function convertIos<T>(template: T, actions?: ActionsIos<T>): Array<NitroAction> | undefined;
+function convertIos<T>(template: T, actions?: ActionsIos<T>): Array<NitroAction> | undefined {
   if (actions == null) {
     return undefined;
   }
@@ -85,7 +92,7 @@ function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined {
   if (actions.backButton != null) {
     nitroActions.push({
       type: 'back',
-      onPress: actions.backButton.onPress,
+      onPress: () => actions.backButton?.onPress(template),
       alignment: undefined,
     });
   }
@@ -100,7 +107,7 @@ function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined {
         type: 'custom',
         enabled,
         image,
-        onPress,
+        onPress: () => onPress(template),
         title,
         alignment: 'leading',
       });
@@ -117,7 +124,7 @@ function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined {
         type: 'custom',
         enabled,
         image,
-        onPress,
+        onPress: () => onPress(template),
         title,
         alignment: 'trailing',
       });
@@ -127,9 +134,15 @@ function convertIos(actions?: ActionsIos): Array<NitroAction> | undefined {
   return nitroActions;
 }
 
-function convertAndroid(actions: ActionsAndroid): Array<NitroAction>;
-function convertAndroid(actions?: ActionsAndroid): Array<NitroAction> | undefined;
-function convertAndroid(actions?: ActionsAndroid): Array<NitroAction> | undefined {
+function convertAndroid<T>(template: T, actions: ActionsAndroid<T>): Array<NitroAction>;
+function convertAndroid<T>(
+  template: T,
+  actions?: ActionsAndroid<T>
+): Array<NitroAction> | undefined;
+function convertAndroid<T>(
+  template: T,
+  actions?: ActionsAndroid<T>
+): Array<NitroAction> | undefined {
   if (actions == null) {
     return undefined;
   }
@@ -145,22 +158,25 @@ function convertAndroid(actions?: ActionsAndroid): Array<NitroAction> | undefine
         : {
             ...startHeaderAction,
             alignment: 'leading',
+            onPress: () => startHeaderAction.onPress(template),
           };
 
     nitroActions.push(action);
   }
 
   for (const action of endHeaderActions) {
-    nitroActions.push(convertToNitro(action, 'trailing'));
+    nitroActions.push(convertToNitro(template, action, 'trailing'));
   }
 
   return nitroActions;
 }
 
-function convert(actions: Actions): Array<NitroAction>;
-function convert(actions?: Actions): Array<NitroAction> | undefined;
-function convert(actions?: Actions): Array<NitroAction> | undefined {
-  return Platform.OS === 'android' ? convertAndroid(actions?.android) : convertIos(actions?.ios);
+function convert<T>(template: T, actions: Actions<T>): Array<NitroAction>;
+function convert<T>(template: T, actions?: Actions<T>): Array<NitroAction> | undefined;
+function convert<T>(template: T, actions?: Actions<T>): Array<NitroAction> | undefined {
+  return Platform.OS === 'android'
+    ? convertAndroid(template, actions?.android)
+    : convertIos(template, actions?.ios);
 }
 
 export const NitroActionUtil = { convert, convertAndroidMap, convertIos };

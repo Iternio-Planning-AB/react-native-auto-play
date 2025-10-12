@@ -21,7 +21,7 @@ export type NitroSection = {
   selectedIndex?: number;
 };
 
-const convert = (sections?: Section): Array<NitroSection> | undefined => {
+const convert = <T>(template: T, sections?: Section<T>): Array<NitroSection> | undefined => {
   if (sections == null) {
     return undefined;
   }
@@ -29,7 +29,7 @@ const convert = (sections?: Section): Array<NitroSection> | undefined => {
   if (Array.isArray(sections)) {
     return sections.map<NitroSection>((section) => {
       const { title, type } = section;
-      const items = section.items.map<NitroRow>(convertRow);
+      const items = section.items.map<NitroRow>((item) => convertRow(template, item));
 
       return {
         items,
@@ -42,14 +42,14 @@ const convert = (sections?: Section): Array<NitroSection> | undefined => {
 
   return [
     {
-      items: sections.items.map(convertRow),
+      items: sections.items.map((item) => convertRow(template, item)),
       type: sections.type,
       selectedIndex: sections.type === 'radio' ? sections.selectedIndex : undefined,
     },
   ];
 };
 
-const convertRow = (item: DefaultRow | RadioRow | ToggleRow): NitroRow => {
+const convertRow = <T>(template: T, item: DefaultRow<T> | RadioRow<T> | ToggleRow<T>): NitroRow => {
   const { title, type, enabled = true, image, onPress } = item;
 
   const detailedText = type === 'default' ? item.detailedText : undefined;
@@ -61,7 +61,8 @@ const convertRow = (item: DefaultRow | RadioRow | ToggleRow): NitroRow => {
     image: NitroImage.convert(image),
     title,
     checked: type === 'toggle' ? item.checked : undefined,
-    onPress: (checked) => (type === 'toggle' ? onPress(checked ?? false) : onPress()),
+    onPress: (checked) =>
+      type === 'toggle' ? onPress(template, checked ?? false) : onPress(template),
   };
 };
 

@@ -1,89 +1,82 @@
-import { GridTemplate } from '@g4rb4g3/react-native-autoplay';
-import type { GridButton } from '@g4rb4g3/react-native-autoplay/lib/utils/NitroGrid';
+import { type GridButton, GridTemplate } from '@g4rb4g3/react-native-autoplay';
 import { AutoTemplate } from './AutoTemplate';
 
-const getButtons = (template: GridTemplate, color: string): Array<GridButton> => {
-  return [
-    {
-      title: { text: '#1' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'red'));
-      },
+const getButtons = (color: string): Array<GridButton<GridTemplate>> => [
+  {
+    title: { text: '#1' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
     },
-    {
-      title: { text: '#2' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'yellow'));
-      },
+    onPress: (template) => {
+      template.updateGrid(getButtons('red'));
     },
-    {
-      title: { text: '#3' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'pink'));
-      },
+  },
+  {
+    title: { text: '#2' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
     },
-    {
-      title: { text: '#4' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'violet'));
-      },
+    onPress: (template) => {
+      template.updateGrid(getButtons('yellow'));
     },
-    {
-      title: { text: '#5' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'green'));
-      },
+  },
+  {
+    title: { text: '#3' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
     },
-    {
-      title: { text: '#6' },
-      image: {
-        name: 'star',
-        color,
-        size: 26,
-      },
-      onPress: () => {
-        template.updateGrid(getButtons(template, 'blue'));
-      },
+    onPress: (template) => {
+      template.updateGrid(getButtons('pink'));
     },
-  ];
-};
+  },
+  {
+    title: { text: '#4' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
+    },
+    onPress: (template) => {
+      template.updateGrid(getButtons('violet'));
+    },
+  },
+  {
+    title: { text: '#5' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
+    },
+    onPress: (template) => {
+      template.updateGrid(getButtons('green'));
+    },
+  },
+  {
+    title: { text: '#6' },
+    image: {
+      name: 'star',
+      color,
+      size: 26,
+    },
+    onPress: (template) => {
+      template.updateGrid(getButtons('blue'));
+    },
+  },
+];
 
 const getTemplate = (): GridTemplate => {
-  const template = new GridTemplate({
+  return new GridTemplate({
     id: 'gridTemplate',
     title: { text: 'grid' },
     actions: AutoTemplate.actions,
-    buttons: [],
+    buttons: getButtons('green'),
   });
-
-  template.updateGrid(getButtons(template, 'green'));
-
-  return template;
 };
 
 export const AutoGridTemplate = { getTemplate };
