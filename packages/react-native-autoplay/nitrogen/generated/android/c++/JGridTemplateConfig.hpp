@@ -62,6 +62,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onDidAppear = this->getFieldValue(fieldOnDidAppear);
       static const auto fieldOnDidDisappear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onDidDisappear");
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onDidDisappear = this->getFieldValue(fieldOnDidDisappear);
+      static const auto fieldOnPopped = clazz->getField<JFunc_void::javaobject>("onPopped");
+      jni::local_ref<JFunc_void::javaobject> onPopped = this->getFieldValue(fieldOnPopped);
       static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
       static const auto fieldTitle = clazz->getField<JAutoText>("title");
@@ -114,6 +116,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
             };
           }
         }()) : std::nullopt,
+        onPopped != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onPopped->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPopped);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onPoppedRef = jni::make_global(onPopped);
+            return [onPoppedRef]() -> void {
+              return onPoppedRef->invoke();
+            };
+          }
+        }()) : std::nullopt,
         actions != nullptr ? std::make_optional([&]() {
           size_t __size = actions->size();
           std::vector<NitroAction> __vector;
@@ -150,6 +163,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
         value.onDidAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidAppear.value()) : nullptr,
         value.onDidDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
+        value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr,
         value.actions.has_value() ? [&]() {
           size_t __size = value.actions.value().size();
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);

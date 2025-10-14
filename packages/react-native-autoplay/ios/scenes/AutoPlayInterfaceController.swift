@@ -41,23 +41,11 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     }
 
     var topTemplateId: String? {
-        guard
-            let userInfo = interfaceController.topTemplate?.userInfo
-                as? [String: Any]
-        else {
-            return nil
-        }
-        return userInfo["id"] as? String
+        return interfaceController.topTemplate?.getTemplateId()
     }
 
     var rootTemplateId: String? {
-        guard
-            let userInfo = interfaceController.rootTemplate.userInfo
-                as? [String: Any]
-        else {
-            return nil
-        }
-        return userInfo["id"] as? String
+        return interfaceController.rootTemplate.getTemplateId()
     }
 
     func pushTemplate(
@@ -100,11 +88,8 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         var templateIds: [String] = []
 
         templates.forEach { template in
-            guard let userInfo = template.userInfo as? [String: Any],
-                let templateId = userInfo["id"] as? String
-            else {
-                return
-            }
+            guard let templateId = template.getTemplateId() else { return }
+
             if templateId == rootTemplateId {
                 return
             }
@@ -120,21 +105,34 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         return templateIds
     }
 
-    func pop(to templateId: String, animated: Bool) async throws -> String? {
+    func pop(to templateId: String, animated: Bool) async throws -> [String] {
         guard
             let template = interfaceController.templates.first(
                 where: {
-                    templateId == ($0.userInfo as? [String: Any])?["id"]
-                        as? String
+                    templateId == $0.getTemplateId()
                 })
-        else { return nil }
+        else { return [] }
+
+        var templateIds: [String] = interfaceController.templates.map {
+            template in template.getTemplateId()!
+        }
+
+        if let startIndex = templateIds.firstIndex(where: {
+            $0 == templateId
+        }),
+            let endIndex = templateIds.firstIndex(where: {
+                $0 == topTemplateId
+            })
+        {
+            templateIds = Array(templateIds[(startIndex)..<endIndex])
+        }
 
         try await interfaceController.pop(
             to: template,
             animated: animated
         )
 
-        return templateId
+        return templateIds
     }
 
     func presentTemplate(
@@ -166,43 +164,67 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        HybridAutoPlay.emitTemplateState(
-            template: aTemplate,
-            templateState: .willappear,
-            animated: animated
-        )
+        guard let templateId = aTemplate.getTemplateId() else {
+            return
+        }
+
+        do {
+            try RootModule.withTemplate(templateId: templateId) { template in
+                template?.onWillAppear(animted: animated)
+            }
+        } catch let error {
+            print("failed to call onWillAppear for \(templateId): \(error)")
+        }
     }
 
     func templateDidAppear(
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        HybridAutoPlay.emitTemplateState(
-            template: aTemplate,
-            templateState: .didappear,
-            animated: animated
-        )
+        guard let templateId = aTemplate.getTemplateId() else {
+            return
+        }
+
+        do {
+            try RootModule.withTemplate(templateId: templateId) { template in
+                template?.onDidAppear(animted: animated)
+            }
+        } catch let error {
+            print("failed to call onDidAppear for \(templateId): \(error)")
+        }
     }
 
     func templateWillDisappear(
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        HybridAutoPlay.emitTemplateState(
-            template: aTemplate,
-            templateState: .willdisappear,
-            animated: animated
-        )
+        guard let templateId = aTemplate.getTemplateId() else {
+            return
+        }
+
+        do {
+            try RootModule.withTemplate(templateId: templateId) { template in
+                template?.onWillDisappear(animted: animated)
+            }
+        } catch let error {
+            print("failed to call onWillDisappear for \(templateId): \(error)")
+        }
     }
 
     func templateDidDisappear(
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        HybridAutoPlay.emitTemplateState(
-            template: aTemplate,
-            templateState: .diddisappear,
-            animated: animated
-        )
+        guard let templateId = aTemplate.getTemplateId() else {
+            return
+        }
+
+        do {
+            try RootModule.withTemplate(templateId: templateId) { template in
+                template?.onDidDisappear(animted: animated)
+            }
+        } catch let error {
+            print("failed to call onDidDisappear for \(templateId): \(error)")
+        }
     }
 }

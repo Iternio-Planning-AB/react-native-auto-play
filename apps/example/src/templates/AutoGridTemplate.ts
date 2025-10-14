@@ -75,6 +75,11 @@ const getTemplate = (): GridTemplate => {
     title: { text: 'grid' },
     actions: AutoTemplate.actions,
     buttons: getButtons('green'),
+    onWillAppear: () => console.log('GridTemplate onWillAppear'),
+    onDidAppear: () => console.log('GridTemplate onDidAppear'),
+    onWillDisappear: () => console.log('GridTemplate onWillDisappear'),
+    onDidDisappear: () => console.log('GridTemplate onDidDisappear'),
+    onPopped: () => console.log('GridTemplate onPopped'),
   });
 };
 

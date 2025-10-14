@@ -28,21 +28,25 @@ class AndroidAutoScreen(
             ) {
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
-                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.WILLAPPEAR)
+                        AndroidAutoTemplate.getTemplate(moduleName)?.onWillAppear()
                     }
 
                     Lifecycle.Event.ON_RESUME -> {
-                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.DIDAPPEAR)
+                        AndroidAutoTemplate.getTemplate(moduleName)?.onDidAppear()
                     }
 
                     Lifecycle.Event.ON_PAUSE -> {
-                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.WILLDISAPPEAR)
+                        AndroidAutoTemplate.getTemplate(moduleName)?.onWillDisappear()
+                    }
+
+                    Lifecycle.Event.ON_STOP -> {
+                        AndroidAutoTemplate.getTemplate(moduleName)?.onDidDisappear()
                     }
 
                     Lifecycle.Event.ON_DESTROY -> {
-                        HybridAutoPlay.emitTemplateState(moduleName, VisibilityState.DIDDISAPPEAR)
                         screens.remove(moduleName)
                         HybridAutoPlay.removeListeners(moduleName)
+                        AndroidAutoTemplate.getTemplate(moduleName)?.onPopped()
                     }
 
                     else -> {}

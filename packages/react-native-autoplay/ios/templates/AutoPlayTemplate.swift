@@ -7,7 +7,7 @@
 
 import CarPlay
 
-class Template: NSObject {
+class AutoPlayTemplate: NSObject {
     let template: CPTemplate
     var barButtons: [NitroAction]?
 
@@ -31,8 +31,28 @@ class Template: NSObject {
                 parsedActions.trailingNavigationBarButtons
         }
     }
-    
+
     open func invalidate() {
         print("\(type(of: self)) lacks invalidate implementation")
+    }
+
+    open func onWillAppear(animted: Bool) {
+        print("\(type(of: self)) lacks onWillAppear implementation")
+    }
+
+    open func onDidAppear(animted: Bool) {
+        print("\(type(of: self)) lacks onDidAppear implementation")
+    }
+
+    open func onWillDisappear(animted: Bool) {
+        print("\(type(of: self)) lacks onWillDisappear implementation")
+    }
+
+    open func onDidDisappear(animted: Bool) {
+        print("\(type(of: self)) lacks onDidDisappear implementation")
+    }
+
+    open func onPopped() {
+        print("\(type(of: self)) lacks onPopped implementation")
     }
 }

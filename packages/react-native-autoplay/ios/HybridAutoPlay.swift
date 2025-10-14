@@ -3,9 +3,6 @@ import NitroModules
 
 class HybridAutoPlay: HybridAutoPlaySpec {
     private static var listeners = [EventName: [String: () -> Void]]()
-    private static var templateStateListeners = [
-        String: [(TemplateEventPayload) -> Void]
-    ]()
     private static var renderStateListeners = [
         String: [(VisibilityState) -> Void]
     ]()
@@ -25,17 +22,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
         return {
             HybridAutoPlay.listeners[eventType]?.removeValue(forKey: uuid)
-        }
-    }
-
-    func addListenerTemplateState(
-        templateId: String,
-        callback: @escaping (TemplateEventPayload) -> Void
-    ) {
-        if HybridAutoPlay.templateStateListeners[templateId] != nil {
-            HybridAutoPlay.templateStateListeners[templateId]?.append(callback)
-        } else {
-            HybridAutoPlay.templateStateListeners[templateId] = [callback]
         }
     }
 
@@ -103,38 +89,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         //TODO
     }
 
-    func addListenerTemplateState(
-        templateId: String,
-        onWillAppear: ((_ animated: Bool?) -> Void)?,
-        onWillDisappear: ((_ animated: Bool?) -> Void)?,
-        onDidAppear: ((_ animated: Bool?) -> Void)?,
-        onDidDisappear: ((_ animated: Bool?) -> Void)?
-    ) {
-        addListenerTemplateState(
-            templateId: templateId
-        ) { state in
-            switch state.state {
-            case .willappear:
-                onWillAppear?(state.animated)
-            case .didappear:
-                onDidAppear?(state.animated)
-            case .willdisappear:
-                onWillDisappear?(state.animated)
-            case .diddisappear:
-                onDidDisappear?(state.animated)
-            }
-        }
-    }
-
     func createMapTemplate(config: MapTemplateConfig) throws {
-        addListenerTemplateState(
-            templateId: config.id,
-            onWillAppear: config.onWillAppear,
-            onWillDisappear: config.onWillDisappear,
-            onDidAppear: config.onDidAppear,
-            onDidDisappear: config.onDidDisappear
-        )
-
         let template = MapTemplate(config: config)
         try RootModule.withScene { scene in
             scene.templateStore.addTemplate(
@@ -145,14 +100,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func createListTemplate(config: ListTemplateConfig) throws {
-        addListenerTemplateState(
-            templateId: config.id,
-            onWillAppear: config.onWillAppear,
-            onWillDisappear: config.onWillDisappear,
-            onDidAppear: config.onDidAppear,
-            onDidDisappear: config.onDidDisappear
-        )
-
         let template = ListTemplate(config: config)
         try RootModule.withScene { scene in
             scene.templateStore.addTemplate(
@@ -176,14 +123,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func createGridTemplate(config: GridTemplateConfig) throws {
-        addListenerTemplateState(
-            templateId: config.id,
-            onWillAppear: config.onWillAppear,
-            onWillDisappear: config.onWillDisappear,
-            onDidAppear: config.onDidAppear,
-            onDidDisappear: config.onDidDisappear
-        )
-
         let template = GridTemplate(config: config)
         try RootModule.withScene { scene in
             scene.templateStore.addTemplate(
@@ -273,13 +212,14 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         return Promise.async {
             return try await RootModule.withInterfaceController {
                 interfaceController in
-                guard
-                    let templateId = try await interfaceController.pop(
-                        to: templateId,
-                        animated: true
-                    )
-                else { return }
-                HybridAutoPlay.removeListeners(templateId: templateId)
+
+                let templateIds = try await interfaceController.pop(
+                    to: templateId,
+                    animated: true
+                )
+                templateIds.forEach { templateId in
+                    HybridAutoPlay.removeListeners(templateId: templateId)
+                }
             }
         }
     }
@@ -315,27 +255,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    static func emitTemplateState(
-        template: CPTemplate,
-        templateState: VisibilityState,
-        animated: Bool
-    ) {
-        guard let userInfo = template.userInfo as? [String: Any],
-            let templateId = userInfo["id"] as? String
-        else {
-            return
-        }
-
-        let payload = TemplateEventPayload(
-            animated: animated,
-            state: templateState
-        )
-
-        HybridAutoPlay.templateStateListeners[templateId]?.forEach { callback in
-            callback(payload)
-        }
-    }
-
     static func emitRenderState(mapTemplateId: String, state: VisibilityState) {
         HybridAutoPlay.renderStateListeners[mapTemplateId]?.forEach {
             callback in
@@ -360,7 +279,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     static func removeListeners(templateId: String) {
-        HybridAutoPlay.templateStateListeners.removeValue(forKey: templateId)
         HybridAutoPlay.renderStateListeners.removeValue(forKey: templateId)
         HybridAutoPlay.safeAreaInsetsListeners.removeValue(forKey: templateId)
     }

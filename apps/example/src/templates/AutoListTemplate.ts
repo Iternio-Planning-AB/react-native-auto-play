@@ -8,7 +8,7 @@ import {
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
-  const template = new ListTemplate({
+  return new ListTemplate({
     title: { text: 'radios' },
     actions: AutoTemplate.actions,
     sections: {
@@ -38,8 +38,8 @@ const getRadioTemplate = (): ListTemplate => {
         },
       ],
     },
+    onPopped: () => console.log('RadioTemplate onPopped'),
   });
-  return template;
 };
 
 const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
@@ -94,7 +94,7 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
 };
 
 const getTemplate = (): ListTemplate => {
-  const template = new ListTemplate({
+  return new ListTemplate({
     title: {
       text: `${TextPlaceholders.Distance} - ${TextPlaceholders.Duration}`,
       distance: { unit: 'meters', value: 1234 },
@@ -102,9 +102,8 @@ const getTemplate = (): ListTemplate => {
     },
     actions: AutoTemplate.actions,
     sections: getMainSection(true),
+    onPopped: () => console.log('ListTemplate onPopped'),
   });
-
-  return template;
 };
 
 export const AutoListTemplate = { getTemplate };

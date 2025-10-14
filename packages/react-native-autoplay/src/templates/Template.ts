@@ -43,6 +43,13 @@ export interface TemplateConfig {
    * Fired after template disappears
    */
   onDidDisappear?(animated?: boolean): void;
+
+  /**
+   * Fired when the template was removed from the stack
+   * on all other states the template is still on the stack and might appear again
+   * this callback lets you know the template is gone forever
+   */
+  onPopped?(): void;
 }
 
 export class Template<TemplateConfigType, ActionsType> {
@@ -56,12 +63,25 @@ export class Template<TemplateConfigType, ActionsType> {
     console.log('***', this.id);
   }
 
+  /**
+   * set as root template on the stack
+   */
   public setRootTemplate() {
     return AutoPlay.setRootTemplate(this.id);
   }
 
+  /**
+   * push this template on the stack and show it to the user
+   */
   public push() {
     return AutoPlay.pushTemplate(this.id);
+  }
+
+  /**
+   * remove all templates above this one from the stack
+   */
+  public popTo() {
+    return AutoPlay.popToTemplate(this.id);
   }
 
   public setActions<T>(actions?: ActionsType) {

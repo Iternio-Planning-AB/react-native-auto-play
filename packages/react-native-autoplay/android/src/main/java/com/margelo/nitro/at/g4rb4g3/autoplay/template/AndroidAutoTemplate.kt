@@ -8,6 +8,13 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.NitroAction
 abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
     abstract fun parse(): Template
     abstract fun setTemplateActions(actions: Array<NitroAction>?)
+
+    abstract fun onWillAppear()
+    abstract fun onWillDisappear()
+    abstract fun onDidAppear()
+    abstract fun onDidDisappear()
+    abstract fun onPopped()
+
     abstract val isRenderTemplate: Boolean
     abstract val templateId: String
 
@@ -20,7 +27,7 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
         const val TAG = "AndroidAutoTemplate"
         val templates = mutableMapOf<String, AndroidAutoTemplate<*>>()
 
-        fun <T> setTemplate(id: String, template: AndroidAutoTemplate<T>,) {
+        fun <T> setTemplate(id: String, template: AndroidAutoTemplate<T>) {
             templates.put(id, template)
         }
 
@@ -38,10 +45,6 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
                 return config
             }
             return null
-        }
-
-        fun removeTemplate(id: String) {
-            templates.remove(id)
         }
     }
 }

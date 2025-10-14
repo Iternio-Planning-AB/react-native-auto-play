@@ -38,11 +38,14 @@ data class AlertTemplateConfig
     val onDidAppear: Func_void_std__optional_bool_?,
     @DoNotStrip
     @Keep
-    val onDidDisappear: Func_void_std__optional_bool_?
+    val onDidDisappear: Func_void_std__optional_bool_?,
+    @DoNotStrip
+    @Keep
+    val onPopped: Func_void?
   ) {
   /**
    * Initialize a new instance of `AlertTemplateConfig` from Kotlin.
    */
-  constructor(titleVariants: Array<String>, actions: Array<AlertAction>?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?)
-       : this(titleVariants, actions?.let { it }, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) })
+  constructor(titleVariants: Array<String>, actions: Array<AlertAction>?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?)
+       : this(titleVariants, actions?.let { it }, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) })
 }

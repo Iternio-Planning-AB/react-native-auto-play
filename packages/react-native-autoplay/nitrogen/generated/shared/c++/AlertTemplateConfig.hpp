@@ -45,10 +45,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear     SWIFT_PRIVATE;
+    std::optional<std::function<void()>> onPopped     SWIFT_PRIVATE;
 
   public:
     AlertTemplateConfig() = default;
-    explicit AlertTemplateConfig(std::vector<std::string> titleVariants, std::optional<std::vector<AlertAction>> actions, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear): titleVariants(titleVariants), actions(actions), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear) {}
+    explicit AlertTemplateConfig(std::vector<std::string> titleVariants, std::optional<std::vector<AlertAction>> actions, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped): titleVariants(titleVariants), actions(actions), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay
@@ -66,7 +67,8 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillAppear")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillDisappear")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidAppear")),
-        JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear"))
+        JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
+        JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onPopped"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::AlertTemplateConfig& arg) {
@@ -77,6 +79,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "onWillDisappear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onWillDisappear));
       obj.setProperty(runtime, "onDidAppear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidAppear));
       obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidDisappear));
+      obj.setProperty(runtime, "onPopped", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPopped));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -93,6 +96,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onWillDisappear"))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidAppear"))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
+      if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onPopped"))) return false;
       return true;
     }
   };

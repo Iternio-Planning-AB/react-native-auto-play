@@ -96,32 +96,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         // TODO
     }
 
-    fun addListenerTemplateState(
-        templateId: String,
-        onWillAppear: Func_void_std__optional_bool_?,
-        onDidAppear: Func_void_std__optional_bool_?,
-        onWillDisappear: Func_void_std__optional_bool_?,
-        onDidDisappear: Func_void_std__optional_bool_?
-    ) {
-        addListenerTemplateState(templateId) { state ->
-            when (state) {
-                VisibilityState.WILLAPPEAR -> onWillAppear?.let { it(null) }
-                VisibilityState.DIDAPPEAR -> onDidAppear?.let { it(null) }
-                VisibilityState.WILLDISAPPEAR -> onWillDisappear?.let { it(null) }
-                VisibilityState.DIDDISAPPEAR -> onDidDisappear?.let { it(null) }
-            }
-        }
-    }
-
     override fun createMapTemplate(config: MapTemplateConfig) {
-        addListenerTemplateState(
-            config.id,
-            config.onWillAppear,
-            config.onDidAppear,
-            config.onWillDisappear,
-            config.onDidDisappear
-        )
-
         val context = AndroidAutoSession.getCarContext(config.id) ?: throw IllegalArgumentException(
             "createMapTemplate failed, carContext found"
         )
@@ -131,14 +106,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun createListTemplate(config: ListTemplateConfig) {
-        addListenerTemplateState(
-            config.id,
-            config.onWillAppear,
-            config.onDidAppear,
-            config.onWillDisappear,
-            config.onDidDisappear
-        )
-
         val context = AndroidAutoSession.getRootContext()
             ?: throw IllegalArgumentException("createListTemplate failed, carContext not found")
 
@@ -147,8 +114,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun updateListTemplateSections(
-        templateId: String,
-        sections: Array<NitroSection>?
+        templateId: String, sections: Array<NitroSection>?
     ) {
         val template = AndroidAutoTemplate.getTemplate(templateId)
             ?: throw IllegalArgumentException("updateListTemplateSections failed, template $templateId not found")
@@ -161,14 +127,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun createGridTemplate(config: GridTemplateConfig) {
-        addListenerTemplateState(
-            config.id,
-            config.onWillAppear,
-            config.onDidAppear,
-            config.onWillDisappear,
-            config.onDidDisappear
-        )
-
         val context = AndroidAutoSession.getRootContext()
             ?: throw IllegalArgumentException("createListTemplate failed, carContext found")
 
@@ -177,8 +135,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun updateGridTemplateButtons(
-        templateId: String,
-        buttons: Array<NitroGridButton>
+        templateId: String, buttons: Array<NitroGridButton>
     ) {
         val template = AndroidAutoTemplate.getTemplate(templateId)
             ?: throw IllegalArgumentException("updateGridTemplateButtons failed, template $templateId not found")
@@ -316,33 +273,13 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
         private val listeners = mutableMapOf<EventName, MutableList<() -> Unit>>()
 
-        private val templateStateListeners =
-            mutableMapOf<String, MutableList<(VisibilityState) -> Unit>>()
         private val renderStateListeners =
             mutableMapOf<String, MutableList<(VisibilityState) -> Unit>>()
         private val safeAreaInsetsListeners =
             mutableMapOf<String, MutableList<(SafeAreaInsets) -> Unit>>()
 
-        fun addListenerTemplateState(
-            templateId: String, callback: (VisibilityState) -> Unit
-        ): () -> Unit {
-            val callbacks = templateStateListeners.getOrPut(templateId) {
-                mutableListOf()
-            }
-            callbacks.add(callback)
-
-            return {
-                templateStateListeners[templateId]?.let {
-                    it.remove(callback)
-                    if (it.isEmpty()) {
-                        templateStateListeners.remove(templateId)
-                    }
-                }
-            }
-        }
 
         fun removeListeners(templateId: String) {
-            templateStateListeners.remove(templateId)
             renderStateListeners.remove(templateId)
             safeAreaInsetsListeners.remove(templateId)
         }
@@ -351,11 +288,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             listeners[event]?.forEach { it() }
         }
 
-        fun emitTemplateState(templateId: String, templateState: VisibilityState) {
-            templateStateListeners[templateId]?.forEach {
-                it(templateState)
-            }
-        }
 
         fun emitRenderState(mapTemplateId: String, state: VisibilityState) {
             renderStateListeners[mapTemplateId]?.forEach {

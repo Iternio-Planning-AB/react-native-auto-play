@@ -51,6 +51,27 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
         super.applyConfigUpdate()
     }
 
+    override fun onWillAppear() {
+        config.onWillAppear?.let { it(null) }
+    }
+
+    override fun onWillDisappear() {
+        config.onWillDisappear?.let { it(null) }
+    }
+
+    override fun onDidAppear() {
+        config.onDidAppear?.let { it(null) }
+    }
+
+    override fun onDidDisappear() {
+        config.onDidDisappear?.let { it(null) }
+    }
+
+    override fun onPopped() {
+        config.onPopped?.let { it() }
+        templates.remove(templateId)
+    }
+
     fun updateSections(sections: Array<NitroSection>?) {
         config = config.copy(sections = sections)
         super.applyConfigUpdate()

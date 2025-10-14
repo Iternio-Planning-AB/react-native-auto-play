@@ -22,7 +22,7 @@ class RootModule {
         try action(scene)
     }
     
-    static func withTemplate(templateId: String, perform action: @escaping (Template?) throws -> Void) throws {
+    static func withTemplate(templateId: String, perform action: @escaping (AutoPlayTemplate?) throws -> Void) throws {
         try withScene { scene in
             guard
                 let template = scene.templateStore.getTemplate(templateId: templateId)
@@ -33,7 +33,6 @@ class RootModule {
             try action(template)
         }
     }
-    
     
     @MainActor
     static func withScene<T>(

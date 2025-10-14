@@ -95,6 +95,27 @@ class MapTemplate(
         super.applyConfigUpdate()
     }
 
+    override fun onWillAppear() {
+        config.onWillAppear?.let { it(null) }
+    }
+
+    override fun onWillDisappear() {
+        config.onWillDisappear?.let { it(null) }
+    }
+
+    override fun onDidAppear() {
+        config.onDidAppear?.let { it(null) }
+    }
+
+    override fun onDidDisappear() {
+        config.onDidDisappear?.let { it(null) }
+    }
+
+    override fun onPopped() {
+        config.onPopped?.let { it() }
+        templates.remove(templateId)
+    }
+
     fun setMapActions(buttons: Array<NitroMapButton>?) {
         config = config.copy(mapButtons = buttons)
         super.applyConfigUpdate()

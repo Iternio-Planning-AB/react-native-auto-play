@@ -52,6 +52,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onDidAppear = this->getFieldValue(fieldOnDidAppear);
       static const auto fieldOnDidDisappear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onDidDisappear");
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onDidDisappear = this->getFieldValue(fieldOnDidDisappear);
+      static const auto fieldOnPopped = clazz->getField<JFunc_void::javaobject>("onPopped");
+      jni::local_ref<JFunc_void::javaobject> onPopped = this->getFieldValue(fieldOnPopped);
       return AlertTemplateConfig(
         [&]() {
           size_t __size = titleVariants->size();
@@ -116,6 +118,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
               return onDidDisappearRef->invoke(animated);
             };
           }
+        }()) : std::nullopt,
+        onPopped != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onPopped->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPopped);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onPoppedRef = jni::make_global(onPopped);
+            return [onPoppedRef]() -> void {
+              return onPoppedRef->invoke();
+            };
+          }
         }()) : std::nullopt
       );
     }
@@ -148,7 +161,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
         value.onDidAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidAppear.value()) : nullptr,
-        value.onDidDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidDisappear.value()) : nullptr
+        value.onDidDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
+        value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr
       );
     }
   };

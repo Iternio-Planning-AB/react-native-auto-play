@@ -7,7 +7,7 @@
 
 import CarPlay
 
-class GridTemplate: Template {
+class GridTemplate: AutoPlayTemplate {
     var config: GridTemplateConfig
 
     init(config: GridTemplateConfig) {
@@ -45,7 +45,27 @@ class GridTemplate: Template {
 
         template.updateGridButtons(buttons)
     }
-    
+
+    override func onWillAppear(animted: Bool) {
+        config.onWillAppear?(animted)
+    }
+
+    override func onDidAppear(animted: Bool) {
+        config.onDidDisappear?(animted)
+    }
+
+    override func onWillDisappear(animted: Bool) {
+        config.onWillDisappear?(animted)
+    }
+
+    override func onDidDisappear(animted: Bool) {
+        config.onDidDisappear?(animted)
+    }
+
+    override func onPopped() {
+        config.onPopped?()
+    }
+
     func updateButtons(buttons: [NitroGridButton]) {
         config.buttons = buttons
         invalidate()

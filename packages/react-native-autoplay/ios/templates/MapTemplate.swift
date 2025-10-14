@@ -7,7 +7,7 @@
 import CarPlay
 import React
 
-class MapTemplate: Template, CPMapTemplateDelegate {
+class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     var config: MapTemplateConfig
 
     init(config: MapTemplateConfig) {
@@ -44,6 +44,26 @@ class MapTemplate: Template, CPMapTemplateDelegate {
                 }
             }
         }
+    }
+
+    override func onWillAppear(animted: Bool) {
+        config.onWillAppear?(animted)
+    }
+
+    override func onDidAppear(animted: Bool) {
+        config.onDidDisappear?(animted)
+    }
+
+    override func onWillDisappear(animted: Bool) {
+        config.onWillDisappear?(animted)
+    }
+
+    override func onDidDisappear(animted: Bool) {
+        config.onDidDisappear?(animted)
+    }
+
+    override func onPopped() {
+        config.onPopped?()
     }
 
     // MARK: gestures
