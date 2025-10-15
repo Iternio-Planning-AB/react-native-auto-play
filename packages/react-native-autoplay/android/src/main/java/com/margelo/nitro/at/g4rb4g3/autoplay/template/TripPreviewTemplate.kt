@@ -55,14 +55,9 @@ class TripPreviewTemplate(
                     addText(
                         Parser.parseText(
                             AutoText(
-                                Parser.PLACEHOLDER_DURATION, null, selectedRoute.travelEstimates.timeRemaining
-                            )
-                        )
-                    )
-                    addText(
-                        Parser.parseText(
-                            AutoText(
-                                Parser.PLACEHOLDER_DISTANCE, selectedRoute.travelEstimates.distanceRemaining, null
+                                "${Parser.PLACEHOLDER_DURATION} (${Parser.PLACEHOLDER_DISTANCE})",
+                                selectedRoute.travelEstimates.distanceRemaining,
+                                selectedRoute.travelEstimates.timeRemaining
                             )
                         )
                     )
