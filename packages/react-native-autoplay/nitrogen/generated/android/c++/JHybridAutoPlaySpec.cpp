@@ -49,6 +49,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NavigationAlertAction; 
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertDismissalReason; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripConfig; }
+// Forward declaration of `TripPoint` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPoint; }
+// Forward declaration of `RouteChoice` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct RouteChoice; }
+// Forward declaration of `TravelEstimates` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TravelEstimates; }
+// Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPreviewTextConfiguration; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct ListTemplateConfig; }
 // Forward declaration of `NitroSection` to properly resolve imports.
@@ -120,6 +130,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "AlertDismissalReason.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JAlertDismissalReason.hpp"
+#include "TripConfig.hpp"
+#include "JTripConfig.hpp"
+#include "TripPoint.hpp"
+#include "JTripPoint.hpp"
+#include "RouteChoice.hpp"
+#include "JRouteChoice.hpp"
+#include "TravelEstimates.hpp"
+#include "JTravelEstimates.hpp"
+#include "TripPreviewTextConfiguration.hpp"
+#include "JTripPreviewTextConfiguration.hpp"
+#include "JFunc_void_std__string_std__optional_std__string_.hpp"
 #include "ListTemplateConfig.hpp"
 #include "JListTemplateConfig.hpp"
 #include "NitroSection.hpp"
@@ -211,6 +232,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
   void JHybridAutoPlaySpec::showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroNavigationAlert> /* alert */)>("showNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), JNitroNavigationAlert::fromCpp(alert));
+  }
+  void JHybridAutoPlaySpec::showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>& onTripSelected) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__optional_std__string_::javaobject> /* onTripSelected */)>("showTripSelector_cxx");
+    method(_javaPart, jni::make_jstring(templateId), [&]() {
+      size_t __size = trips.size();
+      jni::local_ref<jni::JArrayClass<JTripConfig>> __array = jni::JArrayClass<JTripConfig>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = trips[__i];
+        __array->setElement(__i, *JTripConfig::fromCpp(__element));
+      }
+      return __array;
+    }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__optional_std__string__cxx::fromCpp(onTripSelected));
+  }
+  void JHybridAutoPlaySpec::hideTripSelector(const std::string& templateId) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("hideTripSelector");
+    method(_javaPart, jni::make_jstring(templateId));
   }
   void JHybridAutoPlaySpec::createListTemplate(const ListTemplateConfig& config) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JListTemplateConfig> /* config */)>("createListTemplate");

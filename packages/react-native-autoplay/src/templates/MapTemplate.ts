@@ -4,6 +4,7 @@ import { AutoPlay } from '..';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
+import type { TripConfig, TripPreviewTextConfiguration } from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { NitroMapButton } from '../utils/NitroMapButton';
@@ -138,8 +139,22 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   /**
    * brings up a navigation alert
    * calling this with the same alert.id will update an already shown alert
+   * ⚠️ updating an existing alert is currently broken on Android Automotive, it brings up a new alert for each call
    */
   public showAlert(alert: NavigationAlert) {
     AutoPlay.showNavigationAlert(this.id, NitroAlertUtil.convert(alert));
+  }
+
+  public showTripSelector(
+    trips: Array<TripConfig>,
+    selectedTripId: string | null,
+    textConfig: TripPreviewTextConfiguration,
+    onTripSelected: (tripId: string, routeId?: string) => void
+  ) {
+    AutoPlay.showTripSelector(this.id, trips, selectedTripId, textConfig, onTripSelected);
+  }
+
+  public hideTripSelector() {
+    AutoPlay.hideTripSelector(this.id);
   }
 }

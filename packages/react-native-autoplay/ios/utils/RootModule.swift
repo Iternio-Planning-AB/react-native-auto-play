@@ -22,7 +22,7 @@ class RootModule {
         try action(scene)
     }
     
-    static func withTemplate(templateId: String, perform action: @escaping (AutoPlayTemplate?) throws -> Void) throws {
+    static func withTemplate(templateId: String, perform action: @escaping (AutoPlayTemplate) throws -> Void) throws {
         try withScene { scene in
             guard
                 let template = scene.templateStore.getTemplate(templateId: templateId)
@@ -30,6 +30,17 @@ class RootModule {
                 throw AutoPlayError.templateNotFound(templateId)
             }
             
+            try action(template)
+        }
+    }
+    
+    static func withMapTemplate(templateId: String, perform action: @escaping (MapTemplate) throws -> Void) throws {
+        try withTemplate(templateId: templateId) { template in
+            guard let template = template as? MapTemplate else {
+                throw AutoPlayError.invalidTemplateError(
+                    "showNavigationAlert failed, \(templateId) not of instance MapTemplate"
+                )
+            }
             try action(template)
         }
     }

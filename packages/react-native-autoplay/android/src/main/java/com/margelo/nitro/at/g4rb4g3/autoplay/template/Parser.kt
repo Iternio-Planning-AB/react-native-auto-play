@@ -24,6 +24,9 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.ListTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.NitroRow
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.SymbolFont
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object Parser {
     const val TAG = "Parser"
@@ -178,6 +181,26 @@ object Parser {
                     }
 
                 }.build())
+            }
+        }.build()
+    }
+
+    fun formatToTimestamp(duration: Double): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, duration.toInt())
+
+        val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return formatter.format(calendar.time)
+    }
+
+    fun parseText(strings: Array<String>): CarText {
+        return CarText.Builder(strings.first()).apply {
+            strings.forEachIndexed { index, string ->
+                if (index == 0) {
+                    // the first one is on the constructor of the CarText.Builder
+                    return@forEachIndexed
+                }
+                addVariant(string)
             }
         }.build()
     }

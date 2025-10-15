@@ -5,6 +5,7 @@ import type { NitroListTemplateConfig } from '../templates/ListTemplate';
 import type { NitroMapTemplateConfig } from '../templates/MapTemplate';
 import type { TemplateConfig } from '../templates/Template';
 import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
+import type { TripConfig, TripPreviewTextConfiguration } from '../types/Trip';
 import type { NitroAction } from '../utils/NitroAction';
 import type { NitroNavigationAlert } from '../utils/NitroAlert';
 import type { NitroGridButton } from '../utils/NitroGrid';
@@ -57,6 +58,14 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    */
   createMapTemplate(config: MapTemplateConfig): void;
   showNavigationAlert(templateId: string, alert: NitroNavigationAlert): void;
+  showTripSelector(
+    templateId: string,
+    trips: Array<TripConfig>,
+    selectedTripId: string | null,
+    textConfig: TripPreviewTextConfiguration,
+    onTripSelected: (tripId: string, routeId?: string) => void
+  ): void;
+  hideTripSelector(templateId: string): void;
 
   createListTemplate(config: ListTemplateConfig): void;
   updateListTemplateSections(

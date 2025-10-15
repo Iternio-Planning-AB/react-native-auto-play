@@ -16,6 +16,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     var config: MapTemplateConfig
 
     var alertStore: [Double: AlertStoreEntry] = [:]
+    var onTripSelected: ((_ tripId: String, _ routeId: String?) -> Void)?
 
     init(config: MapTemplateConfig) {
         self.config = config
@@ -115,22 +116,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     // MARK: navigation events
-    func mapTemplate(
-        _ mapTemplate: CPMapTemplate,
-        selectedPreviewFor trip: CPTrip,
-        using routeChoice: CPRouteChoice
-    ) {
-
-    }
-
-    func mapTemplate(
-        _ mapTemplate: CPMapTemplate,
-        startedTrip trip: CPTrip,
-        using routeChoice: CPRouteChoice
-    ) {
-
-    }
-
     func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
 
     }
@@ -256,5 +241,76 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         )
 
         template.present(navigationAlert: alert, animated: true)
+    }
+
+    // MARK: trip selection
+    func showTripSelector(
+        trips: [TripConfig],
+        selectedTripId: String?,
+        textConfig: TripPreviewTextConfiguration,
+        onTripSelected: @escaping (_ tripId: String, _ routeId: String?) -> Void
+    ) throws {
+        guard let template = self.template as? CPMapTemplate else { return }
+
+        self.onTripSelected = onTripSelected
+
+        let textConfiguration = Parser.parseTripPreviewTextConfig(
+            textConfig: textConfig
+        )
+
+        let tripPreviews = Parser.parseTrips(trips: trips)
+        let selectedTrip = try selectedTripId.flatMap { tripId in
+            try tripPreviews.first(where: { try $0.getTripId() == tripId })
+        }
+
+        template.showTripPreviews(
+            tripPreviews,
+            selectedTrip: selectedTrip,
+            textConfiguration: textConfiguration
+        )
+
+        try tripPreviews.forEach { trip in
+            guard
+                let travelEstimates = try trip.routeChoices.first?
+                    .getTravelEstimates()
+            else { return }
+
+            template.updateEstimates(travelEstimates, for: trip)
+        }
+    }
+
+    func hideTripSelector() {
+        guard let template = self.template as? CPMapTemplate else { return }
+
+        template.hideTripPreviews()
+        self.onTripSelected = nil
+    }
+
+    func mapTemplate(
+        _ mapTemplate: CPMapTemplate,
+        selectedPreviewFor trip: CPTrip,
+        using routeChoice: CPRouteChoice
+    ) {
+        do {
+            let tripId = try trip.getTripId()
+            let routeId = try routeChoice.getRouteId()
+            self.onTripSelected?(tripId, routeId)
+
+            if let travelEstimates = try trip.routeChoices.first(where: {
+                try $0.getRouteId() == routeId
+            })?.getTravelEstimates() {
+                mapTemplate.updateEstimates(travelEstimates, for: trip)
+            }
+        } catch {
+            print("Unexpected error: \(error).")
+        }
+    }
+
+    func mapTemplate(
+        _ mapTemplate: CPMapTemplate,
+        startedTrip trip: CPTrip,
+        using routeChoice: CPRouteChoice
+    ) {
+        self.onTripSelected = nil
     }
 }

@@ -89,6 +89,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         //TODO
     }
 
+    // MARK: MapTemplate
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
         try RootModule.withScene { scene in
@@ -98,16 +99,53 @@ class HybridAutoPlay: HybridAutoPlaySpec {
             )
         }
     }
-    
-    func showNavigationAlert(templateId: String, alert: NitroNavigationAlert) throws -> Void {
-        try RootModule.withTemplate(templateId: templateId) { template in
+
+    func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
+        throws
+    {
+        try RootModule.withTemplate(templateId: templateId) {
+            template in
             guard let template = template as? MapTemplate else {
-                throw AutoPlayError.invalidTemplateError("showNavigationAlert failed, \(templateId) not of instance MapTemplate")
+                return
             }
+
+            template.config.mapButtons = buttons
+            template.invalidate()
+        }
+    }
+
+    func showNavigationAlert(templateId: String, alert: NitroNavigationAlert)
+        throws
+    {
+        try RootModule.withMapTemplate(templateId: templateId) { template in
             template.showAlert(alertConfig: alert)
         }
     }
 
+    func showTripSelector(
+        templateId: String,
+        trips: [TripConfig],
+        selectedTripId: String?,
+        textConfig: TripPreviewTextConfiguration,
+        onTripSelected: @escaping (_ tripId: String, _ routeId: String?) -> Void
+    ) throws {
+        try RootModule.withMapTemplate(templateId: templateId) { template in
+            try template.showTripSelector(
+                trips: trips,
+                selectedTripId: selectedTripId,
+                textConfig: textConfig,
+                onTripSelected: onTripSelected
+            )
+        }
+    }
+
+    func hideTripSelector(templateId: String) throws {
+        try RootModule.withMapTemplate(templateId: templateId) { template in
+            template.hideTripSelector()
+        }
+    }
+
+    // MARK: ListTemplate
     func createListTemplate(config: ListTemplateConfig) throws {
         let template = ListTemplate(config: config)
         try RootModule.withScene { scene in
@@ -131,6 +169,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
+    // MARK: GridTemplate
     func createGridTemplate(config: GridTemplateConfig) throws {
         let template = GridTemplate(config: config)
         try RootModule.withScene { scene in
@@ -154,6 +193,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
+    // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return Promise.async {
             try await RootModule.withSceneTemplateAndInterfaceController(
@@ -233,31 +273,17 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
-        throws
-    {
-        try RootModule.withTemplate(templateId: templateId) {
-            template in
-            guard let template = template as? MapTemplate else {
-                return
-            }
-
-            template.config.mapButtons = buttons
-            template.invalidate()
-        }
-    }
-
+    // MARK: generic template updates
     func setTemplateActions(templateId: String, actions: [NitroAction]?) throws
     {
         try RootModule.withTemplate(templateId: templateId) {
             template in
-            guard let template = template else { return }
-
             template.barButtons = actions
             template.setBarButtons()
         }
     }
 
+    // MARK: events
     static func emit(event: EventName) {
         HybridAutoPlay.listeners[event]?.values.forEach {
             $0()

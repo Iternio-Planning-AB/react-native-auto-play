@@ -62,8 +62,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroSectionType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroSection; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
+// Forward declaration of `RouteChoice` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
+// Forward declaration of `TravelEstimates` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TravelEstimates; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripConfig; }
+// Forward declaration of `TripPoint` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPoint; }
+// Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPreviewTextConfiguration; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
@@ -95,7 +105,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
 #include "Point.hpp"
+#include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
+#include "TravelEstimates.hpp"
+#include "TripConfig.hpp"
+#include "TripPoint.hpp"
+#include "TripPreviewTextConfiguration.hpp"
 #include "VisibilityState.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>

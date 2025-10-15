@@ -15,6 +15,9 @@ struct Actions {
 }
 
 class Parser {
+    static let PLACEHOLDER_DISTANCE = "{distance}"
+    static let PLACEHOLDER_DURATION = "{duration}"
+
     static func parseActions(actions: [NitroAction]?) -> Actions {
         var leadingNavigationBarButtons: [CPBarButton] = []
         var trailingNavigationBarButtons: [CPBarButton] = []
@@ -64,8 +67,8 @@ class Parser {
 
         if let distance = text.distance {
             result = result.replacingOccurrences(
-                of: "{distance}",
-                with: parseDistance(distance: distance)
+                of: Parser.PLACEHOLDER_DISTANCE,
+                with: formatDistance(distance: distance)
             )
         }
 
@@ -77,7 +80,7 @@ class Parser {
             formatter.collapsesLargestUnit = false
 
             result = result.replacingOccurrences(
-                of: "{duration}",
+                of: Parser.PLACEHOLDER_DURATION,
                 with: formatter.string(from: duration)?.replacingOccurrences(
                     of: ",",
                     with: ""
@@ -88,36 +91,48 @@ class Parser {
         return result
     }
 
-    static func parseDistance(distance: Distance) -> String {
+    static func formatDistance(distance: Distance) -> String {
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
         formatter.unitStyle = .medium
         formatter.numberFormatter.minimumFractionDigits = 0
         formatter.numberFormatter.roundingMode = .halfUp
 
+        switch distance.unit {
+        case .meters:
+            formatter.numberFormatter.maximumFractionDigits = 0
+        case .miles:
+            formatter.numberFormatter.maximumFractionDigits = 1
+        case .yards:
+            formatter.numberFormatter.maximumFractionDigits = 0
+        case .feet:
+            formatter.numberFormatter.maximumFractionDigits = 0
+        case .kilometers:
+            formatter.numberFormatter.maximumFractionDigits = 1
+        }
+
+        let measurement = parseDistance(distance: distance)
+
+        return formatter.string(from: measurement)
+    }
+
+    static func parseDistance(distance: Distance) -> Measurement<UnitLength> {
         var unit: UnitLength
 
         switch distance.unit {
         case .meters:
-            formatter.numberFormatter.maximumFractionDigits = 0
             unit = UnitLength.meters
         case .miles:
-            formatter.numberFormatter.maximumFractionDigits = 1
             unit = UnitLength.miles
         case .yards:
-            formatter.numberFormatter.maximumFractionDigits = 0
             unit = UnitLength.yards
         case .feet:
-            formatter.numberFormatter.maximumFractionDigits = 0
             unit = UnitLength.feet
         case .kilometers:
-            formatter.numberFormatter.maximumFractionDigits = 1
             unit = UnitLength.kilometers
         }
 
-        let measurement = Measurement(value: distance.value, unit: unit)
-
-        return formatter.string(from: measurement)
+        return Measurement(value: distance.value, unit: unit)
     }
 
     static func parseSections(
@@ -179,7 +194,9 @@ class Parser {
         }
     }
 
-    static func parseActionAlertStyle(style: AlertActionStyle?) -> CPAlertAction.Style {
+    static func parseActionAlertStyle(style: AlertActionStyle?)
+        -> CPAlertAction.Style
+    {
         guard let style else { return .default }
         switch style {
         case .default:
@@ -187,5 +204,92 @@ class Parser {
         case .destructive:
             return CPAlertAction.Style.destructive
         }
+    }
+
+    static func parseTripPreviewTextConfig(
+        textConfig: TripPreviewTextConfiguration
+    ) -> CPTripPreviewTextConfiguration {
+        return CPTripPreviewTextConfiguration(
+            startButtonTitle: textConfig.startButtonTitle,
+            additionalRoutesButtonTitle: textConfig.additionalRoutesButtonTitle,
+            overviewButtonTitle: textConfig.overviewButtonTitle
+        )
+    }
+
+    static func parseTripPoint(point: TripPoint) -> MKMapItem {
+        let coordinate = CLLocationCoordinate2D(
+            latitude: point.latitude,
+            longitude: point.longitude
+        )
+        let placemark = MKPlacemark(coordinate: coordinate)
+
+        let item = MKMapItem(placemark: placemark)
+        item.name = point.name
+        return item
+    }
+
+    static func parseRouteChoice(routeChoice: RouteChoice) -> CPRouteChoice {
+        let travelEstimate = parseText(
+            text: AutoText(
+                text:
+                    "\(Parser.PLACEHOLDER_DURATION) (\(Parser.PLACEHOLDER_DISTANCE))",
+                distance: routeChoice.travelEstimates.distanceRemaining,
+                duration: routeChoice.travelEstimates.timeRemaining
+            )
+        )!
+
+        let selectionSummaryVariants =
+            routeChoice.selectionSummaryVariants.map { text in
+                text + "\n " + travelEstimate
+            }
+
+        let additionalInformationVariants = routeChoice
+            .additionalInformationVariants.flatMap { summary in
+                routeChoice.selectionSummaryVariants.map { selection in
+                    summary + "\n" + selection
+                }
+            }
+
+        let route = CPRouteChoice(
+            summaryVariants: routeChoice.summaryVariants,
+            additionalInformationVariants: additionalInformationVariants,
+            selectionSummaryVariants: selectionSummaryVariants
+        )
+
+        route.userInfo = [
+            "id": routeChoice.id,
+            "travelEstimates": parseTravelEstiamtes(
+                travelEstimates: routeChoice.travelEstimates
+            ),
+        ]
+
+        return route
+    }
+
+    static func parseTrips(trips: [TripConfig]) -> [CPTrip] {
+        return trips.map { tripConfig in
+            let trip = CPTrip(
+                origin: parseTripPoint(point: tripConfig.origin),
+                destination: parseTripPoint(point: tripConfig.destination),
+                routeChoices: tripConfig.routeChoices.map { routeChoice in
+                    Parser.parseRouteChoice(routeChoice: routeChoice)
+                }
+            )
+
+            trip.userInfo = ["id": tripConfig.id]
+
+            return trip
+        }
+    }
+
+    static func parseTravelEstiamtes(travelEstimates: TravelEstimates)
+        -> CPTravelEstimates
+    {
+        return CPTravelEstimates(
+            distanceRemaining: parseDistance(
+                distance: travelEstimates.distanceRemaining
+            ),
+            timeRemaining: travelEstimates.timeRemaining
+        )
     }
 }

@@ -170,7 +170,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
-                template?.onWillAppear(animted: animated)
+                template.onWillAppear(animted: animated)
             }
         } catch let error {
             print("failed to call onWillAppear for \(templateId): \(error)")
@@ -187,7 +187,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
-                template?.onDidAppear(animted: animated)
+                template.onDidAppear(animted: animated)
             }
         } catch let error {
             print("failed to call onDidAppear for \(templateId): \(error)")
@@ -204,7 +204,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
-                template?.onWillDisappear(animted: animated)
+                template.onWillDisappear(animted: animated)
             }
         } catch let error {
             print("failed to call onWillDisappear for \(templateId): \(error)")
@@ -221,7 +221,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
-                template?.onDidDisappear(animted: animated)
+                template.onDidDisappear(animted: animated)
             }
         } catch let error {
             print("failed to call onDidDisappear for \(templateId): \(error)")

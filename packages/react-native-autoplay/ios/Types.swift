@@ -15,4 +15,5 @@ enum AutoPlayError: Error {
     case sceneNotFound(String)
     case interfaceControllerNotFound(String)
     case invalidTemplateError(String)
+    case propertyNotFoundError(String)
 }

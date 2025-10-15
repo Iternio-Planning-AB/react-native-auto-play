@@ -54,6 +54,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct NavigationAlertAction; 
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class AlertDismissalReason; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripConfig; }
+// Forward declaration of `TripPoint` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPoint; }
+// Forward declaration of `RouteChoice` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct RouteChoice; }
+// Forward declaration of `TravelEstimates` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TravelEstimates; }
+// Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPreviewTextConfiguration; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct ListTemplateConfig; }
 // Forward declaration of `NitroSection` to properly resolve imports.
@@ -94,6 +104,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "NavigationAlertAction.hpp"
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
+#include "TripConfig.hpp"
+#include "TripPoint.hpp"
+#include "RouteChoice.hpp"
+#include "TravelEstimates.hpp"
+#include "TripPreviewTextConfiguration.hpp"
 #include "ListTemplateConfig.hpp"
 #include "NitroSection.hpp"
 #include "NitroRow.hpp"
@@ -186,6 +201,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     }
     inline void showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) override {
       auto __result = _swiftPart.showNavigationAlert(templateId, std::forward<decltype(alert)>(alert));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>& onTripSelected) override {
+      auto __result = _swiftPart.showTripSelector(templateId, trips, selectedTripId, std::forward<decltype(textConfig)>(textConfig), onTripSelected);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void hideTripSelector(const std::string& templateId) override {
+      auto __result = _swiftPart.hideTripSelector(templateId);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

@@ -1,10 +1,13 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay
 
+import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession.Companion.ROOT_SESSION
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.GridTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.RoutePreviewTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.TripPreviewTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ThreadUtil
 import com.margelo.nitro.core.Promise
 
@@ -106,10 +109,44 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert) {
-        val template = AndroidAutoTemplate.getTemplate(templateId) as? MapTemplate ?: throw IllegalArgumentException(
-            "showNavigationAlert failed, $templateId not of instance MapTemplate"
-        )
+        val template = AndroidAutoTemplate.getTemplate(templateId) as? MapTemplate
+            ?: throw IllegalArgumentException(
+                "showNavigationAlert failed, $templateId not of instance MapTemplate"
+            )
         template.showAlert(alert)
+    }
+
+    override fun showTripSelector(
+        templateId: String,
+        trips: Array<TripConfig>,
+        selectedTripId: String?,
+        textConfig: TripPreviewTextConfiguration,
+        onTripSelected: (String, String?) -> Unit
+    ) {
+        val context = AndroidAutoSession.getRootContext()
+            ?: throw IllegalArgumentException("showTripSelector failed, carContext not found")
+        val screenManager = AndroidAutoScreen.getScreenManager()
+            ?: throw IllegalArgumentException("showTripSelector failed, screenManager not found")
+
+        val screen = TripPreviewTemplate(context, trips, selectedTripId, textConfig, onTripSelected)
+
+        UiThreadUtil.runOnUiThread {
+            screenManager.push(screen)
+        }
+    }
+
+    override fun hideTripSelector(templateId: String) {
+        val screenManager = AndroidAutoScreen.getScreenManager()
+            ?: throw IllegalArgumentException("hideTripSelector failed, screenManager not found")
+        val screens = screenManager.screenStack.filter {
+            it.marker == TripPreviewTemplate.TAG || it.marker === RoutePreviewTemplate.TAG
+        }
+
+        UiThreadUtil.runOnUiThread {
+            screens.forEach {
+                it.finish()
+            }
+        }
     }
 
     override fun createListTemplate(config: ListTemplateConfig) {

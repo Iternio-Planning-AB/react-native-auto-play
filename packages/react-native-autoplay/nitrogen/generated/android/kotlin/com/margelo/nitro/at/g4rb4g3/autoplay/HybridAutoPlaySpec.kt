@@ -78,6 +78,19 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   @Keep
   abstract fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert): Unit
   
+  abstract fun showTripSelector(templateId: String, trips: Array<TripConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: (tripId: String, routeId: String?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun showTripSelector_cxx(templateId: String, trips: Array<TripConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: Func_void_std__string_std__optional_std__string_): Unit {
+    val __result = showTripSelector(templateId, trips, selectedTripId, textConfig, onTripSelected)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun hideTripSelector(templateId: String): Unit
+  
   @DoNotStrip
   @Keep
   abstract fun createListTemplate(config: ListTemplateConfig): Unit

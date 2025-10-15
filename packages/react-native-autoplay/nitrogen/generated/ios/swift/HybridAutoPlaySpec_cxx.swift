@@ -205,6 +205,46 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func showTripSelector(templateId: std.string, trips: bridge.std__vector_TripConfig_, selectedTripId: bridge.std__optional_std__string_, textConfig: TripPreviewTextConfiguration, onTripSelected: bridge.Func_void_std__string_std__optional_std__string_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.showTripSelector(templateId: String(templateId), trips: trips.map({ __item in __item }), selectedTripId: { () -> String? in
+        if bridge.has_value_std__optional_std__string_(selectedTripId) {
+          let __unwrapped = bridge.get_std__optional_std__string_(selectedTripId)
+          return String(__unwrapped)
+        } else {
+          return nil
+        }
+      }(), textConfig: textConfig, onTripSelected: { () -> (String, String?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__string_std__optional_std__string_(onTripSelected)
+        return { (__tripId: String, __routeId: String?) -> Void in
+          __wrappedFunction.call(std.string(__tripId), { () -> bridge.std__optional_std__string_ in
+            if let __unwrappedValue = __routeId {
+              return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func hideTripSelector(templateId: std.string) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.hideTripSelector(templateId: String(templateId))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func createListTemplate(config: ListTemplateConfig) -> bridge.Result_void_ {
     do {
       try self.__implementation.createListTemplate(config: config)

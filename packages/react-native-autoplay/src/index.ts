@@ -19,6 +19,7 @@ export * from './types/GestureEvents';
 export * from './types/Image';
 export * from './types/RootComponent';
 export * from './types/Text';
+export * from './types/Trip';
 export type {
   NavigationAlert as Alert,
   NavigationAlertAction as AlertAction,

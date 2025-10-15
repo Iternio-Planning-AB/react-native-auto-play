@@ -50,8 +50,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { enum class NitroSectionType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct NitroSection; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct Point; }
+// Forward declaration of `RouteChoice` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
+// Forward declaration of `TravelEstimates` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TravelEstimates; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripConfig; }
+// Forward declaration of `TripPoint` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay { struct TripPoint; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay { enum class VisibilityState; }
 
@@ -81,7 +89,11 @@ namespace NitroAutoplay { class HybridAutoPlaySpec_cxx; }
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
 #include "Point.hpp"
+#include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
+#include "TravelEstimates.hpp"
+#include "TripConfig.hpp"
+#include "TripPoint.hpp"
 #include "VisibilityState.hpp"
 #include <NitroModules/FastVectorCopy.hpp>
 #include <NitroModules/Promise.hpp>
@@ -633,6 +645,50 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
   }
   inline std::function<void(AlertDismissalReason /* reason */)> get_std__optional_std__function_void_AlertDismissalReason____reason______(const std::optional<std::function<void(AlertDismissalReason /* reason */)>>& optional) noexcept {
     return *optional;
+  }
+  
+  // pragma MARK: std::vector<RouteChoice>
+  /**
+   * Specialized version of `std::vector<RouteChoice>`.
+   */
+  using std__vector_RouteChoice_ = std::vector<RouteChoice>;
+  inline std::vector<RouteChoice> create_std__vector_RouteChoice_(size_t size) noexcept {
+    std::vector<RouteChoice> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TripConfig>
+  /**
+   * Specialized version of `std::vector<TripConfig>`.
+   */
+  using std__vector_TripConfig_ = std::vector<TripConfig>;
+  inline std::vector<TripConfig> create_std__vector_TripConfig_(size_t size) noexcept {
+    std::vector<TripConfig> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>
+  /**
+   * Specialized version of `std::function<void(const std::string&, const std::optional<std::string>&)>`.
+   */
+  using Func_void_std__string_std__optional_std__string_ = std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::string& / * tripId * /, const std::optional<std::string>& / * routeId * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__string_std__optional_std__string__Wrapper final {
+  public:
+    explicit Func_void_std__string_std__optional_std__string__Wrapper(std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>>(std::move(func))) {}
+    inline void call(std::string tripId, std::optional<std::string> routeId) const noexcept {
+      _function->operator()(tripId, routeId);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__string_std__optional_std__string_ create_Func_void_std__string_std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_std__optional_std__string__Wrapper wrap_Func_void_std__string_std__optional_std__string_(Func_void_std__string_std__optional_std__string_ value) noexcept {
+    return Func_void_std__string_std__optional_std__string__Wrapper(std::move(value));
   }
   
   // pragma MARK: std::vector<NitroRow>
