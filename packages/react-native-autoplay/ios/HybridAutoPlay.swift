@@ -127,14 +127,16 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         trips: [TripConfig],
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
-        onTripSelected: @escaping (_ tripId: String, _ routeId: String?) -> Void
+        onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
+        onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void
     ) throws {
         try RootModule.withMapTemplate(templateId: templateId) { template in
             try template.showTripSelector(
                 trips: trips,
                 selectedTripId: selectedTripId,
                 textConfig: textConfig,
-                onTripSelected: onTripSelected
+                onTripSelected: onTripSelected,
+                onTripStarted: onTripStarted
             )
         }
     }

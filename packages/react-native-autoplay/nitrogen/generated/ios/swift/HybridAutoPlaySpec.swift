@@ -21,7 +21,7 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func dismissTemplate(templateId: String) throws -> Void
   func createMapTemplate(config: MapTemplateConfig) throws -> Void
   func showNavigationAlert(templateId: String, alert: NitroNavigationAlert) throws -> Void
-  func showTripSelector(templateId: String, trips: [TripConfig], selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: @escaping (_ tripId: String, _ routeId: String?) -> Void) throws -> Void
+  func showTripSelector(templateId: String, trips: [TripConfig], selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void, onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void) throws -> Void
   func hideTripSelector(templateId: String) throws -> Void
   func createListTemplate(config: ListTemplateConfig) throws -> Void
   func updateListTemplateSections(templateId: String, sections: [NitroSection]?) throws -> Void

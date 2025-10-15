@@ -63,7 +63,8 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
     trips: Array<TripConfig>,
     selectedTripId: string | null,
     textConfig: TripPreviewTextConfiguration,
-    onTripSelected: (tripId: string, routeId?: string) => void
+    onTripSelected: (tripId: string, routeId: string) => void,
+    onTripStarted: (tripId: string, routeId: string) => void
   ): void;
   hideTripSelector(templateId: string): void;
 

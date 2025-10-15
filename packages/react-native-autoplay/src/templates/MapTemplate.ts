@@ -149,9 +149,17 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     trips: Array<TripConfig>,
     selectedTripId: string | null,
     textConfig: TripPreviewTextConfiguration,
-    onTripSelected: (tripId: string, routeId?: string) => void
+    onTripSelected: (tripId: string, routeId: string) => void,
+    onTripStarted: (tripId: string, routeId: string) => void
   ) {
-    AutoPlay.showTripSelector(this.id, trips, selectedTripId, textConfig, onTripSelected);
+    AutoPlay.showTripSelector(
+      this.id,
+      trips,
+      selectedTripId,
+      textConfig,
+      onTripSelected,
+      onTripStarted
+    );
   }
 
   public hideTripSelector() {

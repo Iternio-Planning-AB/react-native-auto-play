@@ -14,9 +14,11 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.RouteChoice
 
 class RoutePreviewTemplate(
     carContext: CarContext,
+    val tripId: String,
     val routes: Array<RouteChoice>,
     var selectedRouteIndex: Int,
-    val title: String
+    val title: String,
+    val onTripSelected: (String, String) -> Unit
 ) : Screen(carContext) {
     init {
         marker = TAG
@@ -33,6 +35,7 @@ class RoutePreviewTemplate(
                     setSelectedIndex(selectedRouteIndex)
                     setOnSelectedListener {
                         selectedRouteIndex = it
+                        onTripSelected(tripId, routes[it].id)
                         setResult(it)
                         invalidate()
                     }

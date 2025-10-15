@@ -121,14 +121,22 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         trips: Array<TripConfig>,
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
-        onTripSelected: (String, String?) -> Unit
+        onTripSelected: (String, String) -> Unit,
+        onTripStarted: (String, String) -> Unit
     ) {
         val context = AndroidAutoSession.getRootContext()
             ?: throw IllegalArgumentException("showTripSelector failed, carContext not found")
         val screenManager = AndroidAutoScreen.getScreenManager()
             ?: throw IllegalArgumentException("showTripSelector failed, screenManager not found")
 
-        val screen = TripPreviewTemplate(context, trips, selectedTripId, textConfig, onTripSelected)
+        val screen = TripPreviewTemplate(
+            context,
+            trips,
+            selectedTripId,
+            textConfig,
+            onTripSelected,
+            onTripStarted
+        )
 
         UiThreadUtil.runOnUiThread {
             screenManager.push(screen)

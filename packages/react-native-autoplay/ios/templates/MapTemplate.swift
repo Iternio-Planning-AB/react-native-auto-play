@@ -16,7 +16,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     var config: MapTemplateConfig
 
     var alertStore: [Double: AlertStoreEntry] = [:]
-    var onTripSelected: ((_ tripId: String, _ routeId: String?) -> Void)?
+    var onTripSelected: ((_ tripId: String, _ routeId: String) -> Void)?
+    var onTripStarted: ((_ tripId: String, _ routeId: String) -> Void)?
 
     init(config: MapTemplateConfig) {
         self.config = config
@@ -248,11 +249,13 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         trips: [TripConfig],
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
-        onTripSelected: @escaping (_ tripId: String, _ routeId: String?) -> Void
+        onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
+        onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void
     ) throws {
         guard let template = self.template as? CPMapTemplate else { return }
 
         self.onTripSelected = onTripSelected
+        self.onTripStarted = onTripStarted
 
         let textConfiguration = Parser.parseTripPreviewTextConfig(
             textConfig: textConfig
@@ -284,6 +287,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         template.hideTripPreviews()
         self.onTripSelected = nil
+        self.onTripStarted = nil
     }
 
     func mapTemplate(
@@ -311,6 +315,17 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         startedTrip trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        self.onTripSelected = nil
+        if let onTripStarted = self.onTripStarted {
+            do {
+                let tripId = try trip.getTripId()
+                let routeId = try routeChoice.getRouteId()
+                
+                onTripStarted(tripId, routeId)
+            } catch {
+                print("Unexpected error: \(error).")
+            }
+        }
+        
+        hideTripSelector()
     }
 }

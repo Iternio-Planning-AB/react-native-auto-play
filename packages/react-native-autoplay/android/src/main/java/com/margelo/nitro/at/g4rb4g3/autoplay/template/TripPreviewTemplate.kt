@@ -23,16 +23,23 @@ class TripPreviewTemplate(
     val trips: Array<TripConfig>,
     selectedTripId: String?,
     val textConfig: TripPreviewTextConfiguration,
-    val onTripSelected: (String, String?) -> Unit
+    val onTripSelected: (String, String) -> Unit,
+    val onTripStarted: (String, String) -> Unit
 ) : Screen(carContext) {
-    init {
-        marker = TAG
-    }
-
     var selectedTripIndex = selectedTripId?.let {
         trips.indexOfFirst { trip -> trip.id == selectedTripId }
     } ?: 0
     var selectedRouteIndex = 0
+
+    init {
+        marker = TAG
+        // for whatever reason CarPlay fires this when opening up the trip selector so we do the same on AA
+        onTripSelected(
+            trips[selectedTripIndex].id,
+            trips[selectedTripIndex].routeChoices.first().id
+        )
+    }
+
 
     override fun onGetTemplate(): Template {
         var selectedTrip = trips[selectedTripIndex]
@@ -66,7 +73,7 @@ class TripPreviewTemplate(
                     setTitle(textConfig.startButtonTitle)
                     setFlags(Action.FLAG_PRIMARY)
                     setOnClickListener {
-                        onTripSelected(selectedTrip.id, selectedRoute.id)
+                        onTripStarted(selectedTrip.id, selectedRoute.id)
                         finish()
                     }
                 }.build())
@@ -84,9 +91,11 @@ class TripPreviewTemplate(
                             AndroidAutoScreen.getScreenManager()?.pushForResult(
                                 RoutePreviewTemplate(
                                     carContext,
+                                    selectedTrip.id,
                                     selectedTrip.routeChoices,
                                     selectedRouteIndex,
-                                    textConfig.additionalRoutesButtonTitle
+                                    textConfig.additionalRoutesButtonTitle,
+                                    onTripSelected
                                 ), object : OnScreenResultListener {
                                     override fun onScreenResult(result: Any?) {
                                         if (result is Int) {
@@ -120,6 +129,7 @@ class TripPreviewTemplate(
                                 selectedRouteIndex = 0
                                 selectedTrip = trips[selectedTripIndex]
                                 selectedRoute = selectedTrip.routeChoices.first()
+                                onTripSelected(selectedTrip.id, selectedRoute.id)
                                 invalidate()
                             }
                         }.build())
@@ -140,6 +150,7 @@ class TripPreviewTemplate(
                                 selectedRouteIndex = 0
                                 selectedTrip = trips[selectedTripIndex]
                                 selectedRoute = selectedTrip.routeChoices.first()
+                                onTripSelected(selectedTrip.id, selectedRoute.id)
                                 invalidate()
                             }
                         }.build())

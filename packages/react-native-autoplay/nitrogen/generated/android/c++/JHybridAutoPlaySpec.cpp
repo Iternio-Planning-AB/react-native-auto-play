@@ -140,7 +140,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay { struct SafeAreaInsets; }
 #include "JTravelEstimates.hpp"
 #include "TripPreviewTextConfiguration.hpp"
 #include "JTripPreviewTextConfiguration.hpp"
-#include "JFunc_void_std__string_std__optional_std__string_.hpp"
+#include "JFunc_void_std__string_std__string.hpp"
 #include "ListTemplateConfig.hpp"
 #include "JListTemplateConfig.hpp"
 #include "NitroSection.hpp"
@@ -233,8 +233,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroNavigationAlert> /* alert */)>("showNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), JNitroNavigationAlert::fromCpp(alert));
   }
-  void JHybridAutoPlaySpec::showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>& onTripSelected) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__optional_std__string_::javaobject> /* onTripSelected */)>("showTripSelector_cxx");
+  void JHybridAutoPlaySpec::showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */)>("showTripSelector_cxx");
     method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = trips.size();
       jni::local_ref<jni::JArrayClass<JTripConfig>> __array = jni::JArrayClass<JTripConfig>::newArray(__size);
@@ -243,7 +243,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         __array->setElement(__i, *JTripConfig::fromCpp(__element));
       }
       return __array;
-    }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__optional_std__string__cxx::fromCpp(onTripSelected));
+    }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__string_cxx::fromCpp(onTripSelected), JFunc_void_std__string_std__string_cxx::fromCpp(onTripStarted));
   }
   void JHybridAutoPlaySpec::hideTripSelector(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("hideTripSelector");

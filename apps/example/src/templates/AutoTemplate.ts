@@ -60,28 +60,36 @@ const actions: Actions<any> = {
   },
 };
 
-const tripSelectorBackButton: BackButton<MapTemplate> = {
-  type: 'back',
-  onPress: (template) => {
-    template.setActions(mapActions);
-    template.setMapButtons(mapButtons);
-    template.hideTripSelector();
-  },
-};
-
 const mapButtonHandler: (template: MapTemplate) => void = (template) => {
   if (Platform.OS === 'ios') {
     template.setActions({
       ios: {
-        backButton: tripSelectorBackButton,
+        backButton: {
+          type: 'back',
+          onPress: () => {
+            template.setActions(mapActions);
+            template.setMapButtons(mapButtons);
+            template.hideTripSelector();
+          },
+        },
       },
     });
     template.setMapButtons([]);
   }
 
-  template.showTripSelector(AutoTrip, null, TextConfig, (tripId, routeId) => {
+  const onTripSelected = (tripId: string, routeId: string) => {
     console.log(`selected trip ${tripId} using route ${routeId}`);
-  });
+  };
+
+  const onTripStarted = (tripId: string, routeId: string) => {
+    if (Platform.OS === 'ios') {
+      template.setActions(mapActions);
+      template.setMapButtons(mapButtons);
+    }
+    console.log(`started trip ${tripId} using route ${routeId}`);
+  };
+
+  template.showTripSelector(AutoTrip, null, TextConfig, onTripSelected, onTripStarted);
 };
 
 const mapActions: MapTemplateConfig['actions'] = {

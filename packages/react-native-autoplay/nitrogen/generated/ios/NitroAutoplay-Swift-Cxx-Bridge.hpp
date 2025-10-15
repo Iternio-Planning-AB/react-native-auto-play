@@ -669,26 +669,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     return vector;
   }
   
-  // pragma MARK: std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>
+  // pragma MARK: std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>
   /**
-   * Specialized version of `std::function<void(const std::string&, const std::optional<std::string>&)>`.
+   * Specialized version of `std::function<void(const std::string&, const std::string&)>`.
    */
-  using Func_void_std__string_std__optional_std__string_ = std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>;
+  using Func_void_std__string_std__string = std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>;
   /**
-   * Wrapper class for a `std::function<void(const std::string& / * tripId * /, const std::optional<std::string>& / * routeId * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const std::string& / * tripId * /, const std::string& / * routeId * /)>`, this can be used from Swift.
    */
-  class Func_void_std__string_std__optional_std__string__Wrapper final {
+  class Func_void_std__string_std__string_Wrapper final {
   public:
-    explicit Func_void_std__string_std__optional_std__string__Wrapper(std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>>(std::move(func))) {}
-    inline void call(std::string tripId, std::optional<std::string> routeId) const noexcept {
+    explicit Func_void_std__string_std__string_Wrapper(std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>>(std::move(func))) {}
+    inline void call(std::string tripId, std::string routeId) const noexcept {
       _function->operator()(tripId, routeId);
     }
   private:
-    std::unique_ptr<std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>> _function;
+    std::unique_ptr<std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>> _function;
   } SWIFT_NONCOPYABLE;
-  Func_void_std__string_std__optional_std__string_ create_Func_void_std__string_std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__string_std__optional_std__string__Wrapper wrap_Func_void_std__string_std__optional_std__string_(Func_void_std__string_std__optional_std__string_ value) noexcept {
-    return Func_void_std__string_std__optional_std__string__Wrapper(std::move(value));
+  Func_void_std__string_std__string create_Func_void_std__string_std__string(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_std__string_Wrapper wrap_Func_void_std__string_std__string(Func_void_std__string_std__string value) noexcept {
+    return Func_void_std__string_std__string_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::vector<NitroRow>

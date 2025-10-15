@@ -60,7 +60,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
     void dismissTemplate(const std::string& templateId) override;
     void createMapTemplate(const MapTemplateConfig& config) override;
     void showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) override;
-    void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>& onTripSelected) override;
+    void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) override;
     void hideTripSelector(const std::string& templateId) override;
     void createListTemplate(const ListTemplateConfig& config) override;
     void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) override;

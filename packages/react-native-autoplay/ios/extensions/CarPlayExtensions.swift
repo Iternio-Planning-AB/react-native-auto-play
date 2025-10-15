@@ -30,7 +30,7 @@ extension CPMapButton {
 }
 
 extension CPRouteChoice {
-    func getRouteId() throws -> String? {
+    func getRouteId() throws -> String {
         guard let userInfo = self.userInfo as? [String: Any],
             let routeId = userInfo["id"] as? String
         else {

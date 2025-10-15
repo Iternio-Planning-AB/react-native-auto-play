@@ -77,10 +77,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>
-  Func_void_std__string_std__optional_std__string_ create_Func_void_std__string_std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroAutoplay::Func_void_std__string_std__optional_std__string_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const std::string& tripId, const std::optional<std::string>& routeId) mutable -> void {
+  // pragma MARK: std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>
+  Func_void_std__string_std__string create_Func_void_std__string_std__string(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__string_std__string::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::string& tripId, const std::string& routeId) mutable -> void {
       swiftClosure.call(tripId, routeId);
     };
   }

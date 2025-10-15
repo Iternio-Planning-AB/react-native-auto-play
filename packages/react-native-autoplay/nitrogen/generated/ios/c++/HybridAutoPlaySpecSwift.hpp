@@ -205,8 +205,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::optional<std::string>& /* routeId */)>& onTripSelected) override {
-      auto __result = _swiftPart.showTripSelector(templateId, trips, selectedTripId, std::forward<decltype(textConfig)>(textConfig), onTripSelected);
+    inline void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) override {
+      auto __result = _swiftPart.showTripSelector(templateId, trips, selectedTripId, std::forward<decltype(textConfig)>(textConfig), onTripSelected, onTripStarted);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
