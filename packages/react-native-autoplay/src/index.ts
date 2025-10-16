@@ -17,6 +17,7 @@ export const HybridMapTemplate =
   NitroModules.createHybridObject<NitroHybridMapTemplate>('HybridMapTemplate');
 
 export * from './components/SafeAreaView';
+export * from './hooks/useMapTemplate';
 export * from './hooks/useSafeAreaInsets';
 export * from './templates/AlertTemplate';
 export * from './templates/GridTemplate';

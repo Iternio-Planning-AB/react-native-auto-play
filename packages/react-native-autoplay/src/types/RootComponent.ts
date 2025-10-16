@@ -1,4 +1,4 @@
-import type { MapTemplate, MapTemplateId } from '../templates/MapTemplate';
+import type { MapTemplateId } from '../templates/MapTemplate';
 
 export type WindowInformation = {
   width: number;
@@ -24,6 +24,4 @@ export type RootComponentInitialProps = {
    */
   colorScheme: ColorScheme;
   window: WindowInformation;
-
-  template: MapTemplate;
 };

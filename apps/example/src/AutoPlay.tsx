@@ -3,19 +3,36 @@ import {
   MapTemplate,
   type RootComponentInitialProps,
   SafeAreaView,
+  useMapTemplate,
 } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
 import { AutoTemplate } from './templates/AutoTemplate';
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
+  const mapTemplate = useMapTemplate();
+
   const [i, setI] = useState(0);
 
   useEffect(() => {
+    mapTemplate?.showAlert({
+      durationMs: 10 * 1000,
+      id: 1,
+      primaryAction: {
+        title: 'Yeah!',
+        onPress: () => {
+          console.log('yeah useMapTemplate rules');
+        },
+      },
+      title: {
+        text: 'useMapTemplate rules \\o/',
+      },
+    });
+
     const timer = setInterval(() => setI((p) => p + 1), 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [mapTemplate?.showAlert]);
 
   return (
     <SafeAreaView

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { HybridAutoPlay, HybridMapTemplate } from '..';
+import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
@@ -125,10 +126,14 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     AppRegistry.registerComponent(
       this.id,
       () => (props) =>
-        React.createElement(SafeAreaInsetsProvider, {
-          moduleName: config.id,
+        React.createElement(MapTemplateProvider, {
+          mapTemplate: this.template,
           // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-          children: React.createElement(component, { ...props, template: this.template }),
+          children: React.createElement(SafeAreaInsetsProvider, {
+            moduleName: config.id,
+            // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
+            children: React.createElement(component, props),
+          }),
         })
     );
 
