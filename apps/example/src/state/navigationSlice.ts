@@ -31,4 +31,6 @@ export const actionStartNavigation = createAction(
   }
 );
 
+export const actionStopNavigation = createAction('stopNavigation');
+
 export const navigationReducer = navigationSlice.reducer;

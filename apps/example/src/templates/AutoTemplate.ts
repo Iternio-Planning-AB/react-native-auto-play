@@ -65,16 +65,18 @@ const actions: Actions<any> = {
   },
 };
 
+export const onTripFinished = (template: MapTemplate) => {
+  template.stopNavigation();
+  template.setActions(mapActions);
+
+  dispatch(setIsNavigating(false));
+};
+
 const stopNavigation: ImageButton<MapTemplate> = {
   image: {
     name: 'close',
   },
-  onPress: (template) => {
-    template.stopNavigation();
-    template.setActions(mapActions);
-
-    dispatch(setIsNavigating(false));
-  },
+  onPress: onTripFinished,
   type: 'image',
 };
 

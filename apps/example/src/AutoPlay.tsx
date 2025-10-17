@@ -5,12 +5,22 @@ import {
   SafeAreaView,
   useMapTemplate,
 } from '@g4rb4g3/react-native-autoplay';
+import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
 import { AutoTrip } from './config/AutoTrip';
-import { actionStartNavigation, setSelectedTrip } from './state/navigationSlice';
+import {
+  actionStartNavigation,
+  actionStopNavigation,
+  setSelectedTrip,
+} from './state/navigationSlice';
 import { startAppListening } from './state/store';
-import { AutoTemplate, estimatesUpdate, onTripStarted } from './templates/AutoTemplate';
+import {
+  AutoTemplate,
+  estimatesUpdate,
+  onTripFinished,
+  onTripStarted,
+} from './templates/AutoTemplate';
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
   const mapTemplate = useMapTemplate();
@@ -38,32 +48,48 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   }, [mapTemplate?.showAlert]);
 
   useEffect(() => {
-    const unsubscribe = startAppListening({
-      actionCreator: actionStartNavigation,
-      effect: (action, { dispatch }) => {
-        if (mapTemplate == null) {
-          return;
-        }
+    const listeners: Array<UnsubscribeListener> = [];
 
-        const { tripId, routeId } = action.payload;
+    listeners.push(
+      startAppListening({
+        actionCreator: actionStartNavigation,
+        effect: (action, { dispatch }) => {
+          if (mapTemplate == null) {
+            return;
+          }
 
-        const trip = AutoTrip.find((t) => t.id === tripId);
-        const routeChoice = trip?.routeChoices.find((r) => r.id === routeId);
+          const { tripId, routeId } = action.payload;
 
-        if (routeChoice == null) {
-          console.error('invalid tripId or routeId specified');
-          return;
-        }
+          const trip = AutoTrip.find((t) => t.id === tripId);
+          const routeChoice = trip?.routeChoices.find((r) => r.id === routeId);
 
-        dispatch(setSelectedTrip({ routeId, tripId }));
-        onTripStarted(tripId, routeId, mapTemplate);
-        mapTemplate.startNavigation({ id: tripId, routeChoice });
-        estimatesUpdate(mapTemplate, 'initial');
-      },
-    });
+          if (routeChoice == null) {
+            console.error('invalid tripId or routeId specified');
+            return;
+          }
+
+          dispatch(setSelectedTrip({ routeId, tripId }));
+          onTripStarted(tripId, routeId, mapTemplate);
+          mapTemplate.startNavigation({ id: tripId, routeChoice });
+          estimatesUpdate(mapTemplate, 'initial');
+        },
+      })
+    );
+
+    listeners.push(
+      startAppListening({
+        actionCreator: actionStopNavigation,
+        effect: () => {
+          if (mapTemplate == null) {
+            return;
+          }
+          onTripFinished(mapTemplate);
+        },
+      })
+    );
 
     return () => {
-      unsubscribe();
+      listeners.forEach((remove) => remove());
     };
   }, [mapTemplate]);
 

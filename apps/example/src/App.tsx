@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AutoTrip } from './config/AutoTrip';
-import { actionStartNavigation } from './state/navigationSlice';
+import { actionStartNavigation, actionStopNavigation } from './state/navigationSlice';
 import { useAppDispatch, useAppSelector } from './state/store';
 
 function App() {
@@ -50,17 +50,26 @@ function AppContent() {
       <Text>Head unit root visible: {String(isRootVisible)}</Text>
       <Text>isNavigating: {String(isNavigating)}</Text>
       <Text>selectedTrip: {JSON.stringify(selectedTrip)}</Text>
-      <Button
-        title="start navigation"
-        onPress={() => {
-          dispatch(
-            actionStartNavigation({
-              tripId: AutoTrip[0].id,
-              routeId: AutoTrip[0].routeChoices[0].id,
-            })
-          );
-        }}
-      />
+      {isNavigating ? (
+        <Button
+          title="stop navigation"
+          onPress={() => {
+            dispatch(actionStopNavigation());
+          }}
+        />
+      ) : (
+        <Button
+          title="start navigation"
+          onPress={() => {
+            dispatch(
+              actionStartNavigation({
+                tripId: AutoTrip[0].id,
+                routeId: AutoTrip[0].routeChoices[0].id,
+              })
+            );
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }
