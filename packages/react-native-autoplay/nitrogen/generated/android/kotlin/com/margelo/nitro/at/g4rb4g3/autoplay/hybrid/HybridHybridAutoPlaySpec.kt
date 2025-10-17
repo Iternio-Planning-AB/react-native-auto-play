@@ -99,12 +99,12 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
-  abstract fun setTemplateActions(templateId: String, actions: Array<NitroAction>?): Unit
+  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Unit
   
   @DoNotStrip
   @Keep
-  private fun setTemplateActions_cxx(templateId: String, actions: Array<NitroAction>?): Unit {
-    val __result = setTemplateActions(templateId, actions?.let { it })
+  private fun setTemplateHeaderActions_cxx(templateId: String, headerActions: Array<NitroAction>?): Unit {
+    val __result = setTemplateHeaderActions(templateId, headerActions?.let { it })
     return __result
   }
 

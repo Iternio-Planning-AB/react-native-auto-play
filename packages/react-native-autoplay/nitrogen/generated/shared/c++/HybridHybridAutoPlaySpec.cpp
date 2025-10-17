@@ -25,7 +25,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       prototype.registerHybridMethod("popToRootTemplate", &HybridHybridAutoPlaySpec::popToRootTemplate);
       prototype.registerHybridMethod("popToTemplate", &HybridHybridAutoPlaySpec::popToTemplate);
       prototype.registerHybridMethod("addSafeAreaInsetsListener", &HybridHybridAutoPlaySpec::addSafeAreaInsetsListener);
-      prototype.registerHybridMethod("setTemplateActions", &HybridHybridAutoPlaySpec::setTemplateActions);
+      prototype.registerHybridMethod("setTemplateHeaderActions", &HybridHybridAutoPlaySpec::setTemplateHeaderActions);
     });
   }
 

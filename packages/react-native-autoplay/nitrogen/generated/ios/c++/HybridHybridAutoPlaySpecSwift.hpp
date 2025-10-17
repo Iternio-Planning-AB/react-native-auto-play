@@ -172,8 +172,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline void setTemplateActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& actions) override {
-      auto __result = _swiftPart.setTemplateActions(templateId, actions);
+    inline void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override {
+      auto __result = _swiftPart.setTemplateHeaderActions(templateId, headerActions);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

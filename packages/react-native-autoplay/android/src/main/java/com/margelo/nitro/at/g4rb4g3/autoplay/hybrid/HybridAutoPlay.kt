@@ -63,14 +63,14 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun setTemplateActions(
-        templateId: String, actions: Array<NitroAction>?
+    override fun setTemplateHeaderActions(
+        templateId: String, headerActions: Array<NitroAction>?
     ) {
         val template =
             AndroidAutoTemplate.Companion.getTemplate(templateId) ?: throw IllegalArgumentException(
-                "setTemplateActions failed, template $templateId not found"
+                "setTemplateHeaderActions failed, template $templateId not found"
             )
-        template.setTemplateActions(actions)
+        template.setTemplateHeaderActions(headerActions)
     }
 
 

@@ -18,7 +18,7 @@ public extension AlertTemplateConfig {
   /**
    * Create a new instance of `AlertTemplateConfig`.
    */
-  init(titleVariants: [String], actions: [AlertAction]?, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?) {
+  init(titleVariants: [String], headerActions: [AlertAction]?, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?) {
     self.init({ () -> bridge.std__vector_std__string_ in
       var __vector = bridge.create_std__vector_std__string_(titleVariants.count)
       for __item in titleVariants {
@@ -26,7 +26,7 @@ public extension AlertTemplateConfig {
       }
       return __vector
     }(), { () -> bridge.std__optional_std__vector_AlertAction__ in
-      if let __unwrappedValue = actions {
+      if let __unwrappedValue = headerActions {
         return bridge.create_std__optional_std__vector_AlertAction__({ () -> bridge.std__vector_AlertAction_ in
           var __vector = bridge.create_std__vector_AlertAction_(__unwrappedValue.count)
           for __item in __unwrappedValue {
@@ -102,12 +102,12 @@ public extension AlertTemplateConfig {
     }
   }
   
-  var actions: [AlertAction]? {
+  var headerActions: [AlertAction]? {
     @inline(__always)
     get {
       return { () -> [AlertAction]? in
-        if bridge.has_value_std__optional_std__vector_AlertAction__(self.__actions) {
-          let __unwrapped = bridge.get_std__optional_std__vector_AlertAction__(self.__actions)
+        if bridge.has_value_std__optional_std__vector_AlertAction__(self.__headerActions) {
+          let __unwrapped = bridge.get_std__optional_std__vector_AlertAction__(self.__headerActions)
           return __unwrapped.map({ __item in __item })
         } else {
           return nil
@@ -116,7 +116,7 @@ public extension AlertTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__actions = { () -> bridge.std__optional_std__vector_AlertAction__ in
+      self.__headerActions = { () -> bridge.std__optional_std__vector_AlertAction__ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_std__vector_AlertAction__({ () -> bridge.std__vector_AlertAction_ in
             var __vector = bridge.create_std__vector_AlertAction_(__unwrappedValue.count)

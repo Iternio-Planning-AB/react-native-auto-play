@@ -217,13 +217,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     }();
   }
-  void JHybridHybridAutoPlaySpec::setTemplateActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& actions) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* actions */)>("setTemplateActions_cxx");
-    method(_javaPart, jni::make_jstring(templateId), actions.has_value() ? [&]() {
-      size_t __size = actions.value().size();
+  void JHybridHybridAutoPlaySpec::setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions_cxx");
+    method(_javaPart, jni::make_jstring(templateId), headerActions.has_value() ? [&]() {
+      size_t __size = headerActions.value().size();
       jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = actions.value()[__i];
+        const auto& __element = headerActions.value()[__i];
         __array->setElement(__i, *JNitroAction::fromCpp(__element));
       }
       return __array;

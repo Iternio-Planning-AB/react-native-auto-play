@@ -7,7 +7,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 
 abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
     abstract fun parse(): Template
-    abstract fun setTemplateActions(actions: Array<NitroAction>?)
+    abstract fun setTemplateHeaderActions(headerActions: Array<NitroAction>?)
 
     abstract fun onWillAppear()
     abstract fun onWillDisappear()

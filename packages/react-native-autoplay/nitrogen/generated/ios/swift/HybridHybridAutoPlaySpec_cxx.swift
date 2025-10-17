@@ -298,11 +298,11 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func setTemplateActions(templateId: std.string, actions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
+  public final func setTemplateHeaderActions(templateId: std.string, headerActions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
     do {
-      try self.__implementation.setTemplateActions(templateId: String(templateId), actions: { () -> [NitroAction]? in
-        if bridge.has_value_std__optional_std__vector_NitroAction__(actions) {
-          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(actions)
+      try self.__implementation.setTemplateHeaderActions(templateId: String(templateId), headerActions: { () -> [NitroAction]? in
+        if bridge.has_value_std__optional_std__vector_NitroAction__(headerActions) {
+          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(headerActions)
           return __unwrapped.map({ __item in __item })
         } else {
           return nil

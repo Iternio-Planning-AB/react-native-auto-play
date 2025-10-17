@@ -78,7 +78,7 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   ): CleanupCallback;
 
   /**
-   * update a templates actions
+   * update a templates headerActions
    */
-  setTemplateActions(templateId: string, actions?: Array<NitroAction>): void;
+  setTemplateHeaderActions(templateId: string, headerActions?: Array<NitroAction>): void;
 }

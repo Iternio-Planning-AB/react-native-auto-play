@@ -19,13 +19,13 @@ class Parser {
     static let PLACEHOLDER_DISTANCE = "{distance}"
     static let PLACEHOLDER_DURATION = "{duration}"
 
-    static func parseActions(actions: [NitroAction]?) -> Actions {
+    static func parseActions(headerActions: [NitroAction]?) -> Actions {
         var leadingNavigationBarButtons: [CPBarButton] = []
         var trailingNavigationBarButtons: [CPBarButton] = []
         var backButton: CPBarButton?
 
-        if let actions = actions {
-            actions.forEach { action in
+        if let headerActions = headerActions {
+            headerActions.forEach { action in
                 if action.type == .back {
                     backButton = CPBarButton(title: "") { _ in
                         action.onPress()

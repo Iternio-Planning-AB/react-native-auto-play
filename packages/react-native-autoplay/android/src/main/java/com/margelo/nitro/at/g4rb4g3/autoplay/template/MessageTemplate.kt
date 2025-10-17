@@ -18,7 +18,7 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
         return MessageTemplate.Builder(config.message.text).apply {
             // Additional configuration can be added here in the future
             config.title?.let { title ->
-                setHeader(Parser.parseHeader(context, title, config.actions))
+                setHeader(Parser.parseHeader(context, title, config.headerActions))
             }
         }.build()
     }
@@ -44,8 +44,8 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
         config.onWillDisappear?.let { it(null) }
     }
 
-    override fun setTemplateActions(actions: Array<NitroAction>?) {
-        config = config.copy(actions = actions)
+    override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
+        config = config.copy(headerActions = headerActions)
         super.applyConfigUpdate()
     }
 

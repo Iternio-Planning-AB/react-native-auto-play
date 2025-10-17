@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, mapButtons: [NitroMapButton]?, actions: [NitroAction]?, guidanceBackgroundColor: NitroColor?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, guidanceBackgroundColor: NitroColor?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -77,7 +77,7 @@ public extension MapTemplateConfig {
         return .init()
       }
     }(), { () -> bridge.std__optional_std__vector_NitroAction__ in
-      if let __unwrappedValue = actions {
+      if let __unwrappedValue = headerActions {
         return bridge.create_std__optional_std__vector_NitroAction__({ () -> bridge.std__vector_NitroAction_ in
           var __vector = bridge.create_std__vector_NitroAction_(__unwrappedValue.count)
           for __item in __unwrappedValue {
@@ -373,12 +373,12 @@ public extension MapTemplateConfig {
     }
   }
   
-  var actions: [NitroAction]? {
+  var headerActions: [NitroAction]? {
     @inline(__always)
     get {
       return { () -> [NitroAction]? in
-        if bridge.has_value_std__optional_std__vector_NitroAction__(self.__actions) {
-          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(self.__actions)
+        if bridge.has_value_std__optional_std__vector_NitroAction__(self.__headerActions) {
+          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(self.__headerActions)
           return __unwrapped.map({ __item in __item })
         } else {
           return nil
@@ -387,7 +387,7 @@ public extension MapTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__actions = { () -> bridge.std__optional_std__vector_NitroAction__ in
+      self.__headerActions = { () -> bridge.std__optional_std__vector_NitroAction__ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_std__vector_NitroAction__({ () -> bridge.std__vector_NitroAction_ in
             var __vector = bridge.create_std__vector_NitroAction_(__unwrappedValue.count)

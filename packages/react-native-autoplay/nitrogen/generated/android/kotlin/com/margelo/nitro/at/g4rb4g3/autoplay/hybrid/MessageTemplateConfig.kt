@@ -41,7 +41,7 @@ data class MessageTemplateConfig
     val onPopped: Func_void?,
     @DoNotStrip
     @Keep
-    val actions: Array<NitroAction>?,
+    val headerActions: Array<NitroAction>?,
     @DoNotStrip
     @Keep
     val title: AutoText?,
@@ -52,6 +52,6 @@ data class MessageTemplateConfig
   /**
    * Initialize a new instance of `MessageTemplateConfig` from Kotlin.
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, actions: Array<NitroAction>?, title: AutoText?, message: AutoText)
-       : this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, actions?.let { it }, title, message)
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, headerActions: Array<NitroAction>?, title: AutoText?, message: AutoText)
+       : this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, headerActions?.let { it }, title, message)
 }

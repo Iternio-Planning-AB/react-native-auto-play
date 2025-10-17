@@ -38,10 +38,10 @@ import java.util.TimeZone
 object Parser {
     const val TAG = "Parser"
 
-    fun parseHeader(context: CarContext, title: AutoText, actions: Array<NitroAction>?): Header {
+    fun parseHeader(context: CarContext, title: AutoText, headerActions: Array<NitroAction>?): Header {
         return Header.Builder().apply {
             setTitle(parseText(title))
-            actions?.forEach { action ->
+            headerActions?.forEach { action ->
                 when (action.alignment) {
                     NitroAlignment.LEADING -> {
                         setStartHeaderAction(parseAction(context, action))

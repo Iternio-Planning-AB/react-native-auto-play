@@ -170,11 +170,11 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
     }
 
     // MARK: generic template updates
-    func setTemplateActions(templateId: String, actions: [NitroAction]?) throws
+    func setTemplateHeaderActions(templateId: String, headerActions: [NitroAction]?) throws
     {
         try RootModule.withTemplate(templateId: templateId) {
             template in
-            template.barButtons = actions
+            template.barButtons = headerActions
             template.setBarButtons()
         }
     }

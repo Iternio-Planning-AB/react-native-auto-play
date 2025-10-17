@@ -42,8 +42,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldTitleVariants = clazz->getField<jni::JArrayClass<jni::JString>>("titleVariants");
       jni::local_ref<jni::JArrayClass<jni::JString>> titleVariants = this->getFieldValue(fieldTitleVariants);
-      static const auto fieldActions = clazz->getField<jni::JArrayClass<JAlertAction>>("actions");
-      jni::local_ref<jni::JArrayClass<JAlertAction>> actions = this->getFieldValue(fieldActions);
+      static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JAlertAction>>("headerActions");
+      jni::local_ref<jni::JArrayClass<JAlertAction>> headerActions = this->getFieldValue(fieldHeaderActions);
       static const auto fieldOnWillAppear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillAppear");
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onWillAppear = this->getFieldValue(fieldOnWillAppear);
       static const auto fieldOnWillDisappear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillDisappear");
@@ -65,12 +65,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __vector;
         }(),
-        actions != nullptr ? std::make_optional([&]() {
-          size_t __size = actions->size();
+        headerActions != nullptr ? std::make_optional([&]() {
+          size_t __size = headerActions->size();
           std::vector<AlertAction> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = actions->getElement(__i);
+            auto __element = headerActions->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
@@ -149,11 +149,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }(),
-        value.actions.has_value() ? [&]() {
-          size_t __size = value.actions.value().size();
+        value.headerActions.has_value() ? [&]() {
+          size_t __size = value.headerActions.value().size();
           jni::local_ref<jni::JArrayClass<JAlertAction>> __array = jni::JArrayClass<JAlertAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.actions.value()[__i];
+            const auto& __element = value.headerActions.value()[__i];
             __array->setElement(__i, *JAlertAction::fromCpp(__element));
           }
           return __array;

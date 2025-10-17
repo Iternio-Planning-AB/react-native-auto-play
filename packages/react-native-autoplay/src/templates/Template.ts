@@ -82,8 +82,8 @@ export class Template<TemplateConfigType, ActionsType> {
     return HybridAutoPlay.popToTemplate(this.id);
   }
 
-  public setActions<T>(actions?: ActionsType) {
-    const nitroActions = NitroActionUtil.convert(actions as Actions<T>);
-    HybridAutoPlay.setTemplateActions(this.id, nitroActions);
+  public setHeaderActions<T>(headerActions?: ActionsType) {
+    const nitroActions = NitroActionUtil.convert(headerActions as Actions<T>);
+    HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
   }
 }

@@ -11,7 +11,7 @@ export interface AlertAction {
 
 export interface AlertTemplateConfig extends TemplateConfig {
   titleVariants: string[];
-  actions?: AlertAction[];
+  headerActions?: AlertAction[];
 }
 
 export class AlertTemplate extends Template<AlertTemplateConfig, undefined> {

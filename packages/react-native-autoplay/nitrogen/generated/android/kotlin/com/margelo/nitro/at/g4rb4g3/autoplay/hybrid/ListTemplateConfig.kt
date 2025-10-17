@@ -41,7 +41,7 @@ data class ListTemplateConfig
     val onPopped: Func_void?,
     @DoNotStrip
     @Keep
-    val actions: Array<NitroAction>?,
+    val headerActions: Array<NitroAction>?,
     @DoNotStrip
     @Keep
     val title: AutoText,
@@ -52,6 +52,6 @@ data class ListTemplateConfig
   /**
    * Initialize a new instance of `ListTemplateConfig` from Kotlin.
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, actions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?)
-       : this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, actions?.let { it }, title, sections?.let { it })
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?)
+       : this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, headerActions?.let { it }, title, sections?.let { it })
 }

@@ -71,9 +71,9 @@ class MapTemplate(
         }.build()
     }
 
-    private fun parseMapActions(actions: Array<NitroAction>): ActionStrip {
+    private fun parseMapActions(headerActions: Array<NitroAction>): ActionStrip {
         return ActionStrip.Builder().apply {
-            actions.forEach { action ->
+            headerActions.forEach { action ->
                 if (action.type == NitroActionType.BACK) {
                     addAction(Action.BACK)
                     return@forEach
@@ -110,8 +110,8 @@ class MapTemplate(
             config.mapButtons?.let { buttons ->
                 setMapActionStrip(parseMapButtons(buttons))
             }
-            config.actions?.let { actions ->
-                setActionStrip(parseMapActions(actions))
+            config.headerActions?.let { headerActions ->
+                setActionStrip(parseMapActions(headerActions))
             }
             config.guidanceBackgroundColor?.let {
                 setBackgroundColor(Parser.parseColor(it))
@@ -133,8 +133,8 @@ class MapTemplate(
         }.build()
     }
 
-    override fun setTemplateActions(actions: Array<NitroAction>?) {
-        config = config.copy(actions = actions)
+    override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
+        config = config.copy(headerActions = headerActions)
         super.applyConfigUpdate()
     }
 

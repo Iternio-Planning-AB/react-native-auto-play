@@ -21,7 +21,7 @@ class ListTemplate: AutoPlayTemplate {
         super.init(
             templateId: config.id,
             template: template,
-            header: config.actions
+            header: config.headerActions
         )
 
         invalidate()
