@@ -12,6 +12,7 @@
 #include "HybridHybridGridTemplateSpecSwift.hpp"
 #include "HybridHybridListTemplateSpecSwift.hpp"
 #include "HybridHybridMapTemplateSpecSwift.hpp"
+#include "HybridHybridMessageTemplateSpecSwift.hpp"
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
@@ -165,6 +166,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     }
     #endif
     NitroAutoplay::HybridHybridMapTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridMessageTemplateSpec>
+  std::shared_ptr<HybridHybridMessageTemplateSpec> create_std__shared_ptr_HybridHybridMessageTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    NitroAutoplay::HybridHybridMessageTemplateSpec_cxx swiftPart = NitroAutoplay::HybridHybridMessageTemplateSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridMessageTemplateSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridHybridMessageTemplateSpec_(std__shared_ptr_HybridHybridMessageTemplateSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridMessageTemplateSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridMessageTemplateSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridHybridMessageTemplateSpec\" is not implemented in Swift!");
+    }
+    #endif
+    NitroAutoplay::HybridHybridMessageTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
 

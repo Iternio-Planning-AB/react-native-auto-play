@@ -34,6 +34,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGrid
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridListTemplateSpec; }
 // Forward declaration of `HybridHybridMapTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMapTemplateSpec; }
+// Forward declaration of `HybridHybridMessageTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMessageTemplateSpec; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -84,6 +86,8 @@ namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
 namespace NitroAutoplay { class HybridHybridListTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridMapTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
+// Forward declaration of `HybridHybridMessageTemplateSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 
 // Include C++ defined types
 #include "AlertAction.hpp"
@@ -99,6 +103,7 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "HybridHybridGridTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
+#include "HybridHybridMessageTemplateSpec.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -934,5 +939,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridHybridMapTemplateSpec>
   using std__weak_ptr_HybridHybridMapTemplateSpec_ = std::weak_ptr<HybridHybridMapTemplateSpec>;
   inline std__weak_ptr_HybridHybridMapTemplateSpec_ weakify_std__shared_ptr_HybridHybridMapTemplateSpec_(const std::shared_ptr<HybridHybridMapTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridMessageTemplateSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHybridMessageTemplateSpec>`.
+   */
+  using std__shared_ptr_HybridHybridMessageTemplateSpec_ = std::shared_ptr<HybridHybridMessageTemplateSpec>;
+  std::shared_ptr<HybridHybridMessageTemplateSpec> create_std__shared_ptr_HybridHybridMessageTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHybridMessageTemplateSpec_(std__shared_ptr_HybridHybridMessageTemplateSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHybridMessageTemplateSpec>
+  using std__weak_ptr_HybridHybridMessageTemplateSpec_ = std::weak_ptr<HybridHybridMessageTemplateSpec>;
+  inline std__weak_ptr_HybridHybridMessageTemplateSpec_ weakify_std__shared_ptr_HybridHybridMessageTemplateSpec_(const std::shared_ptr<HybridHybridMessageTemplateSpec>& strong) noexcept { return strong; }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift
