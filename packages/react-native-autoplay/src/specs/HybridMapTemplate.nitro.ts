@@ -1,6 +1,11 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { NitroMapTemplateConfig, VisibleTravelEstimate } from '../templates/MapTemplate';
-import type { TripConfig, TripPoint, TripPreviewTextConfiguration } from '../types/Trip';
+import type {
+  TripConfig,
+  TripPoint,
+  TripPreviewTextConfiguration,
+  TripsConfig,
+} from '../types/Trip';
 import type { NitroNavigationAlert } from '../utils/NitroAlert';
 import type { NitroColor } from '../utils/NitroColor';
 import type { NitroMapButton } from '../utils/NitroMapButton';
@@ -17,7 +22,7 @@ export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios
   showNavigationAlert(templateId: string, alert: NitroNavigationAlert): void;
   showTripSelector(
     templateId: string,
-    trips: Array<TripConfig>,
+    trips: Array<TripsConfig>,
     selectedTripId: string | null,
     textConfig: TripPreviewTextConfiguration,
     onTripSelected: (tripId: string, routeId: string) => void,
@@ -42,5 +47,6 @@ export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios
 
   updateTravelEstimates(templateId: string, steps: Array<TripPoint>): void;
 
+  startNavigation(templateId: string, trip: TripConfig): void;
   stopNavigation(templateId: string): void;
 }

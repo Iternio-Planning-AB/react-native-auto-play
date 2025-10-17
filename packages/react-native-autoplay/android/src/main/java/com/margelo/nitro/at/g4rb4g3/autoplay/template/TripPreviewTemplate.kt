@@ -14,13 +14,15 @@ import androidx.car.app.navigation.model.MapWithContentTemplate
 import androidx.core.graphics.drawable.IconCompat
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AutoText
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.RouteChoice
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripPreviewTextConfiguration
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripsConfig
 import com.margelo.nitro.autoplay.R
 
 class TripPreviewTemplate(
     carContext: CarContext,
-    val trips: Array<TripConfig>,
+    val trips: Array<TripsConfig>,
     selectedTripId: String?,
     val textConfig: TripPreviewTextConfiguration,
     val onTripSelected: (String, String) -> Unit,
@@ -74,16 +76,13 @@ class TripPreviewTemplate(
                     setFlags(Action.FLAG_PRIMARY)
                     setOnClickListener {
                         // we have to slice away the first step since it is the origin
-                        val route = selectedRoute.copy(
-                            steps = selectedRoute.steps.slice(1 until selectedRoute.steps.size)
-                                .toTypedArray()
-                        )
-                        val trip = selectedTrip.copy(routeChoices = arrayOf(route))
+                        val steps = selectedRoute.steps.slice(1 until selectedRoute.steps.size)
+                            .toTypedArray()
+                        val trip = TripConfig(selectedTrip.id, selectedRoute.copy(steps = steps))
 
                         MapTemplate.startNavigation(trip)
 
                         onTripStarted(selectedTrip.id, selectedRoute.id)
-
                         finish()
                     }
                 }.build())

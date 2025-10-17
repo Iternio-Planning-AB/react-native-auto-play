@@ -49,20 +49,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
-      static const auto fieldRouteChoices = clazz->getField<jni::JArrayClass<JRouteChoice>>("routeChoices");
-      jni::local_ref<jni::JArrayClass<JRouteChoice>> routeChoices = this->getFieldValue(fieldRouteChoices);
+      static const auto fieldRouteChoice = clazz->getField<JRouteChoice>("routeChoice");
+      jni::local_ref<JRouteChoice> routeChoice = this->getFieldValue(fieldRouteChoice);
       return TripConfig(
         id->toStdString(),
-        [&]() {
-          size_t __size = routeChoices->size();
-          std::vector<RouteChoice> __vector;
-          __vector.reserve(__size);
-          for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = routeChoices->getElement(__i);
-            __vector.push_back(__element->toCpp());
-          }
-          return __vector;
-        }()
+        routeChoice->toCpp()
       );
     }
 
@@ -74,15 +65,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     static jni::local_ref<JTripConfig::javaobject> fromCpp(const TripConfig& value) {
       return newInstance(
         jni::make_jstring(value.id),
-        [&]() {
-          size_t __size = value.routeChoices.size();
-          jni::local_ref<jni::JArrayClass<JRouteChoice>> __array = jni::JArrayClass<JRouteChoice>::newArray(__size);
-          for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.routeChoices[__i];
-            __array->setElement(__i, *JRouteChoice::fromCpp(__element));
-          }
-          return __array;
-        }()
+        JRouteChoice::fromCpp(value.routeChoice)
       );
     }
   };

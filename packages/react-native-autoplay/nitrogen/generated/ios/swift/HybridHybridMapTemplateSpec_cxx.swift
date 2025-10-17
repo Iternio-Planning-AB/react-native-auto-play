@@ -132,7 +132,7 @@ open class HybridHybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func showTripSelector(templateId: std.string, trips: bridge.std__vector_TripConfig_, selectedTripId: bridge.std__optional_std__string_, textConfig: TripPreviewTextConfiguration, onTripSelected: bridge.Func_void_std__string_std__string, onTripStarted: bridge.Func_void_std__string_std__string) -> bridge.Result_void_ {
+  public final func showTripSelector(templateId: std.string, trips: bridge.std__vector_TripsConfig_, selectedTripId: bridge.std__optional_std__string_, textConfig: TripPreviewTextConfiguration, onTripSelected: bridge.Func_void_std__string_std__string, onTripStarted: bridge.Func_void_std__string_std__string) -> bridge.Result_void_ {
     do {
       try self.__implementation.showTripSelector(templateId: String(templateId), trips: trips.map({ __item in __item }), selectedTripId: { () -> String? in
         if bridge.has_value_std__optional_std__string_(selectedTripId) {
@@ -214,6 +214,17 @@ open class HybridHybridMapTemplateSpec_cxx {
   public final func updateTravelEstimates(templateId: std.string, steps: bridge.std__vector_TripPoint_) -> bridge.Result_void_ {
     do {
       try self.__implementation.updateTravelEstimates(templateId: String(templateId), steps: steps.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func startNavigation(templateId: std.string, trip: TripConfig) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.startNavigation(templateId: String(templateId), trip: trip)
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

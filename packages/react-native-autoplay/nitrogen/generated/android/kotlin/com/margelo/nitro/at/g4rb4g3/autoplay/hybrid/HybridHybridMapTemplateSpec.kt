@@ -48,11 +48,11 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   @Keep
   abstract fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert): Unit
   
-  abstract fun showTripSelector(templateId: String, trips: Array<TripConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: (tripId: String, routeId: String) -> Unit, onTripStarted: (tripId: String, routeId: String) -> Unit): Unit
+  abstract fun showTripSelector(templateId: String, trips: Array<TripsConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: (tripId: String, routeId: String) -> Unit, onTripStarted: (tripId: String, routeId: String) -> Unit): Unit
   
   @DoNotStrip
   @Keep
-  private fun showTripSelector_cxx(templateId: String, trips: Array<TripConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: Func_void_std__string_std__string, onTripStarted: Func_void_std__string_std__string): Unit {
+  private fun showTripSelector_cxx(templateId: String, trips: Array<TripsConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: Func_void_std__string_std__string, onTripStarted: Func_void_std__string_std__string): Unit {
     val __result = showTripSelector(templateId, trips, selectedTripId, textConfig, onTripSelected, onTripStarted)
     return __result
   }
@@ -81,6 +81,10 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun startNavigation(templateId: String, trip: TripConfig): Unit
   
   @DoNotStrip
   @Keep

@@ -248,7 +248,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     // MARK: trip selection
     func showTripSelector(
-        trips: [TripConfig],
+        trips: [TripsConfig],
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
         onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
@@ -336,14 +336,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             routeChoices: [routeChoice]
         )
 
-        if let travelEstimates = config.visibleTravelEstimate == .first
-            ? routeChoice.getTravelEstimates().first
-            : routeChoice.getTravelEstimates().last
-        {
-            mapTemplate.updateEstimates(travelEstimates, for: trip)
-        }
-
-        self.navigationSession = mapTemplate.startNavigationSession(for: trip)
+        startNavigation(trip: trip)
     }
 
     func updateGuidanceBackgroundColor(color: NitroColor?) {
@@ -395,6 +388,21 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         }
 
         updateVisibleTravelEstimate(visibleTravelEstimate: nil)
+    }
+    
+    func startNavigation(trip: CPTrip) {
+        guard let template = self.template as? CPMapTemplate else { return }
+        
+        let routeChoice = trip.routeChoices.first
+        
+        if let travelEstimates = config.visibleTravelEstimate == .first
+            ? routeChoice?.getTravelEstimates().first
+            : routeChoice?.getTravelEstimates().last
+        {
+            template.updateEstimates(travelEstimates, for: trip)
+        }
+
+        self.navigationSession = template.startNavigationSession(for: trip)
     }
 
     func stopNavigation() {

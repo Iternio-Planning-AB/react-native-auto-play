@@ -268,8 +268,25 @@ class Parser {
 
         return route
     }
+    
+    static func parseTrip(tripConfig: TripConfig) -> CPTrip {
+        let routeChoices = parseRouteChoice(routeChoice: tripConfig.routeChoice)
+        let trip = CPTrip(
+            origin: parseTripPoint(
+                point: tripConfig.routeChoice.steps.first!
+            ),
+            destination: parseTripPoint(
+                point: tripConfig.routeChoice.steps.last!
+            ),
+            routeChoices: [routeChoices]
+        )
 
-    static func parseTrips(trips: [TripConfig]) -> [CPTrip] {
+        trip.userInfo = ["id": tripConfig.id]
+        
+        return trip
+    }
+
+    static func parseTrips(trips: [TripsConfig]) -> [CPTrip] {
         return trips.map { tripConfig in
             let trip = CPTrip(
                 origin: parseTripPoint(

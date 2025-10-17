@@ -84,6 +84,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `TripsConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
@@ -128,6 +130,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "TripConfig.hpp"
 #include "TripPoint.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include "TripsConfig.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include <NitroModules/Promise.hpp>

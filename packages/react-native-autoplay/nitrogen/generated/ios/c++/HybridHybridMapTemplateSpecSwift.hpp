@@ -48,8 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlert
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
-// Forward declaration of `TripConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
+// Forward declaration of `TripsConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 // Forward declaration of `TripPoint` to properly resolve imports.
@@ -60,6 +60,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -83,12 +85,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewText
 #include "NavigationAlertAction.hpp"
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
-#include "TripConfig.hpp"
+#include "TripsConfig.hpp"
 #include "RouteChoice.hpp"
 #include "TripPoint.hpp"
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include "TripConfig.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -143,7 +146,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) override {
+    inline void showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) override {
       auto __result = _swiftPart.showTripSelector(templateId, trips, selectedTripId, std::forward<decltype(textConfig)>(textConfig), onTripSelected, onTripStarted);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
@@ -175,6 +178,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     inline void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) override {
       auto __result = _swiftPart.updateTravelEstimates(templateId, steps);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void startNavigation(const std::string& templateId, const TripConfig& trip) override {
+      auto __result = _swiftPart.startNavigation(templateId, std::forward<decltype(trip)>(trip));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

@@ -26,7 +26,7 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
 
     override fun showTripSelector(
         templateId: String,
-        trips: Array<TripConfig>,
+        trips: Array<TripsConfig>,
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
         onTripSelected: (String, String) -> Unit,
@@ -84,6 +84,13 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
 
     override fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>) {
         MapTemplate.updateTravelEstimates(steps)
+    }
+
+    override fun startNavigation(
+        templateId: String,
+        trip: TripConfig
+    ) {
+        MapTemplate.startNavigation(trip)
     }
 
     override fun stopNavigation(templateId: String) {

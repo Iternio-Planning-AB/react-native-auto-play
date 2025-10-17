@@ -17,8 +17,8 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MapTemplateConfig; }
 // Forward declaration of `NitroNavigationAlert` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroNavigationAlert; }
-// Forward declaration of `TripConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
+// Forward declaration of `TripsConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -29,11 +29,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
 // Forward declaration of `TripPoint` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
 #include "NitroNavigationAlert.hpp"
-#include "TripConfig.hpp"
+#include "TripsConfig.hpp"
 #include <vector>
 #include <optional>
 #include "TripPreviewTextConfiguration.hpp"
@@ -42,6 +44,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
 #include "NitroColor.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "TripPoint.hpp"
+#include "TripConfig.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -76,12 +79,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       // Methods
       virtual void createMapTemplate(const MapTemplateConfig& config) = 0;
       virtual void showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) = 0;
-      virtual void showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) = 0;
+      virtual void showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) = 0;
       virtual void hideTripSelector(const std::string& templateId) = 0;
       virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
       virtual void updateGuidanceBackgroundColor(const std::string& templateId, const std::optional<NitroColor>& color) = 0;
       virtual void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) = 0;
       virtual void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) = 0;
+      virtual void startNavigation(const std::string& templateId, const TripConfig& trip) = 0;
       virtual void stopNavigation(const std::string& templateId) = 0;
 
     protected:

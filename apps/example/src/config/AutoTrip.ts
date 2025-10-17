@@ -1,6 +1,6 @@
-import type { TripConfig, TripPreviewTextConfiguration } from '@g4rb4g3/react-native-autoplay';
+import type { TripPreviewTextConfiguration, TripsConfig } from '@g4rb4g3/react-native-autoplay';
 
-export const AutoTrip: Array<TripConfig> = [
+export const AutoTrip: Array<TripsConfig> = [
   {
     id: '#0',
     routeChoices: [

@@ -289,7 +289,7 @@ class MapTemplate(
 
         fun startNavigation(trip: TripConfig) {
             isNavigating = true
-            val steps = trip.routeChoices.first().steps
+            val steps = trip.routeChoice.steps
 
             updateDestinationTravelEstimates(steps)
 

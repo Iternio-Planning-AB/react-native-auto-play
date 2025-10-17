@@ -66,10 +66,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `TravelEstimates` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates; }
-// Forward declaration of `TripConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 // Forward declaration of `TripPoint` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
+// Forward declaration of `TripsConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
@@ -115,8 +115,8 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "TravelEstimates.hpp"
-#include "TripConfig.hpp"
 #include "TripPoint.hpp"
+#include "TripsConfig.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include <NitroModules/FastVectorCopy.hpp>
@@ -890,13 +890,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return vector;
   }
   
-  // pragma MARK: std::vector<TripConfig>
+  // pragma MARK: std::vector<TripsConfig>
   /**
-   * Specialized version of `std::vector<TripConfig>`.
+   * Specialized version of `std::vector<TripsConfig>`.
    */
-  using std__vector_TripConfig_ = std::vector<TripConfig>;
-  inline std::vector<TripConfig> create_std__vector_TripConfig_(size_t size) noexcept {
-    std::vector<TripConfig> vector;
+  using std__vector_TripsConfig_ = std::vector<TripsConfig>;
+  inline std::vector<TripsConfig> create_std__vector_TripsConfig_(size_t size) noexcept {
+    std::vector<TripsConfig> vector;
     vector.reserve(size);
     return vector;
   }

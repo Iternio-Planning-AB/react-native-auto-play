@@ -43,8 +43,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlert
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
-// Forward declaration of `TripConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
+// Forward declaration of `TripsConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 // Forward declaration of `TripPoint` to properly resolve imports.
@@ -55,6 +55,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `TripConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
 #include "MapTemplateConfig.hpp"
 #include "JMapTemplateConfig.hpp"
@@ -103,8 +105,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewText
 #include "AlertDismissalReason.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JAlertDismissalReason.hpp"
-#include "TripConfig.hpp"
-#include "JTripConfig.hpp"
+#include "TripsConfig.hpp"
+#include "JTripsConfig.hpp"
 #include "RouteChoice.hpp"
 #include "JRouteChoice.hpp"
 #include "TripPoint.hpp"
@@ -116,6 +118,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewText
 #include "TripPreviewTextConfiguration.hpp"
 #include "JTripPreviewTextConfiguration.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
+#include "TripConfig.hpp"
+#include "JTripConfig.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -151,14 +155,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroNavigationAlert> /* alert */)>("showNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), JNitroNavigationAlert::fromCpp(alert));
   }
-  void JHybridHybridMapTemplateSpec::showTripSelector(const std::string& templateId, const std::vector<TripConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */)>("showTripSelector_cxx");
+  void JHybridHybridMapTemplateSpec::showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripsConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */)>("showTripSelector_cxx");
     method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = trips.size();
-      jni::local_ref<jni::JArrayClass<JTripConfig>> __array = jni::JArrayClass<JTripConfig>::newArray(__size);
+      jni::local_ref<jni::JArrayClass<JTripsConfig>> __array = jni::JArrayClass<JTripsConfig>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = trips[__i];
-        __array->setElement(__i, *JTripConfig::fromCpp(__element));
+        __array->setElement(__i, *JTripsConfig::fromCpp(__element));
       }
       return __array;
     }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__string_cxx::fromCpp(onTripSelected), JFunc_void_std__string_std__string_cxx::fromCpp(onTripStarted));
@@ -198,6 +202,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       return __array;
     }());
+  }
+  void JHybridHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
+    method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
   }
   void JHybridHybridMapTemplateSpec::stopNavigation(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");

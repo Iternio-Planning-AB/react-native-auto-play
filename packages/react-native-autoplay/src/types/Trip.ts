@@ -1,6 +1,6 @@
 import type { AutoText, Distance } from './Text';
 
-export type RouteChoice = {
+type RouteChoice = {
   id: string;
   /**
    * Title on the alternatives, only visible when providing more then one routeChoices
@@ -15,7 +15,6 @@ export type RouteChoice = {
    * travelEstimates are automatically appended to this one
    */
   selectionSummaryVariants: Array<string>;
-
   /**
    * ⚠️ name of the last step is used as title on Android Auto,
    * ideally all these should have the same name to make sure to not exceed the step count
@@ -34,7 +33,10 @@ export type TripPoint = {
   travelEstimates: TravelEstimates;
 };
 
-export type TripConfig = {
+/**
+ * used for showTripSelector
+ */
+export type TripsConfig = {
   id: string;
   routeChoices: Array<RouteChoice>;
 };
@@ -66,4 +68,12 @@ export type TravelEstimates = {
   //  * @namespace Android
   //  */
   // tripIcon?: number;
+};
+
+/**
+ * used for startNavigation
+ */
+export type TripConfig = {
+  id: string;
+  routeChoice: RouteChoice;
 };

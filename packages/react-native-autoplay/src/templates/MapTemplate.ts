@@ -5,7 +5,12 @@ import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
-import type { TripConfig, TripPoint, TripPreviewTextConfiguration } from '../types/Trip';
+import type {
+  TripConfig,
+  TripPoint,
+  TripPreviewTextConfiguration,
+  TripsConfig,
+} from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
@@ -168,7 +173,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   }
 
   public showTripSelector(
-    trips: Array<TripConfig>,
+    trips: Array<TripsConfig>,
     selectedTripId: string | null,
     textConfig: TripPreviewTextConfiguration,
     onTripSelected: (tripId: string, routeId: string) => void,
@@ -226,6 +231,14 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    */
   public updateTravelEstimates(steps: Array<TripPoint>) {
     HybridMapTemplate.updateTravelEstimates(this.id, steps);
+  }
+
+  /**
+   * either use showTripSelector to show a set of trips and let the user start the navigation session
+   * or use this to start a navigation session without asking the user
+   */
+  public startNavigation(trip: TripConfig) {
+    HybridMapTemplate.startNavigation(this.id, trip);
   }
 
   public stopNavigation() {

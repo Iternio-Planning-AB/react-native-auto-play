@@ -40,7 +40,7 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
 
     func showTripSelector(
         templateId: String,
-        trips: [TripConfig],
+        trips: [TripsConfig],
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
         onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
@@ -78,6 +78,13 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
     func updateTravelEstimates(templateId: String, steps: [TripPoint]) throws {
         try RootModule.withMapTemplate(templateId: templateId) { template in
             try template.updateTravelEstimates(steps: steps)
+        }
+    }
+    
+    func startNavigation(templateId: String, trip: TripConfig) throws {
+        try RootModule.withMapTemplate(templateId: templateId) { template in
+            let trip = Parser.parseTrip(tripConfig: trip)
+            template.startNavigation(trip: trip)
         }
     }
     
