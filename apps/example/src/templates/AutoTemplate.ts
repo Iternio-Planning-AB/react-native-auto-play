@@ -13,6 +13,7 @@ import { Platform } from 'react-native';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoListTemplate } from './AutoListTemplate';
+import { AutoMessageTemplate } from './AutoMessageTemplate';
 
 // biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
 const backButton: BackButton<any> = {
@@ -280,6 +281,17 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
         }
       }, 1000);
       template.showAlert(AutoAlert(remaining));
+    },
+  },
+  {
+    type: 'custom',
+    image: {
+      name: 'message',
+      color: 'rgba(255, 255, 255, 1)',
+      backgroundColor: 'rgba(66, 66, 66, 0.5)',
+    },
+    onPress: () => {
+      AutoMessageTemplate.getTemplate().push();
     },
   },
 ];
