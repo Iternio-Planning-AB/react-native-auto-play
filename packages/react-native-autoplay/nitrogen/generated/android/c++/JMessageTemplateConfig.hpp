@@ -13,11 +13,13 @@
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "InformationItem.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JInformationItem.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
@@ -68,6 +70,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> title = this->getFieldValue(fieldTitle);
       static const auto fieldMessage = clazz->getField<JAutoText>("message");
       jni::local_ref<JAutoText> message = this->getFieldValue(fieldMessage);
+      static const auto fieldItems = clazz->getField<jni::JArrayClass<JInformationItem>>("items");
+      jni::local_ref<jni::JArrayClass<JInformationItem>> items = this->getFieldValue(fieldItems);
       return MessageTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -136,7 +140,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           return __vector;
         }()) : std::nullopt,
         title != nullptr ? std::make_optional(title->toCpp()) : std::nullopt,
-        message->toCpp()
+        message->toCpp(),
+        [&]() {
+          size_t __size = items->size();
+          std::vector<InformationItem> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = items->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }()
       );
     }
 
@@ -163,7 +177,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           return __array;
         }() : nullptr,
         value.title.has_value() ? JAutoText::fromCpp(value.title.value()) : nullptr,
-        JAutoText::fromCpp(value.message)
+        JAutoText::fromCpp(value.message),
+        [&]() {
+          size_t __size = value.items.size();
+          jni::local_ref<jni::JArrayClass<JInformationItem>> __array = jni::JArrayClass<JInformationItem>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = value.items[__i];
+            __array->setElement(__i, *JInformationItem::fromCpp(__element));
+          }
+          return __array;
+        }()
       );
     }
   };

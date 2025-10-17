@@ -18,7 +18,7 @@ public extension MessageTemplateConfig {
   /**
    * Create a new instance of `MessageTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, actions: [NitroAction]?, title: AutoText?, message: AutoText) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, actions: [NitroAction]?, title: AutoText?, message: AutoText, items: [InformationItem]) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -82,7 +82,13 @@ public extension MessageTemplateConfig {
       } else {
         return .init()
       }
-    }(), message)
+    }(), message, { () -> bridge.std__vector_InformationItem_ in
+      var __vector = bridge.create_std__vector_InformationItem_(items.count)
+      for __item in items {
+        __vector.push_back(__item)
+      }
+      return __vector
+    }())
   }
 
   var id: String {
@@ -335,6 +341,23 @@ public extension MessageTemplateConfig {
     @inline(__always)
     set {
       self.__message = newValue
+    }
+  }
+  
+  var items: [InformationItem] {
+    @inline(__always)
+    get {
+      return self.__items.map({ __item in __item })
+    }
+    @inline(__always)
+    set {
+      self.__items = { () -> bridge.std__vector_InformationItem_ in
+        var __vector = bridge.create_std__vector_InformationItem_(newValue.count)
+        for __item in newValue {
+          __vector.push_back(__item)
+        }
+        return __vector
+      }()
     }
   }
 }

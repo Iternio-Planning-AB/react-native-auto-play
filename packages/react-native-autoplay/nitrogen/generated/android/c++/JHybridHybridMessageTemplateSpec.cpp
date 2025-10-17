@@ -23,6 +23,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 // Forward declaration of `DistanceUnits` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUnits; }
+// Forward declaration of `InformationItem` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct InformationItem; }
 
 #include "MessageTemplateConfig.hpp"
 #include "JMessageTemplateConfig.hpp"
@@ -46,6 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUni
 #include "JDistance.hpp"
 #include "DistanceUnits.hpp"
 #include "JDistanceUnits.hpp"
+#include "InformationItem.hpp"
+#include "JInformationItem.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
