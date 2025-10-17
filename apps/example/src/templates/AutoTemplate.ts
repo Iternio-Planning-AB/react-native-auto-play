@@ -11,6 +11,8 @@ import {
 } from '@g4rb4g3/react-native-autoplay';
 import { Platform } from 'react-native';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
+import { setIsNavigating, setSelectedTrip } from '../state/navigationSlice';
+import { dispatch } from '../state/store';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoListTemplate } from './AutoListTemplate';
 
@@ -70,6 +72,8 @@ const stopNavigation: ImageButton<MapTemplate> = {
   onPress: (template) => {
     template.stopNavigation();
     template.setActions(mapActions);
+
+    dispatch(setIsNavigating(false));
   },
   type: 'image',
 };
@@ -105,23 +109,48 @@ const toggleEta: ImageButton<MapTemplate> = {
 
 let steps: Array<TripPoint> = [];
 
-const estimatesUpdate = (template: MapTemplate, type: 'add' | 'remove') => {
+export const estimatesUpdate = (template: MapTemplate, type: 'initial' | 'add' | 'remove') => {
+  const value = type === 'initial' ? 0 : type === 'add' ? 1 : -1;
+
   steps = steps.map((s) => ({
     ...s,
     travelEstimates: {
       ...s.travelEstimates,
       distanceRemaining: {
         ...s.travelEstimates.distanceRemaining,
-        value: s.travelEstimates.distanceRemaining.value + (type === 'add' ? 1 : -1),
+        value: s.travelEstimates.distanceRemaining.value + value,
       },
       timeRemaining: {
         ...s.travelEstimates.timeRemaining,
-        seconds: s.travelEstimates.timeRemaining.seconds + (type === 'add' ? 60 : -60),
+        seconds: s.travelEstimates.timeRemaining.seconds + value * 60,
       },
     },
   }));
 
   template.updateTravelEstimates(steps);
+};
+
+export const onTripStarted = (tripId: string, routeId: string, template: MapTemplate) => {
+  dispatch(setIsNavigating(true));
+
+  template.setActions({
+    android: [stopNavigation, toggleEta, plusOne, minusOne],
+    ios: {
+      leadingNavigationBarButtons: [toggleEta, stopNavigation],
+      trailingNavigationBarButtons: [plusOne, minusOne],
+    },
+  });
+
+  if (Platform.OS === 'ios') {
+    template.setMapButtons(mapButtons);
+  }
+
+  console.log(`started trip ${tripId} using route ${routeId}`);
+
+  steps =
+    AutoTrip.find((t) => t.id === tripId)
+      ?.routeChoices.find((r) => r.id === routeId)
+      ?.steps.slice(1) ?? [];
 };
 
 const mapButtonHandler: (template: MapTemplate) => void = (template) => {
@@ -143,30 +172,12 @@ const mapButtonHandler: (template: MapTemplate) => void = (template) => {
 
   const onTripSelected = (tripId: string, routeId: string) => {
     console.log(`selected trip ${tripId} using route ${routeId}`);
+    dispatch(setSelectedTrip({ routeId, tripId }));
   };
 
-  const onTripStarted = (tripId: string, routeId: string) => {
-    template.setActions({
-      android: [stopNavigation, toggleEta, plusOne, minusOne],
-      ios: {
-        leadingNavigationBarButtons: [toggleEta, stopNavigation],
-        trailingNavigationBarButtons: [plusOne, minusOne],
-      },
-    });
-
-    if (Platform.OS === 'ios') {
-      template.setMapButtons(mapButtons);
-    }
-
-    console.log(`started trip ${tripId} using route ${routeId}`);
-
-    steps =
-      AutoTrip.find((t) => t.id === tripId)
-        ?.routeChoices.find((r) => r.id === routeId)
-        ?.steps.slice(1) ?? [];
-  };
-
-  template.showTripSelector(AutoTrip, null, TextConfig, onTripSelected, onTripStarted);
+  template.showTripSelector(AutoTrip, null, TextConfig, onTripSelected, (tripId, routeId) =>
+    onTripStarted(tripId, routeId, template)
+  );
 };
 
 const mapActions: MapTemplateConfig['actions'] = {
