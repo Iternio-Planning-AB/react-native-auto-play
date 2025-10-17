@@ -4,6 +4,7 @@ import { HybridAutoPlay, HybridMapTemplate } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
+import type { Maneuvers } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
   TripConfig,
@@ -14,6 +15,7 @@ import type {
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
+import { type NitroManeuver, NitroManeuverUtil } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import {
   type ActionsIos,
@@ -231,6 +233,19 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    */
   public updateTravelEstimates(steps: Array<TripPoint>) {
     HybridMapTemplate.updateTravelEstimates(this.id, steps);
+  }
+
+  public updateManeuvers(maneuvers: Maneuvers) {
+    const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
+      if (maneuver == null) {
+        return acc;
+      }
+
+      acc.push(NitroManeuverUtil.convert(maneuver));
+      return acc;
+    }, [] as NitroManeuver[]);
+
+    HybridMapTemplate.updateManeuvers(this.id, nitroManeuvers);
   }
 
   /**

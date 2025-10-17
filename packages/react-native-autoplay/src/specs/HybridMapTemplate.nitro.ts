@@ -8,6 +8,7 @@ import type {
 } from '../types/Trip';
 import type { NitroNavigationAlert } from '../utils/NitroAlert';
 import type { NitroColor } from '../utils/NitroColor';
+import type { NitroManeuver } from '../utils/NitroManeuver';
 import type { NitroMapButton } from '../utils/NitroMapButton';
 import type { NitroTemplateConfig } from './HybridAutoPlay.nitro';
 
@@ -46,6 +47,7 @@ export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios
   ): void;
 
   updateTravelEstimates(templateId: string, steps: Array<TripPoint>): void;
+  updateManeuvers(templateId: string, maneuvers: Array<NitroManeuver>): void;
 
   startNavigation(templateId: string, trip: TripConfig): void;
   stopNavigation(templateId: string): void;

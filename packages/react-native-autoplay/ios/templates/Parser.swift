@@ -334,4 +334,105 @@ class Parser {
             }
         }
     }
+    
+    static func parseManeuver (nitroManeuver: NitroManeuver) -> CPManeuver {
+        let maneuver = CPManeuver()
+        maneuver.id = nitroManeuver.id
+        
+        maneuver.attributedInstructionVariants = nitroManeuver.attributedInstructionVariants.map { variant in
+            let attributedString = NSMutableAttributedString(string: variant.text)
+            if let nitroImages = variant.images {
+                nitroImages.forEach { image in
+                    let attachment = NSTextAttachment(image: SymbolFont.imageFromNitroImage(image: image.image)!)
+                    let container = NSAttributedString(attachment: attachment)
+                    attributedString.insert(container, at: Int(image.position))
+                }
+            }
+            return attributedString
+        }
+        
+        maneuver.initialTravelEstimates = Parser.parseTravelEstiamtes(
+            travelEstimates: nitroManeuver.travelEstimates
+        )
+        maneuver.symbolImage = SymbolFont.imageFromNitroImage(
+            image: nitroManeuver.symbolImage
+        )
+        maneuver.junctionImage = SymbolFont.imageFromNitroImage(
+            image: nitroManeuver.junctionImage
+        )
+
+        if #available(iOS 17.4, *) {
+            maneuver.maneuverType = CPManeuverType(
+                rawValue: UInt(nitroManeuver.maneuverType.rawValue)
+            )!
+            maneuver.trafficSide = CPTrafficSide(
+                rawValue: UInt(nitroManeuver.trafficSide.rawValue)
+            )!
+            maneuver.roadFollowingManeuverVariants =
+                nitroManeuver.roadFollowingManeuverVariants
+
+            if let junctionType = nitroManeuver.junctionType?.rawValue {
+                maneuver.junctionType = CPJunctionType(
+                    rawValue: UInt(junctionType)
+                )!
+            }
+
+            if let junctionExitAngle = nitroManeuver.junctionExitAngle {
+                maneuver.junctionExitAngle = Measurement(
+                    value: junctionExitAngle,
+                    unit: UnitAngle.degrees
+                )
+            }
+
+            if let junctionElementAngles = nitroManeuver
+                .junctionElementAngles
+            {
+                maneuver.junctionElementAngles = Set(
+                    junctionElementAngles.map {
+                        Measurement(value: $0, unit: UnitAngle.degrees)
+                    }
+                )
+            }
+
+            if let highwayExitLabel = nitroManeuver.highwayExitLabel {
+                maneuver.highwayExitLabel = highwayExitLabel
+            }
+
+            if let linkedLaneGuidance = nitroManeuver.linkedLaneGuidance {
+                let lanes = linkedLaneGuidance.lanes.map { lane in
+                    let angles = lane.angles.map {
+                        Measurement(value: $0, unit: UnitAngle.degrees)
+                    }
+                    let highlightedAngle = Measurement(
+                        value: lane.highlightedAngle,
+                        unit: UnitAngle.degrees
+                    )
+                    let status = CPLaneStatus(
+                        rawValue: Int(lane.status.rawValue)
+                    )!
+                    if #available(iOS 18.0, *) {
+                        let linkedLane = CPLane(
+                            angles: angles,
+                            highlightedAngle: highlightedAngle,
+                            isPreferred: lane.status == .preferred
+                        )
+                        linkedLane.status = status
+                        return linkedLane
+                    }
+                    let linkedLane = CPLane()
+                    linkedLane.primaryAngle = highlightedAngle
+                    linkedLane.status = status
+                    linkedLane.secondaryAngles = angles
+                    return linkedLane
+                }
+                let laneGuidance = CPLaneGuidance()
+                laneGuidance.instructionVariants =
+                    linkedLaneGuidance.instructionVariants
+                laneGuidance.lanes = lanes
+                maneuver.linkedLaneGuidance = laneGuidance
+            }
+        }
+        
+        return maneuver
+    }
 }

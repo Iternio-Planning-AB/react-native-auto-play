@@ -81,6 +81,12 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
         }
     }
     
+    func updateManeuvers(templateId: String, maneuvers: [NitroManeuver]) throws {
+        try RootModule.withMapTemplate(templateId: templateId) { template in
+            template.updateManeuvers(maneuvers: maneuvers)
+        }
+    }
+    
     func startNavigation(templateId: String, trip: TripConfig) throws {
         try RootModule.withMapTemplate(templateId: templateId) { template in
             let trip = Parser.parseTrip(tripConfig: trip)

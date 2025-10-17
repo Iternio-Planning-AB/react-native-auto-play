@@ -222,6 +222,17 @@ open class HybridHybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
+  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__vector_NitroManeuver_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.updateManeuvers(templateId: String(templateId), maneuvers: maneuvers.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func startNavigation(templateId: std.string, trip: TripConfig) -> bridge.Result_void_ {
     do {
       try self.__implementation.startNavigation(templateId: String(templateId), trip: trip)

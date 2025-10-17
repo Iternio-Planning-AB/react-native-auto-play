@@ -112,7 +112,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         _ mapTemplate: CPMapTemplate,
         displayStyleFor maneuver: CPManeuver
     ) -> CPManeuverDisplayStyle {
-        if maneuver.instructionVariants.count == 0 {
+        if maneuver.attributedInstructionVariants.count == 0 {
             return .symbolOnly
         }
         return .leadingSymbol
@@ -389,12 +389,41 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         updateVisibleTravelEstimate(visibleTravelEstimate: nil)
     }
-    
+
+    func updateManeuvers(maneuvers: [NitroManeuver]) {
+        guard let navigationSession = navigationSession else { return }
+        
+        var upcomingManeuvers: [CPManeuver] = []
+        
+        maneuvers.forEach { nitroManeuver in
+            if let maneuver = navigationSession.upcomingManeuvers
+                .first(where: { $0.id == nitroManeuver.id })
+            {
+                navigationSession.updateEstimates(
+                    Parser.parseTravelEstiamtes(
+                        travelEstimates: nitroManeuver.travelEstimates
+                    ),
+                    for: maneuver
+                )
+                return
+            }
+            
+            let maneuver = Parser.parseManeuver(nitroManeuver: nitroManeuver)
+            upcomingManeuvers.append(maneuver)
+        }
+        
+        if #available(iOS 17.4, *) {
+            navigationSession.add(upcomingManeuvers)
+        }
+        
+        navigationSession.upcomingManeuvers = upcomingManeuvers
+    }
+
     func startNavigation(trip: CPTrip) {
         guard let template = self.template as? CPMapTemplate else { return }
-        
+
         let routeChoice = trip.routeChoices.first
-        
+
         if let travelEstimates = config.visibleTravelEstimate == .first
             ? routeChoice?.getTravelEstimates().first
             : routeChoice?.getTravelEstimates().last

@@ -60,6 +60,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `NitroManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
+// Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
+// Forward declaration of `ManeuverType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
+// Forward declaration of `TrafficSide` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
+// Forward declaration of `JunctionType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class JunctionType; }
+// Forward declaration of `LaneGuidance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `Lane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
+// Forward declaration of `LaneStatus` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
@@ -91,6 +109,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include "NitroManeuver.hpp"
+#include "AttributedInstructionVariant.hpp"
+#include "AttributedInstructionVariantImage.hpp"
+#include "ManeuverType.hpp"
+#include "TrafficSide.hpp"
+#include "JunctionType.hpp"
+#include "LaneGuidance.hpp"
+#include "Lane.hpp"
+#include "LaneStatus.hpp"
 #include "TripConfig.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
@@ -178,6 +205,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     inline void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) override {
       auto __result = _swiftPart.updateTravelEstimates(templateId, steps);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override {
+      auto __result = _swiftPart.updateManeuvers(templateId, maneuvers);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

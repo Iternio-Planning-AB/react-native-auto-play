@@ -63,3 +63,16 @@ extension CPTrip {
         return tripId
     }
 }
+
+extension CPManeuver {
+    var id: String? {
+        get {
+            return (self.userInfo as? [String: Any])?["id"] as? String
+        }
+        set {
+            var info = (self.userInfo as? [String: Any]) ?? [:]
+            info["id"] = newValue
+            self.userInfo = info
+        }
+    }
+}

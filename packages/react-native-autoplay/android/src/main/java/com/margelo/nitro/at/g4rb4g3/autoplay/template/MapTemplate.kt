@@ -8,12 +8,16 @@ import androidx.car.app.model.Alert
 import androidx.car.app.model.AlertCallback
 import androidx.car.app.model.CarColor
 import androidx.car.app.model.CarIcon
+import androidx.car.app.model.Distance
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.NavigationManager
 import androidx.car.app.navigation.NavigationManagerCallback
 import androidx.car.app.navigation.model.Destination
+import androidx.car.app.navigation.model.Maneuver
 import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
+import androidx.car.app.navigation.model.Step
+import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
@@ -23,6 +27,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroNavigationAlert
@@ -252,7 +257,8 @@ class MapTemplate(
 
         private var mapTemplate: MapTemplate? = null
         private lateinit var navigationManager: NavigationManager
-        private var destinationTravelEstimates = mutableMapOf<VisibleTravelEstimate, TravelEstimates>()
+        private var destinationTravelEstimates =
+            mutableMapOf<VisibleTravelEstimate, TravelEstimates>()
 
 
         private val navigationManagerCallback = object : NavigationManagerCallback {
@@ -268,11 +274,10 @@ class MapTemplate(
         fun updateTrip(steps: Array<TripPoint>) {
             val trip = Trip.Builder().apply {
                 steps.map { step ->
-                    val travelEstimate = Parser.parseTravelEstimates(step.travelEstimates)
                     addDestination(
                         Destination.Builder().apply {
                             setName(step.name)
-                        }.build(), travelEstimate
+                        }.build(), Parser.parseTravelEstimates(step.travelEstimates)
                     )
                 }
             }.build()
@@ -327,6 +332,66 @@ class MapTemplate(
             navigationInfo = null
 
             mapTemplate?.applyConfigUpdate()
+        }
+
+        fun updateManeuvers(maneuvers: Array<NitroManeuver>) {
+            val context = AndroidAutoSession.getRootContext()
+                ?: throw InvalidParameterException("updateManeuvers, could not get root car context")
+
+            val template = mapTemplate
+                ?: throw InvalidParameterException("updateManeuvers, could not get map template")
+
+            val current = maneuvers.getOrNull(0)
+            val next = maneuvers.getOrNull(1)
+
+            if (current == null) {
+                navigationInfo = null
+                mapTemplate?.applyConfigUpdate()
+                return
+            }
+
+            navigationInfo = RoutingInfo.Builder().apply {
+                setCurrentStep(
+                    // TODO: add image from attributedInstructionVariants to cue
+                    Step.Builder(Parser.parseText(current.attributedInstructionVariants.map { it.text }
+                        .toTypedArray())).apply {
+                        current.roadFollowingManeuverVariants?.let {
+                            setRoad(it.first())
+                        }
+                        setManeuver(Maneuver.Builder(Maneuver.TYPE_STRAIGHT).apply {
+                            setIcon(Parser.parseImage(context, current.symbolImage))
+                        }.build())
+                    }.build(), Parser.parseDistance(current.travelEstimates.distanceRemaining)
+                )
+                next?.let {
+                    setNextStep(
+                        // TODO: add image from attributedInstructionVariants to cue
+                        Step.Builder(Parser.parseText(it.attributedInstructionVariants.map { it.text }
+                            .toTypedArray())).apply {
+                            it.roadFollowingManeuverVariants?.let {
+                                setRoad(it.first())
+                            }
+                            setManeuver(Maneuver.Builder(Maneuver.TYPE_STRAIGHT).apply {
+                                setIcon(Parser.parseImage(context, it.symbolImage))
+                            }.build())
+                        }.build()
+                    )
+                }
+            }.build()
+
+            template.applyConfigUpdate()
+
+            UiThreadUtil.runOnUiThread {
+                navigationManager.updateTrip(Trip.Builder().apply {
+                    addStep(
+                        navigationInfo!!.currentStep!!,
+                        Parser.parseTravelEstimates(current.travelEstimates)
+                    )
+                    navigationInfo?.nextStep?.let {
+                        addStep(it, Parser.parseTravelEstimates(next!!.travelEstimates))
+                    }
+                }.build())
+            }
         }
     }
 }

@@ -86,6 +86,13 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
         MapTemplate.updateTravelEstimates(steps)
     }
 
+    override fun updateManeuvers(
+        templateId: String,
+        maneuvers: Array<NitroManeuver>
+    ) {
+        MapTemplate.updateManeuvers(maneuvers)
+    }
+
     override fun startNavigation(
         templateId: String,
         trip: TripConfig

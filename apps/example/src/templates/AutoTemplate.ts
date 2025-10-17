@@ -4,8 +4,11 @@ import {
   type BackButton,
   HybridAutoPlay,
   type ImageButton,
+  type Maneuvers,
+  ManeuverType,
   type MapTemplate,
   type MapTemplateConfig,
+  TrafficSide,
   type TripPoint,
   type VisibleTravelEstimate,
 } from '@g4rb4g3/react-native-autoplay';
@@ -84,7 +87,39 @@ const plusOne: ImageButton<MapTemplate> = {
   image: {
     name: 'add',
   },
-  onPress: (template) => estimatesUpdate(template, 'add'),
+  onPress: (template) => {
+    estimatesUpdate(template, 'add');
+    const maneuvers: Maneuvers = [
+      {
+        id: '#0',
+        attributedInstructionVariants: [{ text: 'Straight' }],
+        travelEstimates: {
+          distanceRemaining: { unit: 'meters', value: 500 },
+          timeRemaining: { seconds: 20, timezone: 'Europe/Berlin' },
+        },
+        symbolImage: {
+          name: 'straight',
+        },
+        maneuverType: ManeuverType.StraightAhead,
+        trafficSide: TrafficSide.Left,
+      },
+      {
+        id: '#1',
+        attributedInstructionVariants: [{ text: 'Left' }],
+        travelEstimates: {
+          distanceRemaining: { unit: 'meters', value: 1500 },
+          timeRemaining: { seconds: 40, timezone: 'Europe/Berlin' },
+        },
+        symbolImage: {
+          name: 'turn_left',
+        },
+        maneuverType: ManeuverType.LeftTurn,
+        trafficSide: TrafficSide.Left,
+      },
+    ];
+
+    template.updateManeuvers(maneuvers);
+  },
   type: 'image',
 };
 
@@ -92,7 +127,39 @@ const minusOne: ImageButton<MapTemplate> = {
   image: {
     name: 'remove',
   },
-  onPress: (template) => estimatesUpdate(template, 'remove'),
+  onPress: (template) => {
+    estimatesUpdate(template, 'remove');
+    const maneuvers: Maneuvers = [
+      {
+        id: '#3',
+        attributedInstructionVariants: [{ text: 'Right' }],
+        travelEstimates: {
+          distanceRemaining: { unit: 'meters', value: 500 },
+          timeRemaining: { seconds: 20, timezone: 'Europe/Berlin' },
+        },
+        symbolImage: {
+          name: 'turn_right',
+        },
+        maneuverType: ManeuverType.RightTurn,
+        trafficSide: TrafficSide.Left,
+      },
+      {
+        id: '#4',
+        attributedInstructionVariants: [{ text: '2nd exit' }],
+        travelEstimates: {
+          distanceRemaining: { unit: 'meters', value: 1500 },
+          timeRemaining: { seconds: 40, timezone: 'Europe/Berlin' },
+        },
+        symbolImage: {
+          name: 'roundabout_right',
+        },
+        maneuverType: ManeuverType.RoundaboutExit2,
+        trafficSide: TrafficSide.Left,
+      },
+    ];
+
+    template.updateManeuvers(maneuvers);
+  },
   type: 'image',
 };
 
