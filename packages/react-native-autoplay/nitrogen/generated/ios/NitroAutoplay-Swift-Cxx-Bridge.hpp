@@ -36,8 +36,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridList
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMapTemplateSpec; }
 // Forward declaration of `HybridHybridMessageTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMessageTemplateSpec; }
-// Forward declaration of `InformationItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct InformationItem; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -106,7 +104,6 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
-#include "InformationItem.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -942,17 +939,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridHybridMapTemplateSpec>
   using std__weak_ptr_HybridHybridMapTemplateSpec_ = std::weak_ptr<HybridHybridMapTemplateSpec>;
   inline std__weak_ptr_HybridHybridMapTemplateSpec_ weakify_std__shared_ptr_HybridHybridMapTemplateSpec_(const std::shared_ptr<HybridHybridMapTemplateSpec>& strong) noexcept { return strong; }
-  
-  // pragma MARK: std::vector<InformationItem>
-  /**
-   * Specialized version of `std::vector<InformationItem>`.
-   */
-  using std__vector_InformationItem_ = std::vector<InformationItem>;
-  inline std::vector<InformationItem> create_std__vector_InformationItem_(size_t size) noexcept {
-    std::vector<InformationItem> vector;
-    vector.reserve(size);
-    return vector;
-  }
   
   // pragma MARK: std::shared_ptr<HybridHybridMessageTemplateSpec>
   /**
