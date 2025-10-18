@@ -8,7 +8,6 @@ import androidx.car.app.model.Alert
 import androidx.car.app.model.AlertCallback
 import androidx.car.app.model.CarColor
 import androidx.car.app.model.CarIcon
-import androidx.car.app.model.Distance
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.NavigationManager
 import androidx.car.app.navigation.NavigationManagerCallback
@@ -17,7 +16,6 @@ import androidx.car.app.navigation.model.Maneuver
 import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
 import androidx.car.app.navigation.model.Step
-import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
