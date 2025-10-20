@@ -187,10 +187,18 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         }
     }
 
-    func popToTemplate(templateId: String) throws -> Promise<Void> {
+    func popToTemplate(templateId: String, animate: Bool?) throws -> Promise<Void> {
         return Promise.async {
             return try await RootModule.withInterfaceController {
                 interfaceController in
+                
+                let hasPresentedTemplate = await interfaceController.hasPresentedTemplate()
+                if (hasPresentedTemplate) {
+                    let presentedTemplateId = try await interfaceController.dismissTemplate(animated: animate ?? true)
+                    if (presentedTemplateId != nil) {
+                        HybridAutoPlay.removeListeners(templateId: presentedTemplateId!)
+                    }
+                }
 
                 let templateIds = try await interfaceController.popToTemplate(
                     templateId: templateId,

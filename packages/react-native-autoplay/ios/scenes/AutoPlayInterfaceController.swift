@@ -47,6 +47,10 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     var rootTemplateId: String? {
         return interfaceController.rootTemplate.getTemplateId()
     }
+    
+    func hasPresentedTemplate() -> Bool {
+        return interfaceController.presentedTemplate != nil
+    }
 
     func pushTemplate(
         _ templateToPush: CPTemplate,
@@ -148,15 +152,18 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     func dismissTemplate(
         animated: Bool
     ) async throws -> String? {
-        guard let templateId = topTemplateId else { return nil }
-
+        let templateId = interfaceController.presentedTemplate?.getTemplateId()
+        
         try await interfaceController.dismissTemplate(
             animated: animated
         )
-
-        templateStore.removeTemplate(templateId: templateId)
-
-        return templateId
+        
+        if (templateId != nil) {
+            self.templateStore.removeTemplate(templateId: templateId!)
+            return templateId
+        }
+        
+        return nil
     }
 
     // MARK: CPInterfaceControllerDelegate

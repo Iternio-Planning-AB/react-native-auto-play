@@ -65,7 +65,7 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   /**
    * removes all templates until the specified one is the top template
    */
-  popToTemplate(templateId: string): Promise<void>;
+  popToTemplate(templateId: string, animate?: boolean): Promise<void>;
 
   /**
    * callback for safe area insets changes
