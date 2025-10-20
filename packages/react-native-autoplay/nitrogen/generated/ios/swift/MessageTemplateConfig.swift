@@ -18,7 +18,7 @@ public extension MessageTemplateConfig {
   /**
    * Create a new instance of `MessageTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, headerActions: [NitroAction]?, title: AutoText?, message: AutoText, actions: [NitroAction]?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, headerActions: [NitroAction]?, title: AutoText?, message: AutoText, actions: [NitroAction]?, image: NitroImage?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -91,6 +91,12 @@ public extension MessageTemplateConfig {
           }
           return __vector
         }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_NitroImage_ in
+      if let __unwrappedValue = image {
+        return bridge.create_std__optional_NitroImage_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -373,6 +379,23 @@ public extension MessageTemplateConfig {
             }
             return __vector
           }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var image: NitroImage? {
+    @inline(__always)
+    get {
+      return self.__image.value
+    }
+    @inline(__always)
+    set {
+      self.__image = { () -> bridge.std__optional_NitroImage_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_NitroImage_(__unwrappedValue)
         } else {
           return .init()
         }

@@ -72,6 +72,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> message = this->getFieldValue(fieldMessage);
       static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
+      static const auto fieldImage = clazz->getField<JNitroImage>("image");
+      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
       return MessageTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -150,7 +152,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt
+        }()) : std::nullopt,
+        image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt
       );
     }
 
@@ -186,7 +189,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             __array->setElement(__i, *JNitroAction::fromCpp(__element));
           }
           return __array;
-        }() : nullptr
+        }() : nullptr,
+        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr
       );
     }
   };
