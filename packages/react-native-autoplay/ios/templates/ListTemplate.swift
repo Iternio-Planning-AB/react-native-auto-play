@@ -47,7 +47,7 @@ class ListTemplate: AutoPlayTemplate {
     }
 
     override func onDidAppear(animted: Bool) {
-        config.onDidDisappear?(animted)
+        config.onDidAppear?(animted)
     }
 
     override func onWillDisappear(animted: Bool) {
