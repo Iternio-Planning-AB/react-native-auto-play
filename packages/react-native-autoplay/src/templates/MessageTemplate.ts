@@ -23,6 +23,10 @@ export type MessageTemplateConfig = Omit<NitroMessageTemplateConfig, 'headerActi
    * @namespace android
    */
   headerActions?: HeaderActions<MessageTemplate>;
+  /**
+   * image shown at the top of the message on Android
+   * @namespace android
+   */
   image?: AutoImage;
 };
 
