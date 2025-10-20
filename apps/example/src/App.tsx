@@ -1,7 +1,10 @@
 import { type CleanupCallback, HybridAutoPlay } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
+import { Button, StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { AutoTrip } from './config/AutoTrip';
+import { actionStartNavigation, actionStopNavigation } from './state/navigationSlice';
+import { useAppDispatch, useAppSelector } from './state/store';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -15,6 +18,11 @@ function App() {
 }
 
 function AppContent() {
+  const dispatch = useAppDispatch();
+
+  const isNavigating = useAppSelector((state) => state.navigation.isNavigating);
+  const selectedTrip = useAppSelector((state) => state.navigation.selectedTrip);
+
   const [isConnected, setIsConnected] = useState(false);
   const [isRootVisible, setIsRootVisible] = useState(false);
 
@@ -40,6 +48,28 @@ function AppContent() {
     <SafeAreaView style={styles.container}>
       <Text>AutoPlay connected: {String(isConnected)}</Text>
       <Text>Head unit root visible: {String(isRootVisible)}</Text>
+      <Text>isNavigating: {String(isNavigating)}</Text>
+      <Text>selectedTrip: {JSON.stringify(selectedTrip)}</Text>
+      {isNavigating ? (
+        <Button
+          title="stop navigation"
+          onPress={() => {
+            dispatch(actionStopNavigation());
+          }}
+        />
+      ) : (
+        <Button
+          title="start navigation"
+          onPress={() => {
+            dispatch(
+              actionStartNavigation({
+                tripId: AutoTrip[0].id,
+                routeId: AutoTrip[0].routeChoices[0].id,
+              })
+            );
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }

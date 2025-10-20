@@ -305,8 +305,6 @@ class MapTemplate(
 
                 updateTrip(steps)
             }
-
-            updateTrip(steps)
         }
 
         fun updateTravelEstimates(steps: Array<TripPoint>) {
