@@ -150,39 +150,6 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func createAlertTemplate(config: AlertTemplateConfig) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.createAlertTemplate(config: config)
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func presentTemplate(templateId: std.string) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.presentTemplate(templateId: String(templateId))
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func dismissTemplate(templateId: std.string) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.dismissTemplate(templateId: String(templateId))
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))

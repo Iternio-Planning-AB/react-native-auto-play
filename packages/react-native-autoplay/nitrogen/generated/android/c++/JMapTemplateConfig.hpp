@@ -10,7 +10,9 @@
 #include <fbjni/fbjni.h>
 #include "MapTemplateConfig.hpp"
 
+#include "AlertActionStyle.hpp"
 #include "ColorScheme.hpp"
+#include "JAlertActionStyle.hpp"
 #include "JColorScheme.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_ColorScheme.hpp"

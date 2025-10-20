@@ -33,14 +33,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
-  Func_void_std__optional_bool_ create_Func_void_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroAutoplay::Func_void_std__optional_bool_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](std::optional<bool> animated) mutable -> void {
-      swiftClosure.call(animated);
-    };
-  }
-  
   // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = NitroAutoplay::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
@@ -71,6 +63,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     #endif
     NitroAutoplay::HybridHybridAutoPlaySpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
+  Func_void_std__optional_bool_ create_Func_void_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__optional_bool_::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](std::optional<bool> animated) mutable -> void {
+      swiftClosure.call(animated);
+    };
   }
   
   // pragma MARK: std::shared_ptr<HybridHybridGridTemplateSpec>

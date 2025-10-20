@@ -16,12 +16,6 @@ namespace NitroAutoplay { class HybridHybridAutoPlaySpec_cxx; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
-// Forward declaration of `AlertTemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertTemplateConfig; }
-// Forward declaration of `AlertAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertAction; }
-// Forward declaration of `AlertStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertStyle; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -32,22 +26,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 
 #include <functional>
 #include "EventName.hpp"
 #include <string>
 #include "VisibilityState.hpp"
-#include "AlertTemplateConfig.hpp"
-#include <vector>
-#include "AlertAction.hpp"
-#include <optional>
-#include "AlertStyle.hpp"
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
+#include <optional>
 #include "NitroAction.hpp"
+#include <vector>
 #include "NitroImage.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -105,24 +99,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       auto __value = std::move(__result.value());
       return __value;
-    }
-    inline void createAlertTemplate(const AlertTemplateConfig& config) override {
-      auto __result = _swiftPart.createAlertTemplate(std::forward<decltype(config)>(config));
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
-    inline void presentTemplate(const std::string& templateId) override {
-      auto __result = _swiftPart.presentTemplate(templateId);
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
-    inline void dismissTemplate(const std::string& templateId) override {
-      auto __result = _swiftPart.dismissTemplate(templateId);
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
     }
     inline std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) override {
       auto __result = _swiftPart.setRootTemplate(templateId);

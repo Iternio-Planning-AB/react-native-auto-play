@@ -10,9 +10,11 @@
 #include <fbjni/fbjni.h>
 #include "MessageTemplateConfig.hpp"
 
+#include "AlertActionStyle.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "JAlertActionStyle.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
@@ -68,6 +70,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> title = this->getFieldValue(fieldTitle);
       static const auto fieldMessage = clazz->getField<JAutoText>("message");
       jni::local_ref<JAutoText> message = this->getFieldValue(fieldMessage);
+      static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
+      jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
       return MessageTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -136,7 +140,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           return __vector;
         }()) : std::nullopt,
         title != nullptr ? std::make_optional(title->toCpp()) : std::nullopt,
-        message->toCpp()
+        message->toCpp(),
+        actions != nullptr ? std::make_optional([&]() {
+          size_t __size = actions->size();
+          std::vector<NitroAction> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = actions->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }()) : std::nullopt
       );
     }
 
@@ -163,7 +177,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           return __array;
         }() : nullptr,
         value.title.has_value() ? JAutoText::fromCpp(value.title.value()) : nullptr,
-        JAutoText::fromCpp(value.message)
+        JAutoText::fromCpp(value.message),
+        value.actions.has_value() ? [&]() {
+          size_t __size = value.actions.value().size();
+          jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = value.actions.value()[__i];
+            __array->setElement(__i, *JNitroAction::fromCpp(__element));
+          }
+          return __array;
+        }() : nullptr
       );
     }
   };

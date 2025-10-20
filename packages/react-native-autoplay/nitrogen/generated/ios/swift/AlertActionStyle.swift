@@ -21,6 +21,8 @@ public extension AlertActionStyle {
         self = .default
       case "destructive":
         self = .destructive
+      case "cancel":
+        self = .cancel
       default:
         return nil
     }
@@ -35,6 +37,8 @@ public extension AlertActionStyle {
         return "default"
       case .destructive:
         return "destructive"
+      case .cancel:
+        return "cancel"
     }
   }
 }

@@ -10,12 +10,8 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `AlertActionStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
-// Forward declaration of `AlertAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertAction; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
-// Forward declaration of `AlertStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertStyle; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -90,10 +86,8 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 
 // Include C++ defined types
-#include "AlertAction.hpp"
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
-#include "AlertStyle.hpp"
 #include "AutoText.hpp"
 #include "ColorScheme.hpp"
 #include "Distance.hpp"
@@ -185,125 +179,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Func_void_VisibilityState_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::vector<std::string>
-  /**
-   * Specialized version of `std::vector<std::string>`.
-   */
-  using std__vector_std__string_ = std::vector<std::string>;
-  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
-    std::vector<std::string> vector;
-    vector.reserve(size);
-    return vector;
-  }
-  
-  // pragma MARK: std::optional<AlertStyle>
-  /**
-   * Specialized version of `std::optional<AlertStyle>`.
-   */
-  using std__optional_AlertStyle_ = std::optional<AlertStyle>;
-  inline std::optional<AlertStyle> create_std__optional_AlertStyle_(const AlertStyle& value) noexcept {
-    return std::optional<AlertStyle>(value);
-  }
-  inline bool has_value_std__optional_AlertStyle_(const std::optional<AlertStyle>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline AlertStyle get_std__optional_AlertStyle_(const std::optional<AlertStyle>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::vector<AlertAction>
-  /**
-   * Specialized version of `std::vector<AlertAction>`.
-   */
-  using std__vector_AlertAction_ = std::vector<AlertAction>;
-  inline std::vector<AlertAction> create_std__vector_AlertAction_(size_t size) noexcept {
-    std::vector<AlertAction> vector;
-    vector.reserve(size);
-    return vector;
-  }
-  
-  // pragma MARK: std::optional<std::vector<AlertAction>>
-  /**
-   * Specialized version of `std::optional<std::vector<AlertAction>>`.
-   */
-  using std__optional_std__vector_AlertAction__ = std::optional<std::vector<AlertAction>>;
-  inline std::optional<std::vector<AlertAction>> create_std__optional_std__vector_AlertAction__(const std::vector<AlertAction>& value) noexcept {
-    return std::optional<std::vector<AlertAction>>(value);
-  }
-  inline bool has_value_std__optional_std__vector_AlertAction__(const std::optional<std::vector<AlertAction>>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::vector<AlertAction> get_std__optional_std__vector_AlertAction__(const std::optional<std::vector<AlertAction>>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<bool>
-  /**
-   * Specialized version of `std::optional<bool>`.
-   */
-  using std__optional_bool_ = std::optional<bool>;
-  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
-    return std::optional<bool>(value);
-  }
-  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
-  /**
-   * Specialized version of `std::function<void(std::optional<bool>)>`.
-   */
-  using Func_void_std__optional_bool_ = std::function<void(std::optional<bool> /* animated */)>;
-  /**
-   * Wrapper class for a `std::function<void(std::optional<bool> / * animated * /)>`, this can be used from Swift.
-   */
-  class Func_void_std__optional_bool__Wrapper final {
-  public:
-    explicit Func_void_std__optional_bool__Wrapper(std::function<void(std::optional<bool> /* animated */)>&& func): _function(std::make_unique<std::function<void(std::optional<bool> /* animated */)>>(std::move(func))) {}
-    inline void call(std::optional<bool> animated) const noexcept {
-      _function->operator()(animated);
-    }
-  private:
-    std::unique_ptr<std::function<void(std::optional<bool> /* animated */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_std__optional_bool_ create_Func_void_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__optional_bool__Wrapper wrap_Func_void_std__optional_bool_(Func_void_std__optional_bool_ value) noexcept {
-    return Func_void_std__optional_bool__Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::optional<std::function<void(std::optional<bool> /* animated */)>>
-  /**
-   * Specialized version of `std::optional<std::function<void(std::optional<bool> / * animated * /)>>`.
-   */
-  using std__optional_std__function_void_std__optional_bool_____animated______ = std::optional<std::function<void(std::optional<bool> /* animated */)>>;
-  inline std::optional<std::function<void(std::optional<bool> /* animated */)>> create_std__optional_std__function_void_std__optional_bool_____animated______(const std::function<void(std::optional<bool> /* animated */)>& value) noexcept {
-    return std::optional<std::function<void(std::optional<bool> /* animated */)>>(value);
-  }
-  inline bool has_value_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::function<void(std::optional<bool> /* animated */)> get_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<std::function<void()>>
-  /**
-   * Specialized version of `std::optional<std::function<void()>>`.
-   */
-  using std__optional_std__function_void____ = std::optional<std::function<void()>>;
-  inline std::optional<std::function<void()>> create_std__optional_std__function_void____(const std::function<void()>& value) noexcept {
-    return std::optional<std::function<void()>>(value);
-  }
-  inline bool has_value_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
-    return *optional;
-  }
-  
   // pragma MARK: std::shared_ptr<Promise<void>>
   /**
    * Specialized version of `std::shared_ptr<Promise<void>>`.
@@ -336,6 +211,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<bool>
+  /**
+   * Specialized version of `std::optional<bool>`.
+   */
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
+  }
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return *optional;
   }
   
   // pragma MARK: std::function<void(const SafeAreaInsets& /* insets */)>
@@ -420,6 +310,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
+  // pragma MARK: std::optional<AlertActionStyle>
+  /**
+   * Specialized version of `std::optional<AlertActionStyle>`.
+   */
+  using std__optional_AlertActionStyle_ = std::optional<AlertActionStyle>;
+  inline std::optional<AlertActionStyle> create_std__optional_AlertActionStyle_(const AlertActionStyle& value) noexcept {
+    return std::optional<AlertActionStyle>(value);
+  }
+  inline bool has_value_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline AlertActionStyle get_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
+    return *optional;
+  }
+  
   // pragma MARK: std::vector<NitroAction>
   /**
    * Specialized version of `std::vector<NitroAction>`.
@@ -467,6 +372,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Result<std::function<void()>>::withError(error);
   }
   
+  // pragma MARK: Result<std::shared_ptr<Promise<void>>>
+  using Result_std__shared_ptr_Promise_void___ = Result<std::shared_ptr<Promise<void>>>;
+  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::shared_ptr<Promise<void>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<void>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<void>>>::withError(error);
+  }
+  
   // pragma MARK: Result<void>
   using Result_void_ = Result<void>;
   inline Result_void_ create_Result_void_() noexcept {
@@ -476,13 +390,56 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Result<void>::withError(error);
   }
   
-  // pragma MARK: Result<std::shared_ptr<Promise<void>>>
-  using Result_std__shared_ptr_Promise_void___ = Result<std::shared_ptr<Promise<void>>>;
-  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::shared_ptr<Promise<void>>& value) noexcept {
-    return Result<std::shared_ptr<Promise<void>>>::withValue(value);
+  // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
+  /**
+   * Specialized version of `std::function<void(std::optional<bool>)>`.
+   */
+  using Func_void_std__optional_bool_ = std::function<void(std::optional<bool> /* animated */)>;
+  /**
+   * Wrapper class for a `std::function<void(std::optional<bool> / * animated * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__optional_bool__Wrapper final {
+  public:
+    explicit Func_void_std__optional_bool__Wrapper(std::function<void(std::optional<bool> /* animated */)>&& func): _function(std::make_unique<std::function<void(std::optional<bool> /* animated */)>>(std::move(func))) {}
+    inline void call(std::optional<bool> animated) const noexcept {
+      _function->operator()(animated);
+    }
+  private:
+    std::unique_ptr<std::function<void(std::optional<bool> /* animated */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__optional_bool_ create_Func_void_std__optional_bool_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__optional_bool__Wrapper wrap_Func_void_std__optional_bool_(Func_void_std__optional_bool_ value) noexcept {
+    return Func_void_std__optional_bool__Wrapper(std::move(value));
   }
-  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::exception_ptr& error) noexcept {
-    return Result<std::shared_ptr<Promise<void>>>::withError(error);
+  
+  // pragma MARK: std::optional<std::function<void(std::optional<bool> /* animated */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(std::optional<bool> / * animated * /)>>`.
+   */
+  using std__optional_std__function_void_std__optional_bool_____animated______ = std::optional<std::function<void(std::optional<bool> /* animated */)>>;
+  inline std::optional<std::function<void(std::optional<bool> /* animated */)>> create_std__optional_std__function_void_std__optional_bool_____animated______(const std::function<void(std::optional<bool> /* animated */)>& value) noexcept {
+    return std::optional<std::function<void(std::optional<bool> /* animated */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(std::optional<bool> /* animated */)> get_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<std::function<void()>>
+  /**
+   * Specialized version of `std::optional<std::function<void()>>`.
+   */
+  using std__optional_std__function_void____ = std::optional<std::function<void()>>;
+  inline std::optional<std::function<void()>> create_std__optional_std__function_void____(const std::function<void()>& value) noexcept {
+    return std::optional<std::function<void()>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
+    return *optional;
   }
   
   // pragma MARK: std::optional<Distance>
@@ -806,21 +763,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::optional<AlertActionStyle>
-  /**
-   * Specialized version of `std::optional<AlertActionStyle>`.
-   */
-  using std__optional_AlertActionStyle_ = std::optional<AlertActionStyle>;
-  inline std::optional<AlertActionStyle> create_std__optional_AlertActionStyle_(const AlertActionStyle& value) noexcept {
-    return std::optional<AlertActionStyle>(value);
-  }
-  inline bool has_value_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline AlertActionStyle get_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
-    return *optional;
-  }
-  
   // pragma MARK: std::optional<NavigationAlertAction>
   /**
    * Specialized version of `std::optional<NavigationAlertAction>`.
@@ -871,6 +813,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   }
   inline std::function<void(AlertDismissalReason /* reason */)> get_std__optional_std__function_void_AlertDismissalReason____reason______(const std::optional<std::function<void(AlertDismissalReason /* reason */)>>& optional) noexcept {
     return *optional;
+  }
+  
+  // pragma MARK: std::vector<std::string>
+  /**
+   * Specialized version of `std::vector<std::string>`.
+   */
+  using std__vector_std__string_ = std::vector<std::string>;
+  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
+    std::vector<std::string> vector;
+    vector.reserve(size);
+    return vector;
   }
   
   // pragma MARK: std::vector<TripPoint>

@@ -11,12 +11,6 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
-// Forward declaration of `AlertTemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertTemplateConfig; }
-// Forward declaration of `AlertAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertAction; }
-// Forward declaration of `AlertStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertStyle; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -27,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -38,19 +34,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignm
 #include "VisibilityState.hpp"
 #include "JFunc_void_VisibilityState.hpp"
 #include "JVisibilityState.hpp"
-#include "AlertTemplateConfig.hpp"
-#include "JAlertTemplateConfig.hpp"
-#include <vector>
-#include "AlertAction.hpp"
-#include <optional>
-#include "JAlertAction.hpp"
-#include "AlertStyle.hpp"
-#include "JAlertStyle.hpp"
-#include "JFunc_void_std__optional_bool_.hpp"
 #include "SafeAreaInsets.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JSafeAreaInsets.hpp"
+#include <optional>
 #include "NitroAction.hpp"
+#include <vector>
 #include "JNitroAction.hpp"
 #include "NitroImage.hpp"
 #include "JNitroImage.hpp"
@@ -58,6 +47,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignm
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "JNitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
+#include "JAlertActionStyle.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -114,18 +105,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         };
       }
     }();
-  }
-  void JHybridHybridAutoPlaySpec::createAlertTemplate(const AlertTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JAlertTemplateConfig> /* config */)>("createAlertTemplate");
-    method(_javaPart, JAlertTemplateConfig::fromCpp(config));
-  }
-  void JHybridHybridAutoPlaySpec::presentTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("presentTemplate");
-    method(_javaPart, jni::make_jstring(templateId));
-  }
-  void JHybridHybridAutoPlaySpec::dismissTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("dismissTemplate");
-    method(_javaPart, jni::make_jstring(templateId));
   }
   std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");

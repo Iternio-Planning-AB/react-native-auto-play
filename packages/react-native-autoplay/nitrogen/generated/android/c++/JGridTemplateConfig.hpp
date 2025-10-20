@@ -10,9 +10,11 @@
 #include <fbjni/fbjni.h>
 #include "GridTemplateConfig.hpp"
 
+#include "AlertActionStyle.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "JAlertActionStyle.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"

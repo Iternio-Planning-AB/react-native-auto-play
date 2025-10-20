@@ -21,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
@@ -39,8 +41,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUnits; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
-// Forward declaration of `AlertActionStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
 // Forward declaration of `TripsConfig` to properly resolve imports.
@@ -78,6 +78,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "JNitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
+#include "JAlertActionStyle.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include "VisibleTravelEstimate.hpp"
@@ -100,8 +102,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JDistanceUnits.hpp"
 #include "NavigationAlertAction.hpp"
 #include "JNavigationAlertAction.hpp"
-#include "AlertActionStyle.hpp"
-#include "JAlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JAlertDismissalReason.hpp"

@@ -10,6 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "NitroAction.hpp"
 
+#include "AlertActionStyle.hpp"
+#include "JAlertActionStyle.hpp"
 #include "JFunc_void.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
@@ -54,6 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JNitroAlignment> alignment = this->getFieldValue(fieldAlignment);
       static const auto fieldFlags = clazz->getField<jni::JDouble>("flags");
       jni::local_ref<jni::JDouble> flags = this->getFieldValue(fieldFlags);
+      static const auto fieldStyle = clazz->getField<JAlertActionStyle>("style");
+      jni::local_ref<JAlertActionStyle> style = this->getFieldValue(fieldStyle);
       return NitroAction(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
         image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
@@ -71,7 +75,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         }(),
         type->toCpp(),
         alignment != nullptr ? std::make_optional(alignment->toCpp()) : std::nullopt,
-        flags != nullptr ? std::make_optional(flags->value()) : std::nullopt
+        flags != nullptr ? std::make_optional(flags->value()) : std::nullopt,
+        style != nullptr ? std::make_optional(style->toCpp()) : std::nullopt
       );
     }
 
@@ -88,7 +93,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         JFunc_void_cxx::fromCpp(value.onPress),
         JNitroActionType::fromCpp(value.type),
         value.alignment.has_value() ? JNitroAlignment::fromCpp(value.alignment.value()) : nullptr,
-        value.flags.has_value() ? jni::JDouble::valueOf(value.flags.value()) : nullptr
+        value.flags.has_value() ? jni::JDouble::valueOf(value.flags.value()) : nullptr,
+        value.style.has_value() ? JAlertActionStyle::fromCpp(value.style.value()) : nullptr
       );
     }
   };

@@ -16,9 +16,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("addListener", &HybridHybridAutoPlaySpec::addListener);
       prototype.registerHybridMethod("addListenerRenderState", &HybridHybridAutoPlaySpec::addListenerRenderState);
-      prototype.registerHybridMethod("createAlertTemplate", &HybridHybridAutoPlaySpec::createAlertTemplate);
-      prototype.registerHybridMethod("presentTemplate", &HybridHybridAutoPlaySpec::presentTemplate);
-      prototype.registerHybridMethod("dismissTemplate", &HybridHybridAutoPlaySpec::dismissTemplate);
       prototype.registerHybridMethod("setRootTemplate", &HybridHybridAutoPlaySpec::setRootTemplate);
       prototype.registerHybridMethod("pushTemplate", &HybridHybridAutoPlaySpec::pushTemplate);
       prototype.registerHybridMethod("popTemplate", &HybridHybridAutoPlaySpec::popTemplate);
