@@ -73,17 +73,12 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         template.setTemplateHeaderActions(headerActions)
     }
 
-
-    override fun createAlertTemplate(config: AlertTemplateConfig) {
-        // TODO
+    override fun dismissTemplate(): Promise<Unit> {
+        TODO("Not yet implemented")
     }
 
-    override fun presentTemplate(templateId: String) {
-        // TODO
-    }
-
-    override fun dismissTemplate(templateId: String) {
-        // TODO
+    override fun presentTemplate(templateId: String): Promise<Unit> {
+        TODO("Not yet implemented")
     }
 
     override fun setRootTemplate(templateId: String): Promise<Unit> {

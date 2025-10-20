@@ -77,16 +77,31 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         }
     }
 
-    func createAlertTemplate(config: AlertTemplateConfig) throws {
-        //TODO
+    func presentTemplate(templateId: String) throws
+        -> NitroModules.Promise<Void>
+    {
+        return Promise.async {
+            return try await RootModule.withTemplateAndInterfaceController(
+                templateId: templateId
+            ) { template, interfaceController in
+                let _ = try await interfaceController.presentTemplate(
+                    template,
+                    animated: true
+                )
+            }
+        }
     }
-
-    func presentTemplate(templateId: String) throws {
-        //TODO
-    }
-
-    func dismissTemplate(templateId: String) throws {
-        //TODO
+    
+    func dismissTemplate() throws
+        -> NitroModules.Promise<Void>
+    {
+        return Promise.async {
+            return try await RootModule.withInterfaceController() { interfaceController in
+                let _ = try await interfaceController.dismissTemplate(
+                    animated: true
+                )
+            }
+        }
     }
 
     // MARK: set/push/pop templates

@@ -18,6 +18,23 @@ struct HeaderActions {
 class Parser {
     static let PLACEHOLDER_DISTANCE = "{distance}"
     static let PLACEHOLDER_DURATION = "{duration}"
+    
+    static func parseAlertActions(alertActions: [NitroAction]?) -> [CPAlertAction] {
+        var actions: [CPAlertAction] = []
+
+        if let alertActions = alertActions {
+            alertActions.forEach { alertAction in
+                let action = CPAlertAction(title: alertAction.title!, style: parseActionAlertStyle(style: alertAction.style), handler: { actionHandler in
+                    alertAction.onPress()
+                })
+
+                // for whatever reason CarPlay decieds to reverse the order to what we get from js side so we can not append here
+                actions.append(action)
+            }
+        }
+
+        return actions
+    }
 
     static func parseHeaderActions(headerActions: [NitroAction]?) -> HeaderActions {
         var leadingNavigationBarButtons: [CPBarButton] = []
@@ -204,6 +221,8 @@ class Parser {
             return CPAlertAction.Style.default
         case .destructive:
             return CPAlertAction.Style.destructive
+        case .cancel:
+            return CPAlertAction.Style.cancel
         }
     }
 

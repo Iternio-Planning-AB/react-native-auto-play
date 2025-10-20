@@ -8,6 +8,7 @@ import type {
   TextAndImageButton,
   TextButton,
 } from '../types/Button';
+import type { AlertActionStyle } from './NitroAlert';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
 type NitroActionType = 'appIcon' | 'back' | 'custom';
@@ -24,6 +25,13 @@ export type NitroAction = {
   type: NitroActionType;
   alignment?: NitroAlignment;
   flags?: number;
+  /**
+   * Only used for non header actions
+   * @namespace iOS
+   * @default default
+   */
+  // REVISIT: check if we can re-use the flags?
+  style?: AlertActionStyle;
 };
 
 const getImage = <T>(

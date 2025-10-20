@@ -1,5 +1,4 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { AlertTemplateConfig } from '../templates/AlertTemplate';
 import type { TemplateConfig } from '../templates/Template';
 import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
 import type { NitroAction } from '../utils/NitroAction';
@@ -29,17 +28,13 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   ): CleanupCallback;
 
   /**
-   * @namespace iOS // add similar thing for Android, probably a MessageTemplate then?
+   * @namespace iOS
    */
-  createAlertTemplate(config: AlertTemplateConfig): void;
+  presentTemplate(templateId: string): Promise<void>;
   /**
    * @namespace iOS
    */
-  presentTemplate(templateId: string): void;
-  /**
-   * @namespace iOS
-   */
-  dismissTemplate(templateId: string): void;
+  dismissTemplate(): Promise<void>;
 
   /**
    * sets the specified template as root template, initializes a new stack

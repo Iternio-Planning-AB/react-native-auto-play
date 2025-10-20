@@ -1,8 +1,8 @@
 //
-//  ListTemplate.swift
+//  MessageTemplate.swift
 //  Pods
 //
-//  Created by Manuel Auer on 08.10.25.
+//  Created by Samuel Brucksch on 17.10.25.
 //
 
 import CarPlay
@@ -12,13 +12,8 @@ class MessageTemplate: AutoPlayTemplate {
 
     init(config: MessageTemplateConfig) {
         self.config = config
-        
-        let template = CPInformationTemplate(
-            title: Parser.parseText(text: config.title) ?? "",
-            layout: .leading,
-            items: [],
-            actions: []
-        )
+                        
+        let template = CPAlertTemplate(titleVariants: [Parser.parseText(text: config.message)!], actions: Parser.parseAlertActions(alertActions: config.actions))
 
         super.init(
             templateId: config.id,
