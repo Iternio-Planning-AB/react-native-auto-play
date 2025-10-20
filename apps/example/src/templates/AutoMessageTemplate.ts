@@ -6,6 +6,7 @@ const getTemplate = (showHeaderActions = true): MessageTemplate => {
   return new MessageTemplate({
     title: { text: 'message' },
     message: { text: 'message' },
+    image: { name: 'info', size: 56 },
     actions: [
       {
         type: 'custom',

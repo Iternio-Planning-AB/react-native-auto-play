@@ -26,6 +26,10 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
                     addAction(Parser.parseAction(context, action))
                 }
             }
+
+            config.image?.let { image ->
+                setIcon(Parser.parseImage(context, image))
+            }
         }.build()
     }
 
