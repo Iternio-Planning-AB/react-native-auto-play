@@ -140,7 +140,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popTemplate(): Promise<Unit> {
+    override fun popTemplate(animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("popTemplate failed, screenManager not found")
@@ -158,7 +158,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popToRootTemplate(): Promise<Unit> {
+    override fun popToRootTemplate(animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("popToRootTemplate failed, screenManager not found")
@@ -176,7 +176,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popToTemplate(templateId: String): Promise<Unit> {
+    override fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")

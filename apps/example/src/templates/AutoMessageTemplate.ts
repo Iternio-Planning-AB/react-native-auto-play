@@ -2,7 +2,7 @@ import { HybridAutoPlay } from '@g4rb4g3/react-native-autoplay';
 import { MessageTemplate } from '@g4rb4g3/react-native-autoplay/lib/templates/MessageTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
-const getTemplate = (): MessageTemplate => {
+const getTemplate = (showHeaderActions = true): MessageTemplate => {
   return new MessageTemplate({
     title: { text: 'message' },
     message: { text: 'message' },
@@ -26,7 +26,7 @@ const getTemplate = (): MessageTemplate => {
         },
       },
     ],
-    headerActions: AutoTemplate.headerActions,
+    headerActions: showHeaderActions ? AutoTemplate.headerActions : undefined,
     onWillAppear: () => console.log('MessageTemplate onWillAppear'),
     onDidAppear: () => console.log('MessageTemplate onDidAppear'),
     onWillDisappear: () => console.log('MessageTemplate onWillDisappear'),

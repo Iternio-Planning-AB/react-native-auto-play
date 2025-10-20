@@ -20,6 +20,12 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
             config.title?.let { title ->
                 setHeader(Parser.parseHeader(context, title, config.headerActions))
             }
+
+            config.actions?.let { actions ->
+                actions.forEach { action ->
+                    addAction(Parser.parseAction(context, action))
+                }
+            }
         }.build()
     }
 
