@@ -196,9 +196,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("popToTemplate");
-    auto __result = method(_javaPart, jni::make_jstring(templateId));
+  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToTemplate(const std::string& templateId, std::optional<bool> animate) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JBoolean> /* animate */)>("popToTemplate");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {

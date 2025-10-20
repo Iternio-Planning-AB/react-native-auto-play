@@ -148,8 +148,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId) override {
-      auto __result = _swiftPart.popToTemplate(templateId);
+    inline std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) override {
+      auto __result = _swiftPart.popToTemplate(templateId, animate);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
