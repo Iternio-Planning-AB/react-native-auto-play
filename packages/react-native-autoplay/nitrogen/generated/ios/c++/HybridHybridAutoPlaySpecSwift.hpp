@@ -108,8 +108,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<void>> dismissTemplate(const std::string& templateId) override {
-      auto __result = _swiftPart.dismissTemplate(templateId);
+    inline std::shared_ptr<Promise<void>> dismissTemplate() override {
+      auto __result = _swiftPart.dismissTemplate();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

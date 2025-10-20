@@ -64,7 +64,7 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun dismissTemplate(templateId: String): Promise<Unit>
+  abstract fun dismissTemplate(): Promise<Unit>
   
   @DoNotStrip
   @Keep

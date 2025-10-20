@@ -169,9 +169,9 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func dismissTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
+  public final func dismissTemplate() -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      let __result = try self.__implementation.dismissTemplate(templateId: String(templateId))
+      let __result = try self.__implementation.dismissTemplate()
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
