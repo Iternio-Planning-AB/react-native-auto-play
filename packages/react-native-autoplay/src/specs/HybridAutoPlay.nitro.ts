@@ -28,17 +28,6 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   ): CleanupCallback;
 
   /**
-   * @namespace iOS
-   */
-  presentTemplate(templateId: string): Promise<void>;
-
-  /**
-   * @namespace ios
-   * @param animate - defaults to true
-   */
-  dismissTemplate(animate?: boolean): Promise<void>;
-
-  /**
    * sets the specified template as root template, initializes a new stack
    * Promise might contain an error message in case setting root template failed
    * can be used on any Android screen/iOS scene

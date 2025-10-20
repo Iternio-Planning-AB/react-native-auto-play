@@ -1,5 +1,4 @@
-import { Platform } from 'react-native';
-import { HybridAutoPlay, HybridMessageTemplate } from '..';
+import { HybridMessageTemplate } from '..';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type Actions, type NitroTemplateConfig, Template, type TemplateConfig } from './Template';
@@ -45,11 +44,6 @@ export class MessageTemplate extends Template<MessageTemplateConfig, Actions<Mes
   }
 
   public push(): Promise<void> {
-    if (Platform.OS === 'ios') {
-      // on iOS a CPMessageTemplate needs to be presented instead of pushed.
-      return HybridAutoPlay.presentTemplate(this.id);
-    }
-
     return super.push();
   }
 }

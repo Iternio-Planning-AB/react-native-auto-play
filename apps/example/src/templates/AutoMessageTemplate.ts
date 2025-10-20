@@ -25,15 +25,6 @@ const getTemplate = (): MessageTemplate => {
           HybridAutoPlay.popToRootTemplate();
         },
       },
-      {
-        type: 'custom',
-        title: 'Dismiss',
-        style: 'default',
-        onPress: () => {
-          console.log('*** Dismiss');
-          HybridAutoPlay.dismissTemplate();
-        },
-      },
     ],
     headerActions: AutoTemplate.headerActions,
     onWillAppear: () => console.log('MessageTemplate onWillAppear'),
