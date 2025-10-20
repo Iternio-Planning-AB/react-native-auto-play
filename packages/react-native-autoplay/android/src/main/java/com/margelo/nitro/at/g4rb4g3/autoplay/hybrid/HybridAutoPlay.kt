@@ -73,14 +73,6 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         template.setTemplateHeaderActions(headerActions)
     }
 
-    override fun dismissTemplate(): Promise<Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override fun presentTemplate(templateId: String): Promise<Unit> {
-        TODO("Not yet implemented")
-    }
-
     override fun setRootTemplate(templateId: String): Promise<Unit> {
         return Promise.Companion.async {
             val template = AndroidAutoTemplate.Companion.getTemplate(templateId)

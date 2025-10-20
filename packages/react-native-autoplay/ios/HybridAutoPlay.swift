@@ -77,33 +77,6 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         }
     }
 
-    func presentTemplate(templateId: String) throws
-        -> NitroModules.Promise<Void>
-    {
-        return Promise.async {
-            return try await RootModule.withTemplateAndInterfaceController(
-                templateId: templateId
-            ) { template, interfaceController in
-                let _ = try await interfaceController.presentTemplate(
-                    template,
-                    animated: true
-                )
-            }
-        }
-    }
-    
-    func dismissTemplate(animate: Bool?) throws
-        -> NitroModules.Promise<Void>
-    {
-        return Promise.async {
-            return try await RootModule.withInterfaceController() { interfaceController in
-                let _ = try await interfaceController.dismissTemplate(
-                    animated: animate ?? true
-                )
-            }
-        }
-    }
-
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return Promise.async {
@@ -131,10 +104,17 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
             return try await RootModule.withTemplateAndInterfaceController(
                 templateId: templateId
             ) { template, interfaceController in
-                let _ = try await interfaceController.pushTemplate(
-                    template,
-                    animated: true
-                )
+                if template is CPAlertTemplate {
+                    let _ = try await interfaceController.presentTemplate(
+                        template,
+                        animated: true
+                    )
+                } else {
+                    let _ = try await interfaceController.pushTemplate(
+                        template,
+                        animated: true
+                    )
+                }
             }
         }
     }
