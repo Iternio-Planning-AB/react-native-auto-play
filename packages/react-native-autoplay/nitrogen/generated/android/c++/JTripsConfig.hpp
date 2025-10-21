@@ -72,7 +72,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JTripsConfig::javaobject> fromCpp(const TripsConfig& value) {
-      return newInstance(
+      using JSignature = JTripsConfig(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JRouteChoice>>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.id),
         [&]() {
           size_t __size = value.routeChoices.size();

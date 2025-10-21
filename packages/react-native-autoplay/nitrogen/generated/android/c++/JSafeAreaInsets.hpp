@@ -56,7 +56,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JSafeAreaInsets::javaobject> fromCpp(const SafeAreaInsets& value) {
-      return newInstance(
+      using JSignature = JSafeAreaInsets(double, double, double, double, jni::alias_ref<jni::JBoolean>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.top,
         value.left,
         value.bottom,

@@ -197,7 +197,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }();
   }
   void JHybridHybridAutoPlaySpec::setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions_cxx");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions");
     method(_javaPart, jni::make_jstring(templateId), headerActions.has_value() ? [&]() {
       size_t __size = headerActions.value().size();
       jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);

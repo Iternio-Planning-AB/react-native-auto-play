@@ -59,7 +59,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JTravelEstimates::javaobject> fromCpp(const TravelEstimates& value) {
-      return newInstance(
+      using JSignature = JTravelEstimates(jni::alias_ref<JDistance>, jni::alias_ref<JDurationWithTimeZone>, jni::alias_ref<JAutoText>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         JDistance::fromCpp(value.distanceRemaining),
         JDurationWithTimeZone::fromCpp(value.timeRemaining),
         value.tripText.has_value() ? JAutoText::fromCpp(value.tripText.value()) : nullptr

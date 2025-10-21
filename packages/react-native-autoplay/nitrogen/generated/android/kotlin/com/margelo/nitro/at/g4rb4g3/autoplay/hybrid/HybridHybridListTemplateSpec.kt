@@ -10,7 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
+import com.margelo.nitro.core.HybridObject
 
 /**
  * A Kotlin class representing the HybridListTemplate HybridObject.
@@ -44,18 +44,13 @@ abstract class HybridHybridListTemplateSpec: HybridObject() {
   @Keep
   abstract fun createListTemplate(config: ListTemplateConfig): Unit
   
-  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Unit
-  
   @DoNotStrip
   @Keep
-  private fun updateListTemplateSections_cxx(templateId: String, sections: Array<NitroSection>?): Unit {
-    val __result = updateListTemplateSections(templateId, sections?.let { it })
-    return __result
-  }
+  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Unit
 
   private external fun initHybrid(): HybridData
 
   companion object {
-    private const val TAG = "HybridHybridListTemplateSpec"
+    protected const val TAG = "HybridHybridListTemplateSpec"
   }
 }

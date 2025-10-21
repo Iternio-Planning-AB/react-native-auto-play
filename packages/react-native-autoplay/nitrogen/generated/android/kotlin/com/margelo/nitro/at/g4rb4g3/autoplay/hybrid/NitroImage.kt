@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,22 +16,30 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroImage
+data class NitroImage(
   @DoNotStrip
   @Keep
-  constructor(
+  val glyph: Double,
+  @DoNotStrip
+  @Keep
+  val size: Double,
+  @DoNotStrip
+  @Keep
+  val color: Double?,
+  @DoNotStrip
+  @Keep
+  val backgroundColor: Double?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val glyph: Double,
-    @DoNotStrip
-    @Keep
-    val size: Double,
-    @DoNotStrip
-    @Keep
-    val color: Double?,
-    @DoNotStrip
-    @Keep
-    val backgroundColor: Double?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(glyph: Double, size: Double, color: Double?, backgroundColor: Double?): NitroImage {
+      return NitroImage(glyph, size, color, backgroundColor)
+    }
+  }
 }

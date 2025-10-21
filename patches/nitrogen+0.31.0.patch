@@ -1,0 +1,39 @@
+diff --git a/node_modules/nitrogen/lib/syntax/swift/SwiftCxxBridgedType.js b/node_modules/nitrogen/lib/syntax/swift/SwiftCxxBridgedType.js
+index 89405e4..26d329a 100644
+--- a/node_modules/nitrogen/lib/syntax/swift/SwiftCxxBridgedType.js
++++ b/node_modules/nitrogen/lib/syntax/swift/SwiftCxxBridgedType.js
+@@ -449,21 +449,21 @@ export class SwiftCxxBridgedType {
+                 const wrapping = new SwiftCxxBridgedType(array.itemType, true);
+                 switch (language) {
+                     case 'swift':
+-                        if (isPrimitivelyCopyable(array.itemType)) {
+-                            // We can primitively copy the data, raw:
+-                            const bridge = this.getBridgeOrThrow();
+-                            const getDataFunc = `bridge.get_data_${bridge.specializationName}`;
+-                            return `
+-{ () -> ${array.getCode('swift')} in
+-  let __data = ${getDataFunc}(${cppParameterName})
+-  let __size = ${cppParameterName}.size()
+-  return Array(UnsafeBufferPointer(start: __data, count: __size))
+-}()`.trim();
+-                        }
+-                        else {
++//                         if (isPrimitivelyCopyable(array.itemType)) {
++//                             // We can primitively copy the data, raw:
++//                             const bridge = this.getBridgeOrThrow();
++//                             const getDataFunc = `bridge.get_data_${bridge.specializationName}`;
++//                             return `
++// { () -> ${array.getCode('swift')} in
++//   let __data = ${getDataFunc}(${cppParameterName})
++//   let __size = ${cppParameterName}.size()
++//   return Array(UnsafeBufferPointer(start: __data, count: __size))
++// }()`.trim();
++//                         }
++//                         else {
+                             // We have to iterate the element one by one to create a resulting Array (mapped)
+                             return `${cppParameterName}.map({ __item in ${wrapping.parseFromCppToSwift('__item', 'swift')} })`.trim();
+-                        }
++//                        }
+                     default:
+                         return cppParameterName;
+                 }

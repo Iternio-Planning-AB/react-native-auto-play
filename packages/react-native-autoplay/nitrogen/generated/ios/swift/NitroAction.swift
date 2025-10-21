@@ -105,7 +105,14 @@ public extension NitroAction {
   var enabled: Bool? {
     @inline(__always)
     get {
-      return self.__enabled.value
+      return { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(self.__enabled) {
+          let __unwrapped = bridge.get_std__optional_bool_(self.__enabled)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }()
     }
     @inline(__always)
     set {

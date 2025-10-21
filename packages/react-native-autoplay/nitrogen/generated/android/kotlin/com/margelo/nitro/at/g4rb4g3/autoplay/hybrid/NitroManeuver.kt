@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,64 +16,72 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroManeuver
+data class NitroManeuver(
   @DoNotStrip
   @Keep
-  constructor(
+  val attributedInstructionVariants: Array<AttributedInstructionVariant>,
+  @DoNotStrip
+  @Keep
+  val symbolImage: NitroImage,
+  @DoNotStrip
+  @Keep
+  val junctionImage: NitroImage?,
+  @DoNotStrip
+  @Keep
+  val turnType: TurnType?,
+  @DoNotStrip
+  @Keep
+  val angle: Double?,
+  @DoNotStrip
+  @Keep
+  val elementAngles: DoubleArray?,
+  @DoNotStrip
+  @Keep
+  val exitNumber: Double?,
+  @DoNotStrip
+  @Keep
+  val offRampType: OffRampType?,
+  @DoNotStrip
+  @Keep
+  val onRampType: OnRampType?,
+  @DoNotStrip
+  @Keep
+  val forkType: ForkType?,
+  @DoNotStrip
+  @Keep
+  val keepType: KeepType?,
+  @DoNotStrip
+  @Keep
+  val id: String,
+  @DoNotStrip
+  @Keep
+  val travelEstimates: TravelEstimates,
+  @DoNotStrip
+  @Keep
+  val trafficSide: TrafficSide,
+  @DoNotStrip
+  @Keep
+  val linkedLaneGuidance: LaneGuidance?,
+  @DoNotStrip
+  @Keep
+  val maneuverType: ManeuverType,
+  @DoNotStrip
+  @Keep
+  val roadName: Array<String>?,
+  @DoNotStrip
+  @Keep
+  val highwayExitLabel: String?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val attributedInstructionVariants: Array<AttributedInstructionVariant>,
-    @DoNotStrip
-    @Keep
-    val symbolImage: NitroImage,
-    @DoNotStrip
-    @Keep
-    val junctionImage: NitroImage?,
-    @DoNotStrip
-    @Keep
-    val turnType: TurnType?,
-    @DoNotStrip
-    @Keep
-    val angle: Double?,
-    @DoNotStrip
-    @Keep
-    val elementAngles: DoubleArray?,
-    @DoNotStrip
-    @Keep
-    val exitNumber: Double?,
-    @DoNotStrip
-    @Keep
-    val offRampType: OffRampType?,
-    @DoNotStrip
-    @Keep
-    val onRampType: OnRampType?,
-    @DoNotStrip
-    @Keep
-    val forkType: ForkType?,
-    @DoNotStrip
-    @Keep
-    val keepType: KeepType?,
-    @DoNotStrip
-    @Keep
-    val id: String,
-    @DoNotStrip
-    @Keep
-    val travelEstimates: TravelEstimates,
-    @DoNotStrip
-    @Keep
-    val trafficSide: TrafficSide,
-    @DoNotStrip
-    @Keep
-    val linkedLaneGuidance: LaneGuidance?,
-    @DoNotStrip
-    @Keep
-    val maneuverType: ManeuverType,
-    @DoNotStrip
-    @Keep
-    val roadName: Array<String>?,
-    @DoNotStrip
-    @Keep
-    val highwayExitLabel: String?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(attributedInstructionVariants: Array<AttributedInstructionVariant>, symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, linkedLaneGuidance: LaneGuidance?, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
+      return NitroManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, id, travelEstimates, trafficSide, linkedLaneGuidance, maneuverType, roadName, highwayExitLabel)
+    }
+  }
 }

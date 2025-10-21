@@ -47,7 +47,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JDurationWithTimeZone::javaobject> fromCpp(const DurationWithTimeZone& value) {
-      return newInstance(
+      using JSignature = JDurationWithTimeZone(jni::alias_ref<jni::JString>, double);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.timezone),
         value.seconds
       );

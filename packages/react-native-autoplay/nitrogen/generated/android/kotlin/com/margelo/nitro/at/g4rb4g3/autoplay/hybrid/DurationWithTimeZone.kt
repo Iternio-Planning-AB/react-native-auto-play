@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,16 +16,24 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class DurationWithTimeZone
+data class DurationWithTimeZone(
   @DoNotStrip
   @Keep
-  constructor(
+  val timezone: String,
+  @DoNotStrip
+  @Keep
+  val seconds: Double
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val timezone: String,
-    @DoNotStrip
-    @Keep
-    val seconds: Double
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(timezone: String, seconds: Double): DurationWithTimeZone {
+      return DurationWithTimeZone(timezone, seconds)
+    }
+  }
 }

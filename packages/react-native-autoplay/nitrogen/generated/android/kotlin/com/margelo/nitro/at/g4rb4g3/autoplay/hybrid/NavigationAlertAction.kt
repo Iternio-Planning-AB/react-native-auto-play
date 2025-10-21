@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,23 +16,27 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NavigationAlertAction
+data class NavigationAlertAction(
   @DoNotStrip
   @Keep
-  constructor(
+  val title: String,
+  @DoNotStrip
+  @Keep
+  val style: AlertActionStyle?,
+  @DoNotStrip
+  @Keep
+  val onPress: () -> Unit
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val title: String,
-    @DoNotStrip
-    @Keep
-    val style: AlertActionStyle?,
-    @DoNotStrip
-    @Keep
-    val onPress: Func_void
-  ) {
-  /**
-   * Initialize a new instance of `NavigationAlertAction` from Kotlin.
-   */
-  constructor(title: String, style: AlertActionStyle?, onPress: () -> Unit)
-       : this(title, style, Func_void_java(onPress))
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(title: String, style: AlertActionStyle?, onPress: Func_void): NavigationAlertAction {
+      return NavigationAlertAction(title, style, onPress)
+    }
+  }
 }

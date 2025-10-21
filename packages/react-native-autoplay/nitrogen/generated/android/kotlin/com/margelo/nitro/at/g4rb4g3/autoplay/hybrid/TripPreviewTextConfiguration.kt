@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,22 +16,30 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class TripPreviewTextConfiguration
+data class TripPreviewTextConfiguration(
   @DoNotStrip
   @Keep
-  constructor(
+  val startButtonTitle: String,
+  @DoNotStrip
+  @Keep
+  val additionalRoutesButtonTitle: String,
+  @DoNotStrip
+  @Keep
+  val overviewButtonTitle: String,
+  @DoNotStrip
+  @Keep
+  val travelEstimatesTitle: String
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val startButtonTitle: String,
-    @DoNotStrip
-    @Keep
-    val additionalRoutesButtonTitle: String,
-    @DoNotStrip
-    @Keep
-    val overviewButtonTitle: String,
-    @DoNotStrip
-    @Keep
-    val travelEstimatesTitle: String
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(startButtonTitle: String, additionalRoutesButtonTitle: String, overviewButtonTitle: String, travelEstimatesTitle: String): TripPreviewTextConfiguration {
+      return TripPreviewTextConfiguration(startButtonTitle, additionalRoutesButtonTitle, overviewButtonTitle, travelEstimatesTitle)
+    }
+  }
 }

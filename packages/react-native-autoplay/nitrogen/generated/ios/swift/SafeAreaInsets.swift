@@ -75,7 +75,14 @@ public extension SafeAreaInsets {
   var isLegacyLayout: Bool? {
     @inline(__always)
     get {
-      return self.__isLegacyLayout.value
+      return { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(self.__isLegacyLayout) {
+          let __unwrapped = bridge.get_std__optional_bool_(self.__isLegacyLayout)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }()
     }
     @inline(__always)
     set {

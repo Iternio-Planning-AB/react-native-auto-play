@@ -12,6 +12,7 @@
 
 #include "JLaneStatus.hpp"
 #include "LaneStatus.hpp"
+#include <optional>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -40,12 +41,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto fieldStatus = clazz->getField<JLaneStatus>("status");
       jni::local_ref<JLaneStatus> status = this->getFieldValue(fieldStatus);
       return Lane(
-        [&]() {
+        angles != nullptr ? std::make_optional([&]() {
           size_t __size = angles->size();
           std::vector<double> __vector(__size);
           angles->getRegion(0, __size, __vector.data());
           return __vector;
-        }(),
+        }()) : std::nullopt,
         highlightedAngle,
         status->toCpp()
       );
@@ -57,13 +58,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JLane::javaobject> fromCpp(const Lane& value) {
-      return newInstance(
-        [&]() {
-          size_t __size = value.angles.size();
+      using JSignature = JLane(jni::alias_ref<jni::JArrayDouble>, double, jni::alias_ref<JLaneStatus>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
+        value.angles.has_value() ? [&]() {
+          size_t __size = value.angles.value().size();
           jni::local_ref<jni::JArrayDouble> __array = jni::JArrayDouble::newArray(__size);
-          __array->setRegion(0, __size, value.angles.data());
+          __array->setRegion(0, __size, value.angles.value().data());
           return __array;
-        }(),
+        }() : nullptr,
         value.highlightedAngle,
         JLaneStatus::fromCpp(value.status)
       );

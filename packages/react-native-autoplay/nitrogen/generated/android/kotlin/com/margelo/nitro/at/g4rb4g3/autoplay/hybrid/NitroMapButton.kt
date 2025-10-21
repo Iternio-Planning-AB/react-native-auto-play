@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,23 +16,27 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroMapButton
+data class NitroMapButton(
   @DoNotStrip
   @Keep
-  constructor(
+  val type: NitroMapButtonType,
+  @DoNotStrip
+  @Keep
+  val image: NitroImage?,
+  @DoNotStrip
+  @Keep
+  val onPress: () -> Unit
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val type: NitroMapButtonType,
-    @DoNotStrip
-    @Keep
-    val image: NitroImage?,
-    @DoNotStrip
-    @Keep
-    val onPress: Func_void
-  ) {
-  /**
-   * Initialize a new instance of `NitroMapButton` from Kotlin.
-   */
-  constructor(type: NitroMapButtonType, image: NitroImage?, onPress: () -> Unit)
-       : this(type, image, Func_void_java(onPress))
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(type: NitroMapButtonType, image: NitroImage?, onPress: Func_void): NitroMapButton {
+      return NitroMapButton(type, image, onPress)
+    }
+  }
 }

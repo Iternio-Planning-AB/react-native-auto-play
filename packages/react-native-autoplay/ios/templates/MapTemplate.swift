@@ -394,6 +394,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let navigationSession = navigationSession else { return }
 
         var upcomingManeuvers: [CPManeuver] = []
+        var upcomingLanes: [Any] = []
 
         for (index, nitroManeuver) in maneuvers.enumerated() {
             if let maneuverIndex = navigationSession.upcomingManeuvers
@@ -412,11 +413,33 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                             where: { $0.id == nitroManeuver.id }
                         )!
                     )
+
+                    if #available(iOS 17.4, *),
+                        let linkedLaneGuidance = nitroManeuver
+                            .linkedLaneGuidance
+                    {
+                        upcomingLanes.append(
+                            Parser.parseLaneGuidance(
+                                laneGuidance: linkedLaneGuidance
+                            )
+                        )
+                    }
                 }
                 continue
             }
 
             let maneuver = Parser.parseManeuver(nitroManeuver: nitroManeuver)
+
+            if #available(iOS 17.4, *),
+                let linkedLaneGuidance = nitroManeuver.linkedLaneGuidance
+            {
+                let laneGuidance = Parser.parseLaneGuidance(
+                    laneGuidance: linkedLaneGuidance
+                )
+                maneuver.linkedLaneGuidance = laneGuidance
+                upcomingLanes.append(laneGuidance)
+            }
+
             upcomingManeuvers.append(maneuver)
         }
 
@@ -429,10 +452,26 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                 }
 
                 navigationSession.add(sessionManeuvers)
+
+                if let roadFollowingManeuverVariants = upcomingManeuvers.first?
+                    .roadFollowingManeuverVariants
+                {
+                    navigationSession.currentRoadNameVariants =
+                        roadFollowingManeuverVariants
+                }
             }
 
             navigationSession.upcomingManeuvers = upcomingManeuvers
-            return
+        }
+
+        if #available(iOS 17.4, *) {
+            if upcomingLanes.count > 0 {
+                let lanes = upcomingLanes as! [CPLaneGuidance]
+                navigationSession.add(lanes)
+                navigationSession.currentLaneGuidance = lanes.first
+            } else {
+                navigationSession.currentLaneGuidance = nil
+            }
         }
     }
 

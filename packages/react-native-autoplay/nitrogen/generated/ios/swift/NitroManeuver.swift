@@ -193,11 +193,7 @@ public extension NitroManeuver {
       return { () -> [Double]? in
         if bridge.has_value_std__optional_std__vector_double__(self.__elementAngles) {
           let __unwrapped = bridge.get_std__optional_std__vector_double__(self.__elementAngles)
-          return { () -> [Double] in
-            let __data = bridge.get_data_std__vector_double_(__unwrapped)
-            let __size = __unwrapped.size()
-            return Array(UnsafeBufferPointer(start: __data, count: __size))
-          }()
+          return __unwrapped.map({ __item in __item })
         } else {
           return nil
         }

@@ -48,7 +48,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JDistance::javaobject> fromCpp(const Distance& value) {
-      return newInstance(
+      using JSignature = JDistance(double, jni::alias_ref<JDistanceUnits>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.value,
         JDistanceUnits::fromCpp(value.unit)
       );

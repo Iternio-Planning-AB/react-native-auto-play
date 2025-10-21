@@ -154,7 +154,7 @@ export enum LaneStatus {
 }
 
 export interface Lane {
-  angles: Array<number>;
+  angles?: Array<number>;
   highlightedAngle: number;
   status: LaneStatus;
 }

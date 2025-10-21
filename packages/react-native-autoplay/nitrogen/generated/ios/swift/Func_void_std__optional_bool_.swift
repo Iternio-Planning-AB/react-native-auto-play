@@ -23,7 +23,14 @@ public final class Func_void_std__optional_bool_ {
 
   @inline(__always)
   public func call(animated: bridge.std__optional_bool_) -> Void {
-    self.closure(animated.value)
+    self.closure({ () -> Bool? in
+      if bridge.has_value_std__optional_bool_(animated) {
+        let __unwrapped = bridge.get_std__optional_bool_(animated)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }())
   }
 
   /**

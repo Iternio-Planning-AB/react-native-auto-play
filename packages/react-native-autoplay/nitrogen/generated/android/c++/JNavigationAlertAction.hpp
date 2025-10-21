@@ -65,7 +65,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNavigationAlertAction::javaobject> fromCpp(const NavigationAlertAction& value) {
-      return newInstance(
+      using JSignature = JNavigationAlertAction(jni::alias_ref<jni::JString>, jni::alias_ref<JAlertActionStyle>, jni::alias_ref<JFunc_void::javaobject>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.title),
         value.style.has_value() ? JAlertActionStyle::fromCpp(value.style.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)

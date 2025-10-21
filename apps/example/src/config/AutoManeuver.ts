@@ -1,5 +1,6 @@
 import {
   type AutoManeuver,
+  LaneStatus,
   ManeuverType,
   type MapTemplate,
   TrafficSide,
@@ -22,6 +23,15 @@ const getManeuvers = (): Array<AutoManeuver> => [
     maneuverType: ManeuverType.Straight,
     trafficSide: TrafficSide.Left,
     roadName: ['Main St.'],
+    linkedLaneGuidance: {
+      instructionVariants: ['lane'],
+      lanes: [
+        { highlightedAngle: 0, status: LaneStatus.Preferred },
+        { highlightedAngle: 0, angles: [90], status: LaneStatus.Preferred },
+        { highlightedAngle: 90, status: LaneStatus.NotGood },
+        { highlightedAngle: 90, status: LaneStatus.NotGood },
+      ],
+    },
   },
   {
     id: uuid.v4(),
@@ -34,6 +44,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
       name: 'turn_left',
     },
     maneuverType: ManeuverType.Turn,
+    roadName: ['Main St.'],
     trafficSide: TrafficSide.Left,
     turnType: TurnType.NormalLeft,
     angle: 90,
@@ -49,6 +60,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
       name: 'turn_right',
     },
     maneuverType: ManeuverType.Turn,
+    roadName: ['2nd St.'],
     trafficSide: TrafficSide.Left,
     turnType: TurnType.NormalRight,
     angle: 90,
@@ -65,6 +77,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
     },
     maneuverType: ManeuverType.Arrive,
     trafficSide: TrafficSide.Left,
+    roadName: ['Destination St.'],
   },
 ];
 
@@ -73,7 +86,9 @@ let interval: ReturnType<typeof setInterval> | null = null;
 const playManeuvers = (template: MapTemplate) => {
   let maneuvers = getManeuvers();
 
-  template.updateManeuvers(maneuvers.slice(0, 2));
+  const [initialCurrent, initialNext] = maneuvers;
+
+  template.updateManeuvers([initialCurrent, initialNext]);
 
   interval = setInterval(() => {
     if (maneuvers[0].travelEstimates.timeRemaining.seconds === 0) {

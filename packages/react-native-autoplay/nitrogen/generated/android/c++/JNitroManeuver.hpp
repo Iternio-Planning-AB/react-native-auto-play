@@ -156,7 +156,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroManeuver::javaobject> fromCpp(const NitroManeuver& value) {
-      return newInstance(
+      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JAttributedInstructionVariant>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         [&]() {
           size_t __size = value.attributedInstructionVariants.size();
           jni::local_ref<jni::JArrayClass<JAttributedInstructionVariant>> __array = jni::JArrayClass<JAttributedInstructionVariant>::newArray(__size);

@@ -76,3 +76,12 @@ extension CPManeuver {
         }
     }
 }
+
+@available(iOS 17.4, *)
+extension CPLaneGuidance {
+    convenience init(instructionVariants: [String], lanes: [CPLane]) {
+        self.init()
+        self.instructionVariants = instructionVariants
+        self.lanes = lanes
+    }
+}

@@ -27,6 +27,7 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
 
 #include <vector>
+#include <optional>
 #include "LaneStatus.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -36,13 +37,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct Lane {
   public:
-    std::vector<double> angles     SWIFT_PRIVATE;
+    std::optional<std::vector<double>> angles     SWIFT_PRIVATE;
     double highlightedAngle     SWIFT_PRIVATE;
     LaneStatus status     SWIFT_PRIVATE;
 
   public:
     Lane() = default;
-    explicit Lane(std::vector<double> angles, double highlightedAngle, LaneStatus status): angles(angles), highlightedAngle(highlightedAngle), status(status) {}
+    explicit Lane(std::optional<std::vector<double>> angles, double highlightedAngle, LaneStatus status): angles(angles), highlightedAngle(highlightedAngle), status(status) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -55,14 +56,14 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane(
-        JSIConverter<std::vector<double>>::fromJSI(runtime, obj.getProperty(runtime, "angles")),
+        JSIConverter<std::optional<std::vector<double>>>::fromJSI(runtime, obj.getProperty(runtime, "angles")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "highlightedAngle")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneStatus>::fromJSI(runtime, obj.getProperty(runtime, "status"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "angles", JSIConverter<std::vector<double>>::toJSI(runtime, arg.angles));
+      obj.setProperty(runtime, "angles", JSIConverter<std::optional<std::vector<double>>>::toJSI(runtime, arg.angles));
       obj.setProperty(runtime, "highlightedAngle", JSIConverter<double>::toJSI(runtime, arg.highlightedAngle));
       obj.setProperty(runtime, "status", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneStatus>::toJSI(runtime, arg.status));
       return obj;
@@ -75,7 +76,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::vector<double>>::canConvert(runtime, obj.getProperty(runtime, "angles"))) return false;
+      if (!JSIConverter<std::optional<std::vector<double>>>::canConvert(runtime, obj.getProperty(runtime, "angles"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "highlightedAngle"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneStatus>::canConvert(runtime, obj.getProperty(runtime, "status"))) return false;
       return true;

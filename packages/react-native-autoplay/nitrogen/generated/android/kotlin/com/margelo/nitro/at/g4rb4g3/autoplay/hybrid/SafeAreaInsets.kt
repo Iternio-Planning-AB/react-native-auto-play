@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,25 +16,33 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class SafeAreaInsets
+data class SafeAreaInsets(
   @DoNotStrip
   @Keep
-  constructor(
+  val top: Double,
+  @DoNotStrip
+  @Keep
+  val left: Double,
+  @DoNotStrip
+  @Keep
+  val bottom: Double,
+  @DoNotStrip
+  @Keep
+  val right: Double,
+  @DoNotStrip
+  @Keep
+  val isLegacyLayout: Boolean?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val top: Double,
-    @DoNotStrip
-    @Keep
-    val left: Double,
-    @DoNotStrip
-    @Keep
-    val bottom: Double,
-    @DoNotStrip
-    @Keep
-    val right: Double,
-    @DoNotStrip
-    @Keep
-    val isLegacyLayout: Boolean?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(top: Double, left: Double, bottom: Double, right: Double, isLegacyLayout: Boolean?): SafeAreaInsets {
+      return SafeAreaInsets(top, left, bottom, right, isLegacyLayout)
+    }
+  }
 }

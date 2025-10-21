@@ -10,7 +10,8 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
+import com.margelo.nitro.core.Promise
+import com.margelo.nitro.core.HybridObject
 
 /**
  * A Kotlin class representing the HybridAutoPlay HybridObject.
@@ -87,18 +88,13 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
-  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Unit
-  
   @DoNotStrip
   @Keep
-  private fun setTemplateHeaderActions_cxx(templateId: String, headerActions: Array<NitroAction>?): Unit {
-    val __result = setTemplateHeaderActions(templateId, headerActions?.let { it })
-    return __result
-  }
+  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Unit
 
   private external fun initHybrid(): HybridData
 
   companion object {
-    private const val TAG = "HybridHybridAutoPlaySpec"
+    protected const val TAG = "HybridHybridAutoPlaySpec"
   }
 }

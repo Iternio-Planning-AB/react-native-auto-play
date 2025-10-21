@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,47 +16,51 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class MessageTemplateConfig
+data class MessageTemplateConfig(
   @DoNotStrip
   @Keep
-  constructor(
+  val id: String,
+  @DoNotStrip
+  @Keep
+  val onWillAppear: ((animated: Boolean?) -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val onWillDisappear: ((animated: Boolean?) -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val onDidAppear: ((animated: Boolean?) -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val onDidDisappear: ((animated: Boolean?) -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val onPopped: (() -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val headerActions: Array<NitroAction>?,
+  @DoNotStrip
+  @Keep
+  val title: AutoText?,
+  @DoNotStrip
+  @Keep
+  val message: AutoText,
+  @DoNotStrip
+  @Keep
+  val actions: Array<NitroAction>?,
+  @DoNotStrip
+  @Keep
+  val image: NitroImage?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val id: String,
-    @DoNotStrip
-    @Keep
-    val onWillAppear: Func_void_std__optional_bool_?,
-    @DoNotStrip
-    @Keep
-    val onWillDisappear: Func_void_std__optional_bool_?,
-    @DoNotStrip
-    @Keep
-    val onDidAppear: Func_void_std__optional_bool_?,
-    @DoNotStrip
-    @Keep
-    val onDidDisappear: Func_void_std__optional_bool_?,
-    @DoNotStrip
-    @Keep
-    val onPopped: Func_void?,
-    @DoNotStrip
-    @Keep
-    val headerActions: Array<NitroAction>?,
-    @DoNotStrip
-    @Keep
-    val title: AutoText?,
-    @DoNotStrip
-    @Keep
-    val message: AutoText,
-    @DoNotStrip
-    @Keep
-    val actions: Array<NitroAction>?,
-    @DoNotStrip
-    @Keep
-    val image: NitroImage?
-  ) {
-  /**
-   * Initialize a new instance of `MessageTemplateConfig` from Kotlin.
-   */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, headerActions: Array<NitroAction>?, title: AutoText?, message: AutoText, actions: Array<NitroAction>?, image: NitroImage?)
-       : this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, headerActions?.let { it }, title, message, actions?.let { it }, image)
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, headerActions: Array<NitroAction>?, title: AutoText?, message: AutoText, actions: Array<NitroAction>?, image: NitroImage?): MessageTemplateConfig {
+      return MessageTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, headerActions, title, message, actions, image)
+    }
+  }
 }

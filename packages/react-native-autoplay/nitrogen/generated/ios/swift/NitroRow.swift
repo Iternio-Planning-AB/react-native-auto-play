@@ -80,7 +80,14 @@ public extension NitroRow {
   var browsable: Bool? {
     @inline(__always)
     get {
-      return self.__browsable.value
+      return { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(self.__browsable) {
+          let __unwrapped = bridge.get_std__optional_bool_(self.__browsable)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }()
     }
     @inline(__always)
     set {
@@ -125,7 +132,14 @@ public extension NitroRow {
   var checked: Bool? {
     @inline(__always)
     get {
-      return self.__checked.value
+      return { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(self.__checked) {
+          let __unwrapped = bridge.get_std__optional_bool_(self.__checked)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }()
     }
     @inline(__always)
     set {

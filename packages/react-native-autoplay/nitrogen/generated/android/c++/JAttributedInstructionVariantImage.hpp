@@ -49,7 +49,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JAttributedInstructionVariantImage::javaobject> fromCpp(const AttributedInstructionVariantImage& value) {
-      return newInstance(
+      using JSignature = JAttributedInstructionVariantImage(jni::alias_ref<JNitroImage>, double);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         JNitroImage::fromCpp(value.image),
         value.position
       );

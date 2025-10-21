@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,41 +16,45 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroNavigationAlert
+data class NitroNavigationAlert(
   @DoNotStrip
   @Keep
-  constructor(
+  val id: Double,
+  @DoNotStrip
+  @Keep
+  val title: AutoText,
+  @DoNotStrip
+  @Keep
+  val subtitle: AutoText?,
+  @DoNotStrip
+  @Keep
+  val image: NitroImage?,
+  @DoNotStrip
+  @Keep
+  val primaryAction: NavigationAlertAction,
+  @DoNotStrip
+  @Keep
+  val secondaryAction: NavigationAlertAction?,
+  @DoNotStrip
+  @Keep
+  val durationMs: Double,
+  @DoNotStrip
+  @Keep
+  val onWillShow: (() -> Unit)?,
+  @DoNotStrip
+  @Keep
+  val onDidDismiss: ((reason: AlertDismissalReason) -> Unit)?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val id: Double,
-    @DoNotStrip
-    @Keep
-    val title: AutoText,
-    @DoNotStrip
-    @Keep
-    val subtitle: AutoText?,
-    @DoNotStrip
-    @Keep
-    val image: NitroImage?,
-    @DoNotStrip
-    @Keep
-    val primaryAction: NavigationAlertAction,
-    @DoNotStrip
-    @Keep
-    val secondaryAction: NavigationAlertAction?,
-    @DoNotStrip
-    @Keep
-    val durationMs: Double,
-    @DoNotStrip
-    @Keep
-    val onWillShow: Func_void?,
-    @DoNotStrip
-    @Keep
-    val onDidDismiss: Func_void_AlertDismissalReason?
-  ) {
-  /**
-   * Initialize a new instance of `NitroNavigationAlert` from Kotlin.
-   */
-  constructor(id: Double, title: AutoText, subtitle: AutoText?, image: NitroImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Unit)?, onDidDismiss: ((reason: AlertDismissalReason) -> Unit)?)
-       : this(id, title, subtitle, image, primaryAction, secondaryAction, durationMs, onWillShow?.let { Func_void_java(it) }, onDidDismiss?.let { Func_void_AlertDismissalReason_java(it) })
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(id: Double, title: AutoText, subtitle: AutoText?, image: NitroImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: Func_void?, onDidDismiss: Func_void_AlertDismissalReason?): NitroNavigationAlert {
+      return NitroNavigationAlert(id, title, subtitle, image, primaryAction, secondaryAction, durationMs, onWillShow?.let { it }, onDidDismiss?.let { it })
+    }
+  }
 }

@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,25 +16,33 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class RouteChoice
+data class RouteChoice(
   @DoNotStrip
   @Keep
-  constructor(
+  val id: String,
+  @DoNotStrip
+  @Keep
+  val summaryVariants: Array<String>,
+  @DoNotStrip
+  @Keep
+  val additionalInformationVariants: Array<String>,
+  @DoNotStrip
+  @Keep
+  val selectionSummaryVariants: Array<String>,
+  @DoNotStrip
+  @Keep
+  val steps: Array<TripPoint>
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val id: String,
-    @DoNotStrip
-    @Keep
-    val summaryVariants: Array<String>,
-    @DoNotStrip
-    @Keep
-    val additionalInformationVariants: Array<String>,
-    @DoNotStrip
-    @Keep
-    val selectionSummaryVariants: Array<String>,
-    @DoNotStrip
-    @Keep
-    val steps: Array<TripPoint>
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(id: String, summaryVariants: Array<String>, additionalInformationVariants: Array<String>, selectionSummaryVariants: Array<String>, steps: Array<TripPoint>): RouteChoice {
+      return RouteChoice(id, summaryVariants, additionalInformationVariants, selectionSummaryVariants, steps)
+    }
+  }
 }

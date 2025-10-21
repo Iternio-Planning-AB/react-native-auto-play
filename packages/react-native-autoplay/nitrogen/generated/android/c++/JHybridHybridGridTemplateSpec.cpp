@@ -86,7 +86,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     method(_javaPart, JGridTemplateConfig::fromCpp(config));
   }
   void JHybridHybridGridTemplateSpec::updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons_cxx");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons");
     method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = buttons.size();
       jni::local_ref<jni::JArrayClass<JNitroGridButton>> __array = jni::JArrayClass<JNitroGridButton>::newArray(__size);

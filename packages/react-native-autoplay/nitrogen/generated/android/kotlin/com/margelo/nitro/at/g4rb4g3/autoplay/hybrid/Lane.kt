@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,19 +16,27 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class Lane
+data class Lane(
   @DoNotStrip
   @Keep
-  constructor(
+  val angles: DoubleArray?,
+  @DoNotStrip
+  @Keep
+  val highlightedAngle: Double,
+  @DoNotStrip
+  @Keep
+  val status: LaneStatus
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val angles: DoubleArray,
-    @DoNotStrip
-    @Keep
-    val highlightedAngle: Double,
-    @DoNotStrip
-    @Keep
-    val status: LaneStatus
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(angles: DoubleArray?, highlightedAngle: Double, status: LaneStatus): Lane {
+      return Lane(angles, highlightedAngle, status)
+    }
+  }
 }

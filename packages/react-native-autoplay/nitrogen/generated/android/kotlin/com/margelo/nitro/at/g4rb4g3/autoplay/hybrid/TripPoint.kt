@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,22 +16,30 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class TripPoint
+data class TripPoint(
   @DoNotStrip
   @Keep
-  constructor(
+  val latitude: Double,
+  @DoNotStrip
+  @Keep
+  val longitude: Double,
+  @DoNotStrip
+  @Keep
+  val name: String,
+  @DoNotStrip
+  @Keep
+  val travelEstimates: TravelEstimates
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val latitude: Double,
-    @DoNotStrip
-    @Keep
-    val longitude: Double,
-    @DoNotStrip
-    @Keep
-    val name: String,
-    @DoNotStrip
-    @Keep
-    val travelEstimates: TravelEstimates
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(latitude: Double, longitude: Double, name: String, travelEstimates: TravelEstimates): TripPoint {
+      return TripPoint(latitude, longitude, name, travelEstimates)
+    }
+  }
 }

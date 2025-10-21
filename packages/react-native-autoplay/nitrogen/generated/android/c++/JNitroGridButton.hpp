@@ -71,7 +71,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroGridButton::javaobject> fromCpp(const NitroGridButton& value) {
-      return newInstance(
+      using JSignature = JNitroGridButton(jni::alias_ref<JAutoText>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         JAutoText::fromCpp(value.title),
         JNitroImage::fromCpp(value.image),
         JFunc_void_cxx::fromCpp(value.onPress)

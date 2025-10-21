@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,16 +16,24 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroColor
+data class NitroColor(
   @DoNotStrip
   @Keep
-  constructor(
+  val lightColor: Double,
+  @DoNotStrip
+  @Keep
+  val darkColor: Double
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val lightColor: Double,
-    @DoNotStrip
-    @Keep
-    val darkColor: Double
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(lightColor: Double, darkColor: Double): NitroColor {
+      return NitroColor(lightColor, darkColor)
+    }
+  }
 }

@@ -47,7 +47,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JPoint::javaobject> fromCpp(const Point& value) {
-      return newInstance(
+      using JSignature = JPoint(double, double);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.x,
         value.y
       );
