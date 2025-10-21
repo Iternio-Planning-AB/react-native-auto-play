@@ -27,27 +27,29 @@
 #include "JKeepType.hpp"
 #include "JLane.hpp"
 #include "JLaneGuidance.hpp"
-#include "JLaneStatus.hpp"
 #include "JManeuverType.hpp"
 #include "JNitroImage.hpp"
 #include "JOffRampType.hpp"
 #include "JOnRampType.hpp"
+#include "JPreferredLane.hpp"
 #include "JTrafficSide.hpp"
 #include "JTravelEstimates.hpp"
 #include "JTurnType.hpp"
+#include "JVariant_PreferredLane_Lane.hpp"
 #include "KeepType.hpp"
 #include "Lane.hpp"
 #include "LaneGuidance.hpp"
-#include "LaneStatus.hpp"
 #include "ManeuverType.hpp"
 #include "NitroImage.hpp"
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
+#include "PreferredLane.hpp"
 #include "TrafficSide.hpp"
 #include "TravelEstimates.hpp"
 #include "TurnType.hpp"
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

@@ -417,9 +417,8 @@ class Parser {
             }
 
             if let junctionExitAngle = nitroManeuver.angle {
-                maneuver.junctionExitAngle = Measurement(
-                    value: junctionExitAngle,
-                    unit: UnitAngle.degrees
+                maneuver.junctionExitAngle = doubleToAngle(
+                    value: junctionExitAngle
                 )
             }
 
@@ -427,14 +426,21 @@ class Parser {
                 .elementAngles
             {
                 maneuver.junctionElementAngles = Set(
-                    junctionElementAngles.map {
-                        Measurement(value: $0, unit: UnitAngle.degrees)
-                    }
+                    doubleToAngle(values: junctionElementAngles)
                 )
             }
 
             if let highwayExitLabel = nitroManeuver.highwayExitLabel {
                 maneuver.highwayExitLabel = highwayExitLabel
+            }
+
+            if let linkedLaneGuidance = nitroManeuver.linkedLaneGuidance {
+                let laneGuidance = parseLaneGuidance(
+                    laneGuidance: linkedLaneGuidance
+                )
+                maneuver.linkedLaneGuidance = laneGuidance
+                // iOS does not store the actual CPLaneGuidance type but some NSConcreteMutableAttributedString so we store it in userInfo so we can access it later on
+                maneuver.laneGuidance = laneGuidance
             }
         }
 
@@ -525,36 +531,41 @@ class Parser {
         let instructionVariants = laneGuidance.instructionVariants
 
         let lanes = laneGuidance.lanes.map { lane in
-            let angles =
-                lane.angles?.map {
-                    Measurement(value: $0, unit: UnitAngle.degrees)
-                } ?? []
-            let highlightedAngle = Measurement(
-                value: lane.highlightedAngle,
-                unit: UnitAngle.degrees
-            )
-            let status = CPLaneStatus(
-                rawValue: Int(lane.status.rawValue)
-            )!
-            if #available(iOS 18.0, *) {
-                let linkedLane = CPLane(
-                    angles: angles,
-                    highlightedAngle: highlightedAngle,
-                    isPreferred: lane.status == .preferred
+            var angles: [Measurement<UnitAngle>] = []
+            var highlightedAngle: Measurement<UnitAngle>?
+            var isPreferred = false
+
+            switch lane {
+            case .first(let nitroLaneGuidance):
+                angles = doubleToAngle(values: nitroLaneGuidance.angles)
+                highlightedAngle = doubleToAngle(
+                    value: nitroLaneGuidance.highlightedAngle
                 )
-                linkedLane.status = status
-                return linkedLane
+                isPreferred = nitroLaneGuidance.isPreferred
+            case .second(let nitroLaneGuidance):
+                angles = doubleToAngle(values: nitroLaneGuidance.angles)
             }
-            let linkedLane = CPLane()
-            linkedLane.primaryAngle = highlightedAngle
-            linkedLane.status = status
-            linkedLane.secondaryAngles = angles
-            return linkedLane
+
+            return CPLane(
+                angles: angles,
+                highlightedAngle: highlightedAngle,
+                isPreferred: isPreferred
+            )
         }
 
         return CPLaneGuidance(
             instructionVariants: instructionVariants,
             lanes: lanes
         )
+    }
+
+    static func doubleToAngle(values: [Double]) -> [Measurement<UnitAngle>] {
+        return values.map {
+            doubleToAngle(value: $0)
+        }
+    }
+
+    static func doubleToAngle(value: Double) -> Measurement<UnitAngle> {
+        return Measurement(value: value, unit: UnitAngle.degrees)
     }
 }

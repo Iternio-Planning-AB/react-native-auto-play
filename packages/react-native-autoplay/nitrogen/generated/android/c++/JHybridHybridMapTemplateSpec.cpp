@@ -75,10 +75,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `PreferredLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
 // Forward declaration of `Lane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
-// Forward declaration of `LaneStatus` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
@@ -164,10 +164,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JTrafficSide.hpp"
 #include "LaneGuidance.hpp"
 #include "JLaneGuidance.hpp"
+#include "PreferredLane.hpp"
 #include "Lane.hpp"
+#include <variant>
+#include "JVariant_PreferredLane_Lane.hpp"
+#include "JPreferredLane.hpp"
 #include "JLane.hpp"
-#include "LaneStatus.hpp"
-#include "JLaneStatus.hpp"
 #include "ManeuverType.hpp"
 #include "JManeuverType.hpp"
 #include "TripConfig.hpp"

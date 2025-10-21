@@ -75,6 +75,19 @@ extension CPManeuver {
             self.userInfo = info
         }
     }
+    @available(iOS 17.4, *)
+    var laneGuidance: CPLaneGuidance? {
+        // iOS does not store the actual CPLaneGuidance type but some NSConcreteMutableAttributedString so we store it in userInfo so we can access it later on
+        get {
+            return (self.userInfo as? [String: Any])?["laneGuidance"]
+                as? CPLaneGuidance
+        }
+        set {
+            var info = (self.userInfo as? [String: Any]) ?? [:]
+            info["laneGuidance"] = newValue
+            self.userInfo = info
+        }
+    }
 }
 
 @available(iOS 17.4, *)
@@ -83,5 +96,34 @@ extension CPLaneGuidance {
         self.init()
         self.instructionVariants = instructionVariants
         self.lanes = lanes
+    }
+}
+
+@available(iOS 17.4, *)
+extension CPLane {
+    convenience init(
+        angles: [Measurement<UnitAngle>],
+        highlightedAngle: Measurement<UnitAngle>?,
+        isPreferred: Bool
+    ) {
+        if #available(iOS 18.0, *) {
+            if let highlightedAngle = highlightedAngle {
+                self.init(
+                    angles: angles,
+                    highlightedAngle: highlightedAngle,
+                    isPreferred: isPreferred
+                )
+            } else {
+                self.init(angles: angles)
+            }
+        } else {
+            self.init()
+            if let highlightedAngle = highlightedAngle {
+                self.primaryAngle = highlightedAngle
+            }
+            self.secondaryAngles = angles
+            self.status =
+                isPreferred ? CPLaneStatus.preferred : CPLaneStatus.notGood
+        }
     }
 }

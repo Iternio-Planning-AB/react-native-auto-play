@@ -18,17 +18,24 @@ public extension LaneGuidance {
   /**
    * Create a new instance of `LaneGuidance`.
    */
-  init(instructionVariants: [String], lanes: [Lane]) {
+  init(instructionVariants: [String], lanes: [Variant_PreferredLane_Lane]) {
     self.init({ () -> bridge.std__vector_std__string_ in
       var __vector = bridge.create_std__vector_std__string_(instructionVariants.count)
       for __item in instructionVariants {
         __vector.push_back(std.string(__item))
       }
       return __vector
-    }(), { () -> bridge.std__vector_Lane_ in
-      var __vector = bridge.create_std__vector_Lane_(lanes.count)
+    }(), { () -> bridge.std__vector_std__variant_PreferredLane__Lane__ in
+      var __vector = bridge.create_std__vector_std__variant_PreferredLane__Lane__(lanes.count)
       for __item in lanes {
-        __vector.push_back(__item)
+        __vector.push_back({ () -> bridge.std__variant_PreferredLane__Lane_ in
+          switch __item {
+            case .first(let __value):
+              return bridge.create_std__variant_PreferredLane__Lane_(__value)
+            case .second(let __value):
+              return bridge.create_std__variant_PreferredLane__Lane_(__value)
+          }
+        }().variant)
       }
       return __vector
     }())
@@ -51,17 +58,36 @@ public extension LaneGuidance {
     }
   }
   
-  var lanes: [Lane] {
+  var lanes: [Variant_PreferredLane_Lane] {
     @inline(__always)
     get {
-      return self.__lanes.map({ __item in __item })
+      return self.__lanes.map({ __item in { () -> Variant_PreferredLane_Lane in
+        let __variant = bridge.std__variant_PreferredLane__Lane_(__item)
+        switch __variant.index() {
+          case 0:
+            let __actual = __variant.get_0()
+            return .first(__actual)
+          case 1:
+            let __actual = __variant.get_1()
+            return .second(__actual)
+          default:
+            fatalError("Variant can never have index \(__variant.index())!")
+        }
+      }() })
     }
     @inline(__always)
     set {
-      self.__lanes = { () -> bridge.std__vector_Lane_ in
-        var __vector = bridge.create_std__vector_Lane_(newValue.count)
+      self.__lanes = { () -> bridge.std__vector_std__variant_PreferredLane__Lane__ in
+        var __vector = bridge.create_std__vector_std__variant_PreferredLane__Lane__(newValue.count)
         for __item in newValue {
-          __vector.push_back(__item)
+          __vector.push_back({ () -> bridge.std__variant_PreferredLane__Lane_ in
+            switch __item {
+              case .first(let __value):
+                return bridge.create_std__variant_PreferredLane__Lane_(__value)
+              case .second(let __value):
+                return bridge.create_std__variant_PreferredLane__Lane_(__value)
+            }
+          }().variant)
         }
         return __vector
       }()

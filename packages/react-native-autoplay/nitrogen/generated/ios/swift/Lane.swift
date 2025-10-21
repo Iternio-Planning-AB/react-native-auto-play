@@ -18,63 +18,22 @@ public extension Lane {
   /**
    * Create a new instance of `Lane`.
    */
-  init(angles: [Double]?, highlightedAngle: Double, status: LaneStatus) {
-    self.init({ () -> bridge.std__optional_std__vector_double__ in
-      if let __unwrappedValue = angles {
-        return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-          return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
-        })
-      } else {
-        return .init()
-      }
-    }(), highlightedAngle, status)
+  init(angles: [Double]) {
+    self.init(angles.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
+      return bridge.copy_std__vector_double_(__pointer.baseAddress!, angles.count)
+    })
   }
 
-  var angles: [Double]? {
+  var angles: [Double] {
     @inline(__always)
     get {
-      return { () -> [Double]? in
-        if bridge.has_value_std__optional_std__vector_double__(self.__angles) {
-          let __unwrapped = bridge.get_std__optional_std__vector_double__(self.__angles)
-          return __unwrapped.map({ __item in __item })
-        } else {
-          return nil
-        }
-      }()
+      return self.__angles.map({ __item in __item })
     }
     @inline(__always)
     set {
-      self.__angles = { () -> bridge.std__optional_std__vector_double__ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-            return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
-          })
-        } else {
-          return .init()
-        }
-      }()
-    }
-  }
-  
-  var highlightedAngle: Double {
-    @inline(__always)
-    get {
-      return self.__highlightedAngle
-    }
-    @inline(__always)
-    set {
-      self.__highlightedAngle = newValue
-    }
-  }
-  
-  var status: LaneStatus {
-    @inline(__always)
-    get {
-      return self.__status
-    }
-    @inline(__always)
-    set {
-      self.__status = newValue
+      self.__angles = newValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
+        return bridge.copy_std__vector_double_(__pointer.baseAddress!, newValue.count)
+      }
     }
   }
 }

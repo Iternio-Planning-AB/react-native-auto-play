@@ -46,8 +46,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMess
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
-// Forward declaration of `LaneStatus` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
 // Forward declaration of `Lane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
@@ -92,6 +90,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Point; }
+// Forward declaration of `PreferredLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
@@ -136,7 +136,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "KeepType.hpp"
 #include "Lane.hpp"
 #include "LaneGuidance.hpp"
-#include "LaneStatus.hpp"
 #include "ListTemplateConfig.hpp"
 #include "ManeuverType.hpp"
 #include "MapTemplateConfig.hpp"
@@ -158,6 +157,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "Point.hpp"
+#include "PreferredLane.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "TrafficSide.hpp"
@@ -176,6 +176,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include <memory>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 // C++ helpers for Swift

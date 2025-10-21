@@ -147,21 +147,21 @@ export interface KeepManeuver extends BaseManeuver {
   keepType: KeepType;
 }
 
-export enum LaneStatus {
-  NotGood = 0,
-  Good = 1,
-  Preferred = 2,
+export interface Lane {
+  angles: Array<number>;
 }
 
-export interface Lane {
-  angles?: Array<number>;
+export interface PreferredLane extends Lane {
+  /**
+   * highlightedAngle must not be included in angles, if you have no more angles you can specify an empty angles array
+   */
   highlightedAngle: number;
-  status: LaneStatus;
+  isPreferred: boolean;
 }
 
 export interface LaneGuidance {
   instructionVariants: Array<string>;
-  lanes: Array<Lane>;
+  lanes: Array<PreferredLane | Lane>;
 }
 
 export type Maneuver =

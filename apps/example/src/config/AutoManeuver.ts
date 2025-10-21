@@ -1,6 +1,5 @@
 import {
   type AutoManeuver,
-  LaneStatus,
   ManeuverType,
   type MapTemplate,
   TrafficSide,
@@ -26,10 +25,11 @@ const getManeuvers = (): Array<AutoManeuver> => [
     linkedLaneGuidance: {
       instructionVariants: ['lane'],
       lanes: [
-        { highlightedAngle: 0, status: LaneStatus.Preferred },
-        { highlightedAngle: 0, angles: [90], status: LaneStatus.Preferred },
-        { highlightedAngle: 90, status: LaneStatus.NotGood },
-        { highlightedAngle: 90, status: LaneStatus.NotGood },
+        { angles: [-90] },
+        { highlightedAngle: 0, angles: [], isPreferred: true },
+        { highlightedAngle: 0, angles: [90], isPreferred: false },
+        { angles: [90] },
+        { angles: [90] },
       ],
     },
   },

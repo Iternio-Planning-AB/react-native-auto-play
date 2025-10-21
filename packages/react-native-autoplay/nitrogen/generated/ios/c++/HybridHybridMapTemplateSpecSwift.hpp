@@ -80,10 +80,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `PreferredLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
 // Forward declaration of `Lane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
-// Forward declaration of `LaneStatus` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
@@ -127,8 +127,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "KeepType.hpp"
 #include "TrafficSide.hpp"
 #include "LaneGuidance.hpp"
+#include "PreferredLane.hpp"
 #include "Lane.hpp"
-#include "LaneStatus.hpp"
+#include <variant>
 #include "ManeuverType.hpp"
 #include "TripConfig.hpp"
 

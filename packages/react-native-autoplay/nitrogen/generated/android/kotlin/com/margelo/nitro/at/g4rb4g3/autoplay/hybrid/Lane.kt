@@ -19,13 +19,7 @@ import com.facebook.proguard.annotations.DoNotStrip
 data class Lane(
   @DoNotStrip
   @Keep
-  val angles: DoubleArray?,
-  @DoNotStrip
-  @Keep
-  val highlightedAngle: Double,
-  @DoNotStrip
-  @Keep
-  val status: LaneStatus
+  val angles: DoubleArray
 ) {
   private companion object {
     /**
@@ -35,8 +29,8 @@ data class Lane(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(angles: DoubleArray?, highlightedAngle: Double, status: LaneStatus): Lane {
-      return Lane(angles, highlightedAngle, status)
+    private fun fromCpp(angles: DoubleArray): Lane {
+      return Lane(angles)
     }
   }
 }
