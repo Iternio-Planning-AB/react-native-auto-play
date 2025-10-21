@@ -63,27 +63,14 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun setTemplateActions(
-        templateId: String, actions: Array<NitroAction>?
+    override fun setTemplateHeaderActions(
+        templateId: String, headerActions: Array<NitroAction>?
     ) {
         val template =
             AndroidAutoTemplate.Companion.getTemplate(templateId) ?: throw IllegalArgumentException(
-                "setTemplateActions failed, template $templateId not found"
+                "setTemplateHeaderActions failed, template $templateId not found"
             )
-        template.setTemplateActions(actions)
-    }
-
-
-    override fun createAlertTemplate(config: AlertTemplateConfig) {
-        // TODO
-    }
-
-    override fun presentTemplate(templateId: String) {
-        // TODO
-    }
-
-    override fun dismissTemplate(templateId: String) {
-        // TODO
+        template.setTemplateHeaderActions(headerActions)
     }
 
     override fun setRootTemplate(templateId: String): Promise<Unit> {
@@ -153,7 +140,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popTemplate(): Promise<Unit> {
+    override fun popTemplate(animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("popTemplate failed, screenManager not found")
@@ -171,7 +158,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popToRootTemplate(): Promise<Unit> {
+    override fun popToRootTemplate(animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("popToRootTemplate failed, screenManager not found")
@@ -189,7 +176,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
-    override fun popToTemplate(templateId: String): Promise<Unit> {
+    override fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")

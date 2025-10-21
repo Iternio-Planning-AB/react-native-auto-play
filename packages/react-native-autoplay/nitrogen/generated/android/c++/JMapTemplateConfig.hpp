@@ -10,7 +10,9 @@
 #include <fbjni/fbjni.h>
 #include "MapTemplateConfig.hpp"
 
+#include "AlertActionStyle.hpp"
 #include "ColorScheme.hpp"
+#include "JAlertActionStyle.hpp"
 #include "JColorScheme.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_ColorScheme.hpp"
@@ -74,8 +76,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JFunc_void::javaobject> onPopped = this->getFieldValue(fieldOnPopped);
       static const auto fieldMapButtons = clazz->getField<jni::JArrayClass<JNitroMapButton>>("mapButtons");
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
-      static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
-      jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
+      static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JNitroAction>>("headerActions");
+      jni::local_ref<jni::JArrayClass<JNitroAction>> headerActions = this->getFieldValue(fieldHeaderActions);
       static const auto fieldGuidanceBackgroundColor = clazz->getField<JNitroColor>("guidanceBackgroundColor");
       jni::local_ref<JNitroColor> guidanceBackgroundColor = this->getFieldValue(fieldGuidanceBackgroundColor);
       static const auto fieldVisibleTravelEstimate = clazz->getField<JVisibleTravelEstimate>("visibleTravelEstimate");
@@ -157,12 +159,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __vector;
         }()) : std::nullopt,
-        actions != nullptr ? std::make_optional([&]() {
-          size_t __size = actions->size();
+        headerActions != nullptr ? std::make_optional([&]() {
+          size_t __size = headerActions->size();
           std::vector<NitroAction> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = actions->getElement(__i);
+            auto __element = headerActions->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
@@ -249,11 +251,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }() : nullptr,
-        value.actions.has_value() ? [&]() {
-          size_t __size = value.actions.value().size();
+        value.headerActions.has_value() ? [&]() {
+          size_t __size = value.headerActions.value().size();
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.actions.value()[__i];
+            const auto& __element = value.headerActions.value()[__i];
             __array->setElement(__i, *JNitroAction::fromCpp(__element));
           }
           return __array;

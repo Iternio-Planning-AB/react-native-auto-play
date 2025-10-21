@@ -24,6 +24,10 @@
     "HybridMapTemplate": {
       "kotlin": "HybridMapTemplate",
       "swift": "HybridMapTemplate"
+    },
+    "HybridMessageTemplate": {
+      "kotlin": "HybridMessageTemplate",
+      "swift": "HybridMessageTemplate"
     }
   },
   "ignorePaths": ["**/node_modules"]

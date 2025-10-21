@@ -1,5 +1,4 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { AlertTemplateConfig } from '../templates/AlertTemplate';
 import type { TemplateConfig } from '../templates/Template';
 import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
 import type { NitroAction } from '../utils/NitroAction';
@@ -29,19 +28,6 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   ): CleanupCallback;
 
   /**
-   * @namespace iOS // add similar thing for Android, probably a MessageTemplate then?
-   */
-  createAlertTemplate(config: AlertTemplateConfig): void;
-  /**
-   * @namespace iOS
-   */
-  presentTemplate(templateId: string): void;
-  /**
-   * @namespace iOS
-   */
-  dismissTemplate(templateId: string): void;
-
-  /**
    * sets the specified template as root template, initializes a new stack
    * Promise might contain an error message in case setting root template failed
    * can be used on any Android screen/iOS scene
@@ -55,18 +41,20 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
 
   /**
    * remove the top template from the stack
+   * @param animate - defaults to true
    */
-  popTemplate(): Promise<void>;
+  popTemplate(animate?: boolean): Promise<void>;
 
   /**
    * remove all templates from the stack except the root template
+   * @param animate - defaults to true
    */
-  popToRootTemplate(): Promise<void>;
+  popToRootTemplate(animate?: boolean): Promise<void>;
 
   /**
    * removes all templates until the specified one is the top template
    */
-  popToTemplate(templateId: string): Promise<void>;
+  popToTemplate(templateId: string, animate?: boolean): Promise<void>;
 
   /**
    * callback for safe area insets changes
@@ -78,7 +66,7 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   ): CleanupCallback;
 
   /**
-   * update a templates actions
+   * update a templates headerActions
    */
-  setTemplateActions(templateId: string, actions?: Array<NitroAction>): void;
+  setTemplateHeaderActions(templateId: string, headerActions?: Array<NitroAction>): void;
 }

@@ -21,7 +21,7 @@ class ListTemplate: AutoPlayTemplate {
         super.init(
             templateId: config.id,
             template: template,
-            header: config.actions
+            header: config.headerActions
         )
 
         invalidate()
@@ -47,7 +47,7 @@ class ListTemplate: AutoPlayTemplate {
     }
 
     override func onDidAppear(animted: Bool) {
-        config.onDidDisappear?(animted)
+        config.onDidAppear?(animted)
     }
 
     override func onWillDisappear(animted: Bool) {

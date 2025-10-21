@@ -150,39 +150,6 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func createAlertTemplate(config: AlertTemplateConfig) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.createAlertTemplate(config: config)
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func presentTemplate(templateId: std.string) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.presentTemplate(templateId: String(templateId))
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
-  public final func dismissTemplate(templateId: std.string) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.dismissTemplate(templateId: String(templateId))
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))
@@ -221,9 +188,9 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func popTemplate() -> bridge.Result_std__shared_ptr_Promise_void___ {
+  public final func popTemplate(animate: bridge.std__optional_bool_) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      let __result = try self.__implementation.popTemplate()
+      let __result = try self.__implementation.popTemplate(animate: animate.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
@@ -240,9 +207,9 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func popToRootTemplate() -> bridge.Result_std__shared_ptr_Promise_void___ {
+  public final func popToRootTemplate(animate: bridge.std__optional_bool_) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      let __result = try self.__implementation.popToRootTemplate()
+      let __result = try self.__implementation.popToRootTemplate(animate: animate.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
@@ -259,9 +226,9 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func popToTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
+  public final func popToTemplate(templateId: std.string, animate: bridge.std__optional_bool_) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      let __result = try self.__implementation.popToTemplate(templateId: String(templateId))
+      let __result = try self.__implementation.popToTemplate(templateId: String(templateId), animate: animate.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
@@ -298,11 +265,11 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func setTemplateActions(templateId: std.string, actions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
+  public final func setTemplateHeaderActions(templateId: std.string, headerActions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
     do {
-      try self.__implementation.setTemplateActions(templateId: String(templateId), actions: { () -> [NitroAction]? in
-        if bridge.has_value_std__optional_std__vector_NitroAction__(actions) {
-          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(actions)
+      try self.__implementation.setTemplateHeaderActions(templateId: String(templateId), headerActions: { () -> [NitroAction]? in
+        if bridge.has_value_std__optional_std__vector_NitroAction__(headerActions) {
+          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(headerActions)
           return __unwrapped.map({ __item in __item })
         } else {
           return nil

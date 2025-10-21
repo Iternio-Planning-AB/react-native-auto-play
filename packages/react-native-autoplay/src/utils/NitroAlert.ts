@@ -2,7 +2,7 @@ import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
-type AlertActionStyle = 'default' | 'destructive';
+export type AlertActionStyle = 'default' | 'destructive' | 'cancel';
 type AlertDismissalReason = 'timeout' | 'user' | 'system';
 
 export type NavigationAlertAction = {

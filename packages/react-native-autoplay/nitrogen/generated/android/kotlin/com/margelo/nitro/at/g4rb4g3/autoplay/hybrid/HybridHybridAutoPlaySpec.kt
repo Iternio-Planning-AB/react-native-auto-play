@@ -60,18 +60,6 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun createAlertTemplate(config: AlertTemplateConfig): Unit
-  
-  @DoNotStrip
-  @Keep
-  abstract fun presentTemplate(templateId: String): Unit
-  
-  @DoNotStrip
-  @Keep
-  abstract fun dismissTemplate(templateId: String): Unit
-  
-  @DoNotStrip
-  @Keep
   abstract fun setRootTemplate(templateId: String): Promise<Unit>
   
   @DoNotStrip
@@ -80,15 +68,15 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun popTemplate(): Promise<Unit>
+  abstract fun popTemplate(animate: Boolean?): Promise<Unit>
   
   @DoNotStrip
   @Keep
-  abstract fun popToRootTemplate(): Promise<Unit>
+  abstract fun popToRootTemplate(animate: Boolean?): Promise<Unit>
   
   @DoNotStrip
   @Keep
-  abstract fun popToTemplate(templateId: String): Promise<Unit>
+  abstract fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit>
   
   abstract fun addSafeAreaInsetsListener(moduleName: String, callback: (insets: SafeAreaInsets) -> Unit): () -> Unit
   
@@ -99,12 +87,12 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
-  abstract fun setTemplateActions(templateId: String, actions: Array<NitroAction>?): Unit
+  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Unit
   
   @DoNotStrip
   @Keep
-  private fun setTemplateActions_cxx(templateId: String, actions: Array<NitroAction>?): Unit {
-    val __result = setTemplateActions(templateId, actions?.let { it })
+  private fun setTemplateHeaderActions_cxx(templateId: String, headerActions: Array<NitroAction>?): Unit {
+    val __result = setTemplateHeaderActions(templateId, headerActions?.let { it })
     return __result
   }
 

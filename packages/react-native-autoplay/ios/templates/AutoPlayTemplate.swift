@@ -21,8 +21,8 @@ class AutoPlayTemplate: NSObject {
     func setBarButtons() {
         guard let template = template as? CPBarButtonProviding else { return }
 
-        if let actions = barButtons {
-            let parsedActions = Parser.parseActions(actions: actions)
+        if let headerActions = barButtons {
+            let parsedActions = Parser.parseHeaderActions(headerActions: headerActions)
 
             template.backButton = parsedActions.backButton
             template.leadingNavigationBarButtons =

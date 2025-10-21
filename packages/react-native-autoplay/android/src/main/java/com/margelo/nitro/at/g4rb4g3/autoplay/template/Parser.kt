@@ -18,6 +18,7 @@ import androidx.car.app.model.Row
 import androidx.car.app.model.Toggle
 import androidx.car.app.navigation.model.TravelEstimate
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AutoText
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DistanceUnits
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DurationWithTimeZone
@@ -38,10 +39,10 @@ import java.util.TimeZone
 object Parser {
     const val TAG = "Parser"
 
-    fun parseHeader(context: CarContext, title: AutoText, actions: Array<NitroAction>?): Header {
+    fun parseHeader(context: CarContext, title: AutoText, headerActions: Array<NitroAction>?): Header {
         return Header.Builder().apply {
             setTitle(parseText(title))
-            actions?.forEach { action ->
+            headerActions?.forEach { action ->
                 when (action.alignment) {
                     NitroAlignment.LEADING -> {
                         setStartHeaderAction(parseAction(context, action))
@@ -78,6 +79,11 @@ object Parser {
             }
             action.flags?.let { flags ->
                 setFlags(flags.toInt())
+            }
+            action.style?.let { style ->
+                if (style == AlertActionStyle.DESTRUCTIVE) {
+                    setBackgroundColor(CarColor.RED)
+                }
             }
         }.build()
     }

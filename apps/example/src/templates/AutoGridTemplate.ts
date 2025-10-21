@@ -73,7 +73,7 @@ const getButtons = (color: string): Array<GridButton<GridTemplate>> => [
 const getTemplate = (): GridTemplate => {
   return new GridTemplate({
     title: { text: 'grid' },
-    actions: AutoTemplate.actions,
+    headerActions: AutoTemplate.headerActions,
     buttons: getButtons('green'),
     onWillAppear: () => console.log('GridTemplate onWillAppear'),
     onDidAppear: () => console.log('GridTemplate onDidAppear'),

@@ -11,12 +11,6 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
-// Forward declaration of `AlertTemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertTemplateConfig; }
-// Forward declaration of `AlertAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertAction; }
-// Forward declaration of `AlertStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertStyle; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -27,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -38,19 +34,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignm
 #include "VisibilityState.hpp"
 #include "JFunc_void_VisibilityState.hpp"
 #include "JVisibilityState.hpp"
-#include "AlertTemplateConfig.hpp"
-#include "JAlertTemplateConfig.hpp"
-#include <vector>
-#include "AlertAction.hpp"
 #include <optional>
-#include "JAlertAction.hpp"
-#include "AlertStyle.hpp"
-#include "JAlertStyle.hpp"
-#include "JFunc_void_std__optional_bool_.hpp"
 #include "SafeAreaInsets.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JSafeAreaInsets.hpp"
 #include "NitroAction.hpp"
+#include <vector>
 #include "JNitroAction.hpp"
 #include "NitroImage.hpp"
 #include "JNitroImage.hpp"
@@ -58,6 +47,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignm
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "JNitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
+#include "JAlertActionStyle.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -115,18 +106,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     }();
   }
-  void JHybridHybridAutoPlaySpec::createAlertTemplate(const AlertTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JAlertTemplateConfig> /* config */)>("createAlertTemplate");
-    method(_javaPart, JAlertTemplateConfig::fromCpp(config));
-  }
-  void JHybridHybridAutoPlaySpec::presentTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("presentTemplate");
-    method(_javaPart, jni::make_jstring(templateId));
-  }
-  void JHybridHybridAutoPlaySpec::dismissTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("dismissTemplate");
-    method(_javaPart, jni::make_jstring(templateId));
-  }
   std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId));
@@ -157,9 +136,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popTemplate() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("popTemplate");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popTemplate(std::optional<bool> animate) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popTemplate");
+    auto __result = method(_javaPart, animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
@@ -172,9 +151,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToRootTemplate() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("popToRootTemplate");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToRootTemplate(std::optional<bool> animate) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popToRootTemplate");
+    auto __result = method(_javaPart, animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
@@ -187,9 +166,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("popToTemplate");
-    auto __result = method(_javaPart, jni::make_jstring(templateId));
+  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::popToTemplate(const std::string& templateId, std::optional<bool> animate) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JBoolean> /* animate */)>("popToTemplate");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
@@ -217,13 +196,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     }();
   }
-  void JHybridHybridAutoPlaySpec::setTemplateActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& actions) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* actions */)>("setTemplateActions_cxx");
-    method(_javaPart, jni::make_jstring(templateId), actions.has_value() ? [&]() {
-      size_t __size = actions.value().size();
+  void JHybridHybridAutoPlaySpec::setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions_cxx");
+    method(_javaPart, jni::make_jstring(templateId), headerActions.has_value() ? [&]() {
+      size_t __size = headerActions.value().size();
       jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = actions.value()[__i];
+        const auto& __element = headerActions.value()[__i];
         __array->setElement(__i, *JNitroAction::fromCpp(__element));
       }
       return __array;

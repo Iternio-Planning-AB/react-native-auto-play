@@ -4,6 +4,7 @@ import type { HybridAutoPlay as NitroHybridAutoPlay } from './specs/HybridAutoPl
 import type { HybridGridTemplate as NitroHybridGridTemplate } from './specs/HybridGridTemplate.nitro';
 import type { HybridListTemplate as NitroHybridListTemplate } from './specs/HybridListTemplate.nitro';
 import type { HybridMapTemplate as NitroHybridMapTemplate } from './specs/HybridMapTemplate.nitro';
+import type { HybridMessageTemplate as NitroHybridMessageTemplate } from './specs/HybridMessageTemplate.nitro';
 
 AutoPlayHeadlessJsTask.registerHeadlessTask();
 
@@ -15,14 +16,16 @@ export const HybridGridTemplate =
   NitroModules.createHybridObject<NitroHybridGridTemplate>('HybridGridTemplate');
 export const HybridMapTemplate =
   NitroModules.createHybridObject<NitroHybridMapTemplate>('HybridMapTemplate');
+export const HybridMessageTemplate =
+  NitroModules.createHybridObject<NitroHybridMessageTemplate>('HybridMessageTemplate');
 
 export * from './components/SafeAreaView';
 export * from './hooks/useMapTemplate';
 export * from './hooks/useSafeAreaInsets';
-export * from './templates/AlertTemplate';
 export * from './templates/GridTemplate';
 export * from './templates/ListTemplate';
 export * from './templates/MapTemplate';
+export * from './templates/MessageTemplate';
 export * from './templates/Template';
 export * from './types/Button';
 export * from './types/Event';

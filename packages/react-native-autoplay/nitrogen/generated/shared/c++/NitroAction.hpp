@@ -29,6 +29,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 
 #include <string>
 #include <optional>
@@ -36,6 +38,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignm
 #include <functional>
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -51,10 +54,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     NitroActionType type     SWIFT_PRIVATE;
     std::optional<NitroAlignment> alignment     SWIFT_PRIVATE;
     std::optional<double> flags     SWIFT_PRIVATE;
+    std::optional<AlertActionStyle> style     SWIFT_PRIVATE;
 
   public:
     NitroAction() = default;
-    explicit NitroAction(std::optional<std::string> title, std::optional<NitroImage> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags) {}
+    explicit NitroAction(std::optional<std::string> title, std::optional<NitroImage> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags, std::optional<AlertActionStyle> style): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags), style(style) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -73,7 +77,8 @@ namespace margelo::nitro {
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::fromJSI(runtime, obj.getProperty(runtime, "alignment")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "flags"))
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "flags")),
+        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle>>::fromJSI(runtime, obj.getProperty(runtime, "style"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction& arg) {
@@ -85,6 +90,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::toJSI(runtime, arg.type));
       obj.setProperty(runtime, "alignment", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::toJSI(runtime, arg.alignment));
       obj.setProperty(runtime, "flags", JSIConverter<std::optional<double>>::toJSI(runtime, arg.flags));
+      obj.setProperty(runtime, "style", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle>>::toJSI(runtime, arg.style));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -102,6 +108,7 @@ namespace margelo::nitro {
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::canConvert(runtime, obj.getProperty(runtime, "alignment"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "flags"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle>>::canConvert(runtime, obj.getProperty(runtime, "style"))) return false;
       return true;
     }
   };

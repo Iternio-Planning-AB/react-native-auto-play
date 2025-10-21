@@ -17,7 +17,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
 
     override fun parse(): Template {
         return ListTemplate.Builder().apply {
-            setHeader(Parser.parseHeader(context, config.title, config.actions))
+            setHeader(Parser.parseHeader(context, config.title, config.headerActions))
 
             config.sections?.let { sections ->
                 if (sections.isEmpty()) {
@@ -46,8 +46,8 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
         }.build()
     }
 
-    override fun setTemplateActions(actions: Array<NitroAction>?) {
-        config = config.copy(actions = actions)
+    override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
+        config = config.copy(headerActions = headerActions)
         super.applyConfigUpdate()
     }
 

@@ -10,7 +10,7 @@ import { AutoTemplate } from './AutoTemplate';
 const getRadioTemplate = (): ListTemplate => {
   return new ListTemplate({
     title: { text: 'radios' },
-    actions: AutoTemplate.actions,
+    headerActions: AutoTemplate.headerActions,
     sections: {
       type: 'radio',
       selectedIndex: 1,
@@ -100,7 +100,7 @@ const getTemplate = (): ListTemplate => {
       distance: { unit: 'meters', value: 1234 },
       duration: 4711,
     },
-    actions: AutoTemplate.actions,
+    headerActions: AutoTemplate.headerActions,
     sections: getMainSection(true),
     onPopped: () => console.log('ListTemplate onPopped'),
   });

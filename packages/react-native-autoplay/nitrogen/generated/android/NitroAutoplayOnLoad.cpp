@@ -18,9 +18,9 @@
 #include "JHybridHybridAutoPlaySpec.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_VisibilityState.hpp"
-#include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JHybridHybridGridTemplateSpec.hpp"
+#include "JFunc_void_std__optional_bool_.hpp"
 #include "JHybridHybridListTemplateSpec.hpp"
 #include "JHybridHybridMapTemplateSpec.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
@@ -29,6 +29,7 @@
 #include "JFunc_void_ColorScheme.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
+#include "JHybridHybridMessageTemplateSpec.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -43,9 +44,9 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridAutoPlaySpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_VisibilityState_cxx::registerNatives();
-    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__optional_bool__cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_SafeAreaInsets_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridGridTemplateSpec::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__optional_bool__cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridListTemplateSpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridMapTemplateSpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
@@ -54,6 +55,7 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_ColorScheme_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_AlertDismissalReason_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__string_std__string_cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridMessageTemplateSpec::registerNatives();
 
     // Register Nitro Hybrid Objects
     HybridObjectRegistry::registerHybridObjectConstructor(
@@ -84,6 +86,14 @@ int initialize(JavaVM* vm) {
       "HybridMapTemplate",
       []() -> std::shared_ptr<HybridObject> {
         static DefaultConstructableObject<JHybridHybridMapTemplateSpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridMapTemplate");
+        auto instance = object.create();
+        return instance->cthis()->shared();
+      }
+    );
+    HybridObjectRegistry::registerHybridObjectConstructor(
+      "HybridMessageTemplate",
+      []() -> std::shared_ptr<HybridObject> {
+        static DefaultConstructableObject<JHybridHybridMessageTemplateSpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridMessageTemplate");
         auto instance = object.create();
         return instance->cthis()->shared();
       }

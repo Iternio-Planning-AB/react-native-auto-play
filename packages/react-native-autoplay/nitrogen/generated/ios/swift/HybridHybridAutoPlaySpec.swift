@@ -16,16 +16,13 @@ public protocol HybridHybridAutoPlaySpec_protocol: HybridObject {
   // Methods
   func addListener(eventType: EventName, callback: @escaping () -> Void) throws -> () -> Void
   func addListenerRenderState(mapTemplateId: String, callback: @escaping (_ payload: VisibilityState) -> Void) throws -> () -> Void
-  func createAlertTemplate(config: AlertTemplateConfig) throws -> Void
-  func presentTemplate(templateId: String) throws -> Void
-  func dismissTemplate(templateId: String) throws -> Void
   func setRootTemplate(templateId: String) throws -> Promise<Void>
   func pushTemplate(templateId: String) throws -> Promise<Void>
-  func popTemplate() throws -> Promise<Void>
-  func popToRootTemplate() throws -> Promise<Void>
-  func popToTemplate(templateId: String) throws -> Promise<Void>
+  func popTemplate(animate: Bool?) throws -> Promise<Void>
+  func popToRootTemplate(animate: Bool?) throws -> Promise<Void>
+  func popToTemplate(templateId: String, animate: Bool?) throws -> Promise<Void>
   func addSafeAreaInsetsListener(moduleName: String, callback: @escaping (_ insets: SafeAreaInsets) -> Void) throws -> () -> Void
-  func setTemplateActions(templateId: String, actions: [NitroAction]?) throws -> Void
+  func setTemplateHeaderActions(templateId: String, headerActions: [NitroAction]?) throws -> Void
 }
 
 /// See ``HybridHybridAutoPlaySpec``

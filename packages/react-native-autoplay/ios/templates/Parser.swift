@@ -9,7 +9,7 @@ import CarPlay
 import React
 import UIKit
 
-struct Actions {
+struct HeaderActions {
     let leadingNavigationBarButtons: [CPBarButton]
     let trailingNavigationBarButtons: [CPBarButton]
     let backButton: CPBarButton?
@@ -18,14 +18,30 @@ struct Actions {
 class Parser {
     static let PLACEHOLDER_DISTANCE = "{distance}"
     static let PLACEHOLDER_DURATION = "{duration}"
+    
+    static func parseAlertActions(alertActions: [NitroAction]?) -> [CPAlertAction] {
+        var actions: [CPAlertAction] = []
 
-    static func parseActions(actions: [NitroAction]?) -> Actions {
+        if let alertActions = alertActions {
+            alertActions.forEach { alertAction in
+                let action = CPAlertAction(title: alertAction.title!, style: parseActionAlertStyle(style: alertAction.style), handler: { actionHandler in
+                    alertAction.onPress()
+                })
+
+                actions.append(action)
+            }
+        }
+
+        return actions
+    }
+
+    static func parseHeaderActions(headerActions: [NitroAction]?) -> HeaderActions {
         var leadingNavigationBarButtons: [CPBarButton] = []
         var trailingNavigationBarButtons: [CPBarButton] = []
         var backButton: CPBarButton?
 
-        if let actions = actions {
-            actions.forEach { action in
+        if let headerActions = headerActions {
+            headerActions.forEach { action in
                 if action.type == .back {
                     backButton = CPBarButton(title: "") { _ in
                         action.onPress()
@@ -54,7 +70,7 @@ class Parser {
             }
         }
 
-        return Actions(
+        return HeaderActions(
             leadingNavigationBarButtons: leadingNavigationBarButtons,
             trailingNavigationBarButtons: trailingNavigationBarButtons,
             backButton: backButton
@@ -204,6 +220,8 @@ class Parser {
             return CPAlertAction.Style.default
         case .destructive:
             return CPAlertAction.Style.destructive
+        case .cancel:
+            return CPAlertAction.Style.cancel
         }
     }
 

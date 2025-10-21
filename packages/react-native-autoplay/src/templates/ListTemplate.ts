@@ -3,7 +3,12 @@ import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
-import { type Actions, type NitroTemplateConfig, Template, type TemplateConfig } from './Template';
+import {
+  type HeaderActions,
+  type NitroTemplateConfig,
+  Template,
+  type TemplateConfig,
+} from './Template';
 
 type BaseRow = {
   title: AutoText;
@@ -52,16 +57,16 @@ export type SingleSection<T> = {
 export type Section<T> = Array<MultiSection<T>> | SingleSection<T>;
 
 export interface NitroListTemplateConfig extends TemplateConfig {
-  actions?: Array<NitroAction>;
+  headerActions?: Array<NitroAction>;
   title: AutoText;
   sections?: Array<NitroSection>;
 }
 
-export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'actions' | 'sections'> & {
+export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'headerActions' | 'sections'> & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
-  actions?: Actions<ListTemplate>;
+  headerActions?: HeaderActions<ListTemplate>;
 
   /**
    * a container that groups your list items into sections.
@@ -69,18 +74,18 @@ export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'actions' | 'sect
   sections?: Section<ListTemplate>;
 };
 
-export class ListTemplate extends Template<ListTemplateConfig, Actions<ListTemplate>> {
+export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<ListTemplate>> {
   private template = this;
 
   constructor(config: ListTemplateConfig) {
     super(config);
 
-    const { actions, sections, ...rest } = config;
+    const { headerActions, sections, ...rest } = config;
 
     const nitroConfig: NitroListTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
-      actions: NitroActionUtil.convert(this.template, actions),
+      headerActions: NitroActionUtil.convert(this.template, headerActions),
       sections: NitroSectionUtil.convert(this.template, sections),
     };
 

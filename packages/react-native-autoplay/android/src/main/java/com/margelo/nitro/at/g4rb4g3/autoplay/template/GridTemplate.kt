@@ -18,7 +18,7 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
 
     override fun parse(): Template {
         return GridTemplate.Builder().apply {
-            setHeader(Parser.parseHeader(context, config.title, config.actions))
+            setHeader(Parser.parseHeader(context, config.title, config.headerActions))
 
             if (config.buttons.isEmpty()) {
                 setLoading(true)
@@ -39,8 +39,8 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
         }.build();
     }
 
-    override fun setTemplateActions(actions: Array<NitroAction>?) {
-        config = config.copy(actions = actions)
+    override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
+        config = config.copy(headerActions = headerActions)
         super.applyConfigUpdate()
     }
 

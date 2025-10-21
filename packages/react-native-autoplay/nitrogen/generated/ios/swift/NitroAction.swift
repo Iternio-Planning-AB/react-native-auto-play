@@ -18,7 +18,7 @@ public extension NitroAction {
   /**
    * Create a new instance of `NitroAction`.
    */
-  init(title: String?, image: NitroImage?, enabled: Bool?, onPress: @escaping () -> Void, type: NitroActionType, alignment: NitroAlignment?, flags: Double?) {
+  init(title: String?, image: NitroImage?, enabled: Bool?, onPress: @escaping () -> Void, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: AlertActionStyle?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = title {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -49,6 +49,12 @@ public extension NitroAction {
     }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = flags {
         return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_AlertActionStyle_ in
+      if let __unwrappedValue = style {
+        return bridge.create_std__optional_AlertActionStyle_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -170,6 +176,23 @@ public extension NitroAction {
       self.__flags = { () -> bridge.std__optional_double_ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_double_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var style: AlertActionStyle? {
+    @inline(__always)
+    get {
+      return self.__style.value
+    }
+    @inline(__always)
+    set {
+      self.__style = { () -> bridge.std__optional_AlertActionStyle_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_AlertActionStyle_(__unwrappedValue)
         } else {
           return .init()
         }

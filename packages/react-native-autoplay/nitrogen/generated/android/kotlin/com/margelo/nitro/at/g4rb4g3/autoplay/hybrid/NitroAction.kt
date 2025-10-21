@@ -41,11 +41,14 @@ data class NitroAction
     val alignment: NitroAlignment?,
     @DoNotStrip
     @Keep
-    val flags: Double?
+    val flags: Double?,
+    @DoNotStrip
+    @Keep
+    val style: AlertActionStyle?
   ) {
   /**
    * Initialize a new instance of `NitroAction` from Kotlin.
    */
-  constructor(title: String?, image: NitroImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?)
-       : this(title, image, enabled, Func_void_java(onPress), type, alignment, flags)
+  constructor(title: String?, image: NitroImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: AlertActionStyle?)
+       : this(title, image, enabled, Func_void_java(onPress), type, alignment, flags, style)
 }

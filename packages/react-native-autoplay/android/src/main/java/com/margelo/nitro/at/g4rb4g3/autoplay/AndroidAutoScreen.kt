@@ -63,9 +63,9 @@ class AndroidAutoScreen(
             override fun handleOnBackPressed() {
                 val config = AndroidAutoTemplate.getConfig(moduleName)
                 val backButton = when (config) {
-                    is MapTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
-                    is ListTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
-                    is GridTemplateConfig -> config.actions?.find { it.type == NitroActionType.BACK }
+                    is MapTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is ListTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is GridTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     else -> null
                 }
 

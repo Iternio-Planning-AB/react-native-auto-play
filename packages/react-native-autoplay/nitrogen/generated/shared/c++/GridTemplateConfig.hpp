@@ -51,13 +51,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear     SWIFT_PRIVATE;
     std::optional<std::function<void()>> onPopped     SWIFT_PRIVATE;
-    std::optional<std::vector<NitroAction>> actions     SWIFT_PRIVATE;
+    std::optional<std::vector<NitroAction>> headerActions     SWIFT_PRIVATE;
     AutoText title     SWIFT_PRIVATE;
     std::vector<NitroGridButton> buttons     SWIFT_PRIVATE;
 
   public:
     GridTemplateConfig() = default;
-    explicit GridTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<std::vector<NitroAction>> actions, AutoText title, std::vector<NitroGridButton> buttons): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), actions(actions), title(title), buttons(buttons) {}
+    explicit GridTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::vector<NitroGridButton> buttons): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), headerActions(headerActions), title(title), buttons(buttons) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -76,7 +76,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidAppear")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onPopped")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "actions")),
+        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "headerActions")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "title")),
         JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroGridButton>>::fromJSI(runtime, obj.getProperty(runtime, "buttons"))
       );
@@ -89,7 +89,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "onDidAppear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidAppear));
       obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidDisappear));
       obj.setProperty(runtime, "onPopped", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPopped));
-      obj.setProperty(runtime, "actions", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::toJSI(runtime, arg.actions));
+      obj.setProperty(runtime, "headerActions", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::toJSI(runtime, arg.headerActions));
       obj.setProperty(runtime, "title", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, "buttons", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroGridButton>>::toJSI(runtime, arg.buttons));
       return obj;
@@ -108,7 +108,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidAppear"))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onPopped"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "actions"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "headerActions"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroGridButton>>::canConvert(runtime, obj.getProperty(runtime, "buttons"))) return false;
       return true;
