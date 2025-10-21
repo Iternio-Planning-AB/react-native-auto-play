@@ -28,7 +28,6 @@ class Parser {
                     alertAction.onPress()
                 })
 
-                // for whatever reason CarPlay decieds to reverse the order to what we get from js side so we can not append here
                 actions.append(action)
             }
         }

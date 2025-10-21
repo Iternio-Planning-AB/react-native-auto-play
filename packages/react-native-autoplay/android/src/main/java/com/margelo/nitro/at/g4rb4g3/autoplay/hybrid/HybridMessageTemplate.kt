@@ -9,7 +9,7 @@ class HybridMessageTemplate : HybridHybridMessageTemplateSpec() {
 
     override fun createMessageTemplate(config: MessageTemplateConfig) {
         val context = AndroidAutoSession.Companion.getRootContext()
-            ?: throw IllegalArgumentException("createListTemplate failed, carContext not found")
+            ?: throw IllegalArgumentException("createMessageTemplate failed, carContext not found")
 
         val template = MessageTemplate(context, config)
         AndroidAutoTemplate.Companion.setTemplate(config.id, template)
