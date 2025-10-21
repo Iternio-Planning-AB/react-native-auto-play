@@ -33,15 +33,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldGlyph = clazz->getField<double>("glyph");
       double glyph = this->getFieldValue(fieldGlyph);
-      static const auto fieldSize = clazz->getField<double>("size");
-      double size = this->getFieldValue(fieldSize);
       static const auto fieldColor = clazz->getField<jni::JDouble>("color");
       jni::local_ref<jni::JDouble> color = this->getFieldValue(fieldColor);
       static const auto fieldBackgroundColor = clazz->getField<jni::JDouble>("backgroundColor");
       jni::local_ref<jni::JDouble> backgroundColor = this->getFieldValue(fieldBackgroundColor);
       return NitroImage(
         glyph,
-        size,
         color != nullptr ? std::make_optional(color->value()) : std::nullopt,
         backgroundColor != nullptr ? std::make_optional(backgroundColor->value()) : std::nullopt
       );
@@ -55,7 +52,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     static jni::local_ref<JNitroImage::javaobject> fromCpp(const NitroImage& value) {
       return newInstance(
         value.glyph,
-        value.size,
         value.color.has_value() ? jni::JDouble::valueOf(value.color.value()) : nullptr,
         value.backgroundColor.has_value() ? jni::JDouble::valueOf(value.backgroundColor.value()) : nullptr
       );

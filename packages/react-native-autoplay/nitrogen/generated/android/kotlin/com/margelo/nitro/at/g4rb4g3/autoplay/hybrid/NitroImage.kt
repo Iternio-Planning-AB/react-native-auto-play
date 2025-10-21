@@ -26,9 +26,6 @@ data class NitroImage
     val glyph: Double,
     @DoNotStrip
     @Keep
-    val size: Double,
-    @DoNotStrip
-    @Keep
     val color: Double?,
     @DoNotStrip
     @Keep

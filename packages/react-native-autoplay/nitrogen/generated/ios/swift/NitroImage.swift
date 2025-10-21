@@ -18,8 +18,8 @@ public extension NitroImage {
   /**
    * Create a new instance of `NitroImage`.
    */
-  init(glyph: Double, size: Double, color: Double?, backgroundColor: Double?) {
-    self.init(glyph, size, { () -> bridge.std__optional_double_ in
+  init(glyph: Double, color: Double?, backgroundColor: Double?) {
+    self.init(glyph, { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = color {
         return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
@@ -42,17 +42,6 @@ public extension NitroImage {
     @inline(__always)
     set {
       self.__glyph = newValue
-    }
-  }
-  
-  var size: Double {
-    @inline(__always)
-    get {
-      return self.__size
-    }
-    @inline(__always)
-    set {
-      self.__size = newValue
     }
   }
   
