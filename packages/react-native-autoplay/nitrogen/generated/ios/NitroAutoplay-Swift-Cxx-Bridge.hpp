@@ -16,6 +16,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AlertAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
 // Forward declaration of `AlertStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertStyle; }
+// Forward declaration of `ArrivalDirection` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ArrivalDirection; }
 // Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
 // Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
@@ -30,6 +32,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUni
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 // Forward declaration of `DurationWithTimeZone` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
+// Forward declaration of `ForkType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
 // Forward declaration of `HybridHybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridAutoPlaySpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
@@ -38,8 +42,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGrid
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridListTemplateSpec; }
 // Forward declaration of `HybridHybridMapTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMapTemplateSpec; }
-// Forward declaration of `JunctionType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class JunctionType; }
+// Forward declaration of `KeepType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
 // Forward declaration of `LaneStatus` to properly resolve imports.
@@ -74,6 +78,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRow; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectionType; }
 // Forward declaration of `NitroSection` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroSection; }
+// Forward declaration of `OffRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType; }
+// Forward declaration of `OnRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Point; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
@@ -88,6 +96,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
 // Forward declaration of `TripsConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripsConfig; }
+// Forward declaration of `TurnType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
@@ -108,6 +118,7 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
 #include "AlertStyle.hpp"
+#include "ArrivalDirection.hpp"
 #include "AttributedInstructionVariant.hpp"
 #include "AttributedInstructionVariantImage.hpp"
 #include "AutoText.hpp"
@@ -115,11 +126,12 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
+#include "ForkType.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
-#include "JunctionType.hpp"
+#include "KeepType.hpp"
 #include "Lane.hpp"
 #include "LaneGuidance.hpp"
 #include "LaneStatus.hpp"
@@ -137,6 +149,8 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
+#include "OffRampType.hpp"
+#include "OnRampType.hpp"
 #include "Point.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
@@ -144,6 +158,7 @@ namespace NitroAutoplay { class HybridHybridMapTemplateSpec_cxx; }
 #include "TravelEstimates.hpp"
 #include "TripPoint.hpp"
 #include "TripsConfig.hpp"
+#include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include <NitroModules/FastVectorCopy.hpp>
@@ -987,33 +1002,33 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return vector;
   }
   
-  // pragma MARK: std::optional<std::vector<std::string>>
+  // pragma MARK: std::optional<ArrivalDirection>
   /**
-   * Specialized version of `std::optional<std::vector<std::string>>`.
+   * Specialized version of `std::optional<ArrivalDirection>`.
    */
-  using std__optional_std__vector_std__string__ = std::optional<std::vector<std::string>>;
-  inline std::optional<std::vector<std::string>> create_std__optional_std__vector_std__string__(const std::vector<std::string>& value) noexcept {
-    return std::optional<std::vector<std::string>>(value);
+  using std__optional_ArrivalDirection_ = std::optional<ArrivalDirection>;
+  inline std::optional<ArrivalDirection> create_std__optional_ArrivalDirection_(const ArrivalDirection& value) noexcept {
+    return std::optional<ArrivalDirection>(value);
   }
-  inline bool has_value_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
+  inline bool has_value_std__optional_ArrivalDirection_(const std::optional<ArrivalDirection>& optional) noexcept {
     return optional.has_value();
   }
-  inline std::vector<std::string> get_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
+  inline ArrivalDirection get_std__optional_ArrivalDirection_(const std::optional<ArrivalDirection>& optional) noexcept {
     return *optional;
   }
   
-  // pragma MARK: std::optional<JunctionType>
+  // pragma MARK: std::optional<TurnType>
   /**
-   * Specialized version of `std::optional<JunctionType>`.
+   * Specialized version of `std::optional<TurnType>`.
    */
-  using std__optional_JunctionType_ = std::optional<JunctionType>;
-  inline std::optional<JunctionType> create_std__optional_JunctionType_(const JunctionType& value) noexcept {
-    return std::optional<JunctionType>(value);
+  using std__optional_TurnType_ = std::optional<TurnType>;
+  inline std::optional<TurnType> create_std__optional_TurnType_(const TurnType& value) noexcept {
+    return std::optional<TurnType>(value);
   }
-  inline bool has_value_std__optional_JunctionType_(const std::optional<JunctionType>& optional) noexcept {
+  inline bool has_value_std__optional_TurnType_(const std::optional<TurnType>& optional) noexcept {
     return optional.has_value();
   }
-  inline JunctionType get_std__optional_JunctionType_(const std::optional<JunctionType>& optional) noexcept {
+  inline TurnType get_std__optional_TurnType_(const std::optional<TurnType>& optional) noexcept {
     return *optional;
   }
   
@@ -1044,6 +1059,66 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
+  // pragma MARK: std::optional<OffRampType>
+  /**
+   * Specialized version of `std::optional<OffRampType>`.
+   */
+  using std__optional_OffRampType_ = std::optional<OffRampType>;
+  inline std::optional<OffRampType> create_std__optional_OffRampType_(const OffRampType& value) noexcept {
+    return std::optional<OffRampType>(value);
+  }
+  inline bool has_value_std__optional_OffRampType_(const std::optional<OffRampType>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline OffRampType get_std__optional_OffRampType_(const std::optional<OffRampType>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<OnRampType>
+  /**
+   * Specialized version of `std::optional<OnRampType>`.
+   */
+  using std__optional_OnRampType_ = std::optional<OnRampType>;
+  inline std::optional<OnRampType> create_std__optional_OnRampType_(const OnRampType& value) noexcept {
+    return std::optional<OnRampType>(value);
+  }
+  inline bool has_value_std__optional_OnRampType_(const std::optional<OnRampType>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline OnRampType get_std__optional_OnRampType_(const std::optional<OnRampType>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<ForkType>
+  /**
+   * Specialized version of `std::optional<ForkType>`.
+   */
+  using std__optional_ForkType_ = std::optional<ForkType>;
+  inline std::optional<ForkType> create_std__optional_ForkType_(const ForkType& value) noexcept {
+    return std::optional<ForkType>(value);
+  }
+  inline bool has_value_std__optional_ForkType_(const std::optional<ForkType>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ForkType get_std__optional_ForkType_(const std::optional<ForkType>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<KeepType>
+  /**
+   * Specialized version of `std::optional<KeepType>`.
+   */
+  using std__optional_KeepType_ = std::optional<KeepType>;
+  inline std::optional<KeepType> create_std__optional_KeepType_(const KeepType& value) noexcept {
+    return std::optional<KeepType>(value);
+  }
+  inline bool has_value_std__optional_KeepType_(const std::optional<KeepType>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline KeepType get_std__optional_KeepType_(const std::optional<KeepType>& optional) noexcept {
+    return *optional;
+  }
+  
   // pragma MARK: std::vector<Lane>
   /**
    * Specialized version of `std::vector<Lane>`.
@@ -1067,6 +1142,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return optional.has_value();
   }
   inline LaneGuidance get_std__optional_LaneGuidance_(const std::optional<LaneGuidance>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<std::vector<std::string>>
+  /**
+   * Specialized version of `std::optional<std::vector<std::string>>`.
+   */
+  using std__optional_std__vector_std__string__ = std::optional<std::vector<std::string>>;
+  inline std::optional<std::vector<std::string>> create_std__optional_std__vector_std__string__(const std::vector<std::string>& value) noexcept {
+    return std::optional<std::vector<std::string>>(value);
+  }
+  inline bool has_value_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::vector<std::string> get_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
     return *optional;
   }
   

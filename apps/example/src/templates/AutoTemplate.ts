@@ -1,15 +1,16 @@
 import {
   type Actions,
   type Alert,
+  type AutoManeuvers,
   type BackButton,
   HybridAutoPlay,
   type ImageButton,
-  type Maneuvers,
   ManeuverType,
   type MapTemplate,
   type MapTemplateConfig,
   TrafficSide,
   type TripPoint,
+  TurnType,
   type VisibleTravelEstimate,
 } from '@g4rb4g3/react-native-autoplay';
 import { Platform } from 'react-native';
@@ -89,7 +90,7 @@ const plusOne: ImageButton<MapTemplate> = {
   },
   onPress: (template) => {
     estimatesUpdate(template, 'add');
-    const maneuvers: Maneuvers = [
+    const maneuvers: AutoManeuvers = [
       {
         id: '#0',
         attributedInstructionVariants: [{ text: 'Straight' }],
@@ -100,8 +101,9 @@ const plusOne: ImageButton<MapTemplate> = {
         symbolImage: {
           name: 'straight',
         },
-        maneuverType: ManeuverType.StraightAhead,
+        maneuverType: ManeuverType.Straight,
         trafficSide: TrafficSide.Left,
+        roadName: ['Main St.'],
       },
       {
         id: '#1',
@@ -113,8 +115,10 @@ const plusOne: ImageButton<MapTemplate> = {
         symbolImage: {
           name: 'turn_left',
         },
-        maneuverType: ManeuverType.LeftTurn,
+        maneuverType: ManeuverType.Turn,
         trafficSide: TrafficSide.Left,
+        turnType: TurnType.NormalLeft,
+        angle: 90,
       },
     ];
 
@@ -129,7 +133,7 @@ const minusOne: ImageButton<MapTemplate> = {
   },
   onPress: (template) => {
     estimatesUpdate(template, 'remove');
-    const maneuvers: Maneuvers = [
+    const maneuvers: AutoManeuvers = [
       {
         id: '#3',
         attributedInstructionVariants: [{ text: 'Right' }],
@@ -140,8 +144,9 @@ const minusOne: ImageButton<MapTemplate> = {
         symbolImage: {
           name: 'turn_right',
         },
-        maneuverType: ManeuverType.RightTurn,
+        maneuverType: ManeuverType.Turn,
         trafficSide: TrafficSide.Left,
+        turnType: TurnType.NormalLeft,
       },
       {
         id: '#4',
@@ -153,8 +158,11 @@ const minusOne: ImageButton<MapTemplate> = {
         symbolImage: {
           name: 'roundabout_right',
         },
-        maneuverType: ManeuverType.RoundaboutExit2,
+        maneuverType: ManeuverType.Roundabout,
         trafficSide: TrafficSide.Left,
+        angle: 42,
+        elementAngles: [100, 200],
+        exitNumber: 1,
       },
     ];
 

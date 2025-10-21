@@ -10,34 +10,44 @@
 #include <fbjni/fbjni.h>
 #include "NitroManeuver.hpp"
 
+#include "ArrivalDirection.hpp"
 #include "AttributedInstructionVariant.hpp"
 #include "AttributedInstructionVariantImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
+#include "ForkType.hpp"
+#include "JArrivalDirection.hpp"
 #include "JAttributedInstructionVariant.hpp"
 #include "JAttributedInstructionVariantImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JDurationWithTimeZone.hpp"
-#include "JJunctionType.hpp"
+#include "JForkType.hpp"
+#include "JKeepType.hpp"
 #include "JLane.hpp"
 #include "JLaneGuidance.hpp"
 #include "JLaneStatus.hpp"
 #include "JManeuverType.hpp"
 #include "JNitroImage.hpp"
+#include "JOffRampType.hpp"
+#include "JOnRampType.hpp"
 #include "JTrafficSide.hpp"
 #include "JTravelEstimates.hpp"
-#include "JunctionType.hpp"
+#include "JTurnType.hpp"
+#include "KeepType.hpp"
 #include "Lane.hpp"
 #include "LaneGuidance.hpp"
 #include "LaneStatus.hpp"
 #include "ManeuverType.hpp"
 #include "NitroImage.hpp"
+#include "OffRampType.hpp"
+#include "OnRampType.hpp"
 #include "TrafficSide.hpp"
 #include "TravelEstimates.hpp"
+#include "TurnType.hpp"
 #include <optional>
 #include <string>
 #include <vector>
@@ -61,34 +71,45 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     [[nodiscard]]
     NitroManeuver toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldId = clazz->getField<jni::JString>("id");
-      jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
       static const auto fieldAttributedInstructionVariants = clazz->getField<jni::JArrayClass<JAttributedInstructionVariant>>("attributedInstructionVariants");
       jni::local_ref<jni::JArrayClass<JAttributedInstructionVariant>> attributedInstructionVariants = this->getFieldValue(fieldAttributedInstructionVariants);
-      static const auto fieldTravelEstimates = clazz->getField<JTravelEstimates>("travelEstimates");
-      jni::local_ref<JTravelEstimates> travelEstimates = this->getFieldValue(fieldTravelEstimates);
-      static const auto fieldManeuverType = clazz->getField<JManeuverType>("maneuverType");
-      jni::local_ref<JManeuverType> maneuverType = this->getFieldValue(fieldManeuverType);
-      static const auto fieldTrafficSide = clazz->getField<JTrafficSide>("trafficSide");
-      jni::local_ref<JTrafficSide> trafficSide = this->getFieldValue(fieldTrafficSide);
-      static const auto fieldRoadFollowingManeuverVariants = clazz->getField<jni::JArrayClass<jni::JString>>("roadFollowingManeuverVariants");
-      jni::local_ref<jni::JArrayClass<jni::JString>> roadFollowingManeuverVariants = this->getFieldValue(fieldRoadFollowingManeuverVariants);
       static const auto fieldSymbolImage = clazz->getField<JNitroImage>("symbolImage");
       jni::local_ref<JNitroImage> symbolImage = this->getFieldValue(fieldSymbolImage);
       static const auto fieldJunctionImage = clazz->getField<JNitroImage>("junctionImage");
       jni::local_ref<JNitroImage> junctionImage = this->getFieldValue(fieldJunctionImage);
-      static const auto fieldJunctionType = clazz->getField<JJunctionType>("junctionType");
-      jni::local_ref<JJunctionType> junctionType = this->getFieldValue(fieldJunctionType);
-      static const auto fieldJunctionExitAngle = clazz->getField<jni::JDouble>("junctionExitAngle");
-      jni::local_ref<jni::JDouble> junctionExitAngle = this->getFieldValue(fieldJunctionExitAngle);
-      static const auto fieldJunctionElementAngles = clazz->getField<jni::JArrayDouble>("junctionElementAngles");
-      jni::local_ref<jni::JArrayDouble> junctionElementAngles = this->getFieldValue(fieldJunctionElementAngles);
-      static const auto fieldHighwayExitLabel = clazz->getField<jni::JString>("highwayExitLabel");
-      jni::local_ref<jni::JString> highwayExitLabel = this->getFieldValue(fieldHighwayExitLabel);
+      static const auto fieldArrivalDirection = clazz->getField<JArrivalDirection>("arrivalDirection");
+      jni::local_ref<JArrivalDirection> arrivalDirection = this->getFieldValue(fieldArrivalDirection);
+      static const auto fieldTurnType = clazz->getField<JTurnType>("turnType");
+      jni::local_ref<JTurnType> turnType = this->getFieldValue(fieldTurnType);
+      static const auto fieldAngle = clazz->getField<jni::JDouble>("angle");
+      jni::local_ref<jni::JDouble> angle = this->getFieldValue(fieldAngle);
+      static const auto fieldElementAngles = clazz->getField<jni::JArrayDouble>("elementAngles");
+      jni::local_ref<jni::JArrayDouble> elementAngles = this->getFieldValue(fieldElementAngles);
+      static const auto fieldExitNumber = clazz->getField<jni::JDouble>("exitNumber");
+      jni::local_ref<jni::JDouble> exitNumber = this->getFieldValue(fieldExitNumber);
+      static const auto fieldOffRampType = clazz->getField<JOffRampType>("offRampType");
+      jni::local_ref<JOffRampType> offRampType = this->getFieldValue(fieldOffRampType);
+      static const auto fieldOnRampType = clazz->getField<JOnRampType>("onRampType");
+      jni::local_ref<JOnRampType> onRampType = this->getFieldValue(fieldOnRampType);
+      static const auto fieldForkType = clazz->getField<JForkType>("forkType");
+      jni::local_ref<JForkType> forkType = this->getFieldValue(fieldForkType);
+      static const auto fieldKeepType = clazz->getField<JKeepType>("keepType");
+      jni::local_ref<JKeepType> keepType = this->getFieldValue(fieldKeepType);
+      static const auto fieldId = clazz->getField<jni::JString>("id");
+      jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
+      static const auto fieldTravelEstimates = clazz->getField<JTravelEstimates>("travelEstimates");
+      jni::local_ref<JTravelEstimates> travelEstimates = this->getFieldValue(fieldTravelEstimates);
+      static const auto fieldTrafficSide = clazz->getField<JTrafficSide>("trafficSide");
+      jni::local_ref<JTrafficSide> trafficSide = this->getFieldValue(fieldTrafficSide);
       static const auto fieldLinkedLaneGuidance = clazz->getField<JLaneGuidance>("linkedLaneGuidance");
       jni::local_ref<JLaneGuidance> linkedLaneGuidance = this->getFieldValue(fieldLinkedLaneGuidance);
+      static const auto fieldManeuverType = clazz->getField<JManeuverType>("maneuverType");
+      jni::local_ref<JManeuverType> maneuverType = this->getFieldValue(fieldManeuverType);
+      static const auto fieldRoadName = clazz->getField<jni::JArrayClass<jni::JString>>("roadName");
+      jni::local_ref<jni::JArrayClass<jni::JString>> roadName = this->getFieldValue(fieldRoadName);
+      static const auto fieldHighwayExitLabel = clazz->getField<jni::JString>("highwayExitLabel");
+      jni::local_ref<jni::JString> highwayExitLabel = this->getFieldValue(fieldHighwayExitLabel);
       return NitroManeuver(
-        id->toStdString(),
         [&]() {
           size_t __size = attributedInstructionVariants->size();
           std::vector<AttributedInstructionVariant> __vector;
@@ -99,31 +120,38 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __vector;
         }(),
+        symbolImage->toCpp(),
+        junctionImage != nullptr ? std::make_optional(junctionImage->toCpp()) : std::nullopt,
+        arrivalDirection != nullptr ? std::make_optional(arrivalDirection->toCpp()) : std::nullopt,
+        turnType != nullptr ? std::make_optional(turnType->toCpp()) : std::nullopt,
+        angle != nullptr ? std::make_optional(angle->value()) : std::nullopt,
+        elementAngles != nullptr ? std::make_optional([&]() {
+          size_t __size = elementAngles->size();
+          std::vector<double> __vector(__size);
+          elementAngles->getRegion(0, __size, __vector.data());
+          return __vector;
+        }()) : std::nullopt,
+        exitNumber != nullptr ? std::make_optional(exitNumber->value()) : std::nullopt,
+        offRampType != nullptr ? std::make_optional(offRampType->toCpp()) : std::nullopt,
+        onRampType != nullptr ? std::make_optional(onRampType->toCpp()) : std::nullopt,
+        forkType != nullptr ? std::make_optional(forkType->toCpp()) : std::nullopt,
+        keepType != nullptr ? std::make_optional(keepType->toCpp()) : std::nullopt,
+        id->toStdString(),
         travelEstimates->toCpp(),
-        maneuverType->toCpp(),
         trafficSide->toCpp(),
-        roadFollowingManeuverVariants != nullptr ? std::make_optional([&]() {
-          size_t __size = roadFollowingManeuverVariants->size();
+        linkedLaneGuidance != nullptr ? std::make_optional(linkedLaneGuidance->toCpp()) : std::nullopt,
+        maneuverType->toCpp(),
+        roadName != nullptr ? std::make_optional([&]() {
+          size_t __size = roadName->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = roadFollowingManeuverVariants->getElement(__i);
+            auto __element = roadName->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
         }()) : std::nullopt,
-        symbolImage->toCpp(),
-        junctionImage != nullptr ? std::make_optional(junctionImage->toCpp()) : std::nullopt,
-        junctionType != nullptr ? std::make_optional(junctionType->toCpp()) : std::nullopt,
-        junctionExitAngle != nullptr ? std::make_optional(junctionExitAngle->value()) : std::nullopt,
-        junctionElementAngles != nullptr ? std::make_optional([&]() {
-          size_t __size = junctionElementAngles->size();
-          std::vector<double> __vector(__size);
-          junctionElementAngles->getRegion(0, __size, __vector.data());
-          return __vector;
-        }()) : std::nullopt,
-        highwayExitLabel != nullptr ? std::make_optional(highwayExitLabel->toStdString()) : std::nullopt,
-        linkedLaneGuidance != nullptr ? std::make_optional(linkedLaneGuidance->toCpp()) : std::nullopt
+        highwayExitLabel != nullptr ? std::make_optional(highwayExitLabel->toStdString()) : std::nullopt
       );
     }
 
@@ -134,7 +162,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     [[maybe_unused]]
     static jni::local_ref<JNitroManeuver::javaobject> fromCpp(const NitroManeuver& value) {
       return newInstance(
-        jni::make_jstring(value.id),
         [&]() {
           size_t __size = value.attributedInstructionVariants.size();
           jni::local_ref<jni::JArrayClass<JAttributedInstructionVariant>> __array = jni::JArrayClass<JAttributedInstructionVariant>::newArray(__size);
@@ -144,30 +171,37 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }(),
+        JNitroImage::fromCpp(value.symbolImage),
+        value.junctionImage.has_value() ? JNitroImage::fromCpp(value.junctionImage.value()) : nullptr,
+        value.arrivalDirection.has_value() ? JArrivalDirection::fromCpp(value.arrivalDirection.value()) : nullptr,
+        value.turnType.has_value() ? JTurnType::fromCpp(value.turnType.value()) : nullptr,
+        value.angle.has_value() ? jni::JDouble::valueOf(value.angle.value()) : nullptr,
+        value.elementAngles.has_value() ? [&]() {
+          size_t __size = value.elementAngles.value().size();
+          jni::local_ref<jni::JArrayDouble> __array = jni::JArrayDouble::newArray(__size);
+          __array->setRegion(0, __size, value.elementAngles.value().data());
+          return __array;
+        }() : nullptr,
+        value.exitNumber.has_value() ? jni::JDouble::valueOf(value.exitNumber.value()) : nullptr,
+        value.offRampType.has_value() ? JOffRampType::fromCpp(value.offRampType.value()) : nullptr,
+        value.onRampType.has_value() ? JOnRampType::fromCpp(value.onRampType.value()) : nullptr,
+        value.forkType.has_value() ? JForkType::fromCpp(value.forkType.value()) : nullptr,
+        value.keepType.has_value() ? JKeepType::fromCpp(value.keepType.value()) : nullptr,
+        jni::make_jstring(value.id),
         JTravelEstimates::fromCpp(value.travelEstimates),
-        JManeuverType::fromCpp(value.maneuverType),
         JTrafficSide::fromCpp(value.trafficSide),
-        value.roadFollowingManeuverVariants.has_value() ? [&]() {
-          size_t __size = value.roadFollowingManeuverVariants.value().size();
+        value.linkedLaneGuidance.has_value() ? JLaneGuidance::fromCpp(value.linkedLaneGuidance.value()) : nullptr,
+        JManeuverType::fromCpp(value.maneuverType),
+        value.roadName.has_value() ? [&]() {
+          size_t __size = value.roadName.value().size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.roadFollowingManeuverVariants.value()[__i];
+            const auto& __element = value.roadName.value()[__i];
             __array->setElement(__i, *jni::make_jstring(__element));
           }
           return __array;
         }() : nullptr,
-        JNitroImage::fromCpp(value.symbolImage),
-        value.junctionImage.has_value() ? JNitroImage::fromCpp(value.junctionImage.value()) : nullptr,
-        value.junctionType.has_value() ? JJunctionType::fromCpp(value.junctionType.value()) : nullptr,
-        value.junctionExitAngle.has_value() ? jni::JDouble::valueOf(value.junctionExitAngle.value()) : nullptr,
-        value.junctionElementAngles.has_value() ? [&]() {
-          size_t __size = value.junctionElementAngles.value().size();
-          jni::local_ref<jni::JArrayDouble> __array = jni::JArrayDouble::newArray(__size);
-          __array->setRegion(0, __size, value.junctionElementAngles.value().data());
-          return __array;
-        }() : nullptr,
-        value.highwayExitLabel.has_value() ? jni::make_jstring(value.highwayExitLabel.value()) : nullptr,
-        value.linkedLaneGuidance.has_value() ? JLaneGuidance::fromCpp(value.linkedLaneGuidance.value()) : nullptr
+        value.highwayExitLabel.has_value() ? jni::make_jstring(value.highwayExitLabel.value()) : nullptr
       );
     }
   };

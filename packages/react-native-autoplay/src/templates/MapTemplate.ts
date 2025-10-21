@@ -4,7 +4,7 @@ import { HybridAutoPlay, HybridMapTemplate } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
-import type { Maneuvers } from '../types/Maneuver';
+import type { AutoManeuvers } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
   TripConfig,
@@ -235,7 +235,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     HybridMapTemplate.updateTravelEstimates(this.id, steps);
   }
 
-  public updateManeuvers(maneuvers: Maneuvers) {
+  public updateManeuvers(maneuvers: AutoManeuvers) {
     const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
       if (maneuver == null) {
         return acc;

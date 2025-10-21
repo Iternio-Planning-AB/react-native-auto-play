@@ -2,70 +2,150 @@ import type { AutoImage } from './Image';
 import type { TravelEstimates } from './Trip';
 
 export enum ManeuverType {
-  NoTurn = 0,
-  LeftTurn = 1,
-  RightTurn = 2,
-  StraightAhead = 3,
-  UTurn = 4,
-  FollowRoad = 5,
-  EnterRoundabout = 6,
-  ExitRoundabout = 7,
-  OffRamp = 8,
-  OnRamp = 9,
-  ArriveEndOfNavigation = 10,
-  StartRoute = 11,
-  ArriveAtDestination = 12,
-  KeepLeft = 13,
-  KeepRight = 14,
-  Enter_Ferry = 15,
-  ExitFerry = 16,
-  ChangeFerry = 17,
-  StartRouteWithUTurn = 18,
-  UTurnAtRoundabout = 19,
-  LeftTurnAtEnd = 20,
-  RightTurnAtEnd = 21,
-  HighwayOffRampLeft = 22,
-  HighwayOffRampRight = 23,
-  ArriveAtDestinationLeft = 24,
-  ArriveAtDestinationRight = 25,
-  UTurnWhenPossible = 26,
-  ArriveEndOfDirections = 27,
-  RoundaboutExit1 = 28,
-  RoundaboutExit2 = 29,
-  RoundaboutExit3 = 30,
-  RoundaboutExit4 = 31,
-  RoundaboutExit5 = 32,
-  RoundaboutExit6 = 33,
-  RoundaboutExit7 = 34,
-  RoundaboutExit8 = 35,
-  RoundaboutExit9 = 36,
-  RoundaboutExit10 = 37,
-  RoundaboutExit11 = 38,
-  RoundaboutExit12 = 39,
-  RoundaboutExit13 = 40,
-  RoundaboutExit14 = 41,
-  RoundaboutExit15 = 42,
-  RoundaboutExit16 = 43,
-  RoundaboutExit17 = 44,
-  RoundaboutExit18 = 45,
-  RoundaboutExit19 = 46,
-  SharpLeftTurn = 47,
-  SharpRightTurn = 48,
-  SlightLeftTurn = 49,
-  SlightRightTurn = 50,
-  ChangeHighway = 51,
-  ChangeHighwayLeft = 52,
-  ChangeHighwayRight = 53,
+  Depart = 0,
+  Arrive = 10,
+  Straight = 20,
+  Turn = 30,
+  Roundabout = 40,
+  OffRamp = 50,
+  OnRamp = 60,
+  Fork = 70,
+  EnterFerry = 80,
+  Keep = 90,
 }
 
-export enum JunctionType {
-  Intersection = 0, // single intersection with roads coming to a common point
-  Roundabout = 1, // roundabout, junction elements represent roads exiting the roundabout
+export enum ArrivalDirection {
+  Left = 0,
+  Right = 1,
+  Straight = 2,
 }
 
 export enum TrafficSide {
   Right = 0, // counterclockwise for roundabouts
   Left = 1, // clockwise for roundabouts
+}
+
+export enum TurnType {
+  NoTurn = 0, // Android TYPE_UNKNOWN, iOS noTurn
+  SlightLeft = 1, // Android TYPE_TURN_SLIGHT_LEFT, iOS slightLeftTurn
+  SlightRight = 2, // Android TYPE_TURN_SLIGHT_RIGHT, iOS slightRightTurn
+  NormalLeft = 3, // Android TYPE_TURN_NORMAL_LEFT, iOS leftTurn
+  NormalRight = 4, // Android TYPE_TURN_NORMAL_RIGHT, iOS rightTurn
+  SharpLeft = 5, // Android TYPE_TURN_SHARP_LEFT, iOS sharpLeftTurn
+  SharpRight = 6, // Android TYPE_TURN_SHARP_RIGHT, iOS sharpRightTurn
+  UTurnLeft = 7, // Android TYPE_U_TURN_LEFT, iOS uTurn
+  UTurnRight = 8, // Android TYPE_U_TURN_RIGHT, iOS uTurn
+}
+
+export enum OffRampType {
+  SlightLeft = 0, // Android TYPE_OFF_RAMP_SLIGHT_LEFT
+  SlightRight = 1, // Android TYPE_OFF_RAMP_SLIGHT_RIGHT
+  NormalLeft = 2, // Android TYPE_OFF_RAMP_NORMAL_LEFT
+  NormalRight = 3, // Android TYPE_OFF_RAMP_NORMAL_RIGHT
+}
+
+export enum OnRampType {
+  SlightLeft = 0, // Android TYPE_ON_RAMP_SLIGHT_LEFT
+  SlightRight = 1, // Android TYPE_ON_RAMP_SLIGHT_RIGHT
+  NormalLeft = 2, // Android TYPE_ON_RAMP_NORMAL_LEFT
+  NormalRight = 3, // Android TYPE_ON_RAMP_NORMAL_RIGHT
+  SharpLeft = 4, // Android TYPE_ON_RAMP_SHARP_LEFT
+  SharpRight = 5, // Android TYPE_ON_RAMP_SHARP_RIGHT
+  UTurnLeft = 6, // Android TYPE_ON_RAMP_U_TURN_LEFT
+  UTurnRight = 7, // Android TYPE_ON_RAMP_U_TURN_RIGHT
+}
+
+export enum ForkType {
+  Left = 0, // Android TYPE_FORK_LEFT
+  Right = 1, // Android TYPE_FORK_RIGHT
+}
+
+export enum KeepType {
+  Left = 0, // Android TYPE_KEEP_LEFT, iOS keepLeft
+  Right = 1, // Android TYPE_KEEP_RIGHT, iOS keepRight
+  FollowRoad = 2,
+}
+
+export interface BaseManeuver {
+  /**
+   * @namespace iOS specify a unique identifier, sending over a Maneuver with a known id will only update the travelEstimates on the previously sent Maneuver
+   * @namespace Android applies all updates and does not check for id
+   */
+  id: string;
+  travelEstimates: TravelEstimates;
+  trafficSide: TrafficSide;
+  linkedLaneGuidance?: LaneGuidance;
+  maneuverType: ManeuverType;
+  /**
+   * @namespace iOS picks the best matching one based on length
+   * @namespace Android picks the first one only
+   */
+  roadName?: Array<string>;
+  highwayExitLabel?: string;
+}
+
+export interface WaypointManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Arrive | ManeuverType.Depart;
+  arrivalDirection: ArrivalDirection;
+}
+
+export interface StraightManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Straight;
+}
+
+export interface TurnManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Turn;
+  turnType: TurnType;
+  /**
+   * Optional turn angle in degrees to represent exact turn geometry.
+   */
+  angle?: number;
+  /**
+   * must not include turnAngle
+   * @namespace iOS
+   */
+  elementAngles?: Array<number>;
+}
+
+export interface RoundaboutManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Roundabout;
+  /**
+   * Optional exit number at the roundabout (1 = first exit).
+   */
+  exitNumber?: number;
+  /**
+   * Optional exit angle in degrees (1 to 360).
+   */
+  angle?: number;
+  /**
+   * must not include exitAngle
+   * @namespace iOS
+   */
+  elementAngles?: Array<number>;
+}
+
+export interface OffRampManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.OffRamp;
+  offRampType: OffRampType;
+}
+
+export interface OnRampManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.OnRamp;
+  onRampType: OnRampType;
+}
+
+export interface FerryManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.EnterFerry;
+}
+
+export interface ForkManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Fork;
+  forkType: ForkType;
+}
+
+export interface KeepManeuver extends BaseManeuver {
+  maneuverType: ManeuverType.Keep;
+  keepType: KeepType;
 }
 
 export enum LaneStatus {
@@ -74,38 +154,35 @@ export enum LaneStatus {
   Preferred = 2,
 }
 
-export type Lane = {
+export interface Lane {
   angles: Array<number>;
   highlightedAngle: number;
   status: LaneStatus;
-};
+}
 
-export type LaneGuidance = {
+export interface LaneGuidance {
   instructionVariants: Array<string>;
   lanes: Array<Lane>;
-};
+}
 
-export type Maneuver = {
-  /**
-   * @namespace iOS specify a unique identifier, sending over a Maneuver with a known id will only update the travelEstimates on the previously sent Maneuver
-   * @namespace Android applies all updates and does not check for id
-   */
-  id: string;
+export type Maneuver =
+  | WaypointManeuver
+  | StraightManeuver
+  | TurnManeuver
+  | RoundaboutManeuver
+  | OffRampManeuver
+  | OnRampManeuver
+  | FerryManeuver
+  | ForkManeuver
+  | KeepManeuver;
+
+export type AutoManeuver = Maneuver & {
   attributedInstructionVariants: Array<{
     text: string;
-    images?: [{ image: AutoImage; position: number }];
+    images?: Array<{ image: AutoImage; position: number }>;
   }>;
-  travelEstimates: TravelEstimates;
-  maneuverType: ManeuverType;
-  trafficSide: TrafficSide;
-  roadFollowingManeuverVariants?: Array<string>;
   symbolImage: AutoImage;
   junctionImage?: AutoImage;
-  junctionType?: JunctionType;
-  junctionExitAngle?: number;
-  junctionElementAngles?: Array<number>;
-  highwayExitLabel?: string;
-  linkedLaneGuidance?: LaneGuidance;
 };
 
-export type Maneuvers = [Maneuver, Maneuver | undefined];
+export type AutoManeuvers = [AutoManeuver, AutoManeuver | undefined];

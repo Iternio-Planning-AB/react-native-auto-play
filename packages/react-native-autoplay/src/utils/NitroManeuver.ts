@@ -1,11 +1,14 @@
-import type {
-  JunctionType,
-  LaneGuidance,
-  Maneuver,
+import {
+  type ArrivalDirection,
+  type AutoManeuver,
+  type BaseManeuver,
+  type ForkType,
+  type KeepType,
   ManeuverType,
-  TrafficSide,
+  type OffRampType,
+  type OnRampType,
+  type TurnType,
 } from '../types/Maneuver';
-import type { TravelEstimates } from '../types/Trip';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
 type AttributedInstructionVariantImage = {
@@ -18,27 +21,60 @@ type AttributedInstructionVariant = {
   images?: Array<AttributedInstructionVariantImage>;
 };
 
-export type NitroManeuver = {
-  id: string;
+export interface NitroManeuver extends BaseManeuver {
   attributedInstructionVariants: Array<AttributedInstructionVariant>;
-  travelEstimates: TravelEstimates;
-  maneuverType: ManeuverType;
-  trafficSide: TrafficSide;
-  roadFollowingManeuverVariants?: Array<string>;
   symbolImage: NitroImage;
   junctionImage?: NitroImage;
-  junctionType?: JunctionType;
-  junctionExitAngle?: number;
-  junctionElementAngles?: Array<number>;
-  highwayExitLabel?: string;
-  linkedLaneGuidance?: LaneGuidance;
-};
+  arrivalDirection?: ArrivalDirection;
+  turnType?: TurnType;
+  angle?: number;
+  elementAngles?: Array<number>;
+  exitNumber?: number;
+  offRampType?: OffRampType;
+  onRampType?: OnRampType;
+  forkType?: ForkType;
+  keepType?: KeepType;
+}
 
-function convert(maneuver: Maneuver): NitroManeuver {
-  const { symbolImage, junctionImage, attributedInstructionVariants, ...rest } = maneuver;
+function convert(autoManeuver: AutoManeuver): NitroManeuver {
+  const {
+    symbolImage,
+    junctionImage,
+    attributedInstructionVariants,
+    id,
+    maneuverType,
+    trafficSide,
+    travelEstimates,
+    highwayExitLabel,
+    linkedLaneGuidance,
+    roadName,
+  } = autoManeuver;
+
+  const arrivalDirection =
+    maneuverType === ManeuverType.Arrive ? autoManeuver.arrivalDirection : undefined;
+  const elementAngles =
+    maneuverType === ManeuverType.Turn || maneuverType === ManeuverType.Roundabout
+      ? autoManeuver.elementAngles
+      : undefined;
+  const angle =
+    maneuverType === ManeuverType.Turn || maneuverType === ManeuverType.Roundabout
+      ? autoManeuver.angle
+      : undefined;
+  const turnType = maneuverType === ManeuverType.Turn ? autoManeuver.turnType : undefined;
+  const exitNumber = maneuverType === ManeuverType.Roundabout ? autoManeuver.exitNumber : undefined;
+  const offRampType = maneuverType === ManeuverType.OffRamp ? autoManeuver.offRampType : undefined;
+  const onRampType = maneuverType === ManeuverType.OnRamp ? autoManeuver.onRampType : undefined;
+  const forkType = maneuverType === ManeuverType.Fork ? autoManeuver.forkType : undefined;
+  const keepType = maneuverType === ManeuverType.Keep ? autoManeuver.keepType : undefined;
 
   return {
-    ...rest,
+    id,
+    maneuverType,
+    trafficSide,
+    travelEstimates,
+    linkedLaneGuidance,
+    highwayExitLabel,
+    roadName,
     attributedInstructionVariants: attributedInstructionVariants.map((variant) => ({
       text: variant.text,
       images: variant.images?.map(({ image, position }) => ({
@@ -48,6 +84,15 @@ function convert(maneuver: Maneuver): NitroManeuver {
     })),
     junctionImage: NitroImageUtil.convert(junctionImage),
     symbolImage: NitroImageUtil.convert(symbolImage),
+    arrivalDirection,
+    elementAngles,
+    angle,
+    turnType,
+    exitNumber,
+    offRampType,
+    onRampType,
+    forkType,
+    keepType,
   };
 }
 

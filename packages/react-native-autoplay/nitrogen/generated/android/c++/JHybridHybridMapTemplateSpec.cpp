@@ -61,18 +61,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
 // Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
-// Forward declaration of `ManeuverType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
+// Forward declaration of `ArrivalDirection` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ArrivalDirection; }
+// Forward declaration of `TurnType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
+// Forward declaration of `OffRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType; }
+// Forward declaration of `OnRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
+// Forward declaration of `ForkType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+// Forward declaration of `KeepType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `TrafficSide` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
-// Forward declaration of `JunctionType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class JunctionType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
 // Forward declaration of `Lane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
 // Forward declaration of `LaneStatus` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class LaneStatus; }
+// Forward declaration of `ManeuverType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
@@ -142,18 +152,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JAttributedInstructionVariant.hpp"
 #include "AttributedInstructionVariantImage.hpp"
 #include "JAttributedInstructionVariantImage.hpp"
-#include "ManeuverType.hpp"
-#include "JManeuverType.hpp"
+#include "ArrivalDirection.hpp"
+#include "JArrivalDirection.hpp"
+#include "TurnType.hpp"
+#include "JTurnType.hpp"
+#include "OffRampType.hpp"
+#include "JOffRampType.hpp"
+#include "OnRampType.hpp"
+#include "JOnRampType.hpp"
+#include "ForkType.hpp"
+#include "JForkType.hpp"
+#include "KeepType.hpp"
+#include "JKeepType.hpp"
 #include "TrafficSide.hpp"
 #include "JTrafficSide.hpp"
-#include "JunctionType.hpp"
-#include "JJunctionType.hpp"
 #include "LaneGuidance.hpp"
 #include "JLaneGuidance.hpp"
 #include "Lane.hpp"
 #include "JLane.hpp"
 #include "LaneStatus.hpp"
 #include "JLaneStatus.hpp"
+#include "ManeuverType.hpp"
+#include "JManeuverType.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
 

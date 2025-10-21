@@ -18,15 +18,83 @@ public extension NitroManeuver {
   /**
    * Create a new instance of `NitroManeuver`.
    */
-  init(id: String, attributedInstructionVariants: [AttributedInstructionVariant], travelEstimates: TravelEstimates, maneuverType: ManeuverType, trafficSide: TrafficSide, roadFollowingManeuverVariants: [String]?, symbolImage: NitroImage, junctionImage: NitroImage?, junctionType: JunctionType?, junctionExitAngle: Double?, junctionElementAngles: [Double]?, highwayExitLabel: String?, linkedLaneGuidance: LaneGuidance?) {
-    self.init(std.string(id), { () -> bridge.std__vector_AttributedInstructionVariant_ in
+  init(attributedInstructionVariants: [AttributedInstructionVariant], symbolImage: NitroImage, junctionImage: NitroImage?, arrivalDirection: ArrivalDirection?, turnType: TurnType?, angle: Double?, elementAngles: [Double]?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, linkedLaneGuidance: LaneGuidance?, maneuverType: ManeuverType, roadName: [String]?, highwayExitLabel: String?) {
+    self.init({ () -> bridge.std__vector_AttributedInstructionVariant_ in
       var __vector = bridge.create_std__vector_AttributedInstructionVariant_(attributedInstructionVariants.count)
       for __item in attributedInstructionVariants {
         __vector.push_back(__item)
       }
       return __vector
-    }(), travelEstimates, maneuverType, trafficSide, { () -> bridge.std__optional_std__vector_std__string__ in
-      if let __unwrappedValue = roadFollowingManeuverVariants {
+    }(), symbolImage, { () -> bridge.std__optional_NitroImage_ in
+      if let __unwrappedValue = junctionImage {
+        return bridge.create_std__optional_NitroImage_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_ArrivalDirection_ in
+      if let __unwrappedValue = arrivalDirection {
+        return bridge.create_std__optional_ArrivalDirection_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_TurnType_ in
+      if let __unwrappedValue = turnType {
+        return bridge.create_std__optional_TurnType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = angle {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__vector_double__ in
+      if let __unwrappedValue = elementAngles {
+        return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
+          return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
+        })
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = exitNumber {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_OffRampType_ in
+      if let __unwrappedValue = offRampType {
+        return bridge.create_std__optional_OffRampType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_OnRampType_ in
+      if let __unwrappedValue = onRampType {
+        return bridge.create_std__optional_OnRampType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_ForkType_ in
+      if let __unwrappedValue = forkType {
+        return bridge.create_std__optional_ForkType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_KeepType_ in
+      if let __unwrappedValue = keepType {
+        return bridge.create_std__optional_KeepType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), std.string(id), travelEstimates, trafficSide, { () -> bridge.std__optional_LaneGuidance_ in
+      if let __unwrappedValue = linkedLaneGuidance {
+        return bridge.create_std__optional_LaneGuidance_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), maneuverType, { () -> bridge.std__optional_std__vector_std__string__ in
+      if let __unwrappedValue = roadName {
         return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
           var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
           for __item in __unwrappedValue {
@@ -37,58 +105,15 @@ public extension NitroManeuver {
       } else {
         return .init()
       }
-    }(), symbolImage, { () -> bridge.std__optional_NitroImage_ in
-      if let __unwrappedValue = junctionImage {
-        return bridge.create_std__optional_NitroImage_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_JunctionType_ in
-      if let __unwrappedValue = junctionType {
-        return bridge.create_std__optional_JunctionType_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = junctionExitAngle {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_std__vector_double__ in
-      if let __unwrappedValue = junctionElementAngles {
-        return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-          return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
-        })
-      } else {
-        return .init()
-      }
     }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = highwayExitLabel {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_LaneGuidance_ in
-      if let __unwrappedValue = linkedLaneGuidance {
-        return bridge.create_std__optional_LaneGuidance_(__unwrappedValue)
-      } else {
-        return .init()
-      }
     }())
   }
 
-  var id: String {
-    @inline(__always)
-    get {
-      return String(self.__id)
-    }
-    @inline(__always)
-    set {
-      self.__id = std.string(newValue)
-    }
-  }
-  
   var attributedInstructionVariants: [AttributedInstructionVariant] {
     @inline(__always)
     get {
@@ -102,69 +127,6 @@ public extension NitroManeuver {
           __vector.push_back(__item)
         }
         return __vector
-      }()
-    }
-  }
-  
-  var travelEstimates: TravelEstimates {
-    @inline(__always)
-    get {
-      return self.__travelEstimates
-    }
-    @inline(__always)
-    set {
-      self.__travelEstimates = newValue
-    }
-  }
-  
-  var maneuverType: ManeuverType {
-    @inline(__always)
-    get {
-      return self.__maneuverType
-    }
-    @inline(__always)
-    set {
-      self.__maneuverType = newValue
-    }
-  }
-  
-  var trafficSide: TrafficSide {
-    @inline(__always)
-    get {
-      return self.__trafficSide
-    }
-    @inline(__always)
-    set {
-      self.__trafficSide = newValue
-    }
-  }
-  
-  var roadFollowingManeuverVariants: [String]? {
-    @inline(__always)
-    get {
-      return { () -> [String]? in
-        if bridge.has_value_std__optional_std__vector_std__string__(self.__roadFollowingManeuverVariants) {
-          let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__roadFollowingManeuverVariants)
-          return __unwrapped.map({ __item in String(__item) })
-        } else {
-          return nil
-        }
-      }()
-    }
-    @inline(__always)
-    set {
-      self.__roadFollowingManeuverVariants = { () -> bridge.std__optional_std__vector_std__string__ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
-            var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
-            for __item in __unwrappedValue {
-              __vector.push_back(std.string(__item))
-            }
-            return __vector
-          }())
-        } else {
-          return .init()
-        }
       }()
     }
   }
@@ -197,16 +159,16 @@ public extension NitroManeuver {
     }
   }
   
-  var junctionType: JunctionType? {
+  var arrivalDirection: ArrivalDirection? {
     @inline(__always)
     get {
-      return self.__junctionType.has_value() ? self.__junctionType.pointee : nil
+      return self.__arrivalDirection.has_value() ? self.__arrivalDirection.pointee : nil
     }
     @inline(__always)
     set {
-      self.__junctionType = { () -> bridge.std__optional_JunctionType_ in
+      self.__arrivalDirection = { () -> bridge.std__optional_ArrivalDirection_ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_JunctionType_(__unwrappedValue)
+          return bridge.create_std__optional_ArrivalDirection_(__unwrappedValue)
         } else {
           return .init()
         }
@@ -214,14 +176,31 @@ public extension NitroManeuver {
     }
   }
   
-  var junctionExitAngle: Double? {
+  var turnType: TurnType? {
     @inline(__always)
     get {
-      return self.__junctionExitAngle.value
+      return self.__turnType.has_value() ? self.__turnType.pointee : nil
     }
     @inline(__always)
     set {
-      self.__junctionExitAngle = { () -> bridge.std__optional_double_ in
+      self.__turnType = { () -> bridge.std__optional_TurnType_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_TurnType_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var angle: Double? {
+    @inline(__always)
+    get {
+      return self.__angle.value
+    }
+    @inline(__always)
+    set {
+      self.__angle = { () -> bridge.std__optional_double_ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_double_(__unwrappedValue)
         } else {
@@ -231,12 +210,12 @@ public extension NitroManeuver {
     }
   }
   
-  var junctionElementAngles: [Double]? {
+  var elementAngles: [Double]? {
     @inline(__always)
     get {
       return { () -> [Double]? in
-        if bridge.has_value_std__optional_std__vector_double__(self.__junctionElementAngles) {
-          let __unwrapped = bridge.get_std__optional_std__vector_double__(self.__junctionElementAngles)
+        if bridge.has_value_std__optional_std__vector_double__(self.__elementAngles) {
+          let __unwrapped = bridge.get_std__optional_std__vector_double__(self.__elementAngles)
           return { () -> [Double] in
             let __data = bridge.get_data_std__vector_double_(__unwrapped)
             let __size = __unwrapped.size()
@@ -249,11 +228,187 @@ public extension NitroManeuver {
     }
     @inline(__always)
     set {
-      self.__junctionElementAngles = { () -> bridge.std__optional_std__vector_double__ in
+      self.__elementAngles = { () -> bridge.std__optional_std__vector_double__ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
             return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
           })
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var exitNumber: Double? {
+    @inline(__always)
+    get {
+      return self.__exitNumber.value
+    }
+    @inline(__always)
+    set {
+      self.__exitNumber = { () -> bridge.std__optional_double_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_double_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var offRampType: OffRampType? {
+    @inline(__always)
+    get {
+      return self.__offRampType.has_value() ? self.__offRampType.pointee : nil
+    }
+    @inline(__always)
+    set {
+      self.__offRampType = { () -> bridge.std__optional_OffRampType_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_OffRampType_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onRampType: OnRampType? {
+    @inline(__always)
+    get {
+      return self.__onRampType.has_value() ? self.__onRampType.pointee : nil
+    }
+    @inline(__always)
+    set {
+      self.__onRampType = { () -> bridge.std__optional_OnRampType_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_OnRampType_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var forkType: ForkType? {
+    @inline(__always)
+    get {
+      return self.__forkType.has_value() ? self.__forkType.pointee : nil
+    }
+    @inline(__always)
+    set {
+      self.__forkType = { () -> bridge.std__optional_ForkType_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_ForkType_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var keepType: KeepType? {
+    @inline(__always)
+    get {
+      return self.__keepType.has_value() ? self.__keepType.pointee : nil
+    }
+    @inline(__always)
+    set {
+      self.__keepType = { () -> bridge.std__optional_KeepType_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_KeepType_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var id: String {
+    @inline(__always)
+    get {
+      return String(self.__id)
+    }
+    @inline(__always)
+    set {
+      self.__id = std.string(newValue)
+    }
+  }
+  
+  var travelEstimates: TravelEstimates {
+    @inline(__always)
+    get {
+      return self.__travelEstimates
+    }
+    @inline(__always)
+    set {
+      self.__travelEstimates = newValue
+    }
+  }
+  
+  var trafficSide: TrafficSide {
+    @inline(__always)
+    get {
+      return self.__trafficSide
+    }
+    @inline(__always)
+    set {
+      self.__trafficSide = newValue
+    }
+  }
+  
+  var linkedLaneGuidance: LaneGuidance? {
+    @inline(__always)
+    get {
+      return self.__linkedLaneGuidance.value
+    }
+    @inline(__always)
+    set {
+      self.__linkedLaneGuidance = { () -> bridge.std__optional_LaneGuidance_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_LaneGuidance_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var maneuverType: ManeuverType {
+    @inline(__always)
+    get {
+      return self.__maneuverType
+    }
+    @inline(__always)
+    set {
+      self.__maneuverType = newValue
+    }
+  }
+  
+  var roadName: [String]? {
+    @inline(__always)
+    get {
+      return { () -> [String]? in
+        if bridge.has_value_std__optional_std__vector_std__string__(self.__roadName) {
+          let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__roadName)
+          return __unwrapped.map({ __item in String(__item) })
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__roadName = { () -> bridge.std__optional_std__vector_std__string__ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+            var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+            for __item in __unwrappedValue {
+              __vector.push_back(std.string(__item))
+            }
+            return __vector
+          }())
         } else {
           return .init()
         }
@@ -278,23 +433,6 @@ public extension NitroManeuver {
       self.__highwayExitLabel = { () -> bridge.std__optional_std__string_ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
-        } else {
-          return .init()
-        }
-      }()
-    }
-  }
-  
-  var linkedLaneGuidance: LaneGuidance? {
-    @inline(__always)
-    get {
-      return self.__linkedLaneGuidance.value
-    }
-    @inline(__always)
-    set {
-      self.__linkedLaneGuidance = { () -> bridge.std__optional_LaneGuidance_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_LaneGuidance_(__unwrappedValue)
         } else {
           return .init()
         }

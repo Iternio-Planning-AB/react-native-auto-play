@@ -24,60 +24,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    * An enum which can be represented as a JavaScript enum (ManeuverType).
    */
   enum class ManeuverType {
-    NOTURN      SWIFT_NAME(noturn) = 0,
-    LEFTTURN      SWIFT_NAME(leftturn) = 1,
-    RIGHTTURN      SWIFT_NAME(rightturn) = 2,
-    STRAIGHTAHEAD      SWIFT_NAME(straightahead) = 3,
-    UTURN      SWIFT_NAME(uturn) = 4,
-    FOLLOWROAD      SWIFT_NAME(followroad) = 5,
-    ENTERROUNDABOUT      SWIFT_NAME(enterroundabout) = 6,
-    EXITROUNDABOUT      SWIFT_NAME(exitroundabout) = 7,
-    OFFRAMP      SWIFT_NAME(offramp) = 8,
-    ONRAMP      SWIFT_NAME(onramp) = 9,
-    ARRIVEENDOFNAVIGATION      SWIFT_NAME(arriveendofnavigation) = 10,
-    STARTROUTE      SWIFT_NAME(startroute) = 11,
-    ARRIVEATDESTINATION      SWIFT_NAME(arriveatdestination) = 12,
-    KEEPLEFT      SWIFT_NAME(keepleft) = 13,
-    KEEPRIGHT      SWIFT_NAME(keepright) = 14,
-    ENTER_FERRY      SWIFT_NAME(enterFerry) = 15,
-    EXITFERRY      SWIFT_NAME(exitferry) = 16,
-    CHANGEFERRY      SWIFT_NAME(changeferry) = 17,
-    STARTROUTEWITHUTURN      SWIFT_NAME(startroutewithuturn) = 18,
-    UTURNATROUNDABOUT      SWIFT_NAME(uturnatroundabout) = 19,
-    LEFTTURNATEND      SWIFT_NAME(leftturnatend) = 20,
-    RIGHTTURNATEND      SWIFT_NAME(rightturnatend) = 21,
-    HIGHWAYOFFRAMPLEFT      SWIFT_NAME(highwayofframpleft) = 22,
-    HIGHWAYOFFRAMPRIGHT      SWIFT_NAME(highwayofframpright) = 23,
-    ARRIVEATDESTINATIONLEFT      SWIFT_NAME(arriveatdestinationleft) = 24,
-    ARRIVEATDESTINATIONRIGHT      SWIFT_NAME(arriveatdestinationright) = 25,
-    UTURNWHENPOSSIBLE      SWIFT_NAME(uturnwhenpossible) = 26,
-    ARRIVEENDOFDIRECTIONS      SWIFT_NAME(arriveendofdirections) = 27,
-    ROUNDABOUTEXIT1      SWIFT_NAME(roundaboutexit1) = 28,
-    ROUNDABOUTEXIT2      SWIFT_NAME(roundaboutexit2) = 29,
-    ROUNDABOUTEXIT3      SWIFT_NAME(roundaboutexit3) = 30,
-    ROUNDABOUTEXIT4      SWIFT_NAME(roundaboutexit4) = 31,
-    ROUNDABOUTEXIT5      SWIFT_NAME(roundaboutexit5) = 32,
-    ROUNDABOUTEXIT6      SWIFT_NAME(roundaboutexit6) = 33,
-    ROUNDABOUTEXIT7      SWIFT_NAME(roundaboutexit7) = 34,
-    ROUNDABOUTEXIT8      SWIFT_NAME(roundaboutexit8) = 35,
-    ROUNDABOUTEXIT9      SWIFT_NAME(roundaboutexit9) = 36,
-    ROUNDABOUTEXIT10      SWIFT_NAME(roundaboutexit10) = 37,
-    ROUNDABOUTEXIT11      SWIFT_NAME(roundaboutexit11) = 38,
-    ROUNDABOUTEXIT12      SWIFT_NAME(roundaboutexit12) = 39,
-    ROUNDABOUTEXIT13      SWIFT_NAME(roundaboutexit13) = 40,
-    ROUNDABOUTEXIT14      SWIFT_NAME(roundaboutexit14) = 41,
-    ROUNDABOUTEXIT15      SWIFT_NAME(roundaboutexit15) = 42,
-    ROUNDABOUTEXIT16      SWIFT_NAME(roundaboutexit16) = 43,
-    ROUNDABOUTEXIT17      SWIFT_NAME(roundaboutexit17) = 44,
-    ROUNDABOUTEXIT18      SWIFT_NAME(roundaboutexit18) = 45,
-    ROUNDABOUTEXIT19      SWIFT_NAME(roundaboutexit19) = 46,
-    SHARPLEFTTURN      SWIFT_NAME(sharpleftturn) = 47,
-    SHARPRIGHTTURN      SWIFT_NAME(sharprightturn) = 48,
-    SLIGHTLEFTTURN      SWIFT_NAME(slightleftturn) = 49,
-    SLIGHTRIGHTTURN      SWIFT_NAME(slightrightturn) = 50,
-    CHANGEHIGHWAY      SWIFT_NAME(changehighway) = 51,
-    CHANGEHIGHWAYLEFT      SWIFT_NAME(changehighwayleft) = 52,
-    CHANGEHIGHWAYRIGHT      SWIFT_NAME(changehighwayright) = 53,
+    DEPART      SWIFT_NAME(depart) = 0,
+    ARRIVE      SWIFT_NAME(arrive) = 10,
+    STRAIGHT      SWIFT_NAME(straight) = 20,
+    TURN      SWIFT_NAME(turn) = 30,
+    ROUNDABOUT      SWIFT_NAME(roundabout) = 40,
+    OFFRAMP      SWIFT_NAME(offramp) = 50,
+    ONRAMP      SWIFT_NAME(onramp) = 60,
+    FORK      SWIFT_NAME(fork) = 70,
+    ENTERFERRY      SWIFT_NAME(enterferry) = 80,
+    KEEP      SWIFT_NAME(keep) = 90,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -106,8 +62,19 @@ namespace margelo::nitro {
         // Enums are all integers, so the input floating point number is obviously invalid.
         return false;
       }
-      // Check if we are within the bounds of the enum.
-      return integer >= 0 && integer <= 53;
+      switch (integer) {
+        case 0 /* DEPART */: return true;
+        case 10 /* ARRIVE */: return true;
+        case 20 /* STRAIGHT */: return true;
+        case 30 /* TURN */: return true;
+        case 40 /* ROUNDABOUT */: return true;
+        case 50 /* OFFRAMP */: return true;
+        case 60 /* ONRAMP */: return true;
+        case 70 /* FORK */: return true;
+        case 80 /* ENTERFERRY */: return true;
+        case 90 /* KEEP */: return true;
+        default: return false;
+      }
     }
   };
 

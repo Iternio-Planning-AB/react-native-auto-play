@@ -23,22 +23,7 @@ data class NitroManeuver
   constructor(
     @DoNotStrip
     @Keep
-    val id: String,
-    @DoNotStrip
-    @Keep
     val attributedInstructionVariants: Array<AttributedInstructionVariant>,
-    @DoNotStrip
-    @Keep
-    val travelEstimates: TravelEstimates,
-    @DoNotStrip
-    @Keep
-    val maneuverType: ManeuverType,
-    @DoNotStrip
-    @Keep
-    val trafficSide: TrafficSide,
-    @DoNotStrip
-    @Keep
-    val roadFollowingManeuverVariants: Array<String>?,
     @DoNotStrip
     @Keep
     val symbolImage: NitroImage,
@@ -47,19 +32,52 @@ data class NitroManeuver
     val junctionImage: NitroImage?,
     @DoNotStrip
     @Keep
-    val junctionType: JunctionType?,
+    val arrivalDirection: ArrivalDirection?,
     @DoNotStrip
     @Keep
-    val junctionExitAngle: Double?,
+    val turnType: TurnType?,
     @DoNotStrip
     @Keep
-    val junctionElementAngles: DoubleArray?,
+    val angle: Double?,
     @DoNotStrip
     @Keep
-    val highwayExitLabel: String?,
+    val elementAngles: DoubleArray?,
     @DoNotStrip
     @Keep
-    val linkedLaneGuidance: LaneGuidance?
+    val exitNumber: Double?,
+    @DoNotStrip
+    @Keep
+    val offRampType: OffRampType?,
+    @DoNotStrip
+    @Keep
+    val onRampType: OnRampType?,
+    @DoNotStrip
+    @Keep
+    val forkType: ForkType?,
+    @DoNotStrip
+    @Keep
+    val keepType: KeepType?,
+    @DoNotStrip
+    @Keep
+    val id: String,
+    @DoNotStrip
+    @Keep
+    val travelEstimates: TravelEstimates,
+    @DoNotStrip
+    @Keep
+    val trafficSide: TrafficSide,
+    @DoNotStrip
+    @Keep
+    val linkedLaneGuidance: LaneGuidance?,
+    @DoNotStrip
+    @Keep
+    val maneuverType: ManeuverType,
+    @DoNotStrip
+    @Keep
+    val roadName: Array<String>?,
+    @DoNotStrip
+    @Keep
+    val highwayExitLabel: String?
   ) {
   /* main constructor */
 }
