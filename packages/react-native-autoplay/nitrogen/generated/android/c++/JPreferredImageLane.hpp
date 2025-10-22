@@ -10,6 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "PreferredImageLane.hpp"
 
+#include "JLaneImage.hpp"
+#include "LaneImage.hpp"
 #include <optional>
 #include <vector>
 
@@ -32,8 +34,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     [[nodiscard]]
     PreferredImageLane toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldImage = clazz->getField<jni::JDouble>("image");
-      jni::local_ref<jni::JDouble> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JLaneImage>("image");
+      jni::local_ref<JLaneImage> image = this->getFieldValue(fieldImage);
       static const auto fieldHighlightedAngle = clazz->getField<double>("highlightedAngle");
       double highlightedAngle = this->getFieldValue(fieldHighlightedAngle);
       static const auto fieldIsPreferred = clazz->getField<jboolean>("isPreferred");
@@ -41,7 +43,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto fieldAngles = clazz->getField<jni::JArrayDouble>("angles");
       jni::local_ref<jni::JArrayDouble> angles = this->getFieldValue(fieldAngles);
       return PreferredImageLane(
-        image != nullptr ? std::make_optional(image->value()) : std::nullopt,
+        image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
         highlightedAngle,
         static_cast<bool>(isPreferred),
         [&]() {
@@ -59,12 +61,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JPreferredImageLane::javaobject> fromCpp(const PreferredImageLane& value) {
-      using JSignature = JPreferredImageLane(jni::alias_ref<jni::JDouble>, double, jboolean, jni::alias_ref<jni::JArrayDouble>);
+      using JSignature = JPreferredImageLane(jni::alias_ref<JLaneImage>, double, jboolean, jni::alias_ref<jni::JArrayDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.image.has_value() ? jni::JDouble::valueOf(value.image.value()) : nullptr,
+        value.image.has_value() ? JLaneImage::fromCpp(value.image.value()) : nullptr,
         value.highlightedAngle,
         value.isPreferred,
         [&]() {

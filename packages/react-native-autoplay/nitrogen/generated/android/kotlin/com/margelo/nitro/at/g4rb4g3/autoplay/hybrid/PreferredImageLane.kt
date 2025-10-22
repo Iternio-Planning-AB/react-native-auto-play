@@ -19,7 +19,7 @@ import com.facebook.proguard.annotations.DoNotStrip
 data class PreferredImageLane(
   @DoNotStrip
   @Keep
-  val image: Double?,
+  val image: LaneImage?,
   @DoNotStrip
   @Keep
   val highlightedAngle: Double,
@@ -38,7 +38,7 @@ data class PreferredImageLane(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(image: Double?, highlightedAngle: Double, isPreferred: Boolean, angles: DoubleArray): PreferredImageLane {
+    private fun fromCpp(image: LaneImage?, highlightedAngle: Double, isPreferred: Boolean, angles: DoubleArray): PreferredImageLane {
       return PreferredImageLane(image, highlightedAngle, isPreferred, angles)
     }
   }

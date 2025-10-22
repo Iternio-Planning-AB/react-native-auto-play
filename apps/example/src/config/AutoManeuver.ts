@@ -23,13 +23,23 @@ const getManeuvers = (): Array<AutoManeuver> => [
     trafficSide: TrafficSide.Left,
     roadName: ['Main St.'],
     linkedLaneGuidance: {
-      instructionVariants: ['lane'],
+      instructionVariants: ['Take second lane'],
       lanes: [
-        { angles: [-90], image: 'turn_left' },
-        { highlightedAngle: 0, angles: [], isPreferred: true, image: 'straight' },
-        { highlightedAngle: 0, angles: [90], isPreferred: false, image: 'fork_right' },
-        { angles: [90], image: 'turn_right' },
-        { angles: [90], image: 'turn_right' },
+        { angles: [-90], image: { name: 'turn_left', color: 'grey' } },
+        {
+          highlightedAngle: 0,
+          angles: [],
+          isPreferred: true,
+          image: { name: 'straight', color: 'white' },
+        },
+        {
+          highlightedAngle: 0,
+          angles: [90],
+          isPreferred: false,
+          image: { name: 'fork_right', color: 'gray' },
+        },
+        { angles: [90], image: { name: 'turn_right', color: 'gray' } },
+        { angles: [90], image: { name: 'turn_right', color: 'gray' } },
       ],
     },
   },
@@ -48,6 +58,19 @@ const getManeuvers = (): Array<AutoManeuver> => [
     trafficSide: TrafficSide.Left,
     turnType: TurnType.NormalLeft,
     angle: 90,
+    linkedLaneGuidance: {
+      instructionVariants: ['Take first lane'],
+      lanes: [
+        {
+          highlightedAngle: -90,
+          angles: [],
+          isPreferred: true,
+          image: { name: 'turn_left', color: 'white' },
+        },
+        { angles: [0], image: { name: 'straight', color: 'gray' } },
+        { angles: [90], image: { name: 'fork_right', color: 'gray' } },
+      ],
+    },
   },
   {
     id: uuid.v4(),

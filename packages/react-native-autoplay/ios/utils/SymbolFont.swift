@@ -6,10 +6,12 @@
 //
 
 import CoreText
-import UIKit
 import React
+import UIKit
 
 class SymbolFont {
+    private static let defaultCanvasSize = 32
+
     private static var isRegistered = false
     private static var fontName: String?
 
@@ -53,7 +55,8 @@ class SymbolFont {
         glyph: Double,
         size: CGFloat,
         color: UIColor = .black,
-        backgroundColor: UIColor = .white
+        backgroundColor: UIColor = .white,
+        canvasSize: Int = defaultCanvasSize
     ) -> UIImage? {
         if !SymbolFont.isRegistered {
             SymbolFont.loadFont()
@@ -75,7 +78,10 @@ class SymbolFont {
             string: codepoint,
             attributes: attributes
         )
-        let canvasSize = CGSize(width: 32, height: 32)
+        let canvasSize = CGSize(
+            width: canvasSize,
+            height: canvasSize
+        )
         let rect = CGRect(origin: .zero, size: canvasSize)
 
         // Start drawing
@@ -97,10 +103,10 @@ class SymbolFont {
 
         return image
     }
-    
+
     static func imageFromNitroImage(image: NitroImage?) -> UIImage? {
         guard let image else { return nil }
-        
+
         let color = RCTConvert.uiColor(image.color) ?? .black
         let backgroundColor =
             RCTConvert.uiColor(image.backgroundColor)
@@ -112,5 +118,40 @@ class SymbolFont {
             color: color,
             backgroundColor: backgroundColor
         )!
+    }
+
+    static func imageFromLanes(
+        laneImages: [LaneImage],
+        size: Int,
+    ) -> UIImage {
+        let width = size * laneImages.count
+        let height = size
+
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: width, height: height),
+            false,
+            0.0
+        )
+        defer { UIGraphicsEndImageContext() }
+        var xOffset = 0
+        for laneImage in laneImages {
+            let image = imageFromGlyph(
+                glyph: laneImage.glyph,
+                size: CGFloat(size),
+                color: RCTConvert.uiColor(laneImage.color),
+                backgroundColor: UIColor.clear,
+                canvasSize: Int(size)
+            )!
+            image.draw(
+                in: CGRect(
+                    x: xOffset,
+                    y: 0,
+                    width: Int(image.size.width),
+                    height: Int(image.size.height)
+                )
+            )
+            xOffset += Int(size)
+        }
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }

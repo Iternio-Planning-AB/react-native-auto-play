@@ -23,8 +23,10 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `LaneImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneImage; }
 
-
+#include "LaneImage.hpp"
 #include <optional>
 #include <vector>
 
@@ -35,12 +37,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct ImageLane {
   public:
-    std::optional<double> image     SWIFT_PRIVATE;
+    std::optional<LaneImage> image     SWIFT_PRIVATE;
     std::vector<double> angles     SWIFT_PRIVATE;
 
   public:
     ImageLane() = default;
-    explicit ImageLane(std::optional<double> image, std::vector<double> angles): image(image), angles(angles) {}
+    explicit ImageLane(std::optional<LaneImage> image, std::vector<double> angles): image(image), angles(angles) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -53,13 +55,13 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane(
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::vector<double>>::fromJSI(runtime, obj.getProperty(runtime, "angles"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<double>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "angles", JSIConverter<std::vector<double>>::toJSI(runtime, arg.angles));
       return obj;
     }
@@ -71,7 +73,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::vector<double>>::canConvert(runtime, obj.getProperty(runtime, "angles"))) return false;
       return true;
     }

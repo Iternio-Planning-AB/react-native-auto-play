@@ -12,8 +12,10 @@
 
 #include "ImageLane.hpp"
 #include "JImageLane.hpp"
+#include "JLaneImage.hpp"
 #include "JPreferredImageLane.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
+#include "LaneImage.hpp"
 #include "PreferredImageLane.hpp"
 #include <optional>
 #include <string>

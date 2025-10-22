@@ -44,6 +44,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `LaneImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneImage; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
@@ -130,6 +132,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
+#include "LaneImage.hpp"
 #include "ManeuverType.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"
@@ -1057,6 +1060,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return optional.has_value();
   }
   inline KeepType get_std__optional_KeepType_(const std::optional<KeepType>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<LaneImage>
+  /**
+   * Specialized version of `std::optional<LaneImage>`.
+   */
+  using std__optional_LaneImage_ = std::optional<LaneImage>;
+  inline std::optional<LaneImage> create_std__optional_LaneImage_(const LaneImage& value) noexcept {
+    return std::optional<LaneImage>(value);
+  }
+  inline bool has_value_std__optional_LaneImage_(const std::optional<LaneImage>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline LaneImage get_std__optional_LaneImage_(const std::optional<LaneImage>& optional) noexcept {
     return *optional;
   }
   

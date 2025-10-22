@@ -48,6 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `LaneImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneImage; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ListTemplateConfig; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
@@ -136,6 +138,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
+#include "LaneImage.hpp"
 #include "ListTemplateConfig.hpp"
 #include "ManeuverType.hpp"
 #include "MapTemplateConfig.hpp"

@@ -165,7 +165,10 @@ export interface GlyphLane {
    * @namespace Android setLanesImage called on the specified step/maneuver
    * @namespace iOS be set as symbolImage on the secondary maneuver (a new one will be generated, in case you specify a secondary maneuver it will not be shown then)
    */
-  image?: GlyphName;
+  image?: {
+    name: GlyphName;
+    color: string;
+  };
 }
 
 export type Maneuver =

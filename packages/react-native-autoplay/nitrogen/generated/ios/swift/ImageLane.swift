@@ -18,10 +18,10 @@ public extension ImageLane {
   /**
    * Create a new instance of `ImageLane`.
    */
-  init(image: Double?, angles: [Double]) {
-    self.init({ () -> bridge.std__optional_double_ in
+  init(image: LaneImage?, angles: [Double]) {
+    self.init({ () -> bridge.std__optional_LaneImage_ in
       if let __unwrappedValue = image {
-        return bridge.create_std__optional_double_(__unwrappedValue)
+        return bridge.create_std__optional_LaneImage_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -30,16 +30,16 @@ public extension ImageLane {
     })
   }
 
-  var image: Double? {
+  var image: LaneImage? {
     @inline(__always)
     get {
       return self.__image.value
     }
     @inline(__always)
     set {
-      self.__image = { () -> bridge.std__optional_double_ in
+      self.__image = { () -> bridge.std__optional_LaneImage_ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
+          return bridge.create_std__optional_LaneImage_(__unwrappedValue)
         } else {
           return .init()
         }
@@ -50,7 +50,11 @@ public extension ImageLane {
   var angles: [Double] {
     @inline(__always)
     get {
-      return self.__angles.map({ __item in __item })
+      return { () -> [Double] in
+        let __data = bridge.get_data_std__vector_double_(self.__angles)
+        let __size = self.__angles.size()
+        return Array(UnsafeBufferPointer(start: __data, count: __size))
+      }()
     }
     @inline(__always)
     set {

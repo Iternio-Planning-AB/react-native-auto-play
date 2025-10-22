@@ -363,8 +363,7 @@ class Parser {
     }
 
     static func parseManeuver(nitroManeuver: NitroManeuver) -> CPManeuver {
-        let maneuver = CPManeuver()
-        maneuver.id = nitroManeuver.id
+        let maneuver = CPManeuver(id: nitroManeuver.id)
 
         maneuver.attributedInstructionVariants = nitroManeuver
             .attributedInstructionVariants.map { variant in
@@ -441,6 +440,23 @@ class Parser {
                 maneuver.linkedLaneGuidance = laneGuidance
                 // iOS does not store the actual CPLaneGuidance type but some NSConcreteMutableAttributedString so we store it in userInfo so we can access it later on
                 maneuver.laneGuidance = laneGuidance
+
+                let laneImages = linkedLaneGuidance.lanes.compactMap { lane in
+                    switch lane {
+                    case .first(let nitroLaneGuidance):
+                        return nitroLaneGuidance.image
+                    case .second(let nitroLaneGuidance):
+                        return nitroLaneGuidance.image
+                    }
+                }
+
+                if laneImages.count > 0 {
+                    let secondarySymbolImage = SymbolFont.imageFromLanes(
+                        laneImages: laneImages,
+                        size: 18
+                    )
+                    maneuver.secondarySymbolImage = secondarySymbolImage
+                }
             }
         }
 
@@ -552,17 +568,6 @@ class Parser {
                 isPreferred: isPreferred
             )
         }
-        
-        let laneImages = laneGuidance.lanes.compactMap { lane in
-            switch lane {
-            case .first(let nitroLaneGuidance):
-                return nitroLaneGuidance.image
-            case .second(let nitroLaneGuidance):
-                return nitroLaneGuidance.image
-            }
-        }
-        
-        //TODO merge all laneImages into UIImage and use it as symbolImage on next maneuver
 
         return CPLaneGuidance(
             instructionVariants: instructionVariants,

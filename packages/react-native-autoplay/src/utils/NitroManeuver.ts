@@ -11,6 +11,7 @@ import {
   type PreferredLane,
   type TurnType,
 } from '../types/Maneuver';
+import { NitroColorUtil } from './NitroColor';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
 type AttributedInstructionVariantImage = {
@@ -23,12 +24,17 @@ type AttributedInstructionVariant = {
   images?: Array<AttributedInstructionVariantImage>;
 };
 
+type LaneImage = {
+  glyph: number;
+  color: number;
+};
+
 interface PreferredImageLane extends PreferredLane {
-  image?: number;
+  image?: LaneImage;
 }
 
 interface ImageLane extends Lane {
-  image?: number;
+  image?: LaneImage;
 }
 
 export interface LaneGuidance {
@@ -90,7 +96,12 @@ function convert(autoManeuver: AutoManeuver): NitroManeuver {
           ...linkedLaneGuidance,
           lanes: linkedLaneGuidance.lanes.map((lane) => ({
             ...lane,
-            image: lane.image ? glyphMap[lane.image] : undefined,
+            image: lane.image
+              ? {
+                  glyph: glyphMap[lane.image.name],
+                  color: NitroColorUtil.convert(lane.image.color),
+                }
+              : undefined,
           })),
         }
       : undefined,

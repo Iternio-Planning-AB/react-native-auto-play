@@ -65,15 +65,15 @@ extension CPTrip {
 }
 
 extension CPManeuver {
-    var id: String? {
-        get {
-            return (self.userInfo as? [String: Any])?["id"] as? String
-        }
-        set {
-            var info = (self.userInfo as? [String: Any]) ?? [:]
-            info["id"] = newValue
-            self.userInfo = info
-        }
+    convenience init(id: String, isSecondary: Bool = false) {
+        self.init()
+        var info: [String: Any] = [:]
+        info["id"] = id
+        info["isSecondary"] = isSecondary
+        self.userInfo = info
+    }
+    var id: String {
+        return (self.userInfo as? [String: Any])?["id"] as! String
     }
     @available(iOS 17.4, *)
     var laneGuidance: CPLaneGuidance? {
@@ -87,6 +87,21 @@ extension CPManeuver {
             info["laneGuidance"] = newValue
             self.userInfo = info
         }
+    }
+    var secondarySymbolImage: UIImage? {
+        get {
+            return (self.userInfo as? [String: Any])?["secondarySymbolImage"]
+                as? UIImage
+        }
+        set {
+            var info = (self.userInfo as? [String: Any]) ?? [:]
+            info["secondarySymbolImage"] = newValue
+            self.userInfo = info
+        }
+    }
+    var isSecondary: Bool {
+        return (self.userInfo as? [String: Any])?["isSecondary"]
+            as! Bool
     }
 }
 

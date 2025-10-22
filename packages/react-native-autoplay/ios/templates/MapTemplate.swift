@@ -395,8 +395,14 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         var upcomingManeuvers: [CPManeuver] = []
 
+        let sessionManeuvers = navigationSession.upcomingManeuvers.filter {
+            maneuver in
+            !maneuver.isSecondary
+        }
+
         for (index, nitroManeuver) in maneuvers.enumerated() {
-            if let maneuverIndex = navigationSession.upcomingManeuvers
+            if let maneuverIndex =
+                sessionManeuvers
                 .firstIndex(where: { $0.id == nitroManeuver.id })
             {
                 navigationSession.updateEstimates(
@@ -407,11 +413,10 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                 )
 
                 if index != maneuverIndex {
-                    upcomingManeuvers.append(
-                        navigationSession.upcomingManeuvers.first(
-                            where: { $0.id == nitroManeuver.id }
-                        )!
-                    )
+                    let maneuver = navigationSession.upcomingManeuvers.first(
+                        where: { $0.id == nitroManeuver.id }
+                    )!
+                    upcomingManeuvers.append(maneuver)
                 }
                 continue
             }
@@ -422,14 +427,28 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         if upcomingManeuvers.count > 0 {
             if #available(iOS 17.4, *) {
-                let sessionManeuvers = upcomingManeuvers.filter { m in
-                    !navigationSession.upcomingManeuvers.contains { u in
-                        u.id == m.id
+                upcomingManeuvers = upcomingManeuvers.flatMap { maneuver in
+                    if let secondarySymbolImage = maneuver.secondarySymbolImage
+                    {
+                        let secondaryManeuver = CPManeuver(
+                            id: maneuver.id + "-lanes",
+                            isSecondary: true
+                        )
+                        secondaryManeuver.symbolImage = secondarySymbolImage
+                        return [maneuver, secondaryManeuver]
+                    } else {
+                        return [maneuver]
                     }
                 }
 
-                navigationSession.add(sessionManeuvers)
-                
+                navigationSession.add(
+                    upcomingManeuvers.filter({ maneuver in
+                        !navigationSession.upcomingManeuvers.contains(where: {
+                            $0.id == maneuver.id
+                        })
+                    })
+                )
+
                 let laneGuidances = upcomingManeuvers.compactMap {
                     $0.laneGuidance
                 }
