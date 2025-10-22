@@ -26,7 +26,10 @@ data class NitroImage
     val glyph: Double,
     @DoNotStrip
     @Keep
-    val color: Double?,
+    val dayColor: Double?,
+    @DoNotStrip
+    @Keep
+    val nightColor: Double?,
     @DoNotStrip
     @Keep
     val backgroundColor: Double?

@@ -18,9 +18,15 @@ public extension NitroImage {
   /**
    * Create a new instance of `NitroImage`.
    */
-  init(glyph: Double, color: Double?, backgroundColor: Double?) {
+  init(glyph: Double, dayColor: Double?, nightColor: Double?, backgroundColor: Double?) {
     self.init(glyph, { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = color {
+      if let __unwrappedValue = dayColor {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = nightColor {
         return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
         return .init()
@@ -45,14 +51,31 @@ public extension NitroImage {
     }
   }
   
-  var color: Double? {
+  var dayColor: Double? {
     @inline(__always)
     get {
-      return self.__color.value
+      return self.__dayColor.value
     }
     @inline(__always)
     set {
-      self.__color = { () -> bridge.std__optional_double_ in
+      self.__dayColor = { () -> bridge.std__optional_double_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_double_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var nightColor: Double? {
+    @inline(__always)
+    get {
+      return self.__nightColor.value
+    }
+    @inline(__always)
+    set {
+      self.__nightColor = { () -> bridge.std__optional_double_ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_double_(__unwrappedValue)
         } else {
