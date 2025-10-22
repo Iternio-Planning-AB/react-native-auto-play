@@ -9,7 +9,8 @@ import { NitroColorUtil } from './NitroColor';
  */
 export type NitroImage = {
   glyph: number;
-  color?: number;
+  dayColor?: number;
+  nightColor?: number;
   backgroundColor?: number;
 };
 
@@ -20,11 +21,18 @@ function convert(image?: AutoImage): NitroImage | undefined {
     return undefined;
   }
 
-  const { name, color = 'white', backgroundColor = 'transparent', ...rest } = image;
+  const {
+    name,
+    dayColor = 'white',
+    nightColor = 'black',
+    backgroundColor = 'transparent',
+    ...rest
+  } = image;
   return {
     ...rest,
     glyph: glyphMap[name],
-    color: NitroColorUtil.convert(color) as number | undefined,
+    dayColor: NitroColorUtil.convert(dayColor) as number | undefined,
+    nightColor: NitroColorUtil.convert(nightColor) as number | undefined,
     backgroundColor: NitroColorUtil.convert(
       Platform.OS === 'android' ? 'transparent' : backgroundColor
     ) as number | undefined,
