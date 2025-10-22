@@ -6,15 +6,13 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.util.Log
 import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.autoplay.BuildConfig
 import com.margelo.nitro.autoplay.R
-import kotlin.math.max
 
 object SymbolFont {
     const val TAG = "SymbolFont"
@@ -80,20 +78,22 @@ object SymbolFont {
     }
 
     fun imageFromNitroImage(context: CarContext, image: NitroImage): Bitmap {
-        var color = (if (context.isDarkMode) image.darkColor?.toInt() else image.lightColor?.toInt()) ?: android.graphics.Color.BLACK
+        val color =
+            (if (context.isDarkMode) image.darkColor?.toInt() else image.lightColor?.toInt())
+                ?: android.graphics.Color.BLACK
         val backgroundColor = image.backgroundColor?.toInt() ?: android.graphics.Color.WHITE
 
         return imageFromGlyph(
             context = context,
             glyph = image.glyph,
-            color = color ,
+            color = color,
             backgroundColor = backgroundColor
         )!!
     }
 
     fun iconFromNitroImage(context: CarContext, image: NitroImage): IconCompat {
         val bitmap = imageFromNitroImage(context, image)
-        
+
         return IconCompat.createWithBitmap(bitmap)
     }
 }
