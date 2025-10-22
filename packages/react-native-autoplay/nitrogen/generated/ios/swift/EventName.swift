@@ -21,6 +21,8 @@ public extension EventName {
         self = .didconnect
       case "didDisconnect":
         self = .diddisconnect
+      case "didReceiveTelemetry":
+        self = .didreceivetelemetry
       default:
         return nil
     }
@@ -35,6 +37,8 @@ public extension EventName {
         return "didConnect"
       case .diddisconnect:
         return "didDisconnect"
+      case .didreceivetelemetry:
+        return "didReceiveTelemetry"
     }
   }
 }

@@ -43,12 +43,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldDIDCONNECT = clazz->getStaticField<JEventName>("DIDCONNECT");
       static const auto fieldDIDDISCONNECT = clazz->getStaticField<JEventName>("DIDDISCONNECT");
+      static const auto fieldDIDRECEIVETELEMETRY = clazz->getStaticField<JEventName>("DIDRECEIVETELEMETRY");
       
       switch (value) {
         case EventName::DIDCONNECT:
           return clazz->getStaticFieldValue(fieldDIDCONNECT);
         case EventName::DIDDISCONNECT:
           return clazz->getStaticFieldValue(fieldDIDDISCONNECT);
+        case EventName::DIDRECEIVETELEMETRY:
+          return clazz->getStaticFieldValue(fieldDIDRECEIVETELEMETRY);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

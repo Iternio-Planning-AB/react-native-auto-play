@@ -17,5 +17,6 @@ import com.facebook.proguard.annotations.DoNotStrip
 @Keep
 enum class EventName(@DoNotStrip @Keep val value: Int) {
   DIDCONNECT(0),
-  DIDDISCONNECT(1);
+  DIDDISCONNECT(1),
+  DIDRECEIVETELEMETRY(2);
 }
