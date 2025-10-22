@@ -166,13 +166,19 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline std::function<void()> registerAndroidAutoTelemetryListener(const std::function<void(const Telemetry& /* tlm */)>& callback) override {
+    inline std::shared_ptr<Promise<void>> registerAndroidAutoTelemetryListener(const std::function<void(const Telemetry& /* tlm */)>& callback) override {
       auto __result = _swiftPart.registerAndroidAutoTelemetryListener(callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline void stopAndroidAutoTelemetry() override {
+      auto __result = _swiftPart.stopAndroidAutoTelemetry();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
 
   private:

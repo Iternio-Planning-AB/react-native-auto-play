@@ -225,20 +225,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __array;
     }() : nullptr);
   }
-  std::function<void()> JHybridHybridAutoPlaySpec::registerAndroidAutoTelemetryListener(const std::function<void(const Telemetry& /* tlm */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_Telemetry::javaobject> /* callback */)>("registerAndroidAutoTelemetryListener_cxx");
+  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::registerAndroidAutoTelemetryListener(const std::function<void(const Telemetry& /* tlm */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JFunc_void_Telemetry::javaobject> /* callback */)>("registerAndroidAutoTelemetryListener_cxx");
     auto __result = method(_javaPart, JFunc_void_Telemetry_cxx::fromCpp(callback));
-    return [&]() -> std::function<void()> {
-      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
-        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
-        return downcast->cthis()->getFunction();
-      } else {
-        auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
-      }
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
     }();
+  }
+  void JHybridHybridAutoPlaySpec::stopAndroidAutoTelemetry() {
+    static const auto method = javaClassStatic()->getMethod<void()>("stopAndroidAutoTelemetry");
+    method(_javaPart);
   }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid

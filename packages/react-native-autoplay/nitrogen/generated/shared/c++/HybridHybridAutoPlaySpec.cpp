@@ -24,6 +24,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       prototype.registerHybridMethod("addSafeAreaInsetsListener", &HybridHybridAutoPlaySpec::addSafeAreaInsetsListener);
       prototype.registerHybridMethod("setTemplateHeaderActions", &HybridHybridAutoPlaySpec::setTemplateHeaderActions);
       prototype.registerHybridMethod("registerAndroidAutoTelemetryListener", &HybridHybridAutoPlaySpec::registerAndroidAutoTelemetryListener);
+      prototype.registerHybridMethod("stopAndroidAutoTelemetry", &HybridHybridAutoPlaySpec::stopAndroidAutoTelemetry);
     });
   }
 
