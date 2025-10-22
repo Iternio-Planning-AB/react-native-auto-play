@@ -349,9 +349,7 @@ class MapTemplate(
 
             navigationInfo = RoutingInfo.Builder().apply {
                 setCurrentStep(
-                    // TODO: add image from attributedInstructionVariants to cue
-                    Step.Builder(Parser.parseText(current.attributedInstructionVariants.map { it.text }
-                        .toTypedArray())).apply {
+                    Step.Builder(Parser.parseText(context,current.attributedInstructionVariants)).apply {
                         current.roadName?.let {
                             setRoad(it.first())
                         }
@@ -363,9 +361,7 @@ class MapTemplate(
                 )
                 next?.let {
                     setNextStep(
-                        // TODO: add image from attributedInstructionVariants to cue
-                        Step.Builder(Parser.parseText(it.attributedInstructionVariants.map { it.text }
-                            .toTypedArray())).apply {
+                        Step.Builder(Parser.parseText(context, it.attributedInstructionVariants)).apply {
                             it.roadName?.let {
                                 setRoad(it.first())
                             }

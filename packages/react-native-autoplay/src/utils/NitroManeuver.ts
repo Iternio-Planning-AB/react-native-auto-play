@@ -5,6 +5,7 @@ import {
   type ForkType,
   type KeepType,
   type Lane,
+  type ManeuverImage,
   ManeuverType,
   type OffRampType,
   type OnRampType,
@@ -55,6 +56,19 @@ export interface NitroManeuver extends BaseManeuver {
   forkType?: ForkType;
   keepType?: KeepType;
   linkedLaneGuidance?: LaneGuidance;
+}
+
+function convertManeuverImage(image: ManeuverImage): NitroImage;
+function convertManeuverImage(image: ManeuverImage | undefined): NitroImage | undefined;
+function convertManeuverImage(image?: ManeuverImage): NitroImage | undefined {
+  if (image == null) {
+    return undefined;
+  }
+  return NitroImageUtil.convert({
+    name: image.name,
+    darkColor: image.color ?? 'white',
+    lightColor: image.color ?? 'white',
+  });
 }
 
 function convert(autoManeuver: AutoManeuver): NitroManeuver {
@@ -110,22 +124,12 @@ function convert(autoManeuver: AutoManeuver): NitroManeuver {
     attributedInstructionVariants: attributedInstructionVariants.map((variant) => ({
       text: variant.text,
       images: variant.images?.map(({ image, position }) => ({
-        image: NitroImageUtil.convert(image),
+        image: convertManeuverImage(image),
         position,
       })),
     })),
-    junctionImage: junctionImage
-      ? NitroImageUtil.convert({
-          name: junctionImage.name,
-          darkColor: junctionImage.color,
-          lightColor: junctionImage.color,
-        })
-      : undefined,
-    symbolImage: NitroImageUtil.convert({
-      name: symbolImage.name,
-      darkColor: symbolImage.color ?? 'white',
-      lightColor: symbolImage.color ?? 'white',
-    }),
+    junctionImage: convertManeuverImage(junctionImage),
+    symbolImage: convertManeuverImage(symbolImage),
     elementAngles,
     angle,
     turnType,

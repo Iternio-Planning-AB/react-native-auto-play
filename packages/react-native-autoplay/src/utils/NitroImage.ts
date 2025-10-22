@@ -31,11 +31,11 @@ function convert(image?: AutoImage): NitroImage | undefined {
   return {
     ...rest,
     glyph: glyphMap[name],
-    lightColor: NitroColorUtil.convert(lightColor) as number | undefined,
-    darkColor: NitroColorUtil.convert(darkColor) as number | undefined,
+    lightColor: NitroColorUtil.convert(lightColor),
+    darkColor: NitroColorUtil.convert(darkColor),
     backgroundColor: NitroColorUtil.convert(
       Platform.OS === 'android' ? 'transparent' : backgroundColor
-    ) as number | undefined,
+    ),
   };
 }
 

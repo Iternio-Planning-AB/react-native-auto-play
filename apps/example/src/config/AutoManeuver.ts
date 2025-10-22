@@ -14,7 +14,11 @@ const getManeuvers = (): Array<AutoManeuver> => [
     attributedInstructionVariants: [
       {
         text: 'Straight',
-        images: [{ image: { name: 'music_note' }, position: 'Straight'.length }],
+        images: [
+          { image: { name: 'music_note', color: 'blue' }, position: 'Straight'.length },
+          { image: { name: 'music_note', color: 'red' }, position: 0 },
+          { image: { name: 'music_note', color: 'green' }, position: 4 },
+        ],
       },
     ],
     travelEstimates: {

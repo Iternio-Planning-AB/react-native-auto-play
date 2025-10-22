@@ -2,11 +2,13 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.Spanned
 import android.util.Log
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
 import androidx.car.app.model.CarColor
 import androidx.car.app.model.CarIcon
+import androidx.car.app.model.CarIconSpan
 import androidx.car.app.model.CarText
 import androidx.car.app.model.DateTimeWithZone
 import androidx.car.app.model.Distance
@@ -19,6 +21,7 @@ import androidx.car.app.model.Toggle
 import androidx.car.app.navigation.model.TravelEstimate
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AttributedInstructionVariant
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AutoText
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DistanceUnits
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DurationWithTimeZone
@@ -38,7 +41,9 @@ import java.util.TimeZone
 object Parser {
     const val TAG = "Parser"
 
-    fun parseHeader(context: CarContext, title: AutoText, headerActions: Array<NitroAction>?): Header {
+    fun parseHeader(
+        context: CarContext, title: AutoText, headerActions: Array<NitroAction>?
+    ): Header {
         return Header.Builder().apply {
             setTitle(parseText(title))
             headerActions?.forEach { action ->
@@ -223,6 +228,43 @@ object Parser {
                     return@forEachIndexed
                 }
                 addVariant(string)
+            }
+        }.build()
+    }
+
+    fun parseText(context: CarContext, variant: AttributedInstructionVariant): SpannableString {
+        val images =
+            variant.images?.sortedBy { it.position } ?: return SpannableString(variant.text)
+
+        val builder = StringBuilder(variant.text)
+        images.forEachIndexed { index, image ->
+            val pos = image.position.toInt().coerceIn(0, builder.length)
+            builder.insert(pos + index, " ")
+        }
+
+        val text = SpannableString(builder.toString())
+        images.forEachIndexed { index, image ->
+            val carIcon = parseImage(context, image.image)
+            val start = (image.position.toInt() + index).coerceIn(0, text.length - 1)
+            val end = start + 1
+
+            text.setSpan(
+                CarIconSpan.create(carIcon), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            )
+        }
+        return text
+    }
+
+    fun parseText(context: CarContext, variants: Array<AttributedInstructionVariant>): CarText {
+        val text = parseText(context, variants.first())
+
+        return CarText.Builder(text).apply {
+            variants.forEachIndexed { index, variant ->
+                if (index == 0) {
+                    // the first one is on the constructor of the CarText.Builder
+                    return@forEachIndexed
+                }
+                addVariant(parseText(context, variant))
             }
         }.build()
     }

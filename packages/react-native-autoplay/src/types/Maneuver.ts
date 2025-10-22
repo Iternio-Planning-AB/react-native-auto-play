@@ -1,5 +1,4 @@
 import type { GlyphName } from './Glyphmap';
-import type { AutoImage } from './Image';
 import type { TravelEstimates } from './Trip';
 
 export enum ManeuverType {
@@ -191,7 +190,7 @@ export type Maneuver =
 export type AutoManeuver = Maneuver & {
   attributedInstructionVariants: Array<{
     text: string;
-    images?: Array<{ image: AutoImage; position: number }>;
+    images?: Array<{ image: ManeuverImage; position: number }>;
   }>;
   symbolImage: ManeuverImage;
   junctionImage?: ManeuverImage;
