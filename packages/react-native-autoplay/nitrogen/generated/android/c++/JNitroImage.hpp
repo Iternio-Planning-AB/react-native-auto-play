@@ -33,16 +33,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldGlyph = clazz->getField<double>("glyph");
       double glyph = this->getFieldValue(fieldGlyph);
-      static const auto fieldDayColor = clazz->getField<jni::JDouble>("dayColor");
-      jni::local_ref<jni::JDouble> dayColor = this->getFieldValue(fieldDayColor);
-      static const auto fieldNightColor = clazz->getField<jni::JDouble>("nightColor");
-      jni::local_ref<jni::JDouble> nightColor = this->getFieldValue(fieldNightColor);
+      static const auto fieldLightColor = clazz->getField<jni::JDouble>("lightColor");
+      jni::local_ref<jni::JDouble> lightColor = this->getFieldValue(fieldLightColor);
+      static const auto fieldDarkColor = clazz->getField<jni::JDouble>("darkColor");
+      jni::local_ref<jni::JDouble> darkColor = this->getFieldValue(fieldDarkColor);
       static const auto fieldBackgroundColor = clazz->getField<jni::JDouble>("backgroundColor");
       jni::local_ref<jni::JDouble> backgroundColor = this->getFieldValue(fieldBackgroundColor);
       return NitroImage(
         glyph,
-        dayColor != nullptr ? std::make_optional(dayColor->value()) : std::nullopt,
-        nightColor != nullptr ? std::make_optional(nightColor->value()) : std::nullopt,
+        lightColor != nullptr ? std::make_optional(lightColor->value()) : std::nullopt,
+        darkColor != nullptr ? std::make_optional(darkColor->value()) : std::nullopt,
         backgroundColor != nullptr ? std::make_optional(backgroundColor->value()) : std::nullopt
       );
     }
@@ -55,8 +55,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     static jni::local_ref<JNitroImage::javaobject> fromCpp(const NitroImage& value) {
       return newInstance(
         value.glyph,
-        value.dayColor.has_value() ? jni::JDouble::valueOf(value.dayColor.value()) : nullptr,
-        value.nightColor.has_value() ? jni::JDouble::valueOf(value.nightColor.value()) : nullptr,
+        value.lightColor.has_value() ? jni::JDouble::valueOf(value.lightColor.value()) : nullptr,
+        value.darkColor.has_value() ? jni::JDouble::valueOf(value.darkColor.value()) : nullptr,
         value.backgroundColor.has_value() ? jni::JDouble::valueOf(value.backgroundColor.value()) : nullptr
       );
     }
