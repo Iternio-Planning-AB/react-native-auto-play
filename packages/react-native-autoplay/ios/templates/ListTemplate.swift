@@ -15,11 +15,12 @@ class ListTemplate: AutoPlayTemplate {
 
         let template = CPListTemplate(
             title: Parser.parseText(text: config.title),
-            sections: []
+            sections: [],
+            assistantCellConfiguration: nil,
+            id: config.id
         )
 
         super.init(
-            templateId: config.id,
             template: template,
             header: config.headerActions
         )

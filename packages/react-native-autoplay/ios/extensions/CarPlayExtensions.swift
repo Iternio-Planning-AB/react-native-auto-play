@@ -7,18 +7,6 @@
 
 import CarPlay
 
-extension CPTemplate {
-    func getTemplateId() -> String? {
-        guard let userInfo = self.userInfo as? [String: Any],
-            let templateId = userInfo["id"] as? String
-        else {
-            return nil
-        }
-
-        return templateId
-    }
-}
-
 extension CPMapButton {
     convenience init(
         image: UIImage,
@@ -30,37 +18,50 @@ extension CPMapButton {
 }
 
 extension CPRouteChoice {
-    func getRouteId() throws -> String {
-        guard let userInfo = self.userInfo as? [String: Any],
-            let routeId = userInfo["id"] as? String
-        else {
-            throw AutoPlayError.propertyNotFoundError("id on CPRouteChoice")
-        }
-
-        return routeId
+    convenience init(
+        summaryVariants: [String],
+        additionalInformationVariants: [String],
+        selectionSummaryVariants: [String],
+        id: String,
+        travelEstimates: [CPTravelEstimates]
+    ) {
+        self.init(
+            summaryVariants: summaryVariants,
+            additionalInformationVariants: additionalInformationVariants,
+            selectionSummaryVariants: selectionSummaryVariants
+        )
+        var info: [String: Any] = [:]
+        info["id"] = id
+        info["travelEstimates"] = travelEstimates
+        self.userInfo = info
     }
-
-    func getTravelEstimates() -> [CPTravelEstimates] {
-        guard let userInfo = self.userInfo as? [String: Any],
-            let travelEstimates = userInfo["travelEstimates"]
-                as? [CPTravelEstimates]
-        else {
-            return []
-        }
-
-        return travelEstimates
+    var id: String {
+        return (self.userInfo as? [String: Any])?["id"] as! String
+    }
+    var travelEstimates: [CPTravelEstimates] {
+        return (self.userInfo as? [String: Any])?["travelEstimates"]
+            as! [CPTravelEstimates]
     }
 }
 
 extension CPTrip {
-    func getTripId() throws -> String {
-        guard let userInfo = self.userInfo as? [String: Any],
-            let tripId = userInfo["id"] as? String
-        else {
-            throw AutoPlayError.propertyNotFoundError("id on CPTrip")
-        }
-
-        return tripId
+    convenience init(
+        origin: MKMapItem,
+        destination: MKMapItem,
+        routeChoices: [CPRouteChoice],
+        id: String
+    ) {
+        self.init(
+            origin: origin,
+            destination: destination,
+            routeChoices: routeChoices
+        )
+        var info: [String: Any] = [:]
+        info["id"] = id
+        self.userInfo = info
+    }
+    var id: String {
+        return (self.userInfo as? [String: Any])?["id"] as! String
     }
 }
 

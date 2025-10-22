@@ -15,11 +15,11 @@ class GridTemplate: AutoPlayTemplate {
 
         let template = CPGridTemplate(
             title: Parser.parseText(text: config.title),
-            gridButtons: []
+            gridButtons: [],
+            id: config.id
         )
 
         super.init(
-            templateId: config.id,
             template: template,
             header: config.headerActions
         )

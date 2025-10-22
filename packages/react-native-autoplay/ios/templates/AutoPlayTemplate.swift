@@ -11,9 +11,7 @@ class AutoPlayTemplate: NSObject {
     let template: CPTemplate
     var barButtons: [NitroAction]?
 
-    init(templateId: String, template: CPTemplate, header: [NitroAction]?) {
-        template.userInfo = ["id": templateId]
-
+    init(template: CPTemplate, header: [NitroAction]?) {
         self.template = template
         self.barButtons = header
     }

@@ -282,16 +282,13 @@ class Parser {
         let route = CPRouteChoice(
             summaryVariants: routeChoice.summaryVariants,
             additionalInformationVariants: additionalInformationVariants,
-            selectionSummaryVariants: selectionSummaryVariants
-        )
-
-        route.userInfo = [
-            "id": routeChoice.id,
+            selectionSummaryVariants: selectionSummaryVariants,
+            id: routeChoice.id,
             // we don't want to keep the origin travel estimate
-            "travelEstimates": routeChoice.steps[1...].map { step in
+            travelEstimates: routeChoice.steps[1...].map { step in
                 parseTravelEstiamtes(travelEstimates: step.travelEstimates)
-            },
-        ]
+            }
+        )
 
         return route
     }
@@ -305,17 +302,16 @@ class Parser {
             destination: parseTripPoint(
                 point: tripConfig.routeChoice.steps.last!
             ),
-            routeChoices: [routeChoices]
+            routeChoices: [routeChoices],
+            id: tripConfig.id
         )
-
-        trip.userInfo = ["id": tripConfig.id]
 
         return trip
     }
 
     static func parseTrips(trips: [TripsConfig]) -> [CPTrip] {
         return trips.map { tripConfig in
-            let trip = CPTrip(
+            CPTrip(
                 origin: parseTripPoint(
                     point: tripConfig.routeChoices.first!.steps.first!
                 ),
@@ -324,12 +320,9 @@ class Parser {
                 ),
                 routeChoices: tripConfig.routeChoices.map { routeChoice in
                     Parser.parseRouteChoice(routeChoice: routeChoice)
-                }
+                },
+                id: tripConfig.id
             )
-
-            trip.userInfo = ["id": tripConfig.id]
-
-            return trip
         }
     }
 

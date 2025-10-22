@@ -25,8 +25,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         self.config = config
 
         super.init(
-            templateId: config.id,
-            template: CPMapTemplate(),
+            template: CPMapTemplate(id: config.id),
             header: config.headerActions
         )
 
@@ -253,7 +252,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         textConfig: TripPreviewTextConfiguration,
         onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
         onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void
-    ) throws {
+    ) {
         guard let template = self.template as? CPMapTemplate else { return }
 
         self.onTripSelected = onTripSelected
@@ -264,8 +263,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         )
 
         let tripPreviews = Parser.parseTrips(trips: trips)
-        let selectedTrip = try selectedTripId.flatMap { tripId in
-            try tripPreviews.first(where: { try $0.getTripId() == tripId })
+        let selectedTrip = selectedTripId.flatMap { tripId in
+            tripPreviews.first(where: { $0.id == tripId })
         }
 
         template.showTripPreviews(
@@ -277,7 +276,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         tripPreviews.forEach { trip in
             guard
                 let travelEstimates = trip.routeChoices.first?
-                    .getTravelEstimates().last
+                    .travelEstimates.last
             else { return }
 
             template.updateEstimates(travelEstimates, for: trip)
@@ -297,18 +296,14 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        do {
-            let tripId = try trip.getTripId()
-            let routeId = try routeChoice.getRouteId()
-            self.onTripSelected?(tripId, routeId)
+        let tripId = trip.id
+        let routeId = routeChoice.id
+        self.onTripSelected?(tripId, routeId)
 
-            if let travelEstimates = try trip.routeChoices.first(where: {
-                try $0.getRouteId() == routeId
-            })?.getTravelEstimates().last {
-                mapTemplate.updateEstimates(travelEstimates, for: trip)
-            }
-        } catch {
-            print("Unexpected error: \(error).")
+        if let travelEstimates = trip.routeChoices.first(where: {
+            $0.id == routeId
+        })?.travelEstimates.last {
+            mapTemplate.updateEstimates(travelEstimates, for: trip)
         }
     }
 
@@ -318,14 +313,10 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         using routeChoice: CPRouteChoice
     ) {
         if let onTripStarted = self.onTripStarted {
-            do {
-                let tripId = try trip.getTripId()
-                let routeId = try routeChoice.getRouteId()
+            let tripId = trip.id
+            let routeId = routeChoice.id
 
-                onTripStarted(tripId, routeId)
-            } catch {
-                print("Unexpected error: \(error).")
-            }
+            onTripStarted(tripId, routeId)
         }
 
         hideTripSelector()
@@ -364,7 +355,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let trip = navigationSession?.trip else { return }
 
         let travelEstaimtes = trip.routeChoices.first?
-            .getTravelEstimates()
+            .travelEstimates
         if let estimates = config.visibleTravelEstimate == .first
             ? travelEstaimtes?.first : travelEstaimtes?.last
         {
@@ -373,7 +364,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     }
 
-    func updateTravelEstimates(steps: [TripPoint]) throws {
+    func updateTravelEstimates(steps: [TripPoint]) {
         guard let route = navigationSession?.trip.routeChoices.first else {
             return
         }
@@ -477,8 +468,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         let routeChoice = trip.routeChoices.first
 
         if let travelEstimates = config.visibleTravelEstimate == .first
-            ? routeChoice?.getTravelEstimates().first
-            : routeChoice?.getTravelEstimates().last
+            ? routeChoice?.travelEstimates.first
+            : routeChoice?.travelEstimates.last
         {
             template.updateEstimates(travelEstimates, for: trip)
         }

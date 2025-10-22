@@ -47,7 +47,7 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
         onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void
     ) throws {
         try RootModule.withMapTemplate(templateId: templateId) { template in
-            try template.showTripSelector(
+            template.showTripSelector(
                 trips: trips,
                 selectedTripId: selectedTripId,
                 textConfig: textConfig,
@@ -77,7 +77,7 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
     
     func updateTravelEstimates(templateId: String, steps: [TripPoint]) throws {
         try RootModule.withMapTemplate(templateId: templateId) { template in
-            try template.updateTravelEstimates(steps: steps)
+            template.updateTravelEstimates(steps: steps)
         }
     }
     

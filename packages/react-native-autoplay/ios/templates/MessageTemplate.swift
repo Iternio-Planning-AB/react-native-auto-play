@@ -15,11 +15,11 @@ class MessageTemplate: AutoPlayTemplate {
 
         let template = CPAlertTemplate(
             titleVariants: [Parser.parseText(text: config.message)!],
-            actions: Parser.parseAlertActions(alertActions: config.actions)
+            actions: Parser.parseAlertActions(alertActions: config.actions),
+            id: config.id
         )
 
         super.init(
-            templateId: config.id,
             template: template,
             header: config.headerActions
         )
