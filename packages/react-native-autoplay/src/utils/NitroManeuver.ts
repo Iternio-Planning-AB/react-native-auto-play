@@ -1,11 +1,14 @@
+import { glyphMap } from '../types/Glyphmap';
 import {
   type AutoManeuver,
   type BaseManeuver,
   type ForkType,
   type KeepType,
+  type Lane,
   ManeuverType,
   type OffRampType,
   type OnRampType,
+  type PreferredLane,
   type TurnType,
 } from '../types/Maneuver';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
@@ -20,6 +23,19 @@ type AttributedInstructionVariant = {
   images?: Array<AttributedInstructionVariantImage>;
 };
 
+interface PreferredImageLane extends PreferredLane {
+  image?: number;
+}
+
+interface ImageLane extends Lane {
+  image?: number;
+}
+
+export interface LaneGuidance {
+  instructionVariants: Array<string>;
+  lanes: Array<PreferredImageLane | ImageLane>;
+}
+
 export interface NitroManeuver extends BaseManeuver {
   attributedInstructionVariants: Array<AttributedInstructionVariant>;
   symbolImage: NitroImage;
@@ -32,6 +48,7 @@ export interface NitroManeuver extends BaseManeuver {
   onRampType?: OnRampType;
   forkType?: ForkType;
   keepType?: KeepType;
+  linkedLaneGuidance?: LaneGuidance;
 }
 
 function convert(autoManeuver: AutoManeuver): NitroManeuver {
@@ -68,7 +85,15 @@ function convert(autoManeuver: AutoManeuver): NitroManeuver {
     maneuverType,
     trafficSide,
     travelEstimates,
-    linkedLaneGuidance,
+    linkedLaneGuidance: linkedLaneGuidance
+      ? {
+          ...linkedLaneGuidance,
+          lanes: linkedLaneGuidance.lanes.map((lane) => ({
+            ...lane,
+            image: lane.image ? glyphMap[lane.image] : undefined,
+          })),
+        }
+      : undefined,
     highwayExitLabel,
     roadName,
     attributedInstructionVariants: attributedInstructionVariants.map((variant) => ({

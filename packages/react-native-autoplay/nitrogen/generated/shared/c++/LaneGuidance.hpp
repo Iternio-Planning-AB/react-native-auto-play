@@ -23,15 +23,15 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `PreferredLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
-// Forward declaration of `Lane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 
 #include <string>
 #include <vector>
-#include "PreferredLane.hpp"
-#include "Lane.hpp"
+#include "PreferredImageLane.hpp"
+#include "ImageLane.hpp"
 #include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -42,11 +42,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   struct LaneGuidance {
   public:
     std::vector<std::string> instructionVariants     SWIFT_PRIVATE;
-    std::vector<std::variant<PreferredLane, Lane>> lanes     SWIFT_PRIVATE;
+    std::vector<std::variant<PreferredImageLane, ImageLane>> lanes     SWIFT_PRIVATE;
 
   public:
     LaneGuidance() = default;
-    explicit LaneGuidance(std::vector<std::string> instructionVariants, std::vector<std::variant<PreferredLane, Lane>> lanes): instructionVariants(instructionVariants), lanes(lanes) {}
+    explicit LaneGuidance(std::vector<std::string> instructionVariants, std::vector<std::variant<PreferredImageLane, ImageLane>> lanes): instructionVariants(instructionVariants), lanes(lanes) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -60,13 +60,13 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance(
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "instructionVariants")),
-        JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane>>>::fromJSI(runtime, obj.getProperty(runtime, "lanes"))
+        JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::fromJSI(runtime, obj.getProperty(runtime, "lanes"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "instructionVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.instructionVariants));
-      obj.setProperty(runtime, "lanes", JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane>>>::toJSI(runtime, arg.lanes));
+      obj.setProperty(runtime, "lanes", JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::toJSI(runtime, arg.lanes));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -78,7 +78,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "instructionVariants"))) return false;
-      if (!JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::Lane>>>::canConvert(runtime, obj.getProperty(runtime, "lanes"))) return false;
+      if (!JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::canConvert(runtime, obj.getProperty(runtime, "lanes"))) return false;
       return true;
     }
   };

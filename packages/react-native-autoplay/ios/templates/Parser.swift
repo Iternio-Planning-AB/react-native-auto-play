@@ -552,6 +552,17 @@ class Parser {
                 isPreferred: isPreferred
             )
         }
+        
+        let laneImages = laneGuidance.lanes.compactMap { lane in
+            switch lane {
+            case .first(let nitroLaneGuidance):
+                return nitroLaneGuidance.image
+            case .second(let nitroLaneGuidance):
+                return nitroLaneGuidance.image
+            }
+        }
+        
+        //TODO merge all laneImages into UIImage and use it as symbolImage on next maneuver
 
         return CPLaneGuidance(
             instructionVariants: instructionVariants,

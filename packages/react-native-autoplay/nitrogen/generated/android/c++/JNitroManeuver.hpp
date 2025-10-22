@@ -17,6 +17,7 @@
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
+#include "ImageLane.hpp"
 #include "JAttributedInstructionVariant.hpp"
 #include "JAttributedInstructionVariantImage.hpp"
 #include "JAutoText.hpp"
@@ -24,26 +25,25 @@
 #include "JDistanceUnits.hpp"
 #include "JDurationWithTimeZone.hpp"
 #include "JForkType.hpp"
+#include "JImageLane.hpp"
 #include "JKeepType.hpp"
-#include "JLane.hpp"
 #include "JLaneGuidance.hpp"
 #include "JManeuverType.hpp"
 #include "JNitroImage.hpp"
 #include "JOffRampType.hpp"
 #include "JOnRampType.hpp"
-#include "JPreferredLane.hpp"
+#include "JPreferredImageLane.hpp"
 #include "JTrafficSide.hpp"
 #include "JTravelEstimates.hpp"
 #include "JTurnType.hpp"
-#include "JVariant_PreferredLane_Lane.hpp"
+#include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "KeepType.hpp"
-#include "Lane.hpp"
 #include "LaneGuidance.hpp"
 #include "ManeuverType.hpp"
 #include "NitroImage.hpp"
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
-#include "PreferredLane.hpp"
+#include "PreferredImageLane.hpp"
 #include "TrafficSide.hpp"
 #include "TravelEstimates.hpp"
 #include "TurnType.hpp"
@@ -93,14 +93,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JForkType> forkType = this->getFieldValue(fieldForkType);
       static const auto fieldKeepType = clazz->getField<JKeepType>("keepType");
       jni::local_ref<JKeepType> keepType = this->getFieldValue(fieldKeepType);
+      static const auto fieldLinkedLaneGuidance = clazz->getField<JLaneGuidance>("linkedLaneGuidance");
+      jni::local_ref<JLaneGuidance> linkedLaneGuidance = this->getFieldValue(fieldLinkedLaneGuidance);
       static const auto fieldId = clazz->getField<jni::JString>("id");
       jni::local_ref<jni::JString> id = this->getFieldValue(fieldId);
       static const auto fieldTravelEstimates = clazz->getField<JTravelEstimates>("travelEstimates");
       jni::local_ref<JTravelEstimates> travelEstimates = this->getFieldValue(fieldTravelEstimates);
       static const auto fieldTrafficSide = clazz->getField<JTrafficSide>("trafficSide");
       jni::local_ref<JTrafficSide> trafficSide = this->getFieldValue(fieldTrafficSide);
-      static const auto fieldLinkedLaneGuidance = clazz->getField<JLaneGuidance>("linkedLaneGuidance");
-      jni::local_ref<JLaneGuidance> linkedLaneGuidance = this->getFieldValue(fieldLinkedLaneGuidance);
       static const auto fieldManeuverType = clazz->getField<JManeuverType>("maneuverType");
       jni::local_ref<JManeuverType> maneuverType = this->getFieldValue(fieldManeuverType);
       static const auto fieldRoadName = clazz->getField<jni::JArrayClass<jni::JString>>("roadName");
@@ -133,10 +133,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         onRampType != nullptr ? std::make_optional(onRampType->toCpp()) : std::nullopt,
         forkType != nullptr ? std::make_optional(forkType->toCpp()) : std::nullopt,
         keepType != nullptr ? std::make_optional(keepType->toCpp()) : std::nullopt,
+        linkedLaneGuidance != nullptr ? std::make_optional(linkedLaneGuidance->toCpp()) : std::nullopt,
         id->toStdString(),
         travelEstimates->toCpp(),
         trafficSide->toCpp(),
-        linkedLaneGuidance != nullptr ? std::make_optional(linkedLaneGuidance->toCpp()) : std::nullopt,
         maneuverType->toCpp(),
         roadName != nullptr ? std::make_optional([&]() {
           size_t __size = roadName->size();
@@ -158,7 +158,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroManeuver::javaobject> fromCpp(const NitroManeuver& value) {
-      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JAttributedInstructionVariant>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
+      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JAttributedInstructionVariant>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -187,10 +187,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.onRampType.has_value() ? JOnRampType::fromCpp(value.onRampType.value()) : nullptr,
         value.forkType.has_value() ? JForkType::fromCpp(value.forkType.value()) : nullptr,
         value.keepType.has_value() ? JKeepType::fromCpp(value.keepType.value()) : nullptr,
+        value.linkedLaneGuidance.has_value() ? JLaneGuidance::fromCpp(value.linkedLaneGuidance.value()) : nullptr,
         jni::make_jstring(value.id),
         JTravelEstimates::fromCpp(value.travelEstimates),
         JTrafficSide::fromCpp(value.trafficSide),
-        value.linkedLaneGuidance.has_value() ? JLaneGuidance::fromCpp(value.linkedLaneGuidance.value()) : nullptr,
         JManeuverType::fromCpp(value.maneuverType),
         value.roadName.has_value() ? [&]() {
           size_t __size = value.roadName.value().size();

@@ -10,11 +10,12 @@
 #include <fbjni/fbjni.h>
 #include "LaneGuidance.hpp"
 
-#include "JLane.hpp"
-#include "JPreferredLane.hpp"
-#include "JVariant_PreferredLane_Lane.hpp"
-#include "Lane.hpp"
-#include "PreferredLane.hpp"
+#include "ImageLane.hpp"
+#include "JImageLane.hpp"
+#include "JPreferredImageLane.hpp"
+#include "JVariant_PreferredImageLane_ImageLane.hpp"
+#include "PreferredImageLane.hpp"
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -40,8 +41,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldInstructionVariants = clazz->getField<jni::JArrayClass<jni::JString>>("instructionVariants");
       jni::local_ref<jni::JArrayClass<jni::JString>> instructionVariants = this->getFieldValue(fieldInstructionVariants);
-      static const auto fieldLanes = clazz->getField<jni::JArrayClass<JVariant_PreferredLane_Lane>>("lanes");
-      jni::local_ref<jni::JArrayClass<JVariant_PreferredLane_Lane>> lanes = this->getFieldValue(fieldLanes);
+      static const auto fieldLanes = clazz->getField<jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>>("lanes");
+      jni::local_ref<jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>> lanes = this->getFieldValue(fieldLanes);
       return LaneGuidance(
         [&]() {
           size_t __size = instructionVariants->size();
@@ -55,7 +56,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         }(),
         [&]() {
           size_t __size = lanes->size();
-          std::vector<std::variant<PreferredLane, Lane>> __vector;
+          std::vector<std::variant<PreferredImageLane, ImageLane>> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             auto __element = lanes->getElement(__i);
@@ -72,7 +73,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JLaneGuidance::javaobject> fromCpp(const LaneGuidance& value) {
-      using JSignature = JLaneGuidance(jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<JVariant_PreferredLane_Lane>>);
+      using JSignature = JLaneGuidance(jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -88,10 +89,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         }(),
         [&]() {
           size_t __size = value.lanes.size();
-          jni::local_ref<jni::JArrayClass<JVariant_PreferredLane_Lane>> __array = jni::JArrayClass<JVariant_PreferredLane_Lane>::newArray(__size);
+          jni::local_ref<jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>> __array = jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.lanes[__i];
-            __array->setElement(__i, *JVariant_PreferredLane_Lane::fromCpp(__element));
+            __array->setElement(__i, *JVariant_PreferredImageLane_ImageLane::fromCpp(__element));
           }
           return __array;
         }()

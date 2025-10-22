@@ -25,11 +25,11 @@ const getManeuvers = (): Array<AutoManeuver> => [
     linkedLaneGuidance: {
       instructionVariants: ['lane'],
       lanes: [
-        { angles: [-90] },
-        { highlightedAngle: 0, angles: [], isPreferred: true },
-        { highlightedAngle: 0, angles: [90], isPreferred: false },
-        { angles: [90] },
-        { angles: [90] },
+        { angles: [-90], image: 'turn_left' },
+        { highlightedAngle: 0, angles: [], isPreferred: true, image: 'straight' },
+        { highlightedAngle: 0, angles: [90], isPreferred: false, image: 'fork_right' },
+        { angles: [90], image: 'turn_right' },
+        { angles: [90], image: 'turn_right' },
       ],
     },
   },

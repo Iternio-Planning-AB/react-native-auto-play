@@ -22,7 +22,7 @@ data class LaneGuidance(
   val instructionVariants: Array<String>,
   @DoNotStrip
   @Keep
-  val lanes: Array<Variant_PreferredLane_Lane>
+  val lanes: Array<Variant_PreferredImageLane_ImageLane>
 ) {
   private companion object {
     /**
@@ -32,7 +32,7 @@ data class LaneGuidance(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(instructionVariants: Array<String>, lanes: Array<Variant_PreferredLane_Lane>): LaneGuidance {
+    private fun fromCpp(instructionVariants: Array<String>, lanes: Array<Variant_PreferredImageLane_ImageLane>): LaneGuidance {
       return LaneGuidance(instructionVariants, lanes)
     }
   }

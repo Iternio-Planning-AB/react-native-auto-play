@@ -52,6 +52,9 @@ data class NitroManeuver(
   val keepType: KeepType?,
   @DoNotStrip
   @Keep
+  val linkedLaneGuidance: LaneGuidance?,
+  @DoNotStrip
+  @Keep
   val id: String,
   @DoNotStrip
   @Keep
@@ -59,9 +62,6 @@ data class NitroManeuver(
   @DoNotStrip
   @Keep
   val trafficSide: TrafficSide,
-  @DoNotStrip
-  @Keep
-  val linkedLaneGuidance: LaneGuidance?,
   @DoNotStrip
   @Keep
   val maneuverType: ManeuverType,
@@ -80,8 +80,8 @@ data class NitroManeuver(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(attributedInstructionVariants: Array<AttributedInstructionVariant>, symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, linkedLaneGuidance: LaneGuidance?, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
-      return NitroManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, id, travelEstimates, trafficSide, linkedLaneGuidance, maneuverType, roadName, highwayExitLabel)
+    private fun fromCpp(attributedInstructionVariants: Array<AttributedInstructionVariant>, symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
+      return NitroManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, linkedLaneGuidance, id, travelEstimates, trafficSide, maneuverType, roadName, highwayExitLabel)
     }
   }
 }

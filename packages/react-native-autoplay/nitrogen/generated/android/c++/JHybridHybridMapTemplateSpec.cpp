@@ -71,14 +71,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType;
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
 // Forward declaration of `KeepType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
-// Forward declaration of `TrafficSide` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
-// Forward declaration of `PreferredLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
-// Forward declaration of `Lane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
+// Forward declaration of `TrafficSide` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
@@ -160,16 +160,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JForkType.hpp"
 #include "KeepType.hpp"
 #include "JKeepType.hpp"
-#include "TrafficSide.hpp"
-#include "JTrafficSide.hpp"
 #include "LaneGuidance.hpp"
 #include "JLaneGuidance.hpp"
-#include "PreferredLane.hpp"
-#include "Lane.hpp"
+#include "PreferredImageLane.hpp"
+#include "ImageLane.hpp"
 #include <variant>
-#include "JVariant_PreferredLane_Lane.hpp"
-#include "JPreferredLane.hpp"
-#include "JLane.hpp"
+#include "JVariant_PreferredImageLane_ImageLane.hpp"
+#include "JPreferredImageLane.hpp"
+#include "JImageLane.hpp"
+#include "TrafficSide.hpp"
+#include "JTrafficSide.hpp"
 #include "ManeuverType.hpp"
 #include "JManeuverType.hpp"
 #include "TripConfig.hpp"

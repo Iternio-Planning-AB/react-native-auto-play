@@ -42,12 +42,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridList
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMapTemplateSpec; }
 // Forward declaration of `HybridHybridMessageTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMessageTemplateSpec; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 // Forward declaration of `KeepType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
-// Forward declaration of `Lane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ListTemplateConfig; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
@@ -90,8 +90,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Point; }
-// Forward declaration of `PreferredLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
@@ -133,8 +133,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
+#include "ImageLane.hpp"
 #include "KeepType.hpp"
-#include "Lane.hpp"
 #include "LaneGuidance.hpp"
 #include "ListTemplateConfig.hpp"
 #include "ManeuverType.hpp"
@@ -157,7 +157,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "Point.hpp"
-#include "PreferredLane.hpp"
+#include "PreferredImageLane.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "TrafficSide.hpp"

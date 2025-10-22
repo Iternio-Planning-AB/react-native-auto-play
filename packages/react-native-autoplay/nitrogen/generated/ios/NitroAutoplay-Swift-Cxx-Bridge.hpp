@@ -38,12 +38,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridList
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMapTemplateSpec; }
 // Forward declaration of `HybridHybridMessageTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMessageTemplateSpec; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 // Forward declaration of `KeepType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
-// Forward declaration of `Lane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Lane; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
@@ -78,8 +78,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Point; }
-// Forward declaration of `PreferredLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredLane; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
@@ -127,8 +127,8 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
+#include "ImageLane.hpp"
 #include "KeepType.hpp"
-#include "Lane.hpp"
 #include "LaneGuidance.hpp"
 #include "ManeuverType.hpp"
 #include "NavigationAlertAction.hpp"
@@ -147,7 +147,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "Point.hpp"
-#include "PreferredLane.hpp"
+#include "PreferredImageLane.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "TrafficSide.hpp"
@@ -1060,42 +1060,42 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::variant<PreferredLane, Lane>
+  // pragma MARK: std::variant<PreferredImageLane, ImageLane>
   /**
-   * Wrapper struct for `std::variant<PreferredLane, Lane>`.
+   * Wrapper struct for `std::variant<PreferredImageLane, ImageLane>`.
    * std::variant cannot be used in Swift because of a Swift bug.
    * Not even specializing it works. So we create a wrapper struct.
    */
-  struct std__variant_PreferredLane__Lane_ {
-    std::variant<PreferredLane, Lane> variant;
-    std__variant_PreferredLane__Lane_(std::variant<PreferredLane, Lane> variant): variant(variant) { }
-    operator std::variant<PreferredLane, Lane>() const noexcept {
+  struct std__variant_PreferredImageLane__ImageLane_ {
+    std::variant<PreferredImageLane, ImageLane> variant;
+    std__variant_PreferredImageLane__ImageLane_(std::variant<PreferredImageLane, ImageLane> variant): variant(variant) { }
+    operator std::variant<PreferredImageLane, ImageLane>() const noexcept {
       return variant;
     }
     inline size_t index() const noexcept {
       return variant.index();
     }
-    inline PreferredLane get_0() const noexcept {
+    inline PreferredImageLane get_0() const noexcept {
       return std::get<0>(variant);
     }
-    inline Lane get_1() const noexcept {
+    inline ImageLane get_1() const noexcept {
       return std::get<1>(variant);
     }
   };
-  inline std__variant_PreferredLane__Lane_ create_std__variant_PreferredLane__Lane_(const PreferredLane& value) noexcept {
-    return std__variant_PreferredLane__Lane_(value);
+  inline std__variant_PreferredImageLane__ImageLane_ create_std__variant_PreferredImageLane__ImageLane_(const PreferredImageLane& value) noexcept {
+    return std__variant_PreferredImageLane__ImageLane_(value);
   }
-  inline std__variant_PreferredLane__Lane_ create_std__variant_PreferredLane__Lane_(const Lane& value) noexcept {
-    return std__variant_PreferredLane__Lane_(value);
+  inline std__variant_PreferredImageLane__ImageLane_ create_std__variant_PreferredImageLane__ImageLane_(const ImageLane& value) noexcept {
+    return std__variant_PreferredImageLane__ImageLane_(value);
   }
   
-  // pragma MARK: std::vector<std::variant<PreferredLane, Lane>>
+  // pragma MARK: std::vector<std::variant<PreferredImageLane, ImageLane>>
   /**
-   * Specialized version of `std::vector<std::variant<PreferredLane, Lane>>`.
+   * Specialized version of `std::vector<std::variant<PreferredImageLane, ImageLane>>`.
    */
-  using std__vector_std__variant_PreferredLane__Lane__ = std::vector<std::variant<PreferredLane, Lane>>;
-  inline std::vector<std::variant<PreferredLane, Lane>> create_std__vector_std__variant_PreferredLane__Lane__(size_t size) noexcept {
-    std::vector<std::variant<PreferredLane, Lane>> vector;
+  using std__vector_std__variant_PreferredImageLane__ImageLane__ = std::vector<std::variant<PreferredImageLane, ImageLane>>;
+  inline std::vector<std::variant<PreferredImageLane, ImageLane>> create_std__vector_std__variant_PreferredImageLane__ImageLane__(size_t size) noexcept {
+    std::vector<std::variant<PreferredImageLane, ImageLane>> vector;
     vector.reserve(size);
     return vector;
   }
