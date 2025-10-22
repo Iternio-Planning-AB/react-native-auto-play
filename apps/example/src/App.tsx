@@ -43,26 +43,16 @@ function AppContent() {
 
   const permissionsGranted = useAndroidAutoTelemetryPermission(true, ANDROID_AUTO_PERMISSIONS);
 
-  const [telemetry, setTlm] = useState<Telemetry | null>(null);
+  const [telemetry, setTelemetry] = useState<Telemetry | null>(null);
 
   useEffect(() => {
     if (!permissionsGranted) {
       return;
     }
 
-    console.log('*** telemetry permissions granted, registering telemetry listener');
     HybridAutoPlay.registerAndroidAutoTelemetryListener((tlm: Telemetry) => {
-      setTlm((prevTlm) => {
-        return { ...prevTlm, ...tlm };
-      });
-      console.log('*** auto tlm incoming', tlm);
-    })
-      .then(() => {
-        console.log('*** telemetry listener registered');
-      })
-      .catch((error) => {
-        console.log('*** error registering telemetry listener', error);
-      });
+      setTelemetry(tlm);
+    }).catch(() => {});
 
     return () => {
       HybridAutoPlay.stopAndroidAutoTelemetry();
@@ -97,7 +87,7 @@ function AppContent() {
       <Text>isNavigating: {String(isNavigating)}</Text>
       <Text>selectedTrip: {JSON.stringify(selectedTrip)}</Text>
       <Text>telemetry permissions granted: {String(permissionsGranted)}</Text>
-      {telemetry ? <Text>---- telemetry ----</Text> : null}
+      {telemetry ? <Text>---- last incoming tlm ----</Text> : null}
       {telemetry?.batteryLevel ? (
         <Text>
           batteryLevel: {telemetry.batteryLevel.value} ({telemetry.batteryLevel.timestamp})
@@ -125,17 +115,17 @@ function AppContent() {
       ) : null}
       {telemetry?.vehicle?.name ? (
         <Text>
-          vehicle: {telemetry.vehicle.name.value} ({telemetry.vehicle.name.timestamp})
+          vehicle name: {telemetry.vehicle.name.value} ({telemetry.vehicle.name.timestamp})
         </Text>
       ) : null}
       {telemetry?.vehicle?.year ? (
         <Text>
-          vehicle: {telemetry.vehicle.year.value} ({telemetry.vehicle.year.timestamp})
+          vehicle year: {telemetry.vehicle.year.value} ({telemetry.vehicle.year.timestamp})
         </Text>
       ) : null}
       {telemetry?.vehicle?.manufacturer ? (
         <Text>
-          vehicle: {telemetry.vehicle.manufacturer.value} (
+          vehicle manufacturer: {telemetry.vehicle.manufacturer.value} (
           {telemetry.vehicle.manufacturer.timestamp})
         </Text>
       ) : null}
