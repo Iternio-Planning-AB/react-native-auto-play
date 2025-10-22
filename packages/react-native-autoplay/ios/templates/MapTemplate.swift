@@ -216,7 +216,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         let image = SymbolFont.imageFromNitroImage(
             image: alertConfig.image,
-            padding: false
         )
 
         let style = Parser.parseActionAlertStyle(
