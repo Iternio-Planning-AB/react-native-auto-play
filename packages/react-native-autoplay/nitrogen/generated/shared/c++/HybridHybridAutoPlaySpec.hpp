@@ -17,23 +17,23 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
+// Forward declaration of `Telemetry` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
-// Forward declaration of `Telemetry` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
 
 #include <functional>
 #include "EventName.hpp"
 #include <string>
 #include "VisibilityState.hpp"
-#include <NitroModules/Promise.hpp>
+#include "Telemetry.hpp"
 #include <optional>
+#include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
 #include <vector>
-#include "Telemetry.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -68,6 +68,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       // Methods
       virtual std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) = 0;
       virtual std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerTelemetry(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) = 0;
       virtual std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> popTemplate(std::optional<bool> animate) = 0;
@@ -75,7 +76,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       virtual std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) = 0;
       virtual std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) = 0;
       virtual void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) = 0;
-      virtual std::shared_ptr<Promise<void>> registerAndroidAutoTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) = 0;
+      virtual std::shared_ptr<Promise<void>> startAndroidAutoTelemetry() = 0;
       virtual void stopAndroidAutoTelemetry() = 0;
       virtual bool isConnected() = 0;
 

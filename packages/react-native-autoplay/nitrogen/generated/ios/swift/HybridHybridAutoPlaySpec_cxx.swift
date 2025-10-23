@@ -150,6 +150,32 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func addListenerTelemetry(callback: bridge.Func_void_std__optional_Telemetry_) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerTelemetry(callback: { () -> (Telemetry?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_Telemetry_(callback)
+        return { (__tlm: Telemetry?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_Telemetry_ in
+            if let __unwrappedValue = __tlm {
+              return bridge.create_std__optional_Telemetry_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))
@@ -283,20 +309,9 @@ open class HybridHybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func registerAndroidAutoTelemetryListener(callback: bridge.Func_void_std__optional_Telemetry_) -> bridge.Result_std__shared_ptr_Promise_void___ {
+  public final func startAndroidAutoTelemetry() -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      let __result = try self.__implementation.registerAndroidAutoTelemetryListener(callback: { () -> (Telemetry?) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_std__optional_Telemetry_(callback)
-        return { (__tlm: Telemetry?) -> Void in
-          __wrappedFunction.call({ () -> bridge.std__optional_Telemetry_ in
-            if let __unwrappedValue = __tlm {
-              return bridge.create_std__optional_Telemetry_(__unwrappedValue)
-            } else {
-              return .init()
-            }
-          }())
-        }
-      }())
+      let __result = try self.__implementation.startAndroidAutoTelemetry()
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
         let __promise = bridge.create_std__shared_ptr_Promise_void__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)

@@ -191,6 +191,88 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Func_void_VisibilityState_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::optional<NumericTelemetryItem>
+  /**
+   * Specialized version of `std::optional<NumericTelemetryItem>`.
+   */
+  using std__optional_NumericTelemetryItem_ = std::optional<NumericTelemetryItem>;
+  inline std::optional<NumericTelemetryItem> create_std__optional_NumericTelemetryItem_(const NumericTelemetryItem& value) noexcept {
+    return std::optional<NumericTelemetryItem>(value);
+  }
+  inline bool has_value_std__optional_NumericTelemetryItem_(const std::optional<NumericTelemetryItem>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NumericTelemetryItem get_std__optional_NumericTelemetryItem_(const std::optional<NumericTelemetryItem>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<StringTelemetryItem>
+  /**
+   * Specialized version of `std::optional<StringTelemetryItem>`.
+   */
+  using std__optional_StringTelemetryItem_ = std::optional<StringTelemetryItem>;
+  inline std::optional<StringTelemetryItem> create_std__optional_StringTelemetryItem_(const StringTelemetryItem& value) noexcept {
+    return std::optional<StringTelemetryItem>(value);
+  }
+  inline bool has_value_std__optional_StringTelemetryItem_(const std::optional<StringTelemetryItem>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline StringTelemetryItem get_std__optional_StringTelemetryItem_(const std::optional<StringTelemetryItem>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<VehicleTelemetryItem>
+  /**
+   * Specialized version of `std::optional<VehicleTelemetryItem>`.
+   */
+  using std__optional_VehicleTelemetryItem_ = std::optional<VehicleTelemetryItem>;
+  inline std::optional<VehicleTelemetryItem> create_std__optional_VehicleTelemetryItem_(const VehicleTelemetryItem& value) noexcept {
+    return std::optional<VehicleTelemetryItem>(value);
+  }
+  inline bool has_value_std__optional_VehicleTelemetryItem_(const std::optional<VehicleTelemetryItem>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline VehicleTelemetryItem get_std__optional_VehicleTelemetryItem_(const std::optional<VehicleTelemetryItem>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<Telemetry>
+  /**
+   * Specialized version of `std::optional<Telemetry>`.
+   */
+  using std__optional_Telemetry_ = std::optional<Telemetry>;
+  inline std::optional<Telemetry> create_std__optional_Telemetry_(const Telemetry& value) noexcept {
+    return std::optional<Telemetry>(value);
+  }
+  inline bool has_value_std__optional_Telemetry_(const std::optional<Telemetry>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline Telemetry get_std__optional_Telemetry_(const std::optional<Telemetry>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::function<void(const std::optional<Telemetry>& /* tlm */)>
+  /**
+   * Specialized version of `std::function<void(const std::optional<Telemetry>&)>`.
+   */
+  using Func_void_std__optional_Telemetry_ = std::function<void(const std::optional<Telemetry>& /* tlm */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::optional<Telemetry>& / * tlm * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__optional_Telemetry__Wrapper final {
+  public:
+    explicit Func_void_std__optional_Telemetry__Wrapper(std::function<void(const std::optional<Telemetry>& /* tlm */)>&& func): _function(std::make_unique<std::function<void(const std::optional<Telemetry>& /* tlm */)>>(std::move(func))) {}
+    inline void call(std::optional<Telemetry> tlm) const noexcept {
+      _function->operator()(tlm);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::optional<Telemetry>& /* tlm */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__optional_Telemetry_ create_Func_void_std__optional_Telemetry_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__optional_Telemetry__Wrapper wrap_Func_void_std__optional_Telemetry_(Func_void_std__optional_Telemetry_ value) noexcept {
+    return Func_void_std__optional_Telemetry__Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<Promise<void>>
   /**
    * Specialized version of `std::shared_ptr<Promise<void>>`.
@@ -361,88 +443,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   }
   inline std::vector<NitroAction> get_std__optional_std__vector_NitroAction__(const std::optional<std::vector<NitroAction>>& optional) noexcept {
     return *optional;
-  }
-  
-  // pragma MARK: std::optional<NumericTelemetryItem>
-  /**
-   * Specialized version of `std::optional<NumericTelemetryItem>`.
-   */
-  using std__optional_NumericTelemetryItem_ = std::optional<NumericTelemetryItem>;
-  inline std::optional<NumericTelemetryItem> create_std__optional_NumericTelemetryItem_(const NumericTelemetryItem& value) noexcept {
-    return std::optional<NumericTelemetryItem>(value);
-  }
-  inline bool has_value_std__optional_NumericTelemetryItem_(const std::optional<NumericTelemetryItem>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline NumericTelemetryItem get_std__optional_NumericTelemetryItem_(const std::optional<NumericTelemetryItem>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<StringTelemetryItem>
-  /**
-   * Specialized version of `std::optional<StringTelemetryItem>`.
-   */
-  using std__optional_StringTelemetryItem_ = std::optional<StringTelemetryItem>;
-  inline std::optional<StringTelemetryItem> create_std__optional_StringTelemetryItem_(const StringTelemetryItem& value) noexcept {
-    return std::optional<StringTelemetryItem>(value);
-  }
-  inline bool has_value_std__optional_StringTelemetryItem_(const std::optional<StringTelemetryItem>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline StringTelemetryItem get_std__optional_StringTelemetryItem_(const std::optional<StringTelemetryItem>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<VehicleTelemetryItem>
-  /**
-   * Specialized version of `std::optional<VehicleTelemetryItem>`.
-   */
-  using std__optional_VehicleTelemetryItem_ = std::optional<VehicleTelemetryItem>;
-  inline std::optional<VehicleTelemetryItem> create_std__optional_VehicleTelemetryItem_(const VehicleTelemetryItem& value) noexcept {
-    return std::optional<VehicleTelemetryItem>(value);
-  }
-  inline bool has_value_std__optional_VehicleTelemetryItem_(const std::optional<VehicleTelemetryItem>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline VehicleTelemetryItem get_std__optional_VehicleTelemetryItem_(const std::optional<VehicleTelemetryItem>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<Telemetry>
-  /**
-   * Specialized version of `std::optional<Telemetry>`.
-   */
-  using std__optional_Telemetry_ = std::optional<Telemetry>;
-  inline std::optional<Telemetry> create_std__optional_Telemetry_(const Telemetry& value) noexcept {
-    return std::optional<Telemetry>(value);
-  }
-  inline bool has_value_std__optional_Telemetry_(const std::optional<Telemetry>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline Telemetry get_std__optional_Telemetry_(const std::optional<Telemetry>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::function<void(const std::optional<Telemetry>& /* tlm */)>
-  /**
-   * Specialized version of `std::function<void(const std::optional<Telemetry>&)>`.
-   */
-  using Func_void_std__optional_Telemetry_ = std::function<void(const std::optional<Telemetry>& /* tlm */)>;
-  /**
-   * Wrapper class for a `std::function<void(const std::optional<Telemetry>& / * tlm * /)>`, this can be used from Swift.
-   */
-  class Func_void_std__optional_Telemetry__Wrapper final {
-  public:
-    explicit Func_void_std__optional_Telemetry__Wrapper(std::function<void(const std::optional<Telemetry>& /* tlm */)>&& func): _function(std::make_unique<std::function<void(const std::optional<Telemetry>& /* tlm */)>>(std::move(func))) {}
-    inline void call(std::optional<Telemetry> tlm) const noexcept {
-      _function->operator()(tlm);
-    }
-  private:
-    std::unique_ptr<std::function<void(const std::optional<Telemetry>& /* tlm */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_std__optional_Telemetry_ create_Func_void_std__optional_Telemetry_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__optional_Telemetry__Wrapper wrap_Func_void_std__optional_Telemetry_(Func_void_std__optional_Telemetry_ value) noexcept {
-    return Func_void_std__optional_Telemetry__Wrapper(std::move(value));
   }
   
   // pragma MARK: std::shared_ptr<HybridHybridAutoPlaySpec>

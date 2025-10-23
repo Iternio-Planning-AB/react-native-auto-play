@@ -16,6 +16,14 @@ namespace NitroAutoplay { class HybridHybridAutoPlaySpec_cxx; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
+// Forward declaration of `Telemetry` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
+// Forward declaration of `NumericTelemetryItem` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NumericTelemetryItem; }
+// Forward declaration of `VehicleTelemetryItem` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct VehicleTelemetryItem; }
+// Forward declaration of `StringTelemetryItem` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct StringTelemetryItem; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -28,21 +36,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAction
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
 // Forward declaration of `AlertActionStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
-// Forward declaration of `Telemetry` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
-// Forward declaration of `NumericTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NumericTelemetryItem; }
-// Forward declaration of `VehicleTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct VehicleTelemetryItem; }
-// Forward declaration of `StringTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct StringTelemetryItem; }
 
 #include <functional>
 #include "EventName.hpp"
 #include <string>
 #include "VisibilityState.hpp"
-#include <NitroModules/Promise.hpp>
+#include "Telemetry.hpp"
 #include <optional>
+#include "NumericTelemetryItem.hpp"
+#include "VehicleTelemetryItem.hpp"
+#include "StringTelemetryItem.hpp"
+#include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
 #include <vector>
@@ -50,10 +54,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct StringTelemetry
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "AlertActionStyle.hpp"
-#include "Telemetry.hpp"
-#include "NumericTelemetryItem.hpp"
-#include "VehicleTelemetryItem.hpp"
-#include "StringTelemetryItem.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -106,6 +106,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     inline std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) override {
       auto __result = _swiftPart.addListenerRenderState(mapTemplateId, callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::function<void()> addListenerTelemetry(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) override {
+      auto __result = _swiftPart.addListenerTelemetry(callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
@@ -166,8 +174,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline std::shared_ptr<Promise<void>> registerAndroidAutoTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) override {
-      auto __result = _swiftPart.registerAndroidAutoTelemetryListener(callback);
+    inline std::shared_ptr<Promise<void>> startAndroidAutoTelemetry() override {
+      auto __result = _swiftPart.startAndroidAutoTelemetry();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

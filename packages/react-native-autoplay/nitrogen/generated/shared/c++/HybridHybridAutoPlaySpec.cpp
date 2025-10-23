@@ -16,6 +16,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("addListener", &HybridHybridAutoPlaySpec::addListener);
       prototype.registerHybridMethod("addListenerRenderState", &HybridHybridAutoPlaySpec::addListenerRenderState);
+      prototype.registerHybridMethod("addListenerTelemetry", &HybridHybridAutoPlaySpec::addListenerTelemetry);
       prototype.registerHybridMethod("setRootTemplate", &HybridHybridAutoPlaySpec::setRootTemplate);
       prototype.registerHybridMethod("pushTemplate", &HybridHybridAutoPlaySpec::pushTemplate);
       prototype.registerHybridMethod("popTemplate", &HybridHybridAutoPlaySpec::popTemplate);
@@ -23,7 +24,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       prototype.registerHybridMethod("popToTemplate", &HybridHybridAutoPlaySpec::popToTemplate);
       prototype.registerHybridMethod("addSafeAreaInsetsListener", &HybridHybridAutoPlaySpec::addSafeAreaInsetsListener);
       prototype.registerHybridMethod("setTemplateHeaderActions", &HybridHybridAutoPlaySpec::setTemplateHeaderActions);
-      prototype.registerHybridMethod("registerAndroidAutoTelemetryListener", &HybridHybridAutoPlaySpec::registerAndroidAutoTelemetryListener);
+      prototype.registerHybridMethod("startAndroidAutoTelemetry", &HybridHybridAutoPlaySpec::startAndroidAutoTelemetry);
       prototype.registerHybridMethod("stopAndroidAutoTelemetry", &HybridHybridAutoPlaySpec::stopAndroidAutoTelemetry);
       prototype.registerHybridMethod("isConnected", &HybridHybridAutoPlaySpec::isConnected);
     });

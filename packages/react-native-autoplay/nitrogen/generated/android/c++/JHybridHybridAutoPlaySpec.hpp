@@ -55,6 +55,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     // Methods
     std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) override;
     std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) override;
+    std::function<void()> addListenerTelemetry(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) override;
     std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) override;
     std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) override;
     std::shared_ptr<Promise<void>> popTemplate(std::optional<bool> animate) override;
@@ -62,7 +63,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) override;
     std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) override;
     void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
-    std::shared_ptr<Promise<void>> registerAndroidAutoTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) override;
+    std::shared_ptr<Promise<void>> startAndroidAutoTelemetry() override;
     void stopAndroidAutoTelemetry() override;
     bool isConnected() override;
 
