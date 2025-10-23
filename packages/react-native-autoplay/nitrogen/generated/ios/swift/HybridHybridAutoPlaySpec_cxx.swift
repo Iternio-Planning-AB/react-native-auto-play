@@ -322,4 +322,16 @@ open class HybridHybridAutoPlaySpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func isConnected() -> bridge.Result_bool_ {
+    do {
+      let __result = try self.__implementation.isConnected()
+      let __resultCpp = __result
+      return bridge.create_Result_bool_(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_bool_(__exceptionPtr)
+    }
+  }
 }

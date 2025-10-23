@@ -64,6 +64,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
     std::shared_ptr<Promise<void>> registerAndroidAutoTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) override;
     void stopAndroidAutoTelemetry() override;
+    bool isConnected() override;
 
   private:
     friend HybridBase;
