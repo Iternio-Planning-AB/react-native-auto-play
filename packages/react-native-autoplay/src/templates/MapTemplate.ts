@@ -226,8 +226,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   /**
    * sets or updates maneuvers, make sure to call startNavigation first!
    * @namespace Android sets all the supplied maneuvers whenever called
-   * @namespace iOS will update travelEstimates and cardBackgroundColor only when passing in maneuvers with the same id
-   * ⚠️ updating the cardBackgroundColor works a bit different on Android that applies it immediately while iOS will apply it only on a subsequent update for unknown reasons
+   * @namespace iOS will update travelEstimates only when passing in maneuvers with the same id
    */
   public updateManeuvers(maneuvers: AutoManeuvers) {
     const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {

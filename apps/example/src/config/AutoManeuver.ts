@@ -5,7 +5,6 @@ import {
   TrafficSide,
   TurnType,
 } from '@g4rb4g3/react-native-autoplay';
-import { Platform } from 'react-native';
 import uuid from 'react-native-uuid';
 import { updateTripEstimates } from '../templates/AutoTemplate';
 
@@ -144,7 +143,7 @@ const playManeuvers = (template: MapTemplate) => {
     }
 
     const cardBackgroundColor =
-      current.travelEstimates.distanceRemaining.value > (Platform.OS === 'ios' ? 600 : 500)
+      current.travelEstimates.distanceRemaining.value > 500
         ? 'rgba(0, 0, 0, 1)'
         : 'rgba(111, 0, 111, 1)';
 

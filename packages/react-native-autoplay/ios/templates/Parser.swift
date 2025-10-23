@@ -391,12 +391,6 @@ class Parser {
             traitCollection: traitCollection
         )
 
-        if #available(iOS 15.4, *) {
-            maneuver.cardBackgroundColor = RCTConvert.uiColor(
-                nitroManeuver.cardBackgroundColor
-            )
-        }
-
         if #available(iOS 17.4, *) {
             maneuver.maneuverType = getManeuverType(maneuver: nitroManeuver)
             maneuver.trafficSide = CPTrafficSide(

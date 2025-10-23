@@ -378,6 +378,9 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let template = template as? CPMapTemplate else { return }
         guard let navigationSession = navigationSession else { return }
 
+        template.guidanceBackgroundColor =
+            RCTConvert.uiColor(maneuvers.first?.cardBackgroundColor) ?? .black
+
         var upcomingManeuvers: [CPManeuver] = []
 
         let sessionManeuvers = navigationSession.upcomingManeuvers.filter {
@@ -429,8 +432,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                             isSecondary: true
                         )
                         secondaryManeuver.symbolImage = secondarySymbolImage
-                        secondaryManeuver.cardBackgroundColor =
-                            maneuver.cardBackgroundColor
                         return [maneuver, secondaryManeuver]
                     } else {
                         return [maneuver]
@@ -463,45 +464,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                 }
             }
 
-            navigationSession.upcomingManeuvers = updateCardColor(
-                maneuvers: upcomingManeuvers,
-                colors: maneuvers.compactMap { $0.cardBackgroundColor },
-                template: template
-            )
-            return
+            navigationSession.upcomingManeuvers = upcomingManeuvers
         }
-
-        navigationSession.upcomingManeuvers = updateCardColor(
-            maneuvers: navigationSession.upcomingManeuvers,
-            colors: maneuvers.compactMap { $0.cardBackgroundColor },
-            template: template
-        )
-    }
-
-    func updateCardColor(
-        maneuvers: [CPManeuver],
-        colors: [Double],
-        template: CPMapTemplate
-    )
-        -> [CPManeuver]
-    {
-        var colorIndex = 0
-        var color = RCTConvert.uiColor(colors[colorIndex])
-
-        template.guidanceBackgroundColor = color ?? UIColor.black
-
-        if #available(iOS 15.4, *) {
-            return maneuvers.map { maneuver in
-                maneuver.cardBackgroundColor = color
-                if maneuver.isSecondary && colorIndex < colors.count - 1 {
-                    colorIndex += 1
-                    color = RCTConvert.uiColor(colors[colorIndex])
-                }
-                return maneuver
-            }
-        }
-
-        return maneuvers
     }
 
     func startNavigation(trip: CPTrip) {
