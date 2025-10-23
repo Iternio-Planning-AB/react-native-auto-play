@@ -326,6 +326,10 @@ class VirtualRenderer(
         }
 
         fun removeRenderer(moduleId: String) {
+            val renderer = virtualRenderer[moduleId]
+            renderer?.reactSurfaceId?.let {
+                renderer.uiManager.stopSurface(it)
+            }
             virtualRenderer.remove(moduleId)
         }
     }
