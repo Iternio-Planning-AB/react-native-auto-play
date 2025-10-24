@@ -9,6 +9,7 @@ import CarPlay
 
 class SceneStore {
     static let rootModuleName = "AutoPlayRoot"
+    static let dashboardModuleName = "CarPlayDashboard"
 
     private static var store: [String: AutoPlayScene] = [:]
 
@@ -26,6 +27,10 @@ class SceneStore {
 
     static func isRootModuleConnected() -> Bool {
         return store[SceneStore.rootModuleName]?.isConnected ?? false
+    }
+    
+    static func isDashboardModuleConnected() -> Bool {
+        return store[SceneStore.dashboardModuleName]?.isConnected ?? false
     }
 
     static func getState(moduleName: String) -> VisibilityState? {

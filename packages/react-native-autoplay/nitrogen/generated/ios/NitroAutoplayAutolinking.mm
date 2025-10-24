@@ -15,6 +15,7 @@
 #include "HybridHybridGridTemplateSpecSwift.hpp"
 #include "HybridHybridMapTemplateSpecSwift.hpp"
 #include "HybridHybridMessageTemplateSpecSwift.hpp"
+#include "HybridHybridCarPlayDashboardSpecSwift.hpp"
 
 @interface NitroAutoplayAutolinking : NSObject
 @end
@@ -57,6 +58,13 @@
     "HybridMessageTemplate",
     []() -> std::shared_ptr<HybridObject> {
       std::shared_ptr<HybridHybridMessageTemplateSpec> hybridObject = NitroAutoplay::NitroAutoplayAutolinking::createHybridMessageTemplate();
+      return hybridObject;
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "HybridCarPlayDashboard",
+    []() -> std::shared_ptr<HybridObject> {
+      std::shared_ptr<HybridHybridCarPlayDashboardSpec> hybridObject = NitroAutoplay::NitroAutoplayAutolinking::createHybridCarPlayDashboard();
       return hybridObject;
     }
   );

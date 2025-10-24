@@ -28,6 +28,9 @@
     "HybridMessageTemplate": {
       "kotlin": "HybridMessageTemplate",
       "swift": "HybridMessageTemplate"
+    },
+    "HybridCarPlayDashboard": {
+      "swift": "HybridCarPlayDashboard"
     }
   },
   "ignorePaths": ["**/node_modules"]

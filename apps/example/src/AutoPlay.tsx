@@ -1,4 +1,5 @@
 import {
+  CarPlayDashboard,
   HybridAutoPlay,
   MapTemplate,
   type RootComponentInitialProps,
@@ -8,6 +9,7 @@ import {
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
+import { AutoPlayDashboard } from './AutoPlayDashboard';
 import { AutoTrip } from './config/AutoTrip';
 import {
   actionStartNavigation,
@@ -136,6 +138,8 @@ const registerRunnable = () => {
   const onDisconnect = () => {
     // template.destroy();
   };
+
+  CarPlayDashboard.setComponent(AutoPlayDashboard);
 
   HybridAutoPlay.addListener('didConnect', onConnect);
   HybridAutoPlay.addListener('didDisconnect', onDisconnect);

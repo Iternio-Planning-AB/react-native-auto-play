@@ -20,6 +20,8 @@ Pod::Spec.new do |s|
     "ios/**/*.{m,mm}",
     # Implementation (C++ objects)
     "cpp/**/*.{hpp,cpp}",
+    # symbol font
+    "ios/**/*.ttf",
   ]
 
   s.resource_bundles = {

@@ -9,6 +9,7 @@
 
 // Include C++ implementation defined types
 #include "HybridHybridAutoPlaySpecSwift.hpp"
+#include "HybridHybridCarPlayDashboardSpecSwift.hpp"
 #include "HybridHybridGridTemplateSpecSwift.hpp"
 #include "HybridHybridListTemplateSpecSwift.hpp"
 #include "HybridHybridMapTemplateSpecSwift.hpp"
@@ -62,6 +63,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     }
     #endif
     NitroAutoplay::HybridHybridAutoPlaySpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridCarPlayDashboardSpec>
+  std::shared_ptr<HybridHybridCarPlayDashboardSpec> create_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    NitroAutoplay::HybridHybridCarPlayDashboardSpec_cxx swiftPart = NitroAutoplay::HybridHybridCarPlayDashboardSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridCarPlayDashboardSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(std__shared_ptr_HybridHybridCarPlayDashboardSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridCarPlayDashboardSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridCarPlayDashboardSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridHybridCarPlayDashboardSpec\" is not implemented in Swift!");
+    }
+    #endif
+    NitroAutoplay::HybridHybridCarPlayDashboardSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

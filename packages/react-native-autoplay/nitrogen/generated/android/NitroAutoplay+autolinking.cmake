@@ -34,6 +34,7 @@ target_sources(
   ../nitrogen/generated/android/NitroAutoplayOnLoad.cpp
   # Shared Nitrogen C++ sources
   ../nitrogen/generated/shared/c++/HybridHybridAutoPlaySpec.cpp
+  ../nitrogen/generated/shared/c++/HybridHybridCarPlayDashboardSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridGridTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridListTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridMapTemplateSpec.cpp

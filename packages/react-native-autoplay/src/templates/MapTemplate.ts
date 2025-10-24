@@ -93,7 +93,7 @@ export type MapTemplateConfig = Omit<
   /**
    * react component that is rendered
    */
-  component: React.ComponentType<RootComponentInitialProps & { template: MapTemplate }>;
+  component: React.ComponentType<RootComponentInitialProps>;
 
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner

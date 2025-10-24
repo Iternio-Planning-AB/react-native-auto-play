@@ -12,7 +12,7 @@ class DashboardSceneDelegate: AutoPlayScene,
     CPTemplateApplicationDashboardSceneDelegate
 {
     override init() {
-        super.init(moduleName: "AutoPlayDashboard")
+        super.init(moduleName: SceneStore.dashboardModuleName)
     }
 
     func templateApplicationDashboardScene(
@@ -23,18 +23,22 @@ class DashboardSceneDelegate: AutoPlayScene,
     ) {
         self.window = window
 
+        let traitCollection = templateApplicationDashboardScene.dashboardWindow
+            .traitCollection
+
         let props: [String: Any] = [
-            "colorScheme": window.screen.traitCollection
+            "colorScheme": traitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
+                // TODO: height & with reported from main screen it seems...
                 "height": window.screen.bounds.size.height,
                 "width": window.screen.bounds.size.width,
-                "scale": window.screen.scale,
+                "scale": traitCollection.displayScale,
             ],
         ]
 
         connect(props: props)
-        // RNCarPlay.connect(withDashboardController: dashboardController, window: window)
+        HybridCarPlayDashboard.emit(event: .didconnect)
     }
 
     func templateApplicationDashboardScene(
@@ -45,7 +49,7 @@ class DashboardSceneDelegate: AutoPlayScene,
         from window: UIWindow
     ) {
         disconnect()
-        // RNCarPlay.disconnectFromDashboardController()
+        HybridCarPlayDashboard.emit(event: .diddisconnect)
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

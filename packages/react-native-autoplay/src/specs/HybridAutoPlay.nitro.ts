@@ -12,7 +12,7 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
    * attach a listener for generic notifications like didConnect, didDisconnect, ...
    * @namespace all
    * @param eventType generic events
-   * @returns token to remove the listener
+   * @returns callback to remove the listener
    */
   addListener(eventType: EventName, callback: () => void): CleanupCallback;
 

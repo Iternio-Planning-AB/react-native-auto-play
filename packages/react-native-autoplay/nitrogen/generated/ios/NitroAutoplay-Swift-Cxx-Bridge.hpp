@@ -30,6 +30,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTim
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
 // Forward declaration of `HybridHybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridAutoPlaySpec; }
+// Forward declaration of `HybridHybridCarPlayDashboardSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarPlayDashboardSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
@@ -100,6 +102,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridHybridAutoPlaySpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridAutoPlaySpec_cxx; }
+// Forward declaration of `HybridHybridCarPlayDashboardSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.
@@ -121,6 +125,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
+#include "HybridHybridCarPlayDashboardSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
@@ -425,6 +430,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
     return Result<void>::withError(error);
   }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridCarPlayDashboardSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHybridCarPlayDashboardSpec>`.
+   */
+  using std__shared_ptr_HybridHybridCarPlayDashboardSpec_ = std::shared_ptr<HybridHybridCarPlayDashboardSpec>;
+  std::shared_ptr<HybridHybridCarPlayDashboardSpec> create_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(std__shared_ptr_HybridHybridCarPlayDashboardSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHybridCarPlayDashboardSpec>
+  using std__weak_ptr_HybridHybridCarPlayDashboardSpec_ = std::weak_ptr<HybridHybridCarPlayDashboardSpec>;
+  inline std__weak_ptr_HybridHybridCarPlayDashboardSpec_ weakify_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(const std::shared_ptr<HybridHybridCarPlayDashboardSpec>& strong) noexcept { return strong; }
   
   // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
   /**
