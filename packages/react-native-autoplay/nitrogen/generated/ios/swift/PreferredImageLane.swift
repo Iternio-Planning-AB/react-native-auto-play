@@ -19,9 +19,13 @@ public extension PreferredImageLane {
    * Create a new instance of `PreferredImageLane`.
    */
   init(image: NitroImage, highlightedAngle: Double, isPreferred: Bool, angles: [Double]) {
-    self.init(image, highlightedAngle, isPreferred, angles.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-      return bridge.copy_std__vector_double_(__pointer.baseAddress!, angles.count)
-    })
+    self.init(image, highlightedAngle, isPreferred, { () -> bridge.std__vector_double_ in
+      var __vector = bridge.create_std__vector_double_(angles.count)
+      for __item in angles {
+        __vector.push_back(__item)
+      }
+      return __vector
+    }())
   }
 
   var image: NitroImage {
@@ -64,9 +68,13 @@ public extension PreferredImageLane {
     }
     @inline(__always)
     set {
-      self.__angles = newValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-        return bridge.copy_std__vector_double_(__pointer.baseAddress!, newValue.count)
-      }
+      self.__angles = { () -> bridge.std__vector_double_ in
+        var __vector = bridge.create_std__vector_double_(newValue.count)
+        for __item in newValue {
+          __vector.push_back(__item)
+        }
+        return __vector
+      }()
     }
   }
 }

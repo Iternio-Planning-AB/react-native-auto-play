@@ -10,13 +10,9 @@
   "scripts": {
     "start": "yarn workspace example start",
     "ios": "yarn workspace example ios",
-    "android": "yarn workspace example android",
-    "postinstall": "patch-package"
+    "android": "yarn workspace example android"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4"
-  },
-  "dependencies": {
-    "patch-package": "^8.0.1"
   }
 }

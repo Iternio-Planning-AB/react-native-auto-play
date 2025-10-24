@@ -154,7 +154,6 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
-#include <NitroModules/FastVectorCopy.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -960,11 +959,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
    * Specialized version of `std::vector<double>`.
    */
   using std__vector_double_ = std::vector<double>;
-  inline std::vector<double> copy_std__vector_double_(const double* CONTIGUOUS_MEMORY NON_NULL data, size_t size) noexcept {
-    return margelo::nitro::FastVectorCopy<double>(data, size);
-  }
-  inline const double* CONTIGUOUS_MEMORY NON_NULL get_data_std__vector_double_(const std::vector<double>& vector) noexcept {
-    return vector.data();
+  inline std::vector<double> create_std__vector_double_(size_t size) noexcept {
+    std::vector<double> vector;
+    vector.reserve(size);
+    return vector;
   }
   
   // pragma MARK: std::optional<std::vector<double>>

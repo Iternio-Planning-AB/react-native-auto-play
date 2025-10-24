@@ -19,9 +19,13 @@ public extension ImageLane {
    * Create a new instance of `ImageLane`.
    */
   init(image: NitroImage, angles: [Double]) {
-    self.init(image, angles.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-      return bridge.copy_std__vector_double_(__pointer.baseAddress!, angles.count)
-    })
+    self.init(image, { () -> bridge.std__vector_double_ in
+      var __vector = bridge.create_std__vector_double_(angles.count)
+      for __item in angles {
+        __vector.push_back(__item)
+      }
+      return __vector
+    }())
   }
 
   var image: NitroImage {
@@ -42,9 +46,13 @@ public extension ImageLane {
     }
     @inline(__always)
     set {
-      self.__angles = newValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-        return bridge.copy_std__vector_double_(__pointer.baseAddress!, newValue.count)
-      }
+      self.__angles = { () -> bridge.std__vector_double_ in
+        var __vector = bridge.create_std__vector_double_(newValue.count)
+        for __item in newValue {
+          __vector.push_back(__item)
+        }
+        return __vector
+      }()
     }
   }
 }

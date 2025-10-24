@@ -45,9 +45,13 @@ public extension NitroManeuver {
       }
     }(), { () -> bridge.std__optional_std__vector_double__ in
       if let __unwrappedValue = elementAngles {
-        return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-          return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
-        })
+        return bridge.create_std__optional_std__vector_double__({ () -> bridge.std__vector_double_ in
+          var __vector = bridge.create_std__vector_double_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(__item)
+          }
+          return __vector
+        }())
       } else {
         return .init()
       }
@@ -203,9 +207,13 @@ public extension NitroManeuver {
     set {
       self.__elementAngles = { () -> bridge.std__optional_std__vector_double__ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__vector_double__(__unwrappedValue.withUnsafeBufferPointer { __pointer -> bridge.std__vector_double_ in
-            return bridge.copy_std__vector_double_(__pointer.baseAddress!, __unwrappedValue.count)
-          })
+          return bridge.create_std__optional_std__vector_double__({ () -> bridge.std__vector_double_ in
+            var __vector = bridge.create_std__vector_double_(__unwrappedValue.count)
+            for __item in __unwrappedValue {
+              __vector.push_back(__item)
+            }
+            return __vector
+          }())
         } else {
           return .init()
         }
