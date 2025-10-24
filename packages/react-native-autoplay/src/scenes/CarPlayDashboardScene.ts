@@ -1,5 +1,5 @@
 import type React from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { HybridCarPlayDashboard as NitroHybridCarPlayDashboard } from '../specs/HybridCarPlayDashboard.nitro';
 import type { RootComponentInitialProps } from '../types/RootComponent';
@@ -13,6 +13,9 @@ class Dashboard {
   public readonly id = 'CarPlayDashboard';
 
   constructor() {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
     HybridCarPlayDashboard.addListener('didConnect', () => this.setIsConnected(true));
     HybridCarPlayDashboard.addListener('didDisconnect', () => this.setIsConnected(false));
   }
@@ -33,6 +36,10 @@ class Dashboard {
   }
 
   public setComponent(component: React.ComponentType<RootComponentInitialProps>) {
+    if (Platform.OS !== 'ios') {
+      console.warn(`CarPlayDashboard is not supported on ${Platform.OS}`);
+      return;
+    }
     if (this.component != null) {
       throw new Error('setComponent can be called once only');
     }
