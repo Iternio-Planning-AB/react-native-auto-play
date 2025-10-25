@@ -24,7 +24,7 @@ import {
 } from './Template';
 
 export type AutoPlayCluster = string & { __brand: 'uuid' };
-export type MapTemplateId = 'AutoPlayRoot' | 'AutoPlayDashboard' | AutoPlayCluster;
+export type MapTemplateId = 'AutoPlayRoot' | AutoPlayCluster;
 
 type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
