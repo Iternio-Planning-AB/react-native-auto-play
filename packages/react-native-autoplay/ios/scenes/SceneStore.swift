@@ -28,12 +28,26 @@ class SceneStore {
     static func isRootModuleConnected() -> Bool {
         return store[SceneStore.rootModuleName]?.isConnected ?? false
     }
-    
+
     static func isDashboardModuleConnected() -> Bool {
         return store[SceneStore.dashboardModuleName]?.isConnected ?? false
     }
 
     static func getState(moduleName: String) -> VisibilityState? {
         return store[moduleName]?.state
+    }
+
+    static func getDashboardScene() throws -> DashboardSceneDelegate? {
+        guard
+            let scene = SceneStore.getScene(
+                moduleName: SceneStore.dashboardModuleName
+            )
+        else {
+            throw AutoPlayError.sceneNotFound(
+                "operation failed, \(SceneStore.dashboardModuleName) scene not found"
+            )
+        }
+
+        return scene as? DashboardSceneDelegate
     }
 }

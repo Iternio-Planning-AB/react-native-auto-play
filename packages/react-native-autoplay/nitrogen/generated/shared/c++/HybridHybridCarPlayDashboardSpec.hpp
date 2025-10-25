@@ -15,9 +15,13 @@
 
 // Forward declaration of `DashboardEvent` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DashboardEvent; }
+// Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
 
 #include <functional>
 #include "DashboardEvent.hpp"
+#include "NitroCarPlayDashboardButton.hpp"
+#include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -51,6 +55,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     public:
       // Methods
       virtual std::function<void()> addListener(DashboardEvent eventType, const std::function<void()>& callback) = 0;
+      virtual void setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) = 0;
       virtual void initRootView() = 0;
 
     protected:

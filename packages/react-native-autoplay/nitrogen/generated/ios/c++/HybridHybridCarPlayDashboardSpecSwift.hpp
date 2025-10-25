@@ -14,9 +14,18 @@ namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 
 // Forward declaration of `DashboardEvent` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DashboardEvent; }
+// Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
+// Forward declaration of `NitroImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 
 #include <functional>
 #include "DashboardEvent.hpp"
+#include "NitroCarPlayDashboardButton.hpp"
+#include <vector>
+#include "NitroImage.hpp"
+#include <optional>
+#include <string>
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -66,6 +75,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline void setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) override {
+      auto __result = _swiftPart.setButtons(buttons);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
     inline void initRootView() override {
       auto __result = _swiftPart.initRootView();

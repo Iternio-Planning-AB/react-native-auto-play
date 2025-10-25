@@ -11,6 +11,9 @@ import UIKit
 class DashboardSceneDelegate: AutoPlayScene,
     CPTemplateApplicationDashboardSceneDelegate
 {
+    var dashboardController: CPDashboardController?
+    var templateApplicationDashboardScene: CPTemplateApplicationDashboardScene?
+
     override init() {
         super.init(moduleName: SceneStore.dashboardModuleName)
     }
@@ -22,6 +25,9 @@ class DashboardSceneDelegate: AutoPlayScene,
         to window: UIWindow
     ) {
         self.window = window
+        self.dashboardController = dashboardController
+        self.templateApplicationDashboardScene =
+            templateApplicationDashboardScene
 
         let traitCollection = templateApplicationDashboardScene.dashboardWindow
             .traitCollection
@@ -50,6 +56,8 @@ class DashboardSceneDelegate: AutoPlayScene,
     ) {
         disconnect()
         HybridCarPlayDashboard.emit(event: .diddisconnect)
+
+        self.dashboardController = nil
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -66,5 +74,25 @@ class DashboardSceneDelegate: AutoPlayScene,
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         setState(state: .didappear)
+    }
+
+    func setButtons(buttons: [NitroCarPlayDashboardButton]) {
+        guard
+            let traitCollection = templateApplicationDashboardScene?
+                .dashboardWindow.traitCollection
+        else { return }
+
+        dashboardController?.shortcutButtons = buttons.map { button in
+            CPDashboardButton(
+                titleVariants: button.titleVariants,
+                subtitleVariants: button.subtitleVariants,
+                image: SymbolFont.imageFromNitroImage(
+                    image: button.image,
+                    traitCollection: traitCollection
+                )!
+            ) { _ in
+                button.onPress?()
+            }
+        }
     }
 }

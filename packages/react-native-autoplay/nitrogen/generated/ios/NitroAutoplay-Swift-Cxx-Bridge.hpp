@@ -56,6 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAction
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroGridButton; }
 // Forward declaration of `NitroImage` to properly resolve imports.
@@ -138,6 +140,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "NitroCarPlayDashboardButton.hpp"
 #include "NitroGridButton.hpp"
 #include "NitroImage.hpp"
 #include "NitroManeuver.hpp"
@@ -431,6 +434,43 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Result<void>::withError(error);
   }
   
+  // pragma MARK: std::vector<std::string>
+  /**
+   * Specialized version of `std::vector<std::string>`.
+   */
+  using std__vector_std__string_ = std::vector<std::string>;
+  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
+    std::vector<std::string> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::optional<std::function<void()>>
+  /**
+   * Specialized version of `std::optional<std::function<void()>>`.
+   */
+  using std__optional_std__function_void____ = std::optional<std::function<void()>>;
+  inline std::optional<std::function<void()>> create_std__optional_std__function_void____(const std::function<void()>& value) noexcept {
+    return std::optional<std::function<void()>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::vector<NitroCarPlayDashboardButton>
+  /**
+   * Specialized version of `std::vector<NitroCarPlayDashboardButton>`.
+   */
+  using std__vector_NitroCarPlayDashboardButton_ = std::vector<NitroCarPlayDashboardButton>;
+  inline std::vector<NitroCarPlayDashboardButton> create_std__vector_NitroCarPlayDashboardButton_(size_t size) noexcept {
+    std::vector<NitroCarPlayDashboardButton> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
   // pragma MARK: std::shared_ptr<HybridHybridCarPlayDashboardSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridHybridCarPlayDashboardSpec>`.
@@ -477,21 +517,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(std::optional<bool> /* animated */)> get_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
-    return *optional;
-  }
-  
-  // pragma MARK: std::optional<std::function<void()>>
-  /**
-   * Specialized version of `std::optional<std::function<void()>>`.
-   */
-  using std__optional_std__function_void____ = std::optional<std::function<void()>>;
-  inline std::optional<std::function<void()>> create_std__optional_std__function_void____(const std::function<void()>& value) noexcept {
-    return std::optional<std::function<void()>>(value);
-  }
-  inline bool has_value_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
     return *optional;
   }
   
@@ -851,17 +876,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   }
   inline std::function<void(AlertDismissalReason /* reason */)> get_std__optional_std__function_void_AlertDismissalReason____reason______(const std::optional<std::function<void(AlertDismissalReason /* reason */)>>& optional) noexcept {
     return *optional;
-  }
-  
-  // pragma MARK: std::vector<std::string>
-  /**
-   * Specialized version of `std::vector<std::string>`.
-   */
-  using std__vector_std__string_ = std::vector<std::string>;
-  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
-    std::vector<std::string> vector;
-    vector.reserve(size);
-    return vector;
   }
   
   // pragma MARK: std::vector<TripPoint>

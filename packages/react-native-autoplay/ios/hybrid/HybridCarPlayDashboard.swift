@@ -28,17 +28,13 @@ class HybridCarPlayDashboard: HybridHybridCarPlayDashboardSpec {
     }
 
     func initRootView() throws -> Void {
-        guard
-            let scene = SceneStore.getScene(
-                moduleName: SceneStore.dashboardModuleName
-            )
-        else {
-            throw AutoPlayError.sceneNotFound(
-                "operation failed, \(SceneStore.dashboardModuleName) scene not found"
-            )
-        }
-
-        scene.initRootView()
+        let scene = try SceneStore.getDashboardScene()
+        scene?.initRootView()
+    }
+    
+    func setButtons(buttons: [NitroCarPlayDashboardButton]) throws -> Void {
+        let scene = try SceneStore.getDashboardScene()
+        scene?.setButtons(buttons: buttons)
     }
 
     static func emit(event: DashboardEvent) {

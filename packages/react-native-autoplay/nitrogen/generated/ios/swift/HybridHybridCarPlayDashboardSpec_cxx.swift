@@ -130,6 +130,17 @@ open class HybridHybridCarPlayDashboardSpec_cxx {
   }
   
   @inline(__always)
+  public final func setButtons(buttons: bridge.std__vector_NitroCarPlayDashboardButton_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setButtons(buttons: buttons.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func initRootView() -> bridge.Result_void_ {
     do {
       try self.__implementation.initRootView()
