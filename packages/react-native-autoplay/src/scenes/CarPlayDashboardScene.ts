@@ -59,11 +59,11 @@ class Dashboard {
 
   public setComponent(component: React.ComponentType<RootComponentInitialProps>) {
     if (Platform.OS !== 'ios') {
-      console.warn(`CarPlayDashboard is not supported on ${Platform.OS}`);
+      console.warn(`CarPlayDashboard.setComponent is not supported on ${Platform.OS}`);
       return;
     }
     if (this.component != null) {
-      throw new Error('setComponent can be called once only');
+      throw new Error('CarPlayDashboard.setComponent can be called once only');
     }
     this.component = component;
     this.registerComponent();
@@ -72,8 +72,13 @@ class Dashboard {
   /**
    * sets the dashboard shortcut buttons, make sure to supply at least one button as soon as possible,
    * otherwise the dashboard will not show up!
+   * @namespace iOS
    */
   public setButtons(buttons: Array<CarPlayDashboardButton>) {
+    if (Platform.OS !== 'ios') {
+      console.warn(`CarPlayDashboard.setButtons is not supported on ${Platform.OS}`);
+      return;
+    }
     HybridCarPlayDashboard.setButtons(
       buttons.map((button) => ({ ...button, image: NitroImageUtil.convert(button.image) }))
     );
@@ -86,10 +91,18 @@ class Dashboard {
    * @returns callback to remove the listener
    */
   public addListener(event: EventName, callback: () => void) {
+    if (Platform.OS !== 'ios') {
+      console.warn(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
+      return;
+    }
     return HybridCarPlayDashboard.addListener(event, callback);
   }
 
   public addListenerRenderState(callback: (payload: VisibilityState) => void) {
+    if (Platform.OS !== 'ios') {
+      console.warn(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
+      return;
+    }
     return HybridAutoPlay.addListenerRenderState(this.id, callback);
   }
 }
