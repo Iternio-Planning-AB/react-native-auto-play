@@ -7,9 +7,9 @@
 import NitroModules
 
 class HybridCarPlayDashboard: HybridHybridCarPlayDashboardSpec {
-    private static var listeners = [DashboardEvent: [String: () -> Void]]()
+    private static var listeners = [EventName: [String: () -> Void]]()
 
-    func addListener(eventType: DashboardEvent, callback: @escaping () -> Void)
+    func addListener(eventType: EventName, callback: @escaping () -> Void)
         throws -> () -> Void
     {
         let uuid = UUID().uuidString
@@ -27,17 +27,23 @@ class HybridCarPlayDashboard: HybridHybridCarPlayDashboardSpec {
         }
     }
 
-    func initRootView() throws -> Void {
+    func initRootView() throws {
         let scene = try SceneStore.getDashboardScene()
         scene?.initRootView()
     }
-    
-    func setButtons(buttons: [NitroCarPlayDashboardButton]) throws -> Void {
-        let scene = try SceneStore.getDashboardScene()
-        scene?.setButtons(buttons: buttons)
+
+    func setButtons(buttons: [NitroCarPlayDashboardButton]) throws -> Promise<
+        Void
+    > {
+        return Promise.async {
+            try await MainActor.run {
+                let scene = try SceneStore.getDashboardScene()
+                scene?.setButtons(buttons: buttons)
+            }
+        }
     }
 
-    static func emit(event: DashboardEvent) {
+    static func emit(event: EventName) {
         HybridCarPlayDashboard.listeners[event]?.values.forEach {
             $0()
         }

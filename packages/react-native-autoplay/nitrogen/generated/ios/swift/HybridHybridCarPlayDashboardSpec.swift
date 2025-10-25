@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /// See ``HybridHybridCarPlayDashboardSpec``
 public protocol HybridHybridCarPlayDashboardSpec_protocol: HybridObject {
@@ -14,8 +15,8 @@ public protocol HybridHybridCarPlayDashboardSpec_protocol: HybridObject {
   
 
   // Methods
-  func addListener(eventType: DashboardEvent, callback: @escaping () -> Void) throws -> () -> Void
-  func setButtons(buttons: [NitroCarPlayDashboardButton]) throws -> Void
+  func addListener(eventType: EventName, callback: @escaping () -> Void) throws -> () -> Void
+  func setButtons(buttons: [NitroCarPlayDashboardButton]) throws -> Promise<Void>
   func initRootView() throws -> Void
 }
 

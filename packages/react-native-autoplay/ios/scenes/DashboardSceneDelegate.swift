@@ -76,6 +76,7 @@ class DashboardSceneDelegate: AutoPlayScene,
         setState(state: .didappear)
     }
 
+    @MainActor
     func setButtons(buttons: [NitroCarPlayDashboardButton]) {
         guard
             let traitCollection = templateApplicationDashboardScene?

@@ -13,13 +13,14 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `DashboardEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DashboardEvent; }
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
 
 #include <functional>
-#include "DashboardEvent.hpp"
+#include "EventName.hpp"
+#include <NitroModules/Promise.hpp>
 #include "NitroCarPlayDashboardButton.hpp"
 #include <vector>
 
@@ -54,8 +55,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
     public:
       // Methods
-      virtual std::function<void()> addListener(DashboardEvent eventType, const std::function<void()>& callback) = 0;
-      virtual void setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) = 0;
+      virtual std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) = 0;
+      virtual std::shared_ptr<Promise<void>> setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) = 0;
       virtual void initRootView() = 0;
 
     protected:

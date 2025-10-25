@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /**
  * A class implementation that bridges HybridHybridCarPlayDashboardSpec over to C++.
@@ -112,7 +113,7 @@ open class HybridHybridCarPlayDashboardSpec_cxx {
   @inline(__always)
   public final func addListener(eventType: Int32, callback: bridge.Func_void) -> bridge.Result_std__function_void____ {
     do {
-      let __result = try self.__implementation.addListener(eventType: margelo.nitro.at.g4rb4g3.autoplay.hybrid.DashboardEvent(rawValue: eventType)!, callback: { () -> () -> Void in
+      let __result = try self.__implementation.addListener(eventType: margelo.nitro.at.g4rb4g3.autoplay.hybrid.EventName(rawValue: eventType)!, callback: { () -> () -> Void in
         let __wrappedFunction = bridge.wrap_Func_void(callback)
         return { () -> Void in
           __wrappedFunction.call()
@@ -130,13 +131,21 @@ open class HybridHybridCarPlayDashboardSpec_cxx {
   }
   
   @inline(__always)
-  public final func setButtons(buttons: bridge.std__vector_NitroCarPlayDashboardButton_) -> bridge.Result_void_ {
+  public final func setButtons(buttons: bridge.std__vector_NitroCarPlayDashboardButton_) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      try self.__implementation.setButtons(buttons: buttons.map({ __item in __item }))
-      return bridge.create_Result_void_()
+      let __result = try self.__implementation.setButtons(buttons: buttons.map({ __item in __item }))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_void__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve() })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
     }
   }
   

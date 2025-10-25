@@ -12,15 +12,16 @@
 // Forward declaration of `HybridHybridCarPlayDashboardSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 
-// Forward declaration of `DashboardEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DashboardEvent; }
+// Forward declaration of `EventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 
 #include <functional>
-#include "DashboardEvent.hpp"
+#include "EventName.hpp"
+#include <NitroModules/Promise.hpp>
 #include "NitroCarPlayDashboardButton.hpp"
 #include <vector>
 #include "NitroImage.hpp"
@@ -68,7 +69,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     // Methods
-    inline std::function<void()> addListener(DashboardEvent eventType, const std::function<void()>& callback) override {
+    inline std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) override {
       auto __result = _swiftPart.addListener(static_cast<int>(eventType), callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
@@ -76,11 +77,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline void setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) override {
+    inline std::shared_ptr<Promise<void>> setButtons(const std::vector<NitroCarPlayDashboardButton>& buttons) override {
       auto __result = _swiftPart.setButtons(buttons);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void initRootView() override {
       auto __result = _swiftPart.initRootView();

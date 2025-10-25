@@ -20,8 +20,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstr
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme; }
-// Forward declaration of `DashboardEvent` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DashboardEvent; }
 // Forward declaration of `DistanceUnits` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUnits; }
 // Forward declaration of `Distance` to properly resolve imports.
@@ -126,7 +124,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "AttributedInstructionVariantImage.hpp"
 #include "AutoText.hpp"
 #include "ColorScheme.hpp"
-#include "DashboardEvent.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"

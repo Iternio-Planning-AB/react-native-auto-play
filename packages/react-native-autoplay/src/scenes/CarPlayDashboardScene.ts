@@ -1,11 +1,13 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
+import { HybridAutoPlay } from '..';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type {
   BaseCarPlayDashboardButton,
   HybridCarPlayDashboard as NitroHybridCarPlayDashboard,
 } from '../specs/HybridCarPlayDashboard.nitro';
+import type { EventName, VisibilityState } from '../types/Event';
 import type { AutoImage } from '../types/Image';
 import type { RootComponentInitialProps } from '../types/RootComponent';
 import { NitroImageUtil } from '../utils/NitroImage';
@@ -16,6 +18,8 @@ const HybridCarPlayDashboard =
 export interface CarPlayDashboardButton extends BaseCarPlayDashboardButton {
   image: AutoImage;
 }
+
+export type CarPlayDashboardEvent = EventName | VisibilityState;
 
 class Dashboard {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;
@@ -73,6 +77,20 @@ class Dashboard {
     HybridCarPlayDashboard.setButtons(
       buttons.map((button) => ({ ...button, image: NitroImageUtil.convert(button.image) }))
     );
+  }
+
+  /**
+   * attach a listener for generic notifications like didConnect, didDisconnect, ...
+   * @namespace iOS
+   * @param eventType generic events
+   * @returns callback to remove the listener
+   */
+  public addListener(event: EventName, callback: () => void) {
+    return HybridCarPlayDashboard.addListener(event, callback);
+  }
+
+  public addListenerRenderState(callback: (payload: VisibilityState) => void) {
+    return HybridAutoPlay.addListenerRenderState(this.id, callback);
   }
 }
 
