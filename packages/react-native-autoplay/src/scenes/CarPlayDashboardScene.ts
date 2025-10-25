@@ -92,16 +92,14 @@ class Dashboard {
    */
   public addListener(event: EventName, callback: () => void) {
     if (Platform.OS !== 'ios') {
-      console.warn(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
-      return;
+      throw new Error(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
     }
     return HybridCarPlayDashboard.addListener(event, callback);
   }
 
   public addListenerRenderState(callback: (payload: VisibilityState) => void) {
     if (Platform.OS !== 'ios') {
-      console.warn(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
-      return;
+      throw new Error(`CarPlayDashboard.addListener is not supported on ${Platform.OS}`);
     }
     return HybridAutoPlay.addListenerRenderState(this.id, callback);
   }

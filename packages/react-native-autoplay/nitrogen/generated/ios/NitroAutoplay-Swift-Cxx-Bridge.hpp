@@ -32,6 +32,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridAutoPlaySpec; }
 // Forward declaration of `HybridHybridCarPlayDashboardSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarPlayDashboardSpec; }
+// Forward declaration of `HybridHybridClusterSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridClusterSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
@@ -106,6 +108,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 namespace NitroAutoplay { class HybridHybridAutoPlaySpec_cxx; }
 // Forward declaration of `HybridHybridCarPlayDashboardSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
+// Forward declaration of `HybridHybridClusterSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.
@@ -128,6 +132,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "ForkType.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
 #include "HybridHybridCarPlayDashboardSpec.hpp"
+#include "HybridHybridClusterSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
@@ -482,6 +487,40 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridHybridCarPlayDashboardSpec>
   using std__weak_ptr_HybridHybridCarPlayDashboardSpec_ = std::weak_ptr<HybridHybridCarPlayDashboardSpec>;
   inline std__weak_ptr_HybridHybridCarPlayDashboardSpec_ weakify_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(const std::shared_ptr<HybridHybridCarPlayDashboardSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::function<void(const std::string& /* clusterId */)>
+  /**
+   * Specialized version of `std::function<void(const std::string&)>`.
+   */
+  using Func_void_std__string = std::function<void(const std::string& /* clusterId */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::string& / * clusterId * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__string_Wrapper final {
+  public:
+    explicit Func_void_std__string_Wrapper(std::function<void(const std::string& /* clusterId */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* clusterId */)>>(std::move(func))) {}
+    inline void call(std::string clusterId) const noexcept {
+      _function->operator()(clusterId);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::string& /* clusterId */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__string create_Func_void_std__string(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_Wrapper wrap_Func_void_std__string(Func_void_std__string value) noexcept {
+    return Func_void_std__string_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridClusterSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHybridClusterSpec>`.
+   */
+  using std__shared_ptr_HybridHybridClusterSpec_ = std::shared_ptr<HybridHybridClusterSpec>;
+  std::shared_ptr<HybridHybridClusterSpec> create_std__shared_ptr_HybridHybridClusterSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHybridClusterSpec_(std__shared_ptr_HybridHybridClusterSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHybridClusterSpec>
+  using std__weak_ptr_HybridHybridClusterSpec_ = std::weak_ptr<HybridHybridClusterSpec>;
+  inline std__weak_ptr_HybridHybridClusterSpec_ weakify_std__shared_ptr_HybridHybridClusterSpec_(const std::shared_ptr<HybridHybridClusterSpec>& strong) noexcept { return strong; }
   
   // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
   /**

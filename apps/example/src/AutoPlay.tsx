@@ -1,5 +1,6 @@
 import {
   CarPlayDashboard,
+  ClusterScene,
   HybridAutoPlay,
   MapTemplate,
   type RootComponentInitialProps,
@@ -8,7 +9,8 @@ import {
 } from '@g4rb4g3/react-native-autoplay';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
-import { Platform, Text } from 'react-native';
+import { Platform, Text, View } from 'react-native';
+import { AutoPlayCluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
 import { AutoTrip } from './config/AutoTrip';
 import {
@@ -98,14 +100,16 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: 'green',
+        backgroundColor: 'red',
       }}
     >
-      <Text>
-        Hello Nitro {Platform.OS} {i}
-      </Text>
-      <Text>{JSON.stringify(props.window)}</Text>
-      <Text>Running as {props.id}</Text>
+      <View style={{ flex: 1, backgroundColor: 'green' }}>
+        <Text>
+          Hello Nitro {Platform.OS} {i}
+        </Text>
+        <Text>{JSON.stringify(props.window)}</Text>
+        <Text>Running as {props.id}</Text>
+      </View>
     </SafeAreaView>
   );
 };
@@ -140,6 +144,7 @@ const registerRunnable = () => {
   };
 
   CarPlayDashboard.setComponent(AutoPlayDashboard);
+  ClusterScene.setComponent(AutoPlayCluster);
 
   HybridAutoPlay.addListener('didConnect', onConnect);
   HybridAutoPlay.addListener('didDisconnect', onDisconnect);

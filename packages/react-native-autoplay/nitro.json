@@ -31,6 +31,10 @@
     },
     "HybridCarPlayDashboard": {
       "swift": "HybridCarPlayDashboard"
+    },
+    "HybridCluster": {
+      "kotlin": "HybridCluster",
+      "swift": "HybridCluster"
     }
   },
   "ignorePaths": ["**/node_modules"]

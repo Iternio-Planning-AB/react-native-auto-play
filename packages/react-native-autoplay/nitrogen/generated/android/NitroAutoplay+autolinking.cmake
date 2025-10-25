@@ -35,12 +35,14 @@ target_sources(
   # Shared Nitrogen C++ sources
   ../nitrogen/generated/shared/c++/HybridHybridAutoPlaySpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridCarPlayDashboardSpec.cpp
+  ../nitrogen/generated/shared/c++/HybridHybridClusterSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridGridTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridListTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridMapTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridHybridMessageTemplateSpec.cpp
   # Android-specific Nitrogen C++ sources
   ../nitrogen/generated/android/c++/JHybridHybridAutoPlaySpec.cpp
+  ../nitrogen/generated/android/c++/JHybridHybridClusterSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridGridTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridListTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridMapTemplateSpec.cpp

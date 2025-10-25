@@ -36,6 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GridTemplateCon
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridAutoPlaySpec; }
 // Forward declaration of `HybridHybridCarPlayDashboardSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarPlayDashboardSpec; }
+// Forward declaration of `HybridHybridClusterSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridClusterSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
@@ -132,6 +134,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 #include "GridTemplateConfig.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
 #include "HybridHybridCarPlayDashboardSpec.hpp"
+#include "HybridHybridClusterSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
@@ -196,6 +199,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTrav
 namespace NitroAutoplay { class HybridHybridAutoPlaySpec_cxx; }
 // Forward declaration of `HybridHybridCarPlayDashboardSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
+// Forward declaration of `HybridHybridClusterSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.

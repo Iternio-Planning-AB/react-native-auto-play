@@ -50,4 +50,21 @@ class SceneStore {
 
         return scene as? DashboardSceneDelegate
     }
+
+    @available(iOS 15.4, *)
+    static func getClusterScene(clusterId: String) throws
+        -> ClusterSceneDelegate?
+    {
+        guard
+            let scene = SceneStore.getScene(
+                moduleName: clusterId
+            )
+        else {
+            throw AutoPlayError.sceneNotFound(
+                "operation failed, \(clusterId) scene not found"
+            )
+        }
+
+        return scene as? ClusterSceneDelegate
+    }
 }

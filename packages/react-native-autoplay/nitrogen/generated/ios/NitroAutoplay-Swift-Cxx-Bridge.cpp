@@ -10,6 +10,7 @@
 // Include C++ implementation defined types
 #include "HybridHybridAutoPlaySpecSwift.hpp"
 #include "HybridHybridCarPlayDashboardSpecSwift.hpp"
+#include "HybridHybridClusterSpecSwift.hpp"
 #include "HybridHybridGridTemplateSpecSwift.hpp"
 #include "HybridHybridListTemplateSpecSwift.hpp"
 #include "HybridHybridMapTemplateSpecSwift.hpp"
@@ -79,6 +80,30 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     }
     #endif
     NitroAutoplay::HybridHybridCarPlayDashboardSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* clusterId */)>
+  Func_void_std__string create_Func_void_std__string(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__string::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::string& clusterId) mutable -> void {
+      swiftClosure.call(clusterId);
+    };
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridClusterSpec>
+  std::shared_ptr<HybridHybridClusterSpec> create_std__shared_ptr_HybridHybridClusterSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    NitroAutoplay::HybridHybridClusterSpec_cxx swiftPart = NitroAutoplay::HybridHybridClusterSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridClusterSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridHybridClusterSpec_(std__shared_ptr_HybridHybridClusterSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridClusterSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridClusterSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridHybridClusterSpec\" is not implemented in Swift!");
+    }
+    #endif
+    NitroAutoplay::HybridHybridClusterSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

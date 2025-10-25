@@ -13,9 +13,11 @@ class ClusterSceneDelegate: AutoPlayScene,
     CPTemplateApplicationInstrumentClusterSceneDelegate,
     CPInstrumentClusterControllerDelegate
 {
+    var clusterId = UUID().uuidString
+    var instrumentClusterController:CPInstrumentClusterController?
+    
     override init() {
-        let moduleName = UUID().uuidString
-        super.init(moduleName: moduleName)
+        super.init(moduleName: clusterId)
     }
 
     func templateApplicationInstrumentClusterScene(
@@ -24,6 +26,8 @@ class ClusterSceneDelegate: AutoPlayScene,
         didConnect instrumentClusterController: CPInstrumentClusterController
     ) {
         instrumentClusterController.delegate = self
+        self.instrumentClusterController = instrumentClusterController
+        
         //        let contentStyle = templateApplicationInstrumentClusterScene
         //            .contentStyle
         //        RNCarPlay.connect(withInstrumentClusterController: instrumentClusterController,
@@ -37,7 +41,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         didDisconnectInstrumentClusterController instrumentClusterController:
             CPInstrumentClusterController
     ) {
-        //        RNCarPlay.disconnect(fromInstrumentClusterController: clusterId)
+        
     }
 
     func instrumentClusterControllerDidConnect(
@@ -56,12 +60,14 @@ class ClusterSceneDelegate: AutoPlayScene,
         ]
         
         connect(props: props)
+        HybridCluster.emit(event: .didconnect, clusterId: clusterId)
     }
 
     func instrumentClusterControllerDidDisconnectWindow(
         _ instrumentClusterWindow: UIWindow
     ) {
         disconnect()
+        HybridCluster.emit(event: .diddisconnect, clusterId: clusterId)
     }
 
     func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {

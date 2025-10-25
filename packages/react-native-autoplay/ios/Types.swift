@@ -16,4 +16,5 @@ enum AutoPlayError: Error {
     case interfaceControllerNotFound(String)
     case invalidTemplateError(String)
     case propertyNotFoundError(String)
+    case unsupportedVersion(String)
 }
