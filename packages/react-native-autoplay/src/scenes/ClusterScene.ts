@@ -59,11 +59,15 @@ class Cluster {
 
   public setComponent(component: React.ComponentType<RootComponentInitialProps>) {
     if (this.component != null) {
-      throw new Error('CarPlayDashboard.setComponent can be called once only');
+      throw new Error('ClusterScene.setComponent can be called once only');
     }
     this.component = component;
     this.registerComponent();
   }
 }
 
+/**
+ * @namespace Android
+ * @namespace iOS >= 15.4
+ */
 export const ClusterScene = new Cluster();
