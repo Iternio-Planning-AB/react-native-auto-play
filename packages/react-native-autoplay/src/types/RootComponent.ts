@@ -23,3 +23,16 @@ export type RootComponentInitialProps = {
   colorScheme: ColorScheme;
   window: WindowInformation;
 };
+
+export type AutoPlayClusterInitialProps = RootComponentInitialProps & {
+  /**
+   * lets you know if the compass is enabled/disabled
+   * @namespace iOS
+   */
+  compass?: boolean;
+  /**
+   * lets you know if the speed limit is enabled/disabled
+   * @namespace iOS
+   */
+  speedLimit?: boolean;
+};

@@ -19,6 +19,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ClusterEven
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; }
 
 #include <functional>
 #include "ClusterEventName.hpp"
@@ -27,6 +29,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme
 #include "NitroAttributedString.hpp"
 #include <vector>
 #include "ColorScheme.hpp"
+#include "ZoomEvent.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -63,6 +66,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       virtual std::shared_ptr<Promise<void>> initRootView(const std::string& clusterId) = 0;
       virtual void setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) = 0;
       virtual std::function<void()> addListenerColorScheme(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerZoom(const std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerCompass(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) = 0;
+      virtual std::function<void()> addListenerSpeedLimit(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

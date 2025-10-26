@@ -17,6 +17,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributed
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -37,6 +39,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme
 #include "ColorScheme.hpp"
 #include "JFunc_void_std__string_ColorScheme.hpp"
 #include "JColorScheme.hpp"
+#include "ZoomEvent.hpp"
+#include "JFunc_void_std__string_ZoomEvent.hpp"
+#include "JZoomEvent.hpp"
+#include "JFunc_void_std__string_bool.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -109,6 +115,51 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   std::function<void()> JHybridHybridClusterSpec::addListenerColorScheme(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& callback) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ColorScheme::javaobject> /* callback */)>("addListenerColorScheme_cxx");
     auto __result = method(_javaPart, JFunc_void_std__string_ColorScheme_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridHybridClusterSpec::addListenerZoom(const std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ZoomEvent::javaobject> /* callback */)>("addListenerZoom_cxx");
+    auto __result = method(_javaPart, JFunc_void_std__string_ZoomEvent_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridHybridClusterSpec::addListenerCompass(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerCompass_cxx");
+    auto __result = method(_javaPart, JFunc_void_std__string_bool_cxx::fromCpp(callback));
+    return [&]() -> std::function<void()> {
+      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
+        return downcast->cthis()->getFunction();
+      } else {
+        auto __resultRef = jni::make_global(__result);
+        return [__resultRef]() -> void {
+          return __resultRef->invoke();
+        };
+      }
+    }();
+  }
+  std::function<void()> JHybridHybridClusterSpec::addListenerSpeedLimit(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerSpeedLimit_cxx");
+    auto __result = method(_javaPart, JFunc_void_std__string_bool_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);

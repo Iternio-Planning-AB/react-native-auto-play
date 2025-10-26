@@ -102,6 +102,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
+// Forward declaration of `ZoomEvent` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridHybridAutoPlaySpec_cxx` to properly resolve imports.
@@ -167,6 +169,7 @@ namespace NitroAutoplay { class HybridHybridMessageTemplateSpec_cxx; }
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
+#include "ZoomEvent.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -589,6 +592,50 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   Func_void_std__string_ColorScheme create_Func_void_std__string_ColorScheme(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__string_ColorScheme_Wrapper wrap_Func_void_std__string_ColorScheme(Func_void_std__string_ColorScheme value) noexcept {
     return Func_void_std__string_ColorScheme_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>
+  /**
+   * Specialized version of `std::function<void(const std::string&, ZoomEvent)>`.
+   */
+  using Func_void_std__string_ZoomEvent = std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::string& / * clusterId * /, ZoomEvent / * payload * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__string_ZoomEvent_Wrapper final {
+  public:
+    explicit Func_void_std__string_ZoomEvent_Wrapper(std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>>(std::move(func))) {}
+    inline void call(std::string clusterId, int payload) const noexcept {
+      _function->operator()(clusterId, static_cast<ZoomEvent>(payload));
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__string_ZoomEvent create_Func_void_std__string_ZoomEvent(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_ZoomEvent_Wrapper wrap_Func_void_std__string_ZoomEvent(Func_void_std__string_ZoomEvent value) noexcept {
+    return Func_void_std__string_ZoomEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* clusterId */, bool /* payload */)>
+  /**
+   * Specialized version of `std::function<void(const std::string&, bool)>`.
+   */
+  using Func_void_std__string_bool = std::function<void(const std::string& /* clusterId */, bool /* payload */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::string& / * clusterId * /, bool / * payload * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__string_bool_Wrapper final {
+  public:
+    explicit Func_void_std__string_bool_Wrapper(std::function<void(const std::string& /* clusterId */, bool /* payload */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* clusterId */, bool /* payload */)>>(std::move(func))) {}
+    inline void call(std::string clusterId, bool payload) const noexcept {
+      _function->operator()(clusterId, payload);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::string& /* clusterId */, bool /* payload */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__string_bool create_Func_void_std__string_bool(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_bool_Wrapper wrap_Func_void_std__string_bool(Func_void_std__string_bool value) noexcept {
+    return Func_void_std__string_bool_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::shared_ptr<HybridHybridClusterSpec>

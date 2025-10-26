@@ -1,21 +1,48 @@
 import {
   AutoPlayCluster,
-  type RootComponentInitialProps,
+  type AutoPlayClusterInitialProps,
+  type CleanupCallback,
   SafeAreaView,
 } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 
-export const Cluster = (props: RootComponentInitialProps) => {
+export const Cluster = (props: AutoPlayClusterInitialProps) => {
   const [colorScheme, setColorScheme] = useState(props.colorScheme);
+  const [compass, setCompass] = useState(props.compass);
+  const [speedLImit, setSpeedLimit] = useState(props.speedLimit);
 
   useEffect(() => {
-    AutoPlayCluster.addListenerColorScheme((clusterId, payload) => {
-      if (props.id !== clusterId) {
-        return;
-      }
-      setColorScheme(payload);
-    });
+    const listeners: Array<CleanupCallback> = [];
+
+    listeners.push(
+      AutoPlayCluster.addListenerColorScheme((clusterId, payload) => {
+        if (props.id !== clusterId) {
+          return;
+        }
+        setColorScheme(payload);
+      })
+    );
+
+    listeners.push(
+      AutoPlayCluster.addListenerCompass((clusterId, payload) => {
+        if (props.id !== clusterId) {
+          return;
+        }
+        setCompass(payload);
+      })
+    );
+
+    listeners.push(
+      AutoPlayCluster.addListenerSpeedLimit((clusterId, payload) => {
+        if (props.id !== clusterId) {
+          return;
+        }
+        setSpeedLimit(payload);
+      })
+    );
+
+    return () => listeners.forEach((remove) => remove());
   }, [props.id]);
 
   const textStyle = { color: colorScheme === 'dark' ? 'white' : 'black' };
@@ -26,6 +53,8 @@ export const Cluster = (props: RootComponentInitialProps) => {
         <Text style={textStyle}>Hello Nitro {Platform.OS}</Text>
         <Text style={textStyle}>{JSON.stringify(props.window)}</Text>
         <Text style={textStyle}>Running as {props.id}</Text>
+        <Text style={textStyle}>Compass enabled: {JSON.stringify(compass)}</Text>
+        <Text style={textStyle}>SpeedLimit enabled: {JSON.stringify(speedLImit)}</Text>
       </View>
     </SafeAreaView>
   );

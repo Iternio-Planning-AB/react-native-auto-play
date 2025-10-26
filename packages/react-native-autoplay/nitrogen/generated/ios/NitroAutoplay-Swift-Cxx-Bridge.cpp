@@ -107,6 +107,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>
+  Func_void_std__string_ZoomEvent create_Func_void_std__string_ZoomEvent(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__string_ZoomEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::string& clusterId, ZoomEvent payload) mutable -> void {
+      swiftClosure.call(clusterId, static_cast<int>(payload));
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* clusterId */, bool /* payload */)>
+  Func_void_std__string_bool create_Func_void_std__string_bool(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_std__string_bool::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::string& clusterId, bool payload) mutable -> void {
+      swiftClosure.call(clusterId, payload);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridHybridClusterSpec>
   std::shared_ptr<HybridHybridClusterSpec> create_std__shared_ptr_HybridHybridClusterSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     NitroAutoplay::HybridHybridClusterSpec_cxx swiftPart = NitroAutoplay::HybridHybridClusterSpec_cxx::fromUnsafe(swiftUnsafePointer);

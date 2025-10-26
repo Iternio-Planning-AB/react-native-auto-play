@@ -18,6 +18,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       prototype.registerHybridMethod("initRootView", &HybridHybridClusterSpec::initRootView);
       prototype.registerHybridMethod("setAttributedInactiveDescriptionVariants", &HybridHybridClusterSpec::setAttributedInactiveDescriptionVariants);
       prototype.registerHybridMethod("addListenerColorScheme", &HybridHybridClusterSpec::addListenerColorScheme);
+      prototype.registerHybridMethod("addListenerZoom", &HybridHybridClusterSpec::addListenerZoom);
+      prototype.registerHybridMethod("addListenerCompass", &HybridHybridClusterSpec::addListenerCompass);
+      prototype.registerHybridMethod("addListenerSpeedLimit", &HybridHybridClusterSpec::addListenerSpeedLimit);
     });
   }
 

@@ -21,6 +21,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         super.init(moduleName: clusterId)
     }
 
+    // MARK: CPTemplateApplicationInstrumentClusterSceneDelegate
     func templateApplicationInstrumentClusterScene(
         _ templateApplicationInstrumentClusterScene:
             CPTemplateApplicationInstrumentClusterScene,
@@ -33,12 +34,6 @@ class ClusterSceneDelegate: AutoPlayScene,
                 .contentStyle
         )
         HybridCluster.emit(event: .didconnect, clusterId: clusterId)
-
-        //        let contentStyle = templateApplicationInstrumentClusterScene
-        //            .contentStyle
-        //        RNCarPlay.connect(withInstrumentClusterController: instrumentClusterController,
-        //                          contentStyle: contentStyle,
-        //                          clusterId: clusterId)
     }
 
     func templateApplicationInstrumentClusterScene(
@@ -51,10 +46,26 @@ class ClusterSceneDelegate: AutoPlayScene,
         HybridCluster.emit(event: .diddisconnect, clusterId: clusterId)
     }
 
+    func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {
+        traitCollection = UITraitCollection(userInterfaceStyle: contentStyle)
+        applyAttributedInactiveDescriptionVariants()
+        HybridCluster.emitColorScheme(
+            clusterId: clusterId,
+            colorScheme: traitCollection.userInterfaceStyle == .dark
+                ? .dark : .light
+        )
+    }
+
+    // MARK: CPInstrumentClusterControllerDelegate
     func instrumentClusterControllerDidConnect(
         _ instrumentClusterWindow: UIWindow
     ) {
         self.window = instrumentClusterWindow
+
+        let isCompassEnabled =
+            instrumentClusterController?.compassSetting != .disabled
+        let isSpeedLimitEnabled =
+            instrumentClusterController?.speedLimitSetting != .disabled
 
         let props: [String: Any] = [
             "colorScheme": self.traitCollection.userInterfaceStyle == .dark
@@ -64,6 +75,8 @@ class ClusterSceneDelegate: AutoPlayScene,
                 "width": instrumentClusterWindow.screen.bounds.size.width,
                 "scale": instrumentClusterWindow.screen.scale,
             ],
+            "compass": isCompassEnabled,
+            "speedLimit": isSpeedLimitEnabled,
         ]
 
         connect(props: props)
@@ -81,18 +94,37 @@ class ClusterSceneDelegate: AutoPlayScene,
         )
     }
 
-    override func traitCollectionDidChange(traitCollection: UITraitCollection) {
-        super.traitCollectionDidChange(traitCollection: traitCollection)
-        applyAttributedInactiveDescriptionVariants()
-        HybridCluster.emitColorScheme(
-            clusterId: clusterId,
-            colorScheme: traitCollection.userInterfaceStyle == .dark
-                ? .dark : .light
-        )
+    func instrumentClusterControllerDidZoom(
+        in instrumentClusterController: CPInstrumentClusterController
+    ) {
+        HybridCluster.emitZoom(clusterId: clusterId, payload: .in)
     }
 
-    func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {
-        traitCollection = UITraitCollection(userInterfaceStyle: contentStyle)
+    func instrumentClusterControllerDidZoomOut(
+        _ instrumentClusterController: CPInstrumentClusterController
+    ) {
+        HybridCluster.emitZoom(clusterId: clusterId, payload: .out)
+    }
+
+    func instrumentClusterController(
+        _ instrumentClusterController: CPInstrumentClusterController,
+        didChangeCompassSetting compassSetting: CPInstrumentClusterSetting
+    ) {
+        let isEnabled = compassSetting != .disabled
+        HybridCluster.emitCompass(clusterId: clusterId, payload: isEnabled)
+    }
+
+    func instrumentClusterController(
+        _ instrumentClusterController: CPInstrumentClusterController,
+        didChangeSpeedLimitSetting speedLimitSetting: CPInstrumentClusterSetting
+    ) {
+        let isEnabled = speedLimitSetting != .disabled
+        HybridCluster.emitSpeedLimit(clusterId: clusterId, payload: isEnabled)
+    }
+
+    // MARK: AutoPlayScene
+    override func traitCollectionDidChange(traitCollection: UITraitCollection) {
+        super.traitCollectionDidChange(traitCollection: traitCollection)
         applyAttributedInactiveDescriptionVariants()
         HybridCluster.emitColorScheme(
             clusterId: clusterId,
@@ -117,6 +149,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         setState(state: .didappear)
     }
 
+    // MARK: ClusterSceneDelegate
     func setAttributedInactiveDescriptionVariants(
         attributedInactiveDescriptionVariants:
             [NitroAttributedString]

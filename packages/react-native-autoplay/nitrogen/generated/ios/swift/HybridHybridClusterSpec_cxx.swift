@@ -179,4 +179,64 @@ open class HybridHybridClusterSpec_cxx {
       return bridge.create_Result_std__function_void____(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func addListenerZoom(callback: bridge.Func_void_std__string_ZoomEvent) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerZoom(callback: { () -> (String, ZoomEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__string_ZoomEvent(callback)
+        return { (__clusterId: String, __payload: ZoomEvent) -> Void in
+          __wrappedFunction.call(std.string(__clusterId), __payload.rawValue)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerCompass(callback: bridge.Func_void_std__string_bool) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerCompass(callback: { () -> (String, Bool) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__string_bool(callback)
+        return { (__clusterId: String, __payload: Bool) -> Void in
+          __wrappedFunction.call(std.string(__clusterId), __payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerSpeedLimit(callback: bridge.Func_void_std__string_bool) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerSpeedLimit(callback: { () -> (String, Bool) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__string_bool(callback)
+        return { (__clusterId: String, __payload: Bool) -> Void in
+          __wrappedFunction.call(std.string(__clusterId), __payload)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
 }

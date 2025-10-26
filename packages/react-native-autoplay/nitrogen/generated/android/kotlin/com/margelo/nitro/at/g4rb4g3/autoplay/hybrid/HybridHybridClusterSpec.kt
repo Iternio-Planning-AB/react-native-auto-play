@@ -66,6 +66,33 @@ abstract class HybridHybridClusterSpec: HybridObject() {
     val __result = addListenerColorScheme(callback)
     return Func_void_java(__result)
   }
+  
+  abstract fun addListenerZoom(callback: (clusterId: String, payload: ZoomEvent) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerZoom_cxx(callback: Func_void_std__string_ZoomEvent): Func_void {
+    val __result = addListenerZoom(callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerCompass(callback: (clusterId: String, payload: Boolean) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerCompass_cxx(callback: Func_void_std__string_bool): Func_void {
+    val __result = addListenerCompass(callback)
+    return Func_void_java(__result)
+  }
+  
+  abstract fun addListenerSpeedLimit(callback: (clusterId: String, payload: Boolean) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerSpeedLimit_cxx(callback: Func_void_std__string_bool): Func_void {
+    val __result = addListenerSpeedLimit(callback)
+    return Func_void_java(__result)
+  }
 
   private external fun initHybrid(): HybridData
 

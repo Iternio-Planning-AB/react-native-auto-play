@@ -9,6 +9,8 @@ type ClusterEventName =
   | 'didDisconnect'
   | 'didDisconnectFromWindow';
 
+export type ZoomEvent = 'in' | 'out';
+
 export interface HybridCluster extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   addListener(eventType: ClusterEventName, callback: (clusterId: string) => void): CleanupCallback;
   initRootView(clusterId: string): Promise<void>;
@@ -19,4 +21,7 @@ export interface HybridCluster extends HybridObject<{ android: 'kotlin'; ios: 's
   addListenerColorScheme(
     callback: (clusterId: string, payload: ColorScheme) => void
   ): CleanupCallback;
+  addListenerZoom(callback: (clusterId: string, payload: ZoomEvent) => void): CleanupCallback;
+  addListenerCompass(callback: (clusterId: string, payload: boolean) => void): CleanupCallback;
+  addListenerSpeedLimit(callback: (clusterId: string, payload: boolean) => void): CleanupCallback;
 }

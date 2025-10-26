@@ -57,6 +57,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::shared_ptr<Promise<void>> initRootView(const std::string& clusterId) override;
     void setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) override;
     std::function<void()> addListenerColorScheme(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& callback) override;
+    std::function<void()> addListenerZoom(const std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>& callback) override;
+    std::function<void()> addListenerCompass(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) override;
+    std::function<void()> addListenerSpeedLimit(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) override;
 
   private:
     friend HybridBase;

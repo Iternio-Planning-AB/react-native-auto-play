@@ -2,7 +2,7 @@ import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
-import type { HybridCluster as NitroHybridCluster } from '../specs/HybridCluster.nitro';
+import type { HybridCluster as NitroHybridCluster, ZoomEvent } from '../specs/HybridCluster.nitro';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type { AutoAttributedString } from '../utils/NitroAttributedString';
 import { NitroImageUtil } from '../utils/NitroImage';
@@ -109,6 +109,18 @@ class Cluster {
 
   public addListenerColorScheme(callback: (clusterId: string, payload: ColorScheme) => void) {
     return HybridCluster.addListenerColorScheme(callback);
+  }
+
+  public addListenerZoom(callback: (clusterId: string, payload: ZoomEvent) => void) {
+    return HybridCluster.addListenerZoom(callback);
+  }
+
+  public addListenerCompass(callback: (clusterId: string, payload: boolean) => void) {
+    return HybridCluster.addListenerCompass(callback);
+  }
+
+  public addListenerSpeedLimit(callback: (clusterId: string, payload: boolean) => void) {
+    return HybridCluster.addListenerSpeedLimit(callback);
   }
 }
 

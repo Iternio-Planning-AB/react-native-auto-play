@@ -19,6 +19,18 @@ class HybridCluster: HybridHybridClusterSpec {
         String: (_: String, _: ColorScheme) -> Void
     ]()
 
+    private static var zoomListeners = [
+        String: (_: String, _: ZoomEvent) -> Void
+    ]()
+
+    private static var compassListeners = [
+        String: (_: String, _: Bool) -> Void
+    ]()
+
+    private static var speedLimitListeners = [
+        String: (_: String, _: Bool) -> Void
+    ]()
+
     func addListener(
         eventType: ClusterEventName,
         callback: @escaping (_ clusterId: String) -> Void
@@ -91,6 +103,45 @@ class HybridCluster: HybridHybridClusterSpec {
         }
     }
 
+    func addListenerZoom(
+        callback: @escaping (_ clusterId: String, _ payload: ZoomEvent) -> Void
+    ) throws -> () -> Void {
+        let uuid = UUID().uuidString
+        HybridCluster.zoomListeners[uuid] = callback
+
+        return {
+            HybridCluster.zoomListeners.removeValue(
+                forKey: uuid
+            )
+        }
+    }
+
+    func addListenerCompass(
+        callback: @escaping (_ clusterId: String, _ payload: Bool) -> Void
+    ) throws -> () -> Void {
+        let uuid = UUID().uuidString
+        HybridCluster.compassListeners[uuid] = callback
+
+        return {
+            HybridCluster.compassListeners.removeValue(
+                forKey: uuid
+            )
+        }
+    }
+
+    func addListenerSpeedLimit(
+        callback: @escaping (_ clusterId: String, _ payload: Bool) -> Void
+    ) throws -> () -> Void {
+        let uuid = UUID().uuidString
+        HybridCluster.speedLimitListeners[uuid] = callback
+
+        return {
+            HybridCluster.speedLimitListeners.removeValue(
+                forKey: uuid
+            )
+        }
+    }
+
     static func emit(event: ClusterEventName, clusterId: String) {
         guard let listeners = HybridCluster.listeners[event], !listeners.isEmpty
         else {
@@ -103,10 +154,28 @@ class HybridCluster: HybridHybridClusterSpec {
             $0(clusterId)
         }
     }
-    
+
     static func emitColorScheme(clusterId: String, colorScheme: ColorScheme) {
         HybridCluster.colorSchemeListeners.values.forEach {
             $0(clusterId, colorScheme)
+        }
+    }
+
+    static func emitZoom(clusterId: String, payload: ZoomEvent) {
+        HybridCluster.zoomListeners.values.forEach {
+            $0(clusterId, payload)
+        }
+    }
+
+    static func emitCompass(clusterId: String, payload: Bool) {
+        HybridCluster.compassListeners.values.forEach {
+            $0(clusterId, payload)
+        }
+    }
+
+    static func emitSpeedLimit(clusterId: String, payload: Bool) {
+        HybridCluster.speedLimitListeners.values.forEach {
+            $0(clusterId, payload)
         }
     }
 }
