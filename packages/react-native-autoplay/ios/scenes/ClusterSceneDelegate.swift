@@ -41,7 +41,8 @@ class ClusterSceneDelegate: AutoPlayScene,
         didDisconnectInstrumentClusterController instrumentClusterController:
             CPInstrumentClusterController
     ) {
-
+        disconnect()
+        HybridCluster.emit(event: .diddisconnect, clusterId: clusterId)
     }
 
     func instrumentClusterControllerDidConnect(
@@ -66,8 +67,8 @@ class ClusterSceneDelegate: AutoPlayScene,
     func instrumentClusterControllerDidDisconnectWindow(
         _ instrumentClusterWindow: UIWindow
     ) {
-        disconnect()
-        HybridCluster.emit(event: .diddisconnect, clusterId: clusterId)
+        // only the window disconnected but it could come back so do not call disconnect in here
+        self.window = nil
     }
 
     func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {
