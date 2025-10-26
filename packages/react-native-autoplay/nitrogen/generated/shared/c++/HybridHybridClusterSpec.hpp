@@ -13,13 +13,13 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `EventName` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
+// Forward declaration of `ClusterEventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ClusterEventName; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 
 #include <functional>
-#include "EventName.hpp"
+#include "ClusterEventName.hpp"
 #include <string>
 #include <NitroModules/Promise.hpp>
 #include "NitroAttributedString.hpp"
@@ -56,7 +56,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
     public:
       // Methods
-      virtual std::function<void()> addListener(EventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) = 0;
+      virtual std::function<void()> addListener(ClusterEventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) = 0;
       virtual std::shared_ptr<Promise<void>> initRootView(const std::string& clusterId) = 0;
       virtual std::shared_ptr<Promise<void>> setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) = 0;
 

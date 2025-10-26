@@ -8,15 +8,15 @@ import NitroModules
 
 class HybridCluster: HybridHybridClusterSpec {
     private static var listeners = [
-        EventName: [String: (_:String) -> Void]
+        ClusterEventName: [String: (_:String) -> Void]
     ]()
 
     private static var eventQueue = [
-        EventName: [String]  // clusterIds queued per event
+        ClusterEventName: [String]  // clusterIds queued per event
     ]()
 
     func addListener(
-        eventType: EventName,
+        eventType: ClusterEventName,
         callback: @escaping (_ clusterId: String) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
@@ -78,7 +78,7 @@ class HybridCluster: HybridHybridClusterSpec {
         }
     }
 
-    static func emit(event: EventName, clusterId: String) {
+    static func emit(event: ClusterEventName, clusterId: String) {
         guard let listeners = HybridCluster.listeners[event], !listeners.isEmpty
         else {
             // no listeners -> queue the event

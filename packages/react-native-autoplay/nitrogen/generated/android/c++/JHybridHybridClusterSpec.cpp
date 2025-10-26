@@ -7,8 +7,8 @@
 
 #include "JHybridHybridClusterSpec.hpp"
 
-// Forward declaration of `EventName` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
+// Forward declaration of `ClusterEventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ClusterEventName; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -20,8 +20,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 #include "JFunc_void.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
-#include "EventName.hpp"
-#include "JEventName.hpp"
+#include "ClusterEventName.hpp"
+#include "JClusterEventName.hpp"
 #include <string>
 #include "JFunc_void_std__string.hpp"
 #include "NitroAttributedString.hpp"
@@ -59,9 +59,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   
 
   // Methods
-  std::function<void()> JHybridHybridClusterSpec::addListener(EventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JEventName> /* eventType */, jni::alias_ref<JFunc_void_std__string::javaobject> /* callback */)>("addListener_cxx");
-    auto __result = method(_javaPart, JEventName::fromCpp(eventType), JFunc_void_std__string_cxx::fromCpp(callback));
+  std::function<void()> JHybridHybridClusterSpec::addListener(ClusterEventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JClusterEventName> /* eventType */, jni::alias_ref<JFunc_void_std__string::javaobject> /* callback */)>("addListener_cxx");
+    auto __result = method(_javaPart, JClusterEventName::fromCpp(eventType), JFunc_void_std__string_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);

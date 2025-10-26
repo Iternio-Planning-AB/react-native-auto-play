@@ -27,6 +27,7 @@ class ClusterSceneDelegate: AutoPlayScene,
     ) {
         instrumentClusterController.delegate = self
         self.instrumentClusterController = instrumentClusterController
+        HybridCluster.emit(event: .didconnect, clusterId: clusterId)
 
         //        let contentStyle = templateApplicationInstrumentClusterScene
         //            .contentStyle
@@ -61,7 +62,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         ]
 
         connect(props: props)
-        HybridCluster.emit(event: .didconnect, clusterId: clusterId)
+        HybridCluster.emit(event: .didconnectwithwindow, clusterId: clusterId)
     }
 
     func instrumentClusterControllerDidDisconnectWindow(
@@ -69,9 +70,11 @@ class ClusterSceneDelegate: AutoPlayScene,
     ) {
         // only the window disconnected but it could come back so do not call disconnect in here
         self.window = nil
+        HybridCluster.emit(event: .diddisconnectfromwindow, clusterId: clusterId)
     }
 
     func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle) {
+        print("contentStyleDidChange")
         //        RNCarPlay.clusterContentStyleDidChange(contentStyle, clusterId: clusterId)
     }
 

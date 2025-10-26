@@ -53,7 +53,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     // Methods
-    std::function<void()> addListener(EventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) override;
+    std::function<void()> addListener(ClusterEventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) override;
     std::shared_ptr<Promise<void>> initRootView(const std::string& clusterId) override;
     std::shared_ptr<Promise<void>> setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) override;
 

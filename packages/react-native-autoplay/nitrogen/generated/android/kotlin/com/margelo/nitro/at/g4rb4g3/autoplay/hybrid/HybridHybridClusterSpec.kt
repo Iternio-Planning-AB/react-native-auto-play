@@ -41,11 +41,11 @@ abstract class HybridHybridClusterSpec: HybridObject() {
   
 
   // Methods
-  abstract fun addListener(eventType: EventName, callback: (clusterId: String) -> Unit): () -> Unit
+  abstract fun addListener(eventType: ClusterEventName, callback: (clusterId: String) -> Unit): () -> Unit
   
   @DoNotStrip
   @Keep
-  private fun addListener_cxx(eventType: EventName, callback: Func_void_std__string): Func_void {
+  private fun addListener_cxx(eventType: ClusterEventName, callback: Func_void_std__string): Func_void {
     val __result = addListener(eventType, callback)
     return Func_void_java(__result)
   }

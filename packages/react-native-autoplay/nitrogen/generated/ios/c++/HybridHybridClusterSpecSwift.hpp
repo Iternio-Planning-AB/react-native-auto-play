@@ -12,8 +12,8 @@
 // Forward declaration of `HybridHybridClusterSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 
-// Forward declaration of `EventName` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
+// Forward declaration of `ClusterEventName` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ClusterEventName; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -22,7 +22,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributed
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 
 #include <functional>
-#include "EventName.hpp"
+#include "ClusterEventName.hpp"
 #include <string>
 #include <NitroModules/Promise.hpp>
 #include "NitroAttributedString.hpp"
@@ -72,7 +72,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     // Methods
-    inline std::function<void()> addListener(EventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) override {
+    inline std::function<void()> addListener(ClusterEventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) override {
       auto __result = _swiftPart.addListener(static_cast<int>(eventType), callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());

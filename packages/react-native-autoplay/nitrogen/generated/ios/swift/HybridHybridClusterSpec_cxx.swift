@@ -113,7 +113,7 @@ open class HybridHybridClusterSpec_cxx {
   @inline(__always)
   public final func addListener(eventType: Int32, callback: bridge.Func_void_std__string) -> bridge.Result_std__function_void____ {
     do {
-      let __result = try self.__implementation.addListener(eventType: margelo.nitro.at.g4rb4g3.autoplay.hybrid.EventName(rawValue: eventType)!, callback: { () -> (String) -> Void in
+      let __result = try self.__implementation.addListener(eventType: margelo.nitro.at.g4rb4g3.autoplay.hybrid.ClusterEventName(rawValue: eventType)!, callback: { () -> (String) -> Void in
         let __wrappedFunction = bridge.wrap_Func_void_std__string(callback)
         return { (__clusterId: String) -> Void in
           __wrappedFunction.call(std.string(__clusterId))

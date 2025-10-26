@@ -1,9 +1,15 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { CleanupCallback, EventName } from '../types/Event';
+import type { CleanupCallback } from '../types/Event';
 import type { NitroAttributedString } from '../utils/NitroAttributedString';
 
+type ClusterEventName =
+  | 'didConnect'
+  | 'didConnectWithWindow'
+  | 'didDisconnect'
+  | 'didDisconnectFromWindow';
+
 export interface HybridCluster extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
-  addListener(eventType: EventName, callback: (clusterId: string) => void): CleanupCallback;
+  addListener(eventType: ClusterEventName, callback: (clusterId: string) => void): CleanupCallback;
   initRootView(clusterId: string): Promise<void>;
   setAttributedInactiveDescriptionVariants(
     clusterId: string,

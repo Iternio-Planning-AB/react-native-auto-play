@@ -15,21 +15,22 @@ class Cluster {
   private clusters: { [key: string]: boolean } = {};
 
   constructor() {
-    HybridCluster.addListener('didConnect', (clusterId: string) =>
-      this.setIsConnected(clusterId, true)
-    );
-    HybridCluster.addListener('didDisconnect', (clusterId: string) =>
-      this.setIsConnected(clusterId, false)
-    );
-  }
-
-  private setIsConnected(clusterId: string, isConnected: boolean) {
-    if (isConnected) {
+    HybridCluster.addListener('didConnect', (clusterId) => {
       this.clusters[clusterId] = false;
-      this.registerComponent();
-    } else {
+      this.applyAttributedInactiveDescriptionVariants();
+    });
+    HybridCluster.addListener('didConnectWithWindow', (clusterId) => {
+      this.clusters[clusterId] = false;
+      this.registerComponent().catch((e) => {
+        console.error(e);
+      });
+    });
+    HybridCluster.addListener('didDisconnectFromWindow', (clusterId) => {
+      this.clusters[clusterId] = false;
+    });
+    HybridCluster.addListener('didDisconnect', (clusterId) => {
       delete this.clusters[clusterId];
-    }
+    });
   }
 
   private async registerComponent() {
@@ -77,7 +78,7 @@ class Cluster {
       throw new Error('ClusterScene.setComponent can be called once only');
     }
     this.component = component;
-    this.registerComponent();
+    return this.registerComponent();
   }
 
   /**
