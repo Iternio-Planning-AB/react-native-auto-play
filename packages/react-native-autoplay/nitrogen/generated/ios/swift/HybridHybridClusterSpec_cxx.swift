@@ -148,4 +148,15 @@ open class HybridHybridClusterSpec_cxx {
       return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func setAttributedInactiveDescriptionVariants(clusterId: std.string, attributedInactiveDescriptionVariants: bridge.std__vector_NitroAttributedString_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setAttributedInactiveDescriptionVariants(clusterId: String(clusterId), attributedInactiveDescriptionVariants: attributedInactiveDescriptionVariants.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }

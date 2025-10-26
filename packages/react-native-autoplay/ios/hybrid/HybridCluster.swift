@@ -39,6 +39,24 @@ class HybridCluster: HybridHybridClusterSpec {
         }
     }
 
+    func setAttributedInactiveDescriptionVariants(
+        clusterId: String,
+        attributedInactiveDescriptionVariants:
+            [NitroAttributedString]
+    ) throws {
+        if #available(iOS 15.4, *) {
+            let scene = try SceneStore.getClusterScene(clusterId: clusterId)
+            scene?.setAttributedInactiveDescriptionVariants(
+                attributedInactiveDescriptionVariants:
+                    attributedInactiveDescriptionVariants
+            )
+        } else {
+            throw AutoPlayError.unsupportedVersion(
+                "Cluster support only available on iOS >= 15.4"
+            )
+        }
+    }
+
     static func emit(event: EventName, clusterId: String) {
         HybridCluster.listeners[event]?.values.forEach {
             $0(clusterId)

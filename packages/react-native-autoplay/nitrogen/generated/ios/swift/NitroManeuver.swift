@@ -18,9 +18,9 @@ public extension NitroManeuver {
   /**
    * Create a new instance of `NitroManeuver`.
    */
-  init(attributedInstructionVariants: [AttributedInstructionVariant], symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: [Double]?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: Double, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: [String]?, highwayExitLabel: String?) {
-    self.init({ () -> bridge.std__vector_AttributedInstructionVariant_ in
-      var __vector = bridge.create_std__vector_AttributedInstructionVariant_(attributedInstructionVariants.count)
+  init(attributedInstructionVariants: [NitroAttributedString], symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: [Double]?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: Double, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: [String]?, highwayExitLabel: String?) {
+    self.init({ () -> bridge.std__vector_NitroAttributedString_ in
+      var __vector = bridge.create_std__vector_NitroAttributedString_(attributedInstructionVariants.count)
       for __item in attributedInstructionVariants {
         __vector.push_back(__item)
       }
@@ -112,15 +112,15 @@ public extension NitroManeuver {
     }())
   }
 
-  var attributedInstructionVariants: [AttributedInstructionVariant] {
+  var attributedInstructionVariants: [NitroAttributedString] {
     @inline(__always)
     get {
       return self.__attributedInstructionVariants.map({ __item in __item })
     }
     @inline(__always)
     set {
-      self.__attributedInstructionVariants = { () -> bridge.std__vector_AttributedInstructionVariant_ in
-        var __vector = bridge.create_std__vector_AttributedInstructionVariant_(newValue.count)
+      self.__attributedInstructionVariants = { () -> bridge.std__vector_NitroAttributedString_ in
+        var __vector = bridge.create_std__vector_NitroAttributedString_(newValue.count)
         for __item in newValue {
           __vector.push_back(__item)
         }

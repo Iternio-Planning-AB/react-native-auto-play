@@ -145,6 +145,9 @@ const registerRunnable = () => {
 
   CarPlayDashboard.setComponent(AutoPlayDashboard);
   ClusterScene.setComponent(AutoPlayCluster);
+  ClusterScene.setAttributedInactiveDescriptionVariants([
+    { text: 'Example', images: [{ image: { name: 'bolt' }, position: 0 }] },
+  ]);
 
   HybridAutoPlay.addListener('didConnect', onConnect);
   HybridAutoPlay.addListener('didDisconnect', onDisconnect);

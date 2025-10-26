@@ -60,10 +60,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTim
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
 // Forward declaration of `NitroManeuver` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
-// Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
-// Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
+// Forward declaration of `NitroAttributedString` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
+// Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
 // Forward declaration of `TurnType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
 // Forward declaration of `OffRampType` to properly resolve imports.
@@ -115,8 +115,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
 #include "NitroManeuver.hpp"
-#include "AttributedInstructionVariant.hpp"
-#include "AttributedInstructionVariantImage.hpp"
+#include "NitroAttributedString.hpp"
+#include "NitroAttributedStringImage.hpp"
 #include "TurnType.hpp"
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"

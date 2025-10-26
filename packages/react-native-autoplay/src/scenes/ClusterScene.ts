@@ -4,11 +4,14 @@ import { NitroModules } from 'react-native-nitro-modules';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { HybridCluster as NitroHybridCluster } from '../specs/HybridCluster.nitro';
 import type { RootComponentInitialProps } from '../types/RootComponent';
+import type { AutoAttributedString } from '../utils/NitroAttributedString';
+import { NitroImageUtil } from '../utils/NitroImage';
 
 const HybridCluster = NitroModules.createHybridObject<NitroHybridCluster>('HybridCluster');
 
 class Cluster {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;
+  private attributedInactiveDescriptionVariants: Array<AutoAttributedString> = [];
   private clusters: { [key: string]: boolean } = {};
 
   constructor() {
@@ -55,6 +58,18 @@ class Cluster {
 
       await HybridCluster.initRootView(clusterId);
     }
+
+    this.applyAttributedInactiveDescriptionVariants();
+  }
+
+  private applyAttributedInactiveDescriptionVariants() {
+    const variants = this.attributedInactiveDescriptionVariants.map((v) => ({
+      ...v,
+      images: v.images?.map((i) => ({ ...i, image: NitroImageUtil.convert(i.image) })),
+    }));
+    for (const clusterId of Object.keys(this.clusters)) {
+      HybridCluster.setAttributedInactiveDescriptionVariants(clusterId, variants);
+    }
   }
 
   public setComponent(component: React.ComponentType<RootComponentInitialProps>) {
@@ -63,6 +78,18 @@ class Cluster {
     }
     this.component = component;
     this.registerComponent();
+  }
+
+  /**
+   * sets the text that is shown while no navigation is ongoing
+   * applies specified strings to all connected cluster of content type "Instruction Card"
+   * @namespace iOS
+   */
+  public setAttributedInactiveDescriptionVariants(
+    attributedInactiveDescriptionVariants: Array<AutoAttributedString>
+  ) {
+    this.attributedInactiveDescriptionVariants = attributedInactiveDescriptionVariants;
+    this.applyAttributedInactiveDescriptionVariants();
   }
 }
 

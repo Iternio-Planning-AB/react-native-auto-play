@@ -14,8 +14,8 @@ class ClusterSceneDelegate: AutoPlayScene,
     CPInstrumentClusterControllerDelegate
 {
     var clusterId = UUID().uuidString
-    var instrumentClusterController:CPInstrumentClusterController?
-    
+    var instrumentClusterController: CPInstrumentClusterController?
+
     override init() {
         super.init(moduleName: clusterId)
     }
@@ -27,7 +27,7 @@ class ClusterSceneDelegate: AutoPlayScene,
     ) {
         instrumentClusterController.delegate = self
         self.instrumentClusterController = instrumentClusterController
-        
+
         //        let contentStyle = templateApplicationInstrumentClusterScene
         //            .contentStyle
         //        RNCarPlay.connect(withInstrumentClusterController: instrumentClusterController,
@@ -41,14 +41,14 @@ class ClusterSceneDelegate: AutoPlayScene,
         didDisconnectInstrumentClusterController instrumentClusterController:
             CPInstrumentClusterController
     ) {
-        
+
     }
 
     func instrumentClusterControllerDidConnect(
         _ instrumentClusterWindow: UIWindow
     ) {
         self.window = instrumentClusterWindow
-        
+
         let props: [String: Any] = [
             "colorScheme": instrumentClusterWindow.screen.traitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
@@ -58,7 +58,7 @@ class ClusterSceneDelegate: AutoPlayScene,
                 "scale": instrumentClusterWindow.screen.scale,
             ],
         ]
-        
+
         connect(props: props)
         HybridCluster.emit(event: .didconnect, clusterId: clusterId)
     }
@@ -88,5 +88,17 @@ class ClusterSceneDelegate: AutoPlayScene,
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         setState(state: .didappear)
+    }
+
+    func setAttributedInactiveDescriptionVariants(
+        attributedInactiveDescriptionVariants:
+            [NitroAttributedString]
+    ) {
+        instrumentClusterController?.attributedInactiveDescriptionVariants =
+            Parser.parseAttributedStrings(
+                attributedStrings: attributedInactiveDescriptionVariants,
+                traitCollection: self.window?.traitCollection
+                    ?? UIScreen.main.traitCollection
+            )
     }
 }

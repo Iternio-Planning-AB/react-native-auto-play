@@ -23,8 +23,8 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
+// Forward declaration of `NitroAttributedString` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `TurnType` to properly resolve imports.
@@ -46,7 +46,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 
-#include "AttributedInstructionVariant.hpp"
+#include "NitroAttributedString.hpp"
 #include <vector>
 #include "NitroImage.hpp"
 #include <optional>
@@ -68,7 +68,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct NitroManeuver {
   public:
-    std::vector<AttributedInstructionVariant> attributedInstructionVariants     SWIFT_PRIVATE;
+    std::vector<NitroAttributedString> attributedInstructionVariants     SWIFT_PRIVATE;
     NitroImage symbolImage     SWIFT_PRIVATE;
     std::optional<NitroImage> junctionImage     SWIFT_PRIVATE;
     std::optional<TurnType> turnType     SWIFT_PRIVATE;
@@ -90,7 +90,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     NitroManeuver() = default;
-    explicit NitroManeuver(std::vector<AttributedInstructionVariant> attributedInstructionVariants, NitroImage symbolImage, std::optional<NitroImage> junctionImage, std::optional<TurnType> turnType, std::optional<double> angle, std::optional<std::vector<double>> elementAngles, std::optional<double> exitNumber, std::optional<OffRampType> offRampType, std::optional<OnRampType> onRampType, std::optional<ForkType> forkType, std::optional<KeepType> keepType, std::optional<LaneGuidance> linkedLaneGuidance, double cardBackgroundColor, std::string id, TravelEstimates travelEstimates, TrafficSide trafficSide, ManeuverType maneuverType, std::optional<std::vector<std::string>> roadName, std::optional<std::string> highwayExitLabel): attributedInstructionVariants(attributedInstructionVariants), symbolImage(symbolImage), junctionImage(junctionImage), turnType(turnType), angle(angle), elementAngles(elementAngles), exitNumber(exitNumber), offRampType(offRampType), onRampType(onRampType), forkType(forkType), keepType(keepType), linkedLaneGuidance(linkedLaneGuidance), cardBackgroundColor(cardBackgroundColor), id(id), travelEstimates(travelEstimates), trafficSide(trafficSide), maneuverType(maneuverType), roadName(roadName), highwayExitLabel(highwayExitLabel) {}
+    explicit NitroManeuver(std::vector<NitroAttributedString> attributedInstructionVariants, NitroImage symbolImage, std::optional<NitroImage> junctionImage, std::optional<TurnType> turnType, std::optional<double> angle, std::optional<std::vector<double>> elementAngles, std::optional<double> exitNumber, std::optional<OffRampType> offRampType, std::optional<OnRampType> onRampType, std::optional<ForkType> forkType, std::optional<KeepType> keepType, std::optional<LaneGuidance> linkedLaneGuidance, double cardBackgroundColor, std::string id, TravelEstimates travelEstimates, TrafficSide trafficSide, ManeuverType maneuverType, std::optional<std::vector<std::string>> roadName, std::optional<std::string> highwayExitLabel): attributedInstructionVariants(attributedInstructionVariants), symbolImage(symbolImage), junctionImage(junctionImage), turnType(turnType), angle(angle), elementAngles(elementAngles), exitNumber(exitNumber), offRampType(offRampType), onRampType(onRampType), forkType(forkType), keepType(keepType), linkedLaneGuidance(linkedLaneGuidance), cardBackgroundColor(cardBackgroundColor), id(id), travelEstimates(travelEstimates), trafficSide(trafficSide), maneuverType(maneuverType), roadName(roadName), highwayExitLabel(highwayExitLabel) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -103,7 +103,7 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroManeuver(
-        JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AttributedInstructionVariant>>::fromJSI(runtime, obj.getProperty(runtime, "attributedInstructionVariants")),
+        JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::fromJSI(runtime, obj.getProperty(runtime, "attributedInstructionVariants")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>::fromJSI(runtime, obj.getProperty(runtime, "symbolImage")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "junctionImage")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::fromJSI(runtime, obj.getProperty(runtime, "turnType")),
@@ -126,7 +126,7 @@ namespace margelo::nitro {
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroManeuver& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "attributedInstructionVariants", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AttributedInstructionVariant>>::toJSI(runtime, arg.attributedInstructionVariants));
+      obj.setProperty(runtime, "attributedInstructionVariants", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::toJSI(runtime, arg.attributedInstructionVariants));
       obj.setProperty(runtime, "symbolImage", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>::toJSI(runtime, arg.symbolImage));
       obj.setProperty(runtime, "junctionImage", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::toJSI(runtime, arg.junctionImage));
       obj.setProperty(runtime, "turnType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::toJSI(runtime, arg.turnType));
@@ -155,7 +155,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AttributedInstructionVariant>>::canConvert(runtime, obj.getProperty(runtime, "attributedInstructionVariants"))) return false;
+      if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::canConvert(runtime, obj.getProperty(runtime, "attributedInstructionVariants"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>::canConvert(runtime, obj.getProperty(runtime, "symbolImage"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "junctionImage"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::canConvert(runtime, obj.getProperty(runtime, "turnType"))) return false;

@@ -11,18 +11,9 @@ import {
   type PreferredLane,
   type TurnType,
 } from '../types/Maneuver';
+import type { NitroAttributedString } from './NitroAttributedString';
 import { NitroColorUtil } from './NitroColor';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
-
-type AttributedInstructionVariantImage = {
-  image: NitroImage;
-  position: number;
-};
-
-type AttributedInstructionVariant = {
-  text: string;
-  images?: Array<AttributedInstructionVariantImage>;
-};
 
 interface PreferredImageLane extends PreferredLane {
   image: NitroImage;
@@ -38,7 +29,7 @@ export interface LaneGuidance {
 }
 
 export interface NitroManeuver extends BaseManeuver {
-  attributedInstructionVariants: Array<AttributedInstructionVariant>;
+  attributedInstructionVariants: Array<NitroAttributedString>;
   symbolImage: NitroImage;
   junctionImage?: NitroImage;
   turnType?: TurnType;

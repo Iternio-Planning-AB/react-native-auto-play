@@ -14,11 +14,22 @@ namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 
 // Forward declaration of `EventName` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
+// Forward declaration of `NitroAttributedString` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
+// Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
+// Forward declaration of `NitroImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 
 #include <functional>
 #include "EventName.hpp"
 #include <string>
 #include <NitroModules/Promise.hpp>
+#include "NitroAttributedString.hpp"
+#include <vector>
+#include "NitroAttributedStringImage.hpp"
+#include <optional>
+#include "NitroImage.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
@@ -76,6 +87,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline void setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) override {
+      auto __result = _swiftPart.setAttributedInactiveDescriptionVariants(clusterId, attributedInactiveDescriptionVariants);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
 
   private:

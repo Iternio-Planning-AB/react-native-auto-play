@@ -123,6 +123,35 @@ class Parser {
         return result
     }
 
+    static func parseAttributedStrings(
+        attributedStrings: [NitroAttributedString],
+        traitCollection: UITraitCollection
+    ) -> [NSAttributedString] {
+        return attributedStrings.map { variant in
+            let attributedString = NSMutableAttributedString(
+                string: variant.text
+            )
+            if let nitroImages = variant.images {
+                nitroImages.forEach { image in
+                    let attachment = NSTextAttachment(
+                        image: SymbolFont.imageFromNitroImage(
+                            image: image.image,
+                            traitCollection: traitCollection
+                        )!
+                    )
+                    let container = NSAttributedString(
+                        attachment: attachment
+                    )
+                    attributedString.insert(
+                        container,
+                        at: Int(image.position)
+                    )
+                }
+            }
+            return attributedString
+        }
+    }
+
     static func formatDistance(distance: Distance) -> String {
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
@@ -354,30 +383,11 @@ class Parser {
     ) -> CPManeuver {
         let maneuver = CPManeuver(id: nitroManeuver.id)
 
-        maneuver.attributedInstructionVariants = nitroManeuver
-            .attributedInstructionVariants.map { variant in
-                let attributedString = NSMutableAttributedString(
-                    string: variant.text
-                )
-                if let nitroImages = variant.images {
-                    nitroImages.forEach { image in
-                        let attachment = NSTextAttachment(
-                            image: SymbolFont.imageFromNitroImage(
-                                image: image.image,
-                                traitCollection: traitCollection
-                            )!
-                        )
-                        let container = NSAttributedString(
-                            attachment: attachment
-                        )
-                        attributedString.insert(
-                            container,
-                            at: Int(image.position)
-                        )
-                    }
-                }
-                return attributedString
-            }
+        maneuver.attributedInstructionVariants = parseAttributedStrings(
+            attributedStrings: nitroManeuver
+                .attributedInstructionVariants,
+            traitCollection: traitCollection
+        )
 
         maneuver.initialTravelEstimates = Parser.parseTravelEstiamtes(
             travelEstimates: nitroManeuver.travelEstimates

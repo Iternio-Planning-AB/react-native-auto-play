@@ -19,7 +19,7 @@ import com.facebook.proguard.annotations.DoNotStrip
 data class NitroManeuver(
   @DoNotStrip
   @Keep
-  val attributedInstructionVariants: Array<AttributedInstructionVariant>,
+  val attributedInstructionVariants: Array<NitroAttributedString>,
   @DoNotStrip
   @Keep
   val symbolImage: NitroImage,
@@ -83,7 +83,7 @@ data class NitroManeuver(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(attributedInstructionVariants: Array<AttributedInstructionVariant>, symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: Double, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
+    private fun fromCpp(attributedInstructionVariants: Array<NitroAttributedString>, symbolImage: NitroImage, junctionImage: NitroImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: Double, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
       return NitroManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, linkedLaneGuidance, cardBackgroundColor, id, travelEstimates, trafficSide, maneuverType, roadName, highwayExitLabel)
     }
   }

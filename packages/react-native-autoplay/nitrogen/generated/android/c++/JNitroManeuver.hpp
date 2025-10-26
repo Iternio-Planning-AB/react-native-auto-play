@@ -10,16 +10,12 @@
 #include <fbjni/fbjni.h>
 #include "NitroManeuver.hpp"
 
-#include "AttributedInstructionVariant.hpp"
-#include "AttributedInstructionVariantImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
 #include "ImageLane.hpp"
-#include "JAttributedInstructionVariant.hpp"
-#include "JAttributedInstructionVariantImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
@@ -29,6 +25,8 @@
 #include "JKeepType.hpp"
 #include "JLaneGuidance.hpp"
 #include "JManeuverType.hpp"
+#include "JNitroAttributedString.hpp"
+#include "JNitroAttributedStringImage.hpp"
 #include "JNitroImage.hpp"
 #include "JOffRampType.hpp"
 #include "JOnRampType.hpp"
@@ -40,6 +38,8 @@
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
 #include "ManeuverType.hpp"
+#include "NitroAttributedString.hpp"
+#include "NitroAttributedStringImage.hpp"
 #include "NitroImage.hpp"
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
@@ -71,8 +71,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     [[nodiscard]]
     NitroManeuver toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldAttributedInstructionVariants = clazz->getField<jni::JArrayClass<JAttributedInstructionVariant>>("attributedInstructionVariants");
-      jni::local_ref<jni::JArrayClass<JAttributedInstructionVariant>> attributedInstructionVariants = this->getFieldValue(fieldAttributedInstructionVariants);
+      static const auto fieldAttributedInstructionVariants = clazz->getField<jni::JArrayClass<JNitroAttributedString>>("attributedInstructionVariants");
+      jni::local_ref<jni::JArrayClass<JNitroAttributedString>> attributedInstructionVariants = this->getFieldValue(fieldAttributedInstructionVariants);
       static const auto fieldSymbolImage = clazz->getField<JNitroImage>("symbolImage");
       jni::local_ref<JNitroImage> symbolImage = this->getFieldValue(fieldSymbolImage);
       static const auto fieldJunctionImage = clazz->getField<JNitroImage>("junctionImage");
@@ -112,7 +112,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return NitroManeuver(
         [&]() {
           size_t __size = attributedInstructionVariants->size();
-          std::vector<AttributedInstructionVariant> __vector;
+          std::vector<NitroAttributedString> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             auto __element = attributedInstructionVariants->getElement(__i);
@@ -161,17 +161,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroManeuver::javaobject> fromCpp(const NitroManeuver& value) {
-      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JAttributedInstructionVariant>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, double, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
+      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JNitroAttributedString>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, double, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         [&]() {
           size_t __size = value.attributedInstructionVariants.size();
-          jni::local_ref<jni::JArrayClass<JAttributedInstructionVariant>> __array = jni::JArrayClass<JAttributedInstructionVariant>::newArray(__size);
+          jni::local_ref<jni::JArrayClass<JNitroAttributedString>> __array = jni::JArrayClass<JNitroAttributedString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.attributedInstructionVariants[__i];
-            __array->setElement(__i, *JAttributedInstructionVariant::fromCpp(__element));
+            __array->setElement(__i, *JNitroAttributedString::fromCpp(__element));
           }
           return __array;
         }(),

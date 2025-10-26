@@ -9,6 +9,12 @@
 
 // Forward declaration of `EventName` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
+// Forward declaration of `NitroAttributedString` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
+// Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
+// Forward declaration of `NitroImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 
 #include <functional>
 #include "JFunc_void.hpp"
@@ -18,6 +24,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; 
 #include "JEventName.hpp"
 #include <string>
 #include "JFunc_void_std__string.hpp"
+#include "NitroAttributedString.hpp"
+#include <vector>
+#include "JNitroAttributedString.hpp"
+#include "NitroAttributedStringImage.hpp"
+#include <optional>
+#include "JNitroAttributedStringImage.hpp"
+#include "NitroImage.hpp"
+#include "JNitroImage.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -74,6 +88,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       });
       return __promise;
     }();
+  }
+  void JHybridHybridClusterSpec::setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* clusterId */, jni::alias_ref<jni::JArrayClass<JNitroAttributedString>> /* attributedInactiveDescriptionVariants */)>("setAttributedInactiveDescriptionVariants");
+    method(_javaPart, jni::make_jstring(clusterId), [&]() {
+      size_t __size = attributedInactiveDescriptionVariants.size();
+      jni::local_ref<jni::JArrayClass<JNitroAttributedString>> __array = jni::JArrayClass<JNitroAttributedString>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = attributedInactiveDescriptionVariants[__i];
+        __array->setElement(__i, *JNitroAttributedString::fromCpp(__element));
+      }
+      return __array;
+    }());
   }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid

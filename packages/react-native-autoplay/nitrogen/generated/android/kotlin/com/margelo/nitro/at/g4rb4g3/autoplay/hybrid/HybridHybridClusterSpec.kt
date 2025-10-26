@@ -53,6 +53,10 @@ abstract class HybridHybridClusterSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun initRootView(clusterId: String): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setAttributedInactiveDescriptionVariants(clusterId: String, attributedInactiveDescriptionVariants: Array<NitroAttributedString>): Unit
 
   private external fun initHybrid(): HybridData
 
