@@ -1,6 +1,6 @@
 import {
+  AutoPlayCluster,
   CarPlayDashboard,
-  ClusterScene,
   HybridAutoPlay,
   MapTemplate,
   type RootComponentInitialProps,
@@ -10,7 +10,7 @@ import {
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
-import { AutoPlayCluster } from './AutoPlayCluster';
+import { Cluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
 import { AutoTrip } from './config/AutoTrip';
 import {
@@ -118,7 +118,6 @@ const registerRunnable = () => {
   const onConnect = () => {
     const rootTemplate = new MapTemplate({
       component: AutoPlayRoot,
-      id: 'AutoPlayRoot',
       visibleTravelEstimate: 'first',
       onWillAppear: () => console.log('AutoPlayRoot onWillAppear'),
       onDidAppear: () => console.log('AutoPlayRoot onDidAppear'),
@@ -144,8 +143,8 @@ const registerRunnable = () => {
   };
 
   CarPlayDashboard.setComponent(AutoPlayDashboard);
-  ClusterScene.setComponent(AutoPlayCluster);
-  ClusterScene.setAttributedInactiveDescriptionVariants([
+  AutoPlayCluster.setComponent(Cluster);
+  AutoPlayCluster.setAttributedInactiveDescriptionVariants([
     { text: 'Example', images: [{ image: { name: 'bolt' }, position: 0 }] },
   ]);
 

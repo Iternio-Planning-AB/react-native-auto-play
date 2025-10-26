@@ -1,5 +1,3 @@
-import type { MapTemplateId } from '../templates/MapTemplate';
-
 export type WindowInformation = {
   width: number;
   height: number;
@@ -14,7 +12,7 @@ export type RootComponentInitialProps = {
    * AutoPlayDashboard for the CarPlay dashboard (iOS only)
    * or a random uuid for cluster displays
    */
-  id: MapTemplateId;
+  id: string;
   /**
    * react-native rootTag
    */

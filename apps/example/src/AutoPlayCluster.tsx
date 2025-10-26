@@ -1,16 +1,16 @@
 import {
-  ClusterScene,
+  AutoPlayCluster,
   type RootComponentInitialProps,
   SafeAreaView,
 } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 
-export const AutoPlayCluster = (props: RootComponentInitialProps) => {
+export const Cluster = (props: RootComponentInitialProps) => {
   const [colorScheme, setColorScheme] = useState(props.colorScheme);
 
   useEffect(() => {
-    ClusterScene.addListenerColorScheme((clusterId, payload) => {
+    AutoPlayCluster.addListenerColorScheme((clusterId, payload) => {
       if (props.id !== clusterId) {
         return;
       }

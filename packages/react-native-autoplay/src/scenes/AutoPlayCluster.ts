@@ -108,4 +108,4 @@ class Cluster {
  * @namespace Android
  * @namespace iOS >= 15.4
  */
-export const ClusterScene = new Cluster();
+export const AutoPlayCluster = new Cluster();

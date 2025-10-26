@@ -22,8 +22,8 @@ export const HybridMessageTemplate =
 export * from './components/SafeAreaView';
 export * from './hooks/useMapTemplate';
 export * from './hooks/useSafeAreaInsets';
+export * from './scenes/AutoPlayCluster';
 export * from './scenes/CarPlayDashboardScene';
-export * from './scenes/ClusterScene';
 export * from './templates/GridTemplate';
 export * from './templates/ListTemplate';
 export * from './templates/MapTemplate';
