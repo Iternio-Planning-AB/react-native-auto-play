@@ -29,8 +29,12 @@ object AndroidAutoTelemetryObserver {
 
     private val mModelListener = OnCarDataAvailableListener<Model> {
         telemetryHolder.updateVehicle(it)
-        telemetryCallbacks.forEach { callback ->
-            callback(telemetryHolder.toTelemetry(), null)
+
+        val tlm = telemetryHolder.toTelemetry()
+        tlm?.let {
+            telemetryCallbacks.forEach { callback ->
+                callback(tlm, null)
+            }
         }
     }
 
