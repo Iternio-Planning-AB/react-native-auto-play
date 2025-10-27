@@ -107,14 +107,6 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun startAndroidAutoTelemetry(): Promise<Unit>
-  
-  @DoNotStrip
-  @Keep
-  abstract fun stopAndroidAutoTelemetry(): Unit
-  
-  @DoNotStrip
-  @Keep
   abstract fun isConnected(): Boolean
 
   private external fun initHybrid(): HybridData

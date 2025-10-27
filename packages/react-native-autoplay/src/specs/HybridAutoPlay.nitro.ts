@@ -78,18 +78,6 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
   setTemplateHeaderActions(templateId: string, headerActions?: Array<NitroAction>): void;
 
   /**
-   * Register a listener for Android Auto telemetry data. Should be registered only after the telemetry permissions are granted as it starts the telemetry listener on the native side.
-   * @param callback the callback to receive the telemetry data
-   * @returns a promise that resolves when the telemetry listener is successfully started
-   */
-  startAndroidAutoTelemetry(): Promise<void>;
-
-  /**
-   * Stop the Android Auto telemetry listener.
-   */
-  stopAndroidAutoTelemetry(): void;
-
-  /**
    * Check if Android Auto is connected.
    * @returns true if Android Auto is connected, false otherwise.
    */

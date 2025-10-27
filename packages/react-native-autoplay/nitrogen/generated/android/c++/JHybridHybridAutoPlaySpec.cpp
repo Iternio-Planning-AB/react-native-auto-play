@@ -240,25 +240,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __array;
     }() : nullptr);
   }
-  std::shared_ptr<Promise<void>> JHybridHybridAutoPlaySpec::startAndroidAutoTelemetry() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startAndroidAutoTelemetry");
-    auto __result = method(_javaPart);
-    return [&]() {
-      auto __promise = Promise<void>::create();
-      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
-        __promise->resolve();
-      });
-      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
-        jni::JniException __jniError(__throwable);
-        __promise->reject(std::make_exception_ptr(__jniError));
-      });
-      return __promise;
-    }();
-  }
-  void JHybridHybridAutoPlaySpec::stopAndroidAutoTelemetry() {
-    static const auto method = javaClassStatic()->getMethod<void()>("stopAndroidAutoTelemetry");
-    method(_javaPart);
-  }
   bool JHybridHybridAutoPlaySpec::isConnected() {
     static const auto method = javaClassStatic()->getMethod<jboolean()>("isConnected");
     auto __result = method(_javaPart);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { type Permission, PermissionsAndroid } from 'react-native';
-import { HybridAutoPlay } from '..';
+import { HybridAndroidAutoTelemetry, HybridAutoPlay } from '..';
 import type { AndroidAutoPermissions, Telemetry } from '../types/Telemetry';
 
 interface Props {
@@ -64,14 +64,12 @@ export const useAndroidAutoTelemetry = ({
       return;
     }
 
-    HybridAutoPlay.startAndroidAutoTelemetry().catch(() => {});
-    const remove = HybridAutoPlay.addListenerTelemetry((tlm: Telemetry | null) => {
+    const remove = HybridAndroidAutoTelemetry.registerTelemetryListener((tlm: Telemetry | null) => {
       setTelemetry(tlm);
     });
 
     return () => {
       remove();
-      HybridAutoPlay.stopAndroidAutoTelemetry();
     };
   }, [isConnected, permissionsGranted]);
 

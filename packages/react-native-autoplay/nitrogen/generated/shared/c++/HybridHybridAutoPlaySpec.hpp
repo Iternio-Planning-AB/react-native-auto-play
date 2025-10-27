@@ -76,8 +76,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       virtual std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) = 0;
       virtual std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) = 0;
       virtual void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) = 0;
-      virtual std::shared_ptr<Promise<void>> startAndroidAutoTelemetry() = 0;
-      virtual void stopAndroidAutoTelemetry() = 0;
       virtual bool isConnected() = 0;
 
     protected:

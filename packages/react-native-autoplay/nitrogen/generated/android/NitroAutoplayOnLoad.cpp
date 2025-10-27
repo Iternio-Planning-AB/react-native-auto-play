@@ -15,10 +15,11 @@
 #include <fbjni/fbjni.h>
 #include <NitroModules/HybridObjectRegistry.hpp>
 
-#include "JHybridHybridAutoPlaySpec.hpp"
+#include "JHybridHybridAndroidAutoTelemetrySpec.hpp"
 #include "JFunc_void.hpp"
-#include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_std__optional_Telemetry_.hpp"
+#include "JHybridHybridAutoPlaySpec.hpp"
+#include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JHybridHybridGridTemplateSpec.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
@@ -42,10 +43,11 @@ int initialize(JavaVM* vm) {
 
   return facebook::jni::initialize(vm, [] {
     // Register native JNI methods
-    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridAutoPlaySpec::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridAndroidAutoTelemetrySpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_cxx::registerNatives();
-    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_VisibilityState_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__optional_Telemetry__cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridAutoPlaySpec::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_VisibilityState_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_SafeAreaInsets_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridGridTemplateSpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__optional_bool__cxx::registerNatives();

@@ -174,20 +174,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline std::shared_ptr<Promise<void>> startAndroidAutoTelemetry() override {
-      auto __result = _swiftPart.startAndroidAutoTelemetry();
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-      auto __value = std::move(__result.value());
-      return __value;
-    }
-    inline void stopAndroidAutoTelemetry() override {
-      auto __result = _swiftPart.stopAndroidAutoTelemetry();
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
     inline bool isConnected() override {
       auto __result = _swiftPart.isConnected();
       if (__result.hasError()) [[unlikely]] {
