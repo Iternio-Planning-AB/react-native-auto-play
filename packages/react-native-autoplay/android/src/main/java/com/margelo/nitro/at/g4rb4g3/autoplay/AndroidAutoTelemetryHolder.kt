@@ -31,17 +31,17 @@ class AndroidAutoTelemetryHolder {
     private var year: Int? = null;
 
     fun updateVehicle(model: Model) = synchronized(lock) {
-            name = if (model.name.status == CarValue.STATUS_SUCCESS) {
-                model.name.value ?: null
-            } else null
+        name = if (model.name.status == CarValue.STATUS_SUCCESS) {
+            model.name.value ?: null
+        } else null
 
-            manufacturer = if (model.manufacturer.status == CarValue.STATUS_SUCCESS) {
-                model.manufacturer.value ?: null
-            } else null
+        manufacturer = if (model.manufacturer.status == CarValue.STATUS_SUCCESS) {
+            model.manufacturer.value ?: null
+        } else null
 
-            year = if (model.year.status == CarValue.STATUS_SUCCESS) {
-                model.year.value ?: null
-            } else null
+        year = if (model.year.status == CarValue.STATUS_SUCCESS) {
+            model.year.value ?: null
+        } else null
 
         isDirty = true
     }
@@ -91,9 +91,9 @@ class AndroidAutoTelemetryHolder {
                 speed = createNumericTelemetryItem(speed, speedTimestamp),
                 odometer = createNumericTelemetryItem(odometer, odometerTimestamp),
                 vehicle = VehicleTelemetryItem(
-                    name = createStringTelemetryItem(name, 0) ?: null,
-                    manufacturer = createStringTelemetryItem(manufacturer, 0) ?: null,
-                    year = createNumericTelemetryItem(year?.toFloat(), 0) ?: null
+                    name = createStringTelemetryItem(name, 0),
+                    manufacturer = createStringTelemetryItem(manufacturer, 0),
+                    year = createNumericTelemetryItem(year?.toFloat(), 0)
                 )
             )
         }
