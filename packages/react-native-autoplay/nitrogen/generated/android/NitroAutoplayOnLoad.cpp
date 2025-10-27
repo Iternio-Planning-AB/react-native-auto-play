@@ -71,6 +71,14 @@ int initialize(JavaVM* vm) {
       }
     );
     HybridObjectRegistry::registerHybridObjectConstructor(
+      "HybridAndroidAutoTelemetry",
+      []() -> std::shared_ptr<HybridObject> {
+        static DefaultConstructableObject<JHybridHybridAndroidAutoTelemetrySpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridAndroidAutoTelemetry");
+        auto instance = object.create();
+        return instance->cthis()->shared();
+      }
+    );
+    HybridObjectRegistry::registerHybridObjectConstructor(
       "HybridListTemplate",
       []() -> std::shared_ptr<HybridObject> {
         static DefaultConstructableObject<JHybridHybridListTemplateSpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridListTemplate");
