@@ -17,8 +17,6 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibilityState; }
-// Forward declaration of `Telemetry` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -28,9 +26,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 #include "EventName.hpp"
 #include <string>
 #include "VisibilityState.hpp"
-#include "Telemetry.hpp"
-#include <optional>
 #include <NitroModules/Promise.hpp>
+#include <optional>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
 #include <vector>
@@ -68,7 +65,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       // Methods
       virtual std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) = 0;
       virtual std::function<void()> addListenerRenderState(const std::string& mapTemplateId, const std::function<void(VisibilityState /* payload */)>& callback) = 0;
-      virtual std::function<void()> addListenerTelemetry(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) = 0;
       virtual std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> popTemplate(std::optional<bool> animate) = 0;

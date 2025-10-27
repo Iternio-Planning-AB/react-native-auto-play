@@ -19,6 +19,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Telemetry; }
 #include <functional>
 #include "Telemetry.hpp"
 #include <optional>
+#include <string>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -51,7 +52,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
     public:
       // Methods
-      virtual std::function<void()> registerTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) = 0;
+      virtual std::function<void()> registerTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */, const std::optional<std::string>& /* error */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

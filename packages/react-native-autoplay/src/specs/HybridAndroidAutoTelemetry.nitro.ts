@@ -6,7 +6,11 @@ export interface HybridAndroidAutoTelemetry extends HybridObject<{ android: 'kot
   /**
    * Register a listener for Android Auto telemetry data. Should be registered only after the telemetry permissions are granted otherwise no data will be received.
    * @param callback the callback to receive the telemetry data
+   * @param error the error message if the telemetry listener failed to start
    * @returns callback to remove the listener
+   * @namespace Android
    */
-  registerTelemetryListener(callback: (tlm: Telemetry | null) => void): CleanupCallback;
+  registerTelemetryListener(
+    callback: (tlm: Telemetry | null, error: string | null) => void
+  ): CleanupCallback;
 }

@@ -18,7 +18,8 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.Telemetry
 import com.margelo.nitro.autoplay.BuildConfig
 
 object AndroidAutoTelemetryObserver {
-    private var telemetryCallbacks: MutableList<(Telemetry?) -> Unit> = ArrayList();
+    private var telemetryCallbacks: MutableList<(telemetry: Telemetry?, error: String?) -> Unit> =
+        ArrayList();
 
     private var isRunning = false
     private var carContext: CarContext? = null
@@ -29,7 +30,7 @@ object AndroidAutoTelemetryObserver {
     private val mModelListener = OnCarDataAvailableListener<Model> {
         telemetryHolder.updateVehicle(it)
         telemetryCallbacks.forEach { callback ->
-            callback(telemetryHolder.toTelemetry())
+            callback(telemetryHolder.toTelemetry(), null)
         }
     }
 
@@ -67,7 +68,7 @@ object AndroidAutoTelemetryObserver {
 
             if (tlm != null) {
                 telemetryCallbacks.forEach { callback ->
-                    callback(tlm)
+                    callback(tlm, null)
                 }
             }
 
@@ -75,22 +76,39 @@ object AndroidAutoTelemetryObserver {
         }
     }
 
-    fun addListener(callback: (Telemetry?) -> Unit): () -> Unit {
+    fun addListener(callback: (Telemetry?, String?) -> Unit): () -> Unit {
         telemetryCallbacks.add(callback)
 
-         return {
-             telemetryCallbacks.remove(callback)
+
+        // start is called every time a new listener is registered, so the single shot values are still requested and returned immediately
+        try {
+            startTelemetryObserver()
+        } catch (err: Exception) {
+            callback(null, err.message)
+        }
+
+
+        return {
+            telemetryCallbacks.remove(callback)
+            if (telemetryCallbacks.size === 0) {
+                stopTelemetryObserver()
+            }
         }
     }
 
 
     fun startTelemetryObserver(
-        carContext: CarContext
     ) {
+        val carContext =
+            AndroidAutoSession.Companion.getCarContext(AndroidAutoSession.Companion.ROOT_SESSION)
+                ?: throw IllegalArgumentException(
+                    "Car context not available, failed to start telemetry"
+                )
+
+
         AndroidAutoTelemetryObserver.carContext = carContext
         if (carContext.carAppApiLevel < CarAppApiLevels.LEVEL_3) {
             throw UnsupportedOperationException("Telemetry not supported for this API level ${carContext.carAppApiLevel}")
-            return
         }
 
         val carHardwareExecutor = ContextCompat.getMainExecutor(carContext)
@@ -109,7 +127,10 @@ object AndroidAutoTelemetryObserver {
 
         if (isRunning) {
             // we stop here to not re-register multiple listeners, only the single shot values can be requested multiple times by registering another tlm listener on RN side
-            Log.d(AndroidAutoTelemetryObserver.javaClass.name, "Telemetry observer is already running")
+            Log.d(
+                AndroidAutoTelemetryObserver.javaClass.name,
+                "Telemetry observer is already running"
+            )
             return
         }
 

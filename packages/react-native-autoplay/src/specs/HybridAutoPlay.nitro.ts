@@ -1,7 +1,6 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { TemplateConfig } from '../templates/Template';
 import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
-import type { Telemetry } from '../types/Telemetry';
 import type { NitroAction } from '../utils/NitroAction';
 
 export interface NitroTemplateConfig extends TemplateConfig {
@@ -27,12 +26,6 @@ export interface HybridAutoPlay extends HybridObject<{ android: 'kotlin'; ios: '
     mapTemplateId: string,
     callback: (payload: VisibilityState) => void
   ): CleanupCallback;
-
-  /**
-   * adds a listener for  Android Auto telemetry data
-   * @param callback
-   */
-  addListenerTelemetry(callback: (tlm: Telemetry | null) => void): CleanupCallback;
 
   /**
    * sets the specified template as root template, initializes a new stack
