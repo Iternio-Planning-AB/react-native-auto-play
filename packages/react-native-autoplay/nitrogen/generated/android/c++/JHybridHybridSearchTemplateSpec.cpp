@@ -9,16 +9,6 @@
 
 // Forward declaration of `SearchTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SearchTemplateConfig; }
-// Forward declaration of `NitroAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
-// Forward declaration of `NitroActionType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
-// Forward declaration of `NitroAlignment` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
-// Forward declaration of `AlertActionStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `Distance` to properly resolve imports.
@@ -29,6 +19,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUni
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroSection; }
 // Forward declaration of `NitroRow` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRow; }
+// Forward declaration of `NitroImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectionType; }
 
@@ -39,17 +31,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectio
 #include <functional>
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void.hpp"
-#include "NitroAction.hpp"
-#include <vector>
-#include "JNitroAction.hpp"
-#include "NitroImage.hpp"
-#include "JNitroImage.hpp"
-#include "NitroActionType.hpp"
-#include "JNitroActionType.hpp"
-#include "NitroAlignment.hpp"
-#include "JNitroAlignment.hpp"
-#include "AlertActionStyle.hpp"
-#include "JAlertActionStyle.hpp"
 #include "AutoText.hpp"
 #include "JAutoText.hpp"
 #include "Distance.hpp"
@@ -59,7 +40,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectio
 #include "NitroSection.hpp"
 #include "JNitroSection.hpp"
 #include "NitroRow.hpp"
+#include <vector>
 #include "JNitroRow.hpp"
+#include "NitroImage.hpp"
+#include "JNitroImage.hpp"
 #include "NitroSectionType.hpp"
 #include "JNitroSectionType.hpp"
 #include "JFunc_void_std__string.hpp"

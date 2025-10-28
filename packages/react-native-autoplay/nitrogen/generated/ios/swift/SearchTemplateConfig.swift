@@ -18,7 +18,7 @@ public extension SearchTemplateConfig {
   /**
    * Create a new instance of `SearchTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, headerActions: [NitroAction]?, title: AutoText, results: NitroSection?, initialSearchText: String?, searchHint: String?, onSearchTextChanged: ((_ searchText: String) -> Void)?, onSearchTextSubmitted: ((_ searchText: String) -> Void)?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, title: AutoText, results: NitroSection?, initialSearchText: String?, searchHint: String?, onSearchTextChanged: ((_ searchText: String) -> Void)?, onSearchTextSubmitted: ((_ searchText: String) -> Void)?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -60,18 +60,6 @@ public extension SearchTemplateConfig {
         return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
           let __closureWrapper = Func_void(__unwrappedValue)
           return bridge.create_Func_void(__closureWrapper.toUnsafe())
-        }())
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_std__vector_NitroAction__ in
-      if let __unwrappedValue = headerActions {
-        return bridge.create_std__optional_std__vector_NitroAction__({ () -> bridge.std__vector_NitroAction_ in
-          var __vector = bridge.create_std__vector_NitroAction_(__unwrappedValue.count)
-          for __item in __unwrappedValue {
-            __vector.push_back(__item)
-          }
-          return __vector
         }())
       } else {
         return .init()
@@ -302,36 +290,6 @@ public extension SearchTemplateConfig {
           return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
             let __closureWrapper = Func_void(__unwrappedValue)
             return bridge.create_Func_void(__closureWrapper.toUnsafe())
-          }())
-        } else {
-          return .init()
-        }
-      }()
-    }
-  }
-  
-  var headerActions: [NitroAction]? {
-    @inline(__always)
-    get {
-      return { () -> [NitroAction]? in
-        if bridge.has_value_std__optional_std__vector_NitroAction__(self.__headerActions) {
-          let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(self.__headerActions)
-          return __unwrapped.map({ __item in __item })
-        } else {
-          return nil
-        }
-      }()
-    }
-    @inline(__always)
-    set {
-      self.__headerActions = { () -> bridge.std__optional_std__vector_NitroAction__ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__vector_NitroAction__({ () -> bridge.std__vector_NitroAction_ in
-            var __vector = bridge.create_std__vector_NitroAction_(__unwrappedValue.count)
-            for __item in __unwrappedValue {
-              __vector.push_back(__item)
-            }
-            return __vector
           }())
         } else {
           return .init()
