@@ -29,28 +29,27 @@ class AndroidAutoTelemetryHolder {
 
     private var name: String? = null
     private var manufacturer: String? = null
-    private var year: Int? = null;
+    private var year: Int? = null
 
     fun updateVehicle(model: Model) = synchronized(lock) {
         name = if (model.name.status == CarValue.STATUS_SUCCESS) {
-            model.name.value ?: null
+            model.name.value
         } else null
 
         manufacturer = if (model.manufacturer.status == CarValue.STATUS_SUCCESS) {
-            model.manufacturer.value ?: null
+            model.manufacturer.value
         } else null
 
         year = if (model.year.status == CarValue.STATUS_SUCCESS) {
-            model.year.value ?: null
+            model.year.value
         } else null
 
         isDirty = true
     }
 
     fun updateBatteryLevel(value: Float) = synchronized(lock) {
-        if (abs(batteryLevel ?: -1.0f) === abs(value)) {
-            // only update soc, if it actually changes
-            return;
+        if (batteryLevel == value) {
+            return
         }
 
         batteryLevel = value
@@ -59,9 +58,8 @@ class AndroidAutoTelemetryHolder {
     }
 
     fun updateFuelLevel(value: Float) = synchronized(lock) {
-        if (abs(fuelLevel ?: -1.0f) === abs(value)) {
-            // only update soc, if it actually changes
-            return;
+        if (fuelLevel == value) {
+            return
         }
 
         fuelLevel = value
@@ -70,8 +68,8 @@ class AndroidAutoTelemetryHolder {
     }
 
     fun updateRange(value: Float) = synchronized(lock) {
-        if (abs(range ?: -1.0f) === abs(value)) {
-            return;
+        if (range == value) {
+            return
         }
 
         range = value
@@ -80,12 +78,20 @@ class AndroidAutoTelemetryHolder {
     }
 
     fun updateSpeed(value: Float?) = synchronized(lock) {
+        if (speed == value) {
+            return
+        }
+
         speed = value
         speedTimestamp = (System.currentTimeMillis() / 1000L).toInt()
         isDirty = true
     }
 
     fun updateOdometer(value: Float?) = synchronized(lock) {
+        if (odometer == value) {
+            return
+        }
+
         odometer = value
         odometerTimestamp = (System.currentTimeMillis() / 1000L).toInt()
         isDirty = true
@@ -106,8 +112,8 @@ class AndroidAutoTelemetryHolder {
                 speed = createNumericTelemetryItem(speed, speedTimestamp),
                 odometer = createNumericTelemetryItem(odometer, odometerTimestamp),
                 vehicle = VehicleTelemetryItem(
-                    name = createStringTelemetryItem(name, 0),
-                    manufacturer = createStringTelemetryItem(manufacturer, 0),
+                    name = createStringTelemetryItem(name),
+                    manufacturer = createStringTelemetryItem(manufacturer),
                     year = createNumericTelemetryItem(year?.toFloat(), 0)
                 )
             )
@@ -123,10 +129,10 @@ private fun createNumericTelemetryItem(value: Float?, timestamp: Int?): NumericT
     return NumericTelemetryItem(timestamp.toDouble(), value.toDouble())
 }
 
-private fun createStringTelemetryItem(value: String?, timestamp: Int?): StringTelemetryItem? {
-    if (value == null || timestamp == null) {
+private fun createStringTelemetryItem(value: String?): StringTelemetryItem? {
+    if (value == null) {
         return null
     }
 
-    return StringTelemetryItem(timestamp.toDouble(), value)
+    return StringTelemetryItem(0.0, value)
 }

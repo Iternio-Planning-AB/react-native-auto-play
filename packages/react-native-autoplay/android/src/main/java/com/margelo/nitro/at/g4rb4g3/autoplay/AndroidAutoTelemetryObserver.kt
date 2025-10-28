@@ -100,7 +100,7 @@ object AndroidAutoTelemetryObserver {
 
         return {
             telemetryCallbacks.remove(callback)
-            if (telemetryCallbacks.size === 0) {
+            if (telemetryCallbacks.isEmpty()) {
                 stopTelemetryObserver()
             }
         }

@@ -51,7 +51,7 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
         val screenManager = AndroidAutoScreen.Companion.getScreenManager()
             ?: throw IllegalArgumentException("hideTripSelector failed, screenManager not found")
         val screens = screenManager.screenStack.filter {
-            it.marker == TripPreviewTemplate.Companion.TAG || it.marker === RoutePreviewTemplate.Companion.TAG
+            it.marker == TripPreviewTemplate.Companion.TAG || it.marker == RoutePreviewTemplate.Companion.TAG
         }
 
         UiThreadUtil.runOnUiThread {
