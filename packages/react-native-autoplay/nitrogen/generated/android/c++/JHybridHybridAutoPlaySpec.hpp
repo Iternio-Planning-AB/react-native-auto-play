@@ -62,6 +62,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) override;
     std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) override;
     void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
+    bool isConnected() override;
 
   private:
     friend HybridBase;

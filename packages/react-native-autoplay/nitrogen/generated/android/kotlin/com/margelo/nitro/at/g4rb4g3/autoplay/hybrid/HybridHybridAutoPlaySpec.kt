@@ -95,6 +95,10 @@ abstract class HybridHybridAutoPlaySpec: HybridObject() {
     val __result = setTemplateHeaderActions(templateId, headerActions?.let { it })
     return __result
   }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun isConnected(): Boolean
 
   private external fun initHybrid(): HybridData
 

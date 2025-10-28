@@ -64,6 +64,7 @@ android {
     }
 
     buildConfigField "float", "SCALE_FACTOR", getExtOrDefault("androidAutoScaleFactor")
+    buildConfigField "long", "TELEMETRY_UPDATE_INTERVAL", getExtOrDefault("androidTelemetryUpdateInterval")
   }
 
   externalNativeBuild {

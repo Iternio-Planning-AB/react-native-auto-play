@@ -154,6 +154,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
+    inline bool isConnected() override {
+      auto __result = _swiftPart.isConnected();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
 
   private:
     NitroAutoplay::HybridHybridAutoPlaySpec_cxx _swiftPart;

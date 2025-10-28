@@ -1,10 +1,11 @@
 import { type CleanupCallback, HybridAutoPlay } from '@g4rb4g3/react-native-autoplay';
 import { useEffect, useState } from 'react';
-import { Button, StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
+import { Button, Platform, StatusBar, StyleSheet, Text, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AutoTrip } from './config/AutoTrip';
 import { actionStartNavigation, actionStopNavigation } from './state/navigationSlice';
 import { useAppDispatch, useAppSelector } from './state/store';
+import { TelemetryView } from './TelemetryView';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,7 +24,7 @@ function AppContent() {
   const isNavigating = useAppSelector((state) => state.navigation.isNavigating);
   const selectedTrip = useAppSelector((state) => state.navigation.selectedTrip);
 
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(HybridAutoPlay.isConnected());
   const [isRootVisible, setIsRootVisible] = useState(false);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ function AppContent() {
       <Text>Head unit root visible: {String(isRootVisible)}</Text>
       <Text>isNavigating: {String(isNavigating)}</Text>
       <Text>selectedTrip: {JSON.stringify(selectedTrip)}</Text>
+      {Platform.OS === 'android' ? <TelemetryView /> : null}
       {isNavigating ? (
         <Button
           title="stop navigation"
@@ -77,6 +79,7 @@ function AppContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff',
   },
 });
 

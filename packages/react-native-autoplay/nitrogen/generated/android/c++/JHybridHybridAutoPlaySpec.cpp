@@ -208,5 +208,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __array;
     }() : nullptr);
   }
+  bool JHybridHybridAutoPlaySpec::isConnected() {
+    static const auto method = javaClassStatic()->getMethod<jboolean()>("isConnected");
+    auto __result = method(_javaPart);
+    return static_cast<bool>(__result);
+  }
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid

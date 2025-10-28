@@ -13,6 +13,9 @@
       "kotlin": "HybridAutoPlay",
       "swift": "HybridAutoPlay"
     },
+    "HybridAndroidAutoTelemetry": {
+      "kotlin": "HybridAndroidAutoTelemetry"
+    },
     "HybridListTemplate": {
       "kotlin": "HybridListTemplate",
       "swift": "HybridListTemplate"

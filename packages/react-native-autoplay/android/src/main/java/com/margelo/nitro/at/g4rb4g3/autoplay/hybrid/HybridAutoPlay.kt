@@ -23,6 +23,10 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
         }
     }
 
+    override fun isConnected(): Boolean {
+        return AndroidAutoSession.getIsConnected()
+    }
+
     override fun addListenerRenderState(
         mapTemplateId: String, callback: (VisibilityState) -> Unit
     ): () -> Unit {

@@ -15,6 +15,7 @@ import {
   setSelectedTrip,
 } from './state/navigationSlice';
 import { startAppListening } from './state/store';
+import { TelemetryView } from './TelemetryView';
 import {
   AutoTemplate,
   estimatesUpdate,
@@ -104,6 +105,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       </Text>
       <Text>{JSON.stringify(props.window)}</Text>
       <Text>Running as {props.id}</Text>
+      {Platform.OS === 'android' ? <TelemetryView /> : null}
     </SafeAreaView>
   );
 };

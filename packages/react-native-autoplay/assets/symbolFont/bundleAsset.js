@@ -32,13 +32,17 @@ fs.writeFileSync(`${__dirname}/../../src/types/Glyphmap.ts`, linesOut.join('\n')
 console.log('glyphmap.ts written!');
 
 fs.rmSync(OutDirIos, { recursive: true, force: true });
-fs.mkdir(OutDirIos, () => {});
-fs.copyFile(`${__dirname}/${FontName}.ttf`, `${OutDirIos}/${FontName}.ttf`, () => {});
+fs.mkdirSync(OutDirIos);
+fs.copyFileSync(
+  `${__dirname}/${FontName}.ttf`,
+  `${OutDirIos}/${FontName}.ttf`,
+  fs.constants.COPYFILE_EXCL
+);
 
 fs.rmSync(OutDirAndroid, { recursive: true, force: true });
-fs.mkdir(OutDirAndroid, () => {});
-fs.copyFile(
+fs.mkdirSync(OutDirAndroid);
+fs.copyFileSync(
   `${__dirname}/${FontName}.ttf`,
   `${OutDirAndroid}/${FontName.toLowerCase().replaceAll('-', '_')}.ttf`,
-  () => {}
+  fs.constants.COPYFILE_EXCL
 );

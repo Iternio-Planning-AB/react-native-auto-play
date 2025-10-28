@@ -52,6 +52,10 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
             }
         }
     }
+    
+    func isConnected() throws -> Bool {
+        return SceneStore.isRootModuleConnected()
+    }
 
     func addSafeAreaInsetsListener(
         moduleName: String,
