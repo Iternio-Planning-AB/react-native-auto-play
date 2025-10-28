@@ -13,6 +13,7 @@
 #include "HybridHybridListTemplateSpecSwift.hpp"
 #include "HybridHybridMapTemplateSpecSwift.hpp"
 #include "HybridHybridMessageTemplateSpecSwift.hpp"
+#include "HybridHybridSearchTemplateSpecSwift.hpp"
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
@@ -182,6 +183,22 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     }
     #endif
     NitroAutoplay::HybridHybridMessageTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridSearchTemplateSpec>
+  std::shared_ptr<HybridHybridSearchTemplateSpec> create_std__shared_ptr_HybridHybridSearchTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    NitroAutoplay::HybridHybridSearchTemplateSpec_cxx swiftPart = NitroAutoplay::HybridHybridSearchTemplateSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridSearchTemplateSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridHybridSearchTemplateSpec_(std__shared_ptr_HybridHybridSearchTemplateSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridSearchTemplateSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::HybridHybridSearchTemplateSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridHybridSearchTemplateSpec\" is not implemented in Swift!");
+    }
+    #endif
+    NitroAutoplay::HybridHybridSearchTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
 

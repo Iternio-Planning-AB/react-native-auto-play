@@ -32,6 +32,7 @@
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
 #include "JHybridHybridMessageTemplateSpec.hpp"
+#include "JHybridHybridSearchTemplateSpec.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -60,6 +61,7 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_AlertDismissalReason_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_std__string_std__string_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridMessageTemplateSpec::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridSearchTemplateSpec::registerNatives();
 
     // Register Nitro Hybrid Objects
     HybridObjectRegistry::registerHybridObjectConstructor(
@@ -106,6 +108,14 @@ int initialize(JavaVM* vm) {
       "HybridMessageTemplate",
       []() -> std::shared_ptr<HybridObject> {
         static DefaultConstructableObject<JHybridHybridMessageTemplateSpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridMessageTemplate");
+        auto instance = object.create();
+        return instance->cthis()->shared();
+      }
+    );
+    HybridObjectRegistry::registerHybridObjectConstructor(
+      "HybridSearchTemplate",
+      []() -> std::shared_ptr<HybridObject> {
+        static DefaultConstructableObject<JHybridHybridSearchTemplateSpec::javaobject> object("com/margelo/nitro/at/g4rb4g3/autoplay/hybrid/HybridSearchTemplate");
         auto instance = object.create();
         return instance->cthis()->shared();
       }
