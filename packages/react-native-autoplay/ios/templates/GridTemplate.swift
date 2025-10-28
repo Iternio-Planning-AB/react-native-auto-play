@@ -15,11 +15,11 @@ class GridTemplate: AutoPlayTemplate {
 
         let template = CPGridTemplate(
             title: Parser.parseText(text: config.title),
-            gridButtons: []
+            gridButtons: [],
+            id: config.id
         )
 
         super.init(
-            templateId: config.id,
             template: template,
             header: config.headerActions
         )
@@ -45,7 +45,8 @@ class GridTemplate: AutoPlayTemplate {
                 titleVariants: [Parser.parseText(text: button.title)!],
                 image: SymbolFont.imageFromNitroImage(
                     image: button.image,
-                    size: gridButtonHeight
+                    size: gridButtonHeight,
+                    traitCollection: traitCollection
                 )!
             ) { _ in
                 button.onPress()

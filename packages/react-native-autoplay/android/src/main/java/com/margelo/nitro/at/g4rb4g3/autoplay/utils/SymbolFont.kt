@@ -84,15 +84,31 @@ object SymbolFont {
         val backgroundColor = image.backgroundColor?.toInt() ?: android.graphics.Color.WHITE
 
         return imageFromGlyph(
-            context = context,
-            glyph = image.glyph,
-            color = color,
-            backgroundColor = backgroundColor
+            context = context, glyph = image.glyph, color = color, backgroundColor = backgroundColor
         )!!
     }
 
     fun iconFromNitroImage(context: CarContext, image: NitroImage): IconCompat {
         val bitmap = imageFromNitroImage(context, image)
+
+        return IconCompat.createWithBitmap(bitmap)
+    }
+
+    fun imageFromNitroImages(
+        context: CarContext, images: List<NitroImage>
+    ): IconCompat {
+        val bitmaps = images.map { imageFromNitroImage(context, it) }
+
+        val height = bitmaps.maxOf { it.height }
+        val width = bitmaps.maxOf { it.width }
+        val totalWidth = width * images.size
+
+        val bitmap = createBitmap(totalWidth, height)
+        val canvas = Canvas(bitmap)
+
+        bitmaps.forEachIndexed { index, it ->
+            canvas.drawBitmap(it, (index * width).toFloat(), 0f, null)
+        }
 
         return IconCompat.createWithBitmap(bitmap)
     }

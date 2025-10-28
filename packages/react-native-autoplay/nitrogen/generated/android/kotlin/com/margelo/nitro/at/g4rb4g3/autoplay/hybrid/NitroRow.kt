@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,35 +16,39 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroRow
+data class NitroRow(
   @DoNotStrip
   @Keep
-  constructor(
+  val title: AutoText,
+  @DoNotStrip
+  @Keep
+  val detailedText: AutoText?,
+  @DoNotStrip
+  @Keep
+  val browsable: Boolean?,
+  @DoNotStrip
+  @Keep
+  val enabled: Boolean,
+  @DoNotStrip
+  @Keep
+  val image: NitroImage?,
+  @DoNotStrip
+  @Keep
+  val checked: Boolean?,
+  @DoNotStrip
+  @Keep
+  val onPress: (checked: Boolean?) -> Unit
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val title: AutoText,
-    @DoNotStrip
-    @Keep
-    val detailedText: AutoText?,
-    @DoNotStrip
-    @Keep
-    val browsable: Boolean?,
-    @DoNotStrip
-    @Keep
-    val enabled: Boolean,
-    @DoNotStrip
-    @Keep
-    val image: NitroImage?,
-    @DoNotStrip
-    @Keep
-    val checked: Boolean?,
-    @DoNotStrip
-    @Keep
-    val onPress: Func_void_std__optional_bool_
-  ) {
-  /**
-   * Initialize a new instance of `NitroRow` from Kotlin.
-   */
-  constructor(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: NitroImage?, checked: Boolean?, onPress: (checked: Boolean?) -> Unit)
-       : this(title, detailedText, browsable, enabled, image, checked, Func_void_std__optional_bool__java(onPress))
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: NitroImage?, checked: Boolean?, onPress: Func_void_std__optional_bool_): NitroRow {
+      return NitroRow(title, detailedText, browsable, enabled, image, checked, onPress)
+    }
+  }
 }

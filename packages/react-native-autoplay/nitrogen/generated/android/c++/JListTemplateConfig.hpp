@@ -163,7 +163,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JListTemplateConfig::javaobject> fromCpp(const ListTemplateConfig& value) {
-      return newInstance(
+      using JSignature = JListTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroSection>>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.id),
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,

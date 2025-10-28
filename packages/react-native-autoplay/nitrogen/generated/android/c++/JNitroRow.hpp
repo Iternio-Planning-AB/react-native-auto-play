@@ -83,7 +83,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      return newInstance(
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         JAutoText::fromCpp(value.title),
         value.detailedText.has_value() ? JAutoText::fromCpp(value.detailedText.value()) : nullptr,
         value.browsable.has_value() ? jni::JBoolean::valueOf(value.browsable.value()) : nullptr,

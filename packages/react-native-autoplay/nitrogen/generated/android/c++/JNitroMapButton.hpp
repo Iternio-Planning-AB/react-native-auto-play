@@ -66,7 +66,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
-      return newInstance(
+      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         JNitroMapButtonType::fromCpp(value.type),
         value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)

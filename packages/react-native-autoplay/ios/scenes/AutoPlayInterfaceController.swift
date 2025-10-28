@@ -41,13 +41,13 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     }
 
     var topTemplateId: String? {
-        return interfaceController.topTemplate?.getTemplateId()
+        return interfaceController.topTemplate?.id
     }
 
     var rootTemplateId: String? {
-        return interfaceController.rootTemplate.getTemplateId()
+        return interfaceController.rootTemplate.id
     }
-    
+
     func hasPresentedTemplate() -> Bool {
         return interfaceController.presentedTemplate != nil
     }
@@ -92,7 +92,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         var templateIds: [String] = []
 
         templates.forEach { template in
-            guard let templateId = template.getTemplateId() else { return }
+            let templateId = template.id
 
             if templateId == rootTemplateId {
                 return
@@ -109,16 +109,18 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         return templateIds
     }
 
-    func popToTemplate(templateId: String, animated: Bool) async throws -> [String] {
+    func popToTemplate(templateId: String, animated: Bool) async throws
+        -> [String]
+    {
         guard
             let template = interfaceController.templates.first(
                 where: {
-                    templateId == $0.getTemplateId()
+                    templateId == $0.id
                 })
         else { return [] }
 
         var templateIds: [String] = interfaceController.templates.map {
-            template in template.getTemplateId()!
+            template in template.id
         }
 
         if let startIndex = templateIds.firstIndex(where: {
@@ -152,17 +154,17 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     func dismissTemplate(
         animated: Bool
     ) async throws -> String? {
-        let templateId = interfaceController.presentedTemplate?.getTemplateId()
-        
+        let templateId = interfaceController.presentedTemplate?.id
+
         try await interfaceController.dismissTemplate(
             animated: animated
         )
-        
-        if (templateId != nil) {
+
+        if templateId != nil {
             self.templateStore.removeTemplate(templateId: templateId!)
             return templateId
         }
-        
+
         return nil
     }
 
@@ -171,9 +173,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        guard let templateId = aTemplate.getTemplateId() else {
-            return
-        }
+        let templateId = aTemplate.id
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
@@ -188,9 +188,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        guard let templateId = aTemplate.getTemplateId() else {
-            return
-        }
+        let templateId = aTemplate.id
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
@@ -205,9 +203,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        guard let templateId = aTemplate.getTemplateId() else {
-            return
-        }
+        let templateId = aTemplate.id
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in
@@ -222,9 +218,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ aTemplate: CPTemplate,
         animated: Bool
     ) {
-        guard let templateId = aTemplate.getTemplateId() else {
-            return
-        }
+        let templateId = aTemplate.id
 
         do {
             try RootModule.withTemplate(templateId: templateId) { template in

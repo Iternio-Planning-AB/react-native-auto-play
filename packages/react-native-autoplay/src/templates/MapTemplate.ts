@@ -4,6 +4,7 @@ import { HybridAutoPlay, HybridMapTemplate } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
+import type { AutoManeuvers } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
   TripConfig,
@@ -13,7 +14,7 @@ import type {
 } from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
-import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
+import { type NitroManeuver, NitroManeuverUtil } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import {
   type HeaderActionsIos,
@@ -38,7 +39,6 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
   mapButtons?: Array<NitroMapButton>;
 
   headerActions?: Array<NitroAction>;
-  guidanceBackgroundColor?: NitroColor;
 
   /**
    * show either the next or final step travel estimates, defaults to final step so last
@@ -84,7 +84,7 @@ export type MapButtons<T> = Array<MapButton<T> | MapPanButton<T>>;
 
 export type MapTemplateConfig = Omit<
   NitroMapTemplateConfig,
-  'id' | 'mapButtons' | 'headerActions' | 'guidanceBackgroundColor'
+  'id' | 'mapButtons' | 'headerActions'
 > & {
   /**
    * since we need to find the proper Android screen/iOS scene only certain ids can be used on this template
@@ -107,11 +107,6 @@ export type MapTemplateConfig = Omit<
     android?: HeaderActionsAndroidMap<MapTemplate>;
     ios?: HeaderActionsIos<MapTemplate>;
   };
-
-  /**
-   * Sets the background color to use for the navigation information.
-   */
-  guidanceBackgroundColor?: ThemedColor;
 };
 
 const convertActions = (
@@ -129,7 +124,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   constructor(config: MapTemplateConfig) {
     super(config);
 
-    const { component, mapButtons, headerActions, guidanceBackgroundColor, ...baseConfig } = config;
+    const { component, mapButtons, headerActions, ...baseConfig } = config;
 
     AppRegistry.registerComponent(
       this.id,
@@ -149,7 +144,6 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       ...baseConfig,
       id: this.id,
       headerActions: convertActions(this.template, headerActions),
-      guidanceBackgroundColor: NitroColorUtil.convertThemed(guidanceBackgroundColor),
       mapButtons: NitroMapButton.convert(this.template, mapButtons),
     };
 
@@ -217,13 +211,6 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     HybridMapTemplate.hideTripSelector(this.id);
   }
 
-  public updateGuidanceBackgroundColor(lightColor: string, darkColor: string) {
-    HybridMapTemplate.updateGuidanceBackgroundColor(
-      this.id,
-      NitroColorUtil.convertThemed({ darkColor, lightColor })
-    );
-  }
-
   public updateVisibleTravelEstimate(visibleTravelEstimate: VisibleTravelEstimate) {
     HybridMapTemplate.updateVisibleTravelEstimate(this.id, visibleTravelEstimate);
   }
@@ -234,6 +221,24 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    */
   public updateTravelEstimates(steps: Array<TripPoint>) {
     HybridMapTemplate.updateTravelEstimates(this.id, steps);
+  }
+
+  /**
+   * sets or updates maneuvers, make sure to call startNavigation first!
+   * @namespace Android sets all the supplied maneuvers whenever called
+   * @namespace iOS will update travelEstimates only when passing in maneuvers with the same id
+   */
+  public updateManeuvers(maneuvers: AutoManeuvers) {
+    const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
+      if (maneuver == null) {
+        return acc;
+      }
+
+      acc.push(NitroManeuverUtil.convert(maneuver));
+      return acc;
+    }, [] as NitroManeuver[]);
+
+    HybridMapTemplate.updateManeuvers(this.id, nitroManeuvers);
   }
 
   /**

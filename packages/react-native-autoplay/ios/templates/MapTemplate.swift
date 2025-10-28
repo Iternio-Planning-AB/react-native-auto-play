@@ -25,8 +25,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         self.config = config
 
         super.init(
-            templateId: config.id,
-            template: CPMapTemplate(),
+            template: CPMapTemplate(id: config.id),
             header: config.headerActions
         )
 
@@ -48,7 +47,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                     let icon = SymbolFont.imageFromNitroImage(
                         image: image,
                         size: CPButtonMaximumImageSize.height,
-                        fontScale: 0.65
+                        fontScale: 0.65,
+                        traitCollection: traitCollection
                     )!
                     return CPMapButton(image: icon) { _ in
                         button.onPress()
@@ -59,8 +59,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                 }
             }
         }
-
-        updateGuidanceBackgroundColor(color: config.guidanceBackgroundColor)
     }
 
     override func onWillAppear(animted: Bool) {
@@ -116,7 +114,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         _ mapTemplate: CPMapTemplate,
         displayStyleFor maneuver: CPManeuver
     ) -> CPManeuverDisplayStyle {
-        if maneuver.instructionVariants.count == 0 {
+        if maneuver.attributedInstructionVariants.count == 0 {
             return .symbolOnly
         }
         return .leadingSymbol
@@ -216,6 +214,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         let image = SymbolFont.imageFromNitroImage(
             image: alertConfig.image,
+            traitCollection: traitCollection
         )
 
         let style = Parser.parseActionAlertStyle(
@@ -259,7 +258,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         textConfig: TripPreviewTextConfiguration,
         onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void,
         onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void
-    ) throws {
+    ) {
         guard let template = self.template as? CPMapTemplate else { return }
 
         self.onTripSelected = onTripSelected
@@ -270,8 +269,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         )
 
         let tripPreviews = Parser.parseTrips(trips: trips)
-        let selectedTrip = try selectedTripId.flatMap { tripId in
-            try tripPreviews.first(where: { try $0.getTripId() == tripId })
+        let selectedTrip = selectedTripId.flatMap { tripId in
+            tripPreviews.first(where: { $0.id == tripId })
         }
 
         template.showTripPreviews(
@@ -283,7 +282,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         tripPreviews.forEach { trip in
             guard
                 let travelEstimates = trip.routeChoices.first?
-                    .getTravelEstimates().last
+                    .travelEstimates.last
             else { return }
 
             template.updateEstimates(travelEstimates, for: trip)
@@ -303,18 +302,14 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        do {
-            let tripId = try trip.getTripId()
-            let routeId = try routeChoice.getRouteId()
-            self.onTripSelected?(tripId, routeId)
+        let tripId = trip.id
+        let routeId = routeChoice.id
+        self.onTripSelected?(tripId, routeId)
 
-            if let travelEstimates = try trip.routeChoices.first(where: {
-                try $0.getRouteId() == routeId
-            })?.getTravelEstimates().last {
-                mapTemplate.updateEstimates(travelEstimates, for: trip)
-            }
-        } catch {
-            print("Unexpected error: \(error).")
+        if let travelEstimates = trip.routeChoices.first(where: {
+            $0.id == routeId
+        })?.travelEstimates.last {
+            mapTemplate.updateEstimates(travelEstimates, for: trip)
         }
     }
 
@@ -324,14 +319,10 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         using routeChoice: CPRouteChoice
     ) {
         if let onTripStarted = self.onTripStarted {
-            do {
-                let tripId = try trip.getTripId()
-                let routeId = try routeChoice.getRouteId()
+            let tripId = trip.id
+            let routeId = routeChoice.id
 
-                onTripStarted(tripId, routeId)
-            } catch {
-                print("Unexpected error: \(error).")
-            }
+            onTripStarted(tripId, routeId)
         }
 
         hideTripSelector()
@@ -343,19 +334,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         )
 
         startNavigation(trip: trip)
-    }
-
-    func updateGuidanceBackgroundColor(color: NitroColor?) {
-        guard let template = self.template as? CPMapTemplate else { return }
-
-        config.guidanceBackgroundColor = color
-
-        guard let color = Parser.parseColor(color: color) else {
-            template.guidanceBackgroundColor = .systemGray
-            return
-        }
-
-        template.guidanceBackgroundColor = color
     }
 
     func updateVisibleTravelEstimate(
@@ -370,7 +348,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let trip = navigationSession?.trip else { return }
 
         let travelEstaimtes = trip.routeChoices.first?
-            .getTravelEstimates()
+            .travelEstimates
         if let estimates = config.visibleTravelEstimate == .first
             ? travelEstaimtes?.first : travelEstaimtes?.last
         {
@@ -379,7 +357,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     }
 
-    func updateTravelEstimates(steps: [TripPoint]) throws {
+    func updateTravelEstimates(steps: [TripPoint]) {
         guard let route = navigationSession?.trip.routeChoices.first else {
             return
         }
@@ -396,14 +374,108 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         updateVisibleTravelEstimate(visibleTravelEstimate: nil)
     }
 
+    func updateManeuvers(maneuvers: [NitroManeuver]) {
+        guard let template = template as? CPMapTemplate else { return }
+        guard let navigationSession = navigationSession else { return }
+
+        template.guidanceBackgroundColor =
+            RCTConvert.uiColor(maneuvers.first?.cardBackgroundColor) ?? .black
+
+        var upcomingManeuvers: [CPManeuver] = []
+
+        let sessionManeuvers = navigationSession.upcomingManeuvers.filter {
+            maneuver in
+            !maneuver.isSecondary
+        }
+
+        for (index, nitroManeuver) in maneuvers.enumerated() {
+            if let maneuverIndex =
+                sessionManeuvers
+                .firstIndex(where: { $0.id == nitroManeuver.id })
+            {
+                navigationSession.updateEstimates(
+                    Parser.parseTravelEstiamtes(
+                        travelEstimates: nitroManeuver.travelEstimates
+                    ),
+                    for: navigationSession.upcomingManeuvers[maneuverIndex]
+                )
+
+                if index != maneuverIndex {
+                    let maneuver = navigationSession.upcomingManeuvers.first(
+                        where: { $0.id == nitroManeuver.id }
+                    )!
+                    upcomingManeuvers.append(maneuver)
+                }
+                continue
+            }
+
+            let maneuver = Parser.parseManeuver(
+                nitroManeuver: nitroManeuver,
+                traitCollection: traitCollection
+            )
+            upcomingManeuvers.append(maneuver)
+        }
+
+        if upcomingManeuvers.count > 0 {
+            if #available(iOS 17.4, *) {
+                upcomingManeuvers = upcomingManeuvers.flatMap { maneuver in
+                    if let laneImages = maneuver.laneImages {
+                        // CarPlay has a limitation of 120x18 for the symbolImage on secondaryManeuver that shows lanes only
+                        let secondarySymbolImage = SymbolFont.imageFromLanes(
+                            laneImages: laneImages.prefix(Int(120 / 18)),
+                            size: 18,
+                            traitCollection: traitCollection
+                        )
+
+                        let secondaryManeuver = CPManeuver(
+                            id: maneuver.id + "-lanes",
+                            isSecondary: true
+                        )
+                        secondaryManeuver.symbolImage = secondarySymbolImage
+                        return [maneuver, secondaryManeuver]
+                    } else {
+                        return [maneuver]
+                    }
+                }
+
+                navigationSession.add(
+                    upcomingManeuvers.filter({ maneuver in
+                        !navigationSession.upcomingManeuvers.contains(where: {
+                            $0.id == maneuver.id
+                        })
+                    })
+                )
+
+                let laneGuidances = upcomingManeuvers.compactMap {
+                    $0.laneGuidance
+                }
+                if laneGuidances.isEmpty {
+                    navigationSession.currentLaneGuidance = nil
+                } else {
+                    navigationSession.add(laneGuidances)
+                    navigationSession.currentLaneGuidance = laneGuidances.first
+                }
+
+                if let roadFollowingManeuverVariants = upcomingManeuvers.first?
+                    .roadFollowingManeuverVariants
+                {
+                    navigationSession.currentRoadNameVariants =
+                        roadFollowingManeuverVariants
+                }
+            }
+
+            navigationSession.upcomingManeuvers = upcomingManeuvers
+        }
+    }
+
     func startNavigation(trip: CPTrip) {
         guard let template = self.template as? CPMapTemplate else { return }
 
         let routeChoice = trip.routeChoices.first
 
         if let travelEstimates = config.visibleTravelEstimate == .first
-            ? routeChoice?.getTravelEstimates().first
-            : routeChoice?.getTravelEstimates().last
+            ? routeChoice?.travelEstimates.first
+            : routeChoice?.travelEstimates.last
         {
             template.updateEstimates(travelEstimates, for: trip)
         }

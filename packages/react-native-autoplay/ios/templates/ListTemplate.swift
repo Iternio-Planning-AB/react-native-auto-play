@@ -15,11 +15,12 @@ class ListTemplate: AutoPlayTemplate {
 
         let template = CPListTemplate(
             title: Parser.parseText(text: config.title),
-            sections: []
+            sections: [],
+            assistantCellConfiguration: nil,
+            id: config.id
         )
 
         super.init(
-            templateId: config.id,
             template: template,
             header: config.headerActions
         )
@@ -37,7 +38,8 @@ class ListTemplate: AutoPlayTemplate {
         template.updateSections(
             Parser.parseSections(
                 sections: config.sections,
-                updateSection: self.updateSection(section:sectionIndex:)
+                updateSection: self.updateSection(section:sectionIndex:),
+                traitCollection: traitCollection
             )
         )
     }

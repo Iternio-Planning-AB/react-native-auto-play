@@ -23,8 +23,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAction
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
 // Forward declaration of `AlertActionStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
-// Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -55,6 +53,32 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `NitroManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
+// Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
+// Forward declaration of `TurnType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
+// Forward declaration of `OffRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType; }
+// Forward declaration of `OnRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
+// Forward declaration of `ForkType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+// Forward declaration of `KeepType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
+// Forward declaration of `LaneGuidance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
+// Forward declaration of `TrafficSide` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
+// Forward declaration of `ManeuverType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
@@ -80,8 +104,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroAlignment.hpp"
 #include "AlertActionStyle.hpp"
 #include "JAlertActionStyle.hpp"
-#include "NitroColor.hpp"
-#include "JNitroColor.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "JVisibleTravelEstimate.hpp"
 #include "Point.hpp"
@@ -118,6 +140,34 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TripPreviewTextConfiguration.hpp"
 #include "JTripPreviewTextConfiguration.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
+#include "NitroManeuver.hpp"
+#include "JNitroManeuver.hpp"
+#include "AttributedInstructionVariant.hpp"
+#include "JAttributedInstructionVariant.hpp"
+#include "AttributedInstructionVariantImage.hpp"
+#include "JAttributedInstructionVariantImage.hpp"
+#include "TurnType.hpp"
+#include "JTurnType.hpp"
+#include "OffRampType.hpp"
+#include "JOffRampType.hpp"
+#include "OnRampType.hpp"
+#include "JOnRampType.hpp"
+#include "ForkType.hpp"
+#include "JForkType.hpp"
+#include "KeepType.hpp"
+#include "JKeepType.hpp"
+#include "LaneGuidance.hpp"
+#include "JLaneGuidance.hpp"
+#include "PreferredImageLane.hpp"
+#include "ImageLane.hpp"
+#include <variant>
+#include "JVariant_PreferredImageLane_ImageLane.hpp"
+#include "JPreferredImageLane.hpp"
+#include "JImageLane.hpp"
+#include "TrafficSide.hpp"
+#include "JTrafficSide.hpp"
+#include "ManeuverType.hpp"
+#include "JManeuverType.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
 
@@ -172,7 +222,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     method(_javaPart, jni::make_jstring(templateId));
   }
   void JHybridHybridMapTemplateSpec::setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons_cxx");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
     method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
       size_t __size = buttons.value().size();
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
@@ -182,10 +232,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       return __array;
     }() : nullptr);
-  }
-  void JHybridHybridMapTemplateSpec::updateGuidanceBackgroundColor(const std::string& templateId, const std::optional<NitroColor>& color) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroColor> /* color */)>("updateGuidanceBackgroundColor");
-    method(_javaPart, jni::make_jstring(templateId), color.has_value() ? JNitroColor::fromCpp(color.value()) : nullptr);
   }
   void JHybridHybridMapTemplateSpec::updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JVisibleTravelEstimate> /* visibleTravelEstimate */)>("updateVisibleTravelEstimate");
@@ -199,6 +245,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = steps[__i];
         __array->setElement(__i, *JTripPoint::fromCpp(__element));
+      }
+      return __array;
+    }());
+  }
+  void JHybridHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroManeuver>> /* maneuvers */)>("updateManeuvers");
+    method(_javaPart, jni::make_jstring(templateId), [&]() {
+      size_t __size = maneuvers.size();
+      jni::local_ref<jni::JArrayClass<JNitroManeuver>> __array = jni::JArrayClass<JNitroManeuver>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = maneuvers[__i];
+        __array->setElement(__i, *JNitroManeuver::fromCpp(__element));
       }
       return __array;
     }());

@@ -10,6 +10,8 @@ import React
 import UIKit
 
 class SymbolFont {
+    private static let defaultCanvasSize = 32
+
     private static var isRegistered = false
     private static var fontName: String?
 
@@ -55,8 +57,9 @@ class SymbolFont {
         lightColor: UIColor,
         darkColor: UIColor,
         backgroundColor: UIColor = .white,
-        fontScale: CGFloat,
-        noImageAsset: Bool
+        fontScale: CGFloat = 1,
+        noImageAsset: Bool = false,
+        traitCollection: UITraitCollection
     ) -> UIImage? {
         if !SymbolFont.isRegistered {
             SymbolFont.loadFont()
@@ -114,7 +117,7 @@ class SymbolFont {
         }
 
         if noImageAsset {
-            return UIScreen.main.traitCollection.userInterfaceStyle == .light
+            return traitCollection.userInterfaceStyle == .light
                 ? lightImage : darkImage
         }
 
@@ -134,14 +137,15 @@ class SymbolFont {
         imageAsset.register(darkImage, with: darkTraits)
 
         // Return an image from the asset that will automatically switch based on the interface style
-        return imageAsset.image(with: UIScreen.main.traitCollection)
+        return imageAsset.image(with: traitCollection)
     }
 
     static func imageFromNitroImage(
         image: NitroImage?,
         size: CGFloat = 32,
         fontScale: CGFloat = 1,
-        noImageAsset: Bool = false
+        noImageAsset: Bool = false,
+        traitCollection: UITraitCollection
     ) -> UIImage? {
         guard let image else { return nil }
 
@@ -158,7 +162,45 @@ class SymbolFont {
             darkColor: darkColor,
             backgroundColor: backgroundColor,
             fontScale: fontScale,
-            noImageAsset: noImageAsset
+            noImageAsset: noImageAsset,
+            traitCollection: traitCollection
         )!
+    }
+
+    static func imageFromLanes(
+        laneImages: Array<NitroImage>.SubSequence,
+        size: Int,
+        traitCollection: UITraitCollection
+    ) -> UIImage {
+        let width = size * laneImages.count
+        let height = size
+
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: width, height: height),
+            false,
+            0.0
+        )
+        defer { UIGraphicsEndImageContext() }
+        var xOffset = 0
+        for laneImage in laneImages {
+            let image = imageFromGlyph(
+                glyph: laneImage.glyph,
+                size: CGFloat(size),
+                lightColor: RCTConvert.uiColor(laneImage.lightColor),
+                darkColor: RCTConvert.uiColor(laneImage.darkColor),
+                backgroundColor: UIColor.clear,
+                traitCollection: traitCollection
+            )!
+            image.draw(
+                in: CGRect(
+                    x: xOffset,
+                    y: 0,
+                    width: Int(size),
+                    height: Int(size)
+                )
+            )
+            xOffset += Int(size)
+        }
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }

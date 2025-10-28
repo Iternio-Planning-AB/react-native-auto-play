@@ -94,7 +94,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     method(_javaPart, JListTemplateConfig::fromCpp(config));
   }
   void JHybridHybridListTemplateSpec::updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroSection>> /* sections */)>("updateListTemplateSections_cxx");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroSection>> /* sections */)>("updateListTemplateSections");
     method(_javaPart, jni::make_jstring(templateId), sections.has_value() ? [&]() {
       size_t __size = sections.value().size();
       jni::local_ref<jni::JArrayClass<JNitroSection>> __array = jni::JArrayClass<JNitroSection>::newArray(__size);

@@ -18,9 +18,9 @@ import { startAppListening } from './state/store';
 import { TelemetryView } from './TelemetryView';
 import {
   AutoTemplate,
-  estimatesUpdate,
   onTripFinished,
   onTripStarted,
+  updateTripEstimates,
 } from './templates/AutoTemplate';
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
@@ -70,9 +70,9 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
           }
 
           dispatch(setSelectedTrip({ routeId, tripId }));
-          onTripStarted(tripId, routeId, mapTemplate);
           mapTemplate.startNavigation({ id: tripId, routeChoice });
-          estimatesUpdate(mapTemplate, 'initial');
+          onTripStarted(tripId, routeId, mapTemplate);
+          updateTripEstimates(mapTemplate, 'initial');
         },
       })
     );

@@ -11,6 +11,7 @@ import {
   type VisibleTravelEstimate,
 } from '@g4rb4g3/react-native-autoplay';
 import { Platform } from 'react-native';
+import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { setIsNavigating, setSelectedTrip } from '../state/navigationSlice';
 import { dispatch } from '../state/store';
@@ -79,6 +80,8 @@ export const onTripFinished = (template: MapTemplate) => {
   template.stopNavigation();
   template.setHeaderActions(mapHeaderActions);
 
+  AutoManeuverUtil.stopManeuvers();
+
   dispatch(setIsNavigating(false));
 };
 
@@ -94,7 +97,9 @@ const plusOne: ImageButton<MapTemplate> = {
   image: {
     name: 'add',
   },
-  onPress: (template) => estimatesUpdate(template, 'add'),
+  onPress: (template) => {
+    updateTripEstimates(template, 'add');
+  },
   type: 'image',
 };
 
@@ -102,7 +107,9 @@ const minusOne: ImageButton<MapTemplate> = {
   image: {
     name: 'remove',
   },
-  onPress: (template) => estimatesUpdate(template, 'remove'),
+  onPress: (template) => {
+    updateTripEstimates(template, 'remove');
+  },
   type: 'image',
 };
 
@@ -121,7 +128,7 @@ const toggleEta: ImageButton<MapTemplate> = {
 
 let steps: Array<TripPoint> = [];
 
-export const estimatesUpdate = (template: MapTemplate, type: 'initial' | 'add' | 'remove') => {
+export const updateTripEstimates = (template: MapTemplate, type: 'initial' | 'add' | 'remove') => {
   const value = type === 'initial' ? 0 : type === 'add' ? 1 : -1;
 
   steps = steps.map((s) => ({
@@ -130,11 +137,11 @@ export const estimatesUpdate = (template: MapTemplate, type: 'initial' | 'add' |
       ...s.travelEstimates,
       distanceRemaining: {
         ...s.travelEstimates.distanceRemaining,
-        value: s.travelEstimates.distanceRemaining.value + value,
+        value: s.travelEstimates.distanceRemaining.value + value * 0.1,
       },
       timeRemaining: {
         ...s.travelEstimates.timeRemaining,
-        seconds: s.travelEstimates.timeRemaining.seconds + value * 60,
+        seconds: s.travelEstimates.timeRemaining.seconds + value,
       },
     },
   }));
@@ -163,6 +170,8 @@ export const onTripStarted = (tripId: string, routeId: string, template: MapTemp
     AutoTrip.find((t) => t.id === tripId)
       ?.routeChoices.find((r) => r.id === routeId)
       ?.steps.slice(1) ?? [];
+
+  AutoManeuverUtil.playManeuvers(template);
 };
 
 const mapButtonHandler: (template: MapTemplate) => void = (template) => {

@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,19 +16,27 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class VehicleTelemetryItem
+data class VehicleTelemetryItem(
   @DoNotStrip
   @Keep
-  constructor(
+  val name: StringTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val year: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val manufacturer: StringTelemetryItem?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val name: StringTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val year: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val manufacturer: StringTelemetryItem?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(name: StringTelemetryItem?, year: NumericTelemetryItem?, manufacturer: StringTelemetryItem?): VehicleTelemetryItem {
+      return VehicleTelemetryItem(name, year, manufacturer)
+    }
+  }
 }

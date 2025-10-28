@@ -28,8 +28,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAction
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
 // Forward declaration of `AlertActionStyle` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
-// Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -60,6 +58,32 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
+// Forward declaration of `NitroManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `AttributedInstructionVariant` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariant; }
+// Forward declaration of `AttributedInstructionVariantImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AttributedInstructionVariantImage; }
+// Forward declaration of `TurnType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
+// Forward declaration of `OffRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType; }
+// Forward declaration of `OnRampType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
+// Forward declaration of `ForkType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+// Forward declaration of `KeepType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
+// Forward declaration of `LaneGuidance` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+// Forward declaration of `PreferredImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
+// Forward declaration of `ImageLane` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
+// Forward declaration of `TrafficSide` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
+// Forward declaration of `ManeuverType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
@@ -75,7 +99,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "AlertActionStyle.hpp"
-#include "NitroColor.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "Point.hpp"
 #include "ColorScheme.hpp"
@@ -91,6 +114,20 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include "NitroManeuver.hpp"
+#include "AttributedInstructionVariant.hpp"
+#include "AttributedInstructionVariantImage.hpp"
+#include "TurnType.hpp"
+#include "OffRampType.hpp"
+#include "OnRampType.hpp"
+#include "ForkType.hpp"
+#include "KeepType.hpp"
+#include "LaneGuidance.hpp"
+#include "PreferredImageLane.hpp"
+#include "ImageLane.hpp"
+#include <variant>
+#include "TrafficSide.hpp"
+#include "ManeuverType.hpp"
 #include "TripConfig.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
@@ -164,12 +201,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateGuidanceBackgroundColor(const std::string& templateId, const std::optional<NitroColor>& color) override {
-      auto __result = _swiftPart.updateGuidanceBackgroundColor(templateId, color);
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
     inline void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) override {
       auto __result = _swiftPart.updateVisibleTravelEstimate(templateId, static_cast<int>(visibleTravelEstimate));
       if (__result.hasError()) [[unlikely]] {
@@ -178,6 +209,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     inline void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) override {
       auto __result = _swiftPart.updateTravelEstimates(templateId, steps);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override {
+      auto __result = _swiftPart.updateManeuvers(templateId, maneuvers);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

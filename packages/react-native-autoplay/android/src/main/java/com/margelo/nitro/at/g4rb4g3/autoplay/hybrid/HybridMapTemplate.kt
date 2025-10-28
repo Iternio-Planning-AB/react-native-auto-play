@@ -68,13 +68,6 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
         template.setMapActions(buttons)
     }
 
-    override fun updateGuidanceBackgroundColor(
-        templateId: String, color: NitroColor?
-    ) {
-        val template = AndroidAutoTemplate.Companion.getTemplate<MapTemplate>(templateId)
-        template.updateGuidanceBackgroundColor(color)
-    }
-
     override fun updateVisibleTravelEstimate(
         templateId: String, visibleTravelEstimate: VisibleTravelEstimate
     ) {
@@ -84,6 +77,13 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
 
     override fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>) {
         MapTemplate.updateTravelEstimates(steps)
+    }
+
+    override fun updateManeuvers(
+        templateId: String,
+        maneuvers: Array<NitroManeuver>
+    ) {
+        MapTemplate.updateManeuvers(maneuvers)
     }
 
     override fun startNavigation(

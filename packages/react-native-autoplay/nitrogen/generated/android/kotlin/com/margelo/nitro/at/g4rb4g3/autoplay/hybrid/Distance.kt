@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,16 +16,24 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class Distance
+data class Distance(
   @DoNotStrip
   @Keep
-  constructor(
+  val value: Double,
+  @DoNotStrip
+  @Keep
+  val unit: DistanceUnits
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val value: Double,
-    @DoNotStrip
-    @Keep
-    val unit: DistanceUnits
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(value: Double, unit: DistanceUnits): Distance {
+      return Distance(value, unit)
+    }
+  }
 }

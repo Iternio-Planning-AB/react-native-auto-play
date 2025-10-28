@@ -3983,13 +3983,13 @@ negotiator@~0.6.4:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.4.tgz#777948e2452651c570b712dd01c23e262713fff7"
   integrity sha512-myRT3DiWPHqho5PrJaIRyaMv2kgYf0mUVgBNOYMuCH5Ki1yEiQaf/ZJuQ62nvpc44wL5WDbTX7yGJi1Neevw8w==
 
-nitrogen@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/nitrogen/-/nitrogen-0.30.0.tgz#8fedef33583067d81747452d68f9a046a1efa897"
-  integrity sha512-dM7GBwAOkf8FEILyzvio67Xjuwvbxa9FMMQdsj1PuIQon21et8Nw2ZY0F3xqQK7/osz7b/IWQ5EICPfUzhN3Ng==
+nitrogen@^0.31.2:
+  version "0.31.2"
+  resolved "https://registry.yarnpkg.com/nitrogen/-/nitrogen-0.31.2.tgz#aba4eae84ec5c493d304f5222bbeeb0cee5794f0"
+  integrity sha512-zG0YBjIAsWwquDCdjxQ9wk19bSMRFjF5UYD4yJ18GBw18VMkwhv8HvNpc5volKa9D9tQlDxNKZ45KH3D3CjOPA==
   dependencies:
     chalk "^5.3.0"
-    react-native-nitro-modules "^0.30.0"
+    react-native-nitro-modules "^0.31.2"
     ts-morph "^27.0.0"
     yargs "^18.0.0"
     zod "^4.0.5"
@@ -4294,10 +4294,10 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.1.tgz#038ebe313cf18e1fd1235d51c87360eb87f7c36a"
   integrity sha512-tr41fA15Vn8p4X9ntI+yCyeGSf1TlYaY5vlTZfQmeLBrFo3psOPX6HhTDnFNL9uj3EhP0KAQ80cugCl4b4BERA==
 
-react-native-nitro-modules@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.30.0.tgz#f1d326fddb980fd6f108721204d4d4d9a8f1bf56"
-  integrity sha512-DHFSEbM7cwVHmpbGvmd+b5iqy67My0In9oBc8eSMvjTkLWrDkkiE5jLdt6ZJyDF7Fn3C5Tr6Lq2bUa596VSW2g==
+react-native-nitro-modules@^0.31.2:
+  version "0.31.2"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.31.2.tgz#2070a4e52abbbcb334d385a90a7154e502e5101e"
+  integrity sha512-UTG1kfLq5XDlR1OkhrNLNMbU6EvxIdLp4RUWT4PY8eBKyykOq8/kjc3fYMYxVEUZG+mrujRSMNXKeqHfiMUhOQ==
 
 react-native-safe-area-context@^5.5.2:
   version "5.6.1"

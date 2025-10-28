@@ -53,7 +53,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JTripPreviewTextConfiguration::javaobject> fromCpp(const TripPreviewTextConfiguration& value) {
-      return newInstance(
+      using JSignature = JTripPreviewTextConfiguration(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.startButtonTitle),
         jni::make_jstring(value.additionalRoutesButtonTitle),
         jni::make_jstring(value.overviewButtonTitle),

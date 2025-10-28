@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,28 +16,36 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class Telemetry
+data class Telemetry(
   @DoNotStrip
   @Keep
-  constructor(
+  val speed: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val fuelLevel: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val batteryLevel: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val range: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val odometer: NumericTelemetryItem?,
+  @DoNotStrip
+  @Keep
+  val vehicle: VehicleTelemetryItem?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val speed: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val fuelLevel: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val batteryLevel: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val range: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val odometer: NumericTelemetryItem?,
-    @DoNotStrip
-    @Keep
-    val vehicle: VehicleTelemetryItem?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(speed: NumericTelemetryItem?, fuelLevel: NumericTelemetryItem?, batteryLevel: NumericTelemetryItem?, range: NumericTelemetryItem?, odometer: NumericTelemetryItem?, vehicle: VehicleTelemetryItem?): Telemetry {
+      return Telemetry(speed, fuelLevel, batteryLevel, range, odometer, vehicle)
+    }
+  }
 }

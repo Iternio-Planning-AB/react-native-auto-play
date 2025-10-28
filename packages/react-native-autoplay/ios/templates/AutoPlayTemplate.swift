@@ -10,19 +10,23 @@ import CarPlay
 class AutoPlayTemplate: NSObject {
     let template: CPTemplate
     var barButtons: [NitroAction]?
+    var traitCollection = UIScreen.main.traitCollection
 
-    init(templateId: String, template: CPTemplate, header: [NitroAction]?) {
-        template.userInfo = ["id": templateId]
-
+    init(template: CPTemplate, header: [NitroAction]?) {
         self.template = template
         self.barButtons = header
+
+        super.init()
     }
 
     func setBarButtons() {
         guard let template = template as? CPBarButtonProviding else { return }
 
         if let headerActions = barButtons {
-            let parsedActions = Parser.parseHeaderActions(headerActions: headerActions)
+            let parsedActions = Parser.parseHeaderActions(
+                headerActions: headerActions,
+                traitCollection: traitCollection
+            )
 
             template.backButton = parsedActions.backButton
             template.leadingNavigationBarButtons =
@@ -54,5 +58,9 @@ class AutoPlayTemplate: NSObject {
 
     open func onPopped() {
         print("\(type(of: self)) lacks onPopped implementation")
+    }
+
+    open func traitCollectionDidChange(traitColleciton: UITraitCollection) {
+        self.traitCollection = traitColleciton
     }
 }

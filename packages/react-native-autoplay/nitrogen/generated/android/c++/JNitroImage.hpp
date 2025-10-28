@@ -53,7 +53,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroImage::javaobject> fromCpp(const NitroImage& value) {
-      return newInstance(
+      using JSignature = JNitroImage(double, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.glyph,
         value.lightColor.has_value() ? jni::JDouble::valueOf(value.lightColor.value()) : nullptr,
         value.darkColor.has_value() ? jni::JDouble::valueOf(value.darkColor.value()) : nullptr,

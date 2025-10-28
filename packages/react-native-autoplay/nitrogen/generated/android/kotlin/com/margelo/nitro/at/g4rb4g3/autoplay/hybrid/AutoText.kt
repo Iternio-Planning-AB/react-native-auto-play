@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,19 +16,27 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class AutoText
+data class AutoText(
   @DoNotStrip
   @Keep
-  constructor(
+  val text: String,
+  @DoNotStrip
+  @Keep
+  val distance: Distance?,
+  @DoNotStrip
+  @Keep
+  val duration: Double?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val text: String,
-    @DoNotStrip
-    @Keep
-    val distance: Distance?,
-    @DoNotStrip
-    @Keep
-    val duration: Double?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(text: String, distance: Distance?, duration: Double?): AutoText {
+      return AutoText(text, distance, duration)
+    }
+  }
 }

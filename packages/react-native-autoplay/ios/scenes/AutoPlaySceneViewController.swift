@@ -31,8 +31,8 @@ class AutoPlaySceneViewController: UIViewController {
         }
 
         let isDark = traitCollection.userInterfaceStyle == .dark
-
         template.config.onAppearanceDidChange?(isDark ? .dark : .light)
+        template.traitCollectionDidChange(traitColleciton: traitCollection)
     }
 
     override func viewDidLayoutSubviews() {

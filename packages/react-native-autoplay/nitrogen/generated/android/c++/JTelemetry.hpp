@@ -66,7 +66,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JTelemetry::javaobject> fromCpp(const Telemetry& value) {
-      return newInstance(
+      using JSignature = JTelemetry(jni::alias_ref<JNumericTelemetryItem>, jni::alias_ref<JNumericTelemetryItem>, jni::alias_ref<JNumericTelemetryItem>, jni::alias_ref<JNumericTelemetryItem>, jni::alias_ref<JNumericTelemetryItem>, jni::alias_ref<JVehicleTelemetryItem>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.speed.has_value() ? JNumericTelemetryItem::fromCpp(value.speed.value()) : nullptr,
         value.fuelLevel.has_value() ? JNumericTelemetryItem::fromCpp(value.fuelLevel.value()) : nullptr,
         value.batteryLevel.has_value() ? JNumericTelemetryItem::fromCpp(value.batteryLevel.value()) : nullptr,

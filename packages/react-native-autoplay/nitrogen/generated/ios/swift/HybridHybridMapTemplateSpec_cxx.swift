@@ -189,17 +189,6 @@ open class HybridHybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func updateGuidanceBackgroundColor(templateId: std.string, color: bridge.std__optional_NitroColor_) -> bridge.Result_void_ {
-    do {
-      try self.__implementation.updateGuidanceBackgroundColor(templateId: String(templateId), color: color.value)
-      return bridge.create_Result_void_()
-    } catch (let __error) {
-      let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
-    }
-  }
-  
-  @inline(__always)
   public final func updateVisibleTravelEstimate(templateId: std.string, visibleTravelEstimate: Int32) -> bridge.Result_void_ {
     do {
       try self.__implementation.updateVisibleTravelEstimate(templateId: String(templateId), visibleTravelEstimate: margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibleTravelEstimate(rawValue: visibleTravelEstimate)!)
@@ -214,6 +203,17 @@ open class HybridHybridMapTemplateSpec_cxx {
   public final func updateTravelEstimates(templateId: std.string, steps: bridge.std__vector_TripPoint_) -> bridge.Result_void_ {
     do {
       try self.__implementation.updateTravelEstimates(templateId: String(templateId), steps: steps.map({ __item in __item }))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__vector_NitroManeuver_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.updateManeuvers(templateId: String(templateId), maneuvers: maneuvers.map({ __item in __item }))
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,22 +16,30 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroSection
+data class NitroSection(
   @DoNotStrip
   @Keep
-  constructor(
+  val title: String?,
+  @DoNotStrip
+  @Keep
+  val items: Array<NitroRow>,
+  @DoNotStrip
+  @Keep
+  val type: NitroSectionType,
+  @DoNotStrip
+  @Keep
+  val selectedIndex: Double?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val title: String?,
-    @DoNotStrip
-    @Keep
-    val items: Array<NitroRow>,
-    @DoNotStrip
-    @Keep
-    val type: NitroSectionType,
-    @DoNotStrip
-    @Keep
-    val selectedIndex: Double?
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(title: String?, items: Array<NitroRow>, type: NitroSectionType, selectedIndex: Double?): NitroSection {
+      return NitroSection(title, items, type, selectedIndex)
+    }
+  }
 }

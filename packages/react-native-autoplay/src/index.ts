@@ -32,6 +32,7 @@ export * from './types/Button';
 export * from './types/Event';
 export * from './types/GestureEvents';
 export * from './types/Image';
+export * from './types/Maneuver';
 export * from './types/RootComponent';
 export * from './types/Telemetry';
 export * from './types/Text';

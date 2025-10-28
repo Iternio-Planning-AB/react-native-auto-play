@@ -58,9 +58,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     void showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted) override;
     void hideTripSelector(const std::string& templateId) override;
     void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override;
-    void updateGuidanceBackgroundColor(const std::string& templateId, const std::optional<NitroColor>& color) override;
     void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) override;
     void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) override;
+    void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override;
     void startNavigation(const std::string& templateId, const TripConfig& trip) override;
     void stopNavigation(const std::string& templateId) override;
 

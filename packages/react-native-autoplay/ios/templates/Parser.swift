@@ -41,7 +41,10 @@ class Parser {
         return actions
     }
 
-    static func parseHeaderActions(headerActions: [NitroAction]?)
+    static func parseHeaderActions(
+        headerActions: [NitroAction]?,
+        traitCollection: UITraitCollection
+    )
         -> HeaderActions
     {
         var leadingNavigationBarButtons: [CPBarButton] = []
@@ -63,7 +66,8 @@ class Parser {
                             image: action.image!,
                             fontScale: 0.8,
                             // this icon is not scaled properly when used as image asset, so we use the plain image, as CP does the correct coloring anyways
-                            noImageAsset: true
+                            noImageAsset: true,
+                            traitCollection: traitCollection
                         )!
                     ) { _ in action.onPress() }
                     : CPBarButton(title: action.title ?? "") { _ in
@@ -165,7 +169,8 @@ class Parser {
 
     static func parseSections(
         sections: [NitroSection]?,
-        updateSection: @escaping (NitroSection, Int) -> Void
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
     ) -> [CPListSection] {
         guard let sections else { return [] }
 
@@ -185,7 +190,10 @@ class Parser {
                 let listItem = CPListItem(
                     text: parseText(text: item.title),
                     detailText: parseText(text: item.detailedText),
-                    image: SymbolFont.imageFromNitroImage(image: item.image),
+                    image: SymbolFont.imageFromNitroImage(
+                        image: item.image,
+                        traitCollection: traitCollection
+                    ),
                     accessoryImage: isSelected
                         ? UIImage.checkmark : toggleImage,
                     accessoryType: item.browsable == true
@@ -285,16 +293,13 @@ class Parser {
         let route = CPRouteChoice(
             summaryVariants: routeChoice.summaryVariants,
             additionalInformationVariants: additionalInformationVariants,
-            selectionSummaryVariants: selectionSummaryVariants
-        )
-
-        route.userInfo = [
-            "id": routeChoice.id,
+            selectionSummaryVariants: selectionSummaryVariants,
+            id: routeChoice.id,
             // we don't want to keep the origin travel estimate
-            "travelEstimates": routeChoice.steps[1...].map { step in
+            travelEstimates: routeChoice.steps[1...].map { step in
                 parseTravelEstiamtes(travelEstimates: step.travelEstimates)
-            },
-        ]
+            }
+        )
 
         return route
     }
@@ -308,17 +313,16 @@ class Parser {
             destination: parseTripPoint(
                 point: tripConfig.routeChoice.steps.last!
             ),
-            routeChoices: [routeChoices]
+            routeChoices: [routeChoices],
+            id: tripConfig.id
         )
-
-        trip.userInfo = ["id": tripConfig.id]
 
         return trip
     }
 
     static func parseTrips(trips: [TripsConfig]) -> [CPTrip] {
         return trips.map { tripConfig in
-            let trip = CPTrip(
+            CPTrip(
                 origin: parseTripPoint(
                     point: tripConfig.routeChoices.first!.steps.first!
                 ),
@@ -327,12 +331,9 @@ class Parser {
                 ),
                 routeChoices: tripConfig.routeChoices.map { routeChoice in
                     Parser.parseRouteChoice(routeChoice: routeChoice)
-                }
+                },
+                id: tripConfig.id
             )
-
-            trip.userInfo = ["id": tripConfig.id]
-
-            return trip
         }
     }
 
@@ -347,21 +348,226 @@ class Parser {
         )
     }
 
-    static func parseColor(color: NitroColor?) -> UIColor? {
-        guard let color else { return nil }
+    static func parseManeuver(
+        nitroManeuver: NitroManeuver,
+        traitCollection: UITraitCollection
+    ) -> CPManeuver {
+        let maneuver = CPManeuver(id: nitroManeuver.id)
 
-        let darkColor = RCTConvert.uiColor(color.darkColor) ?? .systemGray
-        let lightColor = RCTConvert.uiColor(color.lightColor) ?? .systemGray
+        maneuver.attributedInstructionVariants = nitroManeuver
+            .attributedInstructionVariants.map { variant in
+                let attributedString = NSMutableAttributedString(
+                    string: variant.text
+                )
+                if let nitroImages = variant.images {
+                    nitroImages.forEach { image in
+                        let attachment = NSTextAttachment(
+                            image: SymbolFont.imageFromNitroImage(
+                                image: image.image,
+                                traitCollection: traitCollection
+                            )!
+                        )
+                        let container = NSAttributedString(
+                            attachment: attachment
+                        )
+                        attributedString.insert(
+                            container,
+                            at: Int(image.position)
+                        )
+                    }
+                }
+                return attributedString
+            }
 
-        return UIColor { traitCollection in
-            switch traitCollection.userInterfaceStyle {
-            case .dark:
-                return darkColor
-            case .light, .unspecified:
-                return lightColor
-            @unknown default:
-                return lightColor
+        maneuver.initialTravelEstimates = Parser.parseTravelEstiamtes(
+            travelEstimates: nitroManeuver.travelEstimates
+        )
+        maneuver.symbolImage = SymbolFont.imageFromNitroImage(
+            image: nitroManeuver.symbolImage,
+            traitCollection: traitCollection
+        )
+        maneuver.junctionImage = SymbolFont.imageFromNitroImage(
+            image: nitroManeuver.junctionImage,
+            traitCollection: traitCollection
+        )
+
+        if #available(iOS 17.4, *) {
+            maneuver.maneuverType = getManeuverType(maneuver: nitroManeuver)
+            maneuver.trafficSide = CPTrafficSide(
+                rawValue: UInt(nitroManeuver.trafficSide.rawValue)
+            )!
+            maneuver.roadFollowingManeuverVariants =
+                nitroManeuver.roadName
+
+            if nitroManeuver.maneuverType == .roundabout {
+                maneuver.junctionType = .roundabout
+            }
+
+            if nitroManeuver.maneuverType == .turn {
+                maneuver.junctionType = .intersection
+            }
+
+            if let junctionExitAngle = nitroManeuver.angle {
+                maneuver.junctionExitAngle = doubleToAngle(
+                    value: junctionExitAngle
+                )
+            }
+
+            if let junctionElementAngles = nitroManeuver
+                .elementAngles
+            {
+                maneuver.junctionElementAngles = Set(
+                    doubleToAngle(values: junctionElementAngles)
+                )
+            }
+
+            if let highwayExitLabel = nitroManeuver.highwayExitLabel {
+                maneuver.highwayExitLabel = highwayExitLabel
+            }
+
+            if let linkedLaneGuidance = nitroManeuver.linkedLaneGuidance {
+                let laneGuidance = parseLaneGuidance(
+                    laneGuidance: linkedLaneGuidance
+                )
+                maneuver.linkedLaneGuidance = laneGuidance
+                // iOS does not store the actual CPLaneGuidance type but some NSConcreteMutableAttributedString so we store it in userInfo so we can access it later on
+                maneuver.laneGuidance = laneGuidance
+
+                let laneImages = linkedLaneGuidance.lanes.compactMap { lane in
+                    switch lane {
+                    case .first(let nitroLaneGuidance):
+                        return nitroLaneGuidance.image
+                    case .second(let nitroLaneGuidance):
+                        return nitroLaneGuidance.image
+                    }
+                }
+
+                maneuver.laneImages = laneImages
             }
         }
+
+        return maneuver
+    }
+
+    @available(iOS 17.4, *)
+    static func getManeuverType(maneuver: NitroManeuver) -> CPManeuverType {
+        switch maneuver.maneuverType {
+        case .depart:
+            return .startRoute
+        case .arrive:
+            return .arriveAtDestination
+        case .arriveleft:
+            return .arriveAtDestinationLeft
+        case .arriveright:
+            return .arriveAtDestinationRight
+        case .straight:
+            return .straightAhead
+        case .turn:
+            switch maneuver.turnType {
+            case .normalleft:
+                return .leftTurn
+            case .normalright:
+                return .rightTurn
+            case .sharpleft:
+                return .sharpLeftTurn
+            case .sharpright:
+                return .sharpRightTurn
+            case .slightleft:
+                return .slightLeftTurn
+            case .slightright:
+                return .slightRightTurn
+            case .uturnright, .uturnleft:
+                return .uTurn
+            default:
+                return .noTurn
+            }
+        case .roundabout:
+            if let exitNumber = maneuver.exitNumber {
+                if exitNumber < 1 || exitNumber > 19 {
+                    return .exitRoundabout
+                }
+                let maneuverType =
+                    CPManeuverType.roundaboutExit1.rawValue
+                    + (UInt(exitNumber) - 1)
+                return CPManeuverType(rawValue: maneuverType) ?? .exitRoundabout
+            }
+            return .exitRoundabout
+        case .offramp:
+            switch maneuver.offRampType {
+            case .slightleft, .normalleft:
+                return .highwayOffRampLeft
+            case .slightright, .normalright:
+                return .highwayOffRampRight
+            default:
+                return .offRamp
+            }
+        case .onramp:
+            return .onRamp
+        case .fork:
+            switch maneuver.forkType {
+            case .left:
+                return .slightLeftTurn
+            case .right:
+                return .slightRightTurn
+            default:
+                return .noTurn
+            }
+        case .enterferry:
+            return .enter_Ferry
+        case .keep:
+            switch maneuver.keepType {
+            case .left:
+                return .keepLeft
+            case .right:
+                return .keepRight
+            default:
+                return .followRoad
+            }
+        }
+    }
+
+    @available(iOS 17.4, *)
+    static func parseLaneGuidance(laneGuidance: LaneGuidance)
+        -> CPLaneGuidance
+    {
+        let instructionVariants = laneGuidance.instructionVariants
+
+        let lanes = laneGuidance.lanes.map { lane in
+            var angles: [Measurement<UnitAngle>] = []
+            var highlightedAngle: Measurement<UnitAngle>?
+            var isPreferred = false
+
+            switch lane {
+            case .first(let nitroLaneGuidance):
+                angles = doubleToAngle(values: nitroLaneGuidance.angles)
+                highlightedAngle = doubleToAngle(
+                    value: nitroLaneGuidance.highlightedAngle
+                )
+                isPreferred = nitroLaneGuidance.isPreferred
+            case .second(let nitroLaneGuidance):
+                angles = doubleToAngle(values: nitroLaneGuidance.angles)
+            }
+
+            return CPLane(
+                angles: angles,
+                highlightedAngle: highlightedAngle,
+                isPreferred: isPreferred
+            )
+        }
+
+        return CPLaneGuidance(
+            instructionVariants: instructionVariants,
+            lanes: lanes
+        )
+    }
+
+    static func doubleToAngle(values: [Double]) -> [Measurement<UnitAngle>] {
+        return values.map {
+            doubleToAngle(value: $0)
+        }
+    }
+
+    static func doubleToAngle(value: Double) -> Measurement<UnitAngle> {
+        return Measurement(value: value, unit: UnitAngle.degrees)
     }
 }

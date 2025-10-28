@@ -10,7 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
+import com.margelo.nitro.core.HybridObject
 
 /**
  * A Kotlin class representing the HybridGridTemplate HybridObject.
@@ -44,18 +44,13 @@ abstract class HybridHybridGridTemplateSpec: HybridObject() {
   @Keep
   abstract fun createGridTemplate(config: GridTemplateConfig): Unit
   
-  abstract fun updateGridTemplateButtons(templateId: String, buttons: Array<NitroGridButton>): Unit
-  
   @DoNotStrip
   @Keep
-  private fun updateGridTemplateButtons_cxx(templateId: String, buttons: Array<NitroGridButton>): Unit {
-    val __result = updateGridTemplateButtons(templateId, buttons)
-    return __result
-  }
+  abstract fun updateGridTemplateButtons(templateId: String, buttons: Array<NitroGridButton>): Unit
 
   private external fun initHybrid(): HybridData
 
   companion object {
-    private const val TAG = "HybridHybridGridTemplateSpec"
+    protected const val TAG = "HybridHybridGridTemplateSpec"
   }
 }

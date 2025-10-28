@@ -86,7 +86,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroAction::javaobject> fromCpp(const NitroAction& value) {
-      return newInstance(
+      using JSignature = JNitroAction(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JNitroActionType>, jni::alias_ref<JNitroAlignment>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JAlertActionStyle>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         value.title.has_value() ? jni::make_jstring(value.title.value()) : nullptr,
         value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
         value.enabled.has_value() ? jni::JBoolean::valueOf(value.enabled.value()) : nullptr,

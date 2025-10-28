@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,38 +16,42 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class NitroAction
+data class NitroAction(
   @DoNotStrip
   @Keep
-  constructor(
+  val title: String?,
+  @DoNotStrip
+  @Keep
+  val image: NitroImage?,
+  @DoNotStrip
+  @Keep
+  val enabled: Boolean?,
+  @DoNotStrip
+  @Keep
+  val onPress: () -> Unit,
+  @DoNotStrip
+  @Keep
+  val type: NitroActionType,
+  @DoNotStrip
+  @Keep
+  val alignment: NitroAlignment?,
+  @DoNotStrip
+  @Keep
+  val flags: Double?,
+  @DoNotStrip
+  @Keep
+  val style: AlertActionStyle?
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val title: String?,
-    @DoNotStrip
-    @Keep
-    val image: NitroImage?,
-    @DoNotStrip
-    @Keep
-    val enabled: Boolean?,
-    @DoNotStrip
-    @Keep
-    val onPress: Func_void,
-    @DoNotStrip
-    @Keep
-    val type: NitroActionType,
-    @DoNotStrip
-    @Keep
-    val alignment: NitroAlignment?,
-    @DoNotStrip
-    @Keep
-    val flags: Double?,
-    @DoNotStrip
-    @Keep
-    val style: AlertActionStyle?
-  ) {
-  /**
-   * Initialize a new instance of `NitroAction` from Kotlin.
-   */
-  constructor(title: String?, image: NitroImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: AlertActionStyle?)
-       : this(title, image, enabled, Func_void_java(onPress), type, alignment, flags, style)
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(title: String?, image: NitroImage?, enabled: Boolean?, onPress: Func_void, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: AlertActionStyle?): NitroAction {
+      return NitroAction(title, image, enabled, onPress, type, alignment, flags, style)
+    }
+  }
 }

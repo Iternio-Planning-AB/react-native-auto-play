@@ -23,7 +23,6 @@
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
-#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
@@ -32,7 +31,6 @@
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
-#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
@@ -78,8 +76,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
       static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JNitroAction>>("headerActions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> headerActions = this->getFieldValue(fieldHeaderActions);
-      static const auto fieldGuidanceBackgroundColor = clazz->getField<JNitroColor>("guidanceBackgroundColor");
-      jni::local_ref<JNitroColor> guidanceBackgroundColor = this->getFieldValue(fieldGuidanceBackgroundColor);
       static const auto fieldVisibleTravelEstimate = clazz->getField<JVisibleTravelEstimate>("visibleTravelEstimate");
       jni::local_ref<JVisibleTravelEstimate> visibleTravelEstimate = this->getFieldValue(fieldVisibleTravelEstimate);
       static const auto fieldOnDidUpdatePanGestureWithTranslation = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidUpdatePanGestureWithTranslation");
@@ -169,7 +165,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __vector;
         }()) : std::nullopt,
-        guidanceBackgroundColor != nullptr ? std::make_optional(guidanceBackgroundColor->toCpp()) : std::nullopt,
         visibleTravelEstimate != nullptr ? std::make_optional(visibleTravelEstimate->toCpp()) : std::nullopt,
         onDidUpdatePanGestureWithTranslation != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> {
           if (onDidUpdatePanGestureWithTranslation->isInstanceOf(JFunc_void_Point_std__optional_Point__cxx::javaClassStatic())) [[likely]] {
@@ -235,7 +230,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      return newInstance(
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double_std__optional_double_::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>);
+      static const auto clazz = javaClassStatic();
+      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
+      return create(
+        clazz,
         jni::make_jstring(value.id),
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
@@ -260,7 +259,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }() : nullptr,
-        value.guidanceBackgroundColor.has_value() ? JNitroColor::fromCpp(value.guidanceBackgroundColor.value()) : nullptr,
         value.visibleTravelEstimate.has_value() ? JVisibleTravelEstimate::fromCpp(value.visibleTravelEstimate.value()) : nullptr,
         value.onDidUpdatePanGestureWithTranslation.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidUpdatePanGestureWithTranslation.value()) : nullptr,
         value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_std__optional_double__cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,

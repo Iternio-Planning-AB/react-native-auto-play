@@ -10,7 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
+import com.margelo.nitro.core.HybridObject
 
 /**
  * A Kotlin class representing the HybridAndroidAutoTelemetry HybridObject.
@@ -52,6 +52,6 @@ abstract class HybridHybridAndroidAutoTelemetrySpec: HybridObject() {
   private external fun initHybrid(): HybridData
 
   companion object {
-    private const val TAG = "HybridHybridAndroidAutoTelemetrySpec"
+    protected const val TAG = "HybridHybridAndroidAutoTelemetrySpec"
   }
 }

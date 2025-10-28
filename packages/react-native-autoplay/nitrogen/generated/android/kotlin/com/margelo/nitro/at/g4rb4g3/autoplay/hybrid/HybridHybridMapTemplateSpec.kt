@@ -10,7 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
+import com.margelo.nitro.core.HybridObject
 
 /**
  * A Kotlin class representing the HybridMapTemplate HybridObject.
@@ -61,18 +61,9 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   @Keep
   abstract fun hideTripSelector(templateId: String): Unit
   
+  @DoNotStrip
+  @Keep
   abstract fun setTemplateMapButtons(templateId: String, buttons: Array<NitroMapButton>?): Unit
-  
-  @DoNotStrip
-  @Keep
-  private fun setTemplateMapButtons_cxx(templateId: String, buttons: Array<NitroMapButton>?): Unit {
-    val __result = setTemplateMapButtons(templateId, buttons?.let { it })
-    return __result
-  }
-  
-  @DoNotStrip
-  @Keep
-  abstract fun updateGuidanceBackgroundColor(templateId: String, color: NitroColor?): Unit
   
   @DoNotStrip
   @Keep
@@ -81,6 +72,10 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun updateManeuvers(templateId: String, maneuvers: Array<NitroManeuver>): Unit
   
   @DoNotStrip
   @Keep
@@ -93,6 +88,6 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   private external fun initHybrid(): HybridData
 
   companion object {
-    private const val TAG = "HybridHybridMapTemplateSpec"
+    protected const val TAG = "HybridHybridMapTemplateSpec"
   }
 }

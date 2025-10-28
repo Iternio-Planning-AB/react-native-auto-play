@@ -1,5 +1,6 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
+import android.graphics.Color
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
@@ -14,6 +15,7 @@ import androidx.car.app.navigation.NavigationManagerCallback
 import androidx.car.app.navigation.model.Destination
 import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
+import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
@@ -22,11 +24,10 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertDismissalReason
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroNavigationAlert
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TravelEstimates
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripPoint
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibleTravelEstimate
@@ -107,18 +108,18 @@ class MapTemplate(
 
     override fun parse(): Template {
         return NavigationTemplate.Builder().apply {
+            setBackgroundColor(cardBackgroundColor)
             config.mapButtons?.let { buttons ->
                 setMapActionStrip(parseMapButtons(buttons))
             }
             config.headerActions?.let { headerActions ->
                 setActionStrip(parseMapActions(headerActions))
             }
-            config.guidanceBackgroundColor?.let {
-                setBackgroundColor(Parser.parseColor(it))
-            }
-            destinationTravelEstimates[config.visibleTravelEstimate]?.let {
+            val travelEstimates =
+                if (config.visibleTravelEstimate == VisibleTravelEstimate.FIRST) destinationTravelEstimates.firstOrNull() else destinationTravelEstimates.lastOrNull()
+            travelEstimates?.let {
                 setDestinationTravelEstimate(
-                    Parser.parseTravelEstimates(it)
+                    Parser.parseTravelEstimates(it.travelEstimates)
                 )
             }
             if (isNavigating) {
@@ -234,11 +235,6 @@ class MapTemplate(
         context.getCarService(AppManager::class.java).showAlert(alert)
     }
 
-    fun updateGuidanceBackgroundColor(color: NitroColor?) {
-        config = config.copy(guidanceBackgroundColor = color)
-        applyConfigUpdate()
-    }
-
     fun updateVisibleTravelEstimate(
         visibleTravelEstimate: VisibleTravelEstimate
     ) {
@@ -249,10 +245,11 @@ class MapTemplate(
     companion object {
         var isNavigating = false
         var navigationInfo: RoutingInfo? = null
+        var cardBackgroundColor: CarColor = CarColor.createCustom(Color.BLACK, Color.BLACK)
 
         private var mapTemplate: MapTemplate? = null
         private lateinit var navigationManager: NavigationManager
-        private var destinationTravelEstimates = mutableMapOf<VisibleTravelEstimate, TravelEstimates>()
+        private var destinationTravelEstimates: Array<TripPoint> = arrayOf()
 
 
         private val navigationManagerCallback = object : NavigationManagerCallback {
@@ -265,33 +262,36 @@ class MapTemplate(
             }
         }
 
-        fun updateTrip(steps: Array<TripPoint>) {
-            val trip = Trip.Builder().apply {
-                steps.map { step ->
-                    val travelEstimate = Parser.parseTravelEstimates(step.travelEstimates)
-                    addDestination(
-                        Destination.Builder().apply {
-                            setName(step.name)
-                        }.build(), travelEstimate
-                    )
-                }
-            }.build()
+        fun getTripDestinations(): Map<Destination, TravelEstimate> {
+            return mutableMapOf<Destination, TravelEstimate>().apply {
+                destinationTravelEstimates.forEach { step ->
+                    val destination = Destination.Builder().apply {
+                        setName(step.name)
+                    }.build()
 
-            UiThreadUtil.runOnUiThread {
-                navigationManager.updateTrip(trip)
+                    val travelEstimates = Parser.parseTravelEstimates(step.travelEstimates)
+
+                    put(destination, travelEstimates)
+                }
             }
         }
 
-        fun updateDestinationTravelEstimates(steps: Array<TripPoint>) {
-            destinationTravelEstimates[VisibleTravelEstimate.FIRST] = steps.first().travelEstimates
-            destinationTravelEstimates[VisibleTravelEstimate.LAST] = steps.last().travelEstimates
+        fun updateTripDestinations() {
+            val tripDestinations = getTripDestinations()
+            UiThreadUtil.runOnUiThread {
+                navigationManager.updateTrip(Trip.Builder().apply {
+                    tripDestinations.forEach {
+                        addDestination(it.key, it.value)
+                    }
+                }.build())
+            }
         }
 
         fun startNavigation(trip: TripConfig) {
             isNavigating = true
             val steps = trip.routeChoice.steps
 
-            updateDestinationTravelEstimates(steps)
+            destinationTravelEstimates = steps
 
             mapTemplate?.applyConfigUpdate()
 
@@ -303,15 +303,13 @@ class MapTemplate(
                 navigationManager.setNavigationManagerCallback(navigationManagerCallback)
                 navigationManager.navigationStarted()
 
-                updateTrip(steps)
+                updateTripDestinations()
             }
         }
 
         fun updateTravelEstimates(steps: Array<TripPoint>) {
-            updateDestinationTravelEstimates(steps)
+            destinationTravelEstimates = steps
             mapTemplate?.applyConfigUpdate()
-
-            updateTrip(steps)
         }
 
         fun stopNavigation() {
@@ -323,10 +321,59 @@ class MapTemplate(
 
         fun navigationEnded() {
             isNavigating = false
-            destinationTravelEstimates.clear()
+            destinationTravelEstimates = arrayOf()
             navigationInfo = null
 
             mapTemplate?.applyConfigUpdate()
+        }
+
+        fun updateManeuvers(maneuvers: Array<NitroManeuver>) {
+            val context = AndroidAutoSession.getRootContext()
+                ?: throw InvalidParameterException("updateManeuvers, could not get root car context")
+
+            val template = mapTemplate
+                ?: throw InvalidParameterException("updateManeuvers, could not get map template")
+
+            if (!this::navigationManager.isInitialized) {
+                throw InvalidParameterException("updateManeuvers, navigationManager not initialized, did you call startNavigation?")
+            }
+
+            val current = maneuvers.getOrNull(0)
+            val next = maneuvers.getOrNull(1)
+
+            if (current == null) {
+                navigationInfo = null
+                mapTemplate?.applyConfigUpdate()
+                return
+            }
+
+            cardBackgroundColor = Parser.parseColor(current.cardBackgroundColor)
+
+            val currentStep = Parser.parseStep(context, current)
+            val nextStep = next?.let { Parser.parseStep(context, it) }
+
+            navigationInfo = RoutingInfo.Builder().apply {
+                setCurrentStep(
+                    currentStep, Parser.parseDistance(current.travelEstimates.distanceRemaining)
+                )
+                nextStep?.let { setNextStep(it) }
+            }.build()
+
+            template.applyConfigUpdate()
+
+            UiThreadUtil.runOnUiThread {
+                navigationManager.updateTrip(Trip.Builder().apply {
+                    addStep(
+                        currentStep, Parser.parseTravelEstimates(current.travelEstimates)
+                    )
+                    nextStep?.let {
+                        addStep(it, Parser.parseTravelEstimates(next.travelEstimates))
+                    }
+                    getTripDestinations().forEach {
+                        addDestination(it.key, it.value)
+                    }
+                }.build())
+            }
         }
     }
 }

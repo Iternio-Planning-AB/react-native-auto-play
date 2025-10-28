@@ -6,7 +6,6 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NumericTelemetryItem
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.StringTelemetryItem
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.Telemetry
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.VehicleTelemetryItem
-import kotlin.math.abs
 
 class AndroidAutoTelemetryHolder {
     private var isDirty = false

@@ -9,7 +9,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.*
 
 
 /**
@@ -17,16 +16,24 @@ import com.margelo.nitro.core.*
  */
 @DoNotStrip
 @Keep
-data class TripConfig
+data class TripConfig(
   @DoNotStrip
   @Keep
-  constructor(
+  val id: String,
+  @DoNotStrip
+  @Keep
+  val routeChoice: RouteChoice
+) {
+  private companion object {
+    /**
+     * Constructor called from C++
+     */
     @DoNotStrip
     @Keep
-    val id: String,
-    @DoNotStrip
-    @Keep
-    val routeChoice: RouteChoice
-  ) {
-  /* main constructor */
+    @Suppress("unused")
+    @JvmStatic
+    private fun fromCpp(id: String, routeChoice: RouteChoice): TripConfig {
+      return TripConfig(id, routeChoice)
+    }
+  }
 }
