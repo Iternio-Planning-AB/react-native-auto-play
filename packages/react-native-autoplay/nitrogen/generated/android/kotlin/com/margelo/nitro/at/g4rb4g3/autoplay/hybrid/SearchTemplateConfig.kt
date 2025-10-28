@@ -37,6 +37,9 @@ data class SearchTemplateConfig(
   val onPopped: (() -> Unit)?,
   @DoNotStrip
   @Keep
+  val headerActions: Array<NitroAction>?,
+  @DoNotStrip
+  @Keep
   val title: AutoText,
   @DoNotStrip
   @Keep
@@ -62,8 +65,8 @@ data class SearchTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, title: AutoText, results: NitroSection?, initialSearchText: String?, searchHint: String?, onSearchTextChanged: Func_void_std__string?, onSearchTextSubmitted: Func_void_std__string?): SearchTemplateConfig {
-      return SearchTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, title, results, initialSearchText, searchHint, onSearchTextChanged?.let { it }, onSearchTextSubmitted?.let { it })
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, headerActions: Array<NitroAction>?, title: AutoText, results: NitroSection?, initialSearchText: String?, searchHint: String?, onSearchTextChanged: Func_void_std__string?, onSearchTextSubmitted: Func_void_std__string?): SearchTemplateConfig {
+      return SearchTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, headerActions, title, results, initialSearchText, searchHint, onSearchTextChanged?.let { it }, onSearchTextSubmitted?.let { it })
     }
   }
 }

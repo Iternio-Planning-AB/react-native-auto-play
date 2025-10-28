@@ -14,6 +14,16 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 
 // Forward declaration of `SearchTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SearchTemplateConfig; }
+// Forward declaration of `NitroAction` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
+// Forward declaration of `NitroImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroActionType` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
+// Forward declaration of `NitroAlignment` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `Distance` to properly resolve imports.
@@ -24,8 +34,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUni
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroSection; }
 // Forward declaration of `NitroRow` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRow; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectionType; }
 
@@ -33,13 +41,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectio
 #include <string>
 #include <optional>
 #include <functional>
+#include "NitroAction.hpp"
+#include <vector>
+#include "NitroImage.hpp"
+#include "NitroActionType.hpp"
+#include "NitroAlignment.hpp"
+#include "AlertActionStyle.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "NitroSection.hpp"
 #include "NitroRow.hpp"
-#include <vector>
-#include "NitroImage.hpp"
 #include "NitroSectionType.hpp"
 
 #include "NitroAutoplay-Swift-Cxx-Umbrella.hpp"
