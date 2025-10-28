@@ -15,11 +15,13 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ListTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MessageTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.SearchTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.GridTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MessageTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.SearchTemplate
 
 class AndroidAutoScreen(
     carContext: CarContext, private val moduleName: String, private var template: Template
@@ -68,6 +70,8 @@ class AndroidAutoScreen(
                     is MapTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is ListTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is GridTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is MessageTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is SearchTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     else -> null
                 }
 
@@ -91,6 +95,7 @@ class AndroidAutoScreen(
             is ListTemplateConfig -> ListTemplate(carContext, config)
             is GridTemplateConfig -> GridTemplate(carContext, config)
             is MessageTemplateConfig -> MessageTemplate(carContext, config)
+            is SearchTemplateConfig -> SearchTemplate(carContext, config)
             else -> null
         }?.let {
             AndroidAutoTemplate.setTemplate(moduleName, it)

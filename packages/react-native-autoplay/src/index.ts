@@ -5,6 +5,7 @@ import type { HybridGridTemplate as NitroHybridGridTemplate } from './specs/Hybr
 import type { HybridListTemplate as NitroHybridListTemplate } from './specs/HybridListTemplate.nitro';
 import type { HybridMapTemplate as NitroHybridMapTemplate } from './specs/HybridMapTemplate.nitro';
 import type { HybridMessageTemplate as NitroHybridMessageTemplate } from './specs/HybridMessageTemplate.nitro';
+import type { HybridSearchTemplate as NitroHybridSearchTemplate } from './specs/HybridSearchTemplate.nitro';
 
 AutoPlayHeadlessJsTask.registerHeadlessTask();
 
@@ -12,6 +13,8 @@ export const HybridAutoPlay =
   NitroModules.createHybridObject<NitroHybridAutoPlay>('HybridAutoPlay');
 export const HybridListTemplate =
   NitroModules.createHybridObject<NitroHybridListTemplate>('HybridListTemplate');
+export const HybridSearchTemplate =
+  NitroModules.createHybridObject<NitroHybridSearchTemplate>('HybridSearchTemplate');
 export const HybridGridTemplate =
   NitroModules.createHybridObject<NitroHybridGridTemplate>('HybridGridTemplate');
 export const HybridMapTemplate =

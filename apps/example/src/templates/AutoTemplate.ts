@@ -17,6 +17,7 @@ import { dispatch } from '../state/store';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoListTemplate } from './AutoListTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
+import { AutoSearchTemplate } from './AutoSearchTemplate';
 
 // biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
 const backButton: BackButton<any> = {
@@ -316,6 +317,64 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
     },
     onPress: () => {
       AutoMessageTemplate.getTemplate({ text: 'message' }).push();
+    },
+  },
+  {
+    type: 'custom',
+    image: {
+      name: 'search',
+      darkColor: 'rgba(255, 0, 0, 1)',
+      lightColor: 'rgba(0, 255, 0, 1)',
+      backgroundColor: 'rgba(66, 66, 66, 0.5)',
+    },
+    onPress: () => {
+      const template = AutoSearchTemplate.getTemplate({
+        initialSearchText: 'initial search text',
+        searchHint: 'search hint',
+        onSearchTextChanged: (searchText) => {
+          template.updateSearchResults(
+            searchText
+              ? {
+                  items: [
+                    {
+                      title: { text: searchText },
+                      type: 'default',
+                      onPress: () => {
+                        console.log('*** onPress', searchText);
+                      },
+                      image: {
+                        name: 'ev_charger',
+                        lightColor: 'red',
+                        darkColor: 'orange',
+                      },
+                    },
+                  ],
+                  type: 'default',
+                }
+              : undefined
+          );
+        },
+        onSearchTextSubmitted: (searchText) => {
+          template.updateSearchResults(
+            searchText
+              ? {
+                  items: [
+                    {
+                      title: { text: searchText },
+                      type: 'default',
+                      onPress: () => {
+                        console.log('*** onPress', searchText);
+                      },
+                    },
+                  ],
+                  type: 'default',
+                }
+              : undefined
+          );
+        },
+      });
+
+      template.push();
     },
   },
 ];

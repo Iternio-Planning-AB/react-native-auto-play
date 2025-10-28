@@ -31,6 +31,10 @@
     "HybridMessageTemplate": {
       "kotlin": "HybridMessageTemplate",
       "swift": "HybridMessageTemplate"
+    },
+    "HybridSearchTemplate": {
+      "kotlin": "HybridSearchTemplate",
+      "swift": "HybridSearchTemplate"
     }
   },
   "ignorePaths": ["**/node_modules"]

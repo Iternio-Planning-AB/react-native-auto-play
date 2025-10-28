@@ -22,12 +22,12 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AutoText
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DistanceUnits
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DurationWithTimeZone
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ListTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAlignment
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ListTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRow
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TravelEstimates
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.SymbolFont
@@ -39,7 +39,11 @@ import java.util.TimeZone
 object Parser {
     const val TAG = "Parser"
 
-    fun parseHeader(context: CarContext, title: AutoText, headerActions: Array<NitroAction>?): Header {
+    fun parseHeader(
+        context: CarContext,
+        title: AutoText,
+        headerActions: Array<NitroAction>?
+    ): Header {
         return Header.Builder().apply {
             setTitle(parseText(title))
             headerActions?.forEach { action ->
@@ -137,6 +141,30 @@ object Parser {
             DistanceUnits.KILOMETERS -> Distance.UNIT_KILOMETERS
         }
         return Distance.create(distance.value, unit)
+    }
+
+    fun parseSearchResult(
+        context: CarContext,
+        rows: Array<NitroRow>,
+    ): ItemList {
+        return ItemList.Builder().apply {
+            setOnSelectedListener {
+                // REVISIT: use global on click listener instead, that only returns the string to search for?
+                rows[it].onPress(null)
+            }
+
+            rows.forEachIndexed { index, row ->
+                addItem(Row.Builder().apply {
+                    setTitle(parseText(row.title))
+                    row.detailedText?.let { detailedText ->
+                        addText(parseText(detailedText))
+                    }
+                    row.image?.let { image ->
+                        setImage(CarIcon.Builder(parseImage(context, image)).build())
+                    }
+                }.build())
+            }
+        }.build()
     }
 
     fun parseRows(
