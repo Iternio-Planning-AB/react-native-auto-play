@@ -347,6 +347,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                   items: [
                     {
                       title: { text: searchText },
+                      detailedText: { text: 'onSearchTextChanged' },
                       type: 'default',
                       onPress: () => {
                         console.log('*** onPress', searchText);
@@ -370,6 +371,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                   items: [
                     {
                       title: { text: searchText },
+                      detailedText: { text: 'onSearchTextSubmitted' },
                       type: 'default',
                       onPress: () => {
                         console.log('*** onPress', searchText);

@@ -27,12 +27,13 @@ export interface NitroSearchTemplateConfig extends TemplateConfig {
    */
   searchHint?: string;
   /**
-   * Called when the user types on the keyboard. Should be debounced to avoid excessive calls to search backends.
+   * Called when the user types on the keyboard. Should be debounced to avoid excessive calls to backend.
    * @param searchText the text that the user has entered into the search bar
    */
   onSearchTextChanged?: (searchText: string) => void;
   /**
    * Called when the user presses enter or search button to confirm search explicitly.
+   * Can be used to trigger a backend call immediately, but might never be called if the user selects a search result item from autocomplete results instead.
    * @param searchText the text that the user has entered into the search bar
    */
   onSearchTextSubmitted?: (searchText: string) => void;
@@ -41,6 +42,7 @@ export interface NitroSearchTemplateConfig extends TemplateConfig {
 export type SearchTemplateConfig = Omit<NitroSearchTemplateConfig, 'headerActions' | 'results'> & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
+   * @namespace Android
    */
   headerActions?: HeaderActions<SearchTemplate>;
   /**

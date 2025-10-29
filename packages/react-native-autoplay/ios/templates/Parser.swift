@@ -167,6 +167,41 @@ class Parser {
         return Measurement(value: distance.value, unit: unit)
     }
 
+    static func parseSearchResults(
+        section: NitroSection?,
+        traitCollection: UITraitCollection
+    ) -> [CPListItem] {
+        guard let section else { return [] }
+
+        return section.items.enumerated().map { (itemIndex, item) in
+            let isSelected =
+                section.type == .radio
+                && Int(section.selectedIndex ?? -1) == itemIndex
+
+            let toggleImage = item.checked.map { checked in
+                UIImage.makeToggleImage(
+                    enabled: checked,
+                    maximumImageSize: CPListItem.maximumImageSize
+                )
+            }
+
+            let listItem = CPListItem(
+                text: parseText(text: item.title),
+                detailText: parseText(text: item.detailedText),
+                image: SymbolFont.imageFromNitroImage(
+                    image: item.image,
+                    traitCollection: traitCollection
+                ),
+            )
+            
+            listItem.handler = { listItem, completionHandler in
+                item.onPress(nil)
+            }
+
+            return listItem
+        }
+    }
+
     static func parseSections(
         sections: [NitroSection]?,
         updateSection: @escaping (NitroSection, Int) -> Void,
