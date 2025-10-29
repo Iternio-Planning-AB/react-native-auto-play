@@ -21,6 +21,16 @@ export type NitroSection = {
   type: NitroSectionType;
 };
 
+const validateRadioItems = (type: NitroSectionType, items: Array<NitroRow>) => {
+  if (
+    __DEV__ &&
+    type === 'radio' &&
+    (items.filter((item) => item.selected).length > 1 || items.every((item) => !item.selected))
+  ) {
+    throw new Error('radio lists must have one selected item');
+  }
+};
+
 const convert = <T>(template: T, sections?: Section<T>): Array<NitroSection> | undefined => {
   if (sections == null) {
     return undefined;
@@ -31,6 +41,8 @@ const convert = <T>(template: T, sections?: Section<T>): Array<NitroSection> | u
       const { title, type } = section;
       const items = section.items.map<NitroRow>((item) => convertRow(template, item));
 
+      validateRadioItems(type, items);
+
       return {
         items,
         type,
@@ -39,9 +51,13 @@ const convert = <T>(template: T, sections?: Section<T>): Array<NitroSection> | u
     });
   }
 
+  const items = sections.items.map((item) => convertRow(template, item));
+
+  validateRadioItems(sections.type, items);
+
   return [
     {
-      items: sections.items.map((item) => convertRow(template, item)),
+      items,
       type: sections.type,
     },
   ];

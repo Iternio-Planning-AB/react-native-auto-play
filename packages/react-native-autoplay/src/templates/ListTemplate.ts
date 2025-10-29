@@ -70,6 +70,9 @@ export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'headerActions' |
 
   /**
    * a container that groups your list items into sections.
+   * must have a single selected item in case it is a radio list.
+   * in case it does not the first item will be selected.
+   * in case it has multiple only the first selected one will be shown as selected.
    */
   sections?: Section<ListTemplate>;
 };
