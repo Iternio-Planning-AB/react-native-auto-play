@@ -83,10 +83,16 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     override func traitCollectionDidChange() {
         let traitCollection = SceneStore.getRootTraitCollection()
+        let isDark = traitCollection.userInterfaceStyle == .dark
+
         self.config.onAppearanceDidChange?(
-            traitCollection.userInterfaceStyle == .dark ? .dark : .light
+            isDark ? .dark : .light
         )
         self.invalidate()
+
+        guard let template = self.template as? CPMapTemplate else { return }
+
+        template.tripEstimateStyle = isDark ? .dark : .light
     }
 
     // MARK: gestures
