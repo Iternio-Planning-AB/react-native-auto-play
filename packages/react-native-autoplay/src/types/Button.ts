@@ -1,3 +1,4 @@
+import { HybridAutoPlay } from '..';
 import type { AutoImage } from './Image';
 
 export type MapButton<T> = {
@@ -47,6 +48,8 @@ export type BackButton<T> = {
   onPress: (template: T) => void;
 };
 
+type BackButtonPopTemplate = { type: 'back'; onPress: () => void };
+
 /**
  * this is a special button that just shows the app icon and can not be pressed
  * @namespace Android
@@ -80,4 +83,10 @@ export type ActionButtonAndroid<T> =
       flags?: Flags;
     })
   | BackButton<T>
+  | BackButtonPopTemplate
   | AppButton;
+
+export const BackButtonPopTemplate: BackButtonPopTemplate = {
+  type: 'back',
+  onPress: () => HybridAutoPlay.popTemplate(),
+};

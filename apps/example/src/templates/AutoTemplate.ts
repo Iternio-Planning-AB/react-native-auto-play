@@ -1,6 +1,6 @@
 import {
   type Alert,
-  type BackButton,
+  BackButtonPopTemplate,
   CarPlayDashboard,
   type HeaderActions,
   HybridAutoPlay,
@@ -26,15 +26,9 @@ import { AutoListTemplate } from './AutoListTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
 
 // biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
-const backButton: BackButton<any> = {
-  type: 'back',
-  onPress: () => HybridAutoPlay.popTemplate(),
-};
-
-// biome-ignore lint/suspicious/noExplicitAny: this is used across different typed templates
 const headerActions: HeaderActions<any> = {
   android: {
-    startHeaderAction: backButton,
+    startHeaderAction: BackButtonPopTemplate,
     endHeaderActions: [
       {
         type: 'textImage',
@@ -58,7 +52,7 @@ const headerActions: HeaderActions<any> = {
     ],
   },
   ios: {
-    backButton,
+    backButton: BackButtonPopTemplate,
     trailingNavigationBarButtons: [
       {
         type: 'text',
