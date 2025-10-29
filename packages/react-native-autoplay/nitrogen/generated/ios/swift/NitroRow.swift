@@ -18,7 +18,7 @@ public extension NitroRow {
   /**
    * Create a new instance of `NitroRow`.
    */
-  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: NitroImage?, checked: Bool?, onPress: @escaping (_ checked: Bool?) -> Void) {
+  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: NitroImage?, checked: Bool?, onPress: @escaping (_ checked: Bool?) -> Void, selected: Bool?) {
     self.init(title, { () -> bridge.std__optional_AutoText_ in
       if let __unwrappedValue = detailedText {
         return bridge.create_std__optional_AutoText_(__unwrappedValue)
@@ -46,6 +46,12 @@ public extension NitroRow {
     }(), { () -> bridge.Func_void_std__optional_bool_ in
       let __closureWrapper = Func_void_std__optional_bool_(onPress)
       return bridge.create_Func_void_std__optional_bool_(__closureWrapper.toUnsafe())
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = selected {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }())
   }
 
@@ -174,6 +180,30 @@ public extension NitroRow {
       self.__onPress = { () -> bridge.Func_void_std__optional_bool_ in
         let __closureWrapper = Func_void_std__optional_bool_(newValue)
         return bridge.create_Func_void_std__optional_bool_(__closureWrapper.toUnsafe())
+      }()
+    }
+  }
+  
+  var selected: Bool? {
+    @inline(__always)
+    get {
+      return { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(self.__selected) {
+          let __unwrapped = bridge.get_std__optional_bool_(self.__selected)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__selected = { () -> bridge.std__optional_bool_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_bool_(__unwrappedValue)
+        } else {
+          return .init()
+        }
       }()
     }
   }

@@ -25,10 +25,7 @@ data class NitroSection(
   val items: Array<NitroRow>,
   @DoNotStrip
   @Keep
-  val type: NitroSectionType,
-  @DoNotStrip
-  @Keep
-  val selectedIndex: Double?
+  val type: NitroSectionType
 ) {
   private companion object {
     /**
@@ -38,8 +35,8 @@ data class NitroSection(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: String?, items: Array<NitroRow>, type: NitroSectionType, selectedIndex: Double?): NitroSection {
-      return NitroSection(title, items, type, selectedIndex)
+    private fun fromCpp(title: String?, items: Array<NitroRow>, type: NitroSectionType): NitroSection {
+      return NitroSection(title, items, type)
     }
   }
 }

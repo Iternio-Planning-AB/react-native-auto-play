@@ -56,6 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JBoolean> checked = this->getFieldValue(fieldChecked);
       static const auto fieldOnPress = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onPress");
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onPress = this->getFieldValue(fieldOnPress);
+      static const auto fieldSelected = clazz->getField<jni::JBoolean>("selected");
+      jni::local_ref<jni::JBoolean> selected = this->getFieldValue(fieldSelected);
       return NitroRow(
         title->toCpp(),
         detailedText != nullptr ? std::make_optional(detailedText->toCpp()) : std::nullopt,
@@ -73,7 +75,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
               return onPressRef->invoke(checked);
             };
           }
-        }()
+        }(),
+        selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt
       );
     }
 
@@ -83,7 +86,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>);
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -94,7 +97,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.enabled,
         value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
         value.checked.has_value() ? jni::JBoolean::valueOf(value.checked.value()) : nullptr,
-        JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress)
+        JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress),
+        value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr
       );
     }
   };

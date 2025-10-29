@@ -18,7 +18,7 @@ public extension NitroSection {
   /**
    * Create a new instance of `NitroSection`.
    */
-  init(title: String?, items: [NitroRow], type: NitroSectionType, selectedIndex: Double?) {
+  init(title: String?, items: [NitroRow], type: NitroSectionType) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = title {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -31,13 +31,7 @@ public extension NitroSection {
         __vector.push_back(__item)
       }
       return __vector
-    }(), type, { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = selectedIndex {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }())
+    }(), type)
   }
 
   var title: String? {
@@ -89,23 +83,6 @@ public extension NitroSection {
     @inline(__always)
     set {
       self.__type = newValue
-    }
-  }
-  
-  var selectedIndex: Double? {
-    @inline(__always)
-    get {
-      return self.__selectedIndex.value
-    }
-    @inline(__always)
-    set {
-      self.__selectedIndex = { () -> bridge.std__optional_double_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
-        } else {
-          return .init()
-        }
-      }()
     }
   }
 }

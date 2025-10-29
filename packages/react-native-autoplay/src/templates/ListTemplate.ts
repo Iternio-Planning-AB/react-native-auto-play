@@ -35,6 +35,7 @@ export type ToggleRow<T> = BaseRow & {
 export type RadioRow<T> = BaseRow & {
   type: 'radio';
   onPress: (template: T) => void;
+  selected?: boolean;
 };
 
 export type MultiSection<T> =
@@ -47,7 +48,6 @@ export type MultiSection<T> =
       type: 'radio';
       title: string;
       items: Array<RadioRow<T>>;
-      selectedIndex: number;
     };
 
 export type SingleSection<T> = {

@@ -47,10 +47,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::optional<NitroImage> image     SWIFT_PRIVATE;
     std::optional<bool> checked     SWIFT_PRIVATE;
     std::function<void(std::optional<bool> /* checked */)> onPress     SWIFT_PRIVATE;
+    std::optional<bool> selected     SWIFT_PRIVATE;
 
   public:
     NitroRow() = default;
-    explicit NitroRow(AutoText title, std::optional<AutoText> detailedText, std::optional<bool> browsable, bool enabled, std::optional<NitroImage> image, std::optional<bool> checked, std::function<void(std::optional<bool> /* checked */)> onPress): title(title), detailedText(detailedText), browsable(browsable), enabled(enabled), image(image), checked(checked), onPress(onPress) {}
+    explicit NitroRow(AutoText title, std::optional<AutoText> detailedText, std::optional<bool> browsable, bool enabled, std::optional<NitroImage> image, std::optional<bool> checked, std::function<void(std::optional<bool> /* checked */)> onPress, std::optional<bool> selected): title(title), detailedText(detailedText), browsable(browsable), enabled(enabled), image(image), checked(checked), onPress(onPress), selected(selected) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -69,7 +70,8 @@ namespace margelo::nitro {
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "enabled")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "checked")),
-        JSIConverter<std::function<void(std::optional<bool>)>>::fromJSI(runtime, obj.getProperty(runtime, "onPress"))
+        JSIConverter<std::function<void(std::optional<bool>)>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "selected"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow& arg) {
@@ -81,6 +83,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "checked", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.checked));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void(std::optional<bool>)>>::toJSI(runtime, arg.onPress));
+      obj.setProperty(runtime, "selected", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.selected));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -98,6 +101,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "checked"))) return false;
       if (!JSIConverter<std::function<void(std::optional<bool>)>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "selected"))) return false;
       return true;
     }
   };

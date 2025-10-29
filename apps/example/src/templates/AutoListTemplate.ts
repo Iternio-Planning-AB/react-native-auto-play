@@ -13,7 +13,6 @@ const getRadioTemplate = (): ListTemplate => {
     headerActions: AutoTemplate.headerActions,
     sections: {
       type: 'radio',
-      selectedIndex: 1,
       items: [
         {
           type: 'radio',
@@ -28,6 +27,7 @@ const getRadioTemplate = (): ListTemplate => {
           onPress: () => {
             console.log('*** radio #2');
           },
+          selected: true,
         },
         {
           type: 'radio',

@@ -53,8 +53,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JNitroRow>> items = this->getFieldValue(fieldItems);
       static const auto fieldType = clazz->getField<JNitroSectionType>("type");
       jni::local_ref<JNitroSectionType> type = this->getFieldValue(fieldType);
-      static const auto fieldSelectedIndex = clazz->getField<jni::JDouble>("selectedIndex");
-      jni::local_ref<jni::JDouble> selectedIndex = this->getFieldValue(fieldSelectedIndex);
       return NitroSection(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
         [&]() {
@@ -67,8 +65,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __vector;
         }(),
-        type->toCpp(),
-        selectedIndex != nullptr ? std::make_optional(selectedIndex->value()) : std::nullopt
+        type->toCpp()
       );
     }
 
@@ -78,7 +75,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroSection::javaobject> fromCpp(const NitroSection& value) {
-      using JSignature = JNitroSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroRow>>, jni::alias_ref<JNitroSectionType>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JNitroSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroRow>>, jni::alias_ref<JNitroSectionType>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -93,8 +90,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }(),
-        JNitroSectionType::fromCpp(value.type),
-        value.selectedIndex.has_value() ? jni::JDouble::valueOf(value.selectedIndex.value()) : nullptr
+        JNitroSectionType::fromCpp(value.type)
       );
     }
   };

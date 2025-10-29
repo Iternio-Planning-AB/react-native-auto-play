@@ -165,19 +165,23 @@ object Parser {
         context: CarContext,
         rows: Array<NitroRow>,
         sectionIndex: Int,
-        selectedIndex: Double?,
+        selectedIndex: Int?,
         templateId: String
     ): ItemList {
         return ItemList.Builder().apply {
             selectedIndex?.let {
-                setSelectedIndex(selectedIndex.toInt())
+                setSelectedIndex(selectedIndex)
                 setOnSelectedListener {
                     rows[it].onPress(null)
                     AndroidAutoTemplate.getTypedConfig<ListTemplateConfig>(templateId)
                         ?.let { config ->
-                            val section = config.sections?.get(sectionIndex)
-                                ?.copy(selectedIndex = it.toDouble()) ?: return@let
-                            config.sections.set(sectionIndex, section)
+                            val items =
+                                config.sections?.get(sectionIndex)?.items?.mapIndexed { index, item ->
+                                    item.copy(selected = it == index)
+                                }?.toTypedArray() ?: return@let
+
+                            val section = config.sections[sectionIndex].copy(items = items)
+                            config.sections[sectionIndex] = section
 
                             AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
                         }
@@ -312,15 +316,13 @@ object Parser {
 
     fun parseColor(color: NitroColor): CarColor {
         return CarColor.createCustom(
-            color.lightColor.toInt(),
-            color.darkColor.toInt()
+            color.lightColor.toInt(), color.darkColor.toInt()
         )
     }
 
     fun parseColor(color: Double, colorDark: Double): CarColor {
         return CarColor.createCustom(
-            color.toInt(),
-            colorDark.toInt()
+            color.toInt(), colorDark.toInt()
         )
     }
 

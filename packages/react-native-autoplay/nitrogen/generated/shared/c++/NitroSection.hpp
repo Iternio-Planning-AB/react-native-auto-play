@@ -44,11 +44,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::optional<std::string> title     SWIFT_PRIVATE;
     std::vector<NitroRow> items     SWIFT_PRIVATE;
     NitroSectionType type     SWIFT_PRIVATE;
-    std::optional<double> selectedIndex     SWIFT_PRIVATE;
 
   public:
     NitroSection() = default;
-    explicit NitroSection(std::optional<std::string> title, std::vector<NitroRow> items, NitroSectionType type, std::optional<double> selectedIndex): title(title), items(items), type(type), selectedIndex(selectedIndex) {}
+    explicit NitroSection(std::optional<std::string> title, std::vector<NitroRow> items, NitroSectionType type): title(title), items(items), type(type) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -63,8 +62,7 @@ namespace margelo::nitro {
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "title")),
         JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::fromJSI(runtime, obj.getProperty(runtime, "items")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "selectedIndex"))
+        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::fromJSI(runtime, obj.getProperty(runtime, "type"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection& arg) {
@@ -72,7 +70,6 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "title", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, "items", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::toJSI(runtime, arg.items));
       obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::toJSI(runtime, arg.type));
-      obj.setProperty(runtime, "selectedIndex", JSIConverter<std::optional<double>>::toJSI(runtime, arg.selectedIndex));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -86,7 +83,6 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::canConvert(runtime, obj.getProperty(runtime, "items"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "selectedIndex"))) return false;
       return true;
     }
   };

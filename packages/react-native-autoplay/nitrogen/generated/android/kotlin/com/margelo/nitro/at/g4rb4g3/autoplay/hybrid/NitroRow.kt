@@ -37,7 +37,10 @@ data class NitroRow(
   val checked: Boolean?,
   @DoNotStrip
   @Keep
-  val onPress: (checked: Boolean?) -> Unit
+  val onPress: (checked: Boolean?) -> Unit,
+  @DoNotStrip
+  @Keep
+  val selected: Boolean?
 ) {
   private companion object {
     /**
@@ -47,8 +50,8 @@ data class NitroRow(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: NitroImage?, checked: Boolean?, onPress: Func_void_std__optional_bool_): NitroRow {
-      return NitroRow(title, detailedText, browsable, enabled, image, checked, onPress)
+    private fun fromCpp(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: NitroImage?, checked: Boolean?, onPress: Func_void_std__optional_bool_, selected: Boolean?): NitroRow {
+      return NitroRow(title, detailedText, browsable, enabled, image, checked, onPress, selected)
     }
   }
 }
