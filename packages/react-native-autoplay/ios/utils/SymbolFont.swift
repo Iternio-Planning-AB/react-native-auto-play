@@ -51,15 +51,13 @@ class SymbolFont {
         SymbolFont.isRegistered = true
     }
 
+    // creates a single color UIImage
     static func imageFromGlyph(
         glyph: Double,
+        foregroundColor: UIColor,
+        backgroundColor: UIColor,
         size: CGFloat,
-        lightColor: UIColor,
-        darkColor: UIColor,
-        backgroundColor: UIColor = .white,
-        fontScale: CGFloat = 1,
-        noImageAsset: Bool = false,
-        traitCollection: UITraitCollection
+        fontScale: CGFloat = 1
     ) -> UIImage? {
         if !SymbolFont.isRegistered {
             SymbolFont.loadFont()
@@ -75,50 +73,64 @@ class SymbolFont {
         let canvasSize = CGSize(width: size, height: size)
         let rect = CGRect(origin: .zero, size: canvasSize)
 
-        // Create a helper function to draw the image with a specific color
-        func createImage(with color: UIColor) -> UIImage? {
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: font,
-                .foregroundColor: color,
-            ]
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: foregroundColor,
+        ]
 
-            let attrString = NSAttributedString(
-                string: codepoint,
-                attributes: attributes
-            )
+        let attrString = NSAttributedString(
+            string: codepoint,
+            attributes: attributes
+        )
 
-            // Start drawing
-            UIGraphicsBeginImageContextWithOptions(canvasSize, false, 0)
-            guard let context = UIGraphicsGetCurrentContext() else {
-                return nil
-            }
-
-            // Fill circular background
-            context.setFillColor(backgroundColor.cgColor)
-            context.fillEllipse(in: rect)
-
-            // Draw glyph
-            let textSize = attrString.size()
-            let x = (canvasSize.width - textSize.width) / 2
-            let y = (canvasSize.height - textSize.height) / 2
-            attrString.draw(at: CGPoint(x: x, y: y))
-
-            let image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-
-            return image
-        }
-
-        // Create images for both light and dark modes
-        guard let lightImage = createImage(with: lightColor),
-            let darkImage = createImage(with: darkColor)
-        else {
+        // Start drawing
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else {
             return nil
         }
 
-        if noImageAsset {
-            return traitCollection.userInterfaceStyle == .light
-                ? lightImage : darkImage
+        // Fill circular background
+        context.setFillColor(backgroundColor.cgColor)
+        context.fillEllipse(in: rect)
+
+        // Draw glyph
+        let textSize = attrString.size()
+        let x = (canvasSize.width - textSize.width) / 2
+        let y = (canvasSize.height - textSize.height) / 2
+        attrString.draw(at: CGPoint(x: x, y: y))
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return image
+    }
+
+    static func imageFromGlyph(
+        glyph: Double,
+        size: CGFloat,
+        lightColor: UIColor,
+        darkColor: UIColor,
+        backgroundColor: UIColor = .white,
+        fontScale: CGFloat = 1,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        guard
+            let lightImage = imageFromGlyph(
+                glyph: glyph,
+                foregroundColor: lightColor,
+                backgroundColor: backgroundColor,
+                size: size,
+                fontScale: fontScale
+            ),
+            let darkImage = imageFromGlyph(
+                glyph: glyph,
+                foregroundColor: darkColor,
+                backgroundColor: backgroundColor,
+                size: size,
+                fontScale: fontScale
+            )
+        else {
+            return nil
         }
 
         // Create a UIImageAsset that contains both light and dark variants
@@ -155,6 +167,17 @@ class SymbolFont {
             RCTConvert.uiColor(image.backgroundColor)
             ?? .white
 
+        if noImageAsset {
+            return imageFromGlyph(
+                glyph: image.glyph,
+                foregroundColor: traitCollection.userInterfaceStyle == .light
+                    ? lightColor : darkColor,
+                backgroundColor: backgroundColor,
+                size: size,
+                fontScale: fontScale
+            )
+        }
+
         return SymbolFont.imageFromGlyph(
             glyph: image.glyph,
             size: size,
@@ -162,7 +185,6 @@ class SymbolFont {
             darkColor: darkColor,
             backgroundColor: backgroundColor,
             fontScale: fontScale,
-            noImageAsset: noImageAsset,
             traitCollection: traitCollection
         )!
     }
@@ -175,32 +197,50 @@ class SymbolFont {
         let width = size * laneImages.count
         let height = size
 
-        UIGraphicsBeginImageContextWithOptions(
-            CGSize(width: width, height: height),
-            false,
-            0.0
-        )
-        defer { UIGraphicsEndImageContext() }
-        var xOffset = 0
-        for laneImage in laneImages {
-            let image = imageFromGlyph(
-                glyph: laneImage.glyph,
-                size: CGFloat(size),
-                lightColor: RCTConvert.uiColor(laneImage.lightColor),
-                darkColor: RCTConvert.uiColor(laneImage.darkColor),
-                backgroundColor: UIColor.clear,
-                traitCollection: traitCollection
-            )!
-            image.draw(
-                in: CGRect(
-                    x: xOffset,
-                    y: 0,
-                    width: Int(size),
-                    height: Int(size)
-                )
+        func getLaneImage(isDark: Bool) -> UIImage {
+            UIGraphicsBeginImageContextWithOptions(
+                CGSize(width: width, height: height),
+                false,
+                0.0
             )
-            xOffset += Int(size)
+
+            defer { UIGraphicsEndImageContext() }
+            var xOffset = 0
+            for laneImage in laneImages {
+                let foregroundColor =
+                    RCTConvert.uiColor(
+                        isDark ? laneImage.darkColor : laneImage.lightColor
+                    ) ?? (isDark ? .white : .black)
+
+                let image = imageFromGlyph(
+                    glyph: laneImage.glyph,
+                    foregroundColor: foregroundColor,
+                    backgroundColor: UIColor.clear,
+                    size: CGFloat(size)
+                )!
+                image.draw(
+                    in: CGRect(
+                        x: xOffset,
+                        y: 0,
+                        width: Int(size),
+                        height: Int(size)
+                    )
+                )
+                xOffset += Int(size)
+            }
+            return UIGraphicsGetImageFromCurrentImageContext()!
         }
-        return UIGraphicsGetImageFromCurrentImageContext()!
+
+        let imageAsset = UIImageAsset()
+        let lightTraits = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: .light)
+        ])
+        imageAsset.register(getLaneImage(isDark: false), with: lightTraits)
+
+        let darkTraits = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: .dark)
+        ])
+        imageAsset.register(getLaneImage(isDark: true), with: darkTraits)
+        return imageAsset.image(with: traitCollection)
     }
 }
