@@ -24,6 +24,8 @@ data class LaneGuidance(
   @Keep
   val lanes: Array<Variant_PreferredImageLane_ImageLane>
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

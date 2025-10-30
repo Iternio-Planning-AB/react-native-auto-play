@@ -65,6 +65,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     void dispose() noexcept override {
       _swiftPart.dispose();
     }
+    std::string toString() override {
+      return _swiftPart.toString();
+    }
 
   public:
     // Properties

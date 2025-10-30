@@ -30,6 +30,8 @@ data class TripPoint(
   @Keep
   val travelEstimates: TravelEstimates
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

@@ -22,19 +22,19 @@ data class MessageTemplateConfig(
   val id: String,
   @DoNotStrip
   @Keep
-  val onWillAppear: ((animated: Boolean?) -> Unit)?,
+  val onWillAppear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onWillDisappear: ((animated: Boolean?) -> Unit)?,
+  val onWillDisappear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onDidAppear: ((animated: Boolean?) -> Unit)?,
+  val onDidAppear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onDidDisappear: ((animated: Boolean?) -> Unit)?,
+  val onDidDisappear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onPopped: (() -> Unit)?,
+  val onPopped: Func_void?,
   @DoNotStrip
   @Keep
   val headerActions: Array<NitroAction>?,
@@ -51,6 +51,12 @@ data class MessageTemplateConfig(
   @Keep
   val image: NitroImage?
 ) {
+  /**
+   * Create a new instance of MessageTemplateConfig from Kotlin
+   */
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, headerActions: Array<NitroAction>?, title: AutoText?, message: AutoText, actions: Array<NitroAction>?, image: NitroImage?):
+         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, headerActions, title, message, actions, image)
+
   private companion object {
     /**
      * Constructor called from C++
@@ -60,7 +66,7 @@ data class MessageTemplateConfig(
     @Suppress("unused")
     @JvmStatic
     private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, headerActions: Array<NitroAction>?, title: AutoText?, message: AutoText, actions: Array<NitroAction>?, image: NitroImage?): MessageTemplateConfig {
-      return MessageTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, headerActions, title, message, actions, image)
+      return MessageTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, title, message, actions, image)
     }
   }
 }

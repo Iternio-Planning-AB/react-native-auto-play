@@ -24,6 +24,8 @@ data class ImageLane(
   @Keep
   val angles: DoubleArray
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

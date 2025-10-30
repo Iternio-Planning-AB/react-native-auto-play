@@ -26,6 +26,13 @@ public protocol HybridHybridMapTemplateSpec_protocol: HybridObject {
   func stopNavigation(templateId: String) throws -> Void
 }
 
+public extension HybridHybridMapTemplateSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridMapTemplate]"
+  }
+}
+
 /// See ``HybridHybridMapTemplateSpec``
 open class HybridHybridMapTemplateSpec_base {
   private weak var cxxWrapper: HybridHybridMapTemplateSpec_cxx? = nil

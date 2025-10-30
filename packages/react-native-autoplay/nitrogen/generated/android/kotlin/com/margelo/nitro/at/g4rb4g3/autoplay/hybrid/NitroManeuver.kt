@@ -75,6 +75,8 @@ data class NitroManeuver(
   @Keep
   val highwayExitLabel: String?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

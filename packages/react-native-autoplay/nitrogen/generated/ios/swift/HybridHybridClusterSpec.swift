@@ -24,6 +24,13 @@ public protocol HybridHybridClusterSpec_protocol: HybridObject {
   func addListenerSpeedLimit(callback: @escaping (_ clusterId: String, _ payload: Bool) -> Void) throws -> () -> Void
 }
 
+public extension HybridHybridClusterSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridCluster]"
+  }
+}
+
 /// See ``HybridHybridClusterSpec``
 open class HybridHybridClusterSpec_base {
   private weak var cxxWrapper: HybridHybridClusterSpec_cxx? = nil

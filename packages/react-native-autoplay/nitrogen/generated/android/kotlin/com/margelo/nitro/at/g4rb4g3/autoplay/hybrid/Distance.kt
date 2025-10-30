@@ -24,6 +24,8 @@ data class Distance(
   @Keep
   val unit: DistanceUnits
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

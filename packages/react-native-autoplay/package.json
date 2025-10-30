@@ -57,7 +57,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/react": "^19.1.03",
-    "nitrogen": "^0.31.2",
+    "nitrogen": "^0.31.3",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {

@@ -24,6 +24,8 @@ data class NumericTelemetryItem(
   @Keep
   val value: Double
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

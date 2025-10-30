@@ -17,6 +17,13 @@ public protocol HybridHybridMessageTemplateSpec_protocol: HybridObject {
   func createMessageTemplate(config: MessageTemplateConfig) throws -> Void
 }
 
+public extension HybridHybridMessageTemplateSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridMessageTemplate]"
+  }
+}
+
 /// See ``HybridHybridMessageTemplateSpec``
 open class HybridHybridMessageTemplateSpec_base {
   private weak var cxxWrapper: HybridHybridMessageTemplateSpec_cxx? = nil

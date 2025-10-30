@@ -28,7 +28,7 @@ data class NitroAction(
   val enabled: Boolean?,
   @DoNotStrip
   @Keep
-  val onPress: () -> Unit,
+  val onPress: Func_void,
   @DoNotStrip
   @Keep
   val type: NitroActionType,
@@ -42,6 +42,12 @@ data class NitroAction(
   @Keep
   val style: AlertActionStyle?
 ) {
+  /**
+   * Create a new instance of NitroAction from Kotlin
+   */
+  constructor(title: String?, image: NitroImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: AlertActionStyle?):
+         this(title, image, enabled, Func_void_java(onPress), type, alignment, flags, style)
+
   private companion object {
     /**
      * Constructor called from C++

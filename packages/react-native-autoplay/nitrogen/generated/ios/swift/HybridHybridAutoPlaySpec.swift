@@ -27,6 +27,13 @@ public protocol HybridHybridAutoPlaySpec_protocol: HybridObject {
   func isConnected() throws -> Bool
 }
 
+public extension HybridHybridAutoPlaySpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridAutoPlay]"
+  }
+}
+
 /// See ``HybridHybridAutoPlaySpec``
 open class HybridHybridAutoPlaySpec_base {
   private weak var cxxWrapper: HybridHybridAutoPlaySpec_cxx? = nil

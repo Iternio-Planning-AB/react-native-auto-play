@@ -24,6 +24,8 @@ data class NitroColor(
   @Keep
   val darkColor: Double
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

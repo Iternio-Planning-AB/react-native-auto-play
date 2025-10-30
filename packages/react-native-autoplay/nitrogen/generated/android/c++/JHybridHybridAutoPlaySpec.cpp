@@ -72,6 +72,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     method(_javaPart);
   }
 
+  std::string JHybridHybridAutoPlaySpec::toString() {
+    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
+    auto javaString = method(_javaPart);
+    return javaString->toStdString();
+  }
+
   // Properties
   
 

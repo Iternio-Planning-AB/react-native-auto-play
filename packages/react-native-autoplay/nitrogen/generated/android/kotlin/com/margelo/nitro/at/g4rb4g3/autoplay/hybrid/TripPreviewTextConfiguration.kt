@@ -30,6 +30,8 @@ data class TripPreviewTextConfiguration(
   @Keep
   val travelEstimatesTitle: String
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

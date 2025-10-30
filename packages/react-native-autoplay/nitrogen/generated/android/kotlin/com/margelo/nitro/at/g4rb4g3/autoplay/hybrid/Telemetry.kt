@@ -36,6 +36,8 @@ data class Telemetry(
   @Keep
   val vehicle: VehicleTelemetryItem?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

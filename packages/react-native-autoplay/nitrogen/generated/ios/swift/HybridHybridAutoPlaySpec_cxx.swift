@@ -77,7 +77,7 @@ open class HybridHybridAutoPlaySpec_cxx {
    */
   public func getCxxPart() -> bridge.std__shared_ptr_HybridHybridAutoPlaySpec_ {
     let cachedCxxPart = self.__cxxPart.lock()
-    if cachedCxxPart.__convertToBool() {
+    if Bool(fromCxx: cachedCxxPart) {
       return cachedCxxPart
     } else {
       let newCxxPart = bridge.create_std__shared_ptr_HybridHybridAutoPlaySpec_(self.toUnsafe())
@@ -104,6 +104,14 @@ open class HybridHybridAutoPlaySpec_cxx {
   @inline(__always)
   public func dispose() {
     self.__implementation.dispose()
+  }
+
+  /**
+   * Call toString() on the Swift class.
+   */
+  @inline(__always)
+  public func toString() -> String {
+    return self.__implementation.toString()
   }
 
   // Properties

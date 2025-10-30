@@ -27,6 +27,8 @@ data class AutoText(
   @Keep
   val duration: Double?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++
