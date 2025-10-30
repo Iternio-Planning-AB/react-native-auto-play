@@ -3,9 +3,12 @@ import type { HybridListTemplate as NitroHybridListTemplate } from '../specs/Hyb
 import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
+import { NitroMapButton } from '../utils/NitroMapButton';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
+import { type BaseMapTemplateConfig, convertMapActions } from './MapTemplate';
 import {
   type HeaderActions,
+  type NitroBaseMapTemplateConfig,
   type NitroTemplateConfig,
   Template,
   type TemplateConfig,
@@ -64,9 +67,13 @@ export interface NitroListTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;
   title: AutoText;
   sections?: Array<NitroSection>;
+  mapConfig?: NitroBaseMapTemplateConfig;
 }
 
-export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'headerActions' | 'sections'> & {
+export type ListTemplateConfig = Omit<
+  NitroListTemplateConfig,
+  'headerActions' | 'sections' | 'mapConfig'
+> & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
@@ -79,6 +86,11 @@ export type ListTemplateConfig = Omit<NitroListTemplateConfig, 'headerActions' |
    * in case it has multiple only the first selected one will be shown as selected.
    */
   sections?: Section<ListTemplate>;
+  /**
+   * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a ListTemplate with a map in background. No actions need to be specified, can be empty object.
+   * @namespace Android
+   */
+  mapConfig?: BaseMapTemplateConfig<ListTemplate>;
 };
 
 export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<ListTemplate>> {
@@ -87,13 +99,19 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
   constructor(config: ListTemplateConfig) {
     super(config);
 
-    const { headerActions, sections, ...rest } = config;
+    const { headerActions, mapConfig, sections, ...rest } = config;
 
     const nitroConfig: NitroListTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       sections: NitroSectionUtil.convert(this.template, sections),
+      mapConfig: mapConfig
+        ? {
+            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
+            headerActions: convertMapActions(this.template, mapConfig.headerActions),
+          }
+        : undefined,
     };
 
     HybridListTemplate.createListTemplate(nitroConfig);

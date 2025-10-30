@@ -4,10 +4,11 @@ import androidx.car.app.CarContext
 import androidx.car.app.model.ListTemplate
 import androidx.car.app.model.SectionedItemList
 import androidx.car.app.model.Template
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
+import androidx.car.app.navigation.model.MapController
+import androidx.car.app.navigation.model.MapWithContentTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ListTemplateConfig
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSection
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSectionType
 
 class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     AndroidAutoTemplate<ListTemplateConfig>(context, config) {
@@ -17,7 +18,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
         get() = config.id
 
     override fun parse(): Template {
-        return ListTemplate.Builder().apply {
+        var template = ListTemplate.Builder().apply {
             setHeader(Parser.parseHeader(context, config.title, config.headerActions))
 
             config.sections?.let { sections ->
@@ -45,6 +46,23 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
                 setLoading(true)
             }
         }.build()
+
+        return this.config.mapConfig?.let {
+            MapWithContentTemplate.Builder().apply {
+                setContentTemplate(template)
+                config.mapConfig?.mapButtons?.let { mapButtons ->
+                    setMapController(
+                        MapController.Builder()
+                            .setMapActionStrip(Parser.parseMapActions(context, mapButtons)).build()
+                    )
+                }
+                config.mapConfig?.headerActions?.let { headerActions ->
+                    setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
+                }
+            }.build()
+        } ?: run {
+            template
+        }
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {

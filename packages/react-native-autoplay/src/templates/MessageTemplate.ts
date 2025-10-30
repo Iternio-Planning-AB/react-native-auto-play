@@ -43,7 +43,7 @@ export type MessageTemplateConfig = Omit<
    */
   image?: AutoImage;
   /**
-   * If mapConfig is set, it will use a MapWithContentTemplate with the current template. This results in a MessageTemplate with a map in background.
+   * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a MessageTemplate with a map in background. No actions need to be specified, can be empty object.
    * @namespace Android
    */
   mapConfig?: BaseMapTemplateConfig<MessageTemplate>;

@@ -1,4 +1,8 @@
-import { type GridButton, GridTemplate } from '@g4rb4g3/react-native-autoplay';
+import {
+  type GridButton,
+  GridTemplate,
+  type GridTemplateConfig,
+} from '@g4rb4g3/react-native-autoplay';
 import { AutoTemplate } from './AutoTemplate';
 
 const getButtons = (lightColor: string, darkColor: string): Array<GridButton<GridTemplate>> => [
@@ -46,9 +50,10 @@ const getButtons = (lightColor: string, darkColor: string): Array<GridButton<Gri
   },
 ];
 
-const getTemplate = (): GridTemplate => {
+const getTemplate = (props?: { mapConfig?: GridTemplateConfig['mapConfig'] }): GridTemplate => {
   return new GridTemplate({
     title: { text: 'grid' },
+    mapConfig: props?.mapConfig,
     headerActions: AutoTemplate.headerActions,
     buttons: getButtons('green', 'red'),
     onWillAppear: () => console.log('GridTemplate onWillAppear'),

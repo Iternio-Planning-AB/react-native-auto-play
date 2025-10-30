@@ -356,7 +356,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
-      name: 'message',
+      name: 'map',
       darkColor: 'rgba(255, 0, 0, 1)',
       lightColor: 'rgba(0, 255, 0, 1)',
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
@@ -366,8 +366,20 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
         message: { text: 'message' },
         mapConfig: {
           mapButtons: [
-            { type: 'custom', image: { name: 'phone' }, onPress: () => {} },
-            { type: 'custom', image: { name: 'car_crash' }, onPress: () => {} },
+            {
+              type: 'custom',
+              image: { name: 'list' },
+              onPress: () => {
+                AutoListTemplate.getTemplate({ mapConfig: {} }).push();
+              },
+            },
+            {
+              type: 'custom',
+              image: { name: 'grid_3x3' },
+              onPress: () => {
+                AutoGridTemplate.getTemplate({ mapConfig: {} }).push();
+              },
+            },
             { type: 'custom', image: { name: 'inbox' }, onPress: () => {} },
             { type: 'custom', image: { name: 'assignment_late' }, onPress: () => {} },
           ],
