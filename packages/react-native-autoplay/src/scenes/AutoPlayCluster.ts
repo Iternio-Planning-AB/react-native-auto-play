@@ -12,6 +12,9 @@ const HybridCluster = NitroModules.createHybridObject<NitroHybridCluster>('Hybri
 class Cluster {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;
   private attributedInactiveDescriptionVariants: Array<AutoAttributedString> = [];
+  /**
+   * holds all cluster scenes/sessions ids and if the have a window/surface connected
+   */
   private clusters: { [key: string]: boolean } = {};
 
   constructor() {
