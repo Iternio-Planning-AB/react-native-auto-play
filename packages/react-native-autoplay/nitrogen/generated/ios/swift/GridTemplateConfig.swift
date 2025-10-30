@@ -18,7 +18,7 @@ public extension GridTemplateConfig {
   /**
    * Create a new instance of `GridTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, headerActions: [NitroAction]?, title: AutoText, buttons: [NitroGridButton]) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, headerActions: [NitroAction]?, title: AutoText, buttons: [NitroGridButton], mapConfig: NitroBaseMapTemplateConfig?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -82,6 +82,12 @@ public extension GridTemplateConfig {
         __vector.push_back(__item)
       }
       return __vector
+    }(), { () -> bridge.std__optional_NitroBaseMapTemplateConfig_ in
+      if let __unwrappedValue = mapConfig {
+        return bridge.create_std__optional_NitroBaseMapTemplateConfig_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }())
   }
 
@@ -334,6 +340,23 @@ public extension GridTemplateConfig {
           __vector.push_back(__item)
         }
         return __vector
+      }()
+    }
+  }
+  
+  var mapConfig: NitroBaseMapTemplateConfig? {
+    @inline(__always)
+    get {
+      return self.__mapConfig.value
+    }
+    @inline(__always)
+    set {
+      self.__mapConfig = { () -> bridge.std__optional_NitroBaseMapTemplateConfig_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_NitroBaseMapTemplateConfig_(__unwrappedValue)
+        } else {
+          return .init()
+        }
       }()
     }
   }

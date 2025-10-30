@@ -43,7 +43,10 @@ data class ListTemplateConfig(
   val title: AutoText,
   @DoNotStrip
   @Keep
-  val sections: Array<NitroSection>?
+  val sections: Array<NitroSection>?,
+  @DoNotStrip
+  @Keep
+  val mapConfig: NitroBaseMapTemplateConfig?
 ) {
   private companion object {
     /**
@@ -53,8 +56,8 @@ data class ListTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?): ListTemplateConfig {
-      return ListTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, headerActions, title, sections)
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?, mapConfig: NitroBaseMapTemplateConfig?): ListTemplateConfig {
+      return ListTemplateConfig(id, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it }, headerActions, title, sections, mapConfig)
     }
   }
 }

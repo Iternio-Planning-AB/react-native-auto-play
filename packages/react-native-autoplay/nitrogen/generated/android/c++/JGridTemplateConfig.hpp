@@ -23,13 +23,19 @@
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
+#include "JNitroBaseMapTemplateConfig.hpp"
 #include "JNitroGridButton.hpp"
 #include "JNitroImage.hpp"
+#include "JNitroMapButton.hpp"
+#include "JNitroMapButtonType.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroGridButton.hpp"
 #include "NitroImage.hpp"
+#include "NitroMapButton.hpp"
+#include "NitroMapButtonType.hpp"
 #include <functional>
 #include <optional>
 #include <string>
@@ -72,6 +78,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> title = this->getFieldValue(fieldTitle);
       static const auto fieldButtons = clazz->getField<jni::JArrayClass<JNitroGridButton>>("buttons");
       jni::local_ref<jni::JArrayClass<JNitroGridButton>> buttons = this->getFieldValue(fieldButtons);
+      static const auto fieldMapConfig = clazz->getField<JNitroBaseMapTemplateConfig>("mapConfig");
+      jni::local_ref<JNitroBaseMapTemplateConfig> mapConfig = this->getFieldValue(fieldMapConfig);
       return GridTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -149,7 +157,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()
+        }(),
+        mapConfig != nullptr ? std::make_optional(mapConfig->toCpp()) : std::nullopt
       );
     }
 
@@ -159,7 +168,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JGridTemplateConfig::javaobject> fromCpp(const GridTemplateConfig& value) {
-      using JSignature = JGridTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>);
+      using JSignature = JGridTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -188,7 +197,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             __array->setElement(__i, *JNitroGridButton::fromCpp(__element));
           }
           return __array;
-        }()
+        }(),
+        value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr
       );
     }
   };
