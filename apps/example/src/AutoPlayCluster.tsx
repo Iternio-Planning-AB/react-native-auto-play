@@ -10,7 +10,7 @@ import { Platform, Text, View } from 'react-native';
 export const Cluster = (props: AutoPlayClusterInitialProps) => {
   const [colorScheme, setColorScheme] = useState(props.colorScheme);
   const [compass, setCompass] = useState(props.compass);
-  const [speedLImit, setSpeedLimit] = useState(props.speedLimit);
+  const [speedLimit, setSpeedLimit] = useState(props.speedLimit);
 
   useEffect(() => {
     const listeners: Array<CleanupCallback | undefined> = [];
