@@ -8,7 +8,7 @@ jobs:
       contents: read
     steps:
       - name: Azure OpenAI CodeReviewer
-        uses: samuelbrucksch/ChatGPT-CodeReview@0.0.7
+        uses: samuelbrucksch/ChatGPT-CodeReview@0.0.8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
