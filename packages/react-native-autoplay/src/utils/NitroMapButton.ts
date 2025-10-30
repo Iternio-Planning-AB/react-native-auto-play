@@ -30,7 +30,10 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
     return {
       type,
       onPress: () => onPress(template),
-      image: NitroImageUtil.convert(button.image),
+      image: NitroImageUtil.convert({
+        ...button.image,
+        backgroundColor: Platform.OS === 'android' ? 'transparent' : button.image.backgroundColor,
+      }),
     };
   });
 };

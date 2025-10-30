@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
 import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
@@ -31,7 +32,8 @@ object SymbolFont {
         context: Context,
         glyph: Double,
         color: Int = android.graphics.Color.BLACK,
-        backgroundColor: Int = android.graphics.Color.WHITE
+        backgroundColor: Int = android.graphics.Color.WHITE,
+        cornerRadius: Float = 8f
     ): Bitmap? {
         loadFont(context)
 
@@ -47,11 +49,16 @@ object SymbolFont {
         val bitmap = createBitmap(canvasSize, canvasSize)
         val canvas = Canvas(bitmap)
 
-        // Fill background
-        canvas.drawColor(backgroundColor)
+        val rectF = RectF(0f, 0f, canvasSize.toFloat(), canvasSize.toFloat())
+        var paint = Paint().apply {
+            this.color = backgroundColor
+            isAntiAlias = true
+        }
+        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
 
         // Setup text paint
-        val paint = Paint().apply {
+        paint.reset()
+        paint = Paint().apply {
             typeface = font
             textSize = canvasSize.toFloat()
             this.color = color

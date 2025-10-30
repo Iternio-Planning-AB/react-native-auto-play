@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { glyphMap } from '../types/Glyphmap';
 import type { AutoImage } from '../types/Image';
 import { NitroColorUtil } from './NitroColor';
@@ -33,9 +32,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
     glyph: glyphMap[name],
     lightColor: NitroColorUtil.convert(lightColor),
     darkColor: NitroColorUtil.convert(darkColor),
-    backgroundColor: NitroColorUtil.convert(
-      Platform.OS === 'android' ? 'transparent' : backgroundColor
-    ),
+    backgroundColor: NitroColorUtil.convert(backgroundColor),
   };
 }
 

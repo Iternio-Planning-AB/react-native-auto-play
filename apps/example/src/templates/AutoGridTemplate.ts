@@ -4,7 +4,7 @@ import { AutoTemplate } from './AutoTemplate';
 const getButtons = (lightColor: string, darkColor: string): Array<GridButton<GridTemplate>> => [
   {
     title: { text: '#1' },
-    image: { name: 'star', darkColor, lightColor },
+    image: { name: 'star', darkColor, lightColor, backgroundColor: 'rgba(0, 255, 255, 1)' },
     onPress: (template) => {
       template.updateGrid(getButtons('red', 'green'));
     },
