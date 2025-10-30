@@ -18,7 +18,7 @@ jobs:
           issue_number: ${{ github.event.pull_request.number }}
           body_regex: ".*"
       - name: Azure OpenAI CodeReviewer
-        uses: samuelbrucksch/ChatGPT-CodeReview@0.0.10
+        uses: samuelbrucksch/ChatGPT-CodeReview@0.0.11
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
@@ -27,3 +27,4 @@ jobs:
           AZURE_OPENAI_API_VERSION: 2024-12-01-preview
           # Optional 
           AZURE_OPENAI_API_ASSISTANT_INSTRUCTION: "Please review the Pullrequest from the diff. Keep it short and do not summarize what changed. Only focus on mentioning the actual issues. Ignore files in packages/react-native-autoplay/nitrogen/generated."
+          IGNORE: "packages/react-native-autoplay/nitrogen/generated/"
