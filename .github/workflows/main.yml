@@ -10,6 +10,12 @@ jobs:
       pull-requests: write
       contents: read
     steps:
+      - name: Delete previous review comments
+        uses: samuelbrucksch/delete-comment@1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_user_name: github-actions[bot]
+          issue_number: ${{ github.event.pull_request.number }}
       - name: Azure OpenAI CodeReviewer
         uses: samuelbrucksch/ChatGPT-CodeReview@0.0.9
         env:
@@ -19,4 +25,4 @@ jobs:
           AZURE_OPENAI_DEPLOYMENT_NAME: mobile-eng-gpt-o3-mini-dev-sdc
           AZURE_OPENAI_API_VERSION: 2024-12-01-preview
           # Optional 
-          # AZURE_OPENAI_API_ASSISTANT_INSTRUCTION: "Please check if there are any confusions or irregularities in the following code diff:"
+          AZURE_OPENAI_API_ASSISTANT_INSTRUCTION: "Please review the Pullrequest from the diff. Keep it short and do not summarize what changed, rather focus on things that can be improved if there are any."
