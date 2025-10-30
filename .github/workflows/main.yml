@@ -3,6 +3,7 @@ on: [pull_request]
 jobs:
   code-review:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     permissions:
       pull-requests: write
       contents: read
