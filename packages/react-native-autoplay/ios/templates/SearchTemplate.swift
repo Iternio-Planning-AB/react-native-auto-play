@@ -135,7 +135,8 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
             onPopped: nil,
             headerActions: config.headerActions,
             title: config.title,
-            sections: [config.results]
+            sections: [config.results],
+            mapConfig: nil
         )
 
         let listTemplate = ListTemplate(config: listConfig)
