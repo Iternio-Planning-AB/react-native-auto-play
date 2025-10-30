@@ -18,7 +18,7 @@ public extension NitroCarPlayDashboardButton {
   /**
    * Create a new instance of `NitroCarPlayDashboardButton`.
    */
-  init(image: NitroImage, titleVariants: [String], subtitleVariants: [String], onPress: (() -> Void)?) {
+  init(image: NitroImage, titleVariants: [String], subtitleVariants: [String], onPress: @escaping () -> Void) {
     self.init(image, { () -> bridge.std__vector_std__string_ in
       var __vector = bridge.create_std__vector_std__string_(titleVariants.count)
       for __item in titleVariants {
@@ -31,15 +31,9 @@ public extension NitroCarPlayDashboardButton {
         __vector.push_back(std.string(__item))
       }
       return __vector
-    }(), { () -> bridge.std__optional_std__function_void____ in
-      if let __unwrappedValue = onPress {
-        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
-          let __closureWrapper = Func_void(__unwrappedValue)
-          return bridge.create_Func_void(__closureWrapper.toUnsafe())
-        }())
-      } else {
-        return .init()
-      }
+    }(), { () -> bridge.Func_void in
+      let __closureWrapper = Func_void(onPress)
+      return bridge.create_Func_void(__closureWrapper.toUnsafe())
     }())
   }
 
@@ -88,34 +82,21 @@ public extension NitroCarPlayDashboardButton {
     }
   }
   
-  var onPress: (() -> Void)? {
+  var onPress: () -> Void {
     @inline(__always)
     get {
-      return { () -> (() -> Void)? in
-        if bridge.has_value_std__optional_std__function_void____(self.__onPress) {
-          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onPress)
-          return { () -> () -> Void in
-            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
-            return { () -> Void in
-              __wrappedFunction.call()
-            }
-          }()
-        } else {
-          return nil
+      return { () -> () -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void(self.__onPress)
+        return { () -> Void in
+          __wrappedFunction.call()
         }
       }()
     }
     @inline(__always)
     set {
-      self.__onPress = { () -> bridge.std__optional_std__function_void____ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
-            let __closureWrapper = Func_void(__unwrappedValue)
-            return bridge.create_Func_void(__closureWrapper.toUnsafe())
-          }())
-        } else {
-          return .init()
-        }
+      self.__onPress = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(newValue)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
       }()
     }
   }

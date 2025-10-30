@@ -92,7 +92,7 @@ class DashboardSceneDelegate: AutoPlayScene,
                     traitCollection: traitCollection
                 )!
             ) { _ in
-                button.onPress?()
+                button.onPress()
             }
         }
     }

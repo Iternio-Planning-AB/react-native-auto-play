@@ -6,7 +6,7 @@ import type { NitroImage } from '../utils/NitroImage';
 export interface BaseCarPlayDashboardButton {
   titleVariants: Array<string>;
   subtitleVariants: Array<string>;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 interface NitroCarPlayDashboardButton extends BaseCarPlayDashboardButton {
