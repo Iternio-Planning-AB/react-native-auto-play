@@ -11,7 +11,7 @@ jobs:
       contents: read
     steps:
       - name: Delete previous review comments
-        uses: samuelbrucksch/delete-comment@1.0.2
+        uses: samuelbrucksch/delete-comment@1.0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_user_name: github-actions[bot]
