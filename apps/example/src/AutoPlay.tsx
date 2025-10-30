@@ -145,7 +145,9 @@ const registerRunnable = () => {
     AutoManeuverUtil.stopManeuvers();
   };
 
-  CarPlayDashboard.setComponent(AutoPlayDashboard);
+  if (Platform.OS === 'ios') {
+    CarPlayDashboard.setComponent(AutoPlayDashboard);
+  }
   AutoPlayCluster.setComponent(Cluster);
   AutoPlayCluster.setAttributedInactiveDescriptionVariants([
     { text: 'Example', images: [{ image: { name: 'bolt' }, position: 0 }] },
