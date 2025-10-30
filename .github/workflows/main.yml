@@ -16,6 +16,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_user_name: github-actions
           issue_number: ${{ github.event.pull_request.number }}
+          body_regex: "*"
       - name: Azure OpenAI CodeReviewer
         uses: samuelbrucksch/ChatGPT-CodeReview@0.0.9
         env:
