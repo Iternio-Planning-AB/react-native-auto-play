@@ -58,6 +58,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ListTemplateCon
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
 // Forward declaration of `MapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MapTemplateConfig; }
+// Forward declaration of `MapWithContentTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MapWithContentTemplateConfig; }
 // Forward declaration of `MessageTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MessageTemplateConfig; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
@@ -155,6 +157,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "ListTemplateConfig.hpp"
 #include "ManeuverType.hpp"
 #include "MapTemplateConfig.hpp"
+#include "MapWithContentTemplateConfig.hpp"
 #include "MessageTemplateConfig.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"

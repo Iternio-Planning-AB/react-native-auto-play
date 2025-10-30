@@ -48,6 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
+// Forward declaration of `MapWithContentTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MapWithContentTemplateConfig; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -148,6 +150,7 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
 #include "ManeuverType.hpp"
+#include "MapWithContentTemplateConfig.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -1288,6 +1291,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridHybridMapTemplateSpec>
   using std__weak_ptr_HybridHybridMapTemplateSpec_ = std::weak_ptr<HybridHybridMapTemplateSpec>;
   inline std__weak_ptr_HybridHybridMapTemplateSpec_ weakify_std__shared_ptr_HybridHybridMapTemplateSpec_(const std::shared_ptr<HybridHybridMapTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::optional<MapWithContentTemplateConfig>
+  /**
+   * Specialized version of `std::optional<MapWithContentTemplateConfig>`.
+   */
+  using std__optional_MapWithContentTemplateConfig_ = std::optional<MapWithContentTemplateConfig>;
+  inline std::optional<MapWithContentTemplateConfig> create_std__optional_MapWithContentTemplateConfig_(const MapWithContentTemplateConfig& value) noexcept {
+    return std::optional<MapWithContentTemplateConfig>(value);
+  }
+  inline bool has_value_std__optional_MapWithContentTemplateConfig_(const std::optional<MapWithContentTemplateConfig>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline MapWithContentTemplateConfig get_std__optional_MapWithContentTemplateConfig_(const std::optional<MapWithContentTemplateConfig>& optional) noexcept {
+    return *optional;
+  }
   
   // pragma MARK: std::shared_ptr<HybridHybridMessageTemplateSpec>
   /**
