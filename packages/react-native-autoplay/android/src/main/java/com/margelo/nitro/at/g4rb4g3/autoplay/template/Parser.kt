@@ -6,6 +6,7 @@ import android.text.Spanned
 import android.util.Log
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
+import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.CarColor
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.CarIconSpan
@@ -35,10 +36,12 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ManeuverType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAlignment
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedString
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRow
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSectionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.OffRampType
@@ -74,6 +77,64 @@ object Parser {
                     else -> {
                         throw IllegalArgumentException("missing alignment in action ${action.type} ${action.title ?: action.image?.glyph}")
                     }
+                }
+            }
+        }.build()
+    }
+
+    fun parseMapHeaderActions(context: CarContext, headerActions: Array<NitroAction>): ActionStrip {
+        return ActionStrip.Builder().apply {
+            headerActions.forEach { action ->
+                if (action.type == NitroActionType.BACK) {
+                    addAction(Action.BACK)
+                    return@forEach
+                }
+                if (action.type == NitroActionType.APPICON) {
+                    addAction(Action.APP_ICON)
+                    return@forEach
+                }
+                addAction(Action.Builder().apply {
+                    action.title?.let {
+                        setTitle(it)
+                    }
+                    action.image?.let { image ->
+                        val icon = CarIcon.Builder(
+                            SymbolFont.iconFromNitroImage(
+                                context, image
+                            )
+                        ).build()
+                        setIcon(icon)
+                    }
+                    action.flags?.let {
+                        setFlags(it.toInt())
+                    }
+                    action.onPress.let {
+                        setOnClickListener(it)
+                    }
+                }.build())
+            }
+        }.build()
+    }
+
+    fun parseMapActions(context: CarContext, buttons: Array<NitroMapButton>): ActionStrip {
+        return ActionStrip.Builder().apply {
+            buttons.forEach { button ->
+                if (button.type == NitroMapButtonType.PAN) {
+                    addAction(Action.PAN)
+                    return@forEach
+                }
+
+                button.image?.let { image ->
+                    addAction(Action.Builder().apply {
+                        setOnClickListener(button.onPress)
+                        setIcon(
+                            CarIcon.Builder(
+                                SymbolFont.iconFromNitroImage(
+                                    context, image
+                                )
+                            ).build()
+                        )
+                    }.build())
                 }
             }
         }.build()
@@ -195,7 +256,7 @@ object Parser {
     ): ItemList {
         val selectedIndex = rows.indexOfFirst { item -> item.selected == true }
             .let { if (it == -1) if (sectionType == NitroSectionType.RADIO) 0 else null else it }
-        
+
         return ItemList.Builder().apply {
             selectedIndex?.let {
                 setSelectedIndex(selectedIndex)

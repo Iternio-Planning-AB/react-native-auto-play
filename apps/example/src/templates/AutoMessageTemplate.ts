@@ -1,10 +1,22 @@
-import { type AutoText, HybridAutoPlay, MessageTemplate } from '@g4rb4g3/react-native-autoplay';
+import {
+  type AutoText,
+  HybridAutoPlay,
+  MessageTemplate,
+  type MessageTemplateConfig,
+} from '@g4rb4g3/react-native-autoplay';
 import { AutoTemplate } from './AutoTemplate';
 
-const getTemplate = (message: AutoText): MessageTemplate => {
+const getTemplate = ({
+  message,
+  mapConfig,
+}: {
+  message: AutoText;
+  mapConfig?: MessageTemplateConfig['mapConfig'];
+}): MessageTemplate => {
   return new MessageTemplate({
     title: { text: 'header title' },
     message,
+    mapConfig,
     image: { name: 'info' },
     actions: [
       {

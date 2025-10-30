@@ -4,11 +4,9 @@ import android.graphics.Color
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
-import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.Alert
 import androidx.car.app.model.AlertCallback
 import androidx.car.app.model.CarColor
-import androidx.car.app.model.CarIcon
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.NavigationManager
 import androidx.car.app.navigation.NavigationManagerCallback
@@ -23,15 +21,12 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertDismissalReason
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroNavigationAlert
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripPoint
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibleTravelEstimate
-import com.margelo.nitro.at.g4rb4g3.autoplay.utils.SymbolFont
 import java.security.InvalidParameterException
 
 class MapTemplate(
@@ -48,72 +43,14 @@ class MapTemplate(
         mapTemplate = this
     }
 
-    private fun parseMapButtons(buttons: Array<NitroMapButton>): ActionStrip {
-        return ActionStrip.Builder().apply {
-            buttons.forEach { button ->
-                if (button.type == NitroMapButtonType.PAN) {
-                    addAction(Action.PAN)
-                    return@forEach
-                }
-
-                button.image?.let { image ->
-                    addAction(Action.Builder().apply {
-                        setOnClickListener(button.onPress)
-                        setIcon(
-                            CarIcon.Builder(
-                                SymbolFont.iconFromNitroImage(
-                                    context, image
-                                )
-                            ).build()
-                        )
-                    }.build())
-                }
-            }
-        }.build()
-    }
-
-    private fun parseMapActions(headerActions: Array<NitroAction>): ActionStrip {
-        return ActionStrip.Builder().apply {
-            headerActions.forEach { action ->
-                if (action.type == NitroActionType.BACK) {
-                    addAction(Action.BACK)
-                    return@forEach
-                }
-                if (action.type == NitroActionType.APPICON) {
-                    addAction(Action.APP_ICON)
-                    return@forEach
-                }
-                addAction(Action.Builder().apply {
-                    action.title?.let {
-                        setTitle(it)
-                    }
-                    action.image?.let { image ->
-                        val icon = CarIcon.Builder(
-                            SymbolFont.iconFromNitroImage(
-                                context, image
-                            )
-                        ).build()
-                        setIcon(icon)
-                    }
-                    action.flags?.let {
-                        setFlags(it.toInt())
-                    }
-                    action.onPress.let {
-                        setOnClickListener(it)
-                    }
-                }.build())
-            }
-        }.build()
-    }
-
     override fun parse(): Template {
         return NavigationTemplate.Builder().apply {
             setBackgroundColor(cardBackgroundColor)
             config.mapButtons?.let { buttons ->
-                setMapActionStrip(parseMapButtons(buttons))
+                setMapActionStrip(Parser.parseMapActions(context, buttons))
             }
             config.headerActions?.let { headerActions ->
-                setActionStrip(parseMapActions(headerActions))
+                setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
             }
             val travelEstimates =
                 if (config.visibleTravelEstimate == VisibleTravelEstimate.FIRST) destinationTravelEstimates.firstOrNull() else destinationTravelEstimates.lastOrNull()

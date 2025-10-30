@@ -3,6 +3,8 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.template
 import androidx.car.app.CarContext
 import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
+import androidx.car.app.navigation.model.MapController
+import androidx.car.app.navigation.model.MapWithContentTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MessageTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 
@@ -14,7 +16,7 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
         get() = config.id
 
     override fun parse(): Template {
-        return MessageTemplate.Builder(Parser.parseText(config.message)).apply {
+        var template = MessageTemplate.Builder(Parser.parseText(config.message)).apply {
             config.title?.let { title ->
                 setHeader(Parser.parseHeader(context, title, config.headerActions))
             }
@@ -29,6 +31,23 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
                 setIcon(Parser.parseImage(context, image))
             }
         }.build()
+
+        return this.config.mapConfig?.let {
+            MapWithContentTemplate.Builder().apply {
+                setContentTemplate(template)
+                config.mapConfig?.mapButtons?.let { mapButtons ->
+                    setMapController(
+                        MapController.Builder()
+                            .setMapActionStrip(Parser.parseMapActions(context, mapButtons)).build()
+                    )
+                }
+                config.mapConfig?.headerActions?.let { headerActions ->
+                    setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
+                }
+            }.build()
+        } ?: run {
+            template
+        }
     }
 
     override fun onDidAppear() {

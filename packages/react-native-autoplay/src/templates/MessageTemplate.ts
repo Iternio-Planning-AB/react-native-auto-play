@@ -1,9 +1,16 @@
-import { type AutoImage, HybridMessageTemplate } from '..';
+import {
+  type AutoImage,
+  type BaseMapTemplateConfig,
+  convertMapActions,
+  HybridMessageTemplate,
+} from '..';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroImage, NitroImageUtil } from '../utils/NitroImage';
+import { NitroMapButton } from '../utils/NitroMapButton';
 import {
   type HeaderActions,
+  type NitroBaseMapTemplateConfig,
   type NitroTemplateConfig,
   Template,
   type TemplateConfig,
@@ -18,9 +25,13 @@ export interface NitroMessageTemplateConfig extends TemplateConfig {
   message: AutoText;
   actions?: Array<NitroAction>;
   image?: NitroImage;
+  mapConfig?: NitroBaseMapTemplateConfig;
 }
 
-export type MessageTemplateConfig = Omit<NitroMessageTemplateConfig, 'headerActions' | 'image'> & {
+export type MessageTemplateConfig = Omit<
+  NitroMessageTemplateConfig,
+  'headerActions' | 'image' | 'mapConfig'
+> & {
   /**
    * action buttons, usually at the top right on Android
    * @namespace Android
@@ -31,6 +42,11 @@ export type MessageTemplateConfig = Omit<NitroMessageTemplateConfig, 'headerActi
    * @namespace Android
    */
   image?: AutoImage;
+  /**
+   * If mapConfig is set, it will use a MapWithContentTemplate with the current template. This results in a MessageTemplate with a map in background.
+   * @namespace Android
+   */
+  mapConfig?: BaseMapTemplateConfig<MessageTemplate>;
 };
 
 /**
@@ -46,13 +62,19 @@ export class MessageTemplate extends Template<
   constructor(config: MessageTemplateConfig) {
     super(config);
 
-    const { headerActions, image, ...rest } = config;
+    const { headerActions, image, mapConfig, ...rest } = config;
 
     const nitroConfig: NitroMessageTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       image: NitroImageUtil.convert(image),
+      mapConfig: mapConfig
+        ? {
+            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
+            headerActions: convertMapActions(this.template, mapConfig.headerActions),
+          }
+        : undefined,
     };
 
     HybridMessageTemplate.createMessageTemplate(nitroConfig);

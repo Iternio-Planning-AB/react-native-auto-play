@@ -2,7 +2,6 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
-import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MessageTemplate
 
 class HybridMessageTemplate : HybridHybridMessageTemplateSpec() {

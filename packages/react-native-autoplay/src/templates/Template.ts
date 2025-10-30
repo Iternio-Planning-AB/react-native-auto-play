@@ -1,7 +1,8 @@
 import uuid from 'react-native-uuid';
 import { HybridAutoPlay } from '..';
 import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
-import { NitroActionUtil } from '../utils/NitroAction';
+import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
+import type { NitroMapButton } from '../utils/NitroMapButton';
 
 export type HeaderActionsIos<T> = {
   backButton?: BackButton<T>;
@@ -51,6 +52,11 @@ export interface TemplateConfig {
    * @namespace iOS - does not work on all templates like SearchTemplate
    */
   onPopped?(): void;
+}
+
+export interface NitroBaseMapTemplateConfig extends TemplateConfig {
+  mapButtons?: Array<NitroMapButton>;
+  headerActions?: Array<NitroAction>;
 }
 
 export class Template<TemplateConfigType, ActionsType> {

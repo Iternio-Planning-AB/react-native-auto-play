@@ -12,12 +12,13 @@ import type {
   TripPreviewTextConfiguration,
   TripsConfig,
 } from '../types/Trip';
-import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
+import { NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { type NitroManeuver, NitroManeuverUtil } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import {
   type HeaderActionsIos,
+  type NitroBaseMapTemplateConfig,
   type NitroTemplateConfig,
   Template,
   type TemplateConfig,
@@ -32,11 +33,7 @@ export type HeaderActionsAndroidMap<T> =
   | [ActionButtonAndroid<T>, ActionButtonAndroid<T>]
   | [ActionButtonAndroid<T>];
 
-export interface NitroMapTemplateConfig extends TemplateConfig {
-  mapButtons?: Array<NitroMapButton>;
-
-  headerActions?: Array<NitroAction>;
-
+export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemplateConfig {
   /**
    * show either the next or final step travel estimates, defaults to final step so last
    */
@@ -79,29 +76,32 @@ export interface NitroMapTemplateConfig extends TemplateConfig {
 
 export type MapButtons<T> = Array<MapButton<T> | MapPanButton<T>>;
 
-export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'mapButtons' | 'headerActions'> & {
-  /**
-   * react component that is rendered
-   */
-  component: React.ComponentType<RootComponentInitialProps>;
-
+export type BaseMapTemplateConfig<T> = {
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner
    */
-  mapButtons?: MapButtons<MapTemplate>;
+  mapButtons?: MapButtons<T>;
 
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
    */
   headerActions?: {
-    android?: HeaderActionsAndroidMap<MapTemplate>;
-    ios?: HeaderActionsIos<MapTemplate>;
+    android?: HeaderActionsAndroidMap<T>;
+    ios?: HeaderActionsIos<T>;
   };
 };
 
-const convertActions = (
-  template: MapTemplate,
-  headerActions: MapTemplateConfig['headerActions']
+export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'mapButtons' | 'headerActions'> &
+  BaseMapTemplateConfig<MapTemplate> & {
+    /**
+     * react component that is rendered
+     */
+    component: React.ComponentType<RootComponentInitialProps>;
+  };
+
+export const convertMapActions = <T>(
+  template: T,
+  headerActions: BaseMapTemplateConfig<T>['headerActions']
 ) => {
   return Platform.OS === 'android'
     ? NitroActionUtil.convertAndroidMap(template, headerActions?.android)
@@ -134,7 +134,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     const nitroConfig: NitroMapTemplateConfig & NitroTemplateConfig = {
       ...baseConfig,
       id: this.id,
-      headerActions: convertActions(this.template, headerActions),
+      headerActions: convertMapActions(this.template, headerActions),
       mapButtons: NitroMapButton.convert(this.template, mapButtons),
     };
 
@@ -147,7 +147,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   }
 
   public override setHeaderActions(headerActions: MapTemplateConfig['headerActions']) {
-    const nitroActions = convertActions(this.template, headerActions);
+    const nitroActions = convertMapActions(this.template, headerActions);
     HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
   }
 

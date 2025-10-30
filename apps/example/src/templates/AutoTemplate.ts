@@ -42,8 +42,10 @@ const headerActions: HeaderActions<unknown> = {
         onPress: () => {
           console.log('*** help \\o/');
           AutoMessageTemplate.getTemplate({
-            text: `help \\o/ ${TextPlaceholders.Duration}`,
-            duration: 4711,
+            message: {
+              text: `help \\o/ ${TextPlaceholders.Duration}`,
+              duration: 4711,
+            },
           }).push();
         },
       },
@@ -65,8 +67,10 @@ const headerActions: HeaderActions<unknown> = {
         onPress: () => {
           console.log('*** help \\o/');
           AutoMessageTemplate.getTemplate({
-            text: `help \\o/ ${TextPlaceholders.Duration}`,
-            duration: 4711,
+            message: {
+              text: `help \\o/ ${TextPlaceholders.Duration}`,
+              duration: 4711,
+            },
           }).push();
         },
       },
@@ -358,7 +362,26 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
     },
     onPress: () => {
-      AutoMessageTemplate.getTemplate({ text: 'message' }).push();
+      AutoMessageTemplate.getTemplate({
+        message: { text: 'message' },
+        mapConfig: {
+          mapButtons: [
+            { type: 'custom', image: { name: 'phone' }, onPress: () => {} },
+            { type: 'custom', image: { name: 'car_crash' }, onPress: () => {} },
+            { type: 'custom', image: { name: 'inbox' }, onPress: () => {} },
+            { type: 'custom', image: { name: 'assignment_late' }, onPress: () => {} },
+          ],
+          headerActions: {
+            // ios does not support map with template, so no need to specify headers for ios here
+            android: [
+              { type: 'image', image: { name: 'battery_vert_050' }, onPress: () => {} },
+              { type: 'image', image: { name: 'barcode_reader' }, onPress: () => {} },
+              { type: 'image', image: { name: 'article_shortcut' }, onPress: () => {} },
+              { type: 'image', image: { name: 'directions_run' }, onPress: () => {} },
+            ],
+          },
+        },
+      }).push();
     },
   },
   {
