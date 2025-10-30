@@ -40,6 +40,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedString
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRow
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSectionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.OffRampType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.OnRampType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.TrafficSide
@@ -189,9 +190,12 @@ object Parser {
         context: CarContext,
         rows: Array<NitroRow>,
         sectionIndex: Int,
-        selectedIndex: Int?,
-        templateId: String
+        templateId: String,
+        sectionType: NitroSectionType
     ): ItemList {
+        val selectedIndex = rows.indexOfFirst { item -> item.selected == true }
+            .let { if (it == -1) if (sectionType == NitroSectionType.RADIO) 0 else null else it }
+        
         return ItemList.Builder().apply {
             selectedIndex?.let {
                 setSelectedIndex(selectedIndex)

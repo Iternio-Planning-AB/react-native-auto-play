@@ -25,23 +25,17 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
                     setLoading(true)
                 } else if (sections.size == 1 && sections.first().title == null) {
                     val section = sections[0]
-                    val selectedIndex =
-                        section.items.indexOfFirst { item -> item.selected == true }
-                            .let { if (it == -1) if (section.type == NitroSectionType.RADIO) 0 else null else it }
                     setSingleList(
                         Parser.parseRows(
-                            context, section.items, 0, selectedIndex, config.id
+                            context, section.items, 0, config.id, section.type
                         )
                     )
                 } else {
                     sections.forEachIndexed { index, section ->
-                        val selectedIndex =
-                            section.items.indexOfFirst { item -> item.selected == true }
-                                .let { if (it == -1) if (section.type == NitroSectionType.RADIO) 0 else null else it }
                         addSectionedList(
                             SectionedItemList.create(
                                 Parser.parseRows(
-                                    context, section.items, index, selectedIndex, config.id
+                                    context, section.items, index, config.id, section.type
                                 ), section.title!!
                             )
                         )
