@@ -13,7 +13,7 @@ class Cluster {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;
   private attributedInactiveDescriptionVariants: Array<AutoAttributedString> = [];
   /**
-   * holds all cluster scenes/sessions ids and if the have a window/surface connected
+   * Holds all cluster scene/session IDs and if they have a window/surface connected
    */
   private clusters: { [key: string]: boolean } = {};
 
