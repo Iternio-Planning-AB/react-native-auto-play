@@ -10,10 +10,6 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Azure OpenAI CodeReviewer
         uses: samuelbrucksch/ChatGPT-CodeReview@0.0.9
         env:
