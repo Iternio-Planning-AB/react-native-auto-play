@@ -24,6 +24,8 @@ data class Point(
   @Keep
   val y: Double
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

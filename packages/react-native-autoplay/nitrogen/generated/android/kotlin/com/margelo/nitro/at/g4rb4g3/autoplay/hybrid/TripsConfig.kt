@@ -24,6 +24,8 @@ data class TripsConfig(
   @Keep
   val routeChoices: Array<RouteChoice>
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

@@ -24,6 +24,8 @@ data class StringTelemetryItem(
   @Keep
   val value: String
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

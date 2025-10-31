@@ -18,6 +18,13 @@ public protocol HybridHybridSearchTemplateSpec_protocol: HybridObject {
   func updateSearchResults(templateId: String, results: NitroSection) throws -> Void
 }
 
+public extension HybridHybridSearchTemplateSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridSearchTemplate]"
+  }
+}
+
 /// See ``HybridHybridSearchTemplateSpec``
 open class HybridHybridSearchTemplateSpec_base {
   private weak var cxxWrapper: HybridHybridSearchTemplateSpec_cxx? = nil

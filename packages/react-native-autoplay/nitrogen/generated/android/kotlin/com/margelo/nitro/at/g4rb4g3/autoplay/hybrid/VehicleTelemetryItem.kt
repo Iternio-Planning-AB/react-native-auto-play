@@ -27,6 +27,8 @@ data class VehicleTelemetryItem(
   @Keep
   val manufacturer: StringTelemetryItem?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

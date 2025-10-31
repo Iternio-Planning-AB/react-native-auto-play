@@ -37,11 +37,17 @@ data class NitroRow(
   val checked: Boolean?,
   @DoNotStrip
   @Keep
-  val onPress: (checked: Boolean?) -> Unit,
+  val onPress: Func_void_std__optional_bool_,
   @DoNotStrip
   @Keep
   val selected: Boolean?
 ) {
+  /**
+   * Create a new instance of NitroRow from Kotlin
+   */
+  constructor(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: NitroImage?, checked: Boolean?, onPress: (checked: Boolean?) -> Unit, selected: Boolean?):
+         this(title, detailedText, browsable, enabled, image, checked, Func_void_std__optional_bool__java(onPress), selected)
+
   private companion object {
     /**
      * Constructor called from C++

@@ -30,6 +30,8 @@ data class NitroImage(
   @Keep
   val backgroundColor: Double?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

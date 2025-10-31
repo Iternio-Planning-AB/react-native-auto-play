@@ -24,6 +24,8 @@ data class NitroAttributedString(
   @Keep
   val images: Array<NitroAttributedStringImage>?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

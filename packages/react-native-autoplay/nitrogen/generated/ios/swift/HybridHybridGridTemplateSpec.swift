@@ -18,6 +18,13 @@ public protocol HybridHybridGridTemplateSpec_protocol: HybridObject {
   func updateGridTemplateButtons(templateId: String, buttons: [NitroGridButton]) throws -> Void
 }
 
+public extension HybridHybridGridTemplateSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridGridTemplate]"
+  }
+}
+
 /// See ``HybridHybridGridTemplateSpec``
 open class HybridHybridGridTemplateSpec_base {
   private weak var cxxWrapper: HybridHybridGridTemplateSpec_cxx? = nil

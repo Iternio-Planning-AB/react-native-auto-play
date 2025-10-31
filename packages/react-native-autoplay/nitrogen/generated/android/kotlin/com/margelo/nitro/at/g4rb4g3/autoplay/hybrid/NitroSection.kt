@@ -27,6 +27,8 @@ data class NitroSection(
   @Keep
   val type: NitroSectionType
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

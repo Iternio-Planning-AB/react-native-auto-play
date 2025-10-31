@@ -25,20 +25,26 @@ data class NitroBaseMapTemplateConfig(
   val headerActions: Array<NitroAction>?,
   @DoNotStrip
   @Keep
-  val onWillAppear: ((animated: Boolean?) -> Unit)?,
+  val onWillAppear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onWillDisappear: ((animated: Boolean?) -> Unit)?,
+  val onWillDisappear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onDidAppear: ((animated: Boolean?) -> Unit)?,
+  val onDidAppear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onDidDisappear: ((animated: Boolean?) -> Unit)?,
+  val onDidDisappear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val onPopped: (() -> Unit)?
+  val onPopped: Func_void?
 ) {
+  /**
+   * Create a new instance of NitroBaseMapTemplateConfig from Kotlin
+   */
+  constructor(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?):
+         this(mapButtons, headerActions, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) })
+
   private companion object {
     /**
      * Constructor called from C++
@@ -48,7 +54,7 @@ data class NitroBaseMapTemplateConfig(
     @Suppress("unused")
     @JvmStatic
     private fun fromCpp(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?): NitroBaseMapTemplateConfig {
-      return NitroBaseMapTemplateConfig(mapButtons, headerActions, onWillAppear?.let { it }, onWillDisappear?.let { it }, onDidAppear?.let { it }, onDidDisappear?.let { it }, onPopped?.let { it })
+      return NitroBaseMapTemplateConfig(mapButtons, headerActions, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped)
     }
   }
 }

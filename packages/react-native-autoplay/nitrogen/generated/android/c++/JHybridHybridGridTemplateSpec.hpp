@@ -41,6 +41,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   public:
     size_t getExternalMemorySize() noexcept override;
     void dispose() noexcept override;
+    std::string toString() override;
 
   public:
     inline const jni::global_ref<JHybridHybridGridTemplateSpec::javaobject>& getJavaPart() const noexcept {

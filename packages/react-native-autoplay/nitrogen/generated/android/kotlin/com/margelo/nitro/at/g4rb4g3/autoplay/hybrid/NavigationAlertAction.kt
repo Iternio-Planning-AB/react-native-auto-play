@@ -25,8 +25,14 @@ data class NavigationAlertAction(
   val style: AlertActionStyle?,
   @DoNotStrip
   @Keep
-  val onPress: () -> Unit
+  val onPress: Func_void
 ) {
+  /**
+   * Create a new instance of NavigationAlertAction from Kotlin
+   */
+  constructor(title: String, style: AlertActionStyle?, onPress: () -> Unit):
+         this(title, style, Func_void_java(onPress))
+
   private companion object {
     /**
      * Constructor called from C++

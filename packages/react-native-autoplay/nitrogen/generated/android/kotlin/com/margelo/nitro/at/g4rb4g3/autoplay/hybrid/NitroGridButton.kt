@@ -25,8 +25,14 @@ data class NitroGridButton(
   val image: NitroImage,
   @DoNotStrip
   @Keep
-  val onPress: () -> Unit
+  val onPress: Func_void
 ) {
+  /**
+   * Create a new instance of NitroGridButton from Kotlin
+   */
+  constructor(title: AutoText, image: NitroImage, onPress: () -> Unit):
+         this(title, image, Func_void_java(onPress))
+
   private companion object {
     /**
      * Constructor called from C++

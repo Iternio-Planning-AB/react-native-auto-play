@@ -21,6 +21,13 @@ public protocol HybridHybridCarPlayDashboardSpec_protocol: HybridObject {
   func addListenerColorScheme(callback: @escaping (_ payload: ColorScheme) -> Void) throws -> () -> Void
 }
 
+public extension HybridHybridCarPlayDashboardSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridCarPlayDashboard]"
+  }
+}
+
 /// See ``HybridHybridCarPlayDashboardSpec``
 open class HybridHybridCarPlayDashboardSpec_base {
   private weak var cxxWrapper: HybridHybridCarPlayDashboardSpec_cxx? = nil

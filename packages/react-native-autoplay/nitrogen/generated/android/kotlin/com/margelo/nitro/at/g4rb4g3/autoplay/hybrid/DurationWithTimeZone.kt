@@ -24,6 +24,8 @@ data class DurationWithTimeZone(
   @Keep
   val seconds: Double
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

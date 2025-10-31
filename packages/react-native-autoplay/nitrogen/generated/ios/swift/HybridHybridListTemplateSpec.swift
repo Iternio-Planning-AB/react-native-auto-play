@@ -18,6 +18,13 @@ public protocol HybridHybridListTemplateSpec_protocol: HybridObject {
   func updateListTemplateSections(templateId: String, sections: [NitroSection]?) throws -> Void
 }
 
+public extension HybridHybridListTemplateSpec_protocol {
+  /// Default implementation of ``HybridObject.toString``
+  func toString() -> String {
+    return "[HybridObject HybridListTemplate]"
+  }
+}
+
 /// See ``HybridHybridListTemplateSpec``
 open class HybridHybridListTemplateSpec_base {
   private weak var cxxWrapper: HybridHybridListTemplateSpec_cxx? = nil

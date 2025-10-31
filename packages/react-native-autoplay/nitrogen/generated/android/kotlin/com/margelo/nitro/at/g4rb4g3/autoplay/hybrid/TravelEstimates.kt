@@ -27,6 +27,8 @@ data class TravelEstimates(
   @Keep
   val tripText: AutoText?
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

@@ -33,6 +33,8 @@ data class RouteChoice(
   @Keep
   val steps: Array<TripPoint>
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++

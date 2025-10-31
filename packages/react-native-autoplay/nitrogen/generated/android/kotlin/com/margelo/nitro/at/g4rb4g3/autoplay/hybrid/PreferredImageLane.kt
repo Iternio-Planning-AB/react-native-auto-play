@@ -30,6 +30,8 @@ data class PreferredImageLane(
   @Keep
   val angles: DoubleArray
 ) {
+  /* primary constructor */
+
   private companion object {
     /**
      * Constructor called from C++
