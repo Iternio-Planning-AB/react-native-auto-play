@@ -28,14 +28,14 @@
     "README.md"
   ],
   "scripts": {
-    "postinstall": "tsc || exit 0;",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf android/build node_modules/**/android/build lib",
     "lint": "biome check src",
     "lint-ci": "biome ci src --reporter=summary",
     "typescript": "tsc",
     "generate:fonts": "node ./assets/symbolFont/bundleAsset.js",
-    "specs": "tsc && nitrogen --logLevel=\"debug\" && npm run generate:fonts"
+    "specs": "nitrogen --logLevel=\"debug\"",
+    "prepare": "tsc && nitrogen && npm run generate:fonts"
   },
   "keywords": [
     "react-native",

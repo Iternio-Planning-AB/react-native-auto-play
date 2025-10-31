@@ -10,7 +10,8 @@
   "scripts": {
     "start": "yarn workspace example start",
     "ios": "yarn workspace example ios",
-    "android": "yarn workspace example android"
+    "android": "yarn workspace example android",
+    "android:adb": "./adb_port_setup.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4"
