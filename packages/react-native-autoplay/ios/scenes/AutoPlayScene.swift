@@ -17,6 +17,7 @@ class AutoPlayScene: UIResponder {
     var interfaceController: AutoPlayInterfaceController?
     var templateStore = TemplateStore()
     var traitCollection = UIScreen.main.traitCollection
+    var safeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
     override init() {}
 
@@ -38,6 +39,7 @@ class AutoPlayScene: UIResponder {
 
         if let window = self.window {
             ViewUtils.showLaunchScreen(window: window)
+            safeAreaInsets = window.safeAreaInsets
         }
     }
 
@@ -73,7 +75,7 @@ class AutoPlayScene: UIResponder {
             guard let moduleName = self.moduleName else {
                 return
             }
-
+            
             guard
                 let rootView = ViewUtils.getRootView(
                     moduleName: moduleName,
@@ -92,5 +94,13 @@ class AutoPlayScene: UIResponder {
     open func traitCollectionDidChange(traitCollection: UITraitCollection) {
         self.traitCollection = traitCollection
         self.templateStore.traitCollectionDidChange()
+    }
+    
+    open func safeAreaInsetsDidChange(safeAreaInsets: UIEdgeInsets) {
+        self.safeAreaInsets = safeAreaInsets
+        HybridAutoPlay.emitSafeAreaInsets(
+            moduleName: moduleName!,
+            safeAreaInsets: safeAreaInsets
+        )
     }
 }

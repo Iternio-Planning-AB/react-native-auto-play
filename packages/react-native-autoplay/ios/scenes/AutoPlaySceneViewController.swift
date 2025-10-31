@@ -22,20 +22,14 @@ class AutoPlaySceneViewController: UIViewController {
     override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {
-        guard
-            let scene = SceneStore.getScene(moduleName: moduleName)
-        else {
-            return
-        }
-        
-        scene.traitCollectionDidChange(traitCollection: traitCollection)
+        SceneStore.getScene(moduleName: moduleName)!.traitCollectionDidChange(
+            traitCollection: traitCollection
+        )
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        HybridAutoPlay.emitSafeAreaInsets(
-            moduleName: moduleName,
+        SceneStore.getScene(moduleName: moduleName)!.safeAreaInsetsDidChange(
             safeAreaInsets: self.view.safeAreaInsets
         )
     }

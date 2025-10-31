@@ -1,27 +1,44 @@
 import CarPlay
 import NitroModules
 
+struct StateListener {
+    let id: UUID
+    let callback: () -> Void
+}
+
+struct RenderStateListener {
+    let id: UUID
+    let callback: (VisibilityState) -> Void
+}
+
+struct SafeAreaListener {
+    let id: UUID
+    let callback: (SafeAreaInsets) -> Void
+}
+
 class HybridAutoPlay: HybridHybridAutoPlaySpec {
-    private static var listeners = [EventName: [String: () -> Void]]()
-    private static var renderStateListeners = [
-        String: [(VisibilityState) -> Void]
-    ]()
-    private static var safeAreaInsetsListeners = [
-        String: [(SafeAreaInsets) -> Void]
-    ]()
+    private static var listeners = [EventName: [StateListener]]()
+    private static var renderStateListeners = [String: [RenderStateListener]]()
+    private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
     func addListener(eventType: EventName, callback: @escaping () -> Void)
         throws -> () -> Void
     {
-        let uuid = UUID().uuidString
-        HybridAutoPlay.listeners[eventType, default: [:]][uuid] = callback
+        let listener = StateListener(id: UUID(), callback: callback)
+
+        HybridAutoPlay.listeners[eventType, default: []].append(listener)
 
         if eventType == .didconnect && SceneStore.isRootModuleConnected() {
             callback()
         }
 
         return {
-            HybridAutoPlay.listeners[eventType]?.removeValue(forKey: uuid)
+            HybridAutoPlay.listeners[eventType]?.removeAll {
+                $0.id == listener.id
+            }
+            if HybridAutoPlay.listeners[eventType]?.isEmpty ?? false {
+                HybridAutoPlay.listeners.removeValue(forKey: eventType)
+            }
         }
     }
 
@@ -29,11 +46,11 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         mapTemplateId: String,
         callback: @escaping (VisibilityState) -> Void
     ) throws -> () -> Void {
-        if HybridAutoPlay.renderStateListeners[mapTemplateId] != nil {
-            HybridAutoPlay.renderStateListeners[mapTemplateId]?.append(callback)
-        } else {
-            HybridAutoPlay.renderStateListeners[mapTemplateId] = [callback]
-        }
+        let listener = RenderStateListener(id: UUID(), callback: callback)
+
+        HybridAutoPlay.renderStateListeners[mapTemplateId, default: []].append(
+            listener
+        )
 
         if let state = SceneStore.getState(moduleName: mapTemplateId) {
             callback(state)
@@ -41,7 +58,7 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
 
         return {
             HybridAutoPlay.renderStateListeners[mapTemplateId]?.removeAll {
-                $0 as AnyObject === callback as AnyObject
+                $0.id == listener.id
             }
             if HybridAutoPlay.renderStateListeners[mapTemplateId]?.isEmpty
                 ?? false
@@ -52,7 +69,7 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
             }
         }
     }
-    
+
     func isConnected() throws -> Bool {
         return SceneStore.isRootModuleConnected()
     }
@@ -61,15 +78,20 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         moduleName: String,
         callback: @escaping (SafeAreaInsets) -> Void
     ) throws -> () -> Void {
-        if HybridAutoPlay.safeAreaInsetsListeners[moduleName] != nil {
-            HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.append(callback)
-        } else {
-            HybridAutoPlay.safeAreaInsetsListeners[moduleName] = [callback]
+        let listener = SafeAreaListener(id: UUID(), callback: callback)
+
+        HybridAutoPlay.safeAreaInsetsListeners[moduleName, default: []].append(
+            listener
+        )
+        
+        if let safeAreaInsets = SceneStore.getScene(moduleName: moduleName)?.safeAreaInsets {
+            let insets = HybridAutoPlay.getSafeAreaInsets(safeAreaInsets: safeAreaInsets)
+            callback(insets)
         }
 
         return {
             HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.removeAll {
-                $0 as AnyObject === callback as AnyObject
+                $0.id == listener.id
             }
             if HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.isEmpty
                 ?? false
@@ -127,16 +149,22 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         return Promise.async {
             return try await RootModule.withInterfaceController {
                 interfaceController in
-                
-                let hasPresentedTemplate = await interfaceController.hasPresentedTemplate()
-                if (hasPresentedTemplate) {
-                    let presentedTemplateId = try await interfaceController.dismissTemplate(animated: animate ?? true)
-                    if (presentedTemplateId != nil) {
-                        HybridAutoPlay.removeListeners(templateId: presentedTemplateId!)
+
+                let hasPresentedTemplate =
+                    await interfaceController.hasPresentedTemplate()
+                if hasPresentedTemplate {
+                    let presentedTemplateId =
+                        try await interfaceController.dismissTemplate(
+                            animated: animate ?? true
+                        )
+                    if presentedTemplateId != nil {
+                        HybridAutoPlay.removeListeners(
+                            templateId: presentedTemplateId!
+                        )
                     }
                     return
                 }
-                
+
                 guard
                     let templateId = try await interfaceController.popTemplate(
                         animated: true
@@ -147,19 +175,26 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         }
     }
 
-    func popToRootTemplate(animate: Bool?) throws -> NitroModules.Promise<Void> {
+    func popToRootTemplate(animate: Bool?) throws -> NitroModules.Promise<Void>
+    {
         return Promise.async {
             try await RootModule.withInterfaceController {
                 interfaceController in
-                
-                let hasPresentedTemplate = await interfaceController.hasPresentedTemplate()
-                if (hasPresentedTemplate) {
-                    let presentedTemplateId = try await interfaceController.dismissTemplate(animated: false)
-                    if (presentedTemplateId != nil) {
-                        HybridAutoPlay.removeListeners(templateId: presentedTemplateId!)
+
+                let hasPresentedTemplate =
+                    await interfaceController.hasPresentedTemplate()
+                if hasPresentedTemplate {
+                    let presentedTemplateId =
+                        try await interfaceController.dismissTemplate(
+                            animated: false
+                        )
+                    if presentedTemplateId != nil {
+                        HybridAutoPlay.removeListeners(
+                            templateId: presentedTemplateId!
+                        )
                     }
                 }
-                
+
                 let templateIds =
                     try await interfaceController.popToRootTemplate(
                         animated: !hasPresentedTemplate && (animate ?? true)
@@ -171,16 +206,24 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         }
     }
 
-    func popToTemplate(templateId: String, animate: Bool?) throws -> Promise<Void> {
+    func popToTemplate(templateId: String, animate: Bool?) throws -> Promise<
+        Void
+    > {
         return Promise.async {
             return try await RootModule.withInterfaceController {
                 interfaceController in
-                
-                let hasPresentedTemplate = await interfaceController.hasPresentedTemplate()
-                if (hasPresentedTemplate) {
-                    let presentedTemplateId = try await interfaceController.dismissTemplate(animated: animate ?? true)
-                    if (presentedTemplateId != nil) {
-                        HybridAutoPlay.removeListeners(templateId: presentedTemplateId!)
+
+                let hasPresentedTemplate =
+                    await interfaceController.hasPresentedTemplate()
+                if hasPresentedTemplate {
+                    let presentedTemplateId =
+                        try await interfaceController.dismissTemplate(
+                            animated: animate ?? true
+                        )
+                    if presentedTemplateId != nil {
+                        HybridAutoPlay.removeListeners(
+                            templateId: presentedTemplateId!
+                        )
                     }
                 }
 
@@ -196,8 +239,10 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
     }
 
     // MARK: generic template updates
-    func setTemplateHeaderActions(templateId: String, headerActions: [NitroAction]?) throws
-    {
+    func setTemplateHeaderActions(
+        templateId: String,
+        headerActions: [NitroAction]?
+    ) throws {
         try RootModule.withTemplate(templateId: templateId) {
             template in
             template.barButtons = headerActions
@@ -207,15 +252,15 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
 
     // MARK: events
     static func emit(event: EventName) {
-        HybridAutoPlay.listeners[event]?.values.forEach {
-            $0()
+        HybridAutoPlay.listeners[event]?.forEach { listener in
+            listener.callback()
         }
     }
 
     static func emitRenderState(mapTemplateId: String, state: VisibilityState) {
         HybridAutoPlay.renderStateListeners[mapTemplateId]?.forEach {
-            callback in
-            callback(state)
+            listener in
+            listener.callback(state)
         }
     }
 
@@ -223,20 +268,24 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         moduleName: String,
         safeAreaInsets: UIEdgeInsets
     ) {
-        let insets = SafeAreaInsets(
-            top: safeAreaInsets.top,
-            left: safeAreaInsets.left,
-            bottom: safeAreaInsets.bottom,
-            right: safeAreaInsets.right,
-            isLegacyLayout: nil
-        )
+        let insets = HybridAutoPlay.getSafeAreaInsets(safeAreaInsets: safeAreaInsets)
         HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.forEach {
-            callback in callback(insets)
+            listener in listener.callback(insets)
         }
     }
 
     static func removeListeners(templateId: String) {
         HybridAutoPlay.renderStateListeners.removeValue(forKey: templateId)
         HybridAutoPlay.safeAreaInsetsListeners.removeValue(forKey: templateId)
+    }
+    
+    static func getSafeAreaInsets(safeAreaInsets: UIEdgeInsets) -> SafeAreaInsets {
+        return SafeAreaInsets(
+            top: safeAreaInsets.top,
+            left: safeAreaInsets.left,
+            bottom: safeAreaInsets.bottom,
+            right: safeAreaInsets.right,
+            isLegacyLayout: nil
+        )
     }
 }
