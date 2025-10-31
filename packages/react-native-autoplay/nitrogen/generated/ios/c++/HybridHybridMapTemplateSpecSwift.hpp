@@ -26,6 +26,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton;
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -80,8 +82,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
 // Forward declaration of `ImageLane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
-// Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `TrafficSide` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
@@ -100,6 +100,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include <vector>
 #include "NitroMapButtonType.hpp"
 #include "NitroImage.hpp"
+#include "NitroColor.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
@@ -128,7 +129,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "PreferredImageLane.hpp"
 #include "ImageLane.hpp"
 #include <variant>
-#include "NitroColor.hpp"
 #include "TrafficSide.hpp"
 #include "ManeuverType.hpp"
 #include "TripConfig.hpp"

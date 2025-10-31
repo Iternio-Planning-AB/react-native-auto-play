@@ -614,7 +614,6 @@ class Parser {
         let lightColor = doubleToColor(value: color.lightColor)
 
         return UIColor { traitCollection in
-            print("userInterfaceStyle: \(traitCollection.userInterfaceStyle)")
             switch traitCollection.userInterfaceStyle {
             case .dark:
                 return darkColor

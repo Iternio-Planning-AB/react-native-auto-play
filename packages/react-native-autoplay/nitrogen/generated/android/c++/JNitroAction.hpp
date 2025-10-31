@@ -15,9 +15,11 @@
 #include "JFunc_void.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include <functional>
 #include <optional>

@@ -1,6 +1,6 @@
 import { glyphMap } from '../types/Glyphmap';
 import type { AutoImage } from '../types/Image';
-import { NitroColorUtil } from './NitroColor';
+import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 /**
  * we need to map the ButtonImage.name from GlyphName to
@@ -8,9 +8,8 @@ import { NitroColorUtil } from './NitroColor';
  */
 export type NitroImage = {
   glyph: number;
-  lightColor?: number;
-  darkColor?: number;
-  backgroundColor?: number;
+  color: NitroColor;
+  backgroundColor: NitroColor;
 };
 
 function convert(image: AutoImage): NitroImage;
@@ -22,17 +21,22 @@ function convert(image?: AutoImage): NitroImage | undefined {
 
   const {
     name,
-    lightColor = 'black',
-    darkColor = 'white',
+    color = { darkColor: 'black', lightColor: 'white' },
     backgroundColor = 'transparent',
     ...rest
   } = image;
+
   return {
     ...rest,
     glyph: glyphMap[name],
-    lightColor: NitroColorUtil.convert(lightColor),
-    darkColor: NitroColorUtil.convert(darkColor),
-    backgroundColor: NitroColorUtil.convert(backgroundColor),
+    color:
+      typeof color === 'string'
+        ? NitroColorUtil.convertThemed({ darkColor: color, lightColor: color })
+        : NitroColorUtil.convertThemed(color),
+    backgroundColor:
+      typeof backgroundColor === 'string'
+        ? NitroColorUtil.convertThemed({ darkColor: backgroundColor, lightColor: backgroundColor })
+        : NitroColorUtil.convertThemed(backgroundColor),
   };
 }
 

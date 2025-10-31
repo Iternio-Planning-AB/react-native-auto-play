@@ -334,8 +334,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
     type: 'custom',
     image: {
       name: 'ev_station',
-      darkColor: 'rgba(255, 0, 0, 1)',
-      lightColor: 'rgba(0, 255, 0, 1)',
+      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
     },
     onPress: (template) => {
@@ -357,8 +356,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
     type: 'custom',
     image: {
       name: 'map',
-      darkColor: 'rgba(255, 0, 0, 1)',
-      lightColor: 'rgba(0, 255, 0, 1)',
+      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
     },
     onPress: () => {
@@ -370,14 +368,14 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               type: 'custom',
               image: { name: 'list' },
               onPress: () => {
-                AutoListTemplate.getTemplate({ mapConfig: {} }).push();
+                AutoListTemplate.getTemplate().push();
               },
             },
             {
               type: 'custom',
               image: { name: 'grid_3x3' },
               onPress: () => {
-                AutoGridTemplate.getTemplate({ mapConfig: {} }).push();
+                AutoGridTemplate.getTemplate().push();
               },
             },
             { type: 'custom', image: { name: 'inbox' }, onPress: () => {} },
@@ -400,8 +398,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
     type: 'custom',
     image: {
       name: 'search',
-      darkColor: 'rgba(255, 0, 0, 1)',
-      lightColor: 'rgba(0, 255, 0, 1)',
+      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
     },
     onPress: () => {
@@ -428,8 +425,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                         },
                         image: {
                           name: 'ev_charger',
-                          lightColor: 'red',
-                          darkColor: 'orange',
+                          color: { lightColor: 'red', darkColor: 'orange' },
                         },
                       },
                     ],
@@ -455,8 +451,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                       },
                       image: {
                         name: 'ev_charger',
-                        lightColor: 'blue',
-                        darkColor: 'green',
+                        color: { lightColor: 'blue', darkColor: 'green' },
                       },
                     },
                   ],

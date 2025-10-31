@@ -12,12 +12,13 @@
 
 #include "ImageLane.hpp"
 #include "JImageLane.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JPreferredImageLane.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include "PreferredImageLane.hpp"
-#include <optional>
 #include <string>
 #include <variant>
 #include <vector>

@@ -23,8 +23,10 @@
 #include "JFunc_void.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JNavigationAlertAction.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "NavigationAlertAction.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include <functional>
 #include <optional>

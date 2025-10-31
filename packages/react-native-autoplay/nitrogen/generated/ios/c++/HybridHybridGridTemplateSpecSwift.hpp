@@ -18,6 +18,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GridTemplateCon
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
@@ -46,6 +48,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapBut
 #include "NitroAction.hpp"
 #include <vector>
 #include "NitroImage.hpp"
+#include "NitroColor.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "AlertActionStyle.hpp"

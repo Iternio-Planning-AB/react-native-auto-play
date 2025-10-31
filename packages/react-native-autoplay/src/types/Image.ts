@@ -1,26 +1,19 @@
+import type { ThemedColor } from '../utils/NitroColor';
 import type { GlyphName } from './Glyphmap';
 
 export type AutoImage = {
   name: GlyphName;
 
   /**
-   * Sets the icon color used in light mode, on Android it is not always applied, depending on where the icon is used.
-   * For example in a GridTemplate or in a ListTemplate a colored icon works, where on a MapTemplate it does not.
-   * @summary defaults to white if not specified
+   * Sets the icon dark and light mode color or a single color for both.
+   * Defaults to white for light mode and black for dark mode if not specified.
+   * Might not get applied everywhere like MapTemplate buttons on Android.
    */
-  lightColor?: string;
+  color?: ThemedColor | string;
 
   /**
-   * Sets the icon color used in dark mode, on Android it is not always applied, depending on where the icon is used
-   * For example in a GridTemplate or in a ListTemplate a colored icon works, where on a MapTemplate it does not.
-   * @summary defaults to black if not specified
+   * Sets the background color for dark and light mode or a single color for both
+   * Defaults to transparent if not specified.
    */
-  darkColor?: string;
-
-  /**
-   * Sets the background color, currently Android does not allow colors and converts everything to grayscale so we stick to transparent for this
-   * @summary defaults to transparent if not specified
-   * @namespace iOS
-   */
-  backgroundColor?: string;
+  backgroundColor?: ThemedColor | string;
 };

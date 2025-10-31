@@ -107,24 +107,31 @@ class SymbolFont {
     static func imageFromGlyph(
         glyph: Double,
         size: CGFloat,
-        lightColor: UIColor,
-        darkColor: UIColor,
-        backgroundColor: UIColor = .white,
+        foregroundColor: NitroColor,
+        backgroundColor: NitroColor,
         fontScale: CGFloat = 1,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         guard
             let lightImage = imageFromGlyph(
                 glyph: glyph,
-                foregroundColor: lightColor,
-                backgroundColor: backgroundColor,
+                foregroundColor: Parser.doubleToColor(
+                    value: foregroundColor.lightColor
+                ),
+                backgroundColor: Parser.doubleToColor(
+                    value: backgroundColor.lightColor
+                ),
                 size: size,
                 fontScale: fontScale
             ),
             let darkImage = imageFromGlyph(
                 glyph: glyph,
-                foregroundColor: darkColor,
-                backgroundColor: backgroundColor,
+                foregroundColor: Parser.doubleToColor(
+                    value: foregroundColor.darkColor
+                ),
+                backgroundColor: Parser.doubleToColor(
+                    value: backgroundColor.darkColor
+                ),
                 size: size,
                 fontScale: fontScale
             )
@@ -160,26 +167,21 @@ class SymbolFont {
     ) -> UIImage? {
         guard let image else { return nil }
 
-        var lightColor: UIColor = .black
-        if let color = image.lightColor {
-            lightColor = Parser.doubleToColor(value: color)
-        }
-
-        var darkColor: UIColor = .black
-        if let color = image.darkColor {
-            darkColor = Parser.doubleToColor(value: color)
-        }
-
-        var backgroundColor: UIColor = .white
-        if let color = image.backgroundColor {
-            backgroundColor = Parser.doubleToColor(value: color)
-        }
-
         if noImageAsset {
-            return imageFromGlyph(
+            let foregroundColor = Parser.doubleToColor(
+                value: traitCollection.userInterfaceStyle == .light
+                    ? image.color.lightColor : image.color.darkColor
+            )
+
+            let backgroundColor = Parser.doubleToColor(
+                value: traitCollection.userInterfaceStyle == .light
+                    ? image.backgroundColor.lightColor
+                    : image.backgroundColor.darkColor
+            )
+
+            return SymbolFont.imageFromGlyph(
                 glyph: image.glyph,
-                foregroundColor: traitCollection.userInterfaceStyle == .light
-                    ? lightColor : darkColor,
+                foregroundColor: foregroundColor,
                 backgroundColor: backgroundColor,
                 size: size,
                 fontScale: fontScale
@@ -189,9 +191,8 @@ class SymbolFont {
         return SymbolFont.imageFromGlyph(
             glyph: image.glyph,
             size: size,
-            lightColor: lightColor,
-            darkColor: darkColor,
-            backgroundColor: backgroundColor,
+            foregroundColor: image.color,
+            backgroundColor: image.backgroundColor,
             fontScale: fontScale,
             traitCollection: traitCollection
         )!
@@ -215,11 +216,11 @@ class SymbolFont {
             defer { UIGraphicsEndImageContext() }
             var xOffset = 0
             for laneImage in laneImages {
-                var foregroundColor: UIColor = (isDark ? .white : .black)
-                if let color = isDark ? laneImage.darkColor : laneImage.lightColor {
-                    foregroundColor = Parser.doubleToColor(value: color)
-                }
-                
+                let foregroundColor = Parser.doubleToColor(
+                    value: isDark
+                        ? laneImage.color.darkColor : laneImage.color.lightColor
+                )
+
                 let image = imageFromGlyph(
                     glyph: laneImage.glyph,
                     foregroundColor: foregroundColor,

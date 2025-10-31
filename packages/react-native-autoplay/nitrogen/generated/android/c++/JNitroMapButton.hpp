@@ -11,8 +11,10 @@
 #include "NitroMapButton.hpp"
 
 #include "JFunc_void.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include "NitroMapButtonType.hpp"
 #include <functional>

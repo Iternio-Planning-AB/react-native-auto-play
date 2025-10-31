@@ -20,6 +20,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributed
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme; }
 // Forward declaration of `ZoomEvent` to properly resolve imports.
@@ -34,6 +36,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "NitroAttributedStringImage.hpp"
 #include <optional>
 #include "NitroImage.hpp"
+#include "NitroColor.hpp"
 #include "ColorScheme.hpp"
 #include "ZoomEvent.hpp"
 

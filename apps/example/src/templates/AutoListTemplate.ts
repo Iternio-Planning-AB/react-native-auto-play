@@ -51,8 +51,7 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
       checked: showRadios,
       image: {
         name: 'alarm',
-        lightColor: 'red',
-        darkColor: 'orange',
+        color: { lightColor: 'red', darkColor: 'orange' },
       },
       onPress: (template, checked) => {
         template.updateSections(getMainSection(checked));
@@ -96,18 +95,14 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
   ];
 };
 
-const getTemplate = ({
-  mapConfig,
-}: {
-  mapConfig?: ListTemplateConfig['mapConfig'];
-}): ListTemplate => {
+const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): ListTemplate => {
   return new ListTemplate({
     title: {
       text: `${TextPlaceholders.Distance} - ${TextPlaceholders.Duration}`,
       distance: { unit: 'meters', value: 1234 },
       duration: 4711,
     },
-    mapConfig,
+    mapConfig: props?.mapConfig,
     headerActions: AutoTemplate.headerActions,
     sections: getMainSection(true),
     onPopped: () => console.log('ListTemplate onPopped'),

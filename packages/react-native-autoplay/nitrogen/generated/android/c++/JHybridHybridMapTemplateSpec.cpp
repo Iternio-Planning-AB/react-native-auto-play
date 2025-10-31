@@ -21,6 +21,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton;
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -75,8 +77,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
 // Forward declaration of `ImageLane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
-// Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `TrafficSide` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
@@ -108,6 +108,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroMapButtonType.hpp"
 #include "NitroImage.hpp"
 #include "JNitroImage.hpp"
+#include "NitroColor.hpp"
+#include "JNitroColor.hpp"
 #include "NitroAction.hpp"
 #include "JNitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -166,8 +168,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "JPreferredImageLane.hpp"
 #include "JImageLane.hpp"
-#include "NitroColor.hpp"
-#include "JNitroColor.hpp"
 #include "TrafficSide.hpp"
 #include "JTrafficSide.hpp"
 #include "ManeuverType.hpp"

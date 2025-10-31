@@ -17,7 +17,9 @@
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include <functional>
 #include <optional>

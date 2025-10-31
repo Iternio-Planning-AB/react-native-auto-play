@@ -328,21 +328,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::optional<double>
-  /**
-   * Specialized version of `std::optional<double>`.
-   */
-  using std__optional_double_ = std::optional<double>;
-  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
-    return std::optional<double>(value);
-  }
-  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return *optional;
-  }
-  
   // pragma MARK: std::optional<NitroImage>
   /**
    * Specialized version of `std::optional<NitroImage>`.
@@ -370,6 +355,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return optional.has_value();
   }
   inline NitroAlignment get_std__optional_NitroAlignment_(const std::optional<NitroAlignment>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<double>
+  /**
+   * Specialized version of `std::optional<double>`.
+   */
+  using std__optional_double_ = std::optional<double>;
+  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
+    return std::optional<double>(value);
+  }
+  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
     return *optional;
   }
   

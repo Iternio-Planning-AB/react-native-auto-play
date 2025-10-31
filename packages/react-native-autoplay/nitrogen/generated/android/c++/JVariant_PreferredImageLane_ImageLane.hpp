@@ -16,7 +16,8 @@
 #include "JPreferredImageLane.hpp"
 #include "NitroImage.hpp"
 #include "JNitroImage.hpp"
-#include <optional>
+#include "NitroColor.hpp"
+#include "JNitroColor.hpp"
 #include <vector>
 #include "JImageLane.hpp"
 

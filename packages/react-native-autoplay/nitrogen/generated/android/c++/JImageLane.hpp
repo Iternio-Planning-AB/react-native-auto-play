@@ -10,9 +10,10 @@
 #include <fbjni/fbjni.h>
 #include "ImageLane.hpp"
 
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
-#include <optional>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

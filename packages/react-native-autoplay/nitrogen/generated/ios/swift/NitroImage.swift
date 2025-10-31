@@ -18,26 +18,8 @@ public extension NitroImage {
   /**
    * Create a new instance of `NitroImage`.
    */
-  init(glyph: Double, lightColor: Double?, darkColor: Double?, backgroundColor: Double?) {
-    self.init(glyph, { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = lightColor {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = darkColor {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = backgroundColor {
-        return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }())
+  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor) {
+    self.init(glyph, color, backgroundColor)
   }
 
   var glyph: Double {
@@ -51,54 +33,25 @@ public extension NitroImage {
     }
   }
   
-  var lightColor: Double? {
+  var color: NitroColor {
     @inline(__always)
     get {
-      return self.__lightColor.value
+      return self.__color
     }
     @inline(__always)
     set {
-      self.__lightColor = { () -> bridge.std__optional_double_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
-        } else {
-          return .init()
-        }
-      }()
+      self.__color = newValue
     }
   }
   
-  var darkColor: Double? {
+  var backgroundColor: NitroColor {
     @inline(__always)
     get {
-      return self.__darkColor.value
+      return self.__backgroundColor
     }
     @inline(__always)
     set {
-      self.__darkColor = { () -> bridge.std__optional_double_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
-        } else {
-          return .init()
-        }
-      }()
-    }
-  }
-  
-  var backgroundColor: Double? {
-    @inline(__always)
-    get {
-      return self.__backgroundColor.value
-    }
-    @inline(__always)
-    set {
-      self.__backgroundColor = { () -> bridge.std__optional_double_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_double_(__unwrappedValue)
-        } else {
-          return .init()
-        }
-      }()
+      self.__backgroundColor = newValue
     }
   }
 }

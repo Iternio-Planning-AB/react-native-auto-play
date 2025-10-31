@@ -86,12 +86,15 @@ object SymbolFont {
 
     fun imageFromNitroImage(context: CarContext, image: NitroImage): Bitmap {
         val color =
-            (if (context.isDarkMode) image.darkColor?.toInt() else image.lightColor?.toInt())
-                ?: android.graphics.Color.BLACK
-        val backgroundColor = image.backgroundColor?.toInt() ?: android.graphics.Color.WHITE
+            if (context.isDarkMode) image.color.darkColor else image.color.lightColor
+        val backgroundColor =
+            if (context.isDarkMode) image.backgroundColor.darkColor else image.backgroundColor.lightColor
 
         return imageFromGlyph(
-            context = context, glyph = image.glyph, color = color, backgroundColor = backgroundColor
+            context = context,
+            glyph = image.glyph,
+            color = color.toInt(),
+            backgroundColor = backgroundColor.toInt()
         )!!
     }
 

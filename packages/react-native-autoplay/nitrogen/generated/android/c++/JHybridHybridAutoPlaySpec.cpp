@@ -17,6 +17,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct SafeAreaInsets;
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 // Forward declaration of `NitroImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
@@ -43,6 +45,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertAction
 #include "JNitroAction.hpp"
 #include "NitroImage.hpp"
 #include "JNitroImage.hpp"
+#include "NitroColor.hpp"
+#include "JNitroColor.hpp"
 #include "NitroActionType.hpp"
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"

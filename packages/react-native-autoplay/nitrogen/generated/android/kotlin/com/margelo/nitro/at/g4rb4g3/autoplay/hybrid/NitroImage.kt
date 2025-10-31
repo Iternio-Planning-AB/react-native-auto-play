@@ -22,13 +22,10 @@ data class NitroImage(
   val glyph: Double,
   @DoNotStrip
   @Keep
-  val lightColor: Double?,
+  val color: NitroColor,
   @DoNotStrip
   @Keep
-  val darkColor: Double?,
-  @DoNotStrip
-  @Keep
-  val backgroundColor: Double?
+  val backgroundColor: NitroColor
 ) {
   /* primary constructor */
 
@@ -40,8 +37,8 @@ data class NitroImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(glyph: Double, lightColor: Double?, darkColor: Double?, backgroundColor: Double?): NitroImage {
-      return NitroImage(glyph, lightColor, darkColor, backgroundColor)
+    private fun fromCpp(glyph: Double, color: NitroColor, backgroundColor: NitroColor): NitroImage {
+      return NitroImage(glyph, color, backgroundColor)
     }
   }
 }

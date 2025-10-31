@@ -11,8 +11,10 @@
 #include "NitroAttributedString.hpp"
 
 #include "JNitroAttributedStringImage.hpp"
+#include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "NitroAttributedStringImage.hpp"
+#include "NitroColor.hpp"
 #include "NitroImage.hpp"
 #include <optional>
 #include <string>

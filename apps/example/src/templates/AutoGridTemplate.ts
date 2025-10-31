@@ -14,8 +14,7 @@ const getButtons = (
     title: { text: '#1' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 0 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {
@@ -26,8 +25,7 @@ const getButtons = (
     title: { text: '#2' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 1 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {
@@ -38,8 +36,7 @@ const getButtons = (
     title: { text: '#3' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 2 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {
@@ -50,8 +47,7 @@ const getButtons = (
     title: { text: '#4' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 3 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {
@@ -62,8 +58,7 @@ const getButtons = (
     title: { text: '#5' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 4 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {
@@ -74,8 +69,7 @@ const getButtons = (
     title: { text: '#6' },
     image: {
       name: 'star',
-      darkColor,
-      lightColor,
+      color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 5 ? 'rgba(0, 255, 255, 1)' : undefined,
     },
     onPress: (template) => {

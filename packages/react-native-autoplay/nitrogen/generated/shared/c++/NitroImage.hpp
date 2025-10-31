@@ -23,9 +23,10 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 
-
-#include <optional>
+#include "NitroColor.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -35,13 +36,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   struct NitroImage {
   public:
     double glyph     SWIFT_PRIVATE;
-    std::optional<double> lightColor     SWIFT_PRIVATE;
-    std::optional<double> darkColor     SWIFT_PRIVATE;
-    std::optional<double> backgroundColor     SWIFT_PRIVATE;
+    NitroColor color     SWIFT_PRIVATE;
+    NitroColor backgroundColor     SWIFT_PRIVATE;
 
   public:
     NitroImage() = default;
-    explicit NitroImage(double glyph, std::optional<double> lightColor, std::optional<double> darkColor, std::optional<double> backgroundColor): glyph(glyph), lightColor(lightColor), darkColor(darkColor), backgroundColor(backgroundColor) {}
+    explicit NitroImage(double glyph, NitroColor color, NitroColor backgroundColor): glyph(glyph), color(color), backgroundColor(backgroundColor) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -55,17 +55,15 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "glyph")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "lightColor")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "darkColor")),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "backgroundColor"))
+        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "color")),
+        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "backgroundColor"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "glyph", JSIConverter<double>::toJSI(runtime, arg.glyph));
-      obj.setProperty(runtime, "lightColor", JSIConverter<std::optional<double>>::toJSI(runtime, arg.lightColor));
-      obj.setProperty(runtime, "darkColor", JSIConverter<std::optional<double>>::toJSI(runtime, arg.darkColor));
-      obj.setProperty(runtime, "backgroundColor", JSIConverter<std::optional<double>>::toJSI(runtime, arg.backgroundColor));
+      obj.setProperty(runtime, "color", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.color));
+      obj.setProperty(runtime, "backgroundColor", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.backgroundColor));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -77,9 +75,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "glyph"))) return false;
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "lightColor"))) return false;
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "darkColor"))) return false;
-      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "backgroundColor"))) return false;
+      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
+      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "backgroundColor"))) return false;
       return true;
     }
   };
