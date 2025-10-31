@@ -15,6 +15,7 @@ import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
 import com.facebook.react.ReactApplication
+import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.fabric.FabricUIManager
@@ -46,6 +47,8 @@ class VirtualRenderer(
     private lateinit var reactSurfaceView: ReactSurfaceView
     private var reactSurfaceId: Int? = null
 
+    private lateinit var reactRootView: ReactRootView
+
     private var height: Int = 0
     private var width: Int = 0
 
@@ -61,8 +64,12 @@ class VirtualRenderer(
         CoroutineScope(Dispatchers.Main).launch {
             reactContext =
                 ReactContextResolver.getReactContext(context.applicationContext as ReactApplication)
-            uiManager =
-                UIManagerHelper.getUIManager(reactContext, UIManagerType.FABRIC) as FabricUIManager
+
+            if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+                uiManager = UIManagerHelper.getUIManager(
+                    reactContext, UIManagerType.FABRIC
+                ) as FabricUIManager
+            }
 
             initRenderer()
         }
@@ -230,50 +237,105 @@ class VirtualRenderer(
     }
 
     private fun initRenderer() {
-        if (!this::display.isInitialized || !this::uiManager.isInitialized) {
-            // this makes sure we have all required instances
-            // no matter if the app is launched on the phone or AA first
+        if (!this::display.isInitialized) {
             return
         }
 
-        MapPresentation(
-            context, display, height, width
-        ).show()
+        val initialProperties = Bundle().apply {
+            putString("id", moduleName)
+            putString("colorScheme", if (context.isDarkMode) "dark" else "light")
+            putBundle("window", Bundle().apply {
+                putInt("height", (height / scale).toInt())
+                putInt("width", (width / scale).toInt())
+                putFloat("scale", scale)
+            })
+        }
+
+        /**
+         * since react-native renders everything with the density/scaleFactor from the main display
+         * we have to adjust scaling on AA to take this into account
+         */
+        DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext)
+        val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
+        val reactNativeScale = virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
+
+        if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+            if (!this::uiManager.isInitialized) {
+                // this makes sure we have all required instances
+                // no matter if the app is launched on the phone or AA first
+                return
+            }
+
+            FabricMapPresentation(
+                context, display, height, width, initialProperties, reactNativeScale
+            ).show()
+        } else {
+            MapPresentation(
+                context, display, height, width, initialProperties, reactNativeScale
+            ).show()
+        }
     }
 
     inner class MapPresentation(
         private val context: CarContext,
         display: Display,
         private val height: Int,
-        private val width: Int
+        private val width: Int,
+        private val initialProperties: Bundle,
+        private val reactNativeScale: Float,
     ) : Presentation(context, display) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
-            val initialProperties = Bundle().apply {
-                putString("id", moduleName)
-                putString("colorScheme", if (context.isDarkMode) "dark" else "light")
-                putBundle("window", Bundle().apply {
-                    putInt("height", (height / scale).toInt())
-                    putInt("width", (width / scale).toInt())
-                    putFloat("scale", scale)
-                })
+            if (!this@VirtualRenderer::reactRootView.isInitialized) {
+                val instanceManager =
+                    (context.applicationContext as ReactApplication).reactNativeHost.reactInstanceManager
+                reactRootView = ReactRootView(context.applicationContext).apply {
+                    layoutParams = FrameLayout.LayoutParams(
+                        (this@MapPresentation.width / reactNativeScale).toInt(), (this@MapPresentation.height / reactNativeScale).toInt()
+                    )
+                    scaleX = reactNativeScale
+                    scaleY = reactNativeScale
+                    pivotX = 0f
+                    pivotY = 0f
+                    setBackgroundColor(Color.DKGRAY)
+
+                    startReactApplication(instanceManager, moduleName, initialProperties)
+                    runApplication()
+                }
+            } else {
+                (reactRootView.parent as? ViewGroup)?.removeView(reactRootView)
             }
+
+            val rootContainer = FrameLayout(context).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+                )
+                clipChildren = false
+            }
+
+            rootContainer.addView(reactRootView)
+
+            setContentView(rootContainer)
+        }
+    }
+
+    inner class FabricMapPresentation(
+        private val context: CarContext,
+        display: Display,
+        private val height: Int,
+        private val width: Int,
+        private val initialProperties: Bundle,
+        private val reactNativeScale: Float
+    ) : Presentation(context, display) {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
 
             if (!this@VirtualRenderer::reactSurfaceImpl.isInitialized) {
                 reactSurfaceImpl = ReactSurfaceImpl(context, moduleName, initialProperties)
             }
 
             if (!this@VirtualRenderer::reactSurfaceView.isInitialized) {
-                /**
-                 * since react-native renders everything with the density/scaleFactor from the main display
-                 * we have to adjust scaling on AA to take this into account
-                 */
-                DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext)
-                val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
-                val reactNativeScale =
-                    virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
-
                 reactSurfaceView = ReactSurfaceView(context, reactSurfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
@@ -327,9 +389,13 @@ class VirtualRenderer(
 
         fun removeRenderer(moduleId: String) {
             val renderer = virtualRenderer[moduleId]
-            renderer?.reactSurfaceId?.let {
-                renderer.uiManager.stopSurface(it)
+
+            if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+                renderer?.reactSurfaceId?.let {
+                    renderer.uiManager.stopSurface(it)
+                }
             }
+
             virtualRenderer.remove(moduleId)
         }
     }
