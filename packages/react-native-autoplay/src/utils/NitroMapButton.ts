@@ -27,10 +27,17 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
       );
     }
 
+    const backgroundColor =
+      Platform.OS === 'android'
+        ? 'transparent'
+        : 'backgroundColor' in button.image
+          ? button.image.backgroundColor
+          : 'transparent';
+
     return {
       type,
       onPress: () => onPress(template),
-      image: NitroImageUtil.convert(button.image),
+      image: NitroImageUtil.convert({ ...button.image, backgroundColor: backgroundColor }),
     };
   });
 };
