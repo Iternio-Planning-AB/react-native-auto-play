@@ -10,15 +10,20 @@
 #include <fbjni/fbjni.h>
 #include "NitroMapButton.hpp"
 
+#include "AssetImage.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "NitroMapButtonType.hpp"
 #include <functional>
 #include <optional>
+#include <string>
+#include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -41,8 +46,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldType = clazz->getField<JNitroMapButtonType>("type");
       jni::local_ref<JNitroMapButtonType> type = this->getFieldValue(fieldType);
-      static const auto fieldImage = clazz->getField<JNitroImage>("image");
-      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
       return NitroMapButton(
@@ -68,13 +73,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
-      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JFunc_void::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         JNitroMapButtonType::fromCpp(value.type),
-        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)
       );
     }

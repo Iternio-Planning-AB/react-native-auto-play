@@ -11,34 +11,38 @@
 #include "MessageTemplateConfig.hpp"
 
 #include "AlertActionStyle.hpp"
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
 #include "JAlertActionStyle.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
 #include "JNitroBaseMapTemplateConfig.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -80,8 +84,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> message = this->getFieldValue(fieldMessage);
       static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
-      static const auto fieldImage = clazz->getField<JNitroImage>("image");
-      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
       static const auto fieldMapConfig = clazz->getField<JNitroBaseMapTemplateConfig>("mapConfig");
       jni::local_ref<JNitroBaseMapTemplateConfig> mapConfig = this->getFieldValue(fieldMapConfig);
       return MessageTemplateConfig(
@@ -174,7 +178,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JMessageTemplateConfig::javaobject> fromCpp(const MessageTemplateConfig& value) {
-      using JSignature = JMessageTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
+      using JSignature = JMessageTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -205,7 +209,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           }
           return __array;
         }() : nullptr,
-        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
         value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr
       );
     }

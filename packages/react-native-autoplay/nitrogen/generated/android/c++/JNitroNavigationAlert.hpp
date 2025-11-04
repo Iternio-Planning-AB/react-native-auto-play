@@ -12,25 +12,29 @@
 
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
 #include "JAlertActionStyle.hpp"
 #include "JAlertDismissalReason.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
+#include "JGlyphImage.hpp"
 #include "JNavigationAlertAction.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -57,8 +61,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JAutoText> title = this->getFieldValue(fieldTitle);
       static const auto fieldSubtitle = clazz->getField<JAutoText>("subtitle");
       jni::local_ref<JAutoText> subtitle = this->getFieldValue(fieldSubtitle);
-      static const auto fieldImage = clazz->getField<JNitroImage>("image");
-      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
       static const auto fieldPrimaryAction = clazz->getField<JNavigationAlertAction>("primaryAction");
       jni::local_ref<JNavigationAlertAction> primaryAction = this->getFieldValue(fieldPrimaryAction);
       static const auto fieldSecondaryAction = clazz->getField<JNavigationAlertAction>("secondaryAction");
@@ -108,7 +112,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroNavigationAlert::javaobject> fromCpp(const NitroNavigationAlert& value) {
-      using JSignature = JNitroNavigationAlert(double, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNavigationAlertAction>, jni::alias_ref<JNavigationAlertAction>, double, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void_AlertDismissalReason::javaobject>);
+      using JSignature = JNitroNavigationAlert(double, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JNavigationAlertAction>, jni::alias_ref<JNavigationAlertAction>, double, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void_AlertDismissalReason::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -116,7 +120,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.id,
         JAutoText::fromCpp(value.title),
         value.subtitle.has_value() ? JAutoText::fromCpp(value.subtitle.value()) : nullptr,
-        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
         JNavigationAlertAction::fromCpp(value.primaryAction),
         value.secondaryAction.has_value() ? JNavigationAlertAction::fromCpp(value.secondaryAction.value()) : nullptr,
         value.durationMs,

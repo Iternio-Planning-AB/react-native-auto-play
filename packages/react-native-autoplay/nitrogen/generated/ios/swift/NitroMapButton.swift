@@ -18,10 +18,17 @@ public extension NitroMapButton {
   /**
    * Create a new instance of `NitroMapButton`.
    */
-  init(type: NitroMapButtonType, image: NitroImage?, onPress: @escaping () -> Void) {
-    self.init(type, { () -> bridge.std__optional_NitroImage_ in
+  init(type: NitroMapButtonType, image: Variant_GlyphImage_AssetImage?, onPress: @escaping () -> Void) {
+    self.init(type, { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
       if let __unwrappedValue = image {
-        return bridge.create_std__optional_NitroImage_(__unwrappedValue)
+        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+          switch __unwrappedValue {
+            case .first(let __value):
+              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+            case .second(let __value):
+              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          }
+        }().variant)
       } else {
         return .init()
       }
@@ -42,16 +49,42 @@ public extension NitroMapButton {
     }
   }
   
-  var image: NitroImage? {
+  var image: Variant_GlyphImage_AssetImage? {
     @inline(__always)
     get {
-      return self.__image.value
+      return { () -> Variant_GlyphImage_AssetImage? in
+        if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__(self.__image) {
+          let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__(self.__image)
+          return { () -> Variant_GlyphImage_AssetImage in
+            let __variant = bridge.std__variant_GlyphImage__AssetImage_(__unwrapped)
+            switch __variant.index() {
+              case 0:
+                let __actual = __variant.get_0()
+                return .first(__actual)
+              case 1:
+                let __actual = __variant.get_1()
+                return .second(__actual)
+              default:
+                fatalError("Variant can never have index \(__variant.index())!")
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
     }
     @inline(__always)
     set {
-      self.__image = { () -> bridge.std__optional_NitroImage_ in
+      self.__image = { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_NitroImage_(__unwrappedValue)
+          return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+            switch __unwrappedValue {
+              case .first(let __value):
+                return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+              case .second(let __value):
+                return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+            }
+          }().variant)
         } else {
           return .init()
         }

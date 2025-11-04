@@ -159,7 +159,7 @@ class SymbolFont {
     }
 
     static func imageFromNitroImage(
-        image: NitroImage?,
+        image: GlyphImage?,
         size: CGFloat = 32,
         fontScale: CGFloat = 1,
         noImageAsset: Bool = false,
@@ -216,18 +216,28 @@ class SymbolFont {
             defer { UIGraphicsEndImageContext() }
             var xOffset = 0
             for laneImage in laneImages {
-                let foregroundColor = Parser.doubleToColor(
-                    value: isDark
-                        ? laneImage.color.darkColor : laneImage.color.lightColor
-                )
+                var image: UIImage?
 
-                let image = imageFromGlyph(
-                    glyph: laneImage.glyph,
-                    foregroundColor: foregroundColor,
-                    backgroundColor: UIColor.clear,
-                    size: CGFloat(size)
-                )!
-                image.draw(
+                if let glypImage = laneImage.glyphImage {
+                    let foregroundColor = Parser.doubleToColor(
+                        value: isDark
+                            ? glypImage.color.darkColor
+                            : glypImage.color.lightColor
+                    )
+
+                    image = imageFromGlyph(
+                        glyph: glypImage.glyph,
+                        foregroundColor: foregroundColor,
+                        backgroundColor: UIColor.clear,
+                        size: CGFloat(size)
+                    )!
+                }
+
+                if let assetImage = laneImage.assetImage {
+                    image = Parser.parseAssetImage(assetImage: assetImage)
+                }
+
+                image?.draw(
                     in: CGRect(
                         x: xOffset,
                         y: 0,

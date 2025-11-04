@@ -19,7 +19,14 @@ public extension ImageLane {
    * Create a new instance of `ImageLane`.
    */
   init(image: NitroImage, angles: [Double]) {
-    self.init(image, { () -> bridge.std__vector_double_ in
+    self.init({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+      switch image {
+        case .first(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        case .second(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+      }
+    }().variant, { () -> bridge.std__vector_double_ in
       var __vector = bridge.create_std__vector_double_(angles.count)
       for __item in angles {
         __vector.push_back(__item)
@@ -31,11 +38,30 @@ public extension ImageLane {
   var image: NitroImage {
     @inline(__always)
     get {
-      return self.__image
+      return { () -> NitroImage in
+        let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__image)
+        switch __variant.index() {
+          case 0:
+            let __actual = __variant.get_0()
+            return .first(__actual)
+          case 1:
+            let __actual = __variant.get_1()
+            return .second(__actual)
+          default:
+            fatalError("Variant can never have index \(__variant.index())!")
+        }
+      }()
     }
     @inline(__always)
     set {
-      self.__image = newValue
+      self.__image = { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+        switch newValue {
+          case .first(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          case .second(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        }
+      }().variant
     }
   }
   

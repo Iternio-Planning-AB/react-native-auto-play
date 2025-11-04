@@ -41,13 +41,23 @@ class GridTemplate: AutoPlayTemplate {
         }
 
         let buttons = config.buttons.map { button in
-            CPGridButton(
-                titleVariants: [Parser.parseText(text: button.title)!],
-                image: SymbolFont.imageFromNitroImage(
-                    image: button.image,
+            var image: UIImage?
+            
+            if let glyphImage = button.image.glyphImage {
+                image = SymbolFont.imageFromNitroImage(
+                    image: glyphImage,
                     size: gridButtonHeight,
                     traitCollection: SceneStore.getRootTraitCollection()
                 )!
+            }
+            
+            if let assetImage = button.image.assetImage {
+                image = Parser.parseAssetImage(assetImage: assetImage)
+            }
+            
+            return CPGridButton(
+                titleVariants: [Parser.parseText(text: button.title)!],
+                image: image!
             ) { _ in
                 button.onPress()
             }

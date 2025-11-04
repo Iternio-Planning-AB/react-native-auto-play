@@ -25,8 +25,10 @@
 
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
@@ -34,7 +36,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismis
 
 #include "AutoText.hpp"
 #include <optional>
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
 #include "NavigationAlertAction.hpp"
 #include <functional>
 #include "AlertDismissalReason.hpp"
@@ -49,7 +53,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     double id     SWIFT_PRIVATE;
     AutoText title     SWIFT_PRIVATE;
     std::optional<AutoText> subtitle     SWIFT_PRIVATE;
-    std::optional<NitroImage> image     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage>> image     SWIFT_PRIVATE;
     NavigationAlertAction primaryAction     SWIFT_PRIVATE;
     std::optional<NavigationAlertAction> secondaryAction     SWIFT_PRIVATE;
     double durationMs     SWIFT_PRIVATE;
@@ -58,7 +62,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     NitroNavigationAlert() = default;
-    explicit NitroNavigationAlert(double id, AutoText title, std::optional<AutoText> subtitle, std::optional<NitroImage> image, NavigationAlertAction primaryAction, std::optional<NavigationAlertAction> secondaryAction, double durationMs, std::optional<std::function<void()>> onWillShow, std::optional<std::function<void(AlertDismissalReason /* reason */)>> onDidDismiss): id(id), title(title), subtitle(subtitle), image(image), primaryAction(primaryAction), secondaryAction(secondaryAction), durationMs(durationMs), onWillShow(onWillShow), onDidDismiss(onDidDismiss) {}
+    explicit NitroNavigationAlert(double id, AutoText title, std::optional<AutoText> subtitle, std::optional<std::variant<GlyphImage, AssetImage>> image, NavigationAlertAction primaryAction, std::optional<NavigationAlertAction> secondaryAction, double durationMs, std::optional<std::function<void()>> onWillShow, std::optional<std::function<void(AlertDismissalReason /* reason */)>> onDidDismiss): id(id), title(title), subtitle(subtitle), image(image), primaryAction(primaryAction), secondaryAction(secondaryAction), durationMs(durationMs), onWillShow(onWillShow), onDidDismiss(onDidDismiss) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -74,7 +78,7 @@ namespace margelo::nitro {
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "id")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "title")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "subtitle")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>::fromJSI(runtime, obj.getProperty(runtime, "primaryAction")),
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>>::fromJSI(runtime, obj.getProperty(runtime, "secondaryAction")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "durationMs")),
@@ -87,7 +91,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "id", JSIConverter<double>::toJSI(runtime, arg.id));
       obj.setProperty(runtime, "title", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, "subtitle", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::toJSI(runtime, arg.subtitle));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "primaryAction", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>::toJSI(runtime, arg.primaryAction));
       obj.setProperty(runtime, "secondaryAction", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>>::toJSI(runtime, arg.secondaryAction));
       obj.setProperty(runtime, "durationMs", JSIConverter<double>::toJSI(runtime, arg.durationMs));
@@ -106,7 +110,7 @@ namespace margelo::nitro {
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "id"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "subtitle"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>::canConvert(runtime, obj.getProperty(runtime, "primaryAction"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertAction>>::canConvert(runtime, obj.getProperty(runtime, "secondaryAction"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "durationMs"))) return false;

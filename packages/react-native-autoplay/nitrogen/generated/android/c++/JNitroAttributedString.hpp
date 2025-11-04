@@ -10,14 +10,18 @@
 #include <fbjni/fbjni.h>
 #include "NitroAttributedString.hpp"
 
+#include "AssetImage.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroAttributedStringImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

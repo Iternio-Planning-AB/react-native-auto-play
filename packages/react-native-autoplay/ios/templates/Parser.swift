@@ -58,20 +58,30 @@ class Parser {
                     }
                     return
                 }
-                let button =
-                    action.image != nil
-                    ? CPBarButton(
-                        image: SymbolFont.imageFromNitroImage(
-                            image: action.image!,
-                            fontScale: 0.8,
-                            // this icon is not scaled properly when used as image asset, so we use the plain image, as CP does the correct coloring anyways
-                            noImageAsset: true,
-                            traitCollection: traitCollection
-                        )!
-                    ) { _ in action.onPress() }
-                    : CPBarButton(title: action.title ?? "") { _ in
+
+                var image: UIImage?
+                if let glypImage = action.image?.glyphImage {
+                    image = SymbolFont.imageFromNitroImage(
+                        image: glypImage,
+                        fontScale: 0.8,
+                        // this icon is not scaled properly when used as image asset, so we use the plain image, as CP does the correct coloring anyways
+                        noImageAsset: true,
+                        traitCollection: traitCollection
+                    )!
+                }
+                if let assetImage = action.image?.assetImage {
+                    image = Parser.parseAssetImage(assetImage: assetImage)
+                }
+
+                var button: CPBarButton
+
+                if let image = image {
+                    button = CPBarButton(image: image) { _ in action.onPress() }
+                } else {
+                    button = CPBarButton(title: action.title ?? "") { _ in
                         action.onPress()
                     }
+                }
 
                 if action.alignment == .leading {
                     // for whatever reason CarPlay decieds to reverse the order to what we get from js side so we can not append here
@@ -133,7 +143,7 @@ class Parser {
             if let nitroImages = variant.images {
                 nitroImages.forEach { image in
                     let attachment = NSTextAttachment(
-                        image: SymbolFont.imageFromNitroImage(
+                        image: Parser.parseNitroImage(
                             image: image.image,
                             traitCollection: traitCollection
                         )!
@@ -205,7 +215,7 @@ class Parser {
             let listItem = CPListItem(
                 text: parseText(text: item.title),
                 detailText: parseText(text: item.detailedText),
-                image: SymbolFont.imageFromNitroImage(
+                image: Parser.parseNitroImage(
                     image: item.image,
                     traitCollection: traitCollection
                 ),
@@ -246,7 +256,7 @@ class Parser {
                 let listItem = CPListItem(
                     text: parseText(text: item.title),
                     detailText: parseText(text: item.detailedText),
-                    image: SymbolFont.imageFromNitroImage(
+                    image: Parser.parseNitroImage(
                         image: item.image,
                         traitCollection: traitCollection
                     ),
@@ -424,11 +434,11 @@ class Parser {
         maneuver.initialTravelEstimates = Parser.parseTravelEstiamtes(
             travelEstimates: nitroManeuver.travelEstimates
         )
-        maneuver.symbolImage = SymbolFont.imageFromNitroImage(
+        maneuver.symbolImage = Parser.parseNitroImage(
             image: nitroManeuver.symbolImage,
             traitCollection: traitCollection
         )
-        maneuver.junctionImage = SymbolFont.imageFromNitroImage(
+        maneuver.junctionImage = Parser.parseNitroImage(
             image: nitroManeuver.junctionImage,
             traitCollection: traitCollection
         )
@@ -639,5 +649,36 @@ class Parser {
 
     static func doubleToColor(value: Double) -> UIColor {
         return NitroConvert.uiColor(value)
+    }
+
+    static func parseNitroImage(
+        image: ImageProtocol?,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        if let glyphImage = image?.glyphImage {
+            return SymbolFont.imageFromNitroImage(
+                image: glyphImage,
+                traitCollection: traitCollection
+            )!
+        }
+
+        if let assetImage = image?.assetImage {
+            return Parser.parseAssetImage(assetImage: assetImage)
+        }
+
+        return nil
+    }
+
+    static func parseAssetImage(assetImage: AssetImage) -> UIImage {
+        let uiImage = NitroConvert.uiImage([
+            "height": assetImage.height, "width": assetImage.width,
+            "uri": assetImage.uri, "scale": assetImage.scale,
+        ])
+
+        guard let color = assetImage.color else {
+            return uiImage
+        }
+
+        return uiImage.withTintColor(Parser.parseColor(color: color))
     }
 }

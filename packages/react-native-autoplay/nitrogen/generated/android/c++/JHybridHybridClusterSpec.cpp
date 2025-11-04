@@ -13,8 +13,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ClusterEven
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -36,10 +38,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "NitroAttributedStringImage.hpp"
 #include <optional>
 #include "JNitroAttributedStringImage.hpp"
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
 #include "JNitroImage.hpp"
+#include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
+#include "JAssetImage.hpp"
 #include "ColorScheme.hpp"
 #include "JFunc_void_std__string_ColorScheme.hpp"
 #include "JColorScheme.hpp"

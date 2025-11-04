@@ -1,3 +1,4 @@
+import type { ImageSourcePropType } from 'react-native';
 import type { ThemedColor } from '../utils/NitroColor';
 import type { GlyphName } from './Glyphmap';
 import type { TravelEstimates } from './Trip';
@@ -159,16 +160,24 @@ export interface PreferredLane extends Lane {
   isPreferred: boolean;
 }
 
-export interface ManeuverImage {
-  name: GlyphName;
-  /**
-   * make sure to specify a color with a proper contrast ratio to cardBackgroundColor otherwise it might not get applied
-   * defaults to white/black for dark/light mode
-   */
-  color?: ThemedColor | string;
-}
+export type ManeuverImage =
+  | {
+      name: GlyphName;
+      /**
+       * make sure to specify a color with a proper contrast ratio to cardBackgroundColor otherwise it might not get applied
+       * defaults to white/black for dark/light mode
+       */
+      color?: ThemedColor | string;
+    }
+  | {
+      image: ImageSourcePropType;
+      /**
+       * if specified the image gets tinted, if not it will just use the original image
+       */
+      color?: ThemedColor | string;
+    };
 
-export interface GlyphLane {
+export interface ImageLane {
   /**
    * all images from all lanes will be merged and
    * @namespace Android setLanesImage called on the specified step/maneuver
@@ -200,7 +209,7 @@ export type AutoManeuver = Maneuver & {
      * @namespace iOS
      */
     instructionVariants: Array<string>;
-    lanes: Array<(PreferredLane & GlyphLane) | (Lane & GlyphLane)>;
+    lanes: Array<(PreferredLane & ImageLane) | (Lane & ImageLane)>;
   };
   cardBackgroundColor: ThemedColor;
 };

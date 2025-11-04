@@ -14,10 +14,15 @@
 #include "ImageLane.hpp"
 #include <variant>
 #include "JPreferredImageLane.hpp"
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
 #include "JNitroImage.hpp"
+#include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
+#include "JAssetImage.hpp"
+#include <optional>
+#include <string>
 #include <vector>
 #include "JImageLane.hpp"
 

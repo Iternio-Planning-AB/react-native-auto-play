@@ -25,11 +25,15 @@
 
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 
 #include "NitroMapButtonType.hpp"
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
 #include <optional>
 #include <functional>
 
@@ -41,12 +45,12 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   struct NitroMapButton {
   public:
     NitroMapButtonType type     SWIFT_PRIVATE;
-    std::optional<NitroImage> image     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage>> image     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
 
   public:
     NitroMapButton() = default;
-    explicit NitroMapButton(NitroMapButtonType type, std::optional<NitroImage> image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
+    explicit NitroMapButton(NitroMapButtonType type, std::optional<std::variant<GlyphImage, AssetImage>> image, std::function<void()> onPress): type(type), image(image), onPress(onPress) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -60,14 +64,14 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButton(
         JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButtonType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButton& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButtonType>::toJSI(runtime, arg.type));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
       return obj;
     }
@@ -80,7 +84,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButtonType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
       return true;
     }

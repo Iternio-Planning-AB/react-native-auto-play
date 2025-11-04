@@ -10,15 +10,19 @@
 #include <fbjni/fbjni.h>
 #include "LaneGuidance.hpp"
 
+#include "AssetImage.hpp"
+#include "GlyphImage.hpp"
 #include "ImageLane.hpp"
+#include "JAssetImage.hpp"
+#include "JGlyphImage.hpp"
 #include "JImageLane.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JPreferredImageLane.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "PreferredImageLane.hpp"
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>

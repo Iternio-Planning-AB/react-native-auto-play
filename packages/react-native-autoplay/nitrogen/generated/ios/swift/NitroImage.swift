@@ -5,53 +5,14 @@
 /// Copyright © 2025 Marc Rousavy @ Margelo
 ///
 
-import NitroModules
+
 
 /**
- * Represents an instance of `NitroImage`, backed by a C++ struct.
+ * An Swift enum with associated values representing a Variant/Union type.
+ * JS type: `struct | struct`
  */
-public typealias NitroImage = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
-
-public extension NitroImage {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
-
-  /**
-   * Create a new instance of `NitroImage`.
-   */
-  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor) {
-    self.init(glyph, color, backgroundColor)
-  }
-
-  var glyph: Double {
-    @inline(__always)
-    get {
-      return self.__glyph
-    }
-    @inline(__always)
-    set {
-      self.__glyph = newValue
-    }
-  }
-  
-  var color: NitroColor {
-    @inline(__always)
-    get {
-      return self.__color
-    }
-    @inline(__always)
-    set {
-      self.__color = newValue
-    }
-  }
-  
-  var backgroundColor: NitroColor {
-    @inline(__always)
-    get {
-      return self.__backgroundColor
-    }
-    @inline(__always)
-    set {
-      self.__backgroundColor = newValue
-    }
-  }
+@frozen
+public indirect enum NitroImage {
+  case first(GlyphImage)
+  case second(AssetImage)
 }

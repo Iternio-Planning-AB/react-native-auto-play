@@ -11,8 +11,10 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct MessageTemplateConfig; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -44,10 +46,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapBut
 #include "NitroAction.hpp"
 #include <vector>
 #include "JNitroAction.hpp"
-#include "NitroImage.hpp"
-#include "JNitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
+#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
+#include "JAssetImage.hpp"
 #include "NitroActionType.hpp"
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"

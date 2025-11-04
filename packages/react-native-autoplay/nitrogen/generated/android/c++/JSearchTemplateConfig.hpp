@@ -11,35 +11,39 @@
 #include "SearchTemplateConfig.hpp"
 
 #include "AlertActionStyle.hpp"
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
 #include "JAlertActionStyle.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void_std__string.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
 #include "JNitroRow.hpp"
 #include "JNitroSection.hpp"
 #include "JNitroSectionType.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

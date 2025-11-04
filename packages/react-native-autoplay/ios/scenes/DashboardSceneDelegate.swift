@@ -87,7 +87,7 @@ class DashboardSceneDelegate: AutoPlayScene,
             CPDashboardButton(
                 titleVariants: button.titleVariants,
                 subtitleVariants: button.subtitleVariants,
-                image: SymbolFont.imageFromNitroImage(
+                image: Parser.parseNitroImage(
                     image: button.image,
                     traitCollection: traitCollection
                 )!

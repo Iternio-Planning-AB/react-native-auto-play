@@ -12,6 +12,8 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `ClusterEventName` to properly resolve imports.
@@ -28,6 +30,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTim
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `ForkType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
 // Forward declaration of `GridTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GridTemplateConfig; }
 // Forward declaration of `HybridHybridAutoPlaySpec` to properly resolve imports.
@@ -80,8 +84,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDas
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroGridButton; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `NitroManeuver` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
@@ -134,6 +136,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 // Include C++ defined types
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "ClusterEventName.hpp"
 #include "ColorScheme.hpp"
@@ -142,6 +145,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "DurationWithTimeZone.hpp"
 #include "EventName.hpp"
 #include "ForkType.hpp"
+#include "GlyphImage.hpp"
 #include "GridTemplateConfig.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
 #include "HybridHybridCarPlayDashboardSpec.hpp"
@@ -168,7 +172,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "NitroCarPlayDashboardButton.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
-#include "NitroImage.hpp"
 #include "NitroManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"

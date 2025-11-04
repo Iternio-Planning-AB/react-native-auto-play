@@ -19,8 +19,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -106,10 +108,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "JNitroMapButtonType.hpp"
-#include "NitroImage.hpp"
-#include "JNitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
+#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
+#include "JAssetImage.hpp"
 #include "NitroAction.hpp"
 #include "JNitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -150,6 +156,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "JNitroAttributedStringImage.hpp"
+#include "JNitroImage.hpp"
 #include "TurnType.hpp"
 #include "JTurnType.hpp"
 #include "OffRampType.hpp"
@@ -164,7 +171,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JLaneGuidance.hpp"
 #include "PreferredImageLane.hpp"
 #include "ImageLane.hpp"
-#include <variant>
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "JPreferredImageLane.hpp"
 #include "JImageLane.hpp"

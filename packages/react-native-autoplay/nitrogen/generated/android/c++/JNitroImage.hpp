@@ -8,59 +8,68 @@
 #pragma once
 
 #include <fbjni/fbjni.h>
-#include "NitroImage.hpp"
+#include <variant>
 
-#include "JNitroColor.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
+#include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
+#include "JNitroColor.hpp"
+#include "JAssetImage.hpp"
+#include <optional>
+#include <string>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroImage" and the the Kotlin data class "NitroImage".
+   * The C++ JNI bridge between the C++ std::variant and the Java class "NitroImage".
    */
-  struct JNitroImage final: public jni::JavaClass<JNitroImage> {
+  class JNitroImage: public jni::JavaClass<JNitroImage> {
   public:
     static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage;";
 
-  public:
-    /**
-     * Convert this Java/Kotlin-based struct to the C++ struct NitroImage by copying all values to C++.
-     */
-    [[maybe_unused]]
-    [[nodiscard]]
-    NitroImage toCpp() const {
-      static const auto clazz = javaClassStatic();
-      static const auto fieldGlyph = clazz->getField<double>("glyph");
-      double glyph = this->getFieldValue(fieldGlyph);
-      static const auto fieldColor = clazz->getField<JNitroColor>("color");
-      jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
-      static const auto fieldBackgroundColor = clazz->getField<JNitroColor>("backgroundColor");
-      jni::local_ref<JNitroColor> backgroundColor = this->getFieldValue(fieldBackgroundColor);
-      return NitroImage(
-        glyph,
-        color->toCpp(),
-        backgroundColor->toCpp()
-      );
+    static jni::local_ref<JNitroImage> create_0(jni::alias_ref<JGlyphImage> value) {
+      static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JGlyphImage>)>("create");
+      return method(javaClassStatic(), value);
+    }
+    static jni::local_ref<JNitroImage> create_1(jni::alias_ref<JAssetImage> value) {
+      static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JAssetImage>)>("create");
+      return method(javaClassStatic(), value);
     }
 
-  public:
-    /**
-     * Create a Java/Kotlin-based struct by copying all values from the given C++ struct to Java.
-     */
-    [[maybe_unused]]
-    static jni::local_ref<JNitroImage::javaobject> fromCpp(const NitroImage& value) {
-      using JSignature = JNitroImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>);
-      static const auto clazz = javaClassStatic();
-      static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
-      return create(
-        clazz,
-        value.glyph,
-        JNitroColor::fromCpp(value.color),
-        JNitroColor::fromCpp(value.backgroundColor)
-      );
+    static jni::local_ref<JNitroImage> fromCpp(const std::variant<GlyphImage, AssetImage>& variant) {
+      switch (variant.index()) {
+        case 0: return create_0(JGlyphImage::fromCpp(std::get<0>(variant)));
+        case 1: return create_1(JAssetImage::fromCpp(std::get<1>(variant)));
+        default: throw std::invalid_argument("Variant holds unknown index! (" + std::to_string(variant.index()) + ")");
+      }
     }
+
+    [[nodiscard]] std::variant<GlyphImage, AssetImage> toCpp() const;
   };
 
+  namespace JNitroImage_impl {
+    class First: public jni::JavaClass<First, JNitroImage> {
+    public:
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage$First;";
+    
+      [[nodiscard]] jni::local_ref<JGlyphImage> getValue() const {
+        static const auto field = javaClassStatic()->getField<JGlyphImage>("value");
+        return getFieldValue(field);
+      }
+    };
+    
+    class Second: public jni::JavaClass<Second, JNitroImage> {
+    public:
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage$Second;";
+    
+      [[nodiscard]] jni::local_ref<JAssetImage> getValue() const {
+        static const auto field = javaClassStatic()->getField<JAssetImage>("value");
+        return getFieldValue(field);
+      }
+    };
+  } // namespace JNitroImage_impl
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid

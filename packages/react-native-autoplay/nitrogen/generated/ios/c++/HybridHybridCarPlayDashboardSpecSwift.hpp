@@ -16,8 +16,10 @@ namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class EventName; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -28,8 +30,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme
 #include <NitroModules/Promise.hpp>
 #include "NitroCarPlayDashboardButton.hpp"
 #include <vector>
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
 #include "NitroColor.hpp"
+#include <optional>
 #include <string>
 #include "ColorScheme.hpp"
 

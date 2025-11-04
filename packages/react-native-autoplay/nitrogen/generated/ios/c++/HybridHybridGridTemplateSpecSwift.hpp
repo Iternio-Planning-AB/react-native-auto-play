@@ -16,8 +16,10 @@ namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GridTemplateConfig; }
 // Forward declaration of `NitroAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -47,7 +49,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapBut
 #include <functional>
 #include "NitroAction.hpp"
 #include <vector>
-#include "NitroImage.hpp"
+#include "GlyphImage.hpp"
+#include "AssetImage.hpp"
+#include <variant>
 #include "NitroColor.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"

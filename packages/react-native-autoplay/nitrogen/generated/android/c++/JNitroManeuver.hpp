@@ -10,17 +10,21 @@
 #include <fbjni/fbjni.h>
 #include "NitroManeuver.hpp"
 
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
+#include "GlyphImage.hpp"
 #include "ImageLane.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JDurationWithTimeZone.hpp"
 #include "JForkType.hpp"
+#include "JGlyphImage.hpp"
 #include "JImageLane.hpp"
 #include "JKeepType.hpp"
 #include "JLaneGuidance.hpp"
@@ -35,6 +39,7 @@
 #include "JTrafficSide.hpp"
 #include "JTravelEstimates.hpp"
 #include "JTurnType.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
@@ -42,7 +47,6 @@
 #include "NitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "PreferredImageLane.hpp"
@@ -77,8 +81,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JNitroAttributedString>> attributedInstructionVariants = this->getFieldValue(fieldAttributedInstructionVariants);
       static const auto fieldSymbolImage = clazz->getField<JNitroImage>("symbolImage");
       jni::local_ref<JNitroImage> symbolImage = this->getFieldValue(fieldSymbolImage);
-      static const auto fieldJunctionImage = clazz->getField<JNitroImage>("junctionImage");
-      jni::local_ref<JNitroImage> junctionImage = this->getFieldValue(fieldJunctionImage);
+      static const auto fieldJunctionImage = clazz->getField<JVariant_GlyphImage_AssetImage>("junctionImage");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> junctionImage = this->getFieldValue(fieldJunctionImage);
       static const auto fieldTurnType = clazz->getField<JTurnType>("turnType");
       jni::local_ref<JTurnType> turnType = this->getFieldValue(fieldTurnType);
       static const auto fieldAngle = clazz->getField<jni::JDouble>("angle");
@@ -163,7 +167,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroManeuver::javaobject> fromCpp(const NitroManeuver& value) {
-      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JNitroAttributedString>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JNitroImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
+      using JSignature = JNitroManeuver(jni::alias_ref<jni::JArrayClass<JNitroAttributedString>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -178,7 +182,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           return __array;
         }(),
         JNitroImage::fromCpp(value.symbolImage),
-        value.junctionImage.has_value() ? JNitroImage::fromCpp(value.junctionImage.value()) : nullptr,
+        value.junctionImage.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.junctionImage.value()) : nullptr,
         value.turnType.has_value() ? JTurnType::fromCpp(value.turnType.value()) : nullptr,
         value.angle.has_value() ? jni::JDouble::valueOf(value.angle.value()) : nullptr,
         value.elementAngles.has_value() ? [&]() {

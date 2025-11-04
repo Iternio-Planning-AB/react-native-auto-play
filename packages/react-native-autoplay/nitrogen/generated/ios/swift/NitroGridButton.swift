@@ -19,7 +19,14 @@ public extension NitroGridButton {
    * Create a new instance of `NitroGridButton`.
    */
   init(title: AutoText, image: NitroImage, onPress: @escaping () -> Void) {
-    self.init(title, image, { () -> bridge.Func_void in
+    self.init(title, { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+      switch image {
+        case .first(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        case .second(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+      }
+    }().variant, { () -> bridge.Func_void in
       let __closureWrapper = Func_void(onPress)
       return bridge.create_Func_void(__closureWrapper.toUnsafe())
     }())
@@ -39,11 +46,30 @@ public extension NitroGridButton {
   var image: NitroImage {
     @inline(__always)
     get {
-      return self.__image
+      return { () -> NitroImage in
+        let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__image)
+        switch __variant.index() {
+          case 0:
+            let __actual = __variant.get_0()
+            return .first(__actual)
+          case 1:
+            let __actual = __variant.get_1()
+            return .second(__actual)
+          default:
+            fatalError("Variant can never have index \(__variant.index())!")
+        }
+      }()
     }
     @inline(__always)
     set {
-      self.__image = newValue
+      self.__image = { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+        switch newValue {
+          case .first(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          case .second(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        }
+      }().variant
     }
   }
   

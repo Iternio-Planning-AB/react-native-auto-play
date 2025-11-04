@@ -44,6 +44,7 @@ class MapTemplate(
     }
 
     override fun parse(): Template {
+        //TODO transparent buttons!
         return NavigationTemplate.Builder().apply {
             setBackgroundColor(cardBackgroundColor)
             config.mapButtons?.let { buttons ->

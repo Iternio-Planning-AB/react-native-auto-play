@@ -7,38 +7,53 @@
 
 package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
-import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
 
 
 /**
- * Represents the JavaScript object/struct "NitroImage".
+ * Represents the TypeScript variant "GlyphImage | AssetImage".
  */
+@Suppress("ClassName")
 @DoNotStrip
-@Keep
-data class NitroImage(
+sealed class NitroImage {
   @DoNotStrip
-  @Keep
-  val glyph: Double,
+  data class First(@DoNotStrip val value: GlyphImage): NitroImage()
   @DoNotStrip
-  @Keep
-  val color: NitroColor,
-  @DoNotStrip
-  @Keep
-  val backgroundColor: NitroColor
-) {
-  /* primary constructor */
+  data class Second(@DoNotStrip val value: AssetImage): NitroImage()
 
-  private companion object {
-    /**
-     * Constructor called from C++
-     */
-    @DoNotStrip
-    @Keep
-    @Suppress("unused")
-    @JvmStatic
-    private fun fromCpp(glyph: Double, color: NitroColor, backgroundColor: NitroColor): NitroImage {
-      return NitroImage(glyph, color, backgroundColor)
+  @Deprecated("getAs() is not type-safe. Use fold/asFirstOrNull/asSecondOrNull instead.", level = DeprecationLevel.ERROR)
+  inline fun <reified T> getAs(): T? = when (this) {
+    is First -> value as? T
+    is Second -> value as? T
+  }
+
+  val isFirst: Boolean
+    get() = this is First
+  val isSecond: Boolean
+    get() = this is Second
+
+  fun asFirstOrNull(): GlyphImage? {
+    val value = (this as? First)?.value ?: return null
+    return value
+  }
+  fun asSecondOrNull(): AssetImage? {
+    val value = (this as? Second)?.value ?: return null
+    return value
+  }
+
+  inline fun <R> match(first: (GlyphImage) -> R, second: (AssetImage) -> R): R {
+    return when (this) {
+      is First -> first(value)
+      is Second -> second(value)
     }
+  }
+
+  companion object {
+    @JvmStatic
+    @DoNotStrip
+    fun create(value: GlyphImage): NitroImage = First(value)
+    @JvmStatic
+    @DoNotStrip
+    fun create(value: AssetImage): NitroImage = Second(value)
   }
 }

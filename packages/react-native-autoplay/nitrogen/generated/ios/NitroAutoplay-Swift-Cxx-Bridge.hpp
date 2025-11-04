@@ -12,6 +12,8 @@
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
+// Forward declaration of `AssetImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -24,6 +26,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `ForkType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+// Forward declaration of `GlyphImage` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
 // Forward declaration of `HybridHybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridAutoPlaySpec; }
 // Forward declaration of `HybridHybridCarPlayDashboardSpec` to properly resolve imports.
@@ -68,8 +72,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDas
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroGridButton; }
-// Forward declaration of `NitroImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroImage; }
 // Forward declaration of `NitroManeuver` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
@@ -132,12 +134,14 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 // Include C++ defined types
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "ColorScheme.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
+#include "GlyphImage.hpp"
 #include "HybridHybridAutoPlaySpec.hpp"
 #include "HybridHybridCarPlayDashboardSpec.hpp"
 #include "HybridHybridClusterSpec.hpp"
@@ -160,7 +164,6 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 #include "NitroCarPlayDashboardButton.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
-#include "NitroImage.hpp"
 #include "NitroManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
@@ -328,18 +331,62 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::optional<NitroImage>
+  // pragma MARK: std::optional<NitroColor>
   /**
-   * Specialized version of `std::optional<NitroImage>`.
+   * Specialized version of `std::optional<NitroColor>`.
    */
-  using std__optional_NitroImage_ = std::optional<NitroImage>;
-  inline std::optional<NitroImage> create_std__optional_NitroImage_(const NitroImage& value) noexcept {
-    return std::optional<NitroImage>(value);
+  using std__optional_NitroColor_ = std::optional<NitroColor>;
+  inline std::optional<NitroColor> create_std__optional_NitroColor_(const NitroColor& value) noexcept {
+    return std::optional<NitroColor>(value);
   }
-  inline bool has_value_std__optional_NitroImage_(const std::optional<NitroImage>& optional) noexcept {
+  inline bool has_value_std__optional_NitroColor_(const std::optional<NitroColor>& optional) noexcept {
     return optional.has_value();
   }
-  inline NitroImage get_std__optional_NitroImage_(const std::optional<NitroImage>& optional) noexcept {
+  inline NitroColor get_std__optional_NitroColor_(const std::optional<NitroColor>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::variant<GlyphImage, AssetImage>
+  /**
+   * Wrapper struct for `std::variant<GlyphImage, AssetImage>`.
+   * std::variant cannot be used in Swift because of a Swift bug.
+   * Not even specializing it works. So we create a wrapper struct.
+   */
+  struct std__variant_GlyphImage__AssetImage_ {
+    std::variant<GlyphImage, AssetImage> variant;
+    std__variant_GlyphImage__AssetImage_(std::variant<GlyphImage, AssetImage> variant): variant(variant) { }
+    operator std::variant<GlyphImage, AssetImage>() const noexcept {
+      return variant;
+    }
+    inline size_t index() const noexcept {
+      return variant.index();
+    }
+    inline GlyphImage get_0() const noexcept {
+      return std::get<0>(variant);
+    }
+    inline AssetImage get_1() const noexcept {
+      return std::get<1>(variant);
+    }
+  };
+  inline std__variant_GlyphImage__AssetImage_ create_std__variant_GlyphImage__AssetImage_(const GlyphImage& value) noexcept {
+    return std__variant_GlyphImage__AssetImage_(value);
+  }
+  inline std__variant_GlyphImage__AssetImage_ create_std__variant_GlyphImage__AssetImage_(const AssetImage& value) noexcept {
+    return std__variant_GlyphImage__AssetImage_(value);
+  }
+  
+  // pragma MARK: std::optional<std::variant<GlyphImage, AssetImage>>
+  /**
+   * Specialized version of `std::optional<std::variant<GlyphImage, AssetImage>>`.
+   */
+  using std__optional_std__variant_GlyphImage__AssetImage__ = std::optional<std::variant<GlyphImage, AssetImage>>;
+  inline std::optional<std::variant<GlyphImage, AssetImage>> create_std__optional_std__variant_GlyphImage__AssetImage__(const std::variant<GlyphImage, AssetImage>& value) noexcept {
+    return std::optional<std::variant<GlyphImage, AssetImage>>(value);
+  }
+  inline bool has_value_std__optional_std__variant_GlyphImage__AssetImage__(const std::optional<std::variant<GlyphImage, AssetImage>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::variant<GlyphImage, AssetImage> get_std__optional_std__variant_GlyphImage__AssetImage__(const std::optional<std::variant<GlyphImage, AssetImage>>& optional) noexcept {
     return *optional;
   }
   

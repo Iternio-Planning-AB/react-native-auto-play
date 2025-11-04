@@ -10,20 +10,24 @@
 #include <fbjni/fbjni.h>
 #include "NitroRow.hpp"
 
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -52,8 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JBoolean> browsable = this->getFieldValue(fieldBrowsable);
       static const auto fieldEnabled = clazz->getField<jboolean>("enabled");
       jboolean enabled = this->getFieldValue(fieldEnabled);
-      static const auto fieldImage = clazz->getField<JNitroImage>("image");
-      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
       static const auto fieldChecked = clazz->getField<jni::JBoolean>("checked");
       jni::local_ref<jni::JBoolean> checked = this->getFieldValue(fieldChecked);
       static const auto fieldOnPress = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onPress");
@@ -88,7 +92,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -97,7 +101,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.detailedText.has_value() ? JAutoText::fromCpp(value.detailedText.value()) : nullptr,
         value.browsable.has_value() ? jni::JBoolean::valueOf(value.browsable.value()) : nullptr,
         value.enabled,
-        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
         value.checked.has_value() ? jni::JBoolean::valueOf(value.checked.value()) : nullptr,
         value.onPress.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress.value()) : nullptr,
         value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr

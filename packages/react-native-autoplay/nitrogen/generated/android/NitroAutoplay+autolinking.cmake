@@ -45,7 +45,9 @@ target_sources(
   # Android-specific Nitrogen C++ sources
   ../nitrogen/generated/android/c++/JHybridHybridAndroidAutoTelemetrySpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridAutoPlaySpec.cpp
+  ../nitrogen/generated/android/c++/JVariant_GlyphImage_AssetImage.cpp
   ../nitrogen/generated/android/c++/JHybridHybridClusterSpec.cpp
+  ../nitrogen/generated/android/c++/JNitroImage.cpp
   ../nitrogen/generated/android/c++/JHybridHybridGridTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridListTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridMapTemplateSpec.cpp

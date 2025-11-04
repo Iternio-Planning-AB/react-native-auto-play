@@ -11,8 +11,11 @@
 #include "MapTemplateConfig.hpp"
 
 #include "AlertActionStyle.hpp"
+#include "AssetImage.hpp"
 #include "ColorScheme.hpp"
+#include "GlyphImage.hpp"
 #include "JAlertActionStyle.hpp"
+#include "JAssetImage.hpp"
 #include "JColorScheme.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_ColorScheme.hpp"
@@ -20,20 +23,20 @@
 #include "JFunc_void_Point_double_std__optional_double_.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
 #include "JPoint.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "JVisibleTravelEstimate.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "Point.hpp"
@@ -41,6 +44,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

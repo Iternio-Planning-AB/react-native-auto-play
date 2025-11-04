@@ -11,19 +11,23 @@
 #include "NitroAction.hpp"
 
 #include "AlertActionStyle.hpp"
+#include "AssetImage.hpp"
+#include "GlyphImage.hpp"
 #include "JAlertActionStyle.hpp"
+#include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -46,8 +50,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldTitle = clazz->getField<jni::JString>("title");
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
-      static const auto fieldImage = clazz->getField<JNitroImage>("image");
-      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
       static const auto fieldEnabled = clazz->getField<jni::JBoolean>("enabled");
       jni::local_ref<jni::JBoolean> enabled = this->getFieldValue(fieldEnabled);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
@@ -88,13 +92,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroAction::javaobject> fromCpp(const NitroAction& value) {
-      using JSignature = JNitroAction(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JNitroActionType>, jni::alias_ref<JNitroAlignment>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JAlertActionStyle>);
+      using JSignature = JNitroAction(jni::alias_ref<jni::JString>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JNitroActionType>, jni::alias_ref<JNitroAlignment>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JAlertActionStyle>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.title.has_value() ? jni::make_jstring(value.title.value()) : nullptr,
-        value.image.has_value() ? JNitroImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
         value.enabled.has_value() ? jni::JBoolean::valueOf(value.enabled.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress),
         JNitroActionType::fromCpp(value.type),

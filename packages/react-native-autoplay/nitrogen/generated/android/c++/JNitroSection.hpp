@@ -10,24 +10,28 @@
 #include <fbjni/fbjni.h>
 #include "NitroSection.hpp"
 
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
-#include "JNitroImage.hpp"
 #include "JNitroRow.hpp"
 #include "JNitroSectionType.hpp"
+#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include "NitroRow.hpp"
 #include "NitroSectionType.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {

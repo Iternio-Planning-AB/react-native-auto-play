@@ -10,20 +10,24 @@
 #include <fbjni/fbjni.h>
 #include "NitroGridButton.hpp"
 
+#include "AssetImage.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
+#include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "NitroColor.hpp"
-#include "NitroImage.hpp"
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 

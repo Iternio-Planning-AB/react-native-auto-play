@@ -28,7 +28,7 @@ data class NitroNavigationAlert(
   val subtitle: AutoText?,
   @DoNotStrip
   @Keep
-  val image: NitroImage?,
+  val image: Variant_GlyphImage_AssetImage?,
   @DoNotStrip
   @Keep
   val primaryAction: NavigationAlertAction,
@@ -48,7 +48,7 @@ data class NitroNavigationAlert(
   /**
    * Create a new instance of NitroNavigationAlert from Kotlin
    */
-  constructor(id: Double, title: AutoText, subtitle: AutoText?, image: NitroImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Unit)?, onDidDismiss: ((reason: AlertDismissalReason) -> Unit)?):
+  constructor(id: Double, title: AutoText, subtitle: AutoText?, image: Variant_GlyphImage_AssetImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Unit)?, onDidDismiss: ((reason: AlertDismissalReason) -> Unit)?):
          this(id, title, subtitle, image, primaryAction, secondaryAction, durationMs, onWillShow?.let { Func_void_java(it) }, onDidDismiss?.let { Func_void_AlertDismissalReason_java(it) })
 
   private companion object {
@@ -59,7 +59,7 @@ data class NitroNavigationAlert(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: Double, title: AutoText, subtitle: AutoText?, image: NitroImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: Func_void?, onDidDismiss: Func_void_AlertDismissalReason?): NitroNavigationAlert {
+    private fun fromCpp(id: Double, title: AutoText, subtitle: AutoText?, image: Variant_GlyphImage_AssetImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: Func_void?, onDidDismiss: Func_void_AlertDismissalReason?): NitroNavigationAlert {
       return NitroNavigationAlert(id, title, subtitle, image, primaryAction, secondaryAction, durationMs, onWillShow, onDidDismiss)
     }
   }
