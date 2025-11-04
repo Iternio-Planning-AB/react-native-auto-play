@@ -71,7 +71,10 @@ class Parser {
                     )!
                 }
                 if let assetImage = action.image?.assetImage {
-                    image = Parser.parseAssetImage(assetImage: assetImage)
+                    image = Parser.parseAssetImage(
+                        assetImage: assetImage,
+                        traitCollection: traitCollection
+                    )
                 }
 
                 var button: CPBarButton
@@ -669,14 +672,20 @@ class Parser {
         }
 
         if let assetImage = image?.assetImage {
-            return Parser.parseAssetImage(assetImage: assetImage)
+            return Parser.parseAssetImage(
+                assetImage: assetImage,
+                traitCollection: traitCollection
+            )
         }
 
         return nil
     }
 
     @MainActor
-    static func parseAssetImage(assetImage: AssetImage) -> UIImage? {
+    static func parseAssetImage(
+        assetImage: AssetImage,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
         let uiImage = NitroConvert.uiImage([
             "height": assetImage.height, "width": assetImage.width,
             "uri": assetImage.uri, "scale": assetImage.scale,
@@ -687,17 +696,45 @@ class Parser {
             return uiImage
         }
 
-        let templateImage = uiImage.withRenderingMode(.alwaysTemplate)
-        
-        let imageView = UIImageView(image: templateImage)
-        imageView.tintColor = Parser.parseColor(color: color)
-        
-        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.render(in: context)
-        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return tintedImage
+        func getTintedImage(color: Double) -> UIImage {
+            let templateImage = uiImage.withRenderingMode(.alwaysTemplate)
+
+            let imageView = UIImageView(image: templateImage)
+            imageView.tintColor = Parser.doubleToColor(value: color)
+
+            UIGraphicsBeginImageContextWithOptions(
+                imageView.bounds.size,
+                false,
+                0.0
+            )
+            let context = UIGraphicsGetCurrentContext()!
+            imageView.layer.render(in: context)
+
+            let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+
+            return tintedImage!
+        }
+
+        let imageAsset = UIImageAsset()
+
+        let lightTraits = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: .light)
+        ])
+        imageAsset.register(
+            getTintedImage(color: color.lightColor),
+            with: lightTraits
+        )
+
+        let darkTraits = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: .dark)
+        ])
+        imageAsset.register(
+            getTintedImage(color: color.darkColor),
+            with: darkTraits
+        )
+
+        // Return an image from the asset that will automatically switch based on the interface style
+        return imageAsset.image(with: traitCollection)
     }
 }

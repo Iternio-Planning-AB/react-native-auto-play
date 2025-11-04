@@ -55,7 +55,10 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                     }
                 }
                 if let assetImage = button.image?.assetImage,
-                    let icon = Parser.parseAssetImage(assetImage: assetImage)
+                    let icon = Parser.parseAssetImage(
+                        assetImage: assetImage,
+                        traitCollection: SceneStore.getRootTraitCollection()
+                    )
                 {
                     return CPMapButton(image: icon) { _ in
                         button.onPress()

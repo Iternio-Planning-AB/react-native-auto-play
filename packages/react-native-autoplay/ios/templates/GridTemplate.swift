@@ -43,7 +43,7 @@ class GridTemplate: AutoPlayTemplate {
 
         let buttons = config.buttons.map { button in
             var image: UIImage?
-            
+
             if let glyphImage = button.image.glyphImage {
                 image = SymbolFont.imageFromNitroImage(
                     image: glyphImage,
@@ -51,11 +51,14 @@ class GridTemplate: AutoPlayTemplate {
                     traitCollection: SceneStore.getRootTraitCollection()
                 )!
             }
-            
+
             if let assetImage = button.image.assetImage {
-                image = Parser.parseAssetImage(assetImage: assetImage)
+                image = Parser.parseAssetImage(
+                    assetImage: assetImage,
+                    traitCollection: SceneStore.getRootTraitCollection()
+                )
             }
-            
+
             return CPGridButton(
                 titleVariants: [Parser.parseText(text: button.title)!],
                 image: image!

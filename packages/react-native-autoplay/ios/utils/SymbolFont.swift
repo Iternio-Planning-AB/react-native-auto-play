@@ -235,7 +235,10 @@ class SymbolFont {
                 }
 
                 if let assetImage = laneImage.assetImage {
-                    image = Parser.parseAssetImage(assetImage: assetImage)
+                    image = Parser.parseAssetImage(
+                        assetImage: assetImage,
+                        traitCollection: traitCollection
+                    )
                 }
 
                 image?.draw(

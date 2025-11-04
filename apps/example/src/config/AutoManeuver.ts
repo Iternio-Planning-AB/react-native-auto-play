@@ -33,7 +33,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
     },
     symbolImage: {
       image: require('../../assets/heart.png'),
-      color: 'red',
+      color: { darkColor: 'white', lightColor: 'black' },
     },
     maneuverType: ManeuverType.Straight,
     trafficSide: TrafficSide.Left,
@@ -98,7 +98,8 @@ const getManeuvers = (): Array<AutoManeuver> => [
       timeRemaining: { seconds: 20, timezone: 'Europe/Berlin' },
     },
     symbolImage: {
-      name: 'turn_right',
+      image: require('../../assets/heart.png'),
+      color: 'red',
     },
     maneuverType: ManeuverType.Turn,
     roadName: ['2nd St.'],
