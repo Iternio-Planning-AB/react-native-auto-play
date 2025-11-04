@@ -31,7 +31,7 @@ export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios
     visibleTravelEstimate: VisibleTravelEstimate
   ): void;
   updateTravelEstimates(templateId: string, steps: Array<TripPoint>): void;
-  updateManeuvers(templateId: string, maneuvers: Array<NitroManeuver>): void;
+  updateManeuvers(templateId: string, maneuvers: Array<NitroManeuver>): Promise<void>;
   startNavigation(templateId: string, trip: TripConfig): void;
   stopNavigation(templateId: string): void;
 }

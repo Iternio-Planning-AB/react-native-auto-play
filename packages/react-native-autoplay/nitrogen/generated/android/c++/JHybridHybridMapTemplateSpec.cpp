@@ -86,6 +86,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverTyp
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
 #include "MapTemplateConfig.hpp"
 #include "JMapTemplateConfig.hpp"
 #include <string>
@@ -265,9 +267,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __array;
     }());
   }
-  void JHybridHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroManeuver>> /* maneuvers */)>("updateManeuvers");
-    method(_javaPart, jni::make_jstring(templateId), [&]() {
+  std::shared_ptr<Promise<void>> JHybridHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroManeuver>> /* maneuvers */)>("updateManeuvers");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = maneuvers.size();
       jni::local_ref<jni::JArrayClass<JNitroManeuver>> __array = jni::JArrayClass<JNitroManeuver>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
@@ -276,6 +278,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
       return __array;
     }());
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
   void JHybridHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");

@@ -242,11 +242,15 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
     func setTemplateHeaderActions(
         templateId: String,
         headerActions: [NitroAction]?
-    ) throws {
-        try RootModule.withTemplate(templateId: templateId) {
-            template in
-            template.barButtons = headerActions
-            template.setBarButtons()
+    ) throws -> Promise<Void> {
+        return Promise.async {
+            try await MainActor.run {
+                try RootModule.withTemplate(templateId: templateId) {
+                    template in
+                    template.barButtons = headerActions
+                    template.setBarButtons()
+                }
+            }
         }
     }
 

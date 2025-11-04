@@ -38,6 +38,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   struct AssetImage {
   public:
     std::optional<NitroColor> color     SWIFT_PRIVATE;
+    bool packager_asset     SWIFT_PRIVATE;
     double height     SWIFT_PRIVATE;
     double width     SWIFT_PRIVATE;
     double scale     SWIFT_PRIVATE;
@@ -45,7 +46,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     AssetImage() = default;
-    explicit AssetImage(std::optional<NitroColor> color, double height, double width, double scale, std::string uri): color(color), height(height), width(width), scale(scale), uri(uri) {}
+    explicit AssetImage(std::optional<NitroColor> color, bool packager_asset, double height, double width, double scale, std::string uri): color(color), packager_asset(packager_asset), height(height), width(width), scale(scale), uri(uri) {}
   };
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -59,6 +60,7 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage(
         JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, "color")),
+        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "packager_asset")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "height")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "width")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "scale")),
@@ -68,6 +70,7 @@ namespace margelo::nitro {
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "color", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::toJSI(runtime, arg.color));
+      obj.setProperty(runtime, "packager_asset", JSIConverter<bool>::toJSI(runtime, arg.packager_asset));
       obj.setProperty(runtime, "height", JSIConverter<double>::toJSI(runtime, arg.height));
       obj.setProperty(runtime, "width", JSIConverter<double>::toJSI(runtime, arg.width));
       obj.setProperty(runtime, "scale", JSIConverter<double>::toJSI(runtime, arg.scale));
@@ -83,6 +86,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
+      if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "packager_asset"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "height"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "width"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "scale"))) return false;

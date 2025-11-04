@@ -22,6 +22,9 @@ data class AssetImage(
   val color: NitroColor?,
   @DoNotStrip
   @Keep
+  val packager_asset: Boolean,
+  @DoNotStrip
+  @Keep
   val height: Double,
   @DoNotStrip
   @Keep
@@ -43,8 +46,8 @@ data class AssetImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(color: NitroColor?, height: Double, width: Double, scale: Double, uri: String): AssetImage {
-      return AssetImage(color, height, width, scale, uri)
+    private fun fromCpp(color: NitroColor?, packager_asset: Boolean, height: Double, width: Double, scale: Double, uri: String): AssetImage {
+      return AssetImage(color, packager_asset, height, width, scale, uri)
     }
   }
 }

@@ -5,9 +5,9 @@ import type { NitroTemplateConfig } from './HybridAutoPlay.nitro';
 interface ListTemplateConfig extends NitroTemplateConfig, NitroListTemplateConfig {}
 
 export interface HybridListTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
-  createListTemplate(config: ListTemplateConfig): void;
+  createListTemplate(config: ListTemplateConfig): Promise<void>;
   updateListTemplateSections(
     templateId: string,
     sections: NitroListTemplateConfig['sections']
-  ): void;
+  ): Promise<void>;
 }

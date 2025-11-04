@@ -18,6 +18,7 @@ class AutoPlayTemplate: NSObject {
         super.init()
     }
 
+    @MainActor
     func setBarButtons() {
         guard let template = template as? CPBarButtonProviding else { return }
 
@@ -35,6 +36,7 @@ class AutoPlayTemplate: NSObject {
         }
     }
 
+    @MainActor
     open func invalidate() {
         print("\(type(of: self)) lacks invalidate implementation")
     }

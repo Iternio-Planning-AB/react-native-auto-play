@@ -10,6 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -80,7 +81,7 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun updateManeuvers(templateId: String, maneuvers: Array<NitroManeuver>): Unit
+  abstract fun updateManeuvers(templateId: String, maneuvers: Array<NitroManeuver>): Promise<Unit>
   
   @DoNotStrip
   @Keep

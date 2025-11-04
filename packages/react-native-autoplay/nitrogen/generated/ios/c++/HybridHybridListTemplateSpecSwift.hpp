@@ -47,6 +47,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton;
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
 
+#include <NitroModules/Promise.hpp>
 #include "ListTemplateConfig.hpp"
 #include <string>
 #include <optional>
@@ -114,17 +115,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     // Methods
-    inline void createListTemplate(const ListTemplateConfig& config) override {
+    inline std::shared_ptr<Promise<void>> createListTemplate(const ListTemplateConfig& config) override {
       auto __result = _swiftPart.createListTemplate(std::forward<decltype(config)>(config));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
-    inline void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) override {
+    inline std::shared_ptr<Promise<void>> updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) override {
       auto __result = _swiftPart.updateListTemplateSections(templateId, sections);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:

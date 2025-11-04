@@ -5,6 +5,8 @@
 //  Created by Manuel Auer on 15.10.25.
 //
 
+import NitroModules
+
 class HybridMapTemplate: HybridHybridMapTemplateSpec {
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
@@ -81,9 +83,15 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
     }
 
     func updateManeuvers(templateId: String, maneuvers: [NitroManeuver]) throws
+        -> Promise<Void>
     {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
-            template.updateManeuvers(maneuvers: maneuvers)
+        return Promise.async {
+            try await MainActor.run {
+                try RootModule.withMapTemplate(templateId: templateId) {
+                    template in
+                    template.updateManeuvers(maneuvers: maneuvers)
+                }
+            }
         }
     }
 

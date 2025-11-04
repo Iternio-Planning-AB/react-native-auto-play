@@ -491,15 +491,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return Result<std::shared_ptr<Promise<void>>>::withError(error);
   }
   
-  // pragma MARK: Result<void>
-  using Result_void_ = Result<void>;
-  inline Result_void_ create_Result_void_() noexcept {
-    return Result<void>::withValue();
-  }
-  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
-    return Result<void>::withError(error);
-  }
-  
   // pragma MARK: Result<bool>
   using Result_bool_ = Result<bool>;
   inline Result_bool_ create_Result_bool_(bool value) noexcept {
@@ -564,6 +555,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridHybridCarPlayDashboardSpec>
   using std__weak_ptr_HybridHybridCarPlayDashboardSpec_ = std::weak_ptr<HybridHybridCarPlayDashboardSpec>;
   inline std__weak_ptr_HybridHybridCarPlayDashboardSpec_ weakify_std__shared_ptr_HybridHybridCarPlayDashboardSpec_(const std::shared_ptr<HybridHybridCarPlayDashboardSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
+  }
   
   // pragma MARK: std::function<void(const std::string& /* clusterId */)>
   /**

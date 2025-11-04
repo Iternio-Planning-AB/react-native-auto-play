@@ -42,24 +42,26 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
         if let mapButtons = config.mapButtons {
             template.mapButtons = mapButtons.map { button in
-                if let glyphImage = button.image?.glyphImage {
+                if let glyphImage = button.image?.glyphImage,
                     let icon = SymbolFont.imageFromNitroImage(
                         image: glyphImage,
                         size: CPButtonMaximumImageSize.height,
                         fontScale: 0.65,
                         traitCollection: SceneStore.getRootTraitCollection()
-                    )!
+                    )
+                {
                     return CPMapButton(image: icon) { _ in
                         button.onPress()
                     }
                 }
-                if let assetImage = button.image?.assetImage {
+                if let assetImage = button.image?.assetImage,
                     let icon = Parser.parseAssetImage(assetImage: assetImage)
+                {
                     return CPMapButton(image: icon) { _ in
                         button.onPress()
                     }
                 }
-                
+
                 return CPMapButton { _ in
                     button.onPress()
                 }

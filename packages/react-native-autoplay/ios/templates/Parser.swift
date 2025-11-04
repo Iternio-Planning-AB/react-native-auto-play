@@ -40,6 +40,7 @@ class Parser {
         return actions
     }
 
+    @MainActor
     static func parseHeaderActions(
         headerActions: [NitroAction]?,
         traitCollection: UITraitCollection
@@ -132,6 +133,7 @@ class Parser {
         return result
     }
 
+    @MainActor
     static func parseAttributedStrings(
         attributedStrings: [NitroAttributedString],
         traitCollection: UITraitCollection
@@ -205,6 +207,7 @@ class Parser {
         return Measurement(value: distance.value, unit: unit)
     }
 
+    @MainActor
     static func parseSearchResults(
         section: NitroSection?,
         traitCollection: UITraitCollection
@@ -230,6 +233,7 @@ class Parser {
         }
     }
 
+    @MainActor
     static func parseSections(
         sections: [NitroSection]?,
         updateSection: @escaping (NitroSection, Int) -> Void,
@@ -419,6 +423,7 @@ class Parser {
         )
     }
 
+    @MainActor
     static func parseManeuver(
         nitroManeuver: NitroManeuver,
         traitCollection: UITraitCollection
@@ -651,6 +656,7 @@ class Parser {
         return NitroConvert.uiColor(value)
     }
 
+    @MainActor
     static func parseNitroImage(
         image: ImageProtocol?,
         traitCollection: UITraitCollection
@@ -669,16 +675,29 @@ class Parser {
         return nil
     }
 
-    static func parseAssetImage(assetImage: AssetImage) -> UIImage {
+    @MainActor
+    static func parseAssetImage(assetImage: AssetImage) -> UIImage? {
         let uiImage = NitroConvert.uiImage([
             "height": assetImage.height, "width": assetImage.width,
             "uri": assetImage.uri, "scale": assetImage.scale,
+            "__packager_asset": assetImage.packager_asset,
         ])
 
         guard let color = assetImage.color else {
             return uiImage
         }
 
-        return uiImage.withTintColor(Parser.parseColor(color: color))
+        let templateImage = uiImage.withRenderingMode(.alwaysTemplate)
+        
+        let imageView = UIImageView(image: templateImage)
+        imageView.tintColor = Parser.parseColor(color: color)
+        
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        imageView.layer.render(in: context)
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return tintedImage
     }
 }

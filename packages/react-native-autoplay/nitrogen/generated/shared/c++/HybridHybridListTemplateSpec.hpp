@@ -18,6 +18,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ListTemplateCon
 // Forward declaration of `NitroSection` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroSection; }
 
+#include <NitroModules/Promise.hpp>
 #include "ListTemplateConfig.hpp"
 #include <string>
 #include "NitroSection.hpp"
@@ -55,8 +56,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
     public:
       // Methods
-      virtual void createListTemplate(const ListTemplateConfig& config) = 0;
-      virtual void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) = 0;
+      virtual std::shared_ptr<Promise<void>> createListTemplate(const ListTemplateConfig& config) = 0;
+      virtual std::shared_ptr<Promise<void>> updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) = 0;
 
     protected:
       // Hybrid Setup

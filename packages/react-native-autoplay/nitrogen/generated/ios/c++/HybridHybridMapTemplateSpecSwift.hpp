@@ -121,6 +121,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include <NitroModules/Promise.hpp>
 #include "NitroManeuver.hpp"
 #include "NitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
@@ -222,11 +223,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override {
+    inline std::shared_ptr<Promise<void>> updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override {
       auto __result = _swiftPart.updateManeuvers(templateId, maneuvers);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void startNavigation(const std::string& templateId, const TripConfig& trip) override {
       auto __result = _swiftPart.startNavigation(templateId, std::forward<decltype(trip)>(trip));

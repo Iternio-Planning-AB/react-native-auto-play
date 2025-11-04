@@ -10,6 +10,7 @@ import CarPlay
 class GridTemplate: AutoPlayTemplate {
     var config: GridTemplateConfig
 
+    @MainActor
     init(config: GridTemplateConfig) {
         self.config = config
 
@@ -86,6 +87,7 @@ class GridTemplate: AutoPlayTemplate {
         config.onPopped?()
     }
 
+    @MainActor
     func updateButtons(buttons: [NitroGridButton]) {
         config.buttons = buttons
         invalidate()

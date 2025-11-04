@@ -18,14 +18,14 @@ public extension AssetImage {
   /**
    * Create a new instance of `AssetImage`.
    */
-  init(color: NitroColor?, height: Double, width: Double, scale: Double, uri: String) {
+  init(color: NitroColor?, packager_asset: Bool, height: Double, width: Double, scale: Double, uri: String) {
     self.init({ () -> bridge.std__optional_NitroColor_ in
       if let __unwrappedValue = color {
         return bridge.create_std__optional_NitroColor_(__unwrappedValue)
       } else {
         return .init()
       }
-    }(), height, width, scale, std.string(uri))
+    }(), packager_asset, height, width, scale, std.string(uri))
   }
 
   var color: NitroColor? {
@@ -42,6 +42,17 @@ public extension AssetImage {
           return .init()
         }
       }()
+    }
+  }
+  
+  var packager_asset: Bool {
+    @inline(__always)
+    get {
+      return self.__packager_asset
+    }
+    @inline(__always)
+    set {
+      self.__packager_asset = newValue
     }
   }
   

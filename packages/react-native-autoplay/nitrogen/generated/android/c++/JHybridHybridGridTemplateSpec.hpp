@@ -54,8 +54,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
   public:
     // Methods
-    void createGridTemplate(const GridTemplateConfig& config) override;
-    void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override;
+    std::shared_ptr<Promise<void>> createGridTemplate(const GridTemplateConfig& config) override;
+    std::shared_ptr<Promise<void>> updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override;
 
   private:
     friend HybridBase;

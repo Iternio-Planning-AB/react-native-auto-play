@@ -36,6 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       static const auto clazz = javaClassStatic();
       static const auto fieldColor = clazz->getField<JNitroColor>("color");
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
+      static const auto fieldPackager_asset = clazz->getField<jboolean>("packager_asset");
+      jboolean packager_asset = this->getFieldValue(fieldPackager_asset);
       static const auto fieldHeight = clazz->getField<double>("height");
       double height = this->getFieldValue(fieldHeight);
       static const auto fieldWidth = clazz->getField<double>("width");
@@ -46,6 +48,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JString> uri = this->getFieldValue(fieldUri);
       return AssetImage(
         color != nullptr ? std::make_optional(color->toCpp()) : std::nullopt,
+        static_cast<bool>(packager_asset),
         height,
         width,
         scale,
@@ -59,12 +62,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JAssetImage::javaobject> fromCpp(const AssetImage& value) {
-      using JSignature = JAssetImage(jni::alias_ref<JNitroColor>, double, double, double, jni::alias_ref<jni::JString>);
+      using JSignature = JAssetImage(jni::alias_ref<JNitroColor>, jboolean, double, double, double, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.color.has_value() ? JNitroColor::fromCpp(value.color.value()) : nullptr,
+        value.packager_asset,
         value.height,
         value.width,
         value.scale,

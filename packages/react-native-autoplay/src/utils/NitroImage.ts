@@ -5,6 +5,7 @@ import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 interface AssetImage extends ImageResolvedAssetSource {
   color?: NitroColor;
+  packager_asset: boolean;
 }
 
 interface GlyphImage {
@@ -48,9 +49,12 @@ function convert(image?: AutoImage): NitroImage | undefined {
 
   if ('image' in image) {
     const { color } = image;
+    const resolvedAsset = Image.resolveAssetSource(image.image);
 
     const assetImage: AssetImage = {
-      ...Image.resolveAssetSource(image.image),
+      ...resolvedAsset,
+      packager_asset:
+        '__packager_asset' in resolvedAsset ? Boolean(resolvedAsset.__packager_asset) : false,
       color:
         typeof color === 'string'
           ? NitroColorUtil.convertThemed({ darkColor: color, lightColor: color })

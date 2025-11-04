@@ -10,6 +10,7 @@ package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -47,11 +48,11 @@ abstract class HybridHybridListTemplateSpec: HybridObject() {
   // Methods
   @DoNotStrip
   @Keep
-  abstract fun createListTemplate(config: ListTemplateConfig): Unit
+  abstract fun createListTemplate(config: ListTemplateConfig): Promise<Unit>
   
   @DoNotStrip
   @Keep
-  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Unit
+  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Promise<Unit>
 
   private external fun initHybrid(): HybridData
 

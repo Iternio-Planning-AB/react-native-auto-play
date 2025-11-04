@@ -43,6 +43,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "NitroMapButton.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "TripPoint.hpp"
+#include <NitroModules/Promise.hpp>
 #include "NitroManeuver.hpp"
 #include "TripConfig.hpp"
 
@@ -84,7 +85,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
       virtual void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) = 0;
       virtual void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) = 0;
-      virtual void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) = 0;
+      virtual std::shared_ptr<Promise<void>> updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) = 0;
       virtual void startNavigation(const std::string& templateId, const TripConfig& trip) = 0;
       virtual void stopNavigation(const std::string& templateId) = 0;
 
