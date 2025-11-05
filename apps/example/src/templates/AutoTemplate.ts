@@ -274,6 +274,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       type: 'image',
       image: {
         name: 'list_alt',
+        type: 'glyph',
       },
       onPress: () => AutoInformationTemplate.getTemplate().push(),
     },
@@ -307,6 +308,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
         type: 'image',
         image: {
           name: 'list_alt',
+          type: 'glyph',
         },
         onPress: () => AutoInformationTemplate.getTemplate().push(),
       },
@@ -407,7 +409,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
             },
             {
               type: 'custom',
-              image: { name: 'list_alt' },
+              image: { name: 'list_alt', type: 'glyph' },
               onPress: () => {
                 AutoInformationTemplate.getTemplate({ mapConfig: {} }).push();
               },
