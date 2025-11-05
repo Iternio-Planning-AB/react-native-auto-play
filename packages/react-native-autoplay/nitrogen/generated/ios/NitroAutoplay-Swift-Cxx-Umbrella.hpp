@@ -38,6 +38,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarP
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridClusterSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
+// Forward declaration of `HybridHybridInformationTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridInformationTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridListTemplateSpec; }
 // Forward declaration of `HybridHybridMapTemplateSpec` to properly resolve imports.
@@ -48,6 +50,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridMess
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridSearchTemplateSpec; }
 // Forward declaration of `ImageLane` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
+// Forward declaration of `InformationTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct InformationTemplateConfig; }
 // Forward declaration of `KeepType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
@@ -147,11 +151,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "HybridHybridCarPlayDashboardSpec.hpp"
 #include "HybridHybridClusterSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
+#include "HybridHybridInformationTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
 #include "HybridHybridSearchTemplateSpec.hpp"
 #include "ImageLane.hpp"
+#include "InformationTemplateConfig.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
 #include "ListTemplateConfig.hpp"
@@ -221,6 +227,8 @@ namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
+// Forward declaration of `HybridHybridInformationTemplateSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridInformationTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridListTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridMapTemplateSpec_cxx` to properly resolve imports.

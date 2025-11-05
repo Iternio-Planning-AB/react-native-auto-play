@@ -32,6 +32,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarP
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridClusterSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
+// Forward declaration of `HybridHybridInformationTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridInformationTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridListTemplateSpec; }
 // Forward declaration of `HybridHybridMapTemplateSpec` to properly resolve imports.
@@ -120,6 +122,8 @@ namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
+// Forward declaration of `HybridHybridInformationTemplateSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridInformationTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridListTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridMapTemplateSpec_cxx` to properly resolve imports.
@@ -142,6 +146,7 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 #include "HybridHybridCarPlayDashboardSpec.hpp"
 #include "HybridHybridClusterSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
+#include "HybridHybridInformationTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
@@ -826,6 +831,33 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     vector.reserve(size);
     return vector;
   }
+  
+  // pragma MARK: std::optional<NitroSection>
+  /**
+   * Specialized version of `std::optional<NitroSection>`.
+   */
+  using std__optional_NitroSection_ = std::optional<NitroSection>;
+  inline std::optional<NitroSection> create_std__optional_NitroSection_(const NitroSection& value) noexcept {
+    return std::optional<NitroSection>(value);
+  }
+  inline bool has_value_std__optional_NitroSection_(const std::optional<NitroSection>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroSection get_std__optional_NitroSection_(const std::optional<NitroSection>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHybridInformationTemplateSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHybridInformationTemplateSpec>`.
+   */
+  using std__shared_ptr_HybridHybridInformationTemplateSpec_ = std::shared_ptr<HybridHybridInformationTemplateSpec>;
+  std::shared_ptr<HybridHybridInformationTemplateSpec> create_std__shared_ptr_HybridHybridInformationTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHybridInformationTemplateSpec_(std__shared_ptr_HybridHybridInformationTemplateSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHybridInformationTemplateSpec>
+  using std__weak_ptr_HybridHybridInformationTemplateSpec_ = std::weak_ptr<HybridHybridInformationTemplateSpec>;
+  inline std__weak_ptr_HybridHybridInformationTemplateSpec_ weakify_std__shared_ptr_HybridHybridInformationTemplateSpec_(const std::shared_ptr<HybridHybridInformationTemplateSpec>& strong) noexcept { return strong; }
   
   // pragma MARK: std::vector<NitroSection>
   /**
