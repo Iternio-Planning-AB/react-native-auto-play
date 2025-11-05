@@ -15,7 +15,7 @@ class HybridInformationTemplate : HybridHybridInformationTemplateSpec() {
 
     override fun updateInformationTemplateSections(
         templateId: String,
-        section: NitroSection?
+        section: NitroSection
     ) {
         val template = AndroidAutoTemplate.Companion.getTemplate<InformationTemplate>(templateId)
         template.updateSection(section)

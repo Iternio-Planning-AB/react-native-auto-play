@@ -35,13 +35,13 @@ const getTemplate = (props?: {
             distance: { unit: 'meters', value: 1234 },
             duration: 4711,
           },
-          image: { name: 'text_ad', color: defaultColor },
+          image: { name: 'text_ad', color: defaultColor, type: 'glyph' },
         },
         {
           type: 'text',
           title: { text: 'Title 2' },
           detailedText: { text: 'Text2' },
-          image: { name: 'text_ad', color: defaultColor },
+          image: { name: 'text_ad', color: defaultColor, type: 'glyph' },
         },
         {
           type: 'text',
@@ -55,38 +55,58 @@ const getTemplate = (props?: {
               'and another one? - nope, this one is cut off',
             ].join('\n'),
           },
-          image: { name: 'text_ad', color: defaultColor },
+          image: { name: 'text_ad', color: defaultColor, type: 'glyph' },
         },
       ],
     },
-    actions: [
+    actions:
       Platform.OS === 'android'
-        ? {
-            type: 'textImage',
-            image: { name: 'alarm' },
-            title: 'Text',
-            style: 'destructive',
-            onPress: () => {
-              console.log('*** Action 1');
+        ? [
+            {
+              type: 'textImage',
+              image: { name: 'alarm', type: 'glyph' },
+              title: 'Confirm',
+              style: 'confirm',
+              onPress: () => {
+                console.log('*** Action 1');
+              },
             },
-          }
-        : {
-            type: 'image',
-            image: { name: 'alarm' },
-            style: 'destructive',
-            onPress: () => {
-              console.log('*** Action 1');
+            {
+              type: 'text',
+              title: 'Default',
+              style: 'normal',
+              onPress: () => {
+                console.log('*** Action 2');
+              },
             },
-          },
-      {
-        type: 'text',
-        title: 'Text',
-        style: 'default',
-        onPress: () => {
-          console.log('*** Action 2');
-        },
-      },
-    ],
+          ]
+        : [
+            {
+              type: 'text',
+              title: 'Normal',
+              style: 'normal',
+              onPress: () => {
+                console.log('*** Action 2');
+              },
+            },
+            {
+              type: 'text',
+              title: 'Cancel',
+              style: 'cancel',
+              onPress: () => {
+                console.log('*** Action 2');
+              },
+            },
+            {
+              type: 'text',
+              title: 'Confirm',
+              style: 'confirm',
+              onPress: () => {
+                console.log('*** Action 2');
+              },
+            },
+          ],
+
     onPopped: () => console.log('InformationTemplate onPopped'),
   });
 };

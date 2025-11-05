@@ -9,6 +9,7 @@ import type {
 import type {
   ActionButtonAndroid,
   ActionButtonIos,
+  ButtonStyle,
   ImageButton,
   TextAndImageButton,
   TextButton,
@@ -18,6 +19,7 @@ import { type NitroImage, NitroImageUtil } from './NitroImage';
 
 type NitroActionType = 'appIcon' | 'back' | 'custom';
 type NitroAlignment = 'leading' | 'trailing';
+type NitroButtonStyle = ButtonStyle | AlertActionStyle;
 
 /**
  * used to convert the very specific typescript typing in an easier to handle type for native code
@@ -36,7 +38,7 @@ export type NitroAction = {
    * @default default
    */
   // REVISIT: check if we can re-use the flags?
-  style?: AlertActionStyle;
+  style?: NitroButtonStyle;
 };
 
 const getImage = <T>(

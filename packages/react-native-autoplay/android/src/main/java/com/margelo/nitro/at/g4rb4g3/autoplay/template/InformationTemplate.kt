@@ -89,7 +89,7 @@ class InformationTemplate(context: CarContext, config: InformationTemplateConfig
         templates.remove(templateId)
     }
 
-    fun updateSection(section: NitroSection?) {
+    fun updateSection(section: NitroSection) {
         config = config.copy(section = section)
         super.applyConfigUpdate()
     }

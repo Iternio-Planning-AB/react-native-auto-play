@@ -1,4 +1,3 @@
-import type { AlertActionStyle } from '../utils/NitroAlert';
 import type { AutoImage } from './Image';
 
 export type MapButton<T = unknown> = {
@@ -6,6 +5,8 @@ export type MapButton<T = unknown> = {
   image: AutoImage;
   onPress: (template: T) => void;
 };
+
+export type ButtonStyle = 'normal' | 'confirm' | 'cancel';
 
 /**
  * this is a special button only visible on devices that have no touch support
@@ -17,7 +18,7 @@ export type MapPanButton<T = unknown> = {
 };
 
 type BaseButton<T = unknown> = {
-  style?: AlertActionStyle;
+  style?: ButtonStyle;
   enabled?: boolean;
   onPress: (template: T) => void;
 };
