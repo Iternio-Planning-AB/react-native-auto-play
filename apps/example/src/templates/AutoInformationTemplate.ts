@@ -86,7 +86,7 @@ const getTemplate = (props?: {
               title: 'Normal',
               style: 'normal',
               onPress: () => {
-                console.log('*** Action 2');
+                console.log('*** Action 1');
               },
             },
             {
@@ -102,7 +102,7 @@ const getTemplate = (props?: {
               title: 'Confirm',
               style: 'confirm',
               onPress: () => {
-                console.log('*** Action 2');
+                console.log('*** Action 3');
               },
             },
           ],
