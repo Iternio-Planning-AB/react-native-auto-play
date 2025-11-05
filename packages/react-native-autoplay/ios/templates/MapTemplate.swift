@@ -46,7 +46,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
                     let icon = SymbolFont.imageFromNitroImage(
                         image: glyphImage,
                         size: CPButtonMaximumImageSize.height,
-                        fontScale: 0.65,
                         traitCollection: SceneStore.getRootTraitCollection()
                     )
                 {

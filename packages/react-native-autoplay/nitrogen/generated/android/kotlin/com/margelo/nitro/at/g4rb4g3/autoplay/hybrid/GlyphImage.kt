@@ -25,7 +25,10 @@ data class GlyphImage(
   val color: NitroColor,
   @DoNotStrip
   @Keep
-  val backgroundColor: NitroColor
+  val backgroundColor: NitroColor,
+  @DoNotStrip
+  @Keep
+  val fontScale: Double?
 ) {
   /* primary constructor */
 
@@ -37,8 +40,8 @@ data class GlyphImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(glyph: Double, color: NitroColor, backgroundColor: NitroColor): GlyphImage {
-      return GlyphImage(glyph, color, backgroundColor)
+    private fun fromCpp(glyph: Double, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?): GlyphImage {
+      return GlyphImage(glyph, color, backgroundColor, fontScale)
     }
   }
 }

@@ -12,6 +12,7 @@
 
 #include "JNitroColor.hpp"
 #include "NitroColor.hpp"
+#include <optional>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
 
@@ -38,10 +39,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldBackgroundColor = clazz->getField<JNitroColor>("backgroundColor");
       jni::local_ref<JNitroColor> backgroundColor = this->getFieldValue(fieldBackgroundColor);
+      static const auto fieldFontScale = clazz->getField<jni::JDouble>("fontScale");
+      jni::local_ref<jni::JDouble> fontScale = this->getFieldValue(fieldFontScale);
       return GlyphImage(
         glyph,
         color->toCpp(),
-        backgroundColor->toCpp()
+        backgroundColor->toCpp(),
+        fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt
       );
     }
 
@@ -51,14 +55,15 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JGlyphImage::javaobject> fromCpp(const GlyphImage& value) {
-      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>);
+      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.glyph,
         JNitroColor::fromCpp(value.color),
-        JNitroColor::fromCpp(value.backgroundColor)
+        JNitroColor::fromCpp(value.backgroundColor),
+        value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr
       );
     }
   };

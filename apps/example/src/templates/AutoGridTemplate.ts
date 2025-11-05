@@ -17,6 +17,7 @@ const getButtons = (
       color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 0 ? 'rgba(0, 255, 255, 1)' : undefined,
       type: 'glyph',
+      fontScale: 0.9,
     },
     onPress: (template) => {
       template.updateGrid(getButtons('red', 'green', 0));
@@ -29,6 +30,7 @@ const getButtons = (
       color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 1 ? 'rgba(0, 255, 255, 1)' : undefined,
       type: 'glyph',
+      fontScale: 0.8,
     },
     onPress: (template) => {
       template.updateGrid(getButtons('yellow', 'blue', 1));
@@ -41,6 +43,7 @@ const getButtons = (
       color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 2 ? 'rgba(0, 255, 255, 1)' : undefined,
       type: 'glyph',
+      fontScale: 0.7,
     },
     onPress: (template) => {
       template.updateGrid(getButtons('pink', 'orange', 2));

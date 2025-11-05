@@ -35,7 +35,8 @@ object SymbolFont {
         glyph: Double,
         color: Int = android.graphics.Color.BLACK,
         backgroundColor: Int = android.graphics.Color.WHITE,
-        cornerRadius: Float = 8f
+        cornerRadius: Float = 8f,
+        fontScale: Float,
     ): Bitmap? {
         loadFont(context)
 
@@ -62,7 +63,7 @@ object SymbolFont {
         paint.reset()
         paint = Paint().apply {
             typeface = font
-            textSize = canvasSize.toFloat()
+            textSize = canvasSize.toFloat() * fontScale
             this.color = color
             isAntiAlias = true
             textAlign = Paint.Align.LEFT
@@ -95,7 +96,8 @@ object SymbolFont {
             context = context,
             glyph = image.glyph,
             color = color.toInt(),
-            backgroundColor = backgroundColor.toInt()
+            backgroundColor = backgroundColor.toInt(),
+            fontScale = (image.fontScale ?: 1.0).toFloat()
         )
     }
 

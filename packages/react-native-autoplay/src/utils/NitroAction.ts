@@ -43,11 +43,27 @@ export type NitroAction = {
 
 const getImage = <T>(
   action: ActionButtonIos<T> | TextButton<T> | ImageButton<T> | TextAndImageButton<T>
-): NitroImage | undefined => ('image' in action ? NitroImageUtil.convert(action.image) : undefined);
+): NitroImage | undefined => {
+  if (action.type === 'text') {
+    return undefined;
+  }
+
+  if (action.image.type === 'glyph' && action.image.fontScale == null) {
+    action.image.fontScale = Platform.OS === 'android' ? 1.0 : 0.8;
+  }
+
+  return NitroImageUtil.convert(action.image);
+};
 
 const getTitle = <T>(
   action: ActionButtonIos<T> | TextButton<T> | ImageButton<T> | TextAndImageButton<T>
-): string | undefined => ('title' in action ? action.title : undefined);
+): string | undefined => {
+  if (action.type !== 'text') {
+    return undefined;
+  }
+
+  return action.title;
+};
 
 // appIcon can not be pressed but we wanna have a non-optional onPress on native side
 const getAppIconAction = (alignment?: NitroAlignment): NitroAction => ({
@@ -74,8 +90,8 @@ const convertToNitro = <T>(
 
   const { enabled, flags, style } = action;
 
-  const title = 'title' in action ? action.title : undefined;
-  const image = 'image' in action ? NitroImageUtil.convert(action.image) : undefined;
+  const title = getTitle(action);
+  const image = getImage(action);
 
   return {
     onPress: () => onPress(template),

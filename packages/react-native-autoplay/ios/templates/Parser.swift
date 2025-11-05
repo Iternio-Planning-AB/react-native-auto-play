@@ -63,7 +63,6 @@ class Parser {
                 if let glypImage = action.image?.glyphImage {
                     image = SymbolFont.imageFromNitroImage(
                         image: glypImage,
-                        fontScale: 0.8,
                         // this icon is not scaled properly when used as image asset, so we use the plain image, as CP does the correct coloring anyways
                         noImageAsset: true,
                         traitCollection: traitCollection

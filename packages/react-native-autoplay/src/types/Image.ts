@@ -18,6 +18,7 @@ export type AutoImage =
        * Defaults to transparent if not specified.
        */
       backgroundColor?: ThemedColor | string;
+      fontScale?: number;
       type: 'glyph';
     }
   | {

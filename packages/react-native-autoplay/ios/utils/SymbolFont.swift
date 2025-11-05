@@ -56,7 +56,7 @@ class SymbolFont {
         foregroundColor: UIColor,
         backgroundColor: UIColor,
         size: CGFloat,
-        fontScale: CGFloat = 1
+        fontScale: CGFloat
     ) -> UIImage? {
         if !SymbolFont.isRegistered {
             SymbolFont.loadFont()
@@ -109,7 +109,7 @@ class SymbolFont {
         size: CGFloat,
         foregroundColor: NitroColor,
         backgroundColor: NitroColor,
-        fontScale: CGFloat = 1,
+        fontScale: CGFloat,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         guard
@@ -161,7 +161,6 @@ class SymbolFont {
     static func imageFromNitroImage(
         image: GlyphImage?,
         size: CGFloat = 32,
-        fontScale: CGFloat = 1,
         noImageAsset: Bool = false,
         traitCollection: UITraitCollection
     ) -> UIImage? {
@@ -184,7 +183,7 @@ class SymbolFont {
                 foregroundColor: foregroundColor,
                 backgroundColor: backgroundColor,
                 size: size,
-                fontScale: fontScale
+                fontScale: image.fontScale ?? 1.0
             )
         }
 
@@ -193,7 +192,7 @@ class SymbolFont {
             size: size,
             foregroundColor: image.color,
             backgroundColor: image.backgroundColor,
-            fontScale: fontScale,
+            fontScale: image.fontScale ?? 1.0,
             traitCollection: traitCollection
         )!
     }
@@ -218,18 +217,19 @@ class SymbolFont {
             for laneImage in laneImages {
                 var image: UIImage?
 
-                if let glypImage = laneImage.glyphImage {
+                if let glyphImage = laneImage.glyphImage {
                     let foregroundColor = Parser.doubleToColor(
                         value: isDark
-                            ? glypImage.color.darkColor
-                            : glypImage.color.lightColor
+                            ? glyphImage.color.darkColor
+                            : glyphImage.color.lightColor
                     )
 
                     image = imageFromGlyph(
-                        glyph: glypImage.glyph,
+                        glyph: glyphImage.glyph,
                         foregroundColor: foregroundColor,
                         backgroundColor: UIColor.clear,
-                        size: CGFloat(size)
+                        size: CGFloat(size),
+                        fontScale: glyphImage.fontScale ?? 1.0
                     )!
                 }
 

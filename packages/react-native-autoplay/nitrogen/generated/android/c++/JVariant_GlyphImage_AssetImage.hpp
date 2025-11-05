@@ -16,8 +16,8 @@
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
-#include "JAssetImage.hpp"
 #include <optional>
+#include "JAssetImage.hpp"
 #include <string>
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
