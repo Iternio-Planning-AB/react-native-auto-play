@@ -9,30 +9,36 @@ import CarPlay
 
 class InformationTemplate: AutoPlayTemplate {
     var config: InformationTemplateConfig
-    
+
     init(config: InformationTemplateConfig) {
         self.config = config
-        
-        let template = CPInformationTemplate(title: Parser.parseText(text: config.title)!, layout: CPInformationTemplateLayout.leading, items: [], actions: Parser.parseInformationActions(actions: config.actions), id: config.id)
+
+        let template = CPInformationTemplate(
+            title: Parser.parseText(text: config.title)!,
+            layout: .leading,
+            items: Parser.parseInformationItems(section: config.section),
+            actions: Parser.parseInformationActions(actions: config.actions),
+            id: config.id
+        )
 
         super.init(
             template: template,
             header: config.headerActions
         )
 
-        invalidate()
+        setBarButtons()
     }
-    
+
     override func invalidate() {
         guard let template = self.template as? CPInformationTemplate else {
             return
         }
 
         setBarButtons()
-        
+
         template.items = Parser.parseInformationItems(section: config.section)
     }
-    
+
     override func onWillAppear(animated: Bool) {
         config.onWillAppear?(animated)
     }
@@ -52,10 +58,9 @@ class InformationTemplate: AutoPlayTemplate {
     override func onPopped() {
         config.onPopped?()
     }
-    
+
     func updateSection(section: NitroSection) {
         config.section = section
         invalidate()
     }
-    
 }
