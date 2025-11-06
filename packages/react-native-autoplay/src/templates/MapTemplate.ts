@@ -175,7 +175,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   }
 
   public override setHeaderActions(headerActions: MapTemplateConfig['headerActions']) {
-    const nitroActions = NitroActionUtil.convert(this.template, headerActions?.android);
+    const nitroActions = NitroActionUtil.convert(this.template, headerActions);
     HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
   }
 

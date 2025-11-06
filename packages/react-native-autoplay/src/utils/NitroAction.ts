@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import type { MapHeaderActions } from '../templates/MapTemplate';
+import type { HeaderActionsAndroidMap, MapHeaderActions } from '../templates/MapTemplate';
 import type {
   ActionButton,
   HeaderActions,
@@ -166,17 +166,24 @@ function convertIos<T>(template: T, actions?: HeaderActionsIos<T>): Array<NitroA
   return nitroActions;
 }
 
-function convertAndroid<T>(template: T, actions: HeaderActionsAndroid<T>): Array<NitroAction>;
 function convertAndroid<T>(
   template: T,
-  actions?: HeaderActionsAndroid<T>
+  actions: HeaderActionsAndroid<T> | HeaderActionsAndroidMap<T>
+): Array<NitroAction>;
+function convertAndroid<T>(
+  template: T,
+  actions?: HeaderActionsAndroid<T> | HeaderActionsAndroidMap<T>
 ): Array<NitroAction> | undefined;
 function convertAndroid<T>(
   template: T,
-  actions?: HeaderActionsAndroid<T>
+  actions?: HeaderActionsAndroid<T> | HeaderActionsAndroidMap<T>
 ): Array<NitroAction> | undefined {
   if (actions == null) {
     return undefined;
+  }
+
+  if (Array.isArray(actions)) {
+    return convertActionButtons(template, actions);
   }
 
   const nitroActions: Array<NitroAction> = [];
@@ -217,10 +224,6 @@ function convert<T>(
 ): Array<NitroAction> | undefined {
   if (Array.isArray(actions)) {
     return convertActionButtons(template, actions);
-  }
-
-  if (actions?.android != null && Array.isArray(actions.android)) {
-    return convertActionButtons(template, actions.android);
   }
 
   return Platform.OS === 'android'
