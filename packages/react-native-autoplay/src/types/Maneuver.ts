@@ -176,7 +176,7 @@ export type ManeuverImage =
        * if specified the image gets tinted, if not it will just use the original image
        */
       color?: ThemedColor | string;
-      type: 'image';
+      type: 'asset';
     };
 
 export interface ImageLane {

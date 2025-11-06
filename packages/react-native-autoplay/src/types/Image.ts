@@ -28,5 +28,5 @@ export type AutoImage =
        * Might not get applied everywhere like MapTemplate buttons on Android.
        */
       color?: ThemedColor | string;
-      type: 'image';
+      type: 'asset';
     };
