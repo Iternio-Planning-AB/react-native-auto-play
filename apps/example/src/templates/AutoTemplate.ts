@@ -416,7 +416,6 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                 AutoInformationTemplate.getTemplate({ mapConfig: {} }).push();
               },
             },
-            { type: 'custom', image: { name: 'inbox', type: 'glyph' }, onPress: () => {} },
             {
               type: 'custom',
               image: { name: 'assignment_late', type: 'glyph' },
