@@ -85,7 +85,11 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
   headerActions?: Array<NitroAction>;
 }
 
-export type MapButtons<T> = Array<MapButton<T> | MapPanButton<T>>;
+export type MapButtons<T> =
+  | [MapButton<T>, MapButton<T>, MapButton<T>, MapButton<T> | MapPanButton<T>]
+  | [MapButton<T>, MapButton<T>, MapButton<T> | MapPanButton<T>]
+  | [MapButton<T>, MapButton<T> | MapPanButton<T>]
+  | [MapButton<T> | MapPanButton<T>];
 
 export type MapHeaderActions<T> = {
   android?: HeaderActionsAndroidMap<T>;
