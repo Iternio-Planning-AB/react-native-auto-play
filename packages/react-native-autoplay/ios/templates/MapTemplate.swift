@@ -388,7 +388,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         let trip = CPTrip(
             origin: trip.origin,
             destination: trip.destination,
-            routeChoices: [routeChoice]
+            routeChoices: [routeChoice],
+            id: trip.id
         )
 
         startNavigation(trip: trip)
@@ -547,6 +548,16 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         }
 
         if let navigationSession = self.navigationSession {
+            let knownTripIds = navigationSession.trip.routeChoices.map { $0.id }
+            let incomingTripIds = trip.routeChoices.map { $0.id }
+
+            if navigationSession.trip.id == trip.id
+                && knownTripIds == incomingTripIds
+            {
+                // in case startNavigation is called with the exact same ids we can ignore the call
+                return
+            }
+
             navigationSession.finishTrip()
         }
 
