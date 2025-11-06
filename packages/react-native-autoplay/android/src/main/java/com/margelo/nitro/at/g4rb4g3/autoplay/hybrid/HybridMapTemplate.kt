@@ -15,7 +15,7 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
                 "createMapTemplate failed, carContext found"
             )
 
-        val template = MapTemplate(context, config)
+        val template = MapTemplate(context, config, initNavigationManager = true)
         AndroidAutoTemplate.Companion.setTemplate(config.id, template)
     }
 
@@ -89,15 +89,13 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
     }
 
     override fun updateManeuvers(
-        templateId: String,
-        maneuvers: Array<NitroManeuver>
+        templateId: String, maneuvers: Array<NitroManeuver>
     ) {
         MapTemplate.updateManeuvers(maneuvers)
     }
 
     override fun startNavigation(
-        templateId: String,
-        trip: TripConfig
+        templateId: String, trip: TripConfig
     ) {
         MapTemplate.startNavigation(trip)
     }

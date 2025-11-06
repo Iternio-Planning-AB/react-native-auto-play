@@ -7,7 +7,8 @@
     "ios": "react-native run-ios --device",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "android:autodrive": "adb shell dumpsys activity service com.example/com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoService AUTO_DRIVE"
   },
   "dependencies": {
     "@g4rb4g3/react-native-autoplay": "*",

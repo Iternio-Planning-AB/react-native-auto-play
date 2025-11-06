@@ -90,6 +90,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JFunc_void_Point::javaobject> onDoubleClick = this->getFieldValue(fieldOnDoubleClick);
       static const auto fieldOnAppearanceDidChange = clazz->getField<JFunc_void_ColorScheme::javaobject>("onAppearanceDidChange");
       jni::local_ref<JFunc_void_ColorScheme::javaobject> onAppearanceDidChange = this->getFieldValue(fieldOnAppearanceDidChange);
+      static const auto fieldOnStopNavigation = clazz->getField<JFunc_void::javaobject>("onStopNavigation");
+      jni::local_ref<JFunc_void::javaobject> onStopNavigation = this->getFieldValue(fieldOnStopNavigation);
+      static const auto fieldOnAutoDriveEnabled = clazz->getField<JFunc_void::javaobject>("onAutoDriveEnabled");
+      jni::local_ref<JFunc_void::javaobject> onAutoDriveEnabled = this->getFieldValue(fieldOnAutoDriveEnabled);
       static const auto fieldMapButtons = clazz->getField<jni::JArrayClass<JNitroMapButton>>("mapButtons");
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
       static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JNitroAction>>("headerActions");
@@ -207,6 +211,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             };
           }
         }()) : std::nullopt,
+        [&]() -> std::function<void()> {
+          if (onStopNavigation->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onStopNavigation);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onStopNavigationRef = jni::make_global(onStopNavigation);
+            return [onStopNavigationRef]() -> void {
+              return onStopNavigationRef->invoke();
+            };
+          }
+        }(),
+        onAutoDriveEnabled != nullptr ? std::make_optional([&]() -> std::function<void()> {
+          if (onAutoDriveEnabled->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onAutoDriveEnabled);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onAutoDriveEnabledRef = jni::make_global(onAutoDriveEnabled);
+            return [onAutoDriveEnabledRef]() -> void {
+              return onAutoDriveEnabledRef->invoke();
+            };
+          }
+        }()) : std::nullopt,
         mapButtons != nullptr ? std::make_optional([&]() {
           size_t __size = mapButtons->size();
           std::vector<NitroMapButton> __vector;
@@ -236,7 +262,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double_std__optional_double_::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double_std__optional_double_::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -253,6 +279,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
         value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
         value.onAppearanceDidChange.has_value() ? JFunc_void_ColorScheme_cxx::fromCpp(value.onAppearanceDidChange.value()) : nullptr,
+        JFunc_void_cxx::fromCpp(value.onStopNavigation),
+        value.onAutoDriveEnabled.has_value() ? JFunc_void_cxx::fromCpp(value.onAutoDriveEnabled.value()) : nullptr,
         value.mapButtons.has_value() ? [&]() {
           size_t __size = value.mapButtons.value().size();
           jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);

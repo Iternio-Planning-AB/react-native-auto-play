@@ -151,7 +151,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     // MARK: navigation events
     func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
-
+        config.onStopNavigation()
     }
 
     func mapTemplateShouldProvideNavigationMetadata(

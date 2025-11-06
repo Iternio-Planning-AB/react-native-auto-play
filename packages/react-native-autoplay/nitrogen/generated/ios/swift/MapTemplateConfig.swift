@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double, _ velocity: Double?) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -111,6 +111,18 @@ public extension MapTemplateConfig {
         return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
           let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
           return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.Func_void in
+      let __closureWrapper = Func_void(onStopNavigation)
+      return bridge.create_Func_void(__closureWrapper.toUnsafe())
+    }(), { () -> bridge.std__optional_std__function_void____ in
+      if let __unwrappedValue = onAutoDriveEnabled {
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -518,6 +530,57 @@ public extension MapTemplateConfig {
           return bridge.create_std__optional_std__function_void_ColorScheme____colorScheme______({ () -> bridge.Func_void_ColorScheme in
             let __closureWrapper = Func_void_ColorScheme(__unwrappedValue)
             return bridge.create_Func_void_ColorScheme(__closureWrapper.toUnsafe())
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onStopNavigation: () -> Void {
+    @inline(__always)
+    get {
+      return { () -> () -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void(self.__onStopNavigation)
+        return { () -> Void in
+          __wrappedFunction.call()
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onStopNavigation = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(newValue)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+    }
+  }
+  
+  var onAutoDriveEnabled: (() -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onAutoDriveEnabled) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onAutoDriveEnabled)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onAutoDriveEnabled = { () -> bridge.std__optional_std__function_void____ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()

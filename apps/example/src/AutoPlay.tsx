@@ -137,6 +137,19 @@ const registerRunnable = () => {
       onAppearanceDidChange: (colorScheme) => console.log('*** onAppearanceDidChange', colorScheme),
       headerActions: AutoTemplate.mapHeaderActions,
       mapButtons: AutoTemplate.mapButtons,
+      onStopNavigation: (template) => {
+        if (HybridAutoPlay.isConnected()) {
+          onTripFinished(template);
+        }
+      },
+      onAutoDriveEnabled: (template) => {
+        const trip = AutoTrip[0];
+        const routeChoice = trip?.routeChoices[0];
+
+        template.startNavigation({ id: trip.id, routeChoice });
+        onTripStarted(trip.id, routeChoice.id, template);
+        updateTripEstimates(template, 'initial');
+      },
     });
     rootTemplate.setRootTemplate();
   };

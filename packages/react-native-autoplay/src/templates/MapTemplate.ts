@@ -78,6 +78,9 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
    */
   onAppearanceDidChange?: (colorScheme: ColorScheme) => void;
 
+  onStopNavigation(): void;
+  onAutoDriveEnabled?: () => void;
+
   mapButtons?: Array<NitroMapButton>;
   headerActions?: Array<NitroAction>;
 }
@@ -101,12 +104,27 @@ export type BaseMapTemplateConfig<T> = {
   headerActions?: MapHeaderActions<T>;
 };
 
-export type MapTemplateConfig = Omit<NitroMapTemplateConfig, 'mapButtons' | 'headerActions'> &
+export type MapTemplateConfig = Omit<
+  NitroMapTemplateConfig,
+  'mapButtons' | 'headerActions' | 'onStopNavigation' | 'onAutoDriveEnabled'
+> &
   BaseMapTemplateConfig<MapTemplate> & {
     /**
      * react component that is rendered
      */
     component: React.ComponentType<RootComponentInitialProps>;
+
+    /**
+     * Notification that navigation was stopped. May occur when another source such as the car head unit starts navigating.
+     * The navigation session on Android Auto/CarPlay is stopped already when this callback is triggered, make sure to stop other things like TTS too.
+     */
+    onStopNavigation(template: MapTemplate): void;
+
+    /**
+     * Notifies the app that, from this point onwards, when the user chooses to navigate to a destination, the app should start simulating a drive towards that destination.
+     * @namespace Android
+     */
+    onAutoDriveEnabled?: (template: MapTemplate) => void;
   };
 
 export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['headerActions']> {
@@ -116,7 +134,14 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   constructor(config: MapTemplateConfig) {
     super(config);
 
-    const { component, mapButtons, headerActions, ...baseConfig } = config;
+    const {
+      component,
+      mapButtons,
+      headerActions,
+      onStopNavigation,
+      onAutoDriveEnabled,
+      ...baseConfig
+    } = config;
 
     AppRegistry.registerComponent(
       this.id,
@@ -137,6 +162,8 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       mapButtons: NitroMapButton.convert(this.template, mapButtons),
+      onStopNavigation: () => onStopNavigation(this.template),
+      onAutoDriveEnabled: onAutoDriveEnabled ? () => onAutoDriveEnabled(this.template) : undefined,
     };
 
     HybridMapTemplate.createMapTemplate(nitroConfig);

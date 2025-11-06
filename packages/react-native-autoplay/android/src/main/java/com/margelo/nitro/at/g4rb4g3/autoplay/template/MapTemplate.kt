@@ -30,7 +30,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibleTravelEstimate
 import java.security.InvalidParameterException
 
 class MapTemplate(
-    context: CarContext, config: MapTemplateConfig
+    context: CarContext, config: MapTemplateConfig, initNavigationManager: Boolean = false
 ) : AndroidAutoTemplate<MapTemplateConfig>(context, config) {
 
     override val isRenderTemplate = true
@@ -41,6 +41,26 @@ class MapTemplate(
 
     init {
         mapTemplate = this
+
+        if (initNavigationManager) {
+            val navigationManagerCallback = object : NavigationManagerCallback {
+                override fun onAutoDriveEnabled() {
+                    mapTemplate?.config?.onAutoDriveEnabled?.let {
+                        it()
+                    }
+                }
+
+                override fun onStopNavigation() {
+                    navigationEnded()
+                    mapTemplate?.config?.onStopNavigation()
+                }
+            }
+
+            UiThreadUtil.runOnUiThread {
+                navigationManager = context.getCarService(NavigationManager::class.java)
+                navigationManager.setNavigationManagerCallback(navigationManagerCallback)
+            }
+        }
     }
 
     override fun parse(): Template {
@@ -180,24 +200,13 @@ class MapTemplate(
     }
 
     companion object {
+        private lateinit var navigationManager: NavigationManager
         var isNavigating = false
         var navigationInfo: RoutingInfo? = null
         var cardBackgroundColor: CarColor = CarColor.createCustom(Color.BLACK, Color.BLACK)
 
         private var mapTemplate: MapTemplate? = null
-        private lateinit var navigationManager: NavigationManager
         private var destinationTravelEstimates: Array<TripPoint> = arrayOf()
-
-
-        private val navigationManagerCallback = object : NavigationManagerCallback {
-            override fun onAutoDriveEnabled() {
-
-            }
-
-            override fun onStopNavigation() {
-                navigationEnded()
-            }
-        }
 
         fun getTripDestinations(): Map<Destination, TravelEstimate> {
             return mutableMapOf<Destination, TravelEstimate>().apply {
@@ -233,11 +242,6 @@ class MapTemplate(
             mapTemplate?.applyConfigUpdate()
 
             UiThreadUtil.runOnUiThread {
-                val context = AndroidAutoSession.getRootContext()
-                    ?: throw InvalidParameterException("startNavigation, could not get root car context")
-
-                navigationManager = context.getCarService(NavigationManager::class.java)
-                navigationManager.setNavigationManagerCallback(navigationManagerCallback)
                 navigationManager.navigationStarted()
 
                 updateTripDestinations()
@@ -269,6 +273,10 @@ class MapTemplate(
         }
 
         fun updateManeuvers(maneuvers: Array<NitroManeuver>) {
+            if (!isNavigating) {
+                return
+            }
+
             val context = AndroidAutoSession.getRootContext()
                 ?: throw InvalidParameterException("updateManeuvers, could not get root car context")
 
