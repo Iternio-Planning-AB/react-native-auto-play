@@ -58,11 +58,11 @@ const getImage = <T>(
 const getTitle = <T>(
   action: ActionButtonIos<T> | TextButton<T> | ImageButton<T> | TextAndImageButton<T>
 ): string | undefined => {
-  if (action.type !== 'text') {
-    return undefined;
+  if (action.type === 'text' || action.type === 'textImage') {
+    return action.title;
   }
 
-  return action.title;
+  return undefined;
 };
 
 // appIcon can not be pressed but we wanna have a non-optional onPress on native side
