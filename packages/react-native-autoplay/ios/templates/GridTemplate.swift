@@ -15,7 +15,7 @@ class GridTemplate: AutoPlayTemplate {
 
         let template = CPGridTemplate(
             title: Parser.parseText(text: config.title),
-            gridButtons: [],
+            gridButtons: GridTemplate.parseButtons(buttons: config.buttons),
             id: config.id
         )
 
@@ -24,23 +24,19 @@ class GridTemplate: AutoPlayTemplate {
             header: config.headerActions
         )
 
-        invalidate()
-    }
-
-    override func invalidate() {
-        guard let template = self.template as? CPGridTemplate else {
-            return
-        }
-
         setBarButtons()
+    }
+    
+    static func parseButtons(buttons: [NitroGridButton]) -> [CPGridButton] {
         let gridButtonHeight: CGFloat
+        
         if #available(iOS 26.0, *) {
             gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
         } else {
             gridButtonHeight = 44
         }
 
-        let buttons = config.buttons.map { button in
+        return buttons.map { button in
             var image: UIImage?
 
             if let glyphImage = button.image.glyphImage {
@@ -65,7 +61,16 @@ class GridTemplate: AutoPlayTemplate {
                 button.onPress()
             }
         }
+    }
 
+    override func invalidate() {
+        guard let template = self.template as? CPGridTemplate else {
+            return
+        }
+
+        setBarButtons()
+
+        let buttons = GridTemplate.parseButtons(buttons: config.buttons)
         template.updateGridButtons(buttons)
     }
 

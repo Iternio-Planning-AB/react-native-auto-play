@@ -36,6 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridCarP
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridClusterSpec; }
 // Forward declaration of `HybridHybridGridTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridGridTemplateSpec; }
+// Forward declaration of `HybridHybridInformationTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridInformationTemplateSpec; }
 // Forward declaration of `HybridHybridListTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { class HybridHybridListTemplateSpec; }
 // Forward declaration of `HybridHybridMapTemplateSpec` to properly resolve imports.
@@ -66,6 +68,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributed
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroBaseMapTemplateConfig; }
+// Forward declaration of `NitroButtonStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButtonStyle; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDashboardButton; }
 // Forward declaration of `NitroColor` to properly resolve imports.
@@ -122,6 +126,8 @@ namespace NitroAutoplay { class HybridHybridCarPlayDashboardSpec_cxx; }
 namespace NitroAutoplay { class HybridHybridClusterSpec_cxx; }
 // Forward declaration of `HybridHybridGridTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridGridTemplateSpec_cxx; }
+// Forward declaration of `HybridHybridInformationTemplateSpec_cxx` to properly resolve imports.
+namespace NitroAutoplay { class HybridHybridInformationTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridListTemplateSpec_cxx` to properly resolve imports.
 namespace NitroAutoplay { class HybridHybridListTemplateSpec_cxx; }
 // Forward declaration of `HybridHybridMapTemplateSpec_cxx` to properly resolve imports.
@@ -146,6 +152,7 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 #include "HybridHybridCarPlayDashboardSpec.hpp"
 #include "HybridHybridClusterSpec.hpp"
 #include "HybridHybridGridTemplateSpec.hpp"
+#include "HybridHybridInformationTemplateSpec.hpp"
 #include "HybridHybridListTemplateSpec.hpp"
 #include "HybridHybridMapTemplateSpec.hpp"
 #include "HybridHybridMessageTemplateSpec.hpp"
@@ -161,6 +168,7 @@ namespace NitroAutoplay { class HybridHybridSearchTemplateSpec_cxx; }
 #include "NitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
+#include "NitroButtonStyle.hpp"
 #include "NitroCarPlayDashboardButton.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
@@ -420,18 +428,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::optional<AlertActionStyle>
+  // pragma MARK: std::optional<NitroButtonStyle>
   /**
-   * Specialized version of `std::optional<AlertActionStyle>`.
+   * Specialized version of `std::optional<NitroButtonStyle>`.
    */
-  using std__optional_AlertActionStyle_ = std::optional<AlertActionStyle>;
-  inline std::optional<AlertActionStyle> create_std__optional_AlertActionStyle_(const AlertActionStyle& value) noexcept {
-    return std::optional<AlertActionStyle>(value);
+  using std__optional_NitroButtonStyle_ = std::optional<NitroButtonStyle>;
+  inline std::optional<NitroButtonStyle> create_std__optional_NitroButtonStyle_(const NitroButtonStyle& value) noexcept {
+    return std::optional<NitroButtonStyle>(value);
   }
-  inline bool has_value_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
+  inline bool has_value_std__optional_NitroButtonStyle_(const std::optional<NitroButtonStyle>& optional) noexcept {
     return optional.has_value();
   }
-  inline AlertActionStyle get_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
+  inline NitroButtonStyle get_std__optional_NitroButtonStyle_(const std::optional<NitroButtonStyle>& optional) noexcept {
     return *optional;
   }
   
@@ -874,6 +882,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return vector;
   }
   
+  // pragma MARK: std::shared_ptr<HybridHybridInformationTemplateSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHybridInformationTemplateSpec>`.
+   */
+  using std__shared_ptr_HybridHybridInformationTemplateSpec_ = std::shared_ptr<HybridHybridInformationTemplateSpec>;
+  std::shared_ptr<HybridHybridInformationTemplateSpec> create_std__shared_ptr_HybridHybridInformationTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHybridInformationTemplateSpec_(std__shared_ptr_HybridHybridInformationTemplateSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHybridInformationTemplateSpec>
+  using std__weak_ptr_HybridHybridInformationTemplateSpec_ = std::weak_ptr<HybridHybridInformationTemplateSpec>;
+  inline std__weak_ptr_HybridHybridInformationTemplateSpec_ weakify_std__shared_ptr_HybridHybridInformationTemplateSpec_(const std::shared_ptr<HybridHybridInformationTemplateSpec>& strong) noexcept { return strong; }
+  
   // pragma MARK: std::vector<NitroSection>
   /**
    * Specialized version of `std::vector<NitroSection>`.
@@ -1065,6 +1085,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(ColorScheme /* colorScheme */)> get_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<AlertActionStyle>
+  /**
+   * Specialized version of `std::optional<AlertActionStyle>`.
+   */
+  using std__optional_AlertActionStyle_ = std::optional<AlertActionStyle>;
+  inline std::optional<AlertActionStyle> create_std__optional_AlertActionStyle_(const AlertActionStyle& value) noexcept {
+    return std::optional<AlertActionStyle>(value);
+  }
+  inline bool has_value_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline AlertActionStyle get_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
     return *optional;
   }
   

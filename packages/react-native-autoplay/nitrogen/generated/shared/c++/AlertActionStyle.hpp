@@ -29,9 +29,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    * An enum which can be represented as a JavaScript union (AlertActionStyle).
    */
   enum class AlertActionStyle {
-    DEFAULT      SWIFT_NAME(default) = 0,
-    DESTRUCTIVE      SWIFT_NAME(destructive) = 1,
-    CANCEL      SWIFT_NAME(cancel) = 2,
+    CANCEL      SWIFT_NAME(cancel) = 0,
+    DEFAULT      SWIFT_NAME(default) = 1,
+    DESTRUCTIVE      SWIFT_NAME(destructive) = 2,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
@@ -44,18 +44,18 @@ namespace margelo::nitro {
     static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
+        case hashString("cancel"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::CANCEL;
         case hashString("default"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::DEFAULT;
         case hashString("destructive"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::DESTRUCTIVE;
-        case hashString("cancel"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::CANCEL;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum AlertActionStyle - invalid value!");
       }
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle arg) {
       switch (arg) {
+        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::CANCEL: return JSIConverter<std::string>::toJSI(runtime, "cancel");
         case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::DEFAULT: return JSIConverter<std::string>::toJSI(runtime, "default");
         case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::DESTRUCTIVE: return JSIConverter<std::string>::toJSI(runtime, "destructive");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertActionStyle::CANCEL: return JSIConverter<std::string>::toJSI(runtime, "cancel");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert AlertActionStyle to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");
@@ -67,9 +67,9 @@ namespace margelo::nitro {
       }
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, value);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
+        case hashString("cancel"):
         case hashString("default"):
         case hashString("destructive"):
-        case hashString("cancel"):
           return true;
         default:
           return false;

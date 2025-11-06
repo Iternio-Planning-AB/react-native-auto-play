@@ -4,6 +4,8 @@ import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import type { NitroMapButton } from '../utils/NitroMapButton';
 
+export type ActionButton<T> = ActionButtonAndroid<T> | ActionButtonIos<T>;
+
 export type HeaderActionsIos<T> = {
   backButton?: BackButton<T>;
   leadingNavigationBarButtons?: [ActionButtonIos<T>, ActionButtonIos<T>] | [ActionButtonIos<T>];

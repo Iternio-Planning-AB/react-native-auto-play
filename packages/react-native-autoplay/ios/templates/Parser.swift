@@ -207,6 +207,35 @@ class Parser {
         return Measurement(value: distance.value, unit: unit)
     }
 
+    static func parseInformationActions(actions: [NitroAction]?)
+        -> [CPTextButton]
+    {
+        guard let actions else { return [] }
+
+        return actions.map { action in
+            let button = CPTextButton(
+                title: action.title!,
+                textStyle: parseTextButtonStyle(style: action.style),
+                handler: { void in
+                    action.onPress()
+                }
+            )
+
+            return button
+        }
+    }
+
+    static func parseInformationItems(section: NitroSection)
+        -> [CPInformationItem]
+    {
+        return section.items.map { item in
+            return CPInformationItem(
+                title: parseText(text: item.title),
+                detail: parseText(text: item.detailedText)
+            )
+        }
+    }
+
     static func parseSearchResults(
         section: NitroSection?,
         traitCollection: UITraitCollection
@@ -303,6 +332,38 @@ class Parser {
         }
     }
 
+    static func parseTextButtonStyle(style: NitroButtonStyle?)
+        -> CPTextButtonStyle
+    {
+        guard let style else { return .normal }
+        switch style {
+        case .cancel:
+            return .cancel
+        case .normal:
+            return .normal
+        case .confirm:
+            return .confirm
+        default:
+            return .normal
+        }
+    }
+
+    static func parseActionAlertStyle(style: NitroButtonStyle?)
+        -> CPAlertAction.Style
+    {
+        guard let style else { return .default }
+        switch style {
+        case .default:
+            return CPAlertAction.Style.default
+        case .destructive:
+            return CPAlertAction.Style.destructive
+        case .cancel:
+            return CPAlertAction.Style.cancel
+        default:
+            return .default
+        }
+    }
+
     static func parseActionAlertStyle(style: AlertActionStyle?)
         -> CPAlertAction.Style
     {
@@ -314,6 +375,8 @@ class Parser {
             return CPAlertAction.Style.destructive
         case .cancel:
             return CPAlertAction.Style.cancel
+        default:
+            return .default
         }
     }
 

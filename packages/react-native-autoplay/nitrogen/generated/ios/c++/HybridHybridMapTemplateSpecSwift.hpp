@@ -36,8 +36,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
-// Forward declaration of `AlertActionStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
+// Forward declaration of `NitroButtonStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButtonStyle; }
 // Forward declaration of `NitroNavigationAlert` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroNavigationAlert; }
 // Forward declaration of `AutoText` to properly resolve imports.
@@ -48,6 +48,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUnits; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
 // Forward declaration of `TripsConfig` to properly resolve imports.
@@ -108,12 +110,13 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
-#include "AlertActionStyle.hpp"
+#include "NitroButtonStyle.hpp"
 #include "NitroNavigationAlert.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "NavigationAlertAction.hpp"
+#include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
 #include "TripsConfig.hpp"
 #include "RouteChoice.hpp"

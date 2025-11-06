@@ -26,8 +26,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
-// Forward declaration of `AlertActionStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
+// Forward declaration of `NitroButtonStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButtonStyle; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
 // Forward declaration of `Distance` to properly resolve imports.
@@ -53,7 +53,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectio
 #include "NitroColor.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
-#include "AlertActionStyle.hpp"
+#include "NitroButtonStyle.hpp"
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"

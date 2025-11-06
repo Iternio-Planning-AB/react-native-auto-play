@@ -5,7 +5,7 @@ import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
-import { type BaseMapTemplateConfig, convertMapActions } from './MapTemplate';
+import type { BaseMapTemplateConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -114,7 +114,7 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
       mapConfig: mapConfig
         ? {
             mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: convertMapActions(this.template, mapConfig.headerActions),
+            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
     };

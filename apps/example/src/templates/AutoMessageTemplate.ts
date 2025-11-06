@@ -18,26 +18,48 @@ const getTemplate = ({
     message,
     mapConfig,
     image: { name: 'info', type: 'glyph' },
-    actions: [
-      {
-        type: 'custom',
-        title: 'Pop',
-        style: 'destructive',
-        onPress: () => {
-          console.log('*** Pop');
-          HybridAutoPlay.popTemplate();
+    actions: {
+      android: [
+        {
+          type: 'image',
+          image: { name: 'thumb_up', type: 'glyph' },
+          onPress: () => {
+            console.log('yeah');
+            HybridAutoPlay.popTemplate();
+          },
         },
-      },
-      {
-        type: 'custom',
-        title: 'PopToRoot',
-        style: 'cancel',
-        onPress: () => {
-          console.log('*** PopToRoot');
-          HybridAutoPlay.popToRootTemplate();
+        {
+          type: 'textImage',
+          image: {
+            name: 'thumb_down',
+            type: 'glyph',
+          },
+          title: 'thumb down',
+          onPress: () => {
+            console.log('better luck next time');
+            HybridAutoPlay.popToRootTemplate();
+          },
         },
-      },
-    ],
+      ],
+      ios: [
+        {
+          type: 'text',
+          title: 'thumb up',
+          onPress: () => {
+            console.log('yeah');
+            HybridAutoPlay.popTemplate();
+          },
+        },
+        {
+          type: 'text',
+          title: 'thumb down',
+          onPress: () => {
+            console.log('yeah');
+            HybridAutoPlay.popToRootTemplate();
+          },
+        },
+      ],
+    },
     headerActions: AutoTemplate.headerActions,
     onWillAppear: () => console.log('MessageTemplate onWillAppear'),
     onDidAppear: () => console.log('MessageTemplate onDidAppear'),

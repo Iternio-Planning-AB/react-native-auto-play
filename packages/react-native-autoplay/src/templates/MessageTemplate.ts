@@ -1,5 +1,6 @@
+import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import { type AutoImage, type BaseMapTemplateConfig, convertMapActions } from '..';
+import type { AutoImage, BaseMapTemplateConfig, CustomActionButtonAndroid, TextButton } from '..';
 import type { HybridMessageTemplate as NitroHybridMessageTemplate } from '../specs/HybridMessageTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
@@ -30,7 +31,7 @@ export interface NitroMessageTemplateConfig extends TemplateConfig {
 
 export type MessageTemplateConfig = Omit<
   NitroMessageTemplateConfig,
-  'headerActions' | 'image' | 'mapConfig'
+  'headerActions' | 'image' | 'mapConfig' | 'actions'
 > & {
   /**
    * action buttons, usually at the top right on Android
@@ -47,6 +48,20 @@ export type MessageTemplateConfig = Omit<
    * @namespace Android
    */
   mapConfig?: BaseMapTemplateConfig<MessageTemplate>;
+
+  /**
+   * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
+   * @namespace iOS - up to 3 buttons of type TextButton
+   */
+  actions?: {
+    android?:
+      | [CustomActionButtonAndroid<MessageTemplate>]
+      | [CustomActionButtonAndroid<MessageTemplate>, CustomActionButtonAndroid<MessageTemplate>];
+    ios?:
+      | [TextButton<MessageTemplate>, TextButton<MessageTemplate>, TextButton<MessageTemplate>]
+      | [TextButton<MessageTemplate>, TextButton<MessageTemplate>]
+      | [TextButton<MessageTemplate>];
+  };
 };
 
 /**
@@ -62,17 +77,23 @@ export class MessageTemplate extends Template<
   constructor(config: MessageTemplateConfig) {
     super(config);
 
-    const { headerActions, image, mapConfig, ...rest } = config;
+    const { headerActions, image, mapConfig, actions, ...rest } = config;
+
+    const platformActions =
+      Platform.OS === 'android'
+        ? NitroActionUtil.convert(this.template, actions?.android)
+        : NitroActionUtil.convert(this.template, actions?.ios);
 
     const nitroConfig: NitroMessageTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       image: NitroImageUtil.convert(image),
+      actions: platformActions,
       mapConfig: mapConfig
         ? {
             mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: convertMapActions(this.template, mapConfig.headerActions),
+            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
     };

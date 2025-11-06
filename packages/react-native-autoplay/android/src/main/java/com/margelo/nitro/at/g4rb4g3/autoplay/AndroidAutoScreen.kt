@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.GridTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.HybridAutoPlay
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.InformationTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.ListTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.MessageTemplateConfig
@@ -18,6 +19,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.SearchTemplateConfig
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.GridTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.InformationTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.ListTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MapTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.MessageTemplate
@@ -72,6 +74,7 @@ class AndroidAutoScreen(
                     is GridTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is MessageTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is SearchTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is InformationTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     else -> null
                 }
 
@@ -96,6 +99,7 @@ class AndroidAutoScreen(
             is GridTemplateConfig -> GridTemplate(carContext, config)
             is MessageTemplateConfig -> MessageTemplate(carContext, config)
             is SearchTemplateConfig -> SearchTemplate(carContext, config)
+            is InformationTemplateConfig -> InformationTemplate(carContext, config)
             else -> null
         }?.let {
             AndroidAutoTemplate.setTemplate(moduleName, it)

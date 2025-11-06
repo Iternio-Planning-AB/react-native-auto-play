@@ -60,9 +60,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
                     setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
                 }
             }.build()
-        } ?: run {
-            template
-        }
+        } ?: template
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {

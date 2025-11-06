@@ -22,6 +22,7 @@ import {
 } from '../state/navigationSlice';
 import { dispatch } from '../state/store';
 import { AutoGridTemplate } from './AutoGridTemplate';
+import { AutoInformationTemplate } from './AutoInformationTemplate';
 import { AutoListTemplate } from './AutoListTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
 import { AutoSearchTemplate } from './AutoSearchTemplate';
@@ -271,6 +272,14 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       },
       onPress: mapButtonHandler,
     },
+    {
+      type: 'image',
+      image: {
+        name: 'list_alt',
+        type: 'glyph',
+      },
+      onPress: () => AutoInformationTemplate.getTemplate().push(),
+    },
   ],
   ios: {
     leadingNavigationBarButtons: [
@@ -296,6 +305,14 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           type: 'glyph',
         },
         onPress: mapButtonHandler,
+      },
+      {
+        type: 'image',
+        image: {
+          name: 'list_alt',
+          type: 'glyph',
+        },
+        onPress: () => AutoInformationTemplate.getTemplate().push(),
       },
     ],
   },
@@ -382,17 +399,23 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               type: 'custom',
               image: { name: 'list', type: 'glyph' },
               onPress: () => {
-                AutoListTemplate.getTemplate().push();
+                AutoListTemplate.getTemplate({ mapConfig: {} }).push();
               },
             },
             {
               type: 'custom',
               image: { name: 'grid_3x3', type: 'glyph' },
               onPress: () => {
-                AutoGridTemplate.getTemplate().push();
+                AutoGridTemplate.getTemplate({ mapConfig: {} }).push();
               },
             },
-            { type: 'custom', image: { name: 'inbox', type: 'glyph' }, onPress: () => {} },
+            {
+              type: 'custom',
+              image: { name: 'list_alt', type: 'glyph' },
+              onPress: () => {
+                AutoInformationTemplate.getTemplate({ mapConfig: {} }).push();
+              },
+            },
             {
               type: 'custom',
               image: { name: 'assignment_late', type: 'glyph' },

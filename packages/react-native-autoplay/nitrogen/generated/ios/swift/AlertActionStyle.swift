@@ -17,12 +17,12 @@ public extension AlertActionStyle {
    */
   init?(fromString string: String) {
     switch string {
+      case "cancel":
+        self = .cancel
       case "default":
         self = .default
       case "destructive":
         self = .destructive
-      case "cancel":
-        self = .cancel
       default:
         return nil
     }
@@ -33,12 +33,12 @@ public extension AlertActionStyle {
    */
   var stringValue: String {
     switch self {
+      case .cancel:
+        return "cancel"
       case .default:
         return "default"
       case .destructive:
         return "destructive"
-      case .cancel:
-        return "cancel"
     }
   }
 }

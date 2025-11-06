@@ -31,8 +31,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
-// Forward declaration of `AlertActionStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
+// Forward declaration of `NitroButtonStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButtonStyle; }
 // Forward declaration of `NitroNavigationAlert` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroNavigationAlert; }
 // Forward declaration of `AutoText` to properly resolve imports.
@@ -43,6 +43,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class DistanceUnits; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlertAction; }
+// Forward declaration of `AlertActionStyle` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
 // Forward declaration of `TripsConfig` to properly resolve imports.
@@ -122,8 +124,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "JNitroAlignment.hpp"
-#include "AlertActionStyle.hpp"
-#include "JAlertActionStyle.hpp"
+#include "NitroButtonStyle.hpp"
+#include "JNitroButtonStyle.hpp"
 #include "NitroNavigationAlert.hpp"
 #include "JNitroNavigationAlert.hpp"
 #include "AutoText.hpp"
@@ -134,6 +136,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JDistanceUnits.hpp"
 #include "NavigationAlertAction.hpp"
 #include "JNavigationAlertAction.hpp"
+#include "AlertActionStyle.hpp"
+#include "JAlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JAlertDismissalReason.hpp"

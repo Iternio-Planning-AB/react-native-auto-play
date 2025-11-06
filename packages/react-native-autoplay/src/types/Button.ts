@@ -6,6 +6,8 @@ export type MapButton<T = unknown> = {
   onPress: (template: T) => void;
 };
 
+export type ButtonStyle = 'normal' | 'confirm' | 'cancel';
+
 /**
  * this is a special button only visible on devices that have no touch support
  * @namespace Android
@@ -15,26 +17,26 @@ export type MapPanButton<T = unknown> = {
   onPress: (template: T) => void;
 };
 
-export type TextButton<T = unknown> = {
+type BaseButton<T = unknown> = {
+  style?: ButtonStyle;
+  enabled?: boolean;
+  onPress: (template: T) => void;
+};
+
+export type TextButton<T = unknown> = BaseButton<T> & {
   type: 'text';
   title: string;
-  enabled?: boolean;
-  onPress: (template: T) => void;
 };
 
-export type ImageButton<T = unknown> = {
+export type ImageButton<T = unknown> = BaseButton<T> & {
   type: 'image';
   image: AutoImage;
-  enabled?: boolean;
-  onPress: (template: T) => void;
 };
 
-export type TextAndImageButton<T = unknown> = {
+export type TextAndImageButton<T = unknown> = BaseButton<T> & {
   type: 'textImage';
   image: AutoImage;
   title: string;
-  enabled?: boolean;
-  onPress: (template: T) => void;
 };
 
 /**
@@ -73,7 +75,7 @@ export type Flags = Flag | (number & { __brand: 'Flags' });
  * @namespace Android
  */
 export type ActionButtonAndroid<T = unknown> =
-  | ((TextButton<T> | ImageButton<T> | TextAndImageButton<T>) & {
+  | (CustomActionButtonAndroid<T> & {
       /**
        * flags can be bitwise combined
        */
@@ -81,3 +83,8 @@ export type ActionButtonAndroid<T = unknown> =
     })
   | BackButton<T>
   | AppButton;
+
+/**
+ * this excludes back and appIcon
+ */
+export type CustomActionButtonAndroid<T> = TextButton<T> | ImageButton<T> | TextAndImageButton<T>;

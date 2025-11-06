@@ -41,17 +41,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     [[maybe_unused]]
     static jni::alias_ref<JAlertActionStyle> fromCpp(AlertActionStyle value) {
       static const auto clazz = javaClassStatic();
+      static const auto fieldCANCEL = clazz->getStaticField<JAlertActionStyle>("CANCEL");
       static const auto fieldDEFAULT = clazz->getStaticField<JAlertActionStyle>("DEFAULT");
       static const auto fieldDESTRUCTIVE = clazz->getStaticField<JAlertActionStyle>("DESTRUCTIVE");
-      static const auto fieldCANCEL = clazz->getStaticField<JAlertActionStyle>("CANCEL");
       
       switch (value) {
+        case AlertActionStyle::CANCEL:
+          return clazz->getStaticFieldValue(fieldCANCEL);
         case AlertActionStyle::DEFAULT:
           return clazz->getStaticFieldValue(fieldDEFAULT);
         case AlertActionStyle::DESTRUCTIVE:
           return clazz->getStaticFieldValue(fieldDESTRUCTIVE);
-        case AlertActionStyle::CANCEL:
-          return clazz->getStaticFieldValue(fieldCANCEL);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

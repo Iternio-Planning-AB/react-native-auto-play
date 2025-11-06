@@ -4,7 +4,7 @@ import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import { type BaseMapTemplateConfig, convertMapActions } from './MapTemplate';
+import type { BaseMapTemplateConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -57,7 +57,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
       mapConfig: mapConfig
         ? {
             mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: convertMapActions(this.template, mapConfig.headerActions),
+            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
     };

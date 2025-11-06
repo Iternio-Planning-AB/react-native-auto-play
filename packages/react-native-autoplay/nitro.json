@@ -20,6 +20,10 @@
       "kotlin": "HybridListTemplate",
       "swift": "HybridListTemplate"
     },
+    "HybridInformationTemplate": {
+      "kotlin": "HybridInformationTemplate",
+      "swift": "HybridInformationTemplate"
+    },
     "HybridGridTemplate": {
       "kotlin": "HybridGridTemplate",
       "swift": "HybridGridTemplate"

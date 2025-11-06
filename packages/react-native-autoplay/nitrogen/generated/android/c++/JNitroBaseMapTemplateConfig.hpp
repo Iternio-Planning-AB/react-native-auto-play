@@ -10,10 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "NitroBaseMapTemplateConfig.hpp"
 
-#include "AlertActionStyle.hpp"
 #include "AssetImage.hpp"
 #include "GlyphImage.hpp"
-#include "JAlertActionStyle.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
@@ -21,6 +19,7 @@
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
+#include "JNitroButtonStyle.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
@@ -28,6 +27,7 @@
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "NitroButtonStyle.hpp"
 #include "NitroColor.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"

@@ -10,19 +10,19 @@
 #include <fbjni/fbjni.h>
 #include "NitroAction.hpp"
 
-#include "AlertActionStyle.hpp"
 #include "AssetImage.hpp"
 #include "GlyphImage.hpp"
-#include "JAlertActionStyle.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
+#include "JNitroButtonStyle.hpp"
 #include "JNitroColor.hpp"
 #include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
+#include "NitroButtonStyle.hpp"
 #include "NitroColor.hpp"
 #include <functional>
 #include <optional>
@@ -62,8 +62,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JNitroAlignment> alignment = this->getFieldValue(fieldAlignment);
       static const auto fieldFlags = clazz->getField<jni::JDouble>("flags");
       jni::local_ref<jni::JDouble> flags = this->getFieldValue(fieldFlags);
-      static const auto fieldStyle = clazz->getField<JAlertActionStyle>("style");
-      jni::local_ref<JAlertActionStyle> style = this->getFieldValue(fieldStyle);
+      static const auto fieldStyle = clazz->getField<JNitroButtonStyle>("style");
+      jni::local_ref<JNitroButtonStyle> style = this->getFieldValue(fieldStyle);
       return NitroAction(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
         image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
@@ -92,7 +92,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroAction::javaobject> fromCpp(const NitroAction& value) {
-      using JSignature = JNitroAction(jni::alias_ref<jni::JString>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JNitroActionType>, jni::alias_ref<JNitroAlignment>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JAlertActionStyle>);
+      using JSignature = JNitroAction(jni::alias_ref<jni::JString>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JNitroActionType>, jni::alias_ref<JNitroAlignment>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JNitroButtonStyle>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -104,7 +104,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         JNitroActionType::fromCpp(value.type),
         value.alignment.has_value() ? JNitroAlignment::fromCpp(value.alignment.value()) : nullptr,
         value.flags.has_value() ? jni::JDouble::valueOf(value.flags.value()) : nullptr,
-        value.style.has_value() ? JAlertActionStyle::fromCpp(value.style.value()) : nullptr
+        value.style.has_value() ? JNitroButtonStyle::fromCpp(value.style.value()) : nullptr
       );
     }
   };

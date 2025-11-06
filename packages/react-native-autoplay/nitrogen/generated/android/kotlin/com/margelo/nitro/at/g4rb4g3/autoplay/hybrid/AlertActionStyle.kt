@@ -16,7 +16,7 @@ import com.facebook.proguard.annotations.DoNotStrip
 @DoNotStrip
 @Keep
 enum class AlertActionStyle(@DoNotStrip @Keep val value: Int) {
-  DEFAULT(0),
-  DESTRUCTIVE(1),
-  CANCEL(2);
+  CANCEL(0),
+  DEFAULT(1),
+  DESTRUCTIVE(2);
 }

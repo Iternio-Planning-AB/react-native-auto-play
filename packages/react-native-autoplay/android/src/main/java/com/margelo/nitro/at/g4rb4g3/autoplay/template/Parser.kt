@@ -1,6 +1,5 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.template
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -39,7 +38,6 @@ import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.react.views.imagehelper.ImageSource
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AssetImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.AutoText
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.DistanceUnits
@@ -53,6 +51,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAction
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAlignment
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedString
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroButtonStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
@@ -178,8 +177,11 @@ object Parser {
                 setFlags(flags.toInt())
             }
             action.style?.let { style ->
-                if (style == AlertActionStyle.DESTRUCTIVE) {
+                if (style == NitroButtonStyle.CANCEL || style == NitroButtonStyle.DESTRUCTIVE) {
                     setBackgroundColor(CarColor.RED)
+                }
+                if (style == NitroButtonStyle.CONFIRM || style == NitroButtonStyle.DEFAULT) {
+                    setBackgroundColor(CarColor.BLUE)
                 }
             }
         }.build()
