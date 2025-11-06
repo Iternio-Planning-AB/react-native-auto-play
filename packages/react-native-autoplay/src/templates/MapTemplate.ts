@@ -29,7 +29,7 @@ import {
 const HybridMapTemplate =
   NitroModules.createHybridObject<NitroHybridMapTemplate>('HybridMapTemplate');
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
 
 export type HeaderActionsAndroidMap<T> =
