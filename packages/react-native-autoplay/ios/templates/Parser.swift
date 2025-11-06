@@ -206,22 +206,33 @@ class Parser {
 
         return Measurement(value: distance.value, unit: unit)
     }
-    
-    static func parseInformationActions(actions: [NitroAction]?) -> [CPTextButton] {
+
+    static func parseInformationActions(actions: [NitroAction]?)
+        -> [CPTextButton]
+    {
         guard let actions else { return [] }
-        
-        return actions.enumerated().map { (actionIndex, action) in
-            let button = CPTextButton(title: action.title!, textStyle: parseTextButtonStyle(style: action.style), handler: { void in
-                action.onPress()
-            } )
-            
+
+        return actions.map { action in
+            let button = CPTextButton(
+                title: action.title!,
+                textStyle: parseTextButtonStyle(style: action.style),
+                handler: { void in
+                    action.onPress()
+                }
+            )
+
             return button
         }
     }
-    
-    static func parseInformationItems(section: NitroSection) -> [CPInformationItem] {
-        return section.items.enumerated().map { (itemIndex, item) in
-            return CPInformationItem(title: parseText(text: item.title), detail: parseText(text: item.detailedText))
+
+    static func parseInformationItems(section: NitroSection)
+        -> [CPInformationItem]
+    {
+        return section.items.map { item in
+            return CPInformationItem(
+                title: parseText(text: item.title),
+                detail: parseText(text: item.detailedText)
+            )
         }
     }
 
@@ -320,9 +331,9 @@ class Parser {
             )
         }
     }
-    
+
     static func parseTextButtonStyle(style: NitroButtonStyle?)
-    -> CPTextButtonStyle
+        -> CPTextButtonStyle
     {
         guard let style else { return .normal }
         switch style {
@@ -336,7 +347,7 @@ class Parser {
             return .normal
         }
     }
-    
+
     static func parseActionAlertStyle(style: NitroButtonStyle?)
         -> CPAlertAction.Style
     {
@@ -352,7 +363,6 @@ class Parser {
             return .default
         }
     }
-    
 
     static func parseActionAlertStyle(style: AlertActionStyle?)
         -> CPAlertAction.Style
