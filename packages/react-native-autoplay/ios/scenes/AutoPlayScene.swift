@@ -7,6 +7,10 @@
 
 import CarPlay
 
+#if RCT_NEW_ARCH_ENABLED
+    import React
+#endif
+
 class AutoPlayScene: UIResponder {
     public private(set) var state: VisibilityState = .diddisappear
 
@@ -44,6 +48,22 @@ class AutoPlayScene: UIResponder {
     }
 
     func disconnect() {
+        #if RCT_NEW_ARCH_ENABLED
+            if let rootView = self.window?.rootViewController?.view
+                as? RCTSurfaceHostingProxyRootView
+            {
+                rootView.surface.stop()
+            }
+        #else
+            if let rootView = self.window?.rootViewController?.view
+                as? RCTRootView
+            {
+                if let contentView = rootView.contentView as? RCTInvalidating {
+                    contentView.invalidate()
+                }
+            }
+        #endif
+
         self.window = nil
         isConnected = false
 
@@ -75,7 +95,7 @@ class AutoPlayScene: UIResponder {
             guard let moduleName = self.moduleName else {
                 return
             }
-            
+
             guard
                 let rootView = ViewUtils.getRootView(
                     moduleName: moduleName,
@@ -90,12 +110,12 @@ class AutoPlayScene: UIResponder {
             window.makeKeyAndVisible()
         }
     }
-    
+
     open func traitCollectionDidChange(traitCollection: UITraitCollection) {
         self.traitCollection = traitCollection
         self.templateStore.traitCollectionDidChange()
     }
-    
+
     open func safeAreaInsetsDidChange(safeAreaInsets: UIEdgeInsets) {
         self.safeAreaInsets = safeAreaInsets
         HybridAutoPlay.emitSafeAreaInsets(

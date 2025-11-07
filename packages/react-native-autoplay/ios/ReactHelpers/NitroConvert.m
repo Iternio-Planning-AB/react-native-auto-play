@@ -1,3 +1,12 @@
+//
+//  NitroConvert.m
+//  Pods
+//
+//  Created by Manuel Auer on 04.11.25.
+//
+
+// this is required for old architecture support since the React pod can not be imported
+
 #import "NitroConvert.h"
 #import <React/RCTConvert.h>
 

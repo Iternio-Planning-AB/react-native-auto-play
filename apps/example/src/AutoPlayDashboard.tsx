@@ -43,7 +43,9 @@ export const AutoPlayDashboard = (props: RootComponentInitialProps) => {
       console.log(`Dashboard ${payload}`)
     );
 
-    return () => removeListener();
+    return () => {
+      removeListener();
+    };
   }, []);
 
   return (

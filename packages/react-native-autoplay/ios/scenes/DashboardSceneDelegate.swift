@@ -50,8 +50,7 @@ class DashboardSceneDelegate: AutoPlayScene,
     func templateApplicationDashboardScene(
         _ templateApplicationDashboardScene:
             CPTemplateApplicationDashboardScene,
-        didDisconnectDashboardController dashboardController:
-            CPDashboardController,
+        didDisconnect dashboardController: CPDashboardController,
         from window: UIWindow
     ) {
         disconnect()
