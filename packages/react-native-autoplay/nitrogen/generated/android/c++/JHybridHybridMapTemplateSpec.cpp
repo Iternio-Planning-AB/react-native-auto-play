@@ -105,7 +105,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "Point.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JPoint.hpp"
-#include "JFunc_void_Point_double_std__optional_double_.hpp"
+#include "JFunc_void_Point_double.hpp"
 #include "JFunc_void_Point.hpp"
 #include "ColorScheme.hpp"
 #include "JFunc_void_ColorScheme.hpp"

@@ -43,7 +43,7 @@ data class MapTemplateConfig(
   val onDidUpdatePanGestureWithTranslation: Func_void_Point_std__optional_Point_?,
   @DoNotStrip
   @Keep
-  val onDidUpdateZoomGestureWithCenter: Func_void_Point_double_std__optional_double_?,
+  val onDidUpdateZoomGestureWithCenter: Func_void_Point_double?,
   @DoNotStrip
   @Keep
   val onClick: Func_void_Point?,
@@ -69,8 +69,8 @@ data class MapTemplateConfig(
   /**
    * Create a new instance of MapTemplateConfig from Kotlin
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double, velocity: Double?) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, onStopNavigation: () -> Unit, onAutoDriveEnabled: (() -> Unit)?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?):
-         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, visibleTravelEstimate, onDidUpdatePanGestureWithTranslation?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_std__optional_double__java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, Func_void_java(onStopNavigation), onAutoDriveEnabled?.let { Func_void_java(it) }, mapButtons, headerActions)
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, onStopNavigation: () -> Unit, onAutoDriveEnabled: (() -> Unit)?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?):
+         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, visibleTravelEstimate, onDidUpdatePanGestureWithTranslation?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, Func_void_java(onStopNavigation), onAutoDriveEnabled?.let { Func_void_java(it) }, mapButtons, headerActions)
 
   private companion object {
     /**
@@ -80,7 +80,7 @@ data class MapTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: Func_void_Point_std__optional_Point_?, onDidUpdateZoomGestureWithCenter: Func_void_Point_double_std__optional_double_?, onClick: Func_void_Point?, onDoubleClick: Func_void_Point?, onAppearanceDidChange: Func_void_ColorScheme?, onStopNavigation: Func_void, onAutoDriveEnabled: Func_void?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?): MapTemplateConfig {
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: Func_void_Point_std__optional_Point_?, onDidUpdateZoomGestureWithCenter: Func_void_Point_double?, onClick: Func_void_Point?, onDoubleClick: Func_void_Point?, onAppearanceDidChange: Func_void_ColorScheme?, onStopNavigation: Func_void, onAutoDriveEnabled: Func_void?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?): MapTemplateConfig {
       return MapTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, visibleTravelEstimate, onDidUpdatePanGestureWithTranslation, onDidUpdateZoomGestureWithCenter, onClick, onDoubleClick, onAppearanceDidChange, onStopNavigation, onAutoDriveEnabled, mapButtons, headerActions)
     }
   }

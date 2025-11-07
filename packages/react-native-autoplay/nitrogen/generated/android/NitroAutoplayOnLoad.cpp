@@ -32,7 +32,7 @@
 #include "JHybridHybridListTemplateSpec.hpp"
 #include "JHybridHybridMapTemplateSpec.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
-#include "JFunc_void_Point_double_std__optional_double_.hpp"
+#include "JFunc_void_Point_double.hpp"
 #include "JFunc_void_Point.hpp"
 #include "JFunc_void_ColorScheme.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
@@ -67,7 +67,7 @@ int initialize(JavaVM* vm) {
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridListTemplateSpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JHybridHybridMapTemplateSpec::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
-    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_Point_double_std__optional_double__cxx::registerNatives();
+    margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_Point_double_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_Point_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_ColorScheme_cxx::registerNatives();
     margelo::nitro::at::g4rb4g3::autoplay::hybrid::JFunc_void_AlertDismissalReason_cxx::registerNatives();

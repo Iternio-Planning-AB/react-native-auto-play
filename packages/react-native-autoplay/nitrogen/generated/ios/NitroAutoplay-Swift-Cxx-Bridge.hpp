@@ -1002,40 +1002,40 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>
+  // pragma MARK: std::function<void(const Point& /* center */, double /* scale */)>
   /**
-   * Specialized version of `std::function<void(const Point&, double, std::optional<double>)>`.
+   * Specialized version of `std::function<void(const Point&, double)>`.
    */
-  using Func_void_Point_double_std__optional_double_ = std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>;
+  using Func_void_Point_double = std::function<void(const Point& /* center */, double /* scale */)>;
   /**
-   * Wrapper class for a `std::function<void(const Point& / * center * /, double / * scale * /, std::optional<double> / * velocity * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const Point& / * center * /, double / * scale * /)>`, this can be used from Swift.
    */
-  class Func_void_Point_double_std__optional_double__Wrapper final {
+  class Func_void_Point_double_Wrapper final {
   public:
-    explicit Func_void_Point_double_std__optional_double__Wrapper(std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>&& func): _function(std::make_unique<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>(std::move(func))) {}
-    inline void call(Point center, double scale, std::optional<double> velocity) const noexcept {
-      _function->operator()(center, scale, velocity);
+    explicit Func_void_Point_double_Wrapper(std::function<void(const Point& /* center */, double /* scale */)>&& func): _function(std::make_unique<std::function<void(const Point& /* center */, double /* scale */)>>(std::move(func))) {}
+    inline void call(Point center, double scale) const noexcept {
+      _function->operator()(center, scale);
     }
   private:
-    std::unique_ptr<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>> _function;
+    std::unique_ptr<std::function<void(const Point& /* center */, double /* scale */)>> _function;
   } SWIFT_NONCOPYABLE;
-  Func_void_Point_double_std__optional_double_ create_Func_void_Point_double_std__optional_double_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_Point_double_std__optional_double__Wrapper wrap_Func_void_Point_double_std__optional_double_(Func_void_Point_double_std__optional_double_ value) noexcept {
-    return Func_void_Point_double_std__optional_double__Wrapper(std::move(value));
+  Func_void_Point_double create_Func_void_Point_double(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_Point_double_Wrapper wrap_Func_void_Point_double(Func_void_Point_double value) noexcept {
+    return Func_void_Point_double_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>
+  // pragma MARK: std::optional<std::function<void(const Point& /* center */, double /* scale */)>>
   /**
-   * Specialized version of `std::optional<std::function<void(const Point& / * center * /, double / * scale * /, std::optional<double> / * velocity * /)>>`.
+   * Specialized version of `std::optional<std::function<void(const Point& / * center * /, double / * scale * /)>>`.
    */
-  using std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______ = std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>;
-  inline std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>> create_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______(const std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>& value) noexcept {
-    return std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>(value);
+  using std__optional_std__function_void_const_Point_____center_____double____scale______ = std::optional<std::function<void(const Point& /* center */, double /* scale */)>>;
+  inline std::optional<std::function<void(const Point& /* center */, double /* scale */)>> create_std__optional_std__function_void_const_Point_____center_____double____scale______(const std::function<void(const Point& /* center */, double /* scale */)>& value) noexcept {
+    return std::optional<std::function<void(const Point& /* center */, double /* scale */)>>(value);
   }
-  inline bool has_value_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______(const std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>& optional) noexcept {
+  inline bool has_value_std__optional_std__function_void_const_Point_____center_____double____scale______(const std::optional<std::function<void(const Point& /* center */, double /* scale */)>>& optional) noexcept {
     return optional.has_value();
   }
-  inline std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)> get_std__optional_std__function_void_const_Point_____center_____double____scale_____std__optional_double_____velocity______(const std::optional<std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>>& optional) noexcept {
+  inline std::function<void(const Point& /* center */, double /* scale */)> get_std__optional_std__function_void_const_Point_____center_____double____scale______(const std::optional<std::function<void(const Point& /* center */, double /* scale */)>>& optional) noexcept {
     return *optional;
   }
   

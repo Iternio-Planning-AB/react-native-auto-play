@@ -18,7 +18,7 @@
 #include "JFunc_void.hpp"
 #include "JFunc_void_ColorScheme.hpp"
 #include "JFunc_void_Point.hpp"
-#include "JFunc_void_Point_double_std__optional_double_.hpp"
+#include "JFunc_void_Point_double.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
@@ -82,8 +82,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<JVisibleTravelEstimate> visibleTravelEstimate = this->getFieldValue(fieldVisibleTravelEstimate);
       static const auto fieldOnDidUpdatePanGestureWithTranslation = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidUpdatePanGestureWithTranslation");
       jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidUpdatePanGestureWithTranslation = this->getFieldValue(fieldOnDidUpdatePanGestureWithTranslation);
-      static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double_std__optional_double_::javaobject>("onDidUpdateZoomGestureWithCenter");
-      jni::local_ref<JFunc_void_Point_double_std__optional_double_::javaobject> onDidUpdateZoomGestureWithCenter = this->getFieldValue(fieldOnDidUpdateZoomGestureWithCenter);
+      static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double::javaobject>("onDidUpdateZoomGestureWithCenter");
+      jni::local_ref<JFunc_void_Point_double::javaobject> onDidUpdateZoomGestureWithCenter = this->getFieldValue(fieldOnDidUpdateZoomGestureWithCenter);
       static const auto fieldOnClick = clazz->getField<JFunc_void_Point::javaobject>("onClick");
       jni::local_ref<JFunc_void_Point::javaobject> onClick = this->getFieldValue(fieldOnClick);
       static const auto fieldOnDoubleClick = clazz->getField<JFunc_void_Point::javaobject>("onDoubleClick");
@@ -167,14 +167,14 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
             };
           }
         }()) : std::nullopt,
-        onDidUpdateZoomGestureWithCenter != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)> {
-          if (onDidUpdateZoomGestureWithCenter->isInstanceOf(JFunc_void_Point_double_std__optional_double__cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_Point_double_std__optional_double__cxx::javaobject>(onDidUpdateZoomGestureWithCenter);
+        onDidUpdateZoomGestureWithCenter != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* center */, double /* scale */)> {
+          if (onDidUpdateZoomGestureWithCenter->isInstanceOf(JFunc_void_Point_double_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_Point_double_cxx::javaobject>(onDidUpdateZoomGestureWithCenter);
             return downcast->cthis()->getFunction();
           } else {
             auto onDidUpdateZoomGestureWithCenterRef = jni::make_global(onDidUpdateZoomGestureWithCenter);
-            return [onDidUpdateZoomGestureWithCenterRef](Point center, double scale, std::optional<double> velocity) -> void {
-              return onDidUpdateZoomGestureWithCenterRef->invoke(center,scale,velocity);
+            return [onDidUpdateZoomGestureWithCenterRef](Point center, double scale) -> void {
+              return onDidUpdateZoomGestureWithCenterRef->invoke(center,scale);
             };
           }
         }()) : std::nullopt,
@@ -262,7 +262,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double_std__optional_double_::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -275,7 +275,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr,
         value.visibleTravelEstimate.has_value() ? JVisibleTravelEstimate::fromCpp(value.visibleTravelEstimate.value()) : nullptr,
         value.onDidUpdatePanGestureWithTranslation.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidUpdatePanGestureWithTranslation.value()) : nullptr,
-        value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_std__optional_double__cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
+        value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
         value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
         value.onAppearanceDidChange.has_value() ? JFunc_void_ColorScheme_cxx::fromCpp(value.onAppearanceDidChange.value()) : nullptr,

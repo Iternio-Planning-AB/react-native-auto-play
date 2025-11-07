@@ -205,11 +205,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const Point& /* center */, double /* scale */, std::optional<double> /* velocity */)>
-  Func_void_Point_double_std__optional_double_ create_Func_void_Point_double_std__optional_double_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = NitroAutoplay::Func_void_Point_double_std__optional_double_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const Point& center, double scale, std::optional<double> velocity) mutable -> void {
-      swiftClosure.call(center, scale, velocity);
+  // pragma MARK: std::function<void(const Point& /* center */, double /* scale */)>
+  Func_void_Point_double create_Func_void_Point_double(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroAutoplay::Func_void_Point_double::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const Point& center, double scale) mutable -> void {
+      swiftClosure.call(center, scale);
     };
   }
   
