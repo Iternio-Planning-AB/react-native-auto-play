@@ -123,7 +123,7 @@ class VirtualRenderer(
 
                 getMapTemplateConfig()?.onDidUpdateZoomGestureWithCenter?.let {
                     it(
-                        center, scaleFactor.toDouble(), null
+                        center, scaleFactor.toDouble()
                     )
                 }
             }

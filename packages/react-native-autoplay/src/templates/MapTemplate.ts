@@ -55,9 +55,8 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
    * callback for pinch to zoom gesture
    * @param center x & y coordinate of the focal point in pixels
    * @param scale the scaling factor
-   * @param velocity the velocity of the zoom gesture in scale factor per second, iOS only
    */
-  onDidUpdateZoomGestureWithCenter?: (center: Point, scale: number, velocity?: number) => void;
+  onDidUpdateZoomGestureWithCenter?: (center: Point, scale: number) => void;
 
   /**
    * single press event callback

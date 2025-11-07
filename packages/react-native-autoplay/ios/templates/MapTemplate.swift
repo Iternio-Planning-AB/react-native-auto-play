@@ -131,10 +131,14 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         scale: CGFloat,
         velocity: CGFloat
     ) {
+        if scale == 1 && velocity == 1 {
+            config.onDoubleClick?(Point(x: center.x, y: center.y))
+            return
+        }
+
         config.onDidUpdateZoomGestureWithCenter?(
             Point(x: center.x, y: center.y),
-            scale,
-            velocity
+            1 - velocity * 0.1
         )
     }
 
