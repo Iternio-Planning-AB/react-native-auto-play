@@ -53,12 +53,18 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
-  const resolvedAsset = Image.resolveAssetSource(image.image);
+  // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
+  // so the input allows all optional parameters which are returned as is even though
+  // the return type claims to not have any optional parameters...
+  // we specify some default values to not crash because of proper typing required by nitro-modules
+  const { height = 0, scale = 0, uri, width = 0, ...rest } = Image.resolveAssetSource(image.image);
 
   const assetImage: AssetImage = {
-    ...resolvedAsset,
-    packager_asset:
-      '__packager_asset' in resolvedAsset ? Boolean(resolvedAsset.__packager_asset) : false,
+    height,
+    scale,
+    uri,
+    width,
+    packager_asset: '__packager_asset' in rest ? Boolean(rest.__packager_asset) : false,
     color:
       typeof image.color === 'string'
         ? NitroColorUtil.convertThemed({ darkColor: image.color, lightColor: image.color })
