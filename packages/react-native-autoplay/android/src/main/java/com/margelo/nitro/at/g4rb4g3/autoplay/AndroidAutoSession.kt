@@ -127,6 +127,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
         if (clusterId != null) {
             HybridCluster.emitColorScheme(clusterId, colorScheme)
+            AndroidAutoScreen.getScreen(clusterId)?.applyConfigUpdate(invalidate = true)
             return
         }
 
