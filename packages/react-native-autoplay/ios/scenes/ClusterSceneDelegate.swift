@@ -67,6 +67,11 @@ class ClusterSceneDelegate: AutoPlayScene,
         let isSpeedLimitEnabled =
             instrumentClusterController?.speedLimitSetting != .disabled
 
+        self.traitCollection = UITraitCollection(
+            userInterfaceStyle: instrumentClusterWindow.traitCollection
+                .userInterfaceStyle
+        )
+
         let props: [String: Any] = [
             "colorScheme": self.traitCollection.userInterfaceStyle == .dark
                 ? "dark" : "light",
