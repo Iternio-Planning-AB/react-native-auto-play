@@ -441,12 +441,11 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let template = template as? CPMapTemplate else { return }
         guard let navigationSession = navigationSession else { return }
 
-        if #unavailable(iOS 26.0),
+        if #unavailable(iOS 15.4),
             let color = maneuvers.first?.cardBackgroundColor
         {
-            // iOS 26 has some bug/weird behavior that it does not update the images inside the maneuver
-            // this might lead to dark icons on dark background or light icons on light background
-            // so we skip this and wait for new maneuvers to update both, the cardBackgroundColor and icon colors
+            // before iOS 15.4 the color had to be set on the template
+            // later on the maneuer which Parser.parseManeuver does
             template.guidanceBackgroundColor = Parser.parseColor(color: color)
         }
 

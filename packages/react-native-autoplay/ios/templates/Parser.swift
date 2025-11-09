@@ -509,8 +509,13 @@ class Parser {
         )
 
         if #available(iOS 15.4, *) {
-            maneuver.cardBackgroundColor = parseColor(
-                color: nitroManeuver.cardBackgroundColor
+            let cardBackgroundColor =
+                traitCollection.userInterfaceStyle == .dark
+                ? nitroManeuver.cardBackgroundColor.darkColor
+                : nitroManeuver.cardBackgroundColor.lightColor
+
+            maneuver.cardBackgroundColor = doubleToColor(
+                value: cardBackgroundColor
             )
         }
 
