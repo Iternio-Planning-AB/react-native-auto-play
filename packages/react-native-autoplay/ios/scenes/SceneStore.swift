@@ -68,6 +68,10 @@ class SceneStore {
         return scene as? ClusterSceneDelegate
     }
     
+    static func getRootScene() -> AutoPlayScene? {
+        return store[SceneStore.rootModuleName]
+    }
+    
     static func getRootTraitCollection() -> UITraitCollection {
         return store[SceneStore.rootModuleName]!.traitCollection
     }

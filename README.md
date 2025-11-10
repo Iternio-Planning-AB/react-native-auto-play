@@ -1,4 +1,4 @@
-# iOS Development Team Setup
+ - [ ] # iOS Development Team Setup
 
 This project uses a local `Development.xcconfig` file for code signing for the example app. This file **should not be committed** to Git.
 
@@ -137,6 +137,13 @@ This should cover old and new architecture, adjust to your needs!
   }
 ````
 
+# CarPlay MapTemplate maneuver dark & light mode
+It is recommended to attach a listener to MapTemplate.onAppearanceDidChange and send maneuver updates based on this to make sure the colors are applied properly.
+Reason for this is that CarPlay does not allow for color updates on maneuvers shown on the screen. You need to send maneuvers with a new id to get them updated properly on the screen.
+The color properties do not need to handle the mode change, best practice is to use ThemedColor whenever possible and set appropriate light and dark mode colors.
+This is mainly required on CarPlay for now since Android Auto lacks light mode.
+
+
 # Localization
 The library allows you to pass distances and durations and formats them according to the system defaults. Make sure to provide all supported app languages in Info.plist CFBundleLocalizations for this to work properly, missing languages will use CFBundleDevelopmentRegion as fallback which is en most of the time and mix it up with the region which might result in en_AT or similar.
 
@@ -159,3 +166,4 @@ In case you wanna open up your CarPlay app from one of the CarPlay dashboard but
 	</dict>
 </array>
 ```
+

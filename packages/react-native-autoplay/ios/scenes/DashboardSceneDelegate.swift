@@ -119,5 +119,10 @@ class DashboardSceneDelegate: AutoPlayScene,
             colorScheme: traitCollection.userInterfaceStyle == .dark
                 ? .dark : .light
         )
+
+        // dashboard and root run on the same screen so the trait collection needs to be synced
+        SceneStore.getRootScene()?.traitCollectionDidChange(
+            traitCollection: traitCollection
+        )
     }
 }
