@@ -18,7 +18,7 @@ public extension NitroNavigationAlert {
   /**
    * Create a new instance of `NitroNavigationAlert`.
    */
-  init(id: Double, title: AutoText, subtitle: AutoText?, image: Variant_GlyphImage_AssetImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Void)?, onDidDismiss: ((_ reason: AlertDismissalReason) -> Void)?, priority: AlertPriority) {
+  init(id: Double, title: AutoText, subtitle: AutoText?, image: Variant_GlyphImage_AssetImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Void)?, onDidDismiss: ((_ reason: AlertDismissalReason) -> Void)?, priority: Double) {
     self.init(id, title, { () -> bridge.std__optional_AutoText_ in
       if let __unwrappedValue = subtitle {
         return bridge.create_std__optional_AutoText_(__unwrappedValue)
@@ -250,7 +250,7 @@ public extension NitroNavigationAlert {
     }
   }
   
-  var priority: AlertPriority {
+  var priority: Double {
     @inline(__always)
     get {
       return self.__priority

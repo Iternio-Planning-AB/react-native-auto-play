@@ -52,8 +52,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NavigationAlert
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertActionStyle; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertDismissalReason; }
-// Forward declaration of `AlertPriority` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class AlertPriority; }
 // Forward declaration of `TripSelectorCallback` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripSelectorCallback; }
 // Forward declaration of `TripsConfig` to properly resolve imports.
@@ -122,7 +120,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "NavigationAlertAction.hpp"
 #include "AlertActionStyle.hpp"
 #include "AlertDismissalReason.hpp"
-#include "AlertPriority.hpp"
 #include "TripSelectorCallback.hpp"
 #include "TripsConfig.hpp"
 #include "RouteChoice.hpp"
