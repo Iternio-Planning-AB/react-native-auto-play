@@ -45,7 +45,7 @@ export type InformationTemplateConfig = Omit<
 
   /**
    * @namespace Android this is a PaneTemplate with a list of rows. Each row can have a title with up to 2 rows and a detailedText with up to 4 rows, either as a single string that is automatically wrapped or a string with line breaks. However if the text is too long it might be broken into multiple rows and then truncated, if more than 4 rows are required due to wrapping.
-   * @namespace iOS this is an InformationTemplate.
+   * @namespace iOS this is an InformationTemplate, ⚠️ the row image is NOT supported
    */
   items?: InformationItems;
 
