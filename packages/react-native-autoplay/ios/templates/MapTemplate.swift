@@ -20,6 +20,15 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     var navigationSession: CPNavigationSession?
 
+    var tripSelectorVisible = false {
+        didSet {
+            if !tripSelectorVisible && oldValue {
+                // this makes sure the latest config updates are applied when the trip selector is gone again
+                invalidate()
+            }
+        }
+    }
+
     init(config: MapTemplateConfig) {
         self.config = config
 
@@ -67,6 +76,11 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     override func invalidate() {
+        if tripSelectorVisible {
+            // ignore invalidate calls to not break the trip selectors back button
+            return
+        }
+
         guard let template = self.template as? CPMapTemplate else { return }
 
         setBarButtons()
@@ -345,8 +359,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         }
 
         template.backButton = CPBarButton(title: "") { _ in
-            template.hideTripPreviews()
-            self.invalidate()
+            self.hideTripSelector()
 
             onBackPressed()
         }
@@ -359,6 +372,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             selectedTrip: selectedTrip,
             textConfiguration: textConfiguration
         )
+
+        tripSelectorVisible = true
 
         tripPreviews.forEach { trip in
             guard
@@ -387,6 +402,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         guard let template = self.template as? CPMapTemplate else { return }
 
         template.hideTripPreviews()
+
+        self.tripSelectorVisible = false
         self.onTripSelected = nil
         self.onTripStarted = nil
     }

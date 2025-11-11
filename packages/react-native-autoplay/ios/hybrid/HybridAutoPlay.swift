@@ -250,7 +250,7 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
         try RootModule.withTemplate(templateId: templateId) {
             template in
             template.barButtons = headerActions
-            template.setBarButtons()
+            template.invalidate()
         }
     }
 
