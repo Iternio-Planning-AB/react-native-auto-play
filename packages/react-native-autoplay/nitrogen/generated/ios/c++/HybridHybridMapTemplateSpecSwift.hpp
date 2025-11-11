@@ -66,8 +66,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
-// Forward declaration of `NitroManeuver` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRoutingManeuver; }
+// Forward declaration of `NitroMessageManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMessageManeuver; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -127,7 +129,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
-#include "NitroManeuver.hpp"
+#include "NitroRoutingManeuver.hpp"
+#include "NitroMessageManeuver.hpp"
 #include "NitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "TurnType.hpp"
@@ -230,7 +233,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) override {
+    inline void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& maneuvers) override {
       auto __result = _swiftPart.updateManeuvers(templateId, maneuvers);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());

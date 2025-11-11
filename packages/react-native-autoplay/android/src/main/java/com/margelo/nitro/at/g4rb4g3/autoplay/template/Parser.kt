@@ -57,6 +57,7 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
+import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRoutingManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRow
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSectionType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.OffRampType
@@ -500,7 +501,7 @@ object Parser {
         return bitmap
     }
 
-    fun parseManeuver(context: CarContext, nitroManeuver: NitroManeuver): Maneuver {
+    fun parseManeuver(context: CarContext, nitroManeuver: NitroRoutingManeuver): Maneuver {
         val maneuverType = when (nitroManeuver.maneuverType) {
             ManeuverType.DEPART -> Maneuver.TYPE_DEPART
             ManeuverType.ARRIVE -> Maneuver.TYPE_DESTINATION
@@ -603,7 +604,7 @@ object Parser {
         }.build()
     }
 
-    fun parseStep(context: CarContext, nitroManeuver: NitroManeuver): Step {
+    fun parseStep(context: CarContext, nitroManeuver: NitroRoutingManeuver): Step {
         return Step.Builder(parseText(context, nitroManeuver.attributedInstructionVariants)).apply {
             nitroManeuver.roadName?.firstOrNull()?.let {
                 setRoad(it)

@@ -1,14 +1,15 @@
 import {
-  type AutoManeuver,
   type BaseManeuver,
   type ForkType,
   type KeepType,
   type Lane,
   type ManeuverImage,
   ManeuverType,
+  type MessageManeuver,
   type OffRampType,
   type OnRampType,
   type PreferredLane,
+  type RoutingManeuver,
   type TurnType,
 } from '../types/Maneuver';
 import type { NitroAttributedString } from './NitroAttributedString';
@@ -28,7 +29,7 @@ export interface LaneGuidance {
   lanes: Array<PreferredImageLane | ImageLane>;
 }
 
-export interface NitroManeuver extends BaseManeuver {
+export interface NitroRoutingManeuver extends BaseManeuver {
   attributedInstructionVariants: Array<NitroAttributedString>;
   symbolImage: NitroImage;
   junctionImage?: NitroImage;
@@ -43,6 +44,15 @@ export interface NitroManeuver extends BaseManeuver {
   linkedLaneGuidance?: LaneGuidance;
   cardBackgroundColor: NitroColor;
 }
+
+export interface NitroMessageManeuver {
+  title: string;
+  text?: string;
+  image?: NitroImage;
+  cardBackgroundColor: NitroColor;
+}
+
+export type NitroManeuver = Array<NitroRoutingManeuver> | NitroMessageManeuver;
 
 function convertManeuverImage(image: ManeuverImage): NitroImage;
 function convertManeuverImage(image: ManeuverImage | undefined): NitroImage | undefined;
@@ -65,7 +75,21 @@ function convertManeuverImage(image?: ManeuverImage): NitroImage | undefined {
   return NitroImageUtil.convert(image);
 }
 
-function convert(autoManeuver: AutoManeuver): NitroManeuver {
+function convert(autoManeuver: MessageManeuver): NitroMessageManeuver;
+function convert(autoManeuver: RoutingManeuver): NitroRoutingManeuver;
+function convert(
+  autoManeuver: RoutingManeuver | MessageManeuver
+): NitroRoutingManeuver | NitroMessageManeuver {
+  if (autoManeuver.type === 'message') {
+    const { title, image, text } = autoManeuver;
+    return {
+      title,
+      text,
+      image: convertManeuverImage(image),
+      cardBackgroundColor: NitroColorUtil.convert(autoManeuver.cardBackgroundColor),
+    };
+  }
+
   const {
     symbolImage,
     junctionImage,

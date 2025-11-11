@@ -1,7 +1,8 @@
 import {
-  type AutoManeuver,
   ManeuverType,
   type MapTemplate,
+  type MessageManeuver,
+  type RoutingManeuver,
   TrafficSide,
   TurnType,
 } from '@g4rb4g3/react-native-autoplay';
@@ -14,9 +15,10 @@ const cardBackgroundColor: ThemedColor = {
   lightColor: 'rgba(173, 232, 255, 1)',
 };
 
-const getManeuvers = (): Array<AutoManeuver> => [
+const getManeuvers = (): Array<RoutingManeuver> => [
   {
     id: uuid.v4(),
+    type: 'routing',
     attributedInstructionVariants: [
       {
         text: 'Straight',
@@ -66,6 +68,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
   },
   {
     id: uuid.v4(),
+    type: 'routing',
     attributedInstructionVariants: [{ text: 'Left' }],
     travelEstimates: {
       distanceRemaining: { unit: 'kilometers', value: 2 },
@@ -97,6 +100,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
   },
   {
     id: uuid.v4(),
+    type: 'routing',
     attributedInstructionVariants: [{ text: 'Right' }],
     travelEstimates: {
       distanceRemaining: { unit: 'kilometers', value: 2 },
@@ -116,6 +120,7 @@ const getManeuvers = (): Array<AutoManeuver> => [
   },
   {
     id: uuid.v4(),
+    type: 'routing',
     attributedInstructionVariants: [{ text: 'Arrived' }],
     travelEstimates: {
       distanceRemaining: { unit: 'kilometers', value: 2 },
@@ -134,7 +139,25 @@ const getManeuvers = (): Array<AutoManeuver> => [
 
 let interval: ReturnType<typeof setInterval> | null = null;
 
-const playManeuvers = (template: MapTemplate) => {
+const playManeuvers = (template: MapTemplate, isInitialCall = true) => {
+  if (isInitialCall) {
+    const message: MessageManeuver = {
+      cardBackgroundColor: 'pink',
+      title: 'Get ready...',
+      type: 'message',
+      image: {
+        type: 'glyph',
+        name: 'party_mode',
+      },
+      text: "Let's get started!",
+    };
+
+    template.updateManeuvers(message);
+
+    setTimeout(() => playManeuvers(template, false), 1000);
+    return;
+  }
+
   let maneuvers = getManeuvers();
 
   const [initialCurrent, initialNext] = maneuvers;
@@ -164,6 +187,19 @@ const playManeuvers = (template: MapTemplate) => {
       if (interval != null) {
         clearInterval(interval);
       }
+
+      const message: MessageManeuver = {
+        cardBackgroundColor: 'pink',
+        title: 'Congrats',
+        type: 'message',
+        image: {
+          type: 'glyph',
+          name: 'party_mode',
+        },
+        text: 'You have arrived!',
+      };
+
+      template.updateManeuvers(message);
       return;
     }
 

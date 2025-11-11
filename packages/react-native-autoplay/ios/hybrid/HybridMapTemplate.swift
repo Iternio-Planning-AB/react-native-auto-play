@@ -49,7 +49,7 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
         mapButtons: [NitroMapButton]
     ) throws -> TripSelectorCallback {
         var callback: TripSelectorCallback?
-        
+
         try RootModule.withMapTemplate(templateId: templateId) { template in
             callback = try template.showTripSelector(
                 trips: trips,
@@ -61,11 +61,11 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
                 mapButtons: mapButtons
             )
         }
-        
+
         guard let callback = callback else {
             throw AutoPlayError.templateNotFound(templateId)
         }
-        
+
         return callback
     }
 
@@ -92,11 +92,20 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
         }
     }
 
-    func updateManeuvers(templateId: String, maneuvers: [NitroManeuver]) throws
-    {
+    func updateManeuvers(templateId: String, maneuvers: NitroManeuver) throws {
         try RootModule.withMapTemplate(templateId: templateId) {
             template in
-            template.updateManeuvers(maneuvers: maneuvers)
+            switch maneuvers {
+            case .first(let routingManeuvers):
+                {
+                    template.updateManeuvers(maneuvers: routingManeuvers)
+                }()
+            case .second(let messageManeuver):
+                {
+                    template.updateManeuvers(messageManeuver: messageManeuver)
+                }()
+            }
+
         }
     }
 

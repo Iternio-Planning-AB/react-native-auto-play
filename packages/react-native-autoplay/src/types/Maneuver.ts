@@ -217,12 +217,24 @@ export type LinkedLaneGuidance = {
   lanes: Array<PreferredImageLane | ImageLane>;
 };
 
-export type AutoManeuver = Maneuver & {
+export type RoutingManeuver = Maneuver & {
   attributedInstructionVariants: Array<AttributedInstructionVariant>;
   symbolImage: ManeuverImage;
   junctionImage?: ManeuverImage;
   linkedLaneGuidance?: LinkedLaneGuidance;
   cardBackgroundColor: ThemedColor | string;
+  type: 'routing';
 };
 
-export type AutoManeuvers = [AutoManeuver, AutoManeuver | undefined];
+export type MessageManeuver = {
+  title: string;
+  /**
+   * @namespace Android
+   */
+  text?: string;
+  image?: ManeuverImage;
+  cardBackgroundColor: ThemedColor | string;
+  type: 'message';
+};
+
+export type AutoManeuver = [RoutingManeuver, RoutingManeuver | undefined] | MessageManeuver;

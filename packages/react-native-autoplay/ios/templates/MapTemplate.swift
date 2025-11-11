@@ -147,7 +147,9 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         _ mapTemplate: CPMapTemplate,
         displayStyleFor maneuver: CPManeuver
     ) -> CPManeuverDisplayStyle {
-        if maneuver.attributedInstructionVariants.count == 0 {
+        if maneuver.attributedInstructionVariants.count == 0
+            && maneuver.instructionVariants.count == 0
+        {
             return .symbolOnly
         }
         return .leadingSymbol
@@ -467,7 +469,38 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         updateVisibleTravelEstimate(visibleTravelEstimate: nil)
     }
 
-    func updateManeuvers(maneuvers: [NitroManeuver]) {
+    func updateManeuvers(messageManeuver: NitroMessageManeuver) {
+        guard let template = template as? CPMapTemplate else { return }
+        guard let navigationSession = navigationSession else { return }
+
+        let color = messageManeuver.cardBackgroundColor
+        let cardBackgroundColor = Parser.parseColor(color: color)
+
+        let maneuver = CPManeuver(id: messageManeuver.title)
+
+        if #available(iOS 15.4, *) {
+            maneuver.cardBackgroundColor = cardBackgroundColor
+        } else {
+            template.guidanceBackgroundColor = cardBackgroundColor
+        }
+
+        maneuver.instructionVariants = [messageManeuver.title]
+
+        if let symbolImage = Parser.parseNitroImage(
+            image: messageManeuver.image,
+            traitCollection: SceneStore.getRootTraitCollection()
+        ) {
+            maneuver.symbolImage = symbolImage
+        }
+
+        if #available(iOS 17.4, *) {
+            navigationSession.add([maneuver])
+        }
+
+        navigationSession.upcomingManeuvers = [maneuver]
+    }
+
+    func updateManeuvers(maneuvers: [NitroRoutingManeuver]) {
         guard let template = template as? CPMapTemplate else { return }
         guard let navigationSession = navigationSession else { return }
 

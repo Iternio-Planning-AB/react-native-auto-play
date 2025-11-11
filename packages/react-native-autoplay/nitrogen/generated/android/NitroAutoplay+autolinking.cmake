@@ -53,6 +53,7 @@ target_sources(
   ../nitrogen/generated/android/c++/JHybridHybridInformationTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridListTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridMapTemplateSpec.cpp
+  ../nitrogen/generated/android/c++/JNitroManeuver.cpp
   ../nitrogen/generated/android/c++/JVariant_PreferredImageLane_ImageLane.cpp
   ../nitrogen/generated/android/c++/JHybridHybridMessageTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridHybridSearchTemplateSpec.cpp

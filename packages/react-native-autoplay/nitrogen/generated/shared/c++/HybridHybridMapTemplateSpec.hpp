@@ -29,8 +29,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton;
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
 // Forward declaration of `TripPoint` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
-// Forward declaration of `NitroManeuver` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRoutingManeuver; }
+// Forward declaration of `NitroMessageManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMessageManeuver; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
@@ -46,7 +48,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "NitroMapButton.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "TripPoint.hpp"
-#include "NitroManeuver.hpp"
+#include "NitroRoutingManeuver.hpp"
+#include "NitroMessageManeuver.hpp"
+#include <variant>
 #include "TripConfig.hpp"
 
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
@@ -87,7 +91,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
       virtual void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) = 0;
       virtual void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) = 0;
-      virtual void updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) = 0;
+      virtual void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& maneuvers) = 0;
       virtual void startNavigation(const std::string& templateId, const TripConfig& trip) = 0;
       virtual void stopNavigation(const std::string& templateId) = 0;
 

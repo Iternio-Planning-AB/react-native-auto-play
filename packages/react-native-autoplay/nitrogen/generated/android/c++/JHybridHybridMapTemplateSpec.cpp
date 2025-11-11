@@ -61,8 +61,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
 // Forward declaration of `TripPreviewTextConfiguration` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPreviewTextConfiguration; }
-// Forward declaration of `NitroManeuver` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
+// Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRoutingManeuver; }
+// Forward declaration of `NitroMessageManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMessageManeuver; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -159,8 +161,10 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "TripPreviewTextConfiguration.hpp"
 #include "JTripPreviewTextConfiguration.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
-#include "NitroManeuver.hpp"
+#include "NitroRoutingManeuver.hpp"
+#include "NitroMessageManeuver.hpp"
 #include "JNitroManeuver.hpp"
+#include "JNitroRoutingManeuver.hpp"
 #include "NitroAttributedString.hpp"
 #include "JNitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
@@ -187,6 +191,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include "JTrafficSide.hpp"
 #include "ManeuverType.hpp"
 #include "JManeuverType.hpp"
+#include "JNitroMessageManeuver.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
 
@@ -283,17 +288,9 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       return __array;
     }());
   }
-  void JHybridHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::vector<NitroManeuver>& maneuvers) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroManeuver>> /* maneuvers */)>("updateManeuvers");
-    method(_javaPart, jni::make_jstring(templateId), [&]() {
-      size_t __size = maneuvers.size();
-      jni::local_ref<jni::JArrayClass<JNitroManeuver>> __array = jni::JArrayClass<JNitroManeuver>::newArray(__size);
-      for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = maneuvers[__i];
-        __array->setElement(__i, *JNitroManeuver::fromCpp(__element));
-      }
-      return __array;
-    }());
+  void JHybridHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& maneuvers) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
+    method(_javaPart, jni::make_jstring(templateId), JNitroManeuver::fromCpp(maneuvers));
   }
   void JHybridHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");

@@ -485,7 +485,7 @@ class Parser {
     }
 
     static func parseManeuver(
-        nitroManeuver: NitroManeuver,
+        nitroManeuver: NitroRoutingManeuver,
         traitCollection: UITraitCollection
     ) -> CPManeuver {
         let maneuver = CPManeuver(id: nitroManeuver.id)
@@ -578,7 +578,7 @@ class Parser {
     }
 
     @available(iOS 17.4, *)
-    static func getManeuverType(maneuver: NitroManeuver) -> CPManeuverType {
+    static func getManeuverType(maneuver: NitroRoutingManeuver) -> CPManeuverType {
         switch maneuver.maneuverType {
         case .depart:
             return .startRoute

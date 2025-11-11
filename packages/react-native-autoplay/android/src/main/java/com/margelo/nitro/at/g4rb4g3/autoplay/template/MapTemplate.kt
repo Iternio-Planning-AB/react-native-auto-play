@@ -7,10 +7,12 @@ import androidx.car.app.model.Action
 import androidx.car.app.model.Alert
 import androidx.car.app.model.AlertCallback
 import androidx.car.app.model.CarColor
+import androidx.car.app.model.CarIcon
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.NavigationManager
 import androidx.car.app.navigation.NavigationManagerCallback
 import androidx.car.app.navigation.model.Destination
+import androidx.car.app.navigation.model.MessageInfo
 import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
 import androidx.car.app.navigation.model.TravelEstimate
@@ -213,7 +215,7 @@ class MapTemplate(
     companion object {
         private lateinit var navigationManager: NavigationManager
         var isNavigating = false
-        var navigationInfo: RoutingInfo? = null
+        var navigationInfo: NavigationTemplate.NavigationInfo? = null
         var cardBackgroundColor: CarColor = CarColor.createCustom(Color.BLACK, Color.BLACK)
 
         private var destinationTravelEstimates: Array<TripPoint> = arrayOf()
@@ -283,7 +285,7 @@ class MapTemplate(
             AndroidAutoScreen.invalidateSurfaceScreens()
         }
 
-        fun updateManeuvers(maneuvers: Array<NitroManeuver>) {
+        fun updateManeuvers(maneuvers: NitroManeuver) {
             if (!isNavigating) {
                 return
             }
@@ -295,12 +297,37 @@ class MapTemplate(
                 throw InvalidParameterException("updateManeuvers, navigationManager not initialized, did you call startNavigation?")
             }
 
-            val current = maneuvers.getOrNull(0)
-            val next = maneuvers.getOrNull(1)
+            val routingInfo = maneuvers.asFirstOrNull()
+            val messageInfo = maneuvers.asSecondOrNull()
 
-            if (current == null) {
+            if (routingInfo.isNullOrEmpty() && messageInfo == null) {
                 navigationInfo = null
                 AndroidAutoScreen.invalidateSurfaceScreens()
+                return
+            }
+
+            if (messageInfo != null) {
+                val backgroundColor =
+                    if (context.isDarkMode) messageInfo.cardBackgroundColor.darkColor else messageInfo.cardBackgroundColor.lightColor
+                cardBackgroundColor = Parser.parseColor(backgroundColor)
+
+                navigationInfo = MessageInfo.Builder(messageInfo.title).apply {
+                    messageInfo.text?.let {
+                        setText(it)
+                    }
+                    messageInfo.image?.let {
+                        setImage(Parser.parseImage(context, it))
+                    }
+                }.build()
+
+                AndroidAutoScreen.invalidateSurfaceScreens()
+                return
+            }
+
+            val current = routingInfo?.getOrNull(0)
+            val next = routingInfo?.getOrNull(1)
+
+            if (current == null) {
                 return
             }
 

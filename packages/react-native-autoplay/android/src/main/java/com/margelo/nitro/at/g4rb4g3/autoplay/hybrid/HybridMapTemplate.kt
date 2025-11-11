@@ -101,7 +101,7 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
     }
 
     override fun updateManeuvers(
-        templateId: String, maneuvers: Array<NitroManeuver>
+        templateId: String, maneuvers: NitroManeuver
     ) {
         MapTemplate.updateManeuvers(maneuvers)
     }

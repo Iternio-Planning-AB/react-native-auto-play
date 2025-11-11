@@ -225,9 +225,21 @@ open class HybridHybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__vector_NitroManeuver_) -> bridge.Result_void_ {
+  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_) -> bridge.Result_void_ {
     do {
-      try self.__implementation.updateManeuvers(templateId: String(templateId), maneuvers: maneuvers.map({ __item in __item }))
+      try self.__implementation.updateManeuvers(templateId: String(templateId), maneuvers: { () -> NitroManeuver in
+        let __variant = maneuvers
+        switch __variant.index() {
+          case 0:
+            let __actual = __variant.get_0()
+            return .first(__actual.map({ __item in __item }))
+          case 1:
+            let __actual = __variant.get_1()
+            return .second(__actual)
+          default:
+            fatalError("Variant can never have index \(__variant.index())!")
+        }
+      }())
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

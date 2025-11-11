@@ -7,86 +7,53 @@
 
 package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
-import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
 
 
 /**
- * Represents the JavaScript object/struct "NitroManeuver".
+ * Represents the TypeScript variant "Array<NitroRoutingManeuver> | NitroMessageManeuver".
  */
+@Suppress("ClassName")
 @DoNotStrip
-@Keep
-data class NitroManeuver(
+sealed class NitroManeuver {
   @DoNotStrip
-  @Keep
-  val attributedInstructionVariants: Array<NitroAttributedString>,
+  data class First(@DoNotStrip val value: Array<NitroRoutingManeuver>): NitroManeuver()
   @DoNotStrip
-  @Keep
-  val symbolImage: NitroImage,
-  @DoNotStrip
-  @Keep
-  val junctionImage: Variant_GlyphImage_AssetImage?,
-  @DoNotStrip
-  @Keep
-  val turnType: TurnType?,
-  @DoNotStrip
-  @Keep
-  val angle: Double?,
-  @DoNotStrip
-  @Keep
-  val elementAngles: DoubleArray?,
-  @DoNotStrip
-  @Keep
-  val exitNumber: Double?,
-  @DoNotStrip
-  @Keep
-  val offRampType: OffRampType?,
-  @DoNotStrip
-  @Keep
-  val onRampType: OnRampType?,
-  @DoNotStrip
-  @Keep
-  val forkType: ForkType?,
-  @DoNotStrip
-  @Keep
-  val keepType: KeepType?,
-  @DoNotStrip
-  @Keep
-  val linkedLaneGuidance: LaneGuidance?,
-  @DoNotStrip
-  @Keep
-  val cardBackgroundColor: NitroColor,
-  @DoNotStrip
-  @Keep
-  val id: String,
-  @DoNotStrip
-  @Keep
-  val travelEstimates: TravelEstimates,
-  @DoNotStrip
-  @Keep
-  val trafficSide: TrafficSide,
-  @DoNotStrip
-  @Keep
-  val maneuverType: ManeuverType,
-  @DoNotStrip
-  @Keep
-  val roadName: Array<String>?,
-  @DoNotStrip
-  @Keep
-  val highwayExitLabel: String?
-) {
-  /* primary constructor */
+  data class Second(@DoNotStrip val value: NitroMessageManeuver): NitroManeuver()
 
-  private companion object {
-    /**
-     * Constructor called from C++
-     */
-    @DoNotStrip
-    @Keep
-    @Suppress("unused")
-    @JvmStatic
-    private fun fromCpp(attributedInstructionVariants: Array<NitroAttributedString>, symbolImage: NitroImage, junctionImage: Variant_GlyphImage_AssetImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: NitroColor, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroManeuver {
-      return NitroManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, linkedLaneGuidance, cardBackgroundColor, id, travelEstimates, trafficSide, maneuverType, roadName, highwayExitLabel)
+  @Deprecated("getAs() is not type-safe. Use fold/asFirstOrNull/asSecondOrNull instead.", level = DeprecationLevel.ERROR)
+  inline fun <reified T> getAs(): T? = when (this) {
+    is First -> value as? T
+    is Second -> value as? T
+  }
+
+  val isFirst: Boolean
+    get() = this is First
+  val isSecond: Boolean
+    get() = this is Second
+
+  fun asFirstOrNull(): Array<NitroRoutingManeuver>? {
+    val value = (this as? First)?.value ?: return null
+    return value
+  }
+  fun asSecondOrNull(): NitroMessageManeuver? {
+    val value = (this as? Second)?.value ?: return null
+    return value
+  }
+
+  inline fun <R> match(first: (Array<NitroRoutingManeuver>) -> R, second: (NitroMessageManeuver) -> R): R {
+    return when (this) {
+      is First -> first(value)
+      is Second -> second(value)
     }
+  }
+
+  companion object {
+    @JvmStatic
+    @DoNotStrip
+    fun create(value: Array<NitroRoutingManeuver>): NitroManeuver = First(value)
+    @JvmStatic
+    @DoNotStrip
+    fun create(value: NitroMessageManeuver): NitroManeuver = Second(value)
   }
 }

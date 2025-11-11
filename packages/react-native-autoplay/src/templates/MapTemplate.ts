@@ -6,7 +6,7 @@ import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import type { HybridMapTemplate as NitroHybridMapTemplate } from '../specs/HybridMapTemplate.nitro';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
-import type { AutoManeuvers } from '../types/Maneuver';
+import type { AutoManeuver } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
   TripConfig,
@@ -16,7 +16,7 @@ import type {
 } from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
-import { type NitroManeuver, NitroManeuverUtil } from '../utils/NitroManeuver';
+import { NitroManeuverUtil, type NitroRoutingManeuver } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import {
   type HeaderActionsIos,
@@ -273,17 +273,23 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * @namespace Android sets all the supplied maneuvers whenever called
    * @namespace iOS will update travelEstimates only when passing in maneuvers with the same id
    */
-  public updateManeuvers(maneuvers: AutoManeuvers) {
-    const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
-      if (maneuver == null) {
+  public updateManeuvers(maneuvers: AutoManeuver) {
+    if (Array.isArray(maneuvers)) {
+      const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
+        if (maneuver == null) {
+          return acc;
+        }
+
+        acc.push(NitroManeuverUtil.convert(maneuver));
         return acc;
-      }
+      }, [] as NitroRoutingManeuver[]);
 
-      acc.push(NitroManeuverUtil.convert(maneuver));
-      return acc;
-    }, [] as NitroManeuver[]);
+      HybridMapTemplate.updateManeuvers(this.id, nitroManeuvers);
+      return;
+    }
 
-    HybridMapTemplate.updateManeuvers(this.id, nitroManeuvers);
+    const messageManeuver = NitroManeuverUtil.convert(maneuvers);
+    HybridMapTemplate.updateManeuvers(this.id, messageManeuver);
   }
 
   /**

@@ -80,7 +80,7 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun updateManeuvers(templateId: String, maneuvers: Array<NitroManeuver>): Unit
+  abstract fun updateManeuvers(templateId: String, maneuvers: NitroManeuver): Unit
   
   @DoNotStrip
   @Keep

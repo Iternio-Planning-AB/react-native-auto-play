@@ -90,14 +90,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroCarPlayDas
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroGridButton; }
-// Forward declaration of `NitroManeuver` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroMapButtonType; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton; }
+// Forward declaration of `NitroMessageManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMessageManeuver; }
 // Forward declaration of `NitroNavigationAlert` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroNavigationAlert; }
+// Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
+namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroRow` to properly resolve imports.
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRow; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
@@ -183,10 +185,11 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ZoomEvent; 
 #include "NitroCarPlayDashboardButton.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
-#include "NitroManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
+#include "NitroMessageManeuver.hpp"
 #include "NitroNavigationAlert.hpp"
+#include "NitroRoutingManeuver.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
