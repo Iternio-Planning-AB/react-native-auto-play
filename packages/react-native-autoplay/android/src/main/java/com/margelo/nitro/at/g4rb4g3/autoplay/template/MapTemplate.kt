@@ -38,7 +38,7 @@ class MapTemplate(
     override val templateId: String
         get() = config.id
 
-    private var alertPriority: Int = 0;
+    private var alertPriority = 0
     private var alertIds: HashSet<Int> = HashSet()
 
 
@@ -126,7 +126,7 @@ class MapTemplate(
     fun showAlert(alertConfig: NitroNavigationAlert) {
         if (alertPriority > alertConfig.priority) {
             // ignore alerts with lower priority than current alert
-            return;
+            return
         }
 
         val title = Parser.parseText(alertConfig.title)
