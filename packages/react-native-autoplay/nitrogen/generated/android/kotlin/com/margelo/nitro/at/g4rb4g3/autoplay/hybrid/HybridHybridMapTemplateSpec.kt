@@ -49,9 +49,14 @@ abstract class HybridHybridMapTemplateSpec: HybridObject() {
   @Keep
   abstract fun createMapTemplate(config: MapTemplateConfig): Unit
   
+  abstract fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert): () -> Unit
+  
   @DoNotStrip
   @Keep
-  abstract fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert): Unit
+  private fun showNavigationAlert_cxx(templateId: String, alert: NitroNavigationAlert): Func_void {
+    val __result = showNavigationAlert(templateId, alert)
+    return Func_void_java(__result)
+  }
   
   abstract fun showTripSelector(templateId: String, trips: Array<TripsConfig>, selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: (tripId: String, routeId: String) -> Unit, onTripStarted: (tripId: String, routeId: String) -> Unit, onBackPressed: () -> Unit, mapButtons: Array<NitroMapButton>): TripSelectorCallback
   

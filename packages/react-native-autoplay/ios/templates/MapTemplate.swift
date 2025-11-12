@@ -330,6 +330,16 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         template.present(navigationAlert: alert, animated: true)
     }
 
+    func dismissNavigationAlert(alertId: Double) {
+        if alertStore[alertId] == nil {
+            return
+        }
+
+        guard let template = self.template as? CPMapTemplate else { return }
+        template.dismissNavigationAlert(animated: true) { _ in
+        }
+    }
+
     // MARK: trip selection
     func showTripSelector(
         trips: [TripsConfig],

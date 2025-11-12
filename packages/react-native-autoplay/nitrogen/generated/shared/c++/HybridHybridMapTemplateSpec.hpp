@@ -37,6 +37,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMessageMan
 namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 
 #include "MapTemplateConfig.hpp"
+#include <functional>
 #include <string>
 #include "NitroNavigationAlert.hpp"
 #include "TripSelectorCallback.hpp"
@@ -44,7 +45,6 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripConfig; }
 #include <vector>
 #include <optional>
 #include "TripPreviewTextConfiguration.hpp"
-#include <functional>
 #include "NitroMapButton.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "TripPoint.hpp"
@@ -85,7 +85,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     public:
       // Methods
       virtual void createMapTemplate(const MapTemplateConfig& config) = 0;
-      virtual void showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) = 0;
+      virtual std::function<void()> showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) = 0;
       virtual TripSelectorCallback showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted, const std::function<void()>& onBackPressed, const std::vector<NitroMapButton>& mapButtons) = 0;
       virtual void hideTripSelector(const std::string& templateId) = 0;
       virtual void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;

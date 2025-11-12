@@ -31,10 +31,17 @@ class HybridMapTemplate: HybridHybridMapTemplateSpec {
     }
 
     func showNavigationAlert(templateId: String, alert: NitroNavigationAlert)
-        throws
+        throws -> () -> Void
     {
+        var mapTemplate: MapTemplate?
+
         try RootModule.withMapTemplate(templateId: templateId) { template in
             template.showAlert(alertConfig: alert)
+            mapTemplate = template
+        }
+
+        return {
+            mapTemplate?.dismissNavigationAlert(alertId: alert.id)
         }
     }
 

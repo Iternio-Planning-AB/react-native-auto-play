@@ -1,5 +1,6 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
+import androidx.car.app.AppManager
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
@@ -19,9 +20,17 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
         AndroidAutoTemplate.Companion.setTemplate(config.id, template)
     }
 
-    override fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert) {
+    override fun showNavigationAlert(templateId: String, alert: NitroNavigationAlert): () -> Unit {
         val template = AndroidAutoTemplate.Companion.getTemplate<MapTemplate>(templateId)
         template.showAlert(alert)
+
+        return {
+            val carContext =
+                AndroidAutoSession.getCarContext(AndroidAutoSession.Companion.ROOT_SESSION)
+                    ?: throw IllegalArgumentException("navigation alert dismiss failed, carContext for ${AndroidAutoSession.Companion.ROOT_SESSION} not found")
+
+            carContext.getCarService(AppManager::class.java).dismissAlert(alert.id.toInt())
+        }
     }
 
     override fun showTripSelector(

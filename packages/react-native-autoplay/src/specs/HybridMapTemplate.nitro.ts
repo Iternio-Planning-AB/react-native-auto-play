@@ -4,6 +4,7 @@ import type {
   TripSelectorCallback,
   VisibleTravelEstimate,
 } from '../templates/MapTemplate';
+import type { CleanupCallback } from '../types/Event';
 import type {
   TripConfig,
   TripPoint,
@@ -19,7 +20,7 @@ interface MapTemplateConfig extends NitroTemplateConfig, NitroMapTemplateConfig 
 
 export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   createMapTemplate(config: MapTemplateConfig): void;
-  showNavigationAlert(templateId: string, alert: NitroNavigationAlert): void;
+  showNavigationAlert(templateId: string, alert: NitroNavigationAlert): CleanupCallback;
   showTripSelector(
     templateId: string,
     trips: Array<TripsConfig>,

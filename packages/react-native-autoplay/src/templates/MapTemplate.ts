@@ -190,9 +190,10 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * brings up a navigation alert
    * calling this with the same alert.id will update an already shown alert
    * ⚠️ updating an existing alert is currently broken on Android Automotive, it brings up a new alert for each call
+   * @returns a callback to dismiss the navigation alert
    */
   public showAlert(alert: NavigationAlert) {
-    HybridMapTemplate.showNavigationAlert(this.id, NitroAlertUtil.convert(alert));
+    return HybridMapTemplate.showNavigationAlert(this.id, NitroAlertUtil.convert(alert));
   }
 
   /**
