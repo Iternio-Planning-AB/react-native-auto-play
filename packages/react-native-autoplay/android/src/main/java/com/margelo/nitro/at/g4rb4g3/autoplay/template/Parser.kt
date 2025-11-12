@@ -31,10 +31,12 @@ import androidx.car.app.navigation.model.Step
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSources
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.image.CloseableBitmap
+import com.facebook.imagepipeline.image.CloseableXml
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.react.views.imagehelper.ImageSource
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
@@ -54,7 +56,6 @@ import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedString
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroButtonStyle
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroImage
-import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroManeuver
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
 import com.margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRoutingManeuver
@@ -475,6 +476,11 @@ object Parser {
             val image = it.get()
             if (image is CloseableBitmap) {
                 bitmap = image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+            }
+
+            if (image is CloseableXml) {
+                val drawable = image.buildDrawable()
+                bitmap = drawable?.toBitmap(width = image.width, height = image.height, Bitmap.Config.ARGB_8888)
             }
 
             CloseableReference.closeSafely(result)
