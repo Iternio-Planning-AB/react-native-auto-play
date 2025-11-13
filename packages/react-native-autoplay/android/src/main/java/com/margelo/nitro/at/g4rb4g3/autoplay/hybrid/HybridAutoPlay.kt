@@ -218,7 +218,7 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
     override fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit> {
         return Promise.Companion.async {
             val screenManager = AndroidAutoScreen.Companion.getScreenManager()
-                ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")
+                ?: throw IllegalArgumentException("popToTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
                 return@async
             }
