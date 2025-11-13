@@ -135,9 +135,13 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
                 templateId: templateId
             ) { template, interfaceController in
                 if template is CPAlertTemplate {
+                    let animated = try await !interfaceController.dismissTemplate(
+                        animated: false
+                    )
+
                     let _ = try await interfaceController.presentTemplate(
                         template,
-                        animated: true
+                        animated: animated
                     )
                 } else {
                     let _ = try await interfaceController.pushTemplate(
@@ -154,18 +158,9 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
             return try await RootModule.withInterfaceController {
                 interfaceController in
 
-                let hasPresentedTemplate =
-                    await interfaceController.hasPresentedTemplate()
-                if hasPresentedTemplate {
-                    let presentedTemplateId =
-                        try await interfaceController.dismissTemplate(
-                            animated: animate ?? true
-                        )
-                    if presentedTemplateId != nil {
-                        HybridAutoPlay.removeListeners(
-                            templateId: presentedTemplateId!
-                        )
-                    }
+                if try await interfaceController.dismissTemplate(
+                    animated: animate ?? true
+                ) {
                     return
                 }
 
@@ -186,18 +181,9 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
                 interfaceController in
 
                 let hasPresentedTemplate =
-                    await interfaceController.hasPresentedTemplate()
-                if hasPresentedTemplate {
-                    let presentedTemplateId =
-                        try await interfaceController.dismissTemplate(
-                            animated: false
-                        )
-                    if presentedTemplateId != nil {
-                        HybridAutoPlay.removeListeners(
-                            templateId: presentedTemplateId!
-                        )
-                    }
-                }
+                    try await interfaceController.dismissTemplate(
+                        animated: false
+                    )
 
                 let templateIds =
                     try await interfaceController.popToRootTemplate(
@@ -217,19 +203,9 @@ class HybridAutoPlay: HybridHybridAutoPlaySpec {
             return try await RootModule.withInterfaceController {
                 interfaceController in
 
-                let hasPresentedTemplate =
-                    await interfaceController.hasPresentedTemplate()
-                if hasPresentedTemplate {
-                    let presentedTemplateId =
-                        try await interfaceController.dismissTemplate(
-                            animated: animate ?? true
-                        )
-                    if presentedTemplateId != nil {
-                        HybridAutoPlay.removeListeners(
-                            templateId: presentedTemplateId!
-                        )
-                    }
-                }
+                let _ = try await interfaceController.dismissTemplate(
+                    animated: animate ?? true
+                )
 
                 let templateIds = try await interfaceController.popToTemplate(
                     templateId: templateId,

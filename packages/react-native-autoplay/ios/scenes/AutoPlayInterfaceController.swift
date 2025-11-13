@@ -47,11 +47,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     var rootTemplateId: String? {
         return interfaceController.rootTemplate.id
     }
-
-    func hasPresentedTemplate() -> Bool {
-        return interfaceController.presentedTemplate != nil
-    }
-
+    
     func pushTemplate(
         _ templateToPush: CPTemplate,
         animated: Bool
@@ -153,19 +149,16 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
     func dismissTemplate(
         animated: Bool
-    ) async throws -> String? {
-        let templateId = interfaceController.presentedTemplate?.id
+    ) async throws -> Bool {
+        if interfaceController.presentedTemplate == nil {
+            return false
+        }
 
         try await interfaceController.dismissTemplate(
             animated: animated
         )
-
-        if templateId != nil {
-            self.templateStore.removeTemplate(templateId: templateId!)
-            return templateId
-        }
-
-        return nil
+        
+        return true
     }
 
     // MARK: CPInterfaceControllerDelegate
@@ -188,7 +181,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         if rootTemplateId == templateId {
             // this makes sure we purge outdated CPSearchTemplate since that one can be popped on with a CarPlay native button we can not intercept
-            templateStore.purge(except: templateId)
+            templateStore.purge()
         }
 
         templateStore.getTemplate(templateId: templateId)?.onDidAppear(
@@ -216,5 +209,13 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         templateStore.getTemplate(templateId: templateId)?.onDidDisappear(
             animated: animated
         )
+
+        if aTemplate is CPAlertTemplate {
+            templateStore.removeTemplate(templateId: templateId)
+
+            HybridAutoPlay.removeListeners(
+                templateId: templateId
+            )
+        }
     }
 }

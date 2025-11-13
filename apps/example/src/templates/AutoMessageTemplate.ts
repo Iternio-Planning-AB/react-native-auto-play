@@ -60,7 +60,7 @@ const getTemplate = ({
         },
       ],
     },
-    headerActions: AutoTemplate.headerActions,
+    headerActions: AutoTemplate.headerActions.android,
     onWillAppear: () => console.log('MessageTemplate onWillAppear'),
     onDidAppear: () => console.log('MessageTemplate onDidAppear'),
     onWillDisappear: () => console.log('MessageTemplate onWillDisappear'),

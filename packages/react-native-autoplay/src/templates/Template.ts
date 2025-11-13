@@ -7,6 +7,9 @@ import type { NitroMapButton } from '../utils/NitroMapButton';
 export type ActionButton<T> = ActionButtonAndroid<T> | ActionButtonIos<T>;
 
 export type HeaderActionsIos<T> = {
+  /**
+   * @platform iOS - the back button can not be hidden or disabled, if you don't define it iOS will provide a default back button popping the template
+   */
   backButton?: BackButton<T>;
   leadingNavigationBarButtons?: [ActionButtonIos<T>, ActionButtonIos<T>] | [ActionButtonIos<T>];
   trailingNavigationBarButtons?: [ActionButtonIos<T>, ActionButtonIos<T>] | [ActionButtonIos<T>];

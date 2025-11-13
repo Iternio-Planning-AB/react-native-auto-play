@@ -1,10 +1,12 @@
 package com.margelo.nitro.at.g4rb4g3.autoplay.hybrid
 
+import androidx.car.app.Screen
 import com.margelo.nitro.at.g4rb4g3.autoplay.ActivityRenderStateProvider
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoScreen
 import com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoSession
 import com.margelo.nitro.at.g4rb4g3.autoplay.VirtualRenderer
 import com.margelo.nitro.at.g4rb4g3.autoplay.template.AndroidAutoTemplate
+import com.margelo.nitro.at.g4rb4g3.autoplay.template.MessageTemplate
 import com.margelo.nitro.at.g4rb4g3.autoplay.utils.ThreadUtil
 import com.margelo.nitro.core.Promise
 
@@ -139,8 +141,25 @@ class HybridAutoPlay : HybridHybridAutoPlaySpec() {
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")
 
             val result = ThreadUtil.postOnUiAndAwait {
+                var topMessageScreen: Screen? = null
+
+                if (screenManager.screenStack.isNotEmpty()) {
+                    screenManager.top.marker?.let {
+                        if (AndroidAutoTemplate.hasTemplate<MessageTemplate>(it)) {
+                            topMessageScreen = screenManager.top
+                        }
+                    }
+                }
                 val screen = AndroidAutoScreen(context, templateId, template.parse())
                 screenManager.push(screen)
+
+                topMessageScreen?.let {
+                    if (AndroidAutoTemplate.hasTemplate<MessageTemplate>(templateId)) {
+                        screenManager.remove(topMessageScreen)
+                    } else {
+                        screenManager.push(topMessageScreen)
+                    }
+                }
             }
 
             if (result.isFailure) {

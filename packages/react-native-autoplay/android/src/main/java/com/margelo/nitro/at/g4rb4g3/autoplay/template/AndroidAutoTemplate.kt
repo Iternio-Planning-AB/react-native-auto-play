@@ -40,6 +40,10 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
             return template ?: throw IllegalArgumentException()
         }
 
+        inline fun <reified T> hasTemplate(id: String): Boolean {
+            return templates[id] is T
+        }
+
         fun getConfig(id: String): Any? {
             return templates[id]?.config
         }

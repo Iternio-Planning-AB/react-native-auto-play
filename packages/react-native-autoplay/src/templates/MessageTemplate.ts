@@ -1,18 +1,20 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import type { AutoImage, BaseMapTemplateConfig, CustomActionButtonAndroid, TextButton } from '..';
+import uuid from 'react-native-uuid';
+import {
+  type AutoImage,
+  type BaseMapTemplateConfig,
+  type CustomActionButtonAndroid,
+  type HeaderActionsAndroid,
+  HybridAutoPlay,
+  type TextButton,
+} from '..';
 import type { HybridMessageTemplate as NitroHybridMessageTemplate } from '../specs/HybridMessageTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroImage, NitroImageUtil } from '../utils/NitroImage';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import {
-  type HeaderActions,
-  type NitroBaseMapTemplateConfig,
-  type NitroTemplateConfig,
-  Template,
-  type TemplateConfig,
-} from './Template';
+import type { NitroBaseMapTemplateConfig, NitroTemplateConfig, TemplateConfig } from './Template';
 
 const HybridMessageTemplate =
   NitroModules.createHybridObject<NitroHybridMessageTemplate>('HybridMessageTemplate');
@@ -37,7 +39,7 @@ export type MessageTemplateConfig = Omit<
    * action buttons, usually at the top right on Android
    * @namespace Android
    */
-  headerActions?: HeaderActions<MessageTemplate>;
+  headerActions?: HeaderActionsAndroid<MessageTemplate>;
   /**
    * image shown at the top of the message on Android
    * @namespace Android
@@ -65,18 +67,15 @@ export type MessageTemplateConfig = Omit<
 };
 
 /**
- * On iOS the MessageTemplate behaves slightly different than on Android. It is presented instead of pushed.
- * Also on iOS it is always on top of all other templates, while on Android it can be overlayed by other templates.
+ * This template is always pushed on top and will stay on top until it is popped.
+ * Other templates being pushed will end up below this one on the stack.
+ * Pushing another MessageTemplate will pop the currently shown one.
  */
-export class MessageTemplate extends Template<
-  MessageTemplateConfig,
-  HeaderActions<MessageTemplate>
-> {
+export class MessageTemplate {
   private template = this;
+  private id = uuid.v4();
 
   constructor(config: MessageTemplateConfig) {
-    super(config);
-
     const { headerActions, image, mapConfig, actions, ...rest } = config;
 
     const platformActions =
@@ -87,7 +86,7 @@ export class MessageTemplate extends Template<
     const nitroConfig: NitroMessageTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
-      headerActions: NitroActionUtil.convert(this.template, headerActions),
+      headerActions: NitroActionUtil.convert(this.template, { android: headerActions }),
       image: NitroImageUtil.convert(image),
       actions: platformActions,
       mapConfig: mapConfig
@@ -99,5 +98,12 @@ export class MessageTemplate extends Template<
     };
 
     HybridMessageTemplate.createMessageTemplate(nitroConfig);
+  }
+
+  /**
+   * push this template on the stack and show it to the user
+   */
+  public push() {
+    return HybridAutoPlay.pushTemplate(this.id);
   }
 }
