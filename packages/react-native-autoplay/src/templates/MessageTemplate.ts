@@ -73,7 +73,7 @@ export type MessageTemplateConfig = Omit<
  */
 export class MessageTemplate {
   private template = this;
-  private id = uuid.v4();
+  public id = uuid.v4();
 
   constructor(config: MessageTemplateConfig) {
     const { headerActions, image, mapConfig, actions, ...rest } = config;
