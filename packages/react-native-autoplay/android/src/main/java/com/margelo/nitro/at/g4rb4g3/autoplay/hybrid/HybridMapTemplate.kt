@@ -47,8 +47,8 @@ class HybridMapTemplate : HybridHybridMapTemplateSpec() {
         trips: Array<TripsConfig>,
         selectedTripId: String?,
         textConfig: TripPreviewTextConfiguration,
-        onTripSelected: (String, String) -> Unit,
-        onTripStarted: (String, String) -> Unit,
+        onTripSelected: (tripId: String, routeId: String) -> Unit,
+        onTripStarted: (tripId: String, routeId: String) -> Unit,
         onBackPressed: () -> Unit,
         mapButtons: Array<NitroMapButton>
     ): TripSelectorCallback {

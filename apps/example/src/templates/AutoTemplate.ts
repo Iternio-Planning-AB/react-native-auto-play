@@ -207,7 +207,6 @@ const mapButtonHandler: (template: MapTemplate) => void = (template) => {
 
   const tripSelector = template.showTripSelector({
     trips: AutoTrip,
-    selectedTripId: null,
     textConfig: TextConfig,
     onTripSelected,
     onTripStarted: (tripId, routeId) => {

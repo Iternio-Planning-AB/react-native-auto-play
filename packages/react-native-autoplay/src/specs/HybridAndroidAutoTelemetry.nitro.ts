@@ -10,7 +10,5 @@ export interface HybridAndroidAutoTelemetry extends HybridObject<{ android: 'kot
    * @returns callback to remove the listener
    * @namespace Android
    */
-  registerTelemetryListener(
-    callback: (tlm: Telemetry | null, error: string | null) => void
-  ): CleanupCallback;
+  registerTelemetryListener(callback: (tlm?: Telemetry, error?: string) => void): CleanupCallback;
 }

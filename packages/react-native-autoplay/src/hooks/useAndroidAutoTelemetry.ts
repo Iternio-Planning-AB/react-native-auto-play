@@ -29,8 +29,8 @@ export const useAndroidAutoTelemetry = ({
   requiredPermissions,
 }: Props) => {
   const [permissionsGranted, setPermissionsGranted] = useState(false);
-  const [telemetry, setTelemetry] = useState<Telemetry | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [telemetry, setTelemetry] = useState<Telemetry | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -66,12 +66,10 @@ export const useAndroidAutoTelemetry = ({
       return;
     }
 
-    const remove = HybridAndroidAutoTelemetry?.registerTelemetryListener(
-      (tlm: Telemetry | null, errorMessage: string | null) => {
-        setError(errorMessage);
-        setTelemetry(tlm);
-      }
-    );
+    const remove = HybridAndroidAutoTelemetry?.registerTelemetryListener((tlm, errorMessage) => {
+      setError(errorMessage);
+      setTelemetry(tlm);
+    });
 
     return () => {
       remove?.();

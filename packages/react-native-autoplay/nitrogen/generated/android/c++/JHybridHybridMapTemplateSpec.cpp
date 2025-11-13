@@ -248,7 +248,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JTripsConfig>> __array = jni::JArrayClass<JTripsConfig>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = trips[__i];
-        __array->setElement(__i, *JTripsConfig::fromCpp(__element));
+        auto __elementJni = JTripsConfig::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
       }
       return __array;
     }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__string_cxx::fromCpp(onTripSelected), JFunc_void_std__string_std__string_cxx::fromCpp(onTripStarted), JFunc_void_cxx::fromCpp(onBackPressed), [&]() {
@@ -256,7 +257,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = mapButtons[__i];
-        __array->setElement(__i, *JNitroMapButton::fromCpp(__element));
+        auto __elementJni = JNitroMapButton::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
       }
       return __array;
     }());
@@ -273,7 +275,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = buttons.value()[__i];
-        __array->setElement(__i, *JNitroMapButton::fromCpp(__element));
+        auto __elementJni = JNitroMapButton::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
       }
       return __array;
     }() : nullptr);
@@ -289,7 +292,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       jni::local_ref<jni::JArrayClass<JTripPoint>> __array = jni::JArrayClass<JTripPoint>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         const auto& __element = steps[__i];
-        __array->setElement(__i, *JTripPoint::fromCpp(__element));
+        auto __elementJni = JTripPoint::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
       }
       return __array;
     }());

@@ -89,7 +89,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           jni::local_ref<jni::JArrayClass<JNitroRoutingManeuver>> __array = jni::JArrayClass<JNitroRoutingManeuver>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = std::get<0>(variant)[__i];
-            __array->setElement(__i, *JNitroRoutingManeuver::fromCpp(__element));
+            auto __elementJni = JNitroRoutingManeuver::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
           }
           return __array;
         }());

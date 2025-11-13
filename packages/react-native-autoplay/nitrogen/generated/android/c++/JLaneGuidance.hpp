@@ -90,7 +90,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.instructionVariants[__i];
-            __array->setElement(__i, *jni::make_jstring(__element));
+            auto __elementJni = jni::make_jstring(__element);
+            __array->setElement(__i, *__elementJni);
           }
           return __array;
         }(),
@@ -99,7 +100,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           jni::local_ref<jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>> __array = jni::JArrayClass<JVariant_PreferredImageLane_ImageLane>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.lanes[__i];
-            __array->setElement(__i, *JVariant_PreferredImageLane_ImageLane::fromCpp(__element));
+            auto __elementJni = JVariant_PreferredImageLane_ImageLane::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
           }
           return __array;
         }()

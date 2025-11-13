@@ -24,7 +24,7 @@ export interface HybridMapTemplate extends HybridObject<{ android: 'kotlin'; ios
   showTripSelector(
     templateId: string,
     trips: Array<TripsConfig>,
-    selectedTripId: string | null,
+    selectedTripId: string | undefined,
     textConfig: TripPreviewTextConfiguration,
     onTripSelected: (tripId: string, routeId: string) => void,
     onTripStarted: (tripId: string, routeId: string) => void,

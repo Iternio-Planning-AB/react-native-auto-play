@@ -40,7 +40,7 @@ export type HeaderActionsAndroidMap<T> =
 
 export interface NavigationAlertCallbacks {
   dismiss: CleanupCallback;
-  update: (title: AutoText, subtitle: AutoText | null) => void;
+  update: (title: AutoText, subtitle?: AutoText) => void;
 }
 
 export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemplateConfig {
@@ -215,7 +215,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     mapButtons,
   }: {
     trips: Array<TripsConfig>;
-    selectedTripId: string | null;
+    selectedTripId?: string;
     textConfig: TripPreviewTextConfiguration;
     onTripSelected: (tripId: string, routeId: string) => void;
     onTripStarted: (tripId: string, routeId: string) => void;

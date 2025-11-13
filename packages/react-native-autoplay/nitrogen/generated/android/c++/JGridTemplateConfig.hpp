@@ -191,7 +191,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.headerActions.value()[__i];
-            __array->setElement(__i, *JNitroAction::fromCpp(__element));
+            auto __elementJni = JNitroAction::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
           }
           return __array;
         }() : nullptr,
@@ -201,7 +202,8 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
           jni::local_ref<jni::JArrayClass<JNitroGridButton>> __array = jni::JArrayClass<JNitroGridButton>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
             const auto& __element = value.buttons[__i];
-            __array->setElement(__i, *JNitroGridButton::fromCpp(__element));
+            auto __elementJni = JNitroGridButton::fromCpp(__element);
+            __array->setElement(__i, *__elementJni);
           }
           return __array;
         }(),
