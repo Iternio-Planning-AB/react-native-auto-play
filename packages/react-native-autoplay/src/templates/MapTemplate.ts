@@ -220,6 +220,10 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     onTripSelected: (tripId: string, routeId: string) => void;
     onTripStarted: (tripId: string, routeId: string) => void;
     onBackPressed: () => void;
+    /**
+     * @namespace iOS - always shown no matter if navigation is started or not
+     * @namespace Android - these buttons will only be shown when navigation is not started, otherwise AA will not show them
+     */
     mapButtons?: MapTemplateConfig['mapButtons'];
   }): TripSelectorCallback {
     if (
