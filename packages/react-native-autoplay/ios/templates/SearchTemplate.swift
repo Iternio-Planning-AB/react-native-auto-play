@@ -7,26 +7,26 @@
 
 import CarPlay
 
-class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
+class SearchTemplate: NSObject, AutoPlayTemplate, CPSearchTemplateDelegate {
+    var template: CPSearchTemplate
     var config: SearchTemplateConfig
+    
+    var autoDismissMs: Double? {
+        return config.autoDismissMs
+    }
+
+    func getTemplate() -> CPTemplate {
+        return template
+    }
 
     var completionHandler: (([CPListItem]) -> Void)?
-
     var pushedListTemplate: ListTemplate?
-
     var searchText = ""
-
     var isInitialized = false
 
     init(config: SearchTemplateConfig) {
         self.config = config
-        let template = CPSearchTemplate(id: config.id)
-
-        super.init(
-            template: template,
-            header: config.headerActions,
-            autoDismissMs: config.autoDismissMs
-        )
+        template = CPSearchTemplate(id: config.id)
     }
 
     func updateSearchResults(results: NitroSection) {
@@ -34,7 +34,7 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
         invalidate()
     }
 
-    override func invalidate() {
+    func invalidate() {
         // if we have pushed a list template update it
         if let listTemplate = pushedListTemplate {
             listTemplate.updateSections(sections: [config.results])
@@ -54,34 +54,26 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
         self.completionHandler = nil
     }
 
-    override func onWillAppear(animated: Bool) {
+    func onWillAppear(animated: Bool) {
         self.pushedListTemplate = nil
         config.onWillAppear?(animated)
     }
 
-    override func onDidAppear(animated: Bool) {
+    func onDidAppear(animated: Bool) {
         config.onDidAppear?(animated)
-
-        guard let template = self.template as? CPSearchTemplate else {
-            return
-        }
         template.delegate = self
     }
 
-    override func onWillDisappear(animated: Bool) {
+    func onWillDisappear(animated: Bool) {
         config.onWillDisappear?(animated)
-
-        guard let template = self.template as? CPSearchTemplate else {
-            return
-        }
         template.delegate = nil
     }
 
-    override func onDidDisappear(animated: Bool) {
+    func onDidDisappear(animated: Bool) {
         config.onDidDisappear?(animated)
     }
 
-    override func onPopped() {
+    func onPopped() {
         config.onPopped?()
     }
 

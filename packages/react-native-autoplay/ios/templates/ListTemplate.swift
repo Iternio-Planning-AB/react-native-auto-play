@@ -7,34 +7,43 @@
 
 import CarPlay
 
-class ListTemplate: AutoPlayTemplate {
+class ListTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
+    let template: CPListTemplate
     var config: ListTemplateConfig
+    
+    var barButtons: [NitroAction]? {
+        get {
+            return config.headerActions
+        }
+        set {
+            config.headerActions = newValue
+            setBarButtons(template: template, barButtons: newValue)
+        }
+    }
+    
+    var autoDismissMs: Double? {
+        return config.autoDismissMs
+    }
+    
+    func getTemplate() -> CPTemplate {
+        return template
+    }
 
     init(config: ListTemplateConfig) {
         self.config = config
 
-        let template = CPListTemplate(
+        template = CPListTemplate(
             title: Parser.parseText(text: config.title),
             sections: [],
             assistantCellConfiguration: nil,
             id: config.id
         )
-
-        super.init(
-            template: template,
-            header: config.headerActions,
-            autoDismissMs: config.autoDismissMs
-        )
-
+        
         invalidate()
     }
 
-    override func invalidate() {
-        guard let template = self.template as? CPListTemplate else {
-            return
-        }
-
-        setBarButtons()
+    func invalidate() {
+        setBarButtons(template: template, barButtons: barButtons)
 
         template.updateSections(
             Parser.parseSections(
@@ -45,23 +54,23 @@ class ListTemplate: AutoPlayTemplate {
         )
     }
 
-    override func onWillAppear(animated: Bool) {
+    func onWillAppear(animated: Bool) {
         config.onWillAppear?(animated)
     }
 
-    override func onDidAppear(animated: Bool) {
+    func onDidAppear(animated: Bool) {
         config.onDidAppear?(animated)
     }
 
-    override func onWillDisappear(animated: Bool) {
+    func onWillDisappear(animated: Bool) {
         config.onWillDisappear?(animated)
     }
 
-    override func onDidDisappear(animated: Bool) {
+    func onDidDisappear(animated: Bool) {
         config.onDidDisappear?(animated)
     }
 
-    override func onPopped() {
+    func onPopped() {
         config.onPopped?()
     }
 

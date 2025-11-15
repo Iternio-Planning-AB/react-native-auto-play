@@ -5,7 +5,7 @@
 //  Created by Samuel Brucksch on 05.11.25.
 //
 
-class HybridInformationTemplate : HybridInformationTemplateSpec {
+class HybridInformationTemplate: HybridInformationTemplateSpec {
 
     func createInformationTemplate(config: InformationTemplateConfig) throws {
         let template = InformationTemplate(config: config)
@@ -16,14 +16,14 @@ class HybridInformationTemplate : HybridInformationTemplateSpec {
             )
         }
     }
-    
-    func updateInformationTemplateSections(templateId: String, section: NitroSection) throws {
-        try RootModule.withScene { scene in
-            if let template = scene.templateStore.getTemplate(
-                templateId: templateId
-            ) as? InformationTemplate {
-                template.updateSection(section: section)
-            }
+
+    func updateInformationTemplateSections(
+        templateId: String,
+        section: NitroSection
+    ) throws {
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: InformationTemplate) in
+            template.updateSection(section: section)
         }
     }
 }

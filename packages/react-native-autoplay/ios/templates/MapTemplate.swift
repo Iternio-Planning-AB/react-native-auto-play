@@ -11,14 +11,32 @@ struct NavigationAlertWrapper {
     let config: NitroNavigationAlert
 }
 
-class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
+class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTemplateDelegate
+{
+    let template: CPMapTemplate
     var config: MapTemplateConfig
+    
+    var barButtons: [NitroAction]? {
+        get {
+            return config.headerActions
+        }
+        set {
+            config.headerActions = newValue
+            setBarButtons(template: template, barButtons: newValue)
+        }
+    }
+
+    var autoDismissMs: Double? {
+        return config.autoDismissMs
+    }
+
+    func getTemplate() -> CPTemplate {
+        return template
+    }
 
     var onTripSelected: ((_ tripId: String, _ routeId: String) -> Void)?
     var onTripStarted: ((_ tripId: String, _ routeId: String) -> Void)?
-
     var navigationSession: CPNavigationSession?
-
     var navigationAlert: NavigationAlertWrapper?
 
     var tripSelectorVisible = false {
@@ -32,17 +50,11 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     init(config: MapTemplateConfig) {
         self.config = config
+        template = CPMapTemplate(id: config.id)
 
-        super.init(
-            template: CPMapTemplate(id: config.id),
-            header: config.headerActions,
-            autoDismissMs: config.autoDismissMs
-        )
+        super.init()
 
-        if let template = self.template as? CPMapTemplate {
-            template.mapDelegate = self
-        }
-
+        template.mapDelegate = self
         invalidate()
     }
 
@@ -77,51 +89,48 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
 
     }
 
-    override func invalidate() {
+    func invalidate() {
         if tripSelectorVisible {
             // ignore invalidate calls to not break the trip selectors back button
             return
         }
 
-        guard let template = self.template as? CPMapTemplate else { return }
-
-        setBarButtons()
+        setBarButtons(template: template, barButtons: config.headerActions)
 
         if let mapButtons = config.mapButtons {
             template.mapButtons = parseMapButtons(mapButtons: mapButtons)
         }
     }
 
-    override func onWillAppear(animated: Bool) {
+    func onWillAppear(animated: Bool) {
         config.onWillAppear?(animated)
     }
 
-    override func onDidAppear(animated: Bool) {
+    func onDidAppear(animated: Bool) {
         config.onDidAppear?(animated)
     }
 
-    override func onWillDisappear(animated: Bool) {
+    func onWillDisappear(animated: Bool) {
         config.onWillDisappear?(animated)
     }
 
-    override func onDidDisappear(animated: Bool) {
+    func onDidDisappear(animated: Bool) {
         config.onDidDisappear?(animated)
     }
 
-    override func onPopped() {
+    func onPopped() {
         config.onPopped?()
     }
 
-    override func traitCollectionDidChange() {
+    func traitCollectionDidChange() {
         let traitCollection = SceneStore.getRootTraitCollection()
         let isDark = traitCollection.userInterfaceStyle == .dark
 
-        self.config.onAppearanceDidChange?(
+        config.onAppearanceDidChange?(
             isDark ? .dark : .light
         )
-        self.invalidate()
 
-        guard let template = self.template as? CPMapTemplate else { return }
+        invalidate()
 
         template.tripEstimateStyle = isDark ? .dark : .light
     }
@@ -225,6 +234,8 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             case .userDismissed: return .user
             case .timeout: return .timeout
             case .systemDismissed: return .system
+            @unknown default:
+                return .system
             }
         }()
 
@@ -233,8 +244,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     func showAlert(alertConfig: NitroNavigationAlert) {
-        guard let template = self.template as? CPMapTemplate else { return }
-
         if let priority = self.navigationAlert?.config.priority,
             priority > alertConfig.priority
         {
@@ -254,6 +263,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         let style = Parser.parseActionAlertStyle(
             style: alertConfig.primaryAction.style
         )
+        
         let primaryAction = CPAlertAction(
             title: alertConfig.primaryAction.title,
             style: style
@@ -290,21 +300,26 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             setNavigationAlert()
         }
     }
-    
-    func updateNavigationAlert(alertId: Double, title: AutoText, subtitle: AutoText?) {
+
+    func updateNavigationAlert(
+        alertId: Double,
+        title: AutoText,
+        subtitle: AutoText?
+    ) {
         guard let alert = self.navigationAlert?.alert else {
             return
         }
-        
+
         if self.navigationAlert?.config.id != alertId {
             return
         }
-        
+
         let title = Parser.parseText(text: title)!
-        let subtitle = subtitle.map { subtitle in
-            [Parser.parseText(text: subtitle)!]
-        } ?? []
-        
+        let subtitle =
+            subtitle.map { subtitle in
+                [Parser.parseText(text: subtitle)!]
+            } ?? []
+
         alert.updateTitleVariants([title], subtitleVariants: subtitle)
     }
 
@@ -313,7 +328,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             return
         }
 
-        guard let template = self.template as? CPMapTemplate else { return }
         template.dismissNavigationAlert(animated: true) { _ in }
     }
 
@@ -326,13 +340,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
         onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void,
         onBackPressed: @escaping () -> Void,
         mapButtons: [NitroMapButton]
-    ) throws -> TripSelectorCallback {
-        guard let template = self.template as? CPMapTemplate else {
-            throw AutoPlayError.invalidTemplateError(
-                template.id + " template not of type map template"
-            )
-        }
-
+    ) -> TripSelectorCallback {
         self.onTripSelected = onTripSelected
         self.onTripStarted = onTripStarted
 
@@ -375,7 +383,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             let selectedTrip = tripPreviews.first { trip in
                 trip.id == tripId
             }
-            template.showTripPreviews(
+            self.template.showTripPreviews(
                 tripPreviews,
                 selectedTrip: selectedTrip,
                 textConfiguration: textConfiguration
@@ -386,13 +394,11 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     func hideTripSelector() {
-        guard let template = self.template as? CPMapTemplate else { return }
-
         template.hideTripPreviews()
 
-        self.tripSelectorVisible = false
-        self.onTripSelected = nil
-        self.onTripStarted = nil
+        tripSelectorVisible = false
+        onTripSelected = nil
+        onTripStarted = nil
     }
 
     func mapTemplate(
@@ -438,8 +444,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     func updateVisibleTravelEstimate(
         visibleTravelEstimate: VisibleTravelEstimate?
     ) {
-        guard let template = self.template as? CPMapTemplate else { return }
-
         if let visibleTravelEstimate = visibleTravelEstimate {
             config.visibleTravelEstimate = visibleTravelEstimate
         }
@@ -474,7 +478,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     func updateManeuvers(messageManeuver: NitroMessageManeuver) {
-        guard let template = template as? CPMapTemplate else { return }
         guard let navigationSession = navigationSession else { return }
 
         let color = messageManeuver.cardBackgroundColor
@@ -505,7 +508,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     func updateManeuvers(maneuvers: [NitroRoutingManeuver]) {
-        guard let template = template as? CPMapTemplate else { return }
         guard let navigationSession = navigationSession else { return }
 
         if #unavailable(iOS 15.4),
@@ -605,8 +607,6 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
     }
 
     func startNavigation(trip: CPTrip) {
-        guard let template = self.template as? CPMapTemplate else { return }
-
         let routeChoice = trip.routeChoices.first
 
         if let travelEstimates = config.visibleTravelEstimate == .first

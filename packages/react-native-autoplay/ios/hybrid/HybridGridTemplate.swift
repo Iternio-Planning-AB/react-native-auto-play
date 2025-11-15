@@ -20,12 +20,9 @@ class HybridGridTemplate: HybridGridTemplateSpec {
         templateId: String,
         buttons: [NitroGridButton]
     ) throws {
-        try RootModule.withScene { scene in
-            if let template = scene.templateStore.getTemplate(
-                templateId: templateId
-            ) as? GridTemplate {
-                template.updateButtons(buttons: buttons)
-            }
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: GridTemplate) in
+            template.updateButtons(buttons: buttons)
         }
     }
 }

@@ -7,30 +7,43 @@
 
 import CarPlay
 
-class GridTemplate: AutoPlayTemplate {
+class GridTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
+    let template: CPGridTemplate
     var config: GridTemplateConfig
+
+    var barButtons: [NitroAction]? {
+        get {
+            return config.headerActions
+        }
+        set {
+            config.headerActions = newValue
+            setBarButtons(template: template, barButtons: newValue)
+        }
+    }
+
+    var autoDismissMs: Double? {
+        return config.autoDismissMs
+    }
+    
+    func getTemplate() -> CPTemplate {
+        return template
+    }
 
     init(config: GridTemplateConfig) {
         self.config = config
 
-        let template = CPGridTemplate(
+        template = CPGridTemplate(
             title: Parser.parseText(text: config.title),
             gridButtons: GridTemplate.parseButtons(buttons: config.buttons),
             id: config.id
         )
 
-        super.init(
-            template: template,
-            header: config.headerActions,
-            autoDismissMs: config.autoDismissMs
-        )
-
-        setBarButtons()
+        setBarButtons(template: template, barButtons: barButtons)
     }
-    
+
     static func parseButtons(buttons: [NitroGridButton]) -> [CPGridButton] {
         let gridButtonHeight: CGFloat
-        
+
         if #available(iOS 26.0, *) {
             gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
         } else {
@@ -64,34 +77,30 @@ class GridTemplate: AutoPlayTemplate {
         }
     }
 
-    override func invalidate() {
-        guard let template = self.template as? CPGridTemplate else {
-            return
-        }
-
-        setBarButtons()
+    func invalidate() {
+        setBarButtons(template: template, barButtons: config.headerActions)
 
         let buttons = GridTemplate.parseButtons(buttons: config.buttons)
         template.updateGridButtons(buttons)
     }
 
-    override func onWillAppear(animated: Bool) {
+    func onWillAppear(animated: Bool) {
         config.onWillAppear?(animated)
     }
 
-    override func onDidAppear(animated: Bool) {
+    func onDidAppear(animated: Bool) {
         config.onDidAppear?(animated)
     }
 
-    override func onWillDisappear(animated: Bool) {
+    func onWillDisappear(animated: Bool) {
         config.onWillDisappear?(animated)
     }
 
-    override func onDidDisappear(animated: Bool) {
+    func onDidDisappear(animated: Bool) {
         config.onDidDisappear?(animated)
     }
 
-    override func onPopped() {
+    func onPopped() {
         config.onPopped?()
     }
 

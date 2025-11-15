@@ -20,12 +20,9 @@ class HybridListTemplate: HybridListTemplateSpec {
         templateId: String,
         sections: [NitroSection]?
     ) throws {
-        try RootModule.withScene { scene in
-            if let template = scene.templateStore.getTemplate(
-                templateId: templateId
-            ) as? ListTemplate {
-                template.updateSections(sections: sections)
-            }
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: ListTemplate) in
+            template.updateSections(sections: sections)
         }
     }
 }

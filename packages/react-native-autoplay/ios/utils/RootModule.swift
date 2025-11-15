@@ -8,7 +8,9 @@
 import CarPlay
 
 class RootModule {
-    static func withScene(perform action: @escaping (AutoPlayScene) throws -> Void) throws {
+    static func withScene(
+        perform action: @escaping (AutoPlayScene) throws -> Void
+    ) throws {
         guard
             let scene = SceneStore.getScene(
                 moduleName: SceneStore.rootModuleName
@@ -18,33 +20,49 @@ class RootModule {
                 "operation failed, \(SceneStore.rootModuleName) scene not found"
             )
         }
-        
+
         try action(scene)
     }
-    
-    static func withTemplate(templateId: String, perform action: @escaping (AutoPlayTemplate) throws -> Void) throws {
+
+    static func withAutoPlayTemplate<T>(
+        templateId: String,
+        perform action: @escaping (T) throws -> Void
+    ) throws {
         try withScene { scene in
             guard
-                let template = scene.templateStore.getTemplate(templateId: templateId)
+                let template = scene.templateStore.getTemplate(
+                    templateId: templateId
+                )
             else {
                 throw AutoPlayError.templateNotFound(templateId)
             }
-            
-            try action(template)
-        }
-    }
-    
-    static func withMapTemplate(templateId: String, perform action: @escaping (MapTemplate) throws -> Void) throws {
-        try withTemplate(templateId: templateId) { template in
-            guard let template = template as? MapTemplate else {
-                throw AutoPlayError.invalidTemplateError(
-                    "showNavigationAlert failed, \(templateId) not of instance MapTemplate"
+
+            guard let template = template as? T else {
+                throw AutoPlayError.invalidTemplateType(
+                    "\(template) is not a \(T.self) template"
                 )
             }
+
             try action(template)
         }
     }
-    
+
+    static func withTemplate<T: CPTemplate>(
+        templateId: String,
+        perform action: @escaping (T) throws -> Void
+    ) throws {
+        try withAutoPlayTemplate(templateId: templateId) {
+            (autoPlayTemplate: AutoPlayTemplate) in
+            if let template = autoPlayTemplate.getTemplate() as? T {
+                try! action(template)
+            } else {
+                throw AutoPlayError.invalidTemplateType(
+                    "\(autoPlayTemplate) is not a \(T.self) template"
+                )
+            }
+        }
+    }
+
     @MainActor
     static func withScene<T>(
         perform action:
@@ -66,7 +84,8 @@ class RootModule {
     @MainActor
     static func withSceneAndInterfaceController<T>(
         perform action:
-            @escaping (AutoPlayScene, AutoPlayInterfaceController) async throws -> T
+            @escaping (AutoPlayScene, AutoPlayInterfaceController) async throws
+            -> T
     ) async throws -> T {
         return try await withScene { scene in
             guard let interfaceController = scene.interfaceController else {
@@ -81,32 +100,11 @@ class RootModule {
 
     @MainActor
     static func withInterfaceController<T>(
-        perform action: @escaping (AutoPlayInterfaceController) async throws -> T
+        perform action:
+            @escaping (AutoPlayInterfaceController) async throws -> T
     ) async throws -> T {
         try await withSceneAndInterfaceController { _, interfaceController in
             try await action(interfaceController)
-        }
-    }
-
-    @MainActor
-    static func withTemplateAndInterfaceController<T>(
-        templateId: String,
-        perform action:
-            @escaping (CPTemplate, AutoPlayInterfaceController) async throws -> T
-    ) async throws -> T {
-        return try await withSceneAndInterfaceController {
-            scene,
-            interfaceController in
-            guard
-                let template = scene.templateStore.getCPTemplate(
-                    templateId: templateId
-                )
-            else {
-                throw AutoPlayError.templateNotFound(
-                    "operation failed, \(templateId) template not found"
-                )
-            }
-            return try await action(template, interfaceController)
         }
     }
 

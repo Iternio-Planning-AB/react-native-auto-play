@@ -1,4 +1,3 @@
-
 //
 //  HybridSearchTemplate.swift
 //  Pods
@@ -7,16 +6,6 @@
 //
 
 class HybridSearchTemplate: HybridSearchTemplateSpec {
-    func updateSearchResults(templateId: String, results: NitroSection) throws {
-        try RootModule.withScene { scene in
-            if let template = scene.templateStore.getTemplate(
-                templateId: templateId
-            ) as? SearchTemplate {
-                template.updateSearchResults(results: results)
-            }
-        }
-    }
-    
     func createSearchTemplate(config: SearchTemplateConfig) throws {
         let template = SearchTemplate(config: config)
         try RootModule.withScene { scene in
@@ -24,6 +13,13 @@ class HybridSearchTemplate: HybridSearchTemplateSpec {
                 template: template,
                 templateId: config.id
             )
+        }
+    }
+
+    func updateSearchResults(templateId: String, results: NitroSection) throws {
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: SearchTemplate) in
+            template.updateSearchResults(results: results)
         }
     }
 }

@@ -17,4 +17,5 @@ enum AutoPlayError: Error {
     case invalidTemplateError(String)
     case propertyNotFoundError(String)
     case unsupportedVersion(String)
+    case invalidTemplateType(String)
 }

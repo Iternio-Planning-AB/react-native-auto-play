@@ -7,59 +7,42 @@
 
 import CarPlay
 
-class AutoPlayTemplate: NSObject {
-    let template: CPTemplate
-    var barButtons: [NitroAction]?
-    let autoDismissMs: Double?
+protocol AutoPlayTemplate {
+    var autoDismissMs: Double? { get }
 
-    init(template: CPTemplate, header: [NitroAction]?, autoDismissMs: Double?) {
-        self.template = template
-        self.barButtons = header
-        self.autoDismissMs = autoDismissMs
+    func invalidate()
+    func onWillAppear(animated: Bool)
+    func onDidAppear(animated: Bool)
+    func onWillDisappear(animated: Bool)
+    func onDidDisappear(animated: Bool)
+    func onPopped()
+    func traitCollectionDidChange()
+    func getTemplate() -> CPTemplate
+}
 
-        super.init()
+extension AutoPlayTemplate {
+    func traitCollectionDidChange() {
+        // this can be implemented optionally
     }
+}
 
-    func setBarButtons() {
-        guard let template = template as? CPBarButtonProviding else { return }
+protocol AutoPlayHeaderProviding {
+    var barButtons: [NitroAction]? { get set }
+}
 
-        if let headerActions = barButtons {
-            let parsedActions = Parser.parseHeaderActions(
-                headerActions: headerActions,
-                traitCollection: SceneStore.getRootTraitCollection()
-            )
+func setBarButtons(template: CPTemplate, barButtons: [NitroAction]?) {
+    guard let template = template as? CPBarButtonProviding else { return }
 
-            template.backButton = parsedActions.backButton
-            template.leadingNavigationBarButtons =
-                parsedActions.leadingNavigationBarButtons
-            template.trailingNavigationBarButtons =
-                parsedActions.trailingNavigationBarButtons
-        }
+    if let headerActions = barButtons {
+        let parsedActions = Parser.parseHeaderActions(
+            headerActions: headerActions,
+            traitCollection: SceneStore.getRootTraitCollection()
+        )
+
+        template.backButton = parsedActions.backButton
+        template.leadingNavigationBarButtons =
+            parsedActions.leadingNavigationBarButtons
+        template.trailingNavigationBarButtons =
+            parsedActions.trailingNavigationBarButtons
     }
-
-    open func invalidate() {
-        print("\(type(of: self)) lacks invalidate implementation")
-    }
-
-    open func onWillAppear(animated: Bool) {
-        print("\(type(of: self)) lacks onWillAppear implementation")
-    }
-
-    open func onDidAppear(animated: Bool) {
-        print("\(type(of: self)) lacks onDidAppear implementation")
-    }
-
-    open func onWillDisappear(animated: Bool) {
-        print("\(type(of: self)) lacks onWillDisappear implementation")
-    }
-
-    open func onDidDisappear(animated: Bool) {
-        print("\(type(of: self)) lacks onDidDisappear implementation")
-    }
-
-    open func onPopped() {
-        print("\(type(of: self)) lacks onPopped implementation")
-    }
-
-    open func traitCollectionDidChange() {}
 }

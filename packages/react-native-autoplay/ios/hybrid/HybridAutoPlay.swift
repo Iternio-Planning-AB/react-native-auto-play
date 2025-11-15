@@ -241,10 +241,11 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         templateId: String,
         headerActions: [NitroAction]?
     ) throws {
-        try RootModule.withTemplate(templateId: templateId) {
-            template in
-            template.barButtons = headerActions
-            template.invalidate()
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: AutoPlayTemplate) in
+            if var template = template as? AutoPlayHeaderProviding {
+                template.barButtons = headerActions
+            }
         }
     }
 

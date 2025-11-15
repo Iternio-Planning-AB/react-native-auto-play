@@ -5,6 +5,8 @@
 //  Created by Manuel Auer on 15.10.25.
 //
 
+import CarPlay
+
 class HybridMapTemplate: HybridMapTemplateSpec {
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
@@ -19,11 +21,8 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
         throws
     {
-        try RootModule.withTemplate(templateId: templateId) {
-            template in
-            guard let template = template as? MapTemplate else {
-                return
-            }
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
 
             template.config.mapButtons = buttons
             template.invalidate()
@@ -35,7 +34,8 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     {
         var mapTemplate: MapTemplate?
 
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             template.showAlert(alertConfig: alert)
             mapTemplate = template
         }
@@ -66,8 +66,9 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     ) throws -> TripSelectorCallback {
         var callback: TripSelectorCallback?
 
-        try RootModule.withMapTemplate(templateId: templateId) { template in
-            callback = try template.showTripSelector(
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
+            callback = template.showTripSelector(
                 trips: trips,
                 selectedTripId: selectedTripId,
                 textConfig: textConfig,
@@ -86,7 +87,8 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func hideTripSelector(templateId: String) throws {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             template.hideTripSelector()
         }
     }
@@ -95,7 +97,8 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         templateId: String,
         visibleTravelEstimate: VisibleTravelEstimate
     ) throws {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             template.updateVisibleTravelEstimate(
                 visibleTravelEstimate: visibleTravelEstimate
             )
@@ -103,14 +106,15 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func updateTravelEstimates(templateId: String, steps: [TripPoint]) throws {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             template.updateTravelEstimates(steps: steps)
         }
     }
 
     func updateManeuvers(templateId: String, maneuvers: NitroManeuver) throws {
-        try RootModule.withMapTemplate(templateId: templateId) {
-            template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             switch maneuvers {
             case .first(let routingManeuvers):
                 {
@@ -126,16 +130,17 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func startNavigation(templateId: String, trip: TripConfig) throws {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             let trip = Parser.parseTrip(tripConfig: trip)
             template.startNavigation(trip: trip)
         }
     }
 
     func stopNavigation(templateId: String) throws {
-        try RootModule.withMapTemplate(templateId: templateId) { template in
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
             template.stopNavigation()
         }
     }
-
 }
