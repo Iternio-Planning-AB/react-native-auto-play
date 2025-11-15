@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `NumericTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NumericTelemetryItem; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NumericTelemetryItem; }
 // Forward declaration of `VehicleTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct VehicleTelemetryItem; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VehicleTelemetryItem; }
 
 #include "NumericTelemetryItem.hpp"
 #include <optional>
 #include "VehicleTelemetryItem.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (Telemetry).
@@ -51,32 +51,32 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit Telemetry(std::optional<NumericTelemetryItem> speed, std::optional<NumericTelemetryItem> fuelLevel, std::optional<NumericTelemetryItem> batteryLevel, std::optional<NumericTelemetryItem> range, std::optional<NumericTelemetryItem> odometer, std::optional<VehicleTelemetryItem> vehicle): speed(speed), fuelLevel(fuelLevel), batteryLevel(batteryLevel), range(range), odometer(odometer), vehicle(vehicle) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ Telemetry <> JS Telemetry (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Telemetry> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::Telemetry fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Telemetry> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::Telemetry fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::Telemetry(
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "speed")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "fuelLevel")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "batteryLevel")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "range")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "odometer")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "vehicle"))
+      return margelo::nitro::swe::iternio::reactnativeautoplay::Telemetry(
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "speed")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "fuelLevel")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "batteryLevel")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "range")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "odometer")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "vehicle"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Telemetry& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::Telemetry& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "speed", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.speed));
-      obj.setProperty(runtime, "fuelLevel", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.fuelLevel));
-      obj.setProperty(runtime, "batteryLevel", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.batteryLevel));
-      obj.setProperty(runtime, "range", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.range));
-      obj.setProperty(runtime, "odometer", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.odometer));
-      obj.setProperty(runtime, "vehicle", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem>>::toJSI(runtime, arg.vehicle));
+      obj.setProperty(runtime, "speed", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.speed));
+      obj.setProperty(runtime, "fuelLevel", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.fuelLevel));
+      obj.setProperty(runtime, "batteryLevel", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.batteryLevel));
+      obj.setProperty(runtime, "range", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.range));
+      obj.setProperty(runtime, "odometer", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.odometer));
+      obj.setProperty(runtime, "vehicle", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem>>::toJSI(runtime, arg.vehicle));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -87,12 +87,12 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "speed"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "fuelLevel"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "batteryLevel"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "range"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "odometer"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "vehicle"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "speed"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "fuelLevel"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "batteryLevel"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "range"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "odometer"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "vehicle"))) return false;
       return true;
     }
   };

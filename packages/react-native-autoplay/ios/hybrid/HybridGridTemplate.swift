@@ -5,7 +5,7 @@
 //  Created by Manuel Auer on 15.10.25.
 //
 
-class HybridGridTemplate: HybridHybridGridTemplateSpec {
+class HybridGridTemplate: HybridGridTemplateSpec {
     func createGridTemplate(config: GridTemplateConfig) throws {
         let template = GridTemplate(config: config)
         try RootModule.withScene { scene in

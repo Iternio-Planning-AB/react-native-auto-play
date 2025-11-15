@@ -1,4 +1,4 @@
-import { HybridAutoPlay, SearchTemplate } from '@g4rb4g3/react-native-autoplay';
+import { HybridAutoPlay, SearchTemplate } from '@iternio/react-native-auto-play';
 import { AutoTemplate } from './AutoTemplate';
 
 const getTemplate = ({

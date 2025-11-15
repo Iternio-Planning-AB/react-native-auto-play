@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroActionType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroAlignment; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroAlignment; }
 // Forward declaration of `NitroButtonStyle` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButtonStyle; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroButtonStyle; }
 
 #include <string>
 #include <optional>
@@ -44,7 +44,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroButton
 #include "NitroAlignment.hpp"
 #include "NitroButtonStyle.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroAction).
@@ -65,36 +65,36 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroAction(std::optional<std::string> title, std::optional<std::variant<GlyphImage, AssetImage>> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags, std::optional<NitroButtonStyle> style): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags), style(style) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroAction <> JS NitroAction (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "title")),
-        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "enabled")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::fromJSI(runtime, obj.getProperty(runtime, "alignment")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::fromJSI(runtime, obj.getProperty(runtime, "type")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAlignment>>::fromJSI(runtime, obj.getProperty(runtime, "alignment")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "flags")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle>>::fromJSI(runtime, obj.getProperty(runtime, "style"))
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle>>::fromJSI(runtime, obj.getProperty(runtime, "style"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "title", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "enabled", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.enabled));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
-      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::toJSI(runtime, arg.type));
-      obj.setProperty(runtime, "alignment", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::toJSI(runtime, arg.alignment));
+      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::toJSI(runtime, arg.type));
+      obj.setProperty(runtime, "alignment", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAlignment>>::toJSI(runtime, arg.alignment));
       obj.setProperty(runtime, "flags", JSIConverter<std::optional<double>>::toJSI(runtime, arg.flags));
-      obj.setProperty(runtime, "style", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle>>::toJSI(runtime, arg.style));
+      obj.setProperty(runtime, "style", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle>>::toJSI(runtime, arg.style));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -106,13 +106,13 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "enabled"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAlignment>>::canConvert(runtime, obj.getProperty(runtime, "alignment"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAlignment>>::canConvert(runtime, obj.getProperty(runtime, "alignment"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "flags"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle>>::canConvert(runtime, obj.getProperty(runtime, "style"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle>>::canConvert(runtime, obj.getProperty(runtime, "style"))) return false;
       return true;
     }
   };

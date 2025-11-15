@@ -1,0 +1,126 @@
+package com.margelo.nitro.swe.iternio.reactnativeautoplay.utils
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Typeface
+import androidx.car.app.CarContext
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.IconCompat
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroImage
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.Parser
+
+object SymbolFont {
+    const val TAG = "SymbolFont"
+
+    private var typeface: Typeface? = null
+
+    fun loadFont(context: Context) {
+        if (typeface != null) {
+            return
+        }
+
+        typeface = ResourcesCompat.getFont(context, R.font.materialsymbolsoutlined_regular)
+    }
+
+    fun imageFromGlyph(
+        context: Context,
+        glyph: Double,
+        color: Int = android.graphics.Color.BLACK,
+        backgroundColor: Int = android.graphics.Color.WHITE,
+        cornerRadius: Float = 8f,
+        fontScale: Float,
+    ): Bitmap? {
+        loadFont(context)
+
+        val font = typeface ?: run {
+            return null
+        }
+
+        val virtualScreenDensity = context.resources.displayMetrics.density
+        val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
+
+        // Minimum recommended image size is 36dp according to https://developers.google.com/cars/design/create-apps/ux-requirements/templated-apps#navigation
+        val canvasSize = (36 * scale).toInt()
+        val bitmap = createBitmap(canvasSize, canvasSize)
+        val canvas = Canvas(bitmap)
+
+        val rectF = RectF(0f, 0f, canvasSize.toFloat(), canvasSize.toFloat())
+        var paint = Paint().apply {
+            this.color = backgroundColor
+            isAntiAlias = true
+        }
+        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
+
+        // Setup text paint
+        paint.reset()
+        paint = Paint().apply {
+            typeface = font
+            textSize = canvasSize.toFloat() * fontScale
+            this.color = color
+            isAntiAlias = true
+            textAlign = Paint.Align.LEFT
+        }
+
+        // Get the character from codepoint
+        val codepoint = glyph.toInt()
+        val text = String(Character.toChars(codepoint))
+
+        // Measure text
+        val bounds = Rect()
+        paint.getTextBounds(text, 0, text.length, bounds)
+
+        // Center the text
+        val x = (canvasSize - bounds.width()) / 2f - bounds.left
+        val y = (canvasSize - bounds.height()) / 2f - bounds.top
+
+        // Draw text
+        canvas.drawText(text, x, y, paint)
+
+        return bitmap
+    }
+
+    fun imageFromNitroImage(context: CarContext, image: GlyphImage): Bitmap? {
+        val color = if (context.isDarkMode) image.color.darkColor else image.color.lightColor
+        val backgroundColor =
+            if (context.isDarkMode) image.backgroundColor.darkColor else image.backgroundColor.lightColor
+
+        return imageFromGlyph(
+            context = context,
+            glyph = image.glyph,
+            color = color.toInt(),
+            backgroundColor = backgroundColor.toInt(),
+            fontScale = (image.fontScale ?: 1.0).toFloat()
+        )
+    }
+
+    fun imageFromNitroImages(
+        context: CarContext, images: List<NitroImage>
+    ): IconCompat {
+        val bitmaps = images.map {
+            Parser.parseImageToBitmap(
+                context, it.asFirstOrNull(), it.asSecondOrNull()
+            )!!
+        }
+
+        val height = bitmaps.maxOf { it.height }
+        val width = bitmaps.maxOf { it.width }
+        val totalWidth = width * images.size
+
+        val bitmap = createBitmap(totalWidth, height)
+        val canvas = Canvas(bitmap)
+
+        bitmaps.forEachIndexed { index, it ->
+            canvas.drawBitmap(it, (index * width).toFloat(), 0f, null)
+        }
+
+        return IconCompat.createWithBitmap(bitmap)
+    }
+}

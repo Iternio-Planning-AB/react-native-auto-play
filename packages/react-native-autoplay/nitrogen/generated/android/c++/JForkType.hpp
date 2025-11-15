@@ -10,7 +10,7 @@
 #include <fbjni/fbjni.h>
 #include "ForkType.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -19,7 +19,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JForkType final: public jni::JavaClass<JForkType> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/ForkType;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/ForkType;";
 
   public:
     /**
@@ -56,4 +56,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

@@ -3,7 +3,7 @@ import {
   type AutoPlayClusterInitialProps,
   type CleanupCallback,
   SafeAreaView,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 

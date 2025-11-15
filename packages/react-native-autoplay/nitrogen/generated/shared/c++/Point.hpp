@@ -27,7 +27,7 @@
 
 
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (Point).
@@ -42,21 +42,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit Point(double x, double y): x(x), y(y) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ Point <> JS Point (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Point> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::Point fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::Point(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "x")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "y"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::Point& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "x", JSIConverter<double>::toJSI(runtime, arg.x));
       obj.setProperty(runtime, "y", JSIConverter<double>::toJSI(runtime, arg.y));

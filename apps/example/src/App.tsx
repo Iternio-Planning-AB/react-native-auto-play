@@ -2,7 +2,7 @@ import {
   AutoPlayModules,
   type CleanupCallback,
   HybridAutoPlay,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { useEffect, useState } from 'react';
 import { Button, Platform, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';

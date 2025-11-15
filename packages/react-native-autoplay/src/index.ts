@@ -1,17 +1,16 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import AutoPlayHeadlessJsTask from './AutoPlayHeadlessJsTask';
-import type { HybridAndroidAutoTelemetry as NitroHybridAndroidAutoTelemetry } from './specs/HybridAndroidAutoTelemetry.nitro';
-import type { HybridAutoPlay as NitroHybridAutoPlay } from './specs/HybridAutoPlay.nitro';
+import type { AndroidAutoTelemetry as NitroAndroidAutoTelemetry } from './specs/AndroidAutoTelemetry.nitro';
+import type { AutoPlay as NitroAutoPlay } from './specs/AutoPlay.nitro';
 
 AutoPlayHeadlessJsTask.registerHeadlessTask();
 
-export const HybridAutoPlay =
-  NitroModules.createHybridObject<NitroHybridAutoPlay>('HybridAutoPlay');
+export const HybridAutoPlay = NitroModules.createHybridObject<NitroAutoPlay>('AutoPlay');
 
 export const HybridAndroidAutoTelemetry =
   Platform.OS === 'android'
-    ? NitroModules.createHybridObject<NitroHybridAndroidAutoTelemetry>('HybridAndroidAutoTelemetry')
+    ? NitroModules.createHybridObject<NitroAndroidAutoTelemetry>('AndroidAutoTelemetry')
     : null;
 
 /**
@@ -46,7 +45,9 @@ export * from './types/Telemetry';
 export * from './types/Text';
 export * from './types/Trip';
 export type {
+  AlertPriority,
   NavigationAlert as Alert,
   NavigationAlertAction as AlertAction,
 } from './utils/NitroAlert';
+export type { ThemedColor } from './utils/NitroColor';
 export type { GridButton } from './utils/NitroGrid';

@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `ManeuverType`, backed by a C++ enum.
  */
-public typealias ManeuverType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.ManeuverType
+public typealias ManeuverType = margelo.nitro.swe.iternio.reactnativeautoplay.ManeuverType
 
 public extension ManeuverType {
   /**

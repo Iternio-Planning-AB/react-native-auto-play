@@ -1,5 +1,5 @@
 {
-  "name": "@g4rb4g3/react-native-autoplay",
+  "name": "@iternio/react-native-auto-play",
   "version": "0.0.1",
   "description": "Android Auto and Apple CarPlay for react-native",
   "main": "lib/index",
@@ -43,14 +43,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/g4rb4g3/react-native-autoplay.git"
+    "url": "git+https://github.com/Iternio-Planning-AB/react-native-auto-play.git"
   },
   "author": "Manuel Auer <g4rb4g3@gmail.com> (https://github.com/g4rb4g3)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/g4rb4g3/react-native-autoplay/issues"
+    "url": "https://github.com/Iternio-Planning-AB/react-native-auto-play/issues"
   },
-  "homepage": "https://github.com/g4rb4g3/react-native-autoplay#readme",
+  "homepage": "https://github.com/Iternio-Planning-AB/react-native-auto-play#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

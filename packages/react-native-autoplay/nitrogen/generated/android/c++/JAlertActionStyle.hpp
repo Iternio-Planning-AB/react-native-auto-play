@@ -10,7 +10,7 @@
 #include <fbjni/fbjni.h>
 #include "AlertActionStyle.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -19,7 +19,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JAlertActionStyle final: public jni::JavaClass<JAlertActionStyle> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/AlertActionStyle;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AlertActionStyle;";
 
   public:
     /**
@@ -59,4 +59,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -37,7 +37,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JTripConfig final: public jni::JavaClass<JTripConfig> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/TripConfig;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripConfig;";
 
   public:
     /**
@@ -74,4 +74,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

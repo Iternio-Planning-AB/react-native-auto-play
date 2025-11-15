@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `ClusterEventName`, backed by a C++ enum.
  */
-public typealias ClusterEventName = margelo.nitro.at.g4rb4g3.autoplay.hybrid.ClusterEventName
+public typealias ClusterEventName = margelo.nitro.swe.iternio.reactnativeautoplay.ClusterEventName
 
 public extension ClusterEventName {
   /**

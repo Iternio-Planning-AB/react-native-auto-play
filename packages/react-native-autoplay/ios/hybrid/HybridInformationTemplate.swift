@@ -5,7 +5,7 @@
 //  Created by Samuel Brucksch on 05.11.25.
 //
 
-class HybridInformationTemplate : HybridHybridInformationTemplateSpec {
+class HybridInformationTemplate : HybridInformationTemplateSpec {
 
     func createInformationTemplate(config: InformationTemplateConfig) throws {
         let template = InformationTemplate(config: config)

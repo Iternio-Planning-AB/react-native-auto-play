@@ -3,10 +3,10 @@ import {
   type MapTemplate,
   type MessageManeuver,
   type RoutingManeuver,
+  type ThemedColor,
   TrafficSide,
   TurnType,
-} from '@g4rb4g3/react-native-autoplay';
-import type { ThemedColor } from '@g4rb4g3/react-native-autoplay/lib/utils/NitroColor';
+} from '@iternio/react-native-auto-play';
 import uuid from 'react-native-uuid';
 import { updateTripEstimates } from '../templates/AutoTemplate';
 

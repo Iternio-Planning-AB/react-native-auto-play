@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `OnRampType`, backed by a C++ enum.
  */
-public typealias OnRampType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.OnRampType
+public typealias OnRampType = margelo.nitro.swe.iternio.reactnativeautoplay.OnRampType
 
 public extension OnRampType {
   /**

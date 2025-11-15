@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `TurnType`, backed by a C++ enum.
  */
-public typealias TurnType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.TurnType
+public typealias TurnType = margelo.nitro.swe.iternio.reactnativeautoplay.TurnType
 
 public extension TurnType {
   /**

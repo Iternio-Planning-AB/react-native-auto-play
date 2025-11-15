@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NavigationAlertCallbacks`, backed by a C++ struct.
  */
-public typealias NavigationAlertCallbacks = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NavigationAlertCallbacks
+public typealias NavigationAlertCallbacks = margelo.nitro.swe.iternio.reactnativeautoplay.NavigationAlertCallbacks
 
 public extension NavigationAlertCallbacks {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NavigationAlertCallbacks`.

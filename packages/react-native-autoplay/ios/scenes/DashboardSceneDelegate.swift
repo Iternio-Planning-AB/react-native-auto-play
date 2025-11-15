@@ -46,8 +46,8 @@ class DashboardSceneDelegate: AutoPlayScene,
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
                 // TODO: height & with reported from main screen it seems...
-                "height": window.screen.bounds.size.height,
-                "width": window.screen.bounds.size.width,
+                "height": window.screen.bounds.size.height.rounded(),
+                "width": window.screen.bounds.size.width.rounded(),
                 "scale": traitCollection.displayScale,
             ],
         ]

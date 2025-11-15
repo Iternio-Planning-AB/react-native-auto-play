@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (ClusterEventName).
@@ -35,30 +35,30 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     DIDDISCONNECTFROMWINDOW      SWIFT_NAME(diddisconnectfromwindow) = 3,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ ClusterEventName <> JS ClusterEventName (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("didConnect"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDCONNECT;
-        case hashString("didDisconnect"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDDISCONNECT;
-        case hashString("didConnectWithWindow"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDCONNECTWITHWINDOW;
-        case hashString("didDisconnectFromWindow"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDDISCONNECTFROMWINDOW;
+        case hashString("didConnect"): return margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDCONNECT;
+        case hashString("didDisconnect"): return margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDDISCONNECT;
+        case hashString("didConnectWithWindow"): return margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDCONNECTWITHWINDOW;
+        case hashString("didDisconnectFromWindow"): return margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDDISCONNECTFROMWINDOW;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum ClusterEventName - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDCONNECT: return JSIConverter<std::string>::toJSI(runtime, "didConnect");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDDISCONNECT: return JSIConverter<std::string>::toJSI(runtime, "didDisconnect");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDCONNECTWITHWINDOW: return JSIConverter<std::string>::toJSI(runtime, "didConnectWithWindow");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::ClusterEventName::DIDDISCONNECTFROMWINDOW: return JSIConverter<std::string>::toJSI(runtime, "didDisconnectFromWindow");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDCONNECT: return JSIConverter<std::string>::toJSI(runtime, "didConnect");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDDISCONNECT: return JSIConverter<std::string>::toJSI(runtime, "didDisconnect");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDCONNECTWITHWINDOW: return JSIConverter<std::string>::toJSI(runtime, "didConnectWithWindow");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::ClusterEventName::DIDDISCONNECTFROMWINDOW: return JSIConverter<std::string>::toJSI(runtime, "didDisconnectFromWindow");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert ClusterEventName to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

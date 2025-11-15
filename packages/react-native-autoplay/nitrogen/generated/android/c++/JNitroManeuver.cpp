@@ -7,7 +7,7 @@
 
 #include "JNitroManeuver.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * Converts JNitroManeuver to std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>
    */
@@ -32,4 +32,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     throw std::invalid_argument("Variant is unknown Kotlin instance!");
   }
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

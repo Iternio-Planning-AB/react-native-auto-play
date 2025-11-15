@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroRow`, backed by a C++ struct.
  */
-public typealias NitroRow = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRow
+public typealias NitroRow = margelo.nitro.swe.iternio.reactnativeautoplay.NitroRow
 
 public extension NitroRow {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroRow`.

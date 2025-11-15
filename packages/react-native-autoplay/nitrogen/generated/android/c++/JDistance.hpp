@@ -13,7 +13,7 @@
 #include "DistanceUnits.hpp"
 #include "JDistanceUnits.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -22,7 +22,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JDistance final: public jni::JavaClass<JDistance> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Distance;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Distance;";
 
   public:
     /**
@@ -59,4 +59,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

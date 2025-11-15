@@ -1,4 +1,4 @@
-import type { AlertPriority } from '@g4rb4g3/react-native-autoplay/lib/utils/NitroAlert';
+import type { AlertPriority } from '@iternio/react-native-auto-play';
 import { createAction, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type NavigationState, SliceName } from './types';
 

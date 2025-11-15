@@ -24,9 +24,9 @@
 #endif
 
 // Forward declaration of `PreferredImageLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct PreferredImageLane; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct PreferredImageLane; }
 // Forward declaration of `ImageLane` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ImageLane; }
 
 #include <string>
 #include <vector>
@@ -34,7 +34,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct ImageLane; }
 #include "ImageLane.hpp"
 #include <variant>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (LaneGuidance).
@@ -49,24 +49,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit LaneGuidance(std::vector<std::string> instructionVariants, std::vector<std::variant<PreferredImageLane, ImageLane>> lanes): instructionVariants(instructionVariants), lanes(lanes) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ LaneGuidance <> JS LaneGuidance (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance(
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "instructionVariants")),
-        JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::fromJSI(runtime, obj.getProperty(runtime, "lanes"))
+        JSIConverter<std::vector<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane, margelo::nitro::swe::iternio::reactnativeautoplay::ImageLane>>>::fromJSI(runtime, obj.getProperty(runtime, "lanes"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "instructionVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.instructionVariants));
-      obj.setProperty(runtime, "lanes", JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::toJSI(runtime, arg.lanes));
+      obj.setProperty(runtime, "lanes", JSIConverter<std::vector<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane, margelo::nitro::swe::iternio::reactnativeautoplay::ImageLane>>>::toJSI(runtime, arg.lanes));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -78,7 +78,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "instructionVariants"))) return false;
-      if (!JSIConverter<std::vector<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ImageLane>>>::canConvert(runtime, obj.getProperty(runtime, "lanes"))) return false;
+      if (!JSIConverter<std::vector<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane, margelo::nitro::swe::iternio::reactnativeautoplay::ImageLane>>>::canConvert(runtime, obj.getProperty(runtime, "lanes"))) return false;
       return true;
     }
   };

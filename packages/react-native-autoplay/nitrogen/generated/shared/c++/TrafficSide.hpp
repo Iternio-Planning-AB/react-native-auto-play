@@ -18,7 +18,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript enum (TrafficSide).
@@ -28,18 +28,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     LEFT      SWIFT_NAME(left) = 1,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TrafficSide <> JS TrafficSide (enum)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
-      return static_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide>(enumValue);
+      return static_cast<margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide>(enumValue);
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide arg) {
       int enumValue = static_cast<int>(arg);
       return JSIConverter<int>::toJSI(runtime, enumValue);
     }

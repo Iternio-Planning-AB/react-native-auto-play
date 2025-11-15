@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `PreferredImageLane`, backed by a C++ struct.
  */
-public typealias PreferredImageLane = margelo.nitro.at.g4rb4g3.autoplay.hybrid.PreferredImageLane
+public typealias PreferredImageLane = margelo.nitro.swe.iternio.reactnativeautoplay.PreferredImageLane
 
 public extension PreferredImageLane {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `PreferredImageLane`.

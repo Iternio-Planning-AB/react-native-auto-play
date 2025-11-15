@@ -24,14 +24,14 @@
 #endif
 
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedStringImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttributedStringImage; }
 
 #include <string>
 #include "NitroAttributedStringImage.hpp"
 #include <vector>
 #include <optional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroAttributedString).
@@ -46,24 +46,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroAttributedString(std::string text, std::optional<std::vector<NitroAttributedStringImage>> images): text(text), images(images) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroAttributedString <> JS NitroAttributedString (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "text")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage>>>::fromJSI(runtime, obj.getProperty(runtime, "images"))
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage>>>::fromJSI(runtime, obj.getProperty(runtime, "images"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "text", JSIConverter<std::string>::toJSI(runtime, arg.text));
-      obj.setProperty(runtime, "images", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage>>>::toJSI(runtime, arg.images));
+      obj.setProperty(runtime, "images", JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage>>>::toJSI(runtime, arg.images));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -75,7 +75,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "text"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage>>>::canConvert(runtime, obj.getProperty(runtime, "images"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage>>>::canConvert(runtime, obj.getProperty(runtime, "images"))) return false;
       return true;
     }
   };

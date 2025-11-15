@@ -24,13 +24,13 @@
 #endif
 
 // Forward declaration of `TripPoint` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TripPoint; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripPoint; }
 
 #include <string>
 #include <vector>
 #include "TripPoint.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (RouteChoice).
@@ -48,30 +48,30 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit RouteChoice(std::string id, std::vector<std::string> summaryVariants, std::vector<std::string> additionalInformationVariants, std::vector<std::string> selectionSummaryVariants, std::vector<TripPoint> steps): id(id), summaryVariants(summaryVariants), additionalInformationVariants(additionalInformationVariants), selectionSummaryVariants(selectionSummaryVariants), steps(steps) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ RouteChoice <> JS RouteChoice (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "summaryVariants")),
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "additionalInformationVariants")),
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "selectionSummaryVariants")),
-        JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint>>::fromJSI(runtime, obj.getProperty(runtime, "steps"))
+        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint>>::fromJSI(runtime, obj.getProperty(runtime, "steps"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
       obj.setProperty(runtime, "summaryVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.summaryVariants));
       obj.setProperty(runtime, "additionalInformationVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.additionalInformationVariants));
       obj.setProperty(runtime, "selectionSummaryVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.selectionSummaryVariants));
-      obj.setProperty(runtime, "steps", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint>>::toJSI(runtime, arg.steps));
+      obj.setProperty(runtime, "steps", JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint>>::toJSI(runtime, arg.steps));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -86,7 +86,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "summaryVariants"))) return false;
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "additionalInformationVariants"))) return false;
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "selectionSummaryVariants"))) return false;
-      if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint>>::canConvert(runtime, obj.getProperty(runtime, "steps"))) return false;
+      if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint>>::canConvert(runtime, obj.getProperty(runtime, "steps"))) return false;
       return true;
     }
   };

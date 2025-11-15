@@ -2,7 +2,7 @@ import {
   type GridButton,
   GridTemplate,
   type GridTemplateConfig,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { AutoTemplate } from './AutoTemplate';
 
 const getButtons = (

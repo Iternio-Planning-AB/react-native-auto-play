@@ -27,7 +27,7 @@
 
 #include <string>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (TripPreviewTextConfiguration).
@@ -44,23 +44,23 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit TripPreviewTextConfiguration(std::string startButtonTitle, std::string additionalRoutesButtonTitle, std::string overviewButtonTitle, std::string travelEstimatesTitle): startButtonTitle(startButtonTitle), additionalRoutesButtonTitle(additionalRoutesButtonTitle), overviewButtonTitle(overviewButtonTitle), travelEstimatesTitle(travelEstimatesTitle) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TripPreviewTextConfiguration <> JS TripPreviewTextConfiguration (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPreviewTextConfiguration> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPreviewTextConfiguration fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TripPreviewTextConfiguration> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TripPreviewTextConfiguration fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPreviewTextConfiguration(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::TripPreviewTextConfiguration(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "startButtonTitle")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "additionalRoutesButtonTitle")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "overviewButtonTitle")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "travelEstimatesTitle"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPreviewTextConfiguration& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::TripPreviewTextConfiguration& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "startButtonTitle", JSIConverter<std::string>::toJSI(runtime, arg.startButtonTitle));
       obj.setProperty(runtime, "additionalRoutesButtonTitle", JSIConverter<std::string>::toJSI(runtime, arg.additionalRoutesButtonTitle));

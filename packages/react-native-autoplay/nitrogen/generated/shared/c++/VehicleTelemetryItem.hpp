@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `StringTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct StringTelemetryItem; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct StringTelemetryItem; }
 // Forward declaration of `NumericTelemetryItem` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NumericTelemetryItem; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NumericTelemetryItem; }
 
 #include "StringTelemetryItem.hpp"
 #include <optional>
 #include "NumericTelemetryItem.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (VehicleTelemetryItem).
@@ -48,26 +48,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit VehicleTelemetryItem(std::optional<StringTelemetryItem> name, std::optional<NumericTelemetryItem> year, std::optional<StringTelemetryItem> manufacturer): name(name), year(year), manufacturer(manufacturer) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ VehicleTelemetryItem <> JS VehicleTelemetryItem (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem(
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "name")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "year")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "manufacturer"))
+      return margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem(
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "name")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "year")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::fromJSI(runtime, obj.getProperty(runtime, "manufacturer"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::VehicleTelemetryItem& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::VehicleTelemetryItem& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "name", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::toJSI(runtime, arg.name));
-      obj.setProperty(runtime, "year", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::toJSI(runtime, arg.year));
-      obj.setProperty(runtime, "manufacturer", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::toJSI(runtime, arg.manufacturer));
+      obj.setProperty(runtime, "name", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::toJSI(runtime, arg.name));
+      obj.setProperty(runtime, "year", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::toJSI(runtime, arg.year));
+      obj.setProperty(runtime, "manufacturer", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::toJSI(runtime, arg.manufacturer));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -78,9 +78,9 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "name"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "year"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "manufacturer"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "name"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "year"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem>>::canConvert(runtime, obj.getProperty(runtime, "manufacturer"))) return false;
       return true;
     }
   };

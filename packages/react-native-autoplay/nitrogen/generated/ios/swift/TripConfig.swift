@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `TripConfig`, backed by a C++ struct.
  */
-public typealias TripConfig = margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripConfig
+public typealias TripConfig = margelo.nitro.swe.iternio.reactnativeautoplay.TripConfig
 
 public extension TripConfig {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `TripConfig`.

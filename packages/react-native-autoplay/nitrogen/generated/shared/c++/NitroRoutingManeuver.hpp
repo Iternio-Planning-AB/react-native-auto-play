@@ -24,31 +24,31 @@
 #endif
 
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAttributedString; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttributedString; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `TurnType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TurnType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnType; }
 // Forward declaration of `OffRampType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OffRampType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OffRampType; }
 // Forward declaration of `OnRampType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class OnRampType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OnRampType; }
 // Forward declaration of `ForkType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ForkType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkType; }
 // Forward declaration of `KeepType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class KeepType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct LaneGuidance; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct LaneGuidance; }
 // Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `TravelEstimates` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TravelEstimates; }
 // Forward declaration of `TrafficSide` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class TrafficSide; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TrafficSide; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
 
 #include "NitroAttributedString.hpp"
 #include <vector>
@@ -68,7 +68,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ManeuverTyp
 #include "TrafficSide.hpp"
 #include "ManeuverType.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroRoutingManeuver).
@@ -100,56 +100,56 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroRoutingManeuver(std::vector<NitroAttributedString> attributedInstructionVariants, std::variant<GlyphImage, AssetImage> symbolImage, std::optional<std::variant<GlyphImage, AssetImage>> junctionImage, std::optional<TurnType> turnType, std::optional<double> angle, std::optional<std::vector<double>> elementAngles, std::optional<double> exitNumber, std::optional<OffRampType> offRampType, std::optional<OnRampType> onRampType, std::optional<ForkType> forkType, std::optional<KeepType> keepType, std::optional<LaneGuidance> linkedLaneGuidance, NitroColor cardBackgroundColor, std::string id, TravelEstimates travelEstimates, TrafficSide trafficSide, ManeuverType maneuverType, std::optional<std::vector<std::string>> roadName, std::optional<std::string> highwayExitLabel): attributedInstructionVariants(attributedInstructionVariants), symbolImage(symbolImage), junctionImage(junctionImage), turnType(turnType), angle(angle), elementAngles(elementAngles), exitNumber(exitNumber), offRampType(offRampType), onRampType(onRampType), forkType(forkType), keepType(keepType), linkedLaneGuidance(linkedLaneGuidance), cardBackgroundColor(cardBackgroundColor), id(id), travelEstimates(travelEstimates), trafficSide(trafficSide), maneuverType(maneuverType), roadName(roadName), highwayExitLabel(highwayExitLabel) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroRoutingManeuver <> JS NitroRoutingManeuver (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRoutingManeuver> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRoutingManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRoutingManeuver(
-        JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::fromJSI(runtime, obj.getProperty(runtime, "attributedInstructionVariants")),
-        JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "symbolImage")),
-        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "junctionImage")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::fromJSI(runtime, obj.getProperty(runtime, "turnType")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver(
+        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::fromJSI(runtime, obj.getProperty(runtime, "attributedInstructionVariants")),
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "symbolImage")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "junctionImage")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::fromJSI(runtime, obj.getProperty(runtime, "turnType")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "angle")),
         JSIConverter<std::optional<std::vector<double>>>::fromJSI(runtime, obj.getProperty(runtime, "elementAngles")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "exitNumber")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OffRampType>>::fromJSI(runtime, obj.getProperty(runtime, "offRampType")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType>>::fromJSI(runtime, obj.getProperty(runtime, "onRampType")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ForkType>>::fromJSI(runtime, obj.getProperty(runtime, "forkType")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::KeepType>>::fromJSI(runtime, obj.getProperty(runtime, "keepType")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance>>::fromJSI(runtime, obj.getProperty(runtime, "linkedLaneGuidance")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "cardBackgroundColor")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OffRampType>>::fromJSI(runtime, obj.getProperty(runtime, "offRampType")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType>>::fromJSI(runtime, obj.getProperty(runtime, "onRampType")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::ForkType>>::fromJSI(runtime, obj.getProperty(runtime, "forkType")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::KeepType>>::fromJSI(runtime, obj.getProperty(runtime, "keepType")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance>>::fromJSI(runtime, obj.getProperty(runtime, "linkedLaneGuidance")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "cardBackgroundColor")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::fromJSI(runtime, obj.getProperty(runtime, "travelEstimates")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide>::fromJSI(runtime, obj.getProperty(runtime, "trafficSide")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType>::fromJSI(runtime, obj.getProperty(runtime, "maneuverType")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::fromJSI(runtime, obj.getProperty(runtime, "travelEstimates")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide>::fromJSI(runtime, obj.getProperty(runtime, "trafficSide")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType>::fromJSI(runtime, obj.getProperty(runtime, "maneuverType")),
         JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, "roadName")),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "highwayExitLabel"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRoutingManeuver& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "attributedInstructionVariants", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::toJSI(runtime, arg.attributedInstructionVariants));
-      obj.setProperty(runtime, "symbolImage", JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::toJSI(runtime, arg.symbolImage));
-      obj.setProperty(runtime, "junctionImage", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.junctionImage));
-      obj.setProperty(runtime, "turnType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::toJSI(runtime, arg.turnType));
+      obj.setProperty(runtime, "attributedInstructionVariants", JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::toJSI(runtime, arg.attributedInstructionVariants));
+      obj.setProperty(runtime, "symbolImage", JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.symbolImage));
+      obj.setProperty(runtime, "junctionImage", JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.junctionImage));
+      obj.setProperty(runtime, "turnType", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::toJSI(runtime, arg.turnType));
       obj.setProperty(runtime, "angle", JSIConverter<std::optional<double>>::toJSI(runtime, arg.angle));
       obj.setProperty(runtime, "elementAngles", JSIConverter<std::optional<std::vector<double>>>::toJSI(runtime, arg.elementAngles));
       obj.setProperty(runtime, "exitNumber", JSIConverter<std::optional<double>>::toJSI(runtime, arg.exitNumber));
-      obj.setProperty(runtime, "offRampType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OffRampType>>::toJSI(runtime, arg.offRampType));
-      obj.setProperty(runtime, "onRampType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType>>::toJSI(runtime, arg.onRampType));
-      obj.setProperty(runtime, "forkType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ForkType>>::toJSI(runtime, arg.forkType));
-      obj.setProperty(runtime, "keepType", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::KeepType>>::toJSI(runtime, arg.keepType));
-      obj.setProperty(runtime, "linkedLaneGuidance", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance>>::toJSI(runtime, arg.linkedLaneGuidance));
-      obj.setProperty(runtime, "cardBackgroundColor", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.cardBackgroundColor));
+      obj.setProperty(runtime, "offRampType", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OffRampType>>::toJSI(runtime, arg.offRampType));
+      obj.setProperty(runtime, "onRampType", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType>>::toJSI(runtime, arg.onRampType));
+      obj.setProperty(runtime, "forkType", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::ForkType>>::toJSI(runtime, arg.forkType));
+      obj.setProperty(runtime, "keepType", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::KeepType>>::toJSI(runtime, arg.keepType));
+      obj.setProperty(runtime, "linkedLaneGuidance", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance>>::toJSI(runtime, arg.linkedLaneGuidance));
+      obj.setProperty(runtime, "cardBackgroundColor", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.cardBackgroundColor));
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
-      obj.setProperty(runtime, "travelEstimates", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::toJSI(runtime, arg.travelEstimates));
-      obj.setProperty(runtime, "trafficSide", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide>::toJSI(runtime, arg.trafficSide));
-      obj.setProperty(runtime, "maneuverType", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType>::toJSI(runtime, arg.maneuverType));
+      obj.setProperty(runtime, "travelEstimates", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::toJSI(runtime, arg.travelEstimates));
+      obj.setProperty(runtime, "trafficSide", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide>::toJSI(runtime, arg.trafficSide));
+      obj.setProperty(runtime, "maneuverType", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType>::toJSI(runtime, arg.maneuverType));
       obj.setProperty(runtime, "roadName", JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.roadName));
       obj.setProperty(runtime, "highwayExitLabel", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.highwayExitLabel));
       return obj;
@@ -162,23 +162,23 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedString>>::canConvert(runtime, obj.getProperty(runtime, "attributedInstructionVariants"))) return false;
-      if (!JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "symbolImage"))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "junctionImage"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>>::canConvert(runtime, obj.getProperty(runtime, "turnType"))) return false;
+      if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::canConvert(runtime, obj.getProperty(runtime, "attributedInstructionVariants"))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "symbolImage"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "junctionImage"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::canConvert(runtime, obj.getProperty(runtime, "turnType"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "angle"))) return false;
       if (!JSIConverter<std::optional<std::vector<double>>>::canConvert(runtime, obj.getProperty(runtime, "elementAngles"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "exitNumber"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OffRampType>>::canConvert(runtime, obj.getProperty(runtime, "offRampType"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType>>::canConvert(runtime, obj.getProperty(runtime, "onRampType"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ForkType>>::canConvert(runtime, obj.getProperty(runtime, "forkType"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::KeepType>>::canConvert(runtime, obj.getProperty(runtime, "keepType"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::LaneGuidance>>::canConvert(runtime, obj.getProperty(runtime, "linkedLaneGuidance"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "cardBackgroundColor"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OffRampType>>::canConvert(runtime, obj.getProperty(runtime, "offRampType"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType>>::canConvert(runtime, obj.getProperty(runtime, "onRampType"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::ForkType>>::canConvert(runtime, obj.getProperty(runtime, "forkType"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::KeepType>>::canConvert(runtime, obj.getProperty(runtime, "keepType"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::LaneGuidance>>::canConvert(runtime, obj.getProperty(runtime, "linkedLaneGuidance"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "cardBackgroundColor"))) return false;
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "id"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::canConvert(runtime, obj.getProperty(runtime, "travelEstimates"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TrafficSide>::canConvert(runtime, obj.getProperty(runtime, "trafficSide"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType>::canConvert(runtime, obj.getProperty(runtime, "maneuverType"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::canConvert(runtime, obj.getProperty(runtime, "travelEstimates"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TrafficSide>::canConvert(runtime, obj.getProperty(runtime, "trafficSide"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType>::canConvert(runtime, obj.getProperty(runtime, "maneuverType"))) return false;
       if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, "roadName"))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "highwayExitLabel"))) return false;
       return true;

@@ -24,18 +24,18 @@
 #endif
 
 // Forward declaration of `Distance` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Distance; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Distance; }
 // Forward declaration of `DurationWithTimeZone` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct DurationWithTimeZone; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWithTimeZone; }
 // Forward declaration of `AutoText` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 
 #include "Distance.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "AutoText.hpp"
 #include <optional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (TravelEstimates).
@@ -51,26 +51,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit TravelEstimates(Distance distanceRemaining, DurationWithTimeZone timeRemaining, std::optional<AutoText> tripText): distanceRemaining(distanceRemaining), timeRemaining(timeRemaining), tripText(tripText) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TravelEstimates <> JS TravelEstimates (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates(
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Distance>::fromJSI(runtime, obj.getProperty(runtime, "distanceRemaining")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone>::fromJSI(runtime, obj.getProperty(runtime, "timeRemaining")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "tripText"))
+      return margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates(
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::fromJSI(runtime, obj.getProperty(runtime, "distanceRemaining")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::fromJSI(runtime, obj.getProperty(runtime, "timeRemaining")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "tripText"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "distanceRemaining", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Distance>::toJSI(runtime, arg.distanceRemaining));
-      obj.setProperty(runtime, "timeRemaining", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone>::toJSI(runtime, arg.timeRemaining));
-      obj.setProperty(runtime, "tripText", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::toJSI(runtime, arg.tripText));
+      obj.setProperty(runtime, "distanceRemaining", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::toJSI(runtime, arg.distanceRemaining));
+      obj.setProperty(runtime, "timeRemaining", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::toJSI(runtime, arg.timeRemaining));
+      obj.setProperty(runtime, "tripText", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::toJSI(runtime, arg.tripText));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -81,9 +81,9 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Distance>::canConvert(runtime, obj.getProperty(runtime, "distanceRemaining"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone>::canConvert(runtime, obj.getProperty(runtime, "timeRemaining"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "tripText"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::canConvert(runtime, obj.getProperty(runtime, "distanceRemaining"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::canConvert(runtime, obj.getProperty(runtime, "timeRemaining"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "tripText"))) return false;
       return true;
     }
   };

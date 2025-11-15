@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `TripPoint`, backed by a C++ struct.
  */
-public typealias TripPoint = margelo.nitro.at.g4rb4g3.autoplay.hybrid.TripPoint
+public typealias TripPoint = margelo.nitro.swe.iternio.reactnativeautoplay.TripPoint
 
 public extension TripPoint {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `TripPoint`.

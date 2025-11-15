@@ -1,4 +1,4 @@
-import type { CarPlayDashboardButton } from '@g4rb4g3/react-native-autoplay';
+import type { CarPlayDashboardButton } from '@iternio/react-native-auto-play';
 import type { Dispatch } from '@reduxjs/toolkit';
 import { actionStartNavigation } from '../state/navigationSlice';
 import { AutoTrip } from './AutoTrip';

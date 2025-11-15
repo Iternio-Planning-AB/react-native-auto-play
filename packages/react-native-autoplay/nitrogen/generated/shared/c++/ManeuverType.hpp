@@ -18,7 +18,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript enum (ManeuverType).
@@ -38,18 +38,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     KEEP      SWIFT_NAME(keep) = 90,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ ManeuverType <> JS ManeuverType (enum)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
-      return static_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType>(enumValue);
+      return static_cast<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType>(enumValue);
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::ManeuverType arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverType arg) {
       int enumValue = static_cast<int>(arg);
       return JSIConverter<int>::toJSI(runtime, enumValue);
     }

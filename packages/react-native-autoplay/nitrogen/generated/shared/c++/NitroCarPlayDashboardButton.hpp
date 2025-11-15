@@ -24,9 +24,9 @@
 #endif
 
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
@@ -36,7 +36,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 #include <functional>
 #include <optional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroCarPlayDashboardButton).
@@ -54,26 +54,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroCarPlayDashboardButton(std::variant<GlyphImage, AssetImage> image, std::vector<std::string> titleVariants, std::vector<std::string> subtitleVariants, std::function<void()> onPress, std::optional<bool> launchHeadUnitScene): image(image), titleVariants(titleVariants), subtitleVariants(subtitleVariants), onPress(onPress), launchHeadUnitScene(launchHeadUnitScene) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroCarPlayDashboardButton <> JS NitroCarPlayDashboardButton (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroCarPlayDashboardButton> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroCarPlayDashboardButton fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroCarPlayDashboardButton> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroCarPlayDashboardButton fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroCarPlayDashboardButton(
-        JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroCarPlayDashboardButton(
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "titleVariants")),
         JSIConverter<std::vector<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "subtitleVariants")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "launchHeadUnitScene"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroCarPlayDashboardButton& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroCarPlayDashboardButton& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "titleVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.titleVariants));
       obj.setProperty(runtime, "subtitleVariants", JSIConverter<std::vector<std::string>>::toJSI(runtime, arg.subtitleVariants));
       obj.setProperty(runtime, "onPress", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
@@ -88,7 +88,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "titleVariants"))) return false;
       if (!JSIConverter<std::vector<std::string>>::canConvert(runtime, obj.getProperty(runtime, "subtitleVariants"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;

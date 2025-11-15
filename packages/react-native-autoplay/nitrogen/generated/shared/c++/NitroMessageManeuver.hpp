@@ -24,11 +24,11 @@
 #endif
 
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 
 #include <string>
 #include <optional>
@@ -37,7 +37,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
 #include <variant>
 #include "NitroColor.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroMessageManeuver).
@@ -54,28 +54,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroMessageManeuver(std::string title, std::optional<std::string> text, std::optional<std::variant<GlyphImage, AssetImage>> image, NitroColor cardBackgroundColor): title(title), text(text), image(image), cardBackgroundColor(cardBackgroundColor) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroMessageManeuver <> JS NitroMessageManeuver (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMessageManeuver> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMessageManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMessageManeuver> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroMessageManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMessageManeuver(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroMessageManeuver(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "title")),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "text")),
-        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "cardBackgroundColor"))
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "cardBackgroundColor"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMessageManeuver& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroMessageManeuver& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "title", JSIConverter<std::string>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, "text", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.text));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
-      obj.setProperty(runtime, "cardBackgroundColor", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.cardBackgroundColor));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "cardBackgroundColor", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.cardBackgroundColor));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -88,8 +88,8 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "text"))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "cardBackgroundColor"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "cardBackgroundColor"))) return false;
       return true;
     }
   };

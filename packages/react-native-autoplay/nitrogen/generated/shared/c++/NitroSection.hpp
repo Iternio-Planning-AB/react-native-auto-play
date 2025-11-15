@@ -24,9 +24,9 @@
 #endif
 
 // Forward declaration of `NitroRow` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroRow; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectionType; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 
 #include <string>
 #include <optional>
@@ -34,7 +34,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class NitroSectio
 #include <vector>
 #include "NitroSectionType.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroSection).
@@ -50,26 +50,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroSection(std::optional<std::string> title, std::vector<NitroRow> items, NitroSectionType type): title(title), items(items), type(type) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroSection <> JS NitroSection (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "title")),
-        JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::fromJSI(runtime, obj.getProperty(runtime, "items")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::fromJSI(runtime, obj.getProperty(runtime, "type"))
+        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow>>::fromJSI(runtime, obj.getProperty(runtime, "items")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType>::fromJSI(runtime, obj.getProperty(runtime, "type"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSection& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "title", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
-      obj.setProperty(runtime, "items", JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::toJSI(runtime, arg.items));
-      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::toJSI(runtime, arg.type));
+      obj.setProperty(runtime, "items", JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow>>::toJSI(runtime, arg.items));
+      obj.setProperty(runtime, "type", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType>::toJSI(runtime, arg.type));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -81,8 +81,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
-      if (!JSIConverter<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow>>::canConvert(runtime, obj.getProperty(runtime, "items"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
+      if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow>>::canConvert(runtime, obj.getProperty(runtime, "items"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType>::canConvert(runtime, obj.getProperty(runtime, "type"))) return false;
       return true;
     }
   };

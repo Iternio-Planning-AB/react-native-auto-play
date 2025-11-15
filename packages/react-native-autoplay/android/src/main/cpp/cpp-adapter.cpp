@@ -1,6 +1,6 @@
 #include <jni.h>
-#include "NitroAutoplayOnLoad.hpp"
+#include "ReactNativeAutoPlayOnLoad.hpp"
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
-  return margelo::nitro::at::g4rb4g3::autoplay::hybrid::initialize(vm);
+  return margelo::nitro::swe::iternio::reactnativeautoplay::initialize(vm);
 }

@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `AlertActionStyle`, backed by a C++ enum.
  */
-public typealias AlertActionStyle = margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertActionStyle
+public typealias AlertActionStyle = margelo.nitro.swe.iternio.reactnativeautoplay.AlertActionStyle
 
 public extension AlertActionStyle {
   /**

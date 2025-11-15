@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroAttributedStringImage`, backed by a C++ struct.
  */
-public typealias NitroAttributedStringImage = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedStringImage
+public typealias NitroAttributedStringImage = margelo.nitro.swe.iternio.reactnativeautoplay.NitroAttributedStringImage
 
 public extension NitroAttributedStringImage {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroAttributedStringImage`.

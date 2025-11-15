@@ -13,7 +13,7 @@ import NitroModules
  * This class can be used from C++, e.g. to wrap the Swift closure as a `std::function`.
  */
 public final class Func_void_VisibilityState {
-  public typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  public typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   private let closure: (_ payload: VisibilityState) -> Void
 
@@ -23,7 +23,7 @@ public final class Func_void_VisibilityState {
 
   @inline(__always)
   public func call(payload: Int32) -> Void {
-    self.closure(margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibilityState(rawValue: payload)!)
+    self.closure(margelo.nitro.swe.iternio.reactnativeautoplay.VisibilityState(rawValue: payload)!)
   }
 
   /**

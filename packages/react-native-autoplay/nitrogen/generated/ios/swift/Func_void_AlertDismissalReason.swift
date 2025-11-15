@@ -13,7 +13,7 @@ import NitroModules
  * This class can be used from C++, e.g. to wrap the Swift closure as a `std::function`.
  */
 public final class Func_void_AlertDismissalReason {
-  public typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  public typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   private let closure: (_ reason: AlertDismissalReason) -> Void
 
@@ -23,7 +23,7 @@ public final class Func_void_AlertDismissalReason {
 
   @inline(__always)
   public func call(reason: Int32) -> Void {
-    self.closure(margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertDismissalReason(rawValue: reason)!)
+    self.closure(margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason(rawValue: reason)!)
   }
 
   /**

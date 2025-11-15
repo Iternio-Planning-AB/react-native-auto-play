@@ -13,7 +13,7 @@
 #include <string>
 #include <functional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -23,7 +23,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JFunc_void_std__string_std__string: public jni::JavaClass<JFunc_void_std__string_std__string> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Func_void_std__string_std__string;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__string_std__string;";
 
   public:
     /**
@@ -59,7 +59,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Func_void_std__string_std__string_cxx;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__string_std__string_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_std__string_std__string_cxx::invoke_cxx)});
     }
@@ -72,4 +72,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)> _func;
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

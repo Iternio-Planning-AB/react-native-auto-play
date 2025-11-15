@@ -27,7 +27,7 @@
 
 #include <string>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (DurationWithTimeZone).
@@ -42,21 +42,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit DurationWithTimeZone(std::string timezone, double seconds): timezone(timezone), seconds(seconds) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ DurationWithTimeZone <> JS DurationWithTimeZone (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "timezone")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "seconds"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::DurationWithTimeZone& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "timezone", JSIConverter<std::string>::toJSI(runtime, arg.timezone));
       obj.setProperty(runtime, "seconds", JSIConverter<double>::toJSI(runtime, arg.seconds));

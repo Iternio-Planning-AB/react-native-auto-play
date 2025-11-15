@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `KeepType`, backed by a C++ enum.
  */
-public typealias KeepType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.KeepType
+public typealias KeepType = margelo.nitro.swe.iternio.reactnativeautoplay.KeepType
 
 public extension KeepType {
   /**

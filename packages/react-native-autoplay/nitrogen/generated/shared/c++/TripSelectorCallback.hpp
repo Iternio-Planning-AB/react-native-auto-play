@@ -28,7 +28,7 @@
 #include <string>
 #include <functional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (TripSelectorCallback).
@@ -42,20 +42,20 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit TripSelectorCallback(std::function<void(const std::string& /* id */)> setSelectedTrip): setSelectedTrip(setSelectedTrip) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TripSelectorCallback <> JS TripSelectorCallback (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripSelectorCallback> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripSelectorCallback fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TripSelectorCallback> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TripSelectorCallback fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripSelectorCallback(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::TripSelectorCallback(
         JSIConverter<std::function<void(const std::string&)>>::fromJSI(runtime, obj.getProperty(runtime, "setSelectedTrip"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripSelectorCallback& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::TripSelectorCallback& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "setSelectedTrip", JSIConverter<std::function<void(const std::string&)>>::toJSI(runtime, arg.setSelectedTrip));
       return obj;

@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroMapButton`, backed by a C++ struct.
  */
-public typealias NitroMapButton = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButton
+public typealias NitroMapButton = margelo.nitro.swe.iternio.reactnativeautoplay.NitroMapButton
 
 public extension NitroMapButton {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroMapButton`.

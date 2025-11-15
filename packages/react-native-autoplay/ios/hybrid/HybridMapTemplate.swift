@@ -5,7 +5,7 @@
 //  Created by Manuel Auer on 15.10.25.
 //
 
-class HybridMapTemplate: HybridHybridMapTemplateSpec {
+class HybridMapTemplate: HybridMapTemplateSpec {
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
         try RootModule.withScene { scene in

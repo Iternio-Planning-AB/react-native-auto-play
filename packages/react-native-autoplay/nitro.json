@@ -1,49 +1,49 @@
 {
   "$schema": "https://nitro.margelo.com/nitro.schema.json",
-  "cxxNamespace": ["at", "g4rb4g3", "autoplay", "hybrid"],
+  "cxxNamespace": ["swe", "iternio", "reactnativeautoplay"],
   "ios": {
-    "iosModuleName": "NitroAutoplay"
+    "iosModuleName": "ReactNativeAutoPlay"
   },
   "android": {
-    "androidNamespace": ["at", "g4rb4g3", "autoplay", "hybrid"],
-    "androidCxxLibName": "NitroAutoplay"
+    "androidNamespace": ["swe", "iternio", "reactnativeautoplay"],
+    "androidCxxLibName": "ReactNativeAutoPlay"
   },
   "autolinking": {
-    "HybridAutoPlay": {
+    "AutoPlay": {
       "kotlin": "HybridAutoPlay",
       "swift": "HybridAutoPlay"
     },
-    "HybridAndroidAutoTelemetry": {
+    "AndroidAutoTelemetry": {
       "kotlin": "HybridAndroidAutoTelemetry"
     },
-    "HybridListTemplate": {
+    "ListTemplate": {
       "kotlin": "HybridListTemplate",
       "swift": "HybridListTemplate"
     },
-    "HybridInformationTemplate": {
+    "InformationTemplate": {
       "kotlin": "HybridInformationTemplate",
       "swift": "HybridInformationTemplate"
     },
-    "HybridGridTemplate": {
+    "GridTemplate": {
       "kotlin": "HybridGridTemplate",
       "swift": "HybridGridTemplate"
     },
-    "HybridMapTemplate": {
+    "MapTemplate": {
       "kotlin": "HybridMapTemplate",
       "swift": "HybridMapTemplate"
     },
-    "HybridMessageTemplate": {
+    "MessageTemplate": {
       "kotlin": "HybridMessageTemplate",
       "swift": "HybridMessageTemplate"
     },
-    "HybridSearchTemplate": {
+    "SearchTemplate": {
       "kotlin": "HybridSearchTemplate",
       "swift": "HybridSearchTemplate"
     },
-    "HybridCarPlayDashboard": {
+    "CarPlayDashboard": {
       "swift": "HybridCarPlayDashboard"
     },
-    "HybridCluster": {
+    "Cluster": {
       "kotlin": "HybridCluster",
       "swift": "HybridCluster"
     }

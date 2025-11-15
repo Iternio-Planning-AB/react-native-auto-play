@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class VisibleTravelEstimate; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
 // Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct Point; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { enum class ColorScheme; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ColorScheme; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroMapButton; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMapButton; }
 // Forward declaration of `NitroAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction; }
 
 #include <string>
 #include <optional>
@@ -44,7 +44,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
 #include <vector>
 #include "NitroAction.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (MapTemplateConfig).
@@ -74,16 +74,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit MapTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<VisibleTravelEstimate> visibleTravelEstimate, std::optional<std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>> onDidUpdatePanGestureWithTranslation, std::optional<std::function<void(const Point& /* center */, double /* scale */)>> onDidUpdateZoomGestureWithCenter, std::optional<std::function<void(const Point& /* center */)>> onClick, std::optional<std::function<void(const Point& /* center */)>> onDoubleClick, std::optional<std::function<void(ColorScheme /* colorScheme */)>> onAppearanceDidChange, std::function<void()> onStopNavigation, std::optional<std::function<void()>> onAutoDriveEnabled, std::optional<std::vector<NitroMapButton>> mapButtons, std::optional<std::vector<NitroAction>> headerActions): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), visibleTravelEstimate(visibleTravelEstimate), onDidUpdatePanGestureWithTranslation(onDidUpdatePanGestureWithTranslation), onDidUpdateZoomGestureWithCenter(onDidUpdateZoomGestureWithCenter), onClick(onClick), onDoubleClick(onDoubleClick), onAppearanceDidChange(onAppearanceDidChange), onStopNavigation(onStopNavigation), onAutoDriveEnabled(onAutoDriveEnabled), mapButtons(mapButtons), headerActions(headerActions) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ MapTemplateConfig <> JS MapTemplateConfig (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::MapTemplateConfig> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::MapTemplateConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::MapTemplateConfig> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::MapTemplateConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::MapTemplateConfig(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::MapTemplateConfig(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillAppear")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillDisappear")),
@@ -91,19 +91,19 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onPopped")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "autoDismissMs")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibleTravelEstimate>>::fromJSI(runtime, obj.getProperty(runtime, "visibleTravelEstimate")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point>&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidUpdatePanGestureWithTranslation")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, double)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidUpdateZoomGestureWithCenter")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onClick")),
-        JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDoubleClick")),
-        JSIConverter<std::optional<std::function<void(margelo::nitro::at::g4rb4g3::autoplay::hybrid::ColorScheme)>>>::fromJSI(runtime, obj.getProperty(runtime, "onAppearanceDidChange")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::fromJSI(runtime, obj.getProperty(runtime, "visibleTravelEstimate")),
+        JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidUpdatePanGestureWithTranslation")),
+        JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidUpdateZoomGestureWithCenter")),
+        JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onClick")),
+        JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDoubleClick")),
+        JSIConverter<std::optional<std::function<void(margelo::nitro::swe::iternio::reactnativeautoplay::ColorScheme)>>>::fromJSI(runtime, obj.getProperty(runtime, "onAppearanceDidChange")),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "onStopNavigation")),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onAutoDriveEnabled")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButton>>>::fromJSI(runtime, obj.getProperty(runtime, "mapButtons")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "headerActions"))
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::fromJSI(runtime, obj.getProperty(runtime, "mapButtons")),
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "headerActions"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::MapTemplateConfig& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::MapTemplateConfig& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
       obj.setProperty(runtime, "onWillAppear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onWillAppear));
@@ -112,16 +112,16 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidDisappear));
       obj.setProperty(runtime, "onPopped", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPopped));
       obj.setProperty(runtime, "autoDismissMs", JSIConverter<std::optional<double>>::toJSI(runtime, arg.autoDismissMs));
-      obj.setProperty(runtime, "visibleTravelEstimate", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibleTravelEstimate>>::toJSI(runtime, arg.visibleTravelEstimate));
-      obj.setProperty(runtime, "onDidUpdatePanGestureWithTranslation", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point>&)>>>::toJSI(runtime, arg.onDidUpdatePanGestureWithTranslation));
-      obj.setProperty(runtime, "onDidUpdateZoomGestureWithCenter", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, double)>>>::toJSI(runtime, arg.onDidUpdateZoomGestureWithCenter));
-      obj.setProperty(runtime, "onClick", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::toJSI(runtime, arg.onClick));
-      obj.setProperty(runtime, "onDoubleClick", JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::toJSI(runtime, arg.onDoubleClick));
-      obj.setProperty(runtime, "onAppearanceDidChange", JSIConverter<std::optional<std::function<void(margelo::nitro::at::g4rb4g3::autoplay::hybrid::ColorScheme)>>>::toJSI(runtime, arg.onAppearanceDidChange));
+      obj.setProperty(runtime, "visibleTravelEstimate", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::toJSI(runtime, arg.visibleTravelEstimate));
+      obj.setProperty(runtime, "onDidUpdatePanGestureWithTranslation", JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::toJSI(runtime, arg.onDidUpdatePanGestureWithTranslation));
+      obj.setProperty(runtime, "onDidUpdateZoomGestureWithCenter", JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::toJSI(runtime, arg.onDidUpdateZoomGestureWithCenter));
+      obj.setProperty(runtime, "onClick", JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::toJSI(runtime, arg.onClick));
+      obj.setProperty(runtime, "onDoubleClick", JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::toJSI(runtime, arg.onDoubleClick));
+      obj.setProperty(runtime, "onAppearanceDidChange", JSIConverter<std::optional<std::function<void(margelo::nitro::swe::iternio::reactnativeautoplay::ColorScheme)>>>::toJSI(runtime, arg.onAppearanceDidChange));
       obj.setProperty(runtime, "onStopNavigation", JSIConverter<std::function<void()>>::toJSI(runtime, arg.onStopNavigation));
       obj.setProperty(runtime, "onAutoDriveEnabled", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onAutoDriveEnabled));
-      obj.setProperty(runtime, "mapButtons", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButton>>>::toJSI(runtime, arg.mapButtons));
-      obj.setProperty(runtime, "headerActions", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::toJSI(runtime, arg.headerActions));
+      obj.setProperty(runtime, "mapButtons", JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::toJSI(runtime, arg.mapButtons));
+      obj.setProperty(runtime, "headerActions", JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.headerActions));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -139,16 +139,16 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onPopped"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "autoDismissMs"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibleTravelEstimate>>::canConvert(runtime, obj.getProperty(runtime, "visibleTravelEstimate"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point>&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidUpdatePanGestureWithTranslation"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&, double)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidUpdateZoomGestureWithCenter"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::canConvert(runtime, obj.getProperty(runtime, "onClick"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::Point&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDoubleClick"))) return false;
-      if (!JSIConverter<std::optional<std::function<void(margelo::nitro::at::g4rb4g3::autoplay::hybrid::ColorScheme)>>>::canConvert(runtime, obj.getProperty(runtime, "onAppearanceDidChange"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::canConvert(runtime, obj.getProperty(runtime, "visibleTravelEstimate"))) return false;
+      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidUpdatePanGestureWithTranslation"))) return false;
+      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidUpdateZoomGestureWithCenter"))) return false;
+      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::canConvert(runtime, obj.getProperty(runtime, "onClick"))) return false;
+      if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&)>>>::canConvert(runtime, obj.getProperty(runtime, "onDoubleClick"))) return false;
+      if (!JSIConverter<std::optional<std::function<void(margelo::nitro::swe::iternio::reactnativeautoplay::ColorScheme)>>>::canConvert(runtime, obj.getProperty(runtime, "onAppearanceDidChange"))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "onStopNavigation"))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onAutoDriveEnabled"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroMapButton>>>::canConvert(runtime, obj.getProperty(runtime, "mapButtons"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "headerActions"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::canConvert(runtime, obj.getProperty(runtime, "mapButtons"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "headerActions"))) return false;
       return true;
     }
   };

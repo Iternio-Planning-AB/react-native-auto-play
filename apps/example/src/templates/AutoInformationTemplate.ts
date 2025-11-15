@@ -2,7 +2,7 @@ import {
   InformationTemplate,
   type InformationTemplateConfig,
   TextPlaceholders,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { Platform } from 'react-native';
 import { AutoTemplate } from './AutoTemplate';
 

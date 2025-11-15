@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `NitroAction` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroAction; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction; }
 // Forward declaration of `AutoText` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroBaseMapTemplateConfig; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
 
 #include <string>
 #include <optional>
@@ -45,7 +45,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroBaseMapTem
 #include <variant>
 #include "NitroBaseMapTemplateConfig.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (MessageTemplateConfig).
@@ -71,16 +71,16 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit MessageTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, std::optional<AutoText> title, AutoText message, std::optional<std::vector<NitroAction>> actions, std::optional<std::variant<GlyphImage, AssetImage>> image, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), message(message), actions(actions), image(image), mapConfig(mapConfig) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ MessageTemplateConfig <> JS MessageTemplateConfig (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::MessageTemplateConfig> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::MessageTemplateConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::MessageTemplateConfig> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::MessageTemplateConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::MessageTemplateConfig(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::MessageTemplateConfig(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillAppear")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onWillDisappear")),
@@ -88,15 +88,15 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onDidDisappear")),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, "onPopped")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "autoDismissMs")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "headerActions")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "title")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "message")),
-        JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "actions")),
-        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, "mapConfig"))
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "headerActions")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "title")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "message")),
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, "actions")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, "mapConfig"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::MessageTemplateConfig& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::MessageTemplateConfig& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
       obj.setProperty(runtime, "onWillAppear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onWillAppear));
@@ -105,12 +105,12 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "onDidDisappear", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidDisappear));
       obj.setProperty(runtime, "onPopped", JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPopped));
       obj.setProperty(runtime, "autoDismissMs", JSIConverter<std::optional<double>>::toJSI(runtime, arg.autoDismissMs));
-      obj.setProperty(runtime, "headerActions", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::toJSI(runtime, arg.headerActions));
-      obj.setProperty(runtime, "title", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::toJSI(runtime, arg.title));
-      obj.setProperty(runtime, "message", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::toJSI(runtime, arg.message));
-      obj.setProperty(runtime, "actions", JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::toJSI(runtime, arg.actions));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
-      obj.setProperty(runtime, "mapConfig", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroBaseMapTemplateConfig>>::toJSI(runtime, arg.mapConfig));
+      obj.setProperty(runtime, "headerActions", JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.headerActions));
+      obj.setProperty(runtime, "title", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::toJSI(runtime, arg.title));
+      obj.setProperty(runtime, "message", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.message));
+      obj.setProperty(runtime, "actions", JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.actions));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "mapConfig", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::toJSI(runtime, arg.mapConfig));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -128,12 +128,12 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onDidDisappear"))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, "onPopped"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "autoDismissMs"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "headerActions"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::canConvert(runtime, obj.getProperty(runtime, "message"))) return false;
-      if (!JSIConverter<std::optional<std::vector<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "actions"))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroBaseMapTemplateConfig>>::canConvert(runtime, obj.getProperty(runtime, "mapConfig"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "headerActions"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, "message"))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, "actions"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::canConvert(runtime, obj.getProperty(runtime, "mapConfig"))) return false;
       return true;
     }
   };

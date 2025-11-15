@@ -6,7 +6,7 @@
 //
 import NitroModules
 
-class HybridCluster: HybridHybridClusterSpec {
+class HybridCluster: HybridClusterSpec {
     private static var listeners = [
         ClusterEventName: [String: (_:String) -> Void]
     ]()

@@ -24,12 +24,12 @@
 #endif
 
 // Forward declaration of `RouteChoice` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct RouteChoice; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RouteChoice; }
 
 #include <string>
 #include "RouteChoice.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (TripConfig).
@@ -44,24 +44,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit TripConfig(std::string id, RouteChoice routeChoice): id(id), routeChoice(routeChoice) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TripConfig <> JS TripConfig (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripConfig> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TripConfig> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TripConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripConfig(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::TripConfig(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "id")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice>::fromJSI(runtime, obj.getProperty(runtime, "routeChoice"))
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice>::fromJSI(runtime, obj.getProperty(runtime, "routeChoice"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripConfig& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::TripConfig& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "id", JSIConverter<std::string>::toJSI(runtime, arg.id));
-      obj.setProperty(runtime, "routeChoice", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice>::toJSI(runtime, arg.routeChoice));
+      obj.setProperty(runtime, "routeChoice", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice>::toJSI(runtime, arg.routeChoice));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -73,7 +73,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "id"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::RouteChoice>::canConvert(runtime, obj.getProperty(runtime, "routeChoice"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::RouteChoice>::canConvert(runtime, obj.getProperty(runtime, "routeChoice"))) return false;
       return true;
     }
   };

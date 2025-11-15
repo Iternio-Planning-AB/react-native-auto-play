@@ -9,7 +9,7 @@ import {
   HybridAutoPlay,
   type TextButton,
 } from '..';
-import type { HybridMessageTemplate as NitroHybridMessageTemplate } from '../specs/HybridMessageTemplate.nitro';
+import type { MessageTemplate as NitroMessageTemplate } from '../specs/MessageTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroImage, NitroImageUtil } from '../utils/NitroImage';
@@ -17,7 +17,7 @@ import { NitroMapButton } from '../utils/NitroMapButton';
 import type { NitroBaseMapTemplateConfig, NitroTemplateConfig, TemplateConfig } from './Template';
 
 const HybridMessageTemplate =
-  NitroModules.createHybridObject<NitroHybridMessageTemplate>('HybridMessageTemplate');
+  NitroModules.createHybridObject<NitroMessageTemplate>('MessageTemplate');
 
 export interface NitroMessageTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;

@@ -27,7 +27,7 @@
 
 
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NumericTelemetryItem).
@@ -42,21 +42,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NumericTelemetryItem(double timestamp, double value): timestamp(timestamp), value(value) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NumericTelemetryItem <> JS NumericTelemetryItem (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "timestamp")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "value"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NumericTelemetryItem& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NumericTelemetryItem& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "timestamp", JSIConverter<double>::toJSI(runtime, arg.timestamp));
       obj.setProperty(runtime, "value", JSIConverter<double>::toJSI(runtime, arg.value));

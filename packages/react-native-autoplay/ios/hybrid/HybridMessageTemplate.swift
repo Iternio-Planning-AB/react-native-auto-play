@@ -5,7 +5,7 @@
 //  Created by Samuel Brucksch on 17.10.25.
 //
 
-class HybridMessageTemplate: HybridHybridMessageTemplateSpec {
+class HybridMessageTemplate: HybridMessageTemplateSpec {
     func createMessageTemplate(config: MessageTemplateConfig) throws {
         let template = MessageTemplate(config: config)
         

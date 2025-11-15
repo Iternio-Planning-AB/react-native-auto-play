@@ -4,7 +4,7 @@ import { NitroModules } from 'react-native-nitro-modules';
 import { type AutoText, type CleanupCallback, HybridAutoPlay } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
-import type { HybridMapTemplate as NitroHybridMapTemplate } from '../specs/HybridMapTemplate.nitro';
+import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { AutoManeuver } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
@@ -26,8 +26,7 @@ import {
   type TemplateConfig,
 } from './Template';
 
-const HybridMapTemplate =
-  NitroModules.createHybridObject<NitroHybridMapTemplate>('HybridMapTemplate');
+const HybridMapTemplate = NitroModules.createHybridObject<NitroMapTemplate>('MapTemplate');
 
 export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';

@@ -24,13 +24,13 @@
 #endif
 
 // Forward declaration of `AutoText` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 
 #include <functional>
 #include "AutoText.hpp"
 #include <optional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NavigationAlertCallbacks).
@@ -45,24 +45,24 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NavigationAlertCallbacks(std::function<void()> dismiss, std::function<void(const AutoText& /* title */, const std::optional<AutoText>& /* subtitle */)> update): dismiss(dismiss), update(update) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NavigationAlertCallbacks <> JS NavigationAlertCallbacks (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertCallbacks> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertCallbacks fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertCallbacks> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertCallbacks fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertCallbacks(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertCallbacks(
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, "dismiss")),
-        JSIConverter<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>&)>>::fromJSI(runtime, obj.getProperty(runtime, "update"))
+        JSIConverter<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::AutoText&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>&)>>::fromJSI(runtime, obj.getProperty(runtime, "update"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NavigationAlertCallbacks& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertCallbacks& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "dismiss", JSIConverter<std::function<void()>>::toJSI(runtime, arg.dismiss));
-      obj.setProperty(runtime, "update", JSIConverter<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>&)>>::toJSI(runtime, arg.update));
+      obj.setProperty(runtime, "update", JSIConverter<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::AutoText&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>&)>>::toJSI(runtime, arg.update));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -74,7 +74,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, "dismiss"))) return false;
-      if (!JSIConverter<std::function<void(const margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText&, const std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>&)>>::canConvert(runtime, obj.getProperty(runtime, "update"))) return false;
+      if (!JSIConverter<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::AutoText&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>&)>>::canConvert(runtime, obj.getProperty(runtime, "update"))) return false;
       return true;
     }
   };

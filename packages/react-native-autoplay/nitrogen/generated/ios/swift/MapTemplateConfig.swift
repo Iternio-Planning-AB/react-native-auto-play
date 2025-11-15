@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `MapTemplateConfig`, backed by a C++ struct.
  */
-public typealias MapTemplateConfig = margelo.nitro.at.g4rb4g3.autoplay.hybrid.MapTemplateConfig
+public typealias MapTemplateConfig = margelo.nitro.swe.iternio.reactnativeautoplay.MapTemplateConfig
 
 public extension MapTemplateConfig {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `MapTemplateConfig`.

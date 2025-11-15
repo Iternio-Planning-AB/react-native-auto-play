@@ -20,7 +20,7 @@
 #include "JAssetImage.hpp"
 #include <string>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -29,7 +29,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   class JNitroImage: public jni::JavaClass<JNitroImage> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage;";
 
     static jni::local_ref<JNitroImage> create_0(jni::alias_ref<JGlyphImage> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JGlyphImage>)>("create");
@@ -54,7 +54,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   namespace JNitroImage_impl {
     class First: public jni::JavaClass<First, JNitroImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage$First;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$First;";
     
       [[nodiscard]] jni::local_ref<JGlyphImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JGlyphImage>("value");
@@ -64,7 +64,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     
     class Second: public jni::JavaClass<Second, JNitroImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroImage$Second;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$Second;";
     
       [[nodiscard]] jni::local_ref<JAssetImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JAssetImage>("value");
@@ -72,4 +72,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     };
   } // namespace JNitroImage_impl
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

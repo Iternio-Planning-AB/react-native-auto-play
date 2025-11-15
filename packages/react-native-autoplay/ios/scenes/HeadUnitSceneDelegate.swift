@@ -28,9 +28,9 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             "colorScheme": interfaceController.carTraitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light",
             "window": [
-                "height": window.bounds.size.height,
-                "width": window.bounds.size.width,
-                "scale": window.screen.scale,
+                "height": window.bounds.size.height.rounded(),
+                "width": window.bounds.size.width.rounded(),
+                "scale": window.screen.scale.rounded(),
             ],
         ]
 

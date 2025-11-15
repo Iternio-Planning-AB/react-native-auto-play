@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (VisibilityState).
@@ -35,30 +35,30 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     DIDDISAPPEAR      SWIFT_NAME(diddisappear) = 3,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ VisibilityState <> JS VisibilityState (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("willAppear"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::WILLAPPEAR;
-        case hashString("didAppear"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::DIDAPPEAR;
-        case hashString("willDisappear"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::WILLDISAPPEAR;
-        case hashString("didDisappear"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::DIDDISAPPEAR;
+        case hashString("willAppear"): return margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::WILLAPPEAR;
+        case hashString("didAppear"): return margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::DIDAPPEAR;
+        case hashString("willDisappear"): return margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::WILLDISAPPEAR;
+        case hashString("didDisappear"): return margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::DIDDISAPPEAR;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum VisibilityState - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::WILLAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "willAppear");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::DIDAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "didAppear");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::WILLDISAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "willDisappear");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::VisibilityState::DIDDISAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "didDisappear");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::WILLAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "willAppear");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::DIDAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "didAppear");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::WILLDISAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "willDisappear");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::VisibilityState::DIDDISAPPEAR: return JSIConverter<std::string>::toJSI(runtime, "didDisappear");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert VisibilityState to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

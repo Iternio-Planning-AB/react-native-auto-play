@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `VisibleTravelEstimate`, backed by a C++ enum.
  */
-public typealias VisibleTravelEstimate = margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibleTravelEstimate
+public typealias VisibleTravelEstimate = margelo.nitro.swe.iternio.reactnativeautoplay.VisibleTravelEstimate
 
 public extension VisibleTravelEstimate {
   /**

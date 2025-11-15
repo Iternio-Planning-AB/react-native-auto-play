@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `ImageLane`, backed by a C++ struct.
  */
-public typealias ImageLane = margelo.nitro.at.g4rb4g3.autoplay.hybrid.ImageLane
+public typealias ImageLane = margelo.nitro.swe.iternio.reactnativeautoplay.ImageLane
 
 public extension ImageLane {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `ImageLane`.

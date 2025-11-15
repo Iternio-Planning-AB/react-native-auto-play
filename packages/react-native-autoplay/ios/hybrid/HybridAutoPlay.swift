@@ -16,7 +16,7 @@ struct SafeAreaListener {
     let callback: (SafeAreaInsets) -> Void
 }
 
-class HybridAutoPlay: HybridHybridAutoPlaySpec {
+class HybridAutoPlay: HybridAutoPlaySpec {
     private static var listeners = [EventName: [StateListener]]()
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()

@@ -26,7 +26,7 @@
 #include <vector>
 #include "JImageLane.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -35,7 +35,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   class JVariant_PreferredImageLane_ImageLane: public jni::JavaClass<JVariant_PreferredImageLane_ImageLane> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Variant_PreferredImageLane_ImageLane;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_PreferredImageLane_ImageLane;";
 
     static jni::local_ref<JVariant_PreferredImageLane_ImageLane> create_0(jni::alias_ref<JPreferredImageLane> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JVariant_PreferredImageLane_ImageLane(jni::alias_ref<JPreferredImageLane>)>("create");
@@ -60,7 +60,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   namespace JVariant_PreferredImageLane_ImageLane_impl {
     class First: public jni::JavaClass<First, JVariant_PreferredImageLane_ImageLane> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Variant_PreferredImageLane_ImageLane$First;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_PreferredImageLane_ImageLane$First;";
     
       [[nodiscard]] jni::local_ref<JPreferredImageLane> getValue() const {
         static const auto field = javaClassStatic()->getField<JPreferredImageLane>("value");
@@ -70,7 +70,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     
     class Second: public jni::JavaClass<Second, JVariant_PreferredImageLane_ImageLane> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Variant_PreferredImageLane_ImageLane$Second;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_PreferredImageLane_ImageLane$Second;";
     
       [[nodiscard]] jni::local_ref<JImageLane> getValue() const {
         static const auto field = javaClassStatic()->getField<JImageLane>("value");
@@ -78,4 +78,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     };
   } // namespace JVariant_PreferredImageLane_ImageLane_impl
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

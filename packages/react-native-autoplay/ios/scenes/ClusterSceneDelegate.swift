@@ -76,8 +76,8 @@ class ClusterSceneDelegate: AutoPlayScene,
             "colorScheme": self.traitCollection.userInterfaceStyle == .dark
                 ? "dark" : "light",
             "window": [
-                "height": instrumentClusterWindow.screen.bounds.size.height,
-                "width": instrumentClusterWindow.screen.bounds.size.width,
+                "height": instrumentClusterWindow.screen.bounds.size.height.rounded(),
+                "width": instrumentClusterWindow.screen.bounds.size.width.rounded(),
                 "scale": instrumentClusterWindow.screen.scale,
             ],
             "compass": isCompassEnabled,

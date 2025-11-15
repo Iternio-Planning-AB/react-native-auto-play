@@ -18,7 +18,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript enum (TurnType).
@@ -35,18 +35,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     UTURNRIGHT      SWIFT_NAME(uturnright) = 8,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TurnType <> JS TurnType (enum)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TurnType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
-      return static_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType>(enumValue);
+      return static_cast<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>(enumValue);
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::TurnType arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::TurnType arg) {
       int enumValue = static_cast<int>(arg);
       return JSIConverter<int>::toJSI(runtime, enumValue);
     }

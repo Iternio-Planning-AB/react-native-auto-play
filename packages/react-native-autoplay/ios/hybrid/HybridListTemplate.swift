@@ -5,7 +5,7 @@
 //  Created by Manuel Auer on 15.10.25.
 //
 
-class HybridListTemplate: HybridHybridListTemplateSpec {
+class HybridListTemplate: HybridListTemplateSpec {
     func createListTemplate(config: ListTemplateConfig) throws {
         let template = ListTemplate(config: config)
         try RootModule.withScene { scene in

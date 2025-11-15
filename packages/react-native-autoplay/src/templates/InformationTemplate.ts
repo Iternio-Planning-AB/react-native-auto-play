@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import type { HybridInformationTemplate as NitroHybridInformationTemplate } from '../specs/HybridInformationTemplate.nitro';
+import type { InformationTemplate as NitroInformationTemplate } from '../specs/InformationTemplate.nitro';
 import type { CustomActionButtonAndroid, TextButton } from '../types/Button';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
@@ -16,9 +16,8 @@ import {
   type TemplateConfig,
 } from './Template';
 
-const HybridInformationTemplate = NitroModules.createHybridObject<NitroHybridInformationTemplate>(
-  'HybridInformationTemplate'
-);
+const HybridInformationTemplate =
+  NitroModules.createHybridObject<NitroInformationTemplate>('InformationTemplate');
 
 export interface NitroInformationTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;

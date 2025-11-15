@@ -22,7 +22,7 @@
 #include "StringTelemetryItem.hpp"
 #include "JStringTelemetryItem.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -32,7 +32,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   struct JFunc_void_std__optional_Telemetry__std__optional_std__string_: public jni::JavaClass<JFunc_void_std__optional_Telemetry__std__optional_std__string_> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Func_void_std__optional_Telemetry__std__optional_std__string_;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry__std__optional_std__string_;";
 
   public:
     /**
@@ -68,7 +68,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/Func_void_std__optional_Telemetry__std__optional_std__string__cxx;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry__std__optional_std__string__cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx::invoke_cxx)});
     }
@@ -81,4 +81,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     std::function<void(const std::optional<Telemetry>& /* tlm */, const std::optional<std::string>& /* error */)> _func;
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

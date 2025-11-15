@@ -10,7 +10,7 @@ import {
   TextPlaceholders,
   type TripPoint,
   type VisibleTravelEstimate,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { Platform } from 'react-native';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';

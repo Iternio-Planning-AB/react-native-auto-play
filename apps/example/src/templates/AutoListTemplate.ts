@@ -6,7 +6,7 @@ import {
   TextPlaceholders,
   type TextRow,
   type ToggleRow,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {

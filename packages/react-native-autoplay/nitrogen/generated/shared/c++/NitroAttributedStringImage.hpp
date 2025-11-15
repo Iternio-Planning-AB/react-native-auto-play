@@ -24,15 +24,15 @@
 #endif
 
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
 #include <variant>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroAttributedStringImage).
@@ -47,23 +47,23 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroAttributedStringImage(std::variant<GlyphImage, AssetImage> image, double position): image(image), position(position) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroAttributedStringImage <> JS NitroAttributedStringImage (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage(
-        JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage(
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "position"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroAttributedStringImage& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "position", JSIConverter<double>::toJSI(runtime, arg.position));
       return obj;
     }
@@ -75,7 +75,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "position"))) return false;
       return true;
     }

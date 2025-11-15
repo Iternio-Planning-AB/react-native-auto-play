@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `ZoomEvent`, backed by a C++ enum.
  */
-public typealias ZoomEvent = margelo.nitro.at.g4rb4g3.autoplay.hybrid.ZoomEvent
+public typealias ZoomEvent = margelo.nitro.swe.iternio.reactnativeautoplay.ZoomEvent
 
 public extension ZoomEvent {
   /**

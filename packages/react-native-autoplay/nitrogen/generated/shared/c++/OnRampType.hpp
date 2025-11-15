@@ -18,7 +18,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript enum (OnRampType).
@@ -34,18 +34,18 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     UTURNRIGHT      SWIFT_NAME(uturnright) = 7,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ OnRampType <> JS OnRampType (enum)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
-      return static_cast<margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType>(enumValue);
+      return static_cast<margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType>(enumValue);
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::OnRampType arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::OnRampType arg) {
       int enumValue = static_cast<int>(arg);
       return JSIConverter<int>::toJSI(runtime, enumValue);
     }

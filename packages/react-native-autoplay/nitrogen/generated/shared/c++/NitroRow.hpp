@@ -24,11 +24,11 @@
 #endif
 
 // Forward declaration of `AutoText` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AutoText; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 
 #include "AutoText.hpp"
 #include <optional>
@@ -37,7 +37,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
 #include <variant>
 #include <functional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroRow).
@@ -58,33 +58,33 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroRow(AutoText title, std::optional<AutoText> detailedText, std::optional<bool> browsable, bool enabled, std::optional<std::variant<GlyphImage, AssetImage>> image, std::optional<bool> checked, std::optional<std::function<void(std::optional<bool> /* checked */)>> onPress, std::optional<bool> selected): title(title), detailedText(detailedText), browsable(browsable), enabled(enabled), image(image), checked(checked), onPress(onPress), selected(selected) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroRow <> JS NitroRow (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow(
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "title")),
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "detailedText")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow(
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, "title")),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, "detailedText")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "browsable")),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "enabled")),
-        JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "checked")),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, "onPress")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "selected"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroRow& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroRow& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "title", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::toJSI(runtime, arg.title));
-      obj.setProperty(runtime, "detailedText", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::toJSI(runtime, arg.detailedText));
+      obj.setProperty(runtime, "title", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.title));
+      obj.setProperty(runtime, "detailedText", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::toJSI(runtime, arg.detailedText));
       obj.setProperty(runtime, "browsable", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.browsable));
       obj.setProperty(runtime, "enabled", JSIConverter<bool>::toJSI(runtime, arg.enabled));
-      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "checked", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.checked));
       obj.setProperty(runtime, "onPress", JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onPress));
       obj.setProperty(runtime, "selected", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.selected));
@@ -98,11 +98,11 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "detailedText"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::canConvert(runtime, obj.getProperty(runtime, "detailedText"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "browsable"))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "enabled"))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "checked"))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, "onPress"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "selected"))) return false;

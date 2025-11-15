@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (NitroButtonStyle).
@@ -36,32 +36,32 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     DESTRUCTIVE      SWIFT_NAME(destructive) = 4,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroButtonStyle <> JS NitroButtonStyle (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("normal"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::NORMAL;
-        case hashString("confirm"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::CONFIRM;
-        case hashString("cancel"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::CANCEL;
-        case hashString("default"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::DEFAULT;
-        case hashString("destructive"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::DESTRUCTIVE;
+        case hashString("normal"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::NORMAL;
+        case hashString("confirm"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::CONFIRM;
+        case hashString("cancel"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::CANCEL;
+        case hashString("default"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::DEFAULT;
+        case hashString("destructive"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::DESTRUCTIVE;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum NitroButtonStyle - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::NORMAL: return JSIConverter<std::string>::toJSI(runtime, "normal");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::CONFIRM: return JSIConverter<std::string>::toJSI(runtime, "confirm");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::CANCEL: return JSIConverter<std::string>::toJSI(runtime, "cancel");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::DEFAULT: return JSIConverter<std::string>::toJSI(runtime, "default");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroButtonStyle::DESTRUCTIVE: return JSIConverter<std::string>::toJSI(runtime, "destructive");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::NORMAL: return JSIConverter<std::string>::toJSI(runtime, "normal");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::CONFIRM: return JSIConverter<std::string>::toJSI(runtime, "confirm");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::CANCEL: return JSIConverter<std::string>::toJSI(runtime, "cancel");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::DEFAULT: return JSIConverter<std::string>::toJSI(runtime, "default");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroButtonStyle::DESTRUCTIVE: return JSIConverter<std::string>::toJSI(runtime, "destructive");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert NitroButtonStyle to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

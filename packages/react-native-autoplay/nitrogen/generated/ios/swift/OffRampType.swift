@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `OffRampType`, backed by a C++ enum.
  */
-public typealias OffRampType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.OffRampType
+public typealias OffRampType = margelo.nitro.swe.iternio.reactnativeautoplay.OffRampType
 
 public extension OffRampType {
   /**

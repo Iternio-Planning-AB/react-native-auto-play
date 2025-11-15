@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `AssetImage`, backed by a C++ struct.
  */
-public typealias AssetImage = margelo.nitro.at.g4rb4g3.autoplay.hybrid.AssetImage
+public typealias AssetImage = margelo.nitro.swe.iternio.reactnativeautoplay.AssetImage
 
 public extension AssetImage {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `AssetImage`.

@@ -19,7 +19,7 @@ class SymbolFont {
 
         guard
             let bundleURL = podBundle.url(
-                forResource: "NitroAutoplay",
+                forResource: "ReactNativeAutoPlay",
                 withExtension: "bundle"
             ),
             let resourceBundle = Bundle(url: bundleURL),

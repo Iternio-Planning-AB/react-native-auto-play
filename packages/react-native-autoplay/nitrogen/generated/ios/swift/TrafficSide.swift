@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `TrafficSide`, backed by a C++ enum.
  */
-public typealias TrafficSide = margelo.nitro.at.g4rb4g3.autoplay.hybrid.TrafficSide
+public typealias TrafficSide = margelo.nitro.swe.iternio.reactnativeautoplay.TrafficSide
 
 public extension TrafficSide {
   /**

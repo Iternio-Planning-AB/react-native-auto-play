@@ -2,7 +2,7 @@ import {
   CarPlayDashboard,
   type RootComponentInitialProps,
   SafeAreaView,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { useEffect } from 'react';
 import { Platform, Text, View } from 'react-native';
 import { getCarPlayDashboardButtons } from './config/CarPlayDashboardButtons';

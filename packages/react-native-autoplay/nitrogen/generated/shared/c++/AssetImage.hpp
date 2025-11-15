@@ -24,13 +24,13 @@
 #endif
 
 // Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 
 #include "NitroColor.hpp"
 #include <optional>
 #include <string>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (AssetImage).
@@ -49,17 +49,17 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit AssetImage(std::optional<NitroColor> color, bool packager_asset, double height, double width, double scale, std::string uri): color(color), packager_asset(packager_asset), height(height), width(width), scale(scale), uri(uri) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ AssetImage <> JS AssetImage (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage(
-        JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, "color")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage(
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, "color")),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "packager_asset")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "height")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "width")),
@@ -67,9 +67,9 @@ namespace margelo::nitro {
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "uri"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "color", JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::toJSI(runtime, arg.color));
+      obj.setProperty(runtime, "color", JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::toJSI(runtime, arg.color));
       obj.setProperty(runtime, "packager_asset", JSIConverter<bool>::toJSI(runtime, arg.packager_asset));
       obj.setProperty(runtime, "height", JSIConverter<double>::toJSI(runtime, arg.height));
       obj.setProperty(runtime, "width", JSIConverter<double>::toJSI(runtime, arg.width));
@@ -85,7 +85,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::optional<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "packager_asset"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "height"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "width"))) return false;

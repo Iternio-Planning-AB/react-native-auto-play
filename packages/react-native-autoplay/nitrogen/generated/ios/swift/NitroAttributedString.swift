@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroAttributedString`, backed by a C++ struct.
  */
-public typealias NitroAttributedString = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroAttributedString
+public typealias NitroAttributedString = margelo.nitro.swe.iternio.reactnativeautoplay.NitroAttributedString
 
 public extension NitroAttributedString {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroAttributedString`.

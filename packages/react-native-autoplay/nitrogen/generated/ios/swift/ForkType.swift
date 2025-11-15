@@ -8,7 +8,7 @@
 /**
  * Represents the JS enum `ForkType`, backed by a C++ enum.
  */
-public typealias ForkType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.ForkType
+public typealias ForkType = margelo.nitro.swe.iternio.reactnativeautoplay.ForkType
 
 public extension ForkType {
   /**

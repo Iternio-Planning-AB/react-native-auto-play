@@ -7,7 +7,7 @@
 
 #include "JVariant_GlyphImage_AssetImage.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * Converts JVariant_GlyphImage_AssetImage to std::variant<GlyphImage, AssetImage>
    */
@@ -23,4 +23,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     }
     throw std::invalid_argument("Variant is unknown Kotlin instance!");
   }
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

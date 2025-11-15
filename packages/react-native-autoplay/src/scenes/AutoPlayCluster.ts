@@ -2,12 +2,12 @@ import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
-import type { HybridCluster as NitroHybridCluster, ZoomEvent } from '../specs/HybridCluster.nitro';
+import type { Cluster as NitroCluster, ZoomEvent } from '../specs/Cluster.nitro';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type { AutoAttributedString } from '../utils/NitroAttributedString';
 import { NitroImageUtil } from '../utils/NitroImage';
 
-const HybridCluster = NitroModules.createHybridObject<NitroHybridCluster>('HybridCluster');
+const HybridCluster = NitroModules.createHybridObject<NitroCluster>('Cluster');
 
 class Cluster {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;

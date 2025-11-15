@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `MessageTemplateConfig`, backed by a C++ struct.
  */
-public typealias MessageTemplateConfig = margelo.nitro.at.g4rb4g3.autoplay.hybrid.MessageTemplateConfig
+public typealias MessageTemplateConfig = margelo.nitro.swe.iternio.reactnativeautoplay.MessageTemplateConfig
 
 public extension MessageTemplateConfig {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `MessageTemplateConfig`.

@@ -62,7 +62,7 @@
 #include "JManeuverType.hpp"
 #include "JNitroMessageManeuver.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
@@ -71,7 +71,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
    */
   class JNitroManeuver: public jni::JavaClass<JNitroManeuver> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroManeuver;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver;";
 
     static jni::local_ref<JNitroManeuver> create_0(jni::alias_ref<jni::JArrayClass<JNitroRoutingManeuver>> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroManeuver(jni::alias_ref<jni::JArrayClass<JNitroRoutingManeuver>>)>("create");
@@ -105,7 +105,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
   namespace JNitroManeuver_impl {
     class First: public jni::JavaClass<First, JNitroManeuver> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroManeuver$First;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$First;";
     
       [[nodiscard]] jni::local_ref<jni::JArrayClass<JNitroRoutingManeuver>> getValue() const {
         static const auto field = javaClassStatic()->getField<jni::JArrayClass<JNitroRoutingManeuver>>("value");
@@ -115,7 +115,7 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     
     class Second: public jni::JavaClass<Second, JNitroManeuver> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/at/g4rb4g3/autoplay/hybrid/NitroManeuver$Second;";
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Second;";
     
       [[nodiscard]] jni::local_ref<JNitroMessageManeuver> getValue() const {
         static const auto field = javaClassStatic()->getField<JNitroMessageManeuver>("value");
@@ -123,4 +123,4 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
       }
     };
   } // namespace JNitroManeuver_impl
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay

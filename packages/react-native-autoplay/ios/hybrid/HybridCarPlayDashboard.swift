@@ -6,7 +6,7 @@
 //
 import NitroModules
 
-class HybridCarPlayDashboard: HybridHybridCarPlayDashboardSpec {
+class HybridCarPlayDashboard: HybridCarPlayDashboardSpec {
     private static var listeners = [EventName: [String: () -> Void]]()
     private static var colorSchemeListeners = [
         String: (_:ColorScheme) -> Void

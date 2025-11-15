@@ -24,12 +24,12 @@
 #endif
 
 // Forward declaration of `TravelEstimates` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct TravelEstimates; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TravelEstimates; }
 
 #include <string>
 #include "TravelEstimates.hpp"
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (TripPoint).
@@ -46,28 +46,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit TripPoint(double latitude, double longitude, std::string name, TravelEstimates travelEstimates): latitude(latitude), longitude(longitude), name(name), travelEstimates(travelEstimates) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ TripPoint <> JS TripPoint (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "latitude")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "longitude")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "name")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::fromJSI(runtime, obj.getProperty(runtime, "travelEstimates"))
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::fromJSI(runtime, obj.getProperty(runtime, "travelEstimates"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::TripPoint& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::TripPoint& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "latitude", JSIConverter<double>::toJSI(runtime, arg.latitude));
       obj.setProperty(runtime, "longitude", JSIConverter<double>::toJSI(runtime, arg.longitude));
       obj.setProperty(runtime, "name", JSIConverter<std::string>::toJSI(runtime, arg.name));
-      obj.setProperty(runtime, "travelEstimates", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::toJSI(runtime, arg.travelEstimates));
+      obj.setProperty(runtime, "travelEstimates", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::toJSI(runtime, arg.travelEstimates));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -81,7 +81,7 @@ namespace margelo::nitro {
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "latitude"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "longitude"))) return false;
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "name"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::TravelEstimates>::canConvert(runtime, obj.getProperty(runtime, "travelEstimates"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::TravelEstimates>::canConvert(runtime, obj.getProperty(runtime, "travelEstimates"))) return false;
       return true;
     }
   };

@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (AlertDismissalReason).
@@ -34,28 +34,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     SYSTEM      SWIFT_NAME(system) = 2,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ AlertDismissalReason <> JS AlertDismissalReason (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("timeout"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::TIMEOUT;
-        case hashString("user"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::USER;
-        case hashString("system"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::SYSTEM;
+        case hashString("timeout"): return margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::TIMEOUT;
+        case hashString("user"): return margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::USER;
+        case hashString("system"): return margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::SYSTEM;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum AlertDismissalReason - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::TIMEOUT: return JSIConverter<std::string>::toJSI(runtime, "timeout");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::USER: return JSIConverter<std::string>::toJSI(runtime, "user");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::AlertDismissalReason::SYSTEM: return JSIConverter<std::string>::toJSI(runtime, "system");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::TIMEOUT: return JSIConverter<std::string>::toJSI(runtime, "timeout");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::USER: return JSIConverter<std::string>::toJSI(runtime, "user");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::AlertDismissalReason::SYSTEM: return JSIConverter<std::string>::toJSI(runtime, "system");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert AlertDismissalReason to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

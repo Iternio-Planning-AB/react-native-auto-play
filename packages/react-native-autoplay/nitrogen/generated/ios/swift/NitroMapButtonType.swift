@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `NitroMapButtonType`, backed by a C++ enum.
  */
-public typealias NitroMapButtonType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroMapButtonType
+public typealias NitroMapButtonType = margelo.nitro.swe.iternio.reactnativeautoplay.NitroMapButtonType
 
 public extension NitroMapButtonType {
   /**

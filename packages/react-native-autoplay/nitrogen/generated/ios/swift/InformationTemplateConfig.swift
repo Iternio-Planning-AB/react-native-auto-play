@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `InformationTemplateConfig`, backed by a C++ struct.
  */
-public typealias InformationTemplateConfig = margelo.nitro.at.g4rb4g3.autoplay.hybrid.InformationTemplateConfig
+public typealias InformationTemplateConfig = margelo.nitro.swe.iternio.reactnativeautoplay.InformationTemplateConfig
 
 public extension InformationTemplateConfig {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `InformationTemplateConfig`.

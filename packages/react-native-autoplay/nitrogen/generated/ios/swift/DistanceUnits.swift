@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `DistanceUnits`, backed by a C++ enum.
  */
-public typealias DistanceUnits = margelo.nitro.at.g4rb4g3.autoplay.hybrid.DistanceUnits
+public typealias DistanceUnits = margelo.nitro.swe.iternio.reactnativeautoplay.DistanceUnits
 
 public extension DistanceUnits {
   /**

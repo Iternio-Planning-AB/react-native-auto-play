@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `LaneGuidance`, backed by a C++ struct.
  */
-public typealias LaneGuidance = margelo.nitro.at.g4rb4g3.autoplay.hybrid.LaneGuidance
+public typealias LaneGuidance = margelo.nitro.swe.iternio.reactnativeautoplay.LaneGuidance
 
 public extension LaneGuidance {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `LaneGuidance`.

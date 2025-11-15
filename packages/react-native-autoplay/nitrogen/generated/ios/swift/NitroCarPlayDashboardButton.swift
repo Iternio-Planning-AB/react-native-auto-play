@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroCarPlayDashboardButton`, backed by a C++ struct.
  */
-public typealias NitroCarPlayDashboardButton = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroCarPlayDashboardButton
+public typealias NitroCarPlayDashboardButton = margelo.nitro.swe.iternio.reactnativeautoplay.NitroCarPlayDashboardButton
 
 public extension NitroCarPlayDashboardButton {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroCarPlayDashboardButton`.

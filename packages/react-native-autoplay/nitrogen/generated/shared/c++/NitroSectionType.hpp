@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (NitroSectionType).
@@ -33,26 +33,26 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     RADIO      SWIFT_NAME(radio) = 1,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroSectionType <> JS NitroSectionType (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("default"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType::DEFAULT;
-        case hashString("radio"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType::RADIO;
+        case hashString("default"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType::DEFAULT;
+        case hashString("radio"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType::RADIO;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum NitroSectionType - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType::DEFAULT: return JSIConverter<std::string>::toJSI(runtime, "default");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroSectionType::RADIO: return JSIConverter<std::string>::toJSI(runtime, "radio");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType::DEFAULT: return JSIConverter<std::string>::toJSI(runtime, "default");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroSectionType::RADIO: return JSIConverter<std::string>::toJSI(runtime, "radio");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert NitroSectionType to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

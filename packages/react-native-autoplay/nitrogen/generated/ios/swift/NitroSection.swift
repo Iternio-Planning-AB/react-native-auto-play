@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroSection`, backed by a C++ struct.
  */
-public typealias NitroSection = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroSection
+public typealias NitroSection = margelo.nitro.swe.iternio.reactnativeautoplay.NitroSection
 
 public extension NitroSection {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroSection`.

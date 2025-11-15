@@ -23,7 +23,7 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * An enum which can be represented as a JavaScript union (NitroActionType).
@@ -34,28 +34,28 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     CUSTOM      SWIFT_NAME(custom) = 2,
   } CLOSED_ENUM;
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroActionType <> JS NitroActionType (union)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
       switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("appIcon"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::APPICON;
-        case hashString("back"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::BACK;
-        case hashString("custom"): return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::CUSTOM;
+        case hashString("appIcon"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::APPICON;
+        case hashString("back"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::BACK;
+        case hashString("custom"): return margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::CUSTOM;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum NitroActionType - invalid value!");
       }
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType arg) {
       switch (arg) {
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::APPICON: return JSIConverter<std::string>::toJSI(runtime, "appIcon");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::BACK: return JSIConverter<std::string>::toJSI(runtime, "back");
-        case margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroActionType::CUSTOM: return JSIConverter<std::string>::toJSI(runtime, "custom");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::APPICON: return JSIConverter<std::string>::toJSI(runtime, "appIcon");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::BACK: return JSIConverter<std::string>::toJSI(runtime, "back");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType::CUSTOM: return JSIConverter<std::string>::toJSI(runtime, "custom");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert NitroActionType to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");

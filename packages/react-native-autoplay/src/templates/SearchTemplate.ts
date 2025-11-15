@@ -1,6 +1,6 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { DefaultRow, SingleSection } from '..';
-import type { HybridSearchTemplate as NitroHybridSearchTemplate } from '../specs/HybridSearchTemplate.nitro';
+import type { SearchTemplate as NitroSearchTemplate } from '../specs/SearchTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
@@ -11,8 +11,7 @@ import {
   type TemplateConfig,
 } from './Template';
 
-const HybridSearchTemplate =
-  NitroModules.createHybridObject<NitroHybridSearchTemplate>('HybridSearchTemplate');
+const HybridSearchTemplate = NitroModules.createHybridObject<NitroSearchTemplate>('SearchTemplate');
 
 export type SearchSection<T> = {
   type: 'default';

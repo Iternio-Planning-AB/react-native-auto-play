@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `AlertDismissalReason`, backed by a C++ enum.
  */
-public typealias AlertDismissalReason = margelo.nitro.at.g4rb4g3.autoplay.hybrid.AlertDismissalReason
+public typealias AlertDismissalReason = margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
 
 public extension AlertDismissalReason {
   /**

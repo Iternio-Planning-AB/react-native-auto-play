@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `VisibilityState`, backed by a C++ enum.
  */
-public typealias VisibilityState = margelo.nitro.at.g4rb4g3.autoplay.hybrid.VisibilityState
+public typealias VisibilityState = margelo.nitro.swe.iternio.reactnativeautoplay.VisibilityState
 
 public extension VisibilityState {
   /**

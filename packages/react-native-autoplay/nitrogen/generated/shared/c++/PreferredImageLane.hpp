@@ -24,16 +24,16 @@
 #endif
 
 // Forward declaration of `GlyphImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct GlyphImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct AssetImage; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
 #include <variant>
 #include <vector>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (PreferredImageLane).
@@ -50,25 +50,25 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit PreferredImageLane(std::variant<GlyphImage, AssetImage> image, double highlightedAngle, bool isPreferred, std::vector<double> angles): image(image), highlightedAngle(highlightedAngle), isPreferred(isPreferred), angles(angles) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ PreferredImageLane <> JS PreferredImageLane (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane(
-        JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
+      return margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane(
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, "image")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "highlightedAngle")),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "isPreferred")),
         JSIConverter<std::vector<double>>::fromJSI(runtime, obj.getProperty(runtime, "angles"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::PreferredImageLane& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::PreferredImageLane& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, "image", JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, "highlightedAngle", JSIConverter<double>::toJSI(runtime, arg.highlightedAngle));
       obj.setProperty(runtime, "isPreferred", JSIConverter<bool>::toJSI(runtime, arg.isPreferred));
       obj.setProperty(runtime, "angles", JSIConverter<std::vector<double>>::toJSI(runtime, arg.angles));
@@ -82,7 +82,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::variant<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage, margelo::nitro::at::g4rb4g3::autoplay::hybrid::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, "image"))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "highlightedAngle"))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "isPreferred"))) return false;
       if (!JSIConverter<std::vector<double>>::canConvert(runtime, obj.getProperty(runtime, "angles"))) return false;

@@ -13,7 +13,7 @@ import NitroModules
  * This class can be used from C++, e.g. to wrap the Swift closure as a `std::function`.
  */
 public final class Func_void_std__string_ColorScheme {
-  public typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  public typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   private let closure: (_ clusterId: String, _ payload: ColorScheme) -> Void
 
@@ -23,7 +23,7 @@ public final class Func_void_std__string_ColorScheme {
 
   @inline(__always)
   public func call(clusterId: std.string, payload: Int32) -> Void {
-    self.closure(String(clusterId), margelo.nitro.at.g4rb4g3.autoplay.hybrid.ColorScheme(rawValue: payload)!)
+    self.closure(String(clusterId), margelo.nitro.swe.iternio.reactnativeautoplay.ColorScheme(rawValue: payload)!)
   }
 
   /**

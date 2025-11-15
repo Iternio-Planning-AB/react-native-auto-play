@@ -6,7 +6,7 @@ import {
   type RootComponentInitialProps,
   SafeAreaView,
   useMapTemplate,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
@@ -121,7 +121,9 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
               console.log('*** onDidDismiss', prio, reason);
             },
             onWillShow: () => {
-              timer = setTimeout(() => update({ text: `Alert ${Date.now()}` }), 5000);
+              timer = setTimeout(() => {
+                update({ text: `Alert ${Date.now()}` }, undefined);
+              }, 5000);
             },
           });
         },

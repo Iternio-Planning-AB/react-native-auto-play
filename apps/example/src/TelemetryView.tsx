@@ -2,7 +2,7 @@ import {
   type AndroidAutoPermissions,
   AndroidAutoTelemetryPermissions,
   useAndroidAutoTelemetry,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { Text } from 'react-native';
 
 const ANDROID_AUTO_PERMISSIONS: Array<AndroidAutoPermissions> = [

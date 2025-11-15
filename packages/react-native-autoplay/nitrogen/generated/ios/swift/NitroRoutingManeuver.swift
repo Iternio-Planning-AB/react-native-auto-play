@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroRoutingManeuver`, backed by a C++ struct.
  */
-public typealias NitroRoutingManeuver = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroRoutingManeuver
+public typealias NitroRoutingManeuver = margelo.nitro.swe.iternio.reactnativeautoplay.NitroRoutingManeuver
 
 public extension NitroRoutingManeuver {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroRoutingManeuver`.

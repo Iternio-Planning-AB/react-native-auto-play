@@ -27,7 +27,7 @@
 
 
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (NitroColor).
@@ -42,21 +42,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit NitroColor(double lightColor, double darkColor): lightColor(lightColor), darkColor(darkColor) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ NitroColor <> JS NitroColor (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "lightColor")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "darkColor"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "lightColor", JSIConverter<double>::toJSI(runtime, arg.lightColor));
       obj.setProperty(runtime, "darkColor", JSIConverter<double>::toJSI(runtime, arg.darkColor));

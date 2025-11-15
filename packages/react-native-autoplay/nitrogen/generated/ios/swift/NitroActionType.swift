@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `NitroActionType`, backed by a C++ enum.
  */
-public typealias NitroActionType = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroActionType
+public typealias NitroActionType = margelo.nitro.swe.iternio.reactnativeautoplay.NitroActionType
 
 public extension NitroActionType {
   /**

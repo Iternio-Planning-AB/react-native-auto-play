@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `NitroColor`, backed by a C++ struct.
  */
-public typealias NitroColor = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroColor
+public typealias NitroColor = margelo.nitro.swe.iternio.reactnativeautoplay.NitroColor
 
 public extension NitroColor {
-  private typealias bridge = margelo.nitro.at.g4rb4g3.autoplay.hybrid.bridge.swift
+  private typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
   /**
    * Create a new instance of `NitroColor`.

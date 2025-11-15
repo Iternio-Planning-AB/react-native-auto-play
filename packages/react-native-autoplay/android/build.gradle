@@ -20,7 +20,7 @@ def isNewArchitectureEnabled() {
 
 apply plugin: "com.android.library"
 apply plugin: 'org.jetbrains.kotlin.android'
-apply from: '../nitrogen/generated/android/NitroAutoplay+autolinking.gradle'
+apply from: '../nitrogen/generated/android/ReactNativeAutoPlay+autolinking.gradle'
 apply from: "./fix-prefab.gradle"
 
 if (isNewArchitectureEnabled()) {
@@ -28,15 +28,15 @@ if (isNewArchitectureEnabled()) {
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["NitroAutoplay_" + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["ReactNativeAutoPlay_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["NitroAutoplay_" + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ReactNativeAutoPlay_" + name]).toInteger()
 }
 
 android {
-  namespace "com.margelo.nitro.autoplay"
+  namespace "com.margelo.nitro.swe.iternio.reactnativeautoplay"
 
   ndkVersion getExtOrDefault("ndkVersion")
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")

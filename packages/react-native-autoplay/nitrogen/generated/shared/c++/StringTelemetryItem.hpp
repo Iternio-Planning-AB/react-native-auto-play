@@ -27,7 +27,7 @@
 
 #include <string>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (StringTelemetryItem).
@@ -42,21 +42,21 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit StringTelemetryItem(double timestamp, std::string value): timestamp(timestamp), value(value) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ StringTelemetryItem <> JS StringTelemetryItem (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "timestamp")),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "value"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::StringTelemetryItem& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::StringTelemetryItem& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "timestamp", JSIConverter<double>::toJSI(runtime, arg.timestamp));
       obj.setProperty(runtime, "value", JSIConverter<std::string>::toJSI(runtime, arg.value));

@@ -8,7 +8,7 @@
 /**
  * Represents the JS union `NitroButtonStyle`, backed by a C++ enum.
  */
-public typealias NitroButtonStyle = margelo.nitro.at.g4rb4g3.autoplay.hybrid.NitroButtonStyle
+public typealias NitroButtonStyle = margelo.nitro.swe.iternio.reactnativeautoplay.NitroButtonStyle
 
 public extension NitroButtonStyle {
   /**

@@ -24,12 +24,12 @@
 #endif
 
 // Forward declaration of `NitroColor` to properly resolve imports.
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid { struct NitroColor; }
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 
 #include "NitroColor.hpp"
 #include <optional>
 
-namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
+namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
    * A struct which can be represented as a JavaScript object (GlyphImage).
@@ -46,27 +46,27 @@ namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid {
     explicit GlyphImage(double glyph, NitroColor color, NitroColor backgroundColor, std::optional<double> fontScale): glyph(glyph), color(color), backgroundColor(backgroundColor), fontScale(fontScale) {}
   };
 
-} // namespace margelo::nitro::at::g4rb4g3::autoplay::hybrid
+} // namespace margelo::nitro::swe::iternio::reactnativeautoplay
 
 namespace margelo::nitro {
 
   // C++ GlyphImage <> JS GlyphImage (object)
   template <>
-  struct JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage> final {
-    static inline margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage> final {
+    static inline margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage(
+      return margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "glyph")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "color")),
-        JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "backgroundColor")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "color")),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, "backgroundColor")),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, "fontScale"))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::at::g4rb4g3::autoplay::hybrid::GlyphImage& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "glyph", JSIConverter<double>::toJSI(runtime, arg.glyph));
-      obj.setProperty(runtime, "color", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.color));
-      obj.setProperty(runtime, "backgroundColor", JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::toJSI(runtime, arg.backgroundColor));
+      obj.setProperty(runtime, "color", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.color));
+      obj.setProperty(runtime, "backgroundColor", JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.backgroundColor));
       obj.setProperty(runtime, "fontScale", JSIConverter<std::optional<double>>::toJSI(runtime, arg.fontScale));
       return obj;
     }
@@ -79,8 +79,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "glyph"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
-      if (!JSIConverter<margelo::nitro::at::g4rb4g3::autoplay::hybrid::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "backgroundColor"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "color"))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, "backgroundColor"))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, "fontScale"))) return false;
       return true;
     }

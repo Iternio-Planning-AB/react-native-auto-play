@@ -1,4 +1,4 @@
-import type { TripPreviewTextConfiguration, TripsConfig } from '@g4rb4g3/react-native-autoplay';
+import type { TripPreviewTextConfiguration, TripsConfig } from '@iternio/react-native-auto-play';
 
 export const AutoTrip: Array<TripsConfig> = [
   {

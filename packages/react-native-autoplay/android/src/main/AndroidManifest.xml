@@ -29,10 +29,7 @@
     <uses-permission android:name="com.google.android.gms.permission.CAR_SPEED" />
 
     <application>
-        <service
-            android:name="com.margelo.nitro.at.g4rb4g3.autoplay.AndroidAutoService"
-            android:exported="true"
-            android:foregroundServiceType="location">
+        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoService" android:exported="true" android:foregroundServiceType="location">
             <intent-filter>
                 <action android:name="androidx.car.app.CarAppService" />
 
@@ -46,19 +43,11 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.google.android.gms.car.application"
-            android:resource="@xml/automotive_app_desc"
-            tools:ignore="MetadataTagInsideApplicationTag" />
-        <meta-data
-            android:name="androidx.car.app.minCarApiLevel"
-            android:value="1" />
+        <meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc" tools:ignore="MetadataTagInsideApplicationTag" />
+        <meta-data android:name="androidx.car.app.minCarApiLevel" android:value="1" />
 
-        <service android:name="com.margelo.nitro.at.g4rb4g3.autoplay.HeadlessTaskService" />
+        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.HeadlessTaskService" />
 
-        <provider
-            android:name="com.margelo.nitro.at.g4rb4g3.autoplay.ActivityRenderStateProvider"
-            android:authorities="${applicationId}.ActivityRenderStateProvider"
-            android:exported="false" />
+        <provider android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.ActivityRenderStateProvider" android:authorities="${applicationId}.ActivityRenderStateProvider" android:exported="false" />
     </application>
 </manifest>

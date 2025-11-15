@@ -3,7 +3,7 @@ import {
   HybridAutoPlay,
   MessageTemplate,
   type MessageTemplateConfig,
-} from '@g4rb4g3/react-native-autoplay';
+} from '@iternio/react-native-auto-play';
 import { AutoTemplate } from './AutoTemplate';
 
 const getTemplate = ({
