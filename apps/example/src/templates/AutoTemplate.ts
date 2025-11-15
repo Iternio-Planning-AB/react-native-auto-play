@@ -361,14 +361,19 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
       alertTimer = setInterval(() => {
         remaining -= 1000;
         if (remaining > 0) {
-          template.showAlert(AutoAlert(remaining));
+          update(
+            {
+              text: `alert ${remaining}ms`,
+            },
+            undefined
+          );
           return;
         }
         if (alertTimer != null) {
           clearInterval(alertTimer);
         }
       }, 1000);
-      template.showAlert(AutoAlert(remaining));
+      const { update } = template.showAlert(AutoAlert(remaining));
     },
   },
   {
