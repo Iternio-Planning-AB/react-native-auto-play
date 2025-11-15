@@ -274,7 +274,7 @@ class MapTemplate: AutoPlayTemplate, CPMapTemplateDelegate {
             image: image,
             primaryAction: primaryAction,
             secondaryAction: secondaryAction,
-            duration: alertConfig.durationMs / 1000,
+            duration: alertConfig.durationMs / 1000
         )
 
         func setNavigationAlert() {
