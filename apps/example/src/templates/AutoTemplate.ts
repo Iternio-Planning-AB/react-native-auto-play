@@ -326,9 +326,6 @@ const AutoAlert = (remaining: number): Alert => ({
     title: 'keep calm',
     onPress: () => {
       console.log('keep calm');
-      if (alertTimer != null) {
-        clearInterval(alertTimer);
-      }
     },
     style: 'default',
   },
@@ -336,14 +333,17 @@ const AutoAlert = (remaining: number): Alert => ({
     title: 'run',
     onPress: () => {
       console.log('run');
-      if (alertTimer != null) {
-        clearInterval(alertTimer);
-      }
     },
     style: 'destructive',
   },
   onWillShow: () => console.log('alarm alert showing....'),
-  onDidDismiss: (reason) => console.log('alarm alert dismissed', reason),
+  onDidDismiss: (reason) => {
+    console.log('alarm alert dismissed', reason);
+    if (alertTimer != null) {
+      clearInterval(alertTimer);
+    }
+    alertTimer = null;
+  },
   priority: 'medium',
 });
 
@@ -385,8 +385,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
       type: 'glyph',
     },
     onPress: () => {
-      AutoMessageTemplate.getTemplate({
-        message: { text: 'message' },
+      AutoGridTemplate.getTemplate({
         mapConfig: {
           mapButtons: [
             {
@@ -398,9 +397,12 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
             },
             {
               type: 'custom',
-              image: { name: 'grid_3x3', type: 'glyph' },
+              image: { name: 'message', type: 'glyph' },
               onPress: () => {
-                AutoGridTemplate.getTemplate({ mapConfig: {} }).push();
+                AutoMessageTemplate.getTemplate({
+                  mapConfig: {},
+                  message: { text: 'message' },
+                }).push();
               },
             },
             {
@@ -517,6 +519,13 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
       });
 
       template.push();
+    },
+  },
+  {
+    type: 'pan',
+    image: {
+      type: 'glyph',
+      name: 'open_with',
     },
   },
 ];

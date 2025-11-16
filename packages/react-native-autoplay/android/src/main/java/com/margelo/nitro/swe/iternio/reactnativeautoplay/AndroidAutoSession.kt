@@ -56,6 +56,8 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
                 null,
                 null,
                 arrayOf(action),
+                null,
+                null
             )
 
             val template = MapTemplate(context = carContext, config, initNavigationManager = false)

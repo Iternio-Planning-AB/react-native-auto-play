@@ -7,6 +7,7 @@ import {
   type TextRow,
   type ToggleRow,
 } from '@iternio/react-native-auto-play';
+import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
@@ -66,6 +67,7 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
       image: {
         name: 'bomb',
         type: 'glyph',
+        color: DefaultTemplateImageColor,
       },
       onPress: (_template, checked) => {
         console.log('*** toggle', checked);
@@ -75,7 +77,7 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
       type: 'text',
       title: { text: 'text' },
       detailedText: { text: 'text only row' },
-      image: { name: 'text_ad', type: 'glyph' },
+      image: { name: 'text_ad', type: 'glyph', color: DefaultTemplateImageColor },
     },
   ];
 
@@ -87,6 +89,7 @@ const getMainSection = (showRadios: boolean): Section<ListTemplate> => {
       image: {
         name: 'rotate_auto',
         type: 'glyph',
+        color: DefaultTemplateImageColor,
       },
       onPress: () => {
         getRadioTemplate()

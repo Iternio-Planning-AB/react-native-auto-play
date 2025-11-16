@@ -6,15 +6,15 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SearchTemplate
 class HybridSearchTemplate : HybridSearchTemplateSpec() {
 
     override fun createSearchTemplate(config: SearchTemplateConfig) {
-        val context = AndroidAutoSession.Companion.getRootContext()
+        val context = AndroidAutoSession.getRootContext()
             ?: throw IllegalArgumentException("createSearchTemplate failed, carContext not found")
 
         val template = SearchTemplate(context, config)
-        AndroidAutoTemplate.Companion.setTemplate(config.id, template)
+        AndroidAutoTemplate.setTemplate(config.id, template)
     }
 
     override fun updateSearchResults(templateId: String, results: NitroSection) {
-        val template = AndroidAutoTemplate.Companion.getTemplate<SearchTemplate>(templateId)
+        val template = AndroidAutoTemplate.getTemplate<SearchTemplate>(templateId)
         template.updateSearchResults(results)
     }
 }

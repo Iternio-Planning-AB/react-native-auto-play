@@ -4,6 +4,7 @@ import {
   MessageTemplate,
   type MessageTemplateConfig,
 } from '@iternio/react-native-auto-play';
+import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoTemplate } from './AutoTemplate';
 
 const getTemplate = ({
@@ -17,12 +18,12 @@ const getTemplate = ({
     title: { text: 'header title' },
     message,
     mapConfig,
-    image: { name: 'info', type: 'glyph' },
+    image: { name: 'info', type: 'glyph', color: DefaultTemplateImageColor },
     actions: {
       android: [
         {
           type: 'image',
-          image: { name: 'thumb_up', type: 'glyph' },
+          image: { name: 'thumb_up', type: 'glyph', color: DefaultTemplateImageColor },
           onPress: () => {
             console.log('yeah');
             HybridAutoPlay.popTemplate();
@@ -33,6 +34,7 @@ const getTemplate = ({
           image: {
             name: 'thumb_down',
             type: 'glyph',
+            color: DefaultTemplateImageColor,
           },
           title: 'thumb down',
           onPress: () => {

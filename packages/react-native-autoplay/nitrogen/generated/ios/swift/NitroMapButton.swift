@@ -18,23 +18,23 @@ public extension NitroMapButton {
   /**
    * Create a new instance of `NitroMapButton`.
    */
-  init(type: NitroMapButtonType, image: Variant_GlyphImage_AssetImage?, onPress: @escaping () -> Void) {
-    self.init(type, { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
-      if let __unwrappedValue = image {
-        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
-          switch __unwrappedValue {
-            case .first(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
-            case .second(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
-          }
-        }().variant)
+  init(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Void)?) {
+    self.init(type, { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+      switch image {
+        case .first(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        case .second(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+      }
+    }().variant, { () -> bridge.std__optional_std__function_void____ in
+      if let __unwrappedValue = onPress {
+        return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+          let __closureWrapper = Func_void(__unwrappedValue)
+          return bridge.create_Func_void(__closureWrapper.toUnsafe())
+        }())
       } else {
         return .init()
       }
-    }(), { () -> bridge.Func_void in
-      let __closureWrapper = Func_void(onPress)
-      return bridge.create_Func_void(__closureWrapper.toUnsafe())
     }())
   }
 
@@ -49,23 +49,46 @@ public extension NitroMapButton {
     }
   }
   
-  var image: Variant_GlyphImage_AssetImage? {
+  var image: NitroImage {
     @inline(__always)
     get {
-      return { () -> Variant_GlyphImage_AssetImage? in
-        if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__(self.__image) {
-          let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__(self.__image)
-          return { () -> Variant_GlyphImage_AssetImage in
-            let __variant = bridge.std__variant_GlyphImage__AssetImage_(__unwrapped)
-            switch __variant.index() {
-              case 0:
-                let __actual = __variant.get_0()
-                return .first(__actual)
-              case 1:
-                let __actual = __variant.get_1()
-                return .second(__actual)
-              default:
-                fatalError("Variant can never have index \(__variant.index())!")
+      return { () -> NitroImage in
+        let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__image)
+        switch __variant.index() {
+          case 0:
+            let __actual = __variant.get_0()
+            return .first(__actual)
+          case 1:
+            let __actual = __variant.get_1()
+            return .second(__actual)
+          default:
+            fatalError("Variant can never have index \(__variant.index())!")
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__image = { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+        switch newValue {
+          case .first(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          case .second(let __value):
+            return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+        }
+      }().variant
+    }
+  }
+  
+  var onPress: (() -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> (() -> Void)? in
+        if bridge.has_value_std__optional_std__function_void____(self.__onPress) {
+          let __unwrapped = bridge.get_std__optional_std__function_void____(self.__onPress)
+          return { () -> () -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void(__unwrapped)
+            return { () -> Void in
+              __wrappedFunction.call()
             }
           }()
         } else {
@@ -75,38 +98,15 @@ public extension NitroMapButton {
     }
     @inline(__always)
     set {
-      self.__image = { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
+      self.__onPress = { () -> bridge.std__optional_std__function_void____ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
-            switch __unwrappedValue {
-              case .first(let __value):
-                return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
-              case .second(let __value):
-                return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
-            }
-          }().variant)
+          return bridge.create_std__optional_std__function_void____({ () -> bridge.Func_void in
+            let __closureWrapper = Func_void(__unwrappedValue)
+            return bridge.create_Func_void(__closureWrapper.toUnsafe())
+          }())
         } else {
           return .init()
         }
-      }()
-    }
-  }
-  
-  var onPress: () -> Void {
-    @inline(__always)
-    get {
-      return { () -> () -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void(self.__onPress)
-        return { () -> Void in
-          __wrappedFunction.call()
-        }
-      }()
-    }
-    @inline(__always)
-    set {
-      self.__onPress = { () -> bridge.Func_void in
-        let __closureWrapper = Func_void(newValue)
-        return bridge.create_Func_void(__closureWrapper.toUnsafe())
       }()
     }
   }

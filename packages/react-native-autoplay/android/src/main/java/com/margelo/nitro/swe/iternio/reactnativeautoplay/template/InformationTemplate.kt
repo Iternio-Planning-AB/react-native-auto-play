@@ -49,20 +49,7 @@ class InformationTemplate(context: CarContext, config: InformationTemplateConfig
             setHeader(Parser.parseHeader(context, config.title, config.headerActions))
         }.build()
 
-        return this.config.mapConfig?.let {
-            MapWithContentTemplate.Builder().apply {
-                setContentTemplate(template)
-                it.mapButtons?.let { mapButtons ->
-                    setMapController(
-                        MapController.Builder()
-                            .setMapActionStrip(Parser.parseMapActions(context, mapButtons)).build()
-                    )
-                }
-                it.headerActions?.let { headerActions ->
-                    setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
-                }
-            }.build()
-        } ?: template
+        return Parser.parseMapWithContentConfig(context, config.mapConfig, template)
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {

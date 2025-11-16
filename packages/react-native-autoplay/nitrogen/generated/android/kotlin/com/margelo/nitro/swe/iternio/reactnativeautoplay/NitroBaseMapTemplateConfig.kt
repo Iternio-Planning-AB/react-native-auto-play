@@ -25,6 +25,9 @@ data class NitroBaseMapTemplateConfig(
   val headerActions: Array<NitroAction>?,
   @DoNotStrip
   @Keep
+  val onDidChangePanningInterface: Func_void_bool?,
+  @DoNotStrip
+  @Keep
   val onWillAppear: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
@@ -45,8 +48,8 @@ data class NitroBaseMapTemplateConfig(
   /**
    * Create a new instance of NitroBaseMapTemplateConfig from Kotlin
    */
-  constructor(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?):
-         this(mapButtons, headerActions, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs)
+  constructor(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onDidChangePanningInterface: ((isPanningInterfaceVisible: Boolean) -> Unit)?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?):
+         this(mapButtons, headerActions, onDidChangePanningInterface?.let { Func_void_bool_java(it) }, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs)
 
   private companion object {
     /**
@@ -56,8 +59,8 @@ data class NitroBaseMapTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?): NitroBaseMapTemplateConfig {
-      return NitroBaseMapTemplateConfig(mapButtons, headerActions, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs)
+    private fun fromCpp(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onDidChangePanningInterface: Func_void_bool?, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?): NitroBaseMapTemplateConfig {
+      return NitroBaseMapTemplateConfig(mapButtons, headerActions, onDidChangePanningInterface, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs)
     }
   }
 }

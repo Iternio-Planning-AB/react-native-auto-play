@@ -98,7 +98,7 @@ class VirtualRenderer(
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
-                getMapTemplateConfig()?.onDidUpdatePanGestureWithTranslation?.let {
+                getMapTemplateConfig()?.onDidPan?.let {
                     it(
                         Point((-distanceX / scale).toDouble(), (-distanceY / scale).toDouble()),
                         null

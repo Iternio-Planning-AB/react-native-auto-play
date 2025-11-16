@@ -20,6 +20,7 @@
 #include "JFunc_void_Point.hpp"
 #include "JFunc_void_Point_double.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
+#include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
@@ -27,6 +28,7 @@
 #include "JNitroAlignment.hpp"
 #include "JNitroButtonStyle.hpp"
 #include "JNitroColor.hpp"
+#include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
 #include "JPoint.hpp"
@@ -82,8 +84,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JDouble> autoDismissMs = this->getFieldValue(fieldAutoDismissMs);
       static const auto fieldVisibleTravelEstimate = clazz->getField<JVisibleTravelEstimate>("visibleTravelEstimate");
       jni::local_ref<JVisibleTravelEstimate> visibleTravelEstimate = this->getFieldValue(fieldVisibleTravelEstimate);
-      static const auto fieldOnDidUpdatePanGestureWithTranslation = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidUpdatePanGestureWithTranslation");
-      jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidUpdatePanGestureWithTranslation = this->getFieldValue(fieldOnDidUpdatePanGestureWithTranslation);
+      static const auto fieldOnDidPan = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidPan");
+      jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidPan = this->getFieldValue(fieldOnDidPan);
       static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double::javaobject>("onDidUpdateZoomGestureWithCenter");
       jni::local_ref<JFunc_void_Point_double::javaobject> onDidUpdateZoomGestureWithCenter = this->getFieldValue(fieldOnDidUpdateZoomGestureWithCenter);
       static const auto fieldOnClick = clazz->getField<JFunc_void_Point::javaobject>("onClick");
@@ -100,6 +102,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
       static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JNitroAction>>("headerActions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> headerActions = this->getFieldValue(fieldHeaderActions);
+      static const auto fieldPanButtonScrollPercentage = clazz->getField<jni::JDouble>("panButtonScrollPercentage");
+      jni::local_ref<jni::JDouble> panButtonScrollPercentage = this->getFieldValue(fieldPanButtonScrollPercentage);
+      static const auto fieldOnDidChangePanningInterface = clazz->getField<JFunc_void_bool::javaobject>("onDidChangePanningInterface");
+      jni::local_ref<JFunc_void_bool::javaobject> onDidChangePanningInterface = this->getFieldValue(fieldOnDidChangePanningInterface);
       return MapTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -159,14 +165,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         }()) : std::nullopt,
         autoDismissMs != nullptr ? std::make_optional(autoDismissMs->value()) : std::nullopt,
         visibleTravelEstimate != nullptr ? std::make_optional(visibleTravelEstimate->toCpp()) : std::nullopt,
-        onDidUpdatePanGestureWithTranslation != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> {
-          if (onDidUpdatePanGestureWithTranslation->isInstanceOf(JFunc_void_Point_std__optional_Point__cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_Point_std__optional_Point__cxx::javaobject>(onDidUpdatePanGestureWithTranslation);
+        onDidPan != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> {
+          if (onDidPan->isInstanceOf(JFunc_void_Point_std__optional_Point__cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_Point_std__optional_Point__cxx::javaobject>(onDidPan);
             return downcast->cthis()->getFunction();
           } else {
-            auto onDidUpdatePanGestureWithTranslationRef = jni::make_global(onDidUpdatePanGestureWithTranslation);
-            return [onDidUpdatePanGestureWithTranslationRef](Point translation, std::optional<Point> velocity) -> void {
-              return onDidUpdatePanGestureWithTranslationRef->invoke(translation,velocity);
+            auto onDidPanRef = jni::make_global(onDidPan);
+            return [onDidPanRef](Point translation, std::optional<Point> velocity) -> void {
+              return onDidPanRef->invoke(translation,velocity);
             };
           }
         }()) : std::nullopt,
@@ -255,6 +261,18 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
+        }()) : std::nullopt,
+        panButtonScrollPercentage != nullptr ? std::make_optional(panButtonScrollPercentage->value()) : std::nullopt,
+        onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
+          if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_bool_cxx::javaobject>(onDidChangePanningInterface);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onDidChangePanningInterfaceRef = jni::make_global(onDidChangePanningInterface);
+            return [onDidChangePanningInterfaceRef](bool isPanningInterfaceVisible) -> void {
+              return onDidChangePanningInterfaceRef->invoke(isPanningInterfaceVisible);
+            };
+          }
         }()) : std::nullopt
       );
     }
@@ -265,7 +283,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -278,7 +296,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr,
         value.autoDismissMs.has_value() ? jni::JDouble::valueOf(value.autoDismissMs.value()) : nullptr,
         value.visibleTravelEstimate.has_value() ? JVisibleTravelEstimate::fromCpp(value.visibleTravelEstimate.value()) : nullptr,
-        value.onDidUpdatePanGestureWithTranslation.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidUpdatePanGestureWithTranslation.value()) : nullptr,
+        value.onDidPan.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidPan.value()) : nullptr,
         value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,
         value.onDoubleClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onDoubleClick.value()) : nullptr,
@@ -304,7 +322,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr
+        }() : nullptr,
+        value.panButtonScrollPercentage.has_value() ? jni::JDouble::valueOf(value.panButtonScrollPercentage.value()) : nullptr,
+        value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr
       );
     }
   };

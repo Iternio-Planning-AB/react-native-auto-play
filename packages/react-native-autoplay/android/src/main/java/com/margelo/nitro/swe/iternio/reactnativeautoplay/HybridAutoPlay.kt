@@ -14,7 +14,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         val callbacks = listeners.getOrPut(eventType) { mutableListOf() }
         callbacks.add(callback)
 
-        if (eventType == EventName.DIDCONNECT && AndroidAutoSession.Companion.getIsConnected()) {
+        if (eventType == EventName.DIDCONNECT && AndroidAutoSession.getIsConnected()) {
             callback()
         }
 
@@ -38,7 +38,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         if (moduleName == "main") {
             callback(ActivityRenderStateProvider.currentState)
         } else {
-            AndroidAutoSession.Companion.getState(moduleName)?.let {
+            AndroidAutoSession.getState(moduleName)?.let {
                 callback(it)
             }
         }
@@ -75,26 +75,26 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         templateId: String, headerActions: Array<NitroAction>?
     ) {
         val template =
-            AndroidAutoTemplate.Companion.getTemplate(templateId) ?: throw IllegalArgumentException(
+            AndroidAutoTemplate.getTemplate(templateId) ?: throw IllegalArgumentException(
                 "setTemplateHeaderActions failed, template $templateId not found"
             )
         template.setTemplateHeaderActions(headerActions)
     }
 
     override fun setRootTemplate(templateId: String): Promise<Unit> {
-        return Promise.Companion.async {
-            val template = AndroidAutoTemplate.Companion.getTemplate(templateId)
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate(templateId)
                 ?: throw IllegalArgumentException("setRootTemplate failed, $templateId template not found")
 
             if (template.isRenderTemplate) {
-                val screen = AndroidAutoScreen.Companion.getScreen(templateId)
+                val screen = AndroidAutoScreen.getScreen(templateId)
                     ?: throw IllegalArgumentException("setRootTemplate failed, $templateId screen not found")
-                val carContext = AndroidAutoSession.Companion.getCarContext(templateId)
+                val carContext = AndroidAutoSession.getCarContext(templateId)
                     ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
                 screen.applyConfigUpdate(invalidate = true)
 
-                if (!VirtualRenderer.Companion.hasRenderer(templateId)) {
+                if (!VirtualRenderer.hasRenderer(templateId)) {
                     val result = ThreadUtil.postOnUiAndAwait {
                         VirtualRenderer(carContext, templateId)
                     }
@@ -104,10 +104,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                     }
                 }
             } else {
-                val screenManager = AndroidAutoScreen.Companion.getScreenManager()
+                val screenManager = AndroidAutoScreen.getScreenManager()
                     ?: throw IllegalArgumentException("setRootTemplate failed, screenManager not found")
                 val carContext =
-                    AndroidAutoSession.Companion.getCarContext(AndroidAutoSession.Companion.ROOT_SESSION)
+                    AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
                         ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
                 val result = ThreadUtil.postOnUiAndAwait {
@@ -129,12 +129,12 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun pushTemplate(templateId: String): Promise<Unit> {
-        return Promise.Companion.async {
-            val context = AndroidAutoSession.Companion.getRootContext()
+        return Promise.async {
+            val context = AndroidAutoSession.getRootContext()
                 ?: throw IllegalArgumentException("pushTemplate failed, carContext not found")
-            val template = AndroidAutoTemplate.Companion.getTemplate(templateId)
+            val template = AndroidAutoTemplate.getTemplate(templateId)
                 ?: throw IllegalArgumentException("pushTemplate failed, template $templateId not found")
-            val screenManager = AndroidAutoScreen.Companion.getScreenManager()
+            val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")
 
             val result = ThreadUtil.postOnUiAndAwait {
@@ -176,8 +176,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun popTemplate(animate: Boolean?): Promise<Unit> {
-        return Promise.Companion.async {
-            val screenManager = AndroidAutoScreen.Companion.getScreenManager()
+        return Promise.async {
+            val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
                 return@async
@@ -194,8 +194,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun popToRootTemplate(animate: Boolean?): Promise<Unit> {
-        return Promise.Companion.async {
-            val screenManager = AndroidAutoScreen.Companion.getScreenManager()
+        return Promise.async {
+            val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popToRootTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
                 return@async
@@ -212,8 +212,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit> {
-        return Promise.Companion.async {
-            val screenManager = AndroidAutoScreen.Companion.getScreenManager()
+        return Promise.async {
+            val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popToTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
                 return@async

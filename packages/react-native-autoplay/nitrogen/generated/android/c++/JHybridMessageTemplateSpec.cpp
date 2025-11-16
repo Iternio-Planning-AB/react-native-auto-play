@@ -72,6 +72,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include "JNitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JNitroImage.hpp"
+#include "JFunc_void_bool.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 

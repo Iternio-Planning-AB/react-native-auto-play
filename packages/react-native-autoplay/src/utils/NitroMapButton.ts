@@ -6,8 +6,8 @@ type NitroMapButtonType = 'pan' | 'custom';
 
 export type NitroMapButton = {
   type: NitroMapButtonType;
-  image?: NitroImage;
-  onPress: () => void;
+  image: NitroImage;
+  onPress?: () => void;
 };
 
 const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButton> | undefined => {
@@ -16,16 +16,8 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
   }
 
   return mapButtons?.map<NitroMapButton>((button) => {
-    const { onPress, type } = button;
-
-    if (button.type === 'pan') {
-      if (Platform.OS === 'android') {
-        return { type: 'pan', onPress: () => onPress(template) };
-      }
-      throw new Error(
-        'unsupported platform, pan button can be used on Android only! Use a custom button instead.'
-      );
-    }
+    const { type } = button;
+    const onPress = button.type === 'custom' ? () => button.onPress(template) : undefined;
 
     if (button.image.type === 'glyph') {
       const backgroundColor =
@@ -39,14 +31,14 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
 
       return {
         type,
-        onPress: () => onPress(template),
+        onPress,
         image: NitroImageUtil.convert({ ...button.image, backgroundColor, fontScale }),
       };
     }
 
     return {
       type,
-      onPress: () => onPress(template),
+      onPress,
       image: NitroImageUtil.convert(button.image),
     };
   });

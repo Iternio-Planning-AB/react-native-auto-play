@@ -22,16 +22,16 @@ data class NitroMapButton(
   val type: NitroMapButtonType,
   @DoNotStrip
   @Keep
-  val image: Variant_GlyphImage_AssetImage?,
+  val image: NitroImage,
   @DoNotStrip
   @Keep
-  val onPress: Func_void
+  val onPress: Func_void?
 ) {
   /**
    * Create a new instance of NitroMapButton from Kotlin
    */
-  constructor(type: NitroMapButtonType, image: Variant_GlyphImage_AssetImage?, onPress: () -> Unit):
-         this(type, image, Func_void_java(onPress))
+  constructor(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Unit)?):
+         this(type, image, onPress?.let { Func_void_java(it) })
 
   private companion object {
     /**
@@ -41,7 +41,7 @@ data class NitroMapButton(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(type: NitroMapButtonType, image: Variant_GlyphImage_AssetImage?, onPress: Func_void): NitroMapButton {
+    private fun fromCpp(type: NitroMapButtonType, image: NitroImage, onPress: Func_void?): NitroMapButton {
       return NitroMapButton(type, image, onPress)
     }
   }

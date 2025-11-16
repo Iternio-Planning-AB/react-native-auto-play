@@ -43,7 +43,6 @@ class MapTemplate(
     private var alertPriority = 0
     private var alertIds: HashSet<Int> = HashSet()
 
-
     init {
         if (initNavigationManager) {
             val navigationManagerCallback = object : NavigationManagerCallback {
@@ -89,6 +88,11 @@ class MapTemplate(
                     setNavigationInfo(RoutingInfo.Builder().apply {
                         setLoading(true)
                     }.build())
+                }
+            }
+            config.onDidChangePanningInterface?.let {
+                setPanModeListener { isInPanMode ->
+                    it(isInPanMode)
                 }
             }
         }.build()

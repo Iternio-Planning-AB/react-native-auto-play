@@ -31,12 +31,7 @@ const HybridMapTemplate = NitroModules.createHybridObject<NitroMapTemplate>('Map
 export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
 
-export type HeaderActionsAndroidMap<T> =
-  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>]
-  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>, ActionButtonAndroid<T>]
-  | [ActionButtonAndroid<T>, ActionButtonAndroid<T>]
-  | [ActionButtonAndroid<T>];
-
+export type HeaderActionsAndroidMap<T> = Array<ActionButtonAndroid<T>> & { length: 1 | 2 | 3 | 4 };
 export interface NavigationAlertCallbacks {
   dismiss: CleanupCallback;
   update: (title: AutoText, subtitle?: AutoText) => void;
@@ -53,7 +48,7 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
    * @param translation distance in pixels along the x & y axis that has been scrolled since the last touch position during the scroll event
    * @param velocity the velocity of the pan gesture, iOS only
    */
-  onDidUpdatePanGestureWithTranslation?: (translation: Point, velocity?: Point) => void;
+  onDidPan?: (translation: Point, velocity?: Point) => void;
 
   /**
    * callback for pinch to zoom gesture
@@ -86,13 +81,36 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
 
   mapButtons?: Array<NitroMapButton>;
   headerActions?: Array<NitroAction>;
+
+  /**
+   * specify the percentage of screen height/width the pan button should scroll
+   * @namespace iOS
+   */
+  panButtonScrollPercentage?:
+    | 0
+    | 0.05
+    | 0.1
+    | 0.15
+    | 0.2
+    | 0.25
+    | 0.3
+    | 0.35
+    | 0.4
+    | 0.45
+    | 0.5
+    | 0.55
+    | 0.6
+    | 0.65
+    | 0.7
+    | 0.75
+    | 0.8
+    | 0.85
+    | 0.9
+    | 0.95
+    | 1;
 }
 
-export type MapButtons<T> =
-  | [MapButton<T>, MapButton<T>, MapButton<T>, MapButton<T> | MapPanButton<T>]
-  | [MapButton<T>, MapButton<T>, MapButton<T> | MapPanButton<T>]
-  | [MapButton<T>, MapButton<T> | MapPanButton<T>]
-  | [MapButton<T> | MapPanButton<T>];
+export type MapButtons<T> = Array<MapButton<T> | MapPanButton> & { length: 1 | 2 | 3 | 4 };
 
 export type MapHeaderActions<T> = {
   android?: HeaderActionsAndroidMap<T>;
@@ -102,6 +120,8 @@ export type MapHeaderActions<T> = {
 export type BaseMapTemplateConfig<T> = {
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner
+   * @namespace Android - adding a pan button will always make the pan button the first one
+   * @namespace iOS - the pan button can be on any position
    */
   mapButtons?: MapButtons<T>;
 

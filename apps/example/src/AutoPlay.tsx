@@ -162,7 +162,7 @@ const registerRunnable = () => {
       onDidAppear: () => console.log('AutoPlayRoot onDidAppear'),
       onWillDisappear: () => console.log('AutoPlayRoot onWillDisappear'),
       onDidDisappear: () => console.log('AutoPlayRoot onDidDisappear'),
-      onDidUpdatePanGestureWithTranslation: ({ x, y }) => {
+      onDidPan: ({ x, y }) => {
         console.log('*** onDidUpdatePanGestureWithTranslation', x, y);
       },
       onDidUpdateZoomGestureWithCenter: ({ x, y }, scale) => {
@@ -185,6 +185,9 @@ const registerRunnable = () => {
         template.startNavigation({ id: trip.id, routeChoice });
         onTripStarted(trip.id, routeChoice.id, template);
         updateTripEstimates(template, 'initial');
+      },
+      onDidChangePanningInterface: (isPanningInterfaceVisible) => {
+        console.log('onDidChangePanningInterface', isPanningInterfaceVisible);
       },
     });
     rootTemplate.setRootTemplate();

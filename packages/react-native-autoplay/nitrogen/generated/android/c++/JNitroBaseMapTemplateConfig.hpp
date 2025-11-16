@@ -14,6 +14,7 @@
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
+#include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
@@ -21,6 +22,7 @@
 #include "JNitroAlignment.hpp"
 #include "JNitroButtonStyle.hpp"
 #include "JNitroColor.hpp"
+#include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
 #include "JVariant_GlyphImage_AssetImage.hpp"
@@ -60,6 +62,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> mapButtons = this->getFieldValue(fieldMapButtons);
       static const auto fieldHeaderActions = clazz->getField<jni::JArrayClass<JNitroAction>>("headerActions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> headerActions = this->getFieldValue(fieldHeaderActions);
+      static const auto fieldOnDidChangePanningInterface = clazz->getField<JFunc_void_bool::javaobject>("onDidChangePanningInterface");
+      jni::local_ref<JFunc_void_bool::javaobject> onDidChangePanningInterface = this->getFieldValue(fieldOnDidChangePanningInterface);
       static const auto fieldOnWillAppear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillAppear");
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onWillAppear = this->getFieldValue(fieldOnWillAppear);
       static const auto fieldOnWillDisappear = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onWillDisappear");
@@ -92,6 +96,17 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
+        }()) : std::nullopt,
+        onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
+          if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_bool_cxx::javaobject>(onDidChangePanningInterface);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onDidChangePanningInterfaceRef = jni::make_global(onDidChangePanningInterface);
+            return [onDidChangePanningInterfaceRef](bool isPanningInterfaceVisible) -> void {
+              return onDidChangePanningInterfaceRef->invoke(isPanningInterfaceVisible);
+            };
+          }
         }()) : std::nullopt,
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
           if (onWillAppear->isInstanceOf(JFunc_void_std__optional_bool__cxx::javaClassStatic())) [[likely]] {
@@ -158,7 +173,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroBaseMapTemplateConfig::javaobject> fromCpp(const NitroBaseMapTemplateConfig& value) {
-      using JSignature = JNitroBaseMapTemplateConfig(jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JNitroBaseMapTemplateConfig(jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JFunc_void_bool::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -183,6 +198,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __array;
         }() : nullptr,
+        value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr,
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,
         value.onDidAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidAppear.value()) : nullptr,

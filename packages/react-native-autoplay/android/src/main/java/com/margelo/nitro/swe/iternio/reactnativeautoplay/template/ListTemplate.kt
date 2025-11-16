@@ -4,8 +4,6 @@ import androidx.car.app.CarContext
 import androidx.car.app.model.ListTemplate
 import androidx.car.app.model.SectionedItemList
 import androidx.car.app.model.Template
-import androidx.car.app.navigation.model.MapController
-import androidx.car.app.navigation.model.MapWithContentTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSection
@@ -48,20 +46,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
             }
         }.build()
 
-        return this.config.mapConfig?.let {
-            MapWithContentTemplate.Builder().apply {
-                setContentTemplate(template)
-                it.mapButtons?.let { mapButtons ->
-                    setMapController(
-                        MapController.Builder()
-                            .setMapActionStrip(Parser.parseMapActions(context, mapButtons)).build()
-                    )
-                }
-                it.headerActions?.let { headerActions ->
-                    setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
-                }
-            }.build()
-        } ?: template
+        return Parser.parseMapWithContentConfig(context, config.mapConfig, template)
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {

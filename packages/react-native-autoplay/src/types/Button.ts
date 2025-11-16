@@ -9,12 +9,13 @@ export type MapButton<T = unknown> = {
 export type ButtonStyle = 'normal' | 'confirm' | 'cancel';
 
 /**
- * this is a special button only visible on devices that have no touch support
- * @namespace Android
+ * pressing this button will bring up the system default pan interface
+ * @namespace Android - this button might not be shown, usually when the device has a touch screen
+ * @namespace iOS - this button will always be shown, no matter if the device has a touch screen or not
  */
-export type MapPanButton<T = unknown> = {
+export type MapPanButton = {
   type: 'pan';
-  onPress: (template: T) => void;
+  image: AutoImage;
 };
 
 type BaseButton<T = unknown> = {

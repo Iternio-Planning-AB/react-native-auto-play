@@ -16,8 +16,8 @@
 #include "JFunc_void.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
+#include "JNitroImage.hpp"
 #include "JNitroMapButtonType.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroColor.hpp"
 #include "NitroMapButtonType.hpp"
 #include <functional>
@@ -46,14 +46,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldType = clazz->getField<JNitroMapButtonType>("type");
       jni::local_ref<JNitroMapButtonType> type = this->getFieldValue(fieldType);
-      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
-      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JNitroImage>("image");
+      jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
       return NitroMapButton(
         type->toCpp(),
-        image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
-        [&]() -> std::function<void()> {
+        image->toCpp(),
+        onPress != nullptr ? std::make_optional([&]() -> std::function<void()> {
           if (onPress->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
             auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPress);
             return downcast->cthis()->getFunction();
@@ -63,7 +63,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
               return onPressRef->invoke();
             };
           }
-        }()
+        }()) : std::nullopt
       );
     }
 
@@ -73,14 +73,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
-      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         JNitroMapButtonType::fromCpp(value.type),
-        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
-        JFunc_void_cxx::fromCpp(value.onPress)
+        JNitroImage::fromCpp(value.image),
+        value.onPress.has_value() ? JFunc_void_cxx::fromCpp(value.onPress.value()) : nullptr
       );
     }
   };

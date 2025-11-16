@@ -149,6 +149,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(bool /* isPanningInterfaceVisible */)>
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_bool::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](bool isPanningInterfaceVisible) mutable -> void {
+      swiftClosure.call(isPanningInterfaceVisible);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridGridTemplateSpec>
   std::shared_ptr<HybridGridTemplateSpec> create_std__shared_ptr_HybridGridTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     ReactNativeAutoPlay::HybridGridTemplateSpec_cxx swiftPart = ReactNativeAutoPlay::HybridGridTemplateSpec_cxx::fromUnsafe(swiftUnsafePointer);

@@ -23,10 +23,13 @@ import androidx.car.app.model.DurationSpan
 import androidx.car.app.model.Header
 import androidx.car.app.model.ItemList
 import androidx.car.app.model.Row
+import androidx.car.app.model.Template
 import androidx.car.app.model.Toggle
 import androidx.car.app.navigation.model.Lane
 import androidx.car.app.navigation.model.LaneDirection
 import androidx.car.app.navigation.model.Maneuver
+import androidx.car.app.navigation.model.MapController
+import androidx.car.app.navigation.model.MapWithContentTemplate
 import androidx.car.app.navigation.model.Step
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.core.graphics.createBitmap
@@ -53,6 +56,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroActionType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAlignment
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAttributedString
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroBaseMapTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroButtonStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroColor
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroImage
@@ -116,12 +120,11 @@ object Parser {
                         setTitle(it)
                     }
                     action.image?.let { image ->
-                        val icon = CarIcon.Builder(
+                        setIcon(
                             parseImage(
                                 context, image
                             )
-                        ).build()
-                        setIcon(icon)
+                        )
                     }
                     action.flags?.let {
                         setFlags(it.toInt())
@@ -135,25 +138,36 @@ object Parser {
     }
 
     fun parseMapActions(context: CarContext, buttons: Array<NitroMapButton>): ActionStrip {
+        // make the pan button the first button so it can be access all the time
+        // when in pan mode AA locks onto this button
+        // once the buttons reappear after the hide timeout AA locks onto the first button
+        // in case the pan button is not the first button you can never get out of pan mode then
+        buttons.sortBy {
+            if (it.type == NitroMapButtonType.PAN) 0 else 1
+        }
         return ActionStrip.Builder().apply {
             buttons.forEach { button ->
                 if (button.type == NitroMapButtonType.PAN) {
-                    addAction(Action.PAN)
+                    addAction(
+                        Action.Builder(Action.PAN).setIcon(
+                            parseImage(
+                                context, button.image
+                            )
+                        ).build()
+                    )
                     return@forEach
                 }
 
-                button.image?.let { image ->
-                    addAction(Action.Builder().apply {
-                        setOnClickListener(button.onPress)
-                        setIcon(
-                            CarIcon.Builder(
-                                parseImage(
-                                    context, image
-                                )
-                            ).build()
+                addAction(Action.Builder().apply {
+                    button.onPress?.let {
+                        setOnClickListener(it)
+                    }
+                    setIcon(
+                        parseImage(
+                            context, button.image
                         )
-                    }.build())
-                }
+                    )
+                }.build())
             }
         }.build()
     }
@@ -282,7 +296,7 @@ object Parser {
                         addText(parseText(detailedText))
                     }
                     row.image?.let { image ->
-                        setImage(CarIcon.Builder(parseImage(context, image)).build())
+                        setImage(parseImage(context, image))
                     }
                     row.onPress?.let {
                         setOnClickListener {
@@ -335,7 +349,7 @@ object Parser {
                         addText(parseText(detailedText))
                     }
                     row.image?.let { image ->
-                        setImage(CarIcon.Builder(parseImage(context, image)).build())
+                        setImage(parseImage(context, image))
                     }
                     row.browsable?.let { browsable ->
                         setBrowsable(browsable)
@@ -658,5 +672,32 @@ object Parser {
             angle in -180..-175 -> LaneDirection.SHAPE_U_TURN_LEFT
             else -> LaneDirection.SHAPE_UNKNOWN
         }
+    }
+
+    fun parseMapWithContentConfig(
+        context: CarContext, mapConfig: NitroBaseMapTemplateConfig?, template: Template
+    ): Template {
+        if (mapConfig == null) {
+            return template
+        }
+
+        return MapWithContentTemplate.Builder().apply {
+            setContentTemplate(template)
+            mapConfig.mapButtons?.let { mapButtons ->
+                setMapController(
+                    MapController.Builder().apply {
+                        setMapActionStrip(Parser.parseMapActions(context, mapButtons)).build()
+                        setPanModeListener { isInPanMode ->
+                            mapConfig.onDidChangePanningInterface?.let {
+                                it(isInPanMode)
+                            }
+                        }
+                    }.build()
+                )
+            }
+            mapConfig.headerActions?.let { headerActions ->
+                setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
+            }
+        }.build()
     }
 }

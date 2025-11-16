@@ -18,7 +18,7 @@ public extension NitroBaseMapTemplateConfig {
   /**
    * Create a new instance of `NitroBaseMapTemplateConfig`.
    */
-  init(mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?) {
+  init(mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?) {
     self.init({ () -> bridge.std__optional_std__vector_NitroMapButton__ in
       if let __unwrappedValue = mapButtons {
         return bridge.create_std__optional_std__vector_NitroMapButton__({ () -> bridge.std__vector_NitroMapButton_ in
@@ -39,6 +39,15 @@ public extension NitroBaseMapTemplateConfig {
             __vector.push_back(__item)
           }
           return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
+      if let __unwrappedValue = onDidChangePanningInterface {
+        return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
+          let __closureWrapper = Func_void_bool(__unwrappedValue)
+          return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -149,6 +158,38 @@ public extension NitroBaseMapTemplateConfig {
               __vector.push_back(__item)
             }
             return __vector
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ isPanningInterfaceVisible: Bool) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface)
+          return { () -> (Bool) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_bool(__unwrapped)
+            return { (__isPanningInterfaceVisible: Bool) -> Void in
+              __wrappedFunction.call(__isPanningInterfaceVisible)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onDidChangePanningInterface = { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
+            let __closureWrapper = Func_void_bool(__unwrappedValue)
+            return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()

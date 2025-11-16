@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -77,7 +77,7 @@ public extension MapTemplateConfig {
         return .init()
       }
     }(), { () -> bridge.std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______ in
-      if let __unwrappedValue = onDidUpdatePanGestureWithTranslation {
+      if let __unwrappedValue = onDidPan {
         return bridge.create_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______({ () -> bridge.Func_void_Point_std__optional_Point_ in
           let __closureWrapper = Func_void_Point_std__optional_Point_(__unwrappedValue)
           return bridge.create_Func_void_Point_std__optional_Point_(__closureWrapper.toUnsafe())
@@ -153,6 +153,21 @@ public extension MapTemplateConfig {
             __vector.push_back(__item)
           }
           return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = panButtonScrollPercentage {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
+      if let __unwrappedValue = onDidChangePanningInterface {
+        return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
+          let __closureWrapper = Func_void_bool(__unwrappedValue)
+          return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
         }())
       } else {
         return .init()
@@ -389,12 +404,12 @@ public extension MapTemplateConfig {
     }
   }
   
-  var onDidUpdatePanGestureWithTranslation: ((_ translation: Point, _ velocity: Point?) -> Void)? {
+  var onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)? {
     @inline(__always)
     get {
       return { () -> ((_ translation: Point, _ velocity: Point?) -> Void)? in
-        if bridge.has_value_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______(self.__onDidUpdatePanGestureWithTranslation) {
-          let __unwrapped = bridge.get_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______(self.__onDidUpdatePanGestureWithTranslation)
+        if bridge.has_value_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______(self.__onDidPan) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______(self.__onDidPan)
           return { () -> (Point, Point?) -> Void in
             let __wrappedFunction = bridge.wrap_Func_void_Point_std__optional_Point_(__unwrapped)
             return { (__translation: Point, __velocity: Point?) -> Void in
@@ -414,7 +429,7 @@ public extension MapTemplateConfig {
     }
     @inline(__always)
     set {
-      self.__onDidUpdatePanGestureWithTranslation = { () -> bridge.std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______ in
+      self.__onDidPan = { () -> bridge.std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______({ () -> bridge.Func_void_Point_std__optional_Point_ in
             let __closureWrapper = Func_void_Point_std__optional_Point_(__unwrappedValue)
@@ -658,6 +673,55 @@ public extension MapTemplateConfig {
               __vector.push_back(__item)
             }
             return __vector
+          }())
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var panButtonScrollPercentage: Double? {
+    @inline(__always)
+    get {
+      return self.__panButtonScrollPercentage.value
+    }
+    @inline(__always)
+    set {
+      self.__panButtonScrollPercentage = { () -> bridge.std__optional_double_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_double_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)? {
+    @inline(__always)
+    get {
+      return { () -> ((_ isPanningInterfaceVisible: Bool) -> Void)? in
+        if bridge.has_value_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface) {
+          let __unwrapped = bridge.get_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface)
+          return { () -> (Bool) -> Void in
+            let __wrappedFunction = bridge.wrap_Func_void_bool(__unwrapped)
+            return { (__isPanningInterfaceVisible: Bool) -> Void in
+              __wrappedFunction.call(__isPanningInterfaceVisible)
+            }
+          }()
+        } else {
+          return nil
+        }
+      }()
+    }
+    @inline(__always)
+    set {
+      self.__onDidChangePanningInterface = { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
+            let __closureWrapper = Func_void_bool(__unwrappedValue)
+            return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
           }())
         } else {
           return .init()

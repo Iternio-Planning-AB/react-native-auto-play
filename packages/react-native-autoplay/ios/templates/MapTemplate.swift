@@ -11,11 +11,14 @@ struct NavigationAlertWrapper {
     let config: NitroNavigationAlert
 }
 
-class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTemplateDelegate
+class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
+    CPMapTemplateDelegate
 {
     let template: CPMapTemplate
     var config: MapTemplateConfig
-    
+
+    let screenDimensions: CGSize
+
     var barButtons: [NitroAction]? {
         get {
             return config.headerActions
@@ -52,15 +55,36 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
         self.config = config
         template = CPMapTemplate(id: config.id)
 
+        if let initialProperties = SceneStore.getRootScene()?.initialProperties,
+            let windowDict = initialProperties["window"] as? [String: Any],
+            let height = windowDict["height"] as? CGFloat,
+            let width = windowDict["width"] as? CGFloat
+        {
+            screenDimensions = CGSize(
+                width: width,
+                height: height
+            )
+        } else {
+            screenDimensions = CGSize(width: 0, height: 0)
+        }
+
         super.init()
 
         template.mapDelegate = self
         invalidate()
     }
 
+    func onPanButtonPress() {
+        if template.isPanningInterfaceVisible {
+            template.dismissPanningInterface(animated: true)
+        } else {
+            template.showPanningInterface(animated: true)
+        }
+    }
+
     func parseMapButtons(mapButtons: [NitroMapButton]) -> [CPMapButton] {
         return mapButtons.map { button in
-            if let glyphImage = button.image?.glyphImage,
+            if let glyphImage = button.image.glyphImage,
                 let icon = SymbolFont.imageFromNitroImage(
                     image: glyphImage,
                     size: CPButtonMaximumImageSize.height,
@@ -68,22 +92,34 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
                 )
             {
                 return CPMapButton(image: icon) { _ in
-                    button.onPress()
+                    if button.type == .pan {
+                        self.onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
                 }
             }
-            if let assetImage = button.image?.assetImage,
+            if let assetImage = button.image.assetImage,
                 let icon = Parser.parseAssetImage(
                     assetImage: assetImage,
                     traitCollection: SceneStore.getRootTraitCollection()
                 )
             {
                 return CPMapButton(image: icon) { _ in
-                    button.onPress()
+                    if button.type == .pan {
+                        self.onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
                 }
             }
 
             return CPMapButton { _ in
-                button.onPress()
+                if button.type == .pan {
+                    self.onPanButtonPress()
+                    return
+                }
+                button.onPress?()
             }
         }
 
@@ -92,6 +128,26 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
     func invalidate() {
         if tripSelectorVisible {
             // ignore invalidate calls to not break the trip selectors back button
+            return
+        }
+        
+        if template.isPanningInterfaceVisible {
+            // while panning interface is shown we only provide a back button on the header
+            // and all map buttons except the pan button
+            // reason is that you can have a max of 2 map buttons while panning interface is shown
+            // best practice is to provide zoom buttons then but then there is no more room for the pan button to exit pan mode
+            template.trailingNavigationBarButtons = []
+            template.leadingNavigationBarButtons = []
+            template.backButton = CPBarButton(title: "") { _ in
+                self.template.dismissPanningInterface(animated: true)
+            }
+            
+            let mapButtons = config.mapButtons?.filter { button in
+                button.type != .pan
+            } ?? []
+            
+            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+            
             return
         }
 
@@ -141,7 +197,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
         didUpdatePanGestureWithTranslation: CGPoint,
         velocity: CGPoint
     ) {
-        config.onDidUpdatePanGestureWithTranslation?(
+        config.onDidPan?(
             Point(
                 x: didUpdatePanGestureWithTranslation.x,
                 y: didUpdatePanGestureWithTranslation.y
@@ -156,6 +212,10 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
         scale: CGFloat,
         velocity: CGFloat
     ) {
+        if template.isPanningInterfaceVisible {
+            return
+        }
+        
         if scale == 1 && velocity == 1 {
             config.onDoubleClick?(Point(x: center.x, y: center.y))
             return
@@ -164,6 +224,47 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
         config.onDidUpdateZoomGestureWithCenter?(
             Point(x: center.x, y: center.y),
             1 - velocity * 0.1
+        )
+    }
+
+    func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
+        config.onDidChangePanningInterface?(true)
+        invalidate()
+    }
+
+    func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        config.onDidChangePanningInterface?(false)
+        invalidate()
+    }
+
+    func mapTemplate(
+        _ mapTemplate: CPMapTemplate,
+        panWith direction: CPMapTemplate.PanDirection
+    ) {
+        let panButtonScrollPercentage = config.panButtonScrollPercentage ?? 0.15
+        let scrollDistanceX = screenDimensions.width * panButtonScrollPercentage
+        let scrollDistanceY = screenDimensions.height * panButtonScrollPercentage
+
+        var translation = CGPoint.zero
+
+        switch direction {
+        case .left:
+            translation.x = scrollDistanceX
+        case .right:
+            translation.x = -scrollDistanceX
+        case .up:
+            translation.y = scrollDistanceY
+        case .down:
+            translation.y = -scrollDistanceY
+        default:
+            return
+        }
+
+        let velocity = CGPoint(x: translation.x * 2, y: translation.y * 2)
+
+        config.onDidPan?(
+            Point(x: translation.x, y: translation.y),
+            Point(x: velocity.x, y: velocity.y)
         )
     }
 
@@ -263,7 +364,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding, CPMapTem
         let style = Parser.parseActionAlertStyle(
             style: alertConfig.primaryAction.style
         )
-        
+
         let primaryAction = CPAlertAction(
             title: alertConfig.primaryAction.title,
             style: style
