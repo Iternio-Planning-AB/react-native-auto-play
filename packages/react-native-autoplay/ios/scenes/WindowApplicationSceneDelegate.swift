@@ -33,21 +33,30 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        HybridAutoPlay.emitRenderState(moduleName: "main", state: .didappear)
+        SceneStore.setState(
+            moduleName: SceneStore.windowSceneModuleName,
+            state: .didappear
+        )
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        HybridAutoPlay.emitRenderState(
-            moduleName: "main",
+        SceneStore.setState(
+            moduleName: SceneStore.windowSceneModuleName,
             state: .willdisappear
         )
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        HybridAutoPlay.emitRenderState(moduleName: "main", state: .willappear)
+        SceneStore.setState(
+            moduleName: SceneStore.windowSceneModuleName,
+            state: .willappear
+        )
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        HybridAutoPlay.emitRenderState(moduleName: "main", state: .diddisappear)
+        SceneStore.setState(
+            moduleName: SceneStore.windowSceneModuleName,
+            state: .diddisappear
+        )
     }
 }

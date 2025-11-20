@@ -12,8 +12,6 @@ import CarPlay
 #endif
 
 class AutoPlayScene: UIResponder {
-    public private(set) var state: VisibilityState = .diddisappear
-
     var initialProperties: [String: Any] = [:]
     var moduleName: String?
     var window: UIWindow?
@@ -75,16 +73,11 @@ class AutoPlayScene: UIResponder {
     }
 
     func setState(state: VisibilityState) {
-        self.state = state
-
         guard let moduleName = self.moduleName else {
             return
         }
 
-        HybridAutoPlay.emitRenderState(
-            moduleName: moduleName,
-            state: state
-        )
+        SceneStore.setState(moduleName: moduleName, state: state)
     }
 
     func initRootView() {

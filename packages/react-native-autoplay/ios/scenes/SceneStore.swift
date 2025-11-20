@@ -10,6 +10,9 @@ import CarPlay
 class SceneStore {
     static let rootModuleName = "AutoPlayRoot"
     static let dashboardModuleName = "CarPlayDashboard"
+    static let windowSceneModuleName = "main"
+
+    private static var renderState = [String: VisibilityState]()
 
     private static var store: [String: AutoPlayScene] = [:]
 
@@ -34,7 +37,16 @@ class SceneStore {
     }
 
     static func getState(moduleName: String) -> VisibilityState? {
-        return store[moduleName]?.state
+        return renderState[moduleName]
+    }
+
+    static func setState(moduleName: String, state: VisibilityState) {
+        renderState[moduleName] = state
+
+        HybridAutoPlay.emitRenderState(
+            moduleName: moduleName,
+            state: state
+        )
     }
 
     static func getDashboardScene() throws -> DashboardSceneDelegate? {
@@ -67,11 +79,11 @@ class SceneStore {
 
         return scene as? ClusterSceneDelegate
     }
-    
+
     static func getRootScene() -> AutoPlayScene? {
         return store[SceneStore.rootModuleName]
     }
-    
+
     static func getRootTraitCollection() -> UITraitCollection {
         return store[SceneStore.rootModuleName]!.traitCollection
     }
