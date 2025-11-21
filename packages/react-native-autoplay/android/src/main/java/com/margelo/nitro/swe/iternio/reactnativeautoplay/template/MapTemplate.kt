@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.template
 
+import android.app.Service
 import android.graphics.Color
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
@@ -20,6 +21,7 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertActionStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoService
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoSession
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.MapTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
@@ -262,6 +264,8 @@ class MapTemplate(
 
                 updateTripDestinations()
             }
+
+            AndroidAutoService.instance?.startForeground()
         }
 
         fun updateTravelEstimates(steps: Array<TripPoint>) {
@@ -287,6 +291,8 @@ class MapTemplate(
             navigationInfo = null
 
             AndroidAutoScreen.invalidateSurfaceScreens()
+
+            AndroidAutoService.instance?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
         }
 
         fun updateManeuvers(maneuvers: NitroManeuver) {
@@ -340,11 +346,29 @@ class MapTemplate(
             cardBackgroundColor = Parser.parseColor(backgroundColor)
 
             val currentStep = Parser.parseStep(context, current)
+            val currentDistance = Parser.parseDistance(current.travelEstimates.distanceRemaining)
+
             val nextStep = next?.let { Parser.parseStep(context, it) }
+
+            AndroidAutoService.instance?.let {
+                val notificationIcon = Parser.parseImageToBitmap(
+                    context,
+                    current.symbolImage.asFirstOrNull(),
+                    current.symbolImage.asSecondOrNull()
+                )
+
+                val notificationText = currentStep.cue?.toString()
+
+                val notificationTitle = "${currentDistance.displayDistance.toInt()} ${Parser.parseDistanceUnit(currentDistance.displayUnit)}"
+
+                it.notify(
+                    notificationTitle, notificationText, notificationIcon
+                )
+            }
 
             navigationInfo = RoutingInfo.Builder().apply {
                 setCurrentStep(
-                    currentStep, Parser.parseDistance(current.travelEstimates.distanceRemaining)
+                    currentStep, currentDistance
                 )
                 nextStep?.let { setNextStep(it) }
             }.build()

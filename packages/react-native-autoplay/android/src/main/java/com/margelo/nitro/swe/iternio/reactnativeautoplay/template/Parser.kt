@@ -707,6 +707,17 @@ object Parser {
         }
     }
 
+    fun parseDistanceUnit(@Distance.Unit displayUnit: Int): String {
+        return when (displayUnit) {
+            Distance.UNIT_FEET -> "ft"
+            Distance.UNIT_KILOMETERS, Distance.UNIT_KILOMETERS_P1 -> "km"
+            Distance.UNIT_METERS -> "m"
+            Distance.UNIT_MILES, Distance.UNIT_MILES_P1 -> "mi"
+            Distance.UNIT_YARDS -> "yd"
+            else -> ""
+        }
+    }
+
     fun parseMapWithContentConfig(
         context: CarContext, mapConfig: NitroBaseMapTemplateConfig?, template: Template
     ): Template {
