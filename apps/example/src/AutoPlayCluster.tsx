@@ -15,7 +15,7 @@ export const Cluster = (props: AutoPlayClusterInitialProps) => {
   useEffect(() => {
     const listeners: Array<CleanupCallback | undefined> = [];
 
-    listeners.push(
+    listteners.push(
       AutoPlayCluster.addListenerColorScheme((clusterId, payload) => {
         if (props.id !== clusterId) {
           return;
