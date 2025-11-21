@@ -7,9 +7,12 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.view.Display
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
@@ -25,6 +28,7 @@ import com.facebook.react.uimanager.DisplayMetricsHolder
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.Debouncer
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ReactContextResolver
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +37,9 @@ import kotlinx.coroutines.launch
 import kotlin.math.floor
 
 class VirtualRenderer(
-    private val context: CarContext, private val moduleName: String
+    private val context: CarContext,
+    private val moduleName: String,
+    private val isCluster: Boolean = false
 ) {
     private lateinit var uiManager: FabricUIManager
     private lateinit var display: Display
@@ -48,6 +54,8 @@ class VirtualRenderer(
     private var height: Int = 0
     private var width: Int = 0
 
+    private var splashWillDisappear = false
+
     /**
      * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side
      */
@@ -55,7 +63,7 @@ class VirtualRenderer(
     val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
 
     init {
-        virtualRenderer.put(moduleName, this)
+        virtualRenderer[moduleName] = this
 
         CoroutineScope(Dispatchers.Main).launch {
             reactContext =
@@ -63,7 +71,7 @@ class VirtualRenderer(
 
             if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
                 uiManager = UIManagerHelper.getUIManager(
-                    reactContext, UIManagerType.Companion.FABRIC
+                    reactContext, UIManagerType.FABRIC
                 ) as FabricUIManager
             }
 
@@ -188,7 +196,7 @@ class VirtualRenderer(
                     val left = floor((visibleArea.left + additionalMarginLeft) / scale).toDouble()
                     val right =
                         floor((width - visibleArea.right + additionalMarginRight) / scale).toDouble()
-                    HybridAutoPlay.Companion.emitSafeAreaInsets(
+                    HybridAutoPlay.emitSafeAreaInsets(
                         moduleName = moduleName,
                         top = top,
                         bottom = bottom,
@@ -213,7 +221,7 @@ class VirtualRenderer(
                             defaultMargin
                         ) / scale
                     ).toDouble()
-                    HybridAutoPlay.Companion.emitSafeAreaInsets(
+                    HybridAutoPlay.emitSafeAreaInsets(
                         moduleName = moduleName,
                         top = top,
                         bottom = bottom,
@@ -227,9 +235,9 @@ class VirtualRenderer(
     }
 
     private fun getMapTemplateConfig(): MapTemplateConfig? {
-        val screenManager = AndroidAutoScreen.Companion.getScreen(moduleName)?.screenManager ?: return null
+        val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
         val marker = screenManager.top.marker ?: return null
-        return AndroidAutoTemplate.Companion.getConfig(marker) as MapTemplateConfig?
+        return AndroidAutoTemplate.getConfig(marker) as MapTemplateConfig?
     }
 
     private fun initRenderer() {
@@ -283,18 +291,28 @@ class VirtualRenderer(
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
+            var splashScreenView: View? = null
+
             if (!this@VirtualRenderer::reactRootView.isInitialized) {
+                splashScreenView =
+                    if (isCluster) getClusterSplashScreen(context, height, width) else null
+
                 val instanceManager =
                     (context.applicationContext as ReactApplication).reactNativeHost.reactInstanceManager
                 reactRootView = ReactRootView(context.applicationContext).apply {
                     layoutParams = FrameLayout.LayoutParams(
-                        (this@MapPresentation.width / reactNativeScale).toInt(), (this@MapPresentation.height / reactNativeScale).toInt()
+                        (this@MapPresentation.width / reactNativeScale).toInt(),
+                        (this@MapPresentation.height / reactNativeScale).toInt()
                     )
                     scaleX = reactNativeScale
                     scaleY = reactNativeScale
                     pivotX = 0f
                     pivotY = 0f
                     setBackgroundColor(Color.DKGRAY)
+
+                    splashScreenView?.let {
+                        removeClusterSplashScreen({ viewTreeObserver }, it)
+                    }
 
                     startReactApplication(instanceManager, moduleName, initialProperties)
                     runApplication()
@@ -308,9 +326,13 @@ class VirtualRenderer(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
                 clipChildren = false
+
+                addView(reactRootView)
             }
 
-            rootContainer.addView(reactRootView)
+            splashScreenView?.let {
+                rootContainer.addView(it)
+            }
 
             setContentView(rootContainer)
         }
@@ -331,7 +353,12 @@ class VirtualRenderer(
                 reactSurfaceImpl = ReactSurfaceImpl(context, moduleName, initialProperties)
             }
 
+            var splashScreenView: View? = null
+
             if (!this@VirtualRenderer::reactSurfaceView.isInitialized) {
+                splashScreenView =
+                    if (isCluster) getClusterSplashScreen(context, height, width) else null
+
                 reactSurfaceView = ReactSurfaceView(context, reactSurfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
@@ -341,6 +368,10 @@ class VirtualRenderer(
                     pivotX = 0f
                     pivotY = 0f
                     setBackgroundColor(Color.DKGRAY)
+
+                    splashScreenView?.let {
+                        removeClusterSplashScreen({ viewTreeObserver }, it)
+                    }
                 }
 
                 reactSurfaceId = uiManager.startSurface(
@@ -363,15 +394,61 @@ class VirtualRenderer(
                 (reactSurfaceView.parent as ViewGroup).removeView(reactSurfaceView)
             }
 
-            setContentView(FrameLayout(context).apply {
+            val rootContainer = FrameLayout(context).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
                 clipChildren = false
 
                 addView(reactSurfaceView)
-            })
+            }
+
+            splashScreenView?.let {
+                rootContainer.addView(it)
+            }
+
+            setContentView(rootContainer)
         }
+    }
+
+    private fun getClusterSplashScreen(
+        context: Context, containerHeight: Int, containerWidth: Int
+    ): View {
+        val layout =
+            LayoutInflater.from(context).inflate(R.layout.cluster_splashscreen, null, false)
+        val text = layout.findViewById<TextView>(R.id.splash_text)
+
+        AppInfo.getApplicationIcon(context)?.let {
+            val maxIconSize = minOf(64, (0.25 * maxOf(containerHeight, containerWidth)).toInt())
+
+            it.setBounds(0, 0, maxIconSize, maxIconSize)
+            text.setCompoundDrawables(null, it, null, null)
+        }
+
+        text.text = AppInfo.getApplicationLabel(context)
+
+        return layout
+    }
+
+    private fun removeClusterSplashScreen(
+        getViewTreeObserver: () -> ViewTreeObserver, splashScreenView: View
+    ) {
+        getViewTreeObserver().addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (splashWillDisappear) {
+                    return
+                }
+                splashWillDisappear = true
+
+                splashScreenView.animate().alpha(0f)
+                    .setStartDelay(BuildConfig.CLUSTER_SPLASH_DELAY_MS)
+                    .setDuration(BuildConfig.CLUSTER_SPLASH_DURATION_MS).withEndAction {
+                        (splashScreenView.parent as? ViewGroup)?.removeView(splashScreenView)
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this)
+                    }
+            }
+        })
     }
 
     companion object {

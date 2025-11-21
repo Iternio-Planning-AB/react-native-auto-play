@@ -28,7 +28,7 @@ class HybridCluster : HybridClusterSpec() {
             val carContext = AndroidAutoSession.getCarContext(clusterId)
                 ?: throw IllegalArgumentException("initRootView failed, carContext for $clusterId cluster not found")
             val result = ThreadUtil.postOnUiAndAwait {
-                VirtualRenderer(carContext, clusterId)
+                VirtualRenderer(carContext, clusterId, isCluster = true)
             }
             if (result.isFailure) {
                 throw result.exceptionOrNull()
