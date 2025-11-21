@@ -110,17 +110,29 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return Promise.async {
-            try await RootModule.withSceneTemplateAndInterfaceController(
-                templateId: templateId
-            ) { template, scene, interfaceController in
-                if template is CPMapTemplate {
+            guard
+                let template = TemplateStore.getTemplate(
+                    templateId: templateId
+                )
+            else {
+                throw AutoPlayError.templateNotFound(templateId)
+            }
+
+            try await RootModule.withSceneAndInterfaceController {
+                scene,
+                interfaceController in
+                let carPlayTemplate = template.getTemplate()
+                
+                if carPlayTemplate is CPMapTemplate {
                     await MainActor.run {
                         scene.initRootView()
                     }
                 }
 
+                await template.invalidate()
+
                 let _ = try await interfaceController.setRootTemplate(
-                    template,
+                    carPlayTemplate,
                     animated: false
                 )
             }
@@ -131,27 +143,39 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         -> NitroModules.Promise<Void>
     {
         return Promise.async {
-            return try await RootModule.withSceneTemplateAndInterfaceController(
-                templateId: templateId
-            ) { template, scene, interfaceController in
-                if template is CPAlertTemplate {
+            guard
+                let template = TemplateStore.getTemplate(
+                    templateId: templateId
+                )
+            else {
+                throw AutoPlayError.templateNotFound(templateId)
+            }
+
+            await template.invalidate()
+
+            return try await RootModule.withInterfaceController {
+                interfaceController in
+                
+                let carPlayTemplate = template.getTemplate()
+                
+                if carPlayTemplate is CPAlertTemplate {
                     let animated = try await
                         !interfaceController.dismissTemplate(
                             animated: false
                         )
 
                     let _ = try await interfaceController.presentTemplate(
-                        template,
+                        carPlayTemplate,
                         animated: animated
                     )
                 } else {
                     let _ = try await interfaceController.pushTemplate(
-                        template,
+                        carPlayTemplate,
                         animated: true
                     )
                 }
 
-                if let autoDismissMs = await scene.templateStore.getTemplate(
+                if let autoDismissMs = TemplateStore.getTemplate(
                     templateId: templateId
                 )?.autoDismissMs {
                     Task { @MainActor in
@@ -240,10 +264,18 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     func setTemplateHeaderActions(
         templateId: String,
         headerActions: [NitroAction]?
-    ) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: AutoPlayTemplate) in
-            if var template = template as? AutoPlayHeaderProviding {
+    ) throws -> Promise<Void> {
+        return Promise.async {
+            try await MainActor.run {
+                guard
+                    var template = TemplateStore.getTemplate(
+                        templateId: templateId
+                    ) as? AutoPlayHeaderProviding
+                else {
+                    throw AutoPlayError.invalidTemplateType(
+                        "\(templateId) does not support header actions"
+                    )
+                }
                 template.barButtons = headerActions
             }
         }

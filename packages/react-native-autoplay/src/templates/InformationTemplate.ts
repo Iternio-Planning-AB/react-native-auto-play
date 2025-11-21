@@ -116,7 +116,7 @@ export class InformationTemplate extends Template<
 
   public updateItems(items?: InformationItems) {
     const section = this.getSection(items);
-    HybridInformationTemplate.updateInformationTemplateSections(
+    return HybridInformationTemplate.updateInformationTemplateSections(
       this.id,
       NitroSectionUtil.convert(this.template, section)?.at(0) ?? { items: [], type: 'default' }
     );

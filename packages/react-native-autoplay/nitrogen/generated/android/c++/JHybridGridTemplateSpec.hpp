@@ -55,7 +55,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     // Methods
     void createGridTemplate(const GridTemplateConfig& config) override;
-    void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override;
+    std::shared_ptr<Promise<void>> updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override;
 
   private:
     friend HybridBase;

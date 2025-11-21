@@ -122,7 +122,7 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
   }
 
   public updateSections(sections?: Section<ListTemplate>) {
-    HybridListTemplate.updateListTemplateSections(
+    return HybridListTemplate.updateListTemplateSections(
       this.id,
       NitroSectionUtil.convert(this.template, sections)
     );

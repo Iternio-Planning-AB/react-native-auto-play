@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.ListTemplate
 
@@ -15,8 +16,10 @@ class HybridListTemplate : HybridListTemplateSpec() {
 
     override fun updateListTemplateSections(
         templateId: String, sections: Array<NitroSection>?
-    ) {
-        val template = AndroidAutoTemplate.getTemplate<ListTemplate>(templateId)
-        template.updateSections(sections)
+    ): Promise<Unit> {
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate<ListTemplate>(templateId)
+            template.updateSections(sections)
+        }
     }
 }

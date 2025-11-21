@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /// See ``HybridSearchTemplateSpec``
 public protocol HybridSearchTemplateSpec_protocol: HybridObject {
@@ -15,7 +16,7 @@ public protocol HybridSearchTemplateSpec_protocol: HybridObject {
 
   // Methods
   func createSearchTemplate(config: SearchTemplateConfig) throws -> Void
-  func updateSearchResults(templateId: String, results: NitroSection) throws -> Void
+  func updateSearchResults(templateId: String, results: NitroSection) throws -> Promise<Void>
 }
 
 public extension HybridSearchTemplateSpec_protocol {

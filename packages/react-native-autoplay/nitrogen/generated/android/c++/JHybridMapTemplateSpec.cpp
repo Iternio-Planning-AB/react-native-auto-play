@@ -97,6 +97,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include <string>
 #include <functional>
 #include "JFunc_void_std__string.hpp"
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
 #include "MapTemplateConfig.hpp"
 #include "JMapTemplateConfig.hpp"
 #include <optional>
@@ -271,9 +273,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("hideTripSelector");
     method(_javaPart, jni::make_jstring(templateId));
   }
-  void JHybridMapTemplateSpec::setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
-    method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
       size_t __size = buttons.value().size();
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
@@ -283,6 +285,17 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       }
       return __array;
     }() : nullptr);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
   void JHybridMapTemplateSpec::updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JVisibleTravelEstimate> /* visibleTravelEstimate */)>("updateVisibleTravelEstimate");

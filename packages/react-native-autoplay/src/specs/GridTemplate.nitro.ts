@@ -7,5 +7,5 @@ interface GridTemplateConfig extends NitroTemplateConfig, NitroGridTemplateConfi
 
 export interface GridTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   createGridTemplate(config: GridTemplateConfig): void;
-  updateGridTemplateButtons(templateId: string, buttons: Array<NitroGridButton>): void;
+  updateGridTemplateButtons(templateId: string, buttons: Array<NitroGridButton>): Promise<void>;
 }

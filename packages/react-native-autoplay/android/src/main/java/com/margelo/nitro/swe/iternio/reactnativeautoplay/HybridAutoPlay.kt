@@ -72,12 +72,14 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
     override fun setTemplateHeaderActions(
         templateId: String, headerActions: Array<NitroAction>?
-    ) {
-        val template =
-            AndroidAutoTemplate.getTemplate(templateId) ?: throw IllegalArgumentException(
-                "setTemplateHeaderActions failed, template $templateId not found"
-            )
-        template.setTemplateHeaderActions(headerActions)
+    ): Promise<Unit> {
+        return Promise.async {
+            val template =
+                AndroidAutoTemplate.getTemplate(templateId) ?: throw IllegalArgumentException(
+                    "setTemplateHeaderActions failed, template $templateId not found"
+                )
+            template.setTemplateHeaderActions(headerActions)
+        }
     }
 
     override fun setRootTemplate(templateId: String): Promise<Unit> {
@@ -105,9 +107,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             } else {
                 val screenManager = AndroidAutoScreen.getScreenManager()
                     ?: throw IllegalArgumentException("setRootTemplate failed, screenManager not found")
-                val carContext =
-                    AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
-                        ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
+                val carContext = AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
+                    ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
                 val result = ThreadUtil.postOnUiAndAwait {
                     screenManager.popToRoot()

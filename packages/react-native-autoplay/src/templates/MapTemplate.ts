@@ -198,12 +198,12 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
     const buttons = NitroMapButton.convert(this.template, mapButtons);
-    HybridMapTemplate.setTemplateMapButtons(this.id, buttons);
+    return HybridMapTemplate.setTemplateMapButtons(this.id, buttons);
   }
 
   public override setHeaderActions(headerActions: MapTemplateConfig['headerActions']) {
     const nitroActions = NitroActionUtil.convert(this.template, headerActions);
-    HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
+    return HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
   }
 
   /**

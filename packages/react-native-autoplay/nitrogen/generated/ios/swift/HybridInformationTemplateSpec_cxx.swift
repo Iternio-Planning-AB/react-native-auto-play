@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /**
  * A class implementation that bridges HybridInformationTemplateSpec over to C++.
@@ -129,13 +130,21 @@ open class HybridInformationTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func updateInformationTemplateSections(templateId: std.string, section: NitroSection) -> bridge.Result_void_ {
+  public final func updateInformationTemplateSections(templateId: std.string, section: NitroSection) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      try self.__implementation.updateInformationTemplateSections(templateId: String(templateId), section: section)
-      return bridge.create_Result_void_()
+      let __result = try self.__implementation.updateInformationTemplateSections(templateId: String(templateId), section: section)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_void__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve() })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
     }
   }
 }

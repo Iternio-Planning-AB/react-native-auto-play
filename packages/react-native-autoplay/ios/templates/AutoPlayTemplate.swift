@@ -10,7 +10,7 @@ import CarPlay
 protocol AutoPlayTemplate {
     var autoDismissMs: Double? { get }
 
-    func invalidate()
+    @MainActor func invalidate()
     func onWillAppear(animated: Bool)
     func onDidAppear(animated: Bool)
     func onWillDisappear(animated: Bool)
@@ -27,9 +27,10 @@ extension AutoPlayTemplate {
 }
 
 protocol AutoPlayHeaderProviding {
-    var barButtons: [NitroAction]? { get set }
+    @MainActor var barButtons: [NitroAction]? { get set }
 }
 
+@MainActor
 func setBarButtons(template: CPTemplate, barButtons: [NitroAction]?) {
     guard let template = template as? CPBarButtonProviding else { return }
 

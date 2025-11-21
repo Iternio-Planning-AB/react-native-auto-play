@@ -20,8 +20,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
     ) {
         self.window = window
         self.interfaceController = AutoPlayInterfaceController(
-            interfaceController: interfaceController,
-            templateStore: self.templateStore
+            interfaceController: interfaceController
         )
 
         let props: [String: Any] = [
@@ -45,8 +44,10 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
     ) {
         HybridAutoPlay.emit(event: .diddisconnect)
         disconnect()
-        
-        let mapTemplate = templateStore.getTemplate(templateId: SceneStore.rootModuleName) as? MapTemplate
+
+        let mapTemplate =
+            TemplateStore.getTemplate(templateId: SceneStore.rootModuleName)
+            as? MapTemplate
         mapTemplate?.stopNavigation()
     }
 

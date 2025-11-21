@@ -2,6 +2,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.car.app.AppManager
 import com.facebook.react.bridge.UiThreadUtil
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.RoutePreviewTemplate
@@ -120,9 +121,11 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
 
     override fun setTemplateMapButtons(
         templateId: String, buttons: Array<NitroMapButton>?
-    ) {
-        val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
-        template.setMapActions(buttons)
+    ): Promise<Unit> {
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
+            template.setMapActions(buttons)
+        }
     }
 
     override fun updateVisibleTravelEstimate(

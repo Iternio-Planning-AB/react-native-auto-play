@@ -7,27 +7,27 @@
 import CarPlay
 
 class TemplateStore {
-    private var store: [String: AutoPlayTemplate] = [:]
+    private static var store: [String: AutoPlayTemplate] = [:]
 
-    func getCPTemplate(templateId key: String) -> CPTemplate? {
+    static func getCPTemplate(templateId key: String) -> CPTemplate? {
         return store[key]?.getTemplate()
     }
 
-    func getTemplate(templateId: String) -> AutoPlayTemplate? {
+    static func getTemplate(templateId: String) -> AutoPlayTemplate? {
         return store[templateId]
     }
 
-    func addTemplate(template: AutoPlayTemplate, templateId: String) {
+    static func addTemplate(template: AutoPlayTemplate, templateId: String) {
         store[templateId] = template
     }
 
-    func removeTemplate(templateId: String) {
+    static func removeTemplate(templateId: String) {
         store[templateId]?.onPopped()
 
         store.removeValue(forKey: templateId)
     }
 
-    func removeTemplates(templateIds: [String]) {
+    static func removeTemplates(templateIds: [String]) {
         templateIds.forEach { templateId in
             store[templateId]?.onPopped()
         }
@@ -35,11 +35,11 @@ class TemplateStore {
         store = store.filter { !templateIds.contains($0.key) }
     }
 
-    func purge() {
+    static func purge() {
         store = store.filter { !($0.value.getTemplate() is CPSearchTemplate) }
     }
 
-    func traitCollectionDidChange() {
+    static func traitCollectionDidChange() {
         store.values.forEach { template in template.traitCollectionDidChange() }
     }
 }

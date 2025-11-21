@@ -95,7 +95,7 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Unit
+  abstract fun setTemplateHeaderActions(templateId: String, headerActions: Array<NitroAction>?): Promise<Unit>
   
   @DoNotStrip
   @Keep

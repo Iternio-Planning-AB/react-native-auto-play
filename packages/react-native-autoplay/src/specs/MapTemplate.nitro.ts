@@ -39,7 +39,7 @@ export interface MapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swi
     mapButtons: Array<NitroMapButton>
   ): TripSelectorCallback;
   hideTripSelector(templateId: string): void;
-  setTemplateMapButtons(templateId: string, buttons?: Array<NitroMapButton>): void;
+  setTemplateMapButtons(templateId: string, buttons?: Array<NitroMapButton>): Promise<void>;
   updateVisibleTravelEstimate(
     templateId: string,
     visibleTravelEstimate: VisibleTravelEstimate

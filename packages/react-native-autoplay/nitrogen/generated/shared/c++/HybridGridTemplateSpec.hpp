@@ -19,6 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GridTemplat
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
 
 #include "GridTemplateConfig.hpp"
+#include <NitroModules/Promise.hpp>
 #include <string>
 #include "NitroGridButton.hpp"
 #include <vector>
@@ -55,7 +56,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     public:
       // Methods
       virtual void createGridTemplate(const GridTemplateConfig& config) = 0;
-      virtual void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) = 0;
+      virtual std::shared_ptr<Promise<void>> updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) = 0;
 
     protected:
       // Hybrid Setup

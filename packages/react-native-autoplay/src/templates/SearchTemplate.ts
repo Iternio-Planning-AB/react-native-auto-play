@@ -87,7 +87,7 @@ export class SearchTemplate extends Template<SearchTemplateConfig, HeaderActions
   }
 
   public updateSearchResults(results?: SingleSection<SearchTemplate>) {
-    HybridSearchTemplate.updateSearchResults(
+    return HybridSearchTemplate.updateSearchResults(
       this.id,
       NitroSectionUtil.convert(this.template, results)?.at(0) ?? {
         items: [],

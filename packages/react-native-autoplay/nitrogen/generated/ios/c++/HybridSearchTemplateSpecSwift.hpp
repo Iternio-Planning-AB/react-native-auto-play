@@ -60,6 +60,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSe
 #include "NitroSection.hpp"
 #include "NitroRow.hpp"
 #include "NitroSectionType.hpp"
+#include <NitroModules/Promise.hpp>
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -111,11 +112,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateSearchResults(const std::string& templateId, const NitroSection& results) override {
+    inline std::shared_ptr<Promise<void>> updateSearchResults(const std::string& templateId, const NitroSection& results) override {
       auto __result = _swiftPart.updateSearchResults(templateId, std::forward<decltype(results)>(results));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:

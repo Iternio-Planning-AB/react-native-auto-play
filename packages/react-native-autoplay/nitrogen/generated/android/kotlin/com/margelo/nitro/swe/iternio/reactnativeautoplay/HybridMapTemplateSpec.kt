@@ -10,6 +10,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -76,7 +77,7 @@ abstract class HybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun setTemplateMapButtons(templateId: String, buttons: Array<NitroMapButton>?): Unit
+  abstract fun setTemplateMapButtons(templateId: String, buttons: Array<NitroMapButton>?): Promise<Unit>
   
   @DoNotStrip
   @Keep

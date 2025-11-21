@@ -63,6 +63,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
+#include <NitroModules/Promise.hpp>
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -114,11 +115,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override {
+    inline std::shared_ptr<Promise<void>> updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) override {
       auto __result = _swiftPart.updateGridTemplateButtons(templateId, buttons);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:

@@ -10,7 +10,7 @@ import CarPlay
 class SearchTemplate: NSObject, AutoPlayTemplate, CPSearchTemplateDelegate {
     var template: CPSearchTemplate
     var config: SearchTemplateConfig
-    
+
     var autoDismissMs: Double? {
         return config.autoDismissMs
     }
@@ -34,6 +34,7 @@ class SearchTemplate: NSObject, AutoPlayTemplate, CPSearchTemplateDelegate {
         invalidate()
     }
 
+    @MainActor
     func invalidate() {
         // if we have pushed a list template update it
         if let listTemplate = pushedListTemplate {
@@ -139,16 +140,19 @@ class SearchTemplate: NSObject, AutoPlayTemplate, CPSearchTemplateDelegate {
         // execute callback after creating the template to avoid race condition in updateSearchResults
         config.onSearchTextSubmitted(searchText)
 
+        TemplateStore.addTemplate(
+            template: listTemplate,
+            templateId: listConfig.id
+        )
+
         // Push the template
         Task { @MainActor in
             do {
-                try await RootModule.withSceneAndInterfaceController {
-                    scene,
+                try await RootModule.withInterfaceController {
                     interfaceController in
-                    scene.templateStore.addTemplate(
-                        template: listTemplate,
-                        templateId: listConfig.id
-                    )
+                    
+                    listTemplate.invalidate()
+
                     let _ = try await interfaceController.pushTemplate(
                         listTemplate.template,
                         animated: true

@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /**
  * A class implementation that bridges HybridListTemplateSpec over to C++.
@@ -129,9 +130,9 @@ open class HybridListTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func updateListTemplateSections(templateId: std.string, sections: bridge.std__optional_std__vector_NitroSection__) -> bridge.Result_void_ {
+  public final func updateListTemplateSections(templateId: std.string, sections: bridge.std__optional_std__vector_NitroSection__) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      try self.__implementation.updateListTemplateSections(templateId: String(templateId), sections: { () -> [NitroSection]? in
+      let __result = try self.__implementation.updateListTemplateSections(templateId: String(templateId), sections: { () -> [NitroSection]? in
         if bridge.has_value_std__optional_std__vector_NitroSection__(sections) {
           let __unwrapped = bridge.get_std__optional_std__vector_NitroSection__(sections)
           return __unwrapped.map({ __item in __item })
@@ -139,10 +140,18 @@ open class HybridListTemplateSpec_cxx {
           return nil
         }
       }())
-      return bridge.create_Result_void_()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_void__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve() })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
     }
   }
 }

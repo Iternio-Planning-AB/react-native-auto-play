@@ -10,14 +10,11 @@ import CarPlay
 @MainActor
 class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     let interfaceController: CPInterfaceController
-    let templateStore: TemplateStore
 
     init(
-        interfaceController: CPInterfaceController,
-        templateStore: TemplateStore
+        interfaceController: CPInterfaceController
     ) {
         self.interfaceController = interfaceController
-        self.templateStore = templateStore
 
         super.init()
 
@@ -47,7 +44,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     var rootTemplateId: String? {
         return interfaceController.rootTemplate.id
     }
-    
+
     func pushTemplate(
         _ templateToPush: CPTemplate,
         animated: Bool
@@ -77,7 +74,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             animated: animated
         )
 
-        self.templateStore.removeTemplate(templateId: templateId)
+        TemplateStore.removeTemplate(templateId: templateId)
 
         return templateId
     }
@@ -100,7 +97,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             animated: animated
         )
 
-        self.templateStore.removeTemplates(templateIds: templateIds)
+        TemplateStore.removeTemplates(templateIds: templateIds)
 
         return templateIds
     }
@@ -157,7 +154,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         try await interfaceController.dismissTemplate(
             animated: animated
         )
-        
+
         return true
     }
 
@@ -168,7 +165,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     ) {
         let templateId = aTemplate.id
 
-        templateStore.getTemplate(templateId: templateId)?.onWillAppear(
+        TemplateStore.getTemplate(templateId: templateId)?.onWillAppear(
             animated: animated
         )
     }
@@ -181,10 +178,10 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         if rootTemplateId == templateId {
             // this makes sure we purge outdated CPSearchTemplate since that one can be popped on with a CarPlay native button we can not intercept
-            templateStore.purge()
+            TemplateStore.purge()
         }
 
-        templateStore.getTemplate(templateId: templateId)?.onDidAppear(
+        TemplateStore.getTemplate(templateId: templateId)?.onDidAppear(
             animated: animated
         )
     }
@@ -195,7 +192,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     ) {
         let templateId = aTemplate.id
 
-        templateStore.getTemplate(templateId: templateId)?.onWillDisappear(
+        TemplateStore.getTemplate(templateId: templateId)?.onWillDisappear(
             animated: animated
         )
     }
@@ -206,12 +203,12 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     ) {
         let templateId = aTemplate.id
 
-        templateStore.getTemplate(templateId: templateId)?.onDidDisappear(
+        TemplateStore.getTemplate(templateId: templateId)?.onDidDisappear(
             animated: animated
         )
 
         if aTemplate is CPAlertTemplate {
-            templateStore.removeTemplate(templateId: templateId)
+            TemplateStore.removeTemplate(templateId: templateId)
 
             HybridAutoPlay.removeListeners(
                 templateId: templateId

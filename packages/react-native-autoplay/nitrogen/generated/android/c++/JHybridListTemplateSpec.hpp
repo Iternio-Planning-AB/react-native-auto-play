@@ -55,7 +55,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     // Methods
     void createListTemplate(const ListTemplateConfig& config) override;
-    void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) override;
+    std::shared_ptr<Promise<void>> updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) override;
 
   private:
     friend HybridBase;

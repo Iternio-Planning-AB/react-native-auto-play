@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /// See ``HybridListTemplateSpec``
 public protocol HybridListTemplateSpec_protocol: HybridObject {
@@ -15,7 +16,7 @@ public protocol HybridListTemplateSpec_protocol: HybridObject {
 
   // Methods
   func createListTemplate(config: ListTemplateConfig) throws -> Void
-  func updateListTemplateSections(templateId: String, sections: [NitroSection]?) throws -> Void
+  func updateListTemplateSections(templateId: String, sections: [NitroSection]?) throws -> Promise<Void>
 }
 
 public extension HybridListTemplateSpec_protocol {

@@ -38,10 +38,9 @@ class ListTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
             assistantCellConfiguration: nil,
             id: config.id
         )
-        
-        invalidate()
     }
 
+    @MainActor
     func invalidate() {
         setBarButtons(template: template, barButtons: barButtons)
 
@@ -74,11 +73,13 @@ class ListTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
         config.onPopped?()
     }
 
+    @MainActor
     private func updateSection(section: NitroSection, sectionIndex: Int) {
         config.sections?[sectionIndex] = section
         invalidate()
     }
 
+    @MainActor
     func updateSections(sections: [NitroSection]?) {
         config.sections = sections
         invalidate()

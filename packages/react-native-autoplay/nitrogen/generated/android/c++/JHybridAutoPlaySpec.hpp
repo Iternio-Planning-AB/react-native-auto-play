@@ -62,7 +62,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::shared_ptr<Promise<void>> popToRootTemplate(std::optional<bool> animate) override;
     std::shared_ptr<Promise<void>> popToTemplate(const std::string& templateId, std::optional<bool> animate) override;
     std::function<void()> addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) override;
-    void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
+    std::shared_ptr<Promise<void>> setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
     bool isConnected() override;
 
   private:

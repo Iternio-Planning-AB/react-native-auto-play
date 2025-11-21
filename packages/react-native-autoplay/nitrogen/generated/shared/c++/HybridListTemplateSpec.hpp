@@ -19,6 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ListTemplat
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
 
 #include "ListTemplateConfig.hpp"
+#include <NitroModules/Promise.hpp>
 #include <string>
 #include "NitroSection.hpp"
 #include <vector>
@@ -56,7 +57,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     public:
       // Methods
       virtual void createListTemplate(const ListTemplateConfig& config) = 0;
-      virtual void updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) = 0;
+      virtual std::shared_ptr<Promise<void>> updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) = 0;
 
     protected:
       // Hybrid Setup

@@ -106,7 +106,7 @@ class AutoPlayScene: UIResponder {
 
     open func traitCollectionDidChange(traitCollection: UITraitCollection) {
         self.traitCollection = traitCollection
-        self.templateStore.traitCollectionDidChange()
+        TemplateStore.traitCollectionDidChange()
     }
 
     open func safeAreaInsetsDidChange(safeAreaInsets: UIEdgeInsets) {

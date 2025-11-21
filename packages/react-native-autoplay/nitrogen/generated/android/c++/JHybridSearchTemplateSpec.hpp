@@ -55,7 +55,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     // Methods
     void createSearchTemplate(const SearchTemplateConfig& config) override;
-    void updateSearchResults(const std::string& templateId, const NitroSection& results) override;
+    std::shared_ptr<Promise<void>> updateSearchResults(const std::string& templateId, const NitroSection& results) override;
 
   private:
     friend HybridBase;

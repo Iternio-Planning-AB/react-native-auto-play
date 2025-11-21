@@ -39,8 +39,6 @@ class InformationTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
             actions: Parser.parseInformationActions(actions: config.actions),
             id: config.id
         )
-
-        setBarButtons(template: template, barButtons: barButtons)
     }
 
     func invalidate() {
@@ -68,6 +66,7 @@ class InformationTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
         config.onPopped?()
     }
 
+    @MainActor
     func updateSection(section: NitroSection) {
         config.section = section
         invalidate()

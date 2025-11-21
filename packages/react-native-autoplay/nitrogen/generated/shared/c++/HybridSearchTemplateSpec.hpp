@@ -19,6 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SearchTempl
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
 
 #include "SearchTemplateConfig.hpp"
+#include <NitroModules/Promise.hpp>
 #include <string>
 #include "NitroSection.hpp"
 
@@ -54,7 +55,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     public:
       // Methods
       virtual void createSearchTemplate(const SearchTemplateConfig& config) = 0;
-      virtual void updateSearchResults(const std::string& templateId, const NitroSection& results) = 0;
+      virtual std::shared_ptr<Promise<void>> updateSearchResults(const std::string& templateId, const NitroSection& results) = 0;
 
     protected:
       // Hybrid Setup

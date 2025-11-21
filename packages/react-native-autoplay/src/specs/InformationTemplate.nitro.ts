@@ -9,5 +9,5 @@ export interface InformationTemplate extends HybridObject<{ android: 'kotlin'; i
   updateInformationTemplateSections(
     templateId: string,
     section: NitroInformationTemplateConfig['section']
-  ): void;
+  ): Promise<void>;
 }

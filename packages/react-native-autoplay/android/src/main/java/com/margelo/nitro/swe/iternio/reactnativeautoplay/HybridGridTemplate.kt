@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.GridTemplate
 
@@ -14,8 +15,10 @@ class HybridGridTemplate : HybridGridTemplateSpec() {
 
     override fun updateGridTemplateButtons(
         templateId: String, buttons: Array<NitroGridButton>
-    ) {
-        val template = AndroidAutoTemplate.getTemplate<GridTemplate>(templateId)
-        template.updateButtons(buttons)
+    ): Promise<Unit> {
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate<GridTemplate>(templateId)
+            template.updateButtons(buttons)
+        }
     }
 }

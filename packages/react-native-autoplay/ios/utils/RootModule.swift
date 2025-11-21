@@ -28,23 +28,21 @@ class RootModule {
         templateId: String,
         perform action: @escaping (T) throws -> Void
     ) throws {
-        try withScene { scene in
-            guard
-                let template = scene.templateStore.getTemplate(
-                    templateId: templateId
-                )
-            else {
-                throw AutoPlayError.templateNotFound(templateId)
-            }
-
-            guard let template = template as? T else {
-                throw AutoPlayError.invalidTemplateType(
-                    "\(template) is not a \(T.self) template"
-                )
-            }
-
-            try action(template)
+        guard
+            let template = TemplateStore.getTemplate(
+                templateId: templateId
+            )
+        else {
+            throw AutoPlayError.templateNotFound(templateId)
         }
+
+        guard let template = template as? T else {
+            throw AutoPlayError.invalidTemplateType(
+                "\(template) is not a \(T.self) template"
+            )
+        }
+
+        try action(template)
     }
 
     static func withTemplate<T: CPTemplate>(
@@ -63,7 +61,6 @@ class RootModule {
         }
     }
 
-    @MainActor
     static func withScene<T>(
         perform action:
             @escaping (AutoPlayScene) async throws -> T
@@ -105,30 +102,6 @@ class RootModule {
     ) async throws -> T {
         try await withSceneAndInterfaceController { _, interfaceController in
             try await action(interfaceController)
-        }
-    }
-
-    @MainActor
-    static func withSceneTemplateAndInterfaceController<T>(
-        templateId: String,
-        perform action:
-            @escaping (CPTemplate, AutoPlayScene, AutoPlayInterfaceController)
-            async throws -> T
-    ) async throws -> T {
-        return try await withSceneAndInterfaceController {
-            scene,
-            interfaceController in
-
-            guard
-                let template = scene.templateStore.getCPTemplate(
-                    templateId: templateId
-                )
-            else {
-                throw AutoPlayError.templateNotFound(
-                    "operation failed, \(templateId) template not found"
-                )
-            }
-            return try await action(template, scene, interfaceController)
         }
     }
 }

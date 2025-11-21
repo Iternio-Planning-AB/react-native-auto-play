@@ -10,6 +10,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -51,7 +52,7 @@ abstract class HybridListTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Unit
+  abstract fun updateListTemplateSections(templateId: String, sections: Array<NitroSection>?): Promise<Unit>
 
   private external fun initHybrid(): HybridData
 

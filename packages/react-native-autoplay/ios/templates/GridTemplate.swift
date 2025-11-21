@@ -37,8 +37,6 @@ class GridTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
             gridButtons: GridTemplate.parseButtons(buttons: config.buttons),
             id: config.id
         )
-
-        setBarButtons(template: template, barButtons: barButtons)
     }
 
     static func parseButtons(buttons: [NitroGridButton]) -> [CPGridButton] {
@@ -104,6 +102,7 @@ class GridTemplate: AutoPlayTemplate, AutoPlayHeaderProviding {
         config.onPopped?()
     }
 
+    @MainActor
     func updateButtons(buttons: [NitroGridButton]) {
         config.buttons = buttons
         invalidate()

@@ -295,9 +295,9 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
-  public final func setTemplateHeaderActions(templateId: std.string, headerActions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_void_ {
+  public final func setTemplateHeaderActions(templateId: std.string, headerActions: bridge.std__optional_std__vector_NitroAction__) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
-      try self.__implementation.setTemplateHeaderActions(templateId: String(templateId), headerActions: { () -> [NitroAction]? in
+      let __result = try self.__implementation.setTemplateHeaderActions(templateId: String(templateId), headerActions: { () -> [NitroAction]? in
         if bridge.has_value_std__optional_std__vector_NitroAction__(headerActions) {
           let __unwrapped = bridge.get_std__optional_std__vector_NitroAction__(headerActions)
           return __unwrapped.map({ __item in __item })
@@ -305,10 +305,18 @@ open class HybridAutoPlaySpec_cxx {
           return nil
         }
       }())
-      return bridge.create_Result_void_()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_void__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve() })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__resultCpp)
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_void_(__exceptionPtr)
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
     }
   }
   

@@ -6,26 +6,34 @@
 //
 
 import CarPlay
+import NitroModules
 
 class HybridMapTemplate: HybridMapTemplateSpec {
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
-        try RootModule.withScene { scene in
-            scene.templateStore.addTemplate(
-                template: template,
-                templateId: config.id
-            )
-        }
+        TemplateStore.addTemplate(
+            template: template,
+            templateId: config.id
+        )
     }
 
     func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
-        throws
+        throws -> Promise<Void>
     {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
-
-            template.config.mapButtons = buttons
-            template.invalidate()
+        return Promise.async {
+            guard
+                let template = TemplateStore.getTemplate(templateId: templateId)
+                    as? MapTemplate
+            else {
+                throw AutoPlayError.invalidTemplateError(
+                    "\(templateId) is not a MapTemplate"
+                )
+            }
+            
+            await MainActor.run {
+                template.config.mapButtons = buttons
+                template.invalidate()
+            }
         }
     }
 

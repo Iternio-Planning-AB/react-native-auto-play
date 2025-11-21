@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SearchTemplate
 
@@ -13,8 +14,10 @@ class HybridSearchTemplate : HybridSearchTemplateSpec() {
         AndroidAutoTemplate.setTemplate(config.id, template)
     }
 
-    override fun updateSearchResults(templateId: String, results: NitroSection) {
-        val template = AndroidAutoTemplate.getTemplate<SearchTemplate>(templateId)
-        template.updateSearchResults(results)
+    override fun updateSearchResults(templateId: String, results: NitroSection): Promise<Unit> {
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate<SearchTemplate>(templateId)
+            template.updateSearchResults(results)
+        }
     }
 }

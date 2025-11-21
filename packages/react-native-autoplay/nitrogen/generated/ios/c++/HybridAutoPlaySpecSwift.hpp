@@ -158,11 +158,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline void setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override {
+    inline std::shared_ptr<Promise<void>> setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override {
       auto __result = _swiftPart.setTemplateHeaderActions(templateId, headerActions);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline bool isConnected() override {
       auto __result = _swiftPart.isConnected();

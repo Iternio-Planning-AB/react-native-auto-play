@@ -25,7 +25,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         }
         set {
             config.headerActions = newValue
-            setBarButtons(template: template, barButtons: newValue)
+            invalidate()
         }
     }
 
@@ -42,14 +42,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
     var navigationSession: CPNavigationSession?
     var navigationAlert: NavigationAlertWrapper?
 
-    var tripSelectorVisible = false {
-        didSet {
-            if !tripSelectorVisible && oldValue {
-                // this makes sure the latest config updates are applied when the trip selector is gone again
-                invalidate()
-            }
-        }
-    }
+    var tripSelectorVisible = false
 
     init(config: MapTemplateConfig) {
         self.config = config
@@ -71,7 +64,6 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         super.init()
 
         template.mapDelegate = self
-        invalidate()
     }
 
     func onPanButtonPress() {
@@ -125,12 +117,13 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
 
     }
 
+    @MainActor
     func invalidate() {
         if tripSelectorVisible {
             // ignore invalidate calls to not break the trip selectors back button
             return
         }
-        
+
         if template.isPanningInterfaceVisible {
             // while panning interface is shown we only provide a back button on the header
             // and all map buttons except the pan button
@@ -141,13 +134,14 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
             template.backButton = CPBarButton(title: "") { _ in
                 self.template.dismissPanningInterface(animated: true)
             }
-            
-            let mapButtons = config.mapButtons?.filter { button in
-                button.type != .pan
-            } ?? []
-            
+
+            let mapButtons =
+                config.mapButtons?.filter { button in
+                    button.type != .pan
+                } ?? []
+
             template.mapButtons = parseMapButtons(mapButtons: mapButtons)
-            
+
             return
         }
 
@@ -186,9 +180,11 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
             isDark ? .dark : .light
         )
 
-        invalidate()
-
         template.tripEstimateStyle = isDark ? .dark : .light
+
+        DispatchQueue.main.async {
+            self.invalidate()
+        }
     }
 
     // MARK: gestures
@@ -215,7 +211,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         if template.isPanningInterfaceVisible {
             return
         }
-        
+
         if scale == 1 && velocity == 1 {
             config.onDoubleClick?(Point(x: center.x, y: center.y))
             return
@@ -243,7 +239,8 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
     ) {
         let panButtonScrollPercentage = config.panButtonScrollPercentage ?? 0.15
         let scrollDistanceX = screenDimensions.width * panButtonScrollPercentage
-        let scrollDistanceY = screenDimensions.height * panButtonScrollPercentage
+        let scrollDistanceY =
+            screenDimensions.height * panButtonScrollPercentage
 
         var translation = CGPoint.zero
 
@@ -442,8 +439,23 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         onBackPressed: @escaping () -> Void,
         mapButtons: [NitroMapButton]
     ) -> TripSelectorCallback {
+        tripSelectorVisible = true
         self.onTripSelected = onTripSelected
         self.onTripStarted = onTripStarted
+
+        DispatchQueue.main.async {
+            self.template.backButton = CPBarButton(title: "") { _ in
+                self.hideTripSelector()
+
+                onBackPressed()
+            }
+
+            self.template.leadingNavigationBarButtons = []
+            self.template.trailingNavigationBarButtons = []
+            self.template.mapButtons = self.parseMapButtons(
+                mapButtons: mapButtons
+            )
+        }
 
         let textConfiguration = Parser.parseTripPreviewTextConfig(
             textConfig: textConfig
@@ -454,22 +466,11 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
             tripPreviews.first(where: { $0.id == tripId })
         }
 
-        template.backButton = CPBarButton(title: "") { _ in
-            self.hideTripSelector()
-
-            onBackPressed()
-        }
-        template.leadingNavigationBarButtons = []
-        template.trailingNavigationBarButtons = []
-        template.mapButtons = parseMapButtons(mapButtons: mapButtons)
-
         template.showTripPreviews(
             tripPreviews,
             selectedTrip: selectedTrip,
             textConfiguration: textConfiguration
         )
-
-        tripSelectorVisible = true
 
         tripPreviews.forEach { trip in
             guard
@@ -500,6 +501,10 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         tripSelectorVisible = false
         onTripSelected = nil
         onTripStarted = nil
+
+        DispatchQueue.main.async {
+            self.invalidate()
+        }
     }
 
     func mapTemplate(

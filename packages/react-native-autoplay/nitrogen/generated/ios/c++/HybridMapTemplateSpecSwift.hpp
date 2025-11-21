@@ -129,6 +129,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "TravelEstimates.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "TripPreviewTextConfiguration.hpp"
+#include <NitroModules/Promise.hpp>
 #include "NitroRoutingManeuver.hpp"
 #include "NitroMessageManeuver.hpp"
 #include "NitroAttributedString.hpp"
@@ -227,11 +228,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override {
+    inline std::shared_ptr<Promise<void>> setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override {
       auto __result = _swiftPart.setTemplateMapButtons(templateId, buttons);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) override {
       auto __result = _swiftPart.updateVisibleTravelEstimate(templateId, static_cast<int>(visibleTravelEstimate));

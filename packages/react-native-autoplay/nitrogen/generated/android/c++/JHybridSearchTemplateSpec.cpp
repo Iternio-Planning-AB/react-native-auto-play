@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
 #include "SearchTemplateConfig.hpp"
 #include "JSearchTemplateConfig.hpp"
 #include <string>
@@ -110,9 +112,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JSearchTemplateConfig> /* config */)>("createSearchTemplate");
     method(_javaPart, JSearchTemplateConfig::fromCpp(config));
   }
-  void JHybridSearchTemplateSpec::updateSearchResults(const std::string& templateId, const NitroSection& results) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* results */)>("updateSearchResults");
-    method(_javaPart, jni::make_jstring(templateId), JNitroSection::fromCpp(results));
+  std::shared_ptr<Promise<void>> JHybridSearchTemplateSpec::updateSearchResults(const std::string& templateId, const NitroSection& results) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* results */)>("updateSearchResults");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JNitroSection::fromCpp(results));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

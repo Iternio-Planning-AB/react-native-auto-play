@@ -7,6 +7,7 @@
 
 import Foundation
 import NitroModules
+import NitroModules
 
 /// See ``HybridInformationTemplateSpec``
 public protocol HybridInformationTemplateSpec_protocol: HybridObject {
@@ -15,7 +16,7 @@ public protocol HybridInformationTemplateSpec_protocol: HybridObject {
 
   // Methods
   func createInformationTemplate(config: InformationTemplateConfig) throws -> Void
-  func updateInformationTemplateSections(templateId: String, section: NitroSection) throws -> Void
+  func updateInformationTemplateSections(templateId: String, section: NitroSection) throws -> Promise<Void>
 }
 
 public extension HybridInformationTemplateSpec_protocol {

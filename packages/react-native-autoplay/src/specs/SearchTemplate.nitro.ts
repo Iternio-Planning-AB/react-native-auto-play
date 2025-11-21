@@ -6,5 +6,8 @@ interface SearchTemplateConfig extends NitroTemplateConfig, NitroSearchTemplateC
 
 export interface SearchTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
   createSearchTemplate(config: SearchTemplateConfig): void;
-  updateSearchResults(templateId: string, results: NitroSearchTemplateConfig['results']): void;
+  updateSearchResults(
+    templateId: string,
+    results: NitroSearchTemplateConfig['results']
+  ): Promise<void>;
 }

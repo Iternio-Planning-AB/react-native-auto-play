@@ -38,6 +38,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMapBut
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMapButtonType; }
 
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
 #include "GridTemplateConfig.hpp"
 #include "JGridTemplateConfig.hpp"
 #include <string>
@@ -115,9 +117,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JGridTemplateConfig> /* config */)>("createGridTemplate");
     method(_javaPart, JGridTemplateConfig::fromCpp(config));
   }
-  void JHybridGridTemplateSpec::updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons");
-    method(_javaPart, jni::make_jstring(templateId), [&]() {
+  std::shared_ptr<Promise<void>> JHybridGridTemplateSpec::updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = buttons.size();
       jni::local_ref<jni::JArrayClass<JNitroGridButton>> __array = jni::JArrayClass<JNitroGridButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
@@ -127,6 +129,17 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       }
       return __array;
     }());
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
