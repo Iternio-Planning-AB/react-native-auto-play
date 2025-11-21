@@ -1,0 +1,38 @@
+name: AI Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      review-command:
+        type: choice
+        default: run
+        options: [ run, run-inline, run-context, run-summary, run-inline-reply, run-summary-reply ]
+      pull-request-number:
+        type: string
+        required: true
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: Nikita-Filonov/ai-review@v0.42.0
+        with:
+          review-command: ${{ inputs.review-command }}
+        env:
+          # --- LLM configuration ---
+          LLM__PROVIDER: "AZURE_OPENAI"
+          LLM__META__MODEL: ${{ secrets.AZURE_OPEN_AI_DEPLOYMENT }}
+          LLM__HTTP_CLIENT__API_URL: ${{ secrets.AZURE_OPEN_AI_URL }}
+          LLM__HTTP_CLIENT__API_TOKEN: ${{ secrets.OPENAI_API_KEY }}
+          LLM__HTTP_CLIENT__API_VERSION: "2024-12-01-preview"
+
+          # --- GitHub integration ---
+          VCS__PROVIDER: "GITHUB"
+          VCS__PIPELINE__OWNER: ${{ github.repository_owner }}
+          VCS__PIPELINE__REPO: ${{ github.event.repository.name }}
+          VCS__PIPELINE__PULL_NUMBER: ${{ inputs.pull-request-number }}
+          VCS__HTTP_CLIENT__API_URL: "https://api.github.com"
+          VCS__HTTP_CLIENT__API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
