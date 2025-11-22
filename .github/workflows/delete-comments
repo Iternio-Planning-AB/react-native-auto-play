@@ -10,7 +10,7 @@ jobs:
   delete-comments:
       runs-on: ubuntu-latest
       steps:
-        - uses: SamuelBrucksch/delete-comment@1.0.3
+        - uses: SamuelBrucksch/delete-comment@1.0.4
           with: 
             github_token: ${{ secrets.GITHUB_TOKEN }}
             delete_user_name: github-actions[bot]
