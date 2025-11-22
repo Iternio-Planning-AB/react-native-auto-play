@@ -64,7 +64,7 @@ jobs:
           # PROMPT__NORMALIZE_PROMPTS: "true"
 
           # Inline prompts (joined in order, local review instructions).
-          PROMPT__INLINE_PROMPT_FILES: '["./prompts/inline.md"]'
+          PROMPT__INLINE_PROMPT_FILES: '["./.prompts/inline.md"]'
 
           # Inline system prompts (format/contract rules).
           # PROMPT__SYSTEM_INLINE_PROMPT_FILES: '["./prompts/system_inline.md"]'
