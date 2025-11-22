@@ -6,12 +6,29 @@ on:
       review-command:
         type: choice
         default: run
-        options: [ run, run-inline, run-context, run-summary, run-inline-reply, run-summary-reply ]
+        options:
+          [
+            run,
+            run-inline,
+            run-context,
+            run-summary,
+            run-inline-reply,
+            run-summary-reply,
+          ]
       pull-request-number:
         type: string
         required: true
 jobs:
+  delete-comments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: SamuelBrucksch/delete-comment@1.0.4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_user_name: github-actions[bot]
+          issue_number: ${{ inputs.pull-request-number }} #${{ github.event.number
   ai-review:
+    needs: delete-comments
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,3 +53,58 @@ jobs:
           VCS__PIPELINE__PULL_NUMBER: ${{ inputs.pull-request-number }}
           VCS__HTTP_CLIENT__API_URL: "https://api.github.com"
           VCS__HTTP_CLIENT__API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          REVIEW__MAX_INLINE_COMMENTS: "5" # Max inline comments per file
+          REVIEW__MAX_CONTEXT_COMMENTS: "5" # Max context comments per PR
+
+          # ===============================
+          # Prompts (optional overrides)
+          # ===============================
+          # Whether to normalize prompts before sending to the LLM.
+          # Controls stripping trailing spaces, collapsing multiple blank lines,
+          # and trimming leading/trailing whitespace.
+          #
+          # Default: "true"
+          #
+          # Example:
+          #   PROMPT__NORMALIZE_PROMPTS: "false"
+          #
+          # Set to "false" if you want prompts to be passed to the model "as is",
+          # without any cleanup or formatting changes.
+          #
+          # PROMPT__NORMALIZE_PROMPTS: "true"
+
+          # Inline prompts (joined in order, local review instructions).
+          PROMPT__INLINE_PROMPT_FILES: '["./.prompts/inline.md"]'
+
+          # Inline system prompts (format/contract rules).
+          # PROMPT__SYSTEM_INLINE_PROMPT_FILES: '["./prompts/system_inline.md"]'
+          # PROMPT__INCLUDE_INLINE_SYSTEM_PROMPTS: "true"
+
+          # Context prompts (joined in order, broader analysis instructions).
+          PROMPT__CONTEXT_PROMPT_FILES: '["./.prompts/inline.md"]'
+
+          # Context system prompts (format/contract rules).
+          # PROMPT__SYSTEM_CONTEXT_PROMPT_FILES: '["./prompts/system_context.md"]'
+          # PROMPT__INCLUDE_CONTEXT_SYSTEM_PROMPTS: "true"
+
+          # Summary prompts (joined in order, local review instructions).
+          # PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/summary.md"]'
+
+          # Summary system prompts (format/contract rules).
+          # PROMPT__SYSTEM_SUMMARY_PROMPT_FILES: '["./prompts/system_summary.md"]'
+          # PROMPT__INCLUDE_SUMMARY_SYSTEM_PROMPTS: "true"
+
+          # Inline reply prompts (used when replying to inline code review comments).
+          # PROMPT__INLINE_REPLY_PROMPT_FILES: '["./prompts/inline_reply.md"]'
+
+          # Inline reply system prompts (format/contract rules).
+          # PROMPT__SYSTEM_INLINE_REPLY_PROMPT_FILES: '["./prompts/system_inline_reply.md"]'
+          # PROMPT__INCLUDE_INLINE_REPLY_SYSTEM_PROMPTS: "true"
+
+          # Summary reply prompts (used when replying in summary review threads).
+          # PROMPT__SUMMARY_REPLY_PROMPT_FILES: '["./prompts/summary_reply.md"]'
+
+          # Summary reply system prompts (format/contract rules).
+          # PROMPT__SYSTEM_SUMMARY_REPLY_PROMPT_FILES: '["./prompts/system_summary_reply.md"]'
+          # PROMPT__INCLUDE_SUMMARY_REPLY_SYSTEM_PROMPTS: "true"
