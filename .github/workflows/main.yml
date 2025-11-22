@@ -16,7 +16,7 @@ jobs:
       steps:
         - uses: GetDutchie/github-action-delete-comment@v1.0.0
           with: 
-            github_token: ${{ secrets.DUTCHIE_BOT_TOKEN }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
             delete_user_name: github-actions[bot]
             issue_number: ${{ github.event.number }}
   ai-review:
