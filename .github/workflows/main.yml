@@ -11,6 +11,14 @@ on:
         type: string
         required: true
 jobs:
+  delete-comments:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: SamuelBrucksch/delete-comment@1.0.3
+          with: 
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            delete_user_name: github-actions[bot]
+            issue_number: ${{ github.event.number }}
   ai-review:
     runs-on: ubuntu-latest
     steps:
