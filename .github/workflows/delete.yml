@@ -1,0 +1,17 @@
+name: Delete Comments
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull-request-number:
+        type: string
+        required: true
+jobs:
+  delete-comments:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: SamuelBrucksch/delete-comment@1.0.3
+          with: 
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            delete_user_name: github-actions[bot]
+            issue_number: ${{ inputs.pull-request-number }} #${{ github.event.number 
