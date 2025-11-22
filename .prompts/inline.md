@@ -19,7 +19,7 @@ Provide concise, practical inline review comments focused on correctness, clarit
 
 - Critical bugs.
 - Readability issues (unclear variable or function names, overly complex expressions).
-- Simplifications improving maintainability (idiomatic use of slices, maps, `defer`, etc.).
+- Simplifications improving maintainability.
 - Obvious inefficiencies or redundancy (duplicate code, unnecessary checks).
 
 ---
@@ -30,11 +30,13 @@ Provide concise, practical inline review comments focused on correctness, clarit
 - Missing comments or documentation.
 - Micro-optimizations without clear value.
 - Pre-existing issues outside the changed lines.
+- Issues a linter would find
+- Issues that would be detected from typed language tools (java, typescript, swift)
 
 ---
 
 ### Output
 
 Follow the standard inline review JSON format defined in the system prompt.  
-Limit to **no more than 5 comments**, each short and actionable, focus on those with highest priority.  
+Limit to **no more than 10 comments**, each short and actionable, focus on those with highest priority.  
 If no issues are found, return an empty array. If providing code suggestions, make sure the indendation is correct.
