@@ -1,12 +1,8 @@
-name: AI Review
+name: Delete Comments
 
 on:
   workflow_dispatch:
     inputs:
-      review-command:
-        type: choice
-        default: run
-        options: [ "delete comments" ]
       pull-request-number:
         type: string
         required: true
