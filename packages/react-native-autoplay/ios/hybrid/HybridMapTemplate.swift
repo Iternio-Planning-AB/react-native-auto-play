@@ -29,7 +29,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
                     "\(templateId) is not a MapTemplate"
                 )
             }
-            
+
             await MainActor.run {
                 template.config.mapButtons = buttons
                 template.invalidate()
@@ -140,6 +140,13 @@ class HybridMapTemplate: HybridMapTemplateSpec {
             case .second(let messageManeuver):
                 {
                     template.updateManeuvers(messageManeuver: messageManeuver)
+                }()
+            case .third(let loadingManeuver):
+                {
+                    template.navigationSession?.pauseTrip(
+                        for: .loading,
+                        description: nil
+                    )
                 }()
             }
 

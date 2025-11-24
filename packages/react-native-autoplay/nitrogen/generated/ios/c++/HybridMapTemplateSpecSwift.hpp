@@ -70,6 +70,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripPreview
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroMessageManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMessageManeuver; }
+// Forward declaration of `NitroLoadingManeuver` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -132,6 +134,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include <NitroModules/Promise.hpp>
 #include "NitroRoutingManeuver.hpp"
 #include "NitroMessageManeuver.hpp"
+#include "NitroLoadingManeuver.hpp"
 #include "NitroAttributedString.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "TurnType.hpp"
@@ -248,7 +251,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& maneuvers) override {
+    inline void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) override {
       auto __result = _swiftPart.updateManeuvers(templateId, maneuvers);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());

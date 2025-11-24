@@ -256,7 +256,7 @@ open class HybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
-  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_) -> bridge.Result_void_ {
+  public final func updateManeuvers(templateId: std.string, maneuvers: bridge.std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_) -> bridge.Result_void_ {
     do {
       try self.__implementation.updateManeuvers(templateId: String(templateId), maneuvers: { () -> NitroManeuver in
         let __variant = maneuvers
@@ -267,6 +267,9 @@ open class HybridMapTemplateSpec_cxx {
           case 1:
             let __actual = __variant.get_1()
             return .second(__actual)
+          case 2:
+            let __actual = __variant.get_2()
+            return .third(__actual)
           default:
             fatalError("Variant can never have index \(__variant.index())!")
         }

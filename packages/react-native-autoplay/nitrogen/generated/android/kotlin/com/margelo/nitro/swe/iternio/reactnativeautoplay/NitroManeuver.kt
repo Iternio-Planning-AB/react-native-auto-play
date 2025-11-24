@@ -11,7 +11,7 @@ import com.facebook.proguard.annotations.DoNotStrip
 
 
 /**
- * Represents the TypeScript variant "Array<NitroRoutingManeuver> | NitroMessageManeuver".
+ * Represents the TypeScript variant "Array<NitroRoutingManeuver> | NitroMessageManeuver | NitroLoadingManeuver".
  */
 @Suppress("ClassName")
 @DoNotStrip
@@ -20,17 +20,22 @@ sealed class NitroManeuver {
   data class First(@DoNotStrip val value: Array<NitroRoutingManeuver>): NitroManeuver()
   @DoNotStrip
   data class Second(@DoNotStrip val value: NitroMessageManeuver): NitroManeuver()
+  @DoNotStrip
+  data class Third(@DoNotStrip val value: NitroLoadingManeuver): NitroManeuver()
 
   @Deprecated("getAs() is not type-safe. Use fold/asFirstOrNull/asSecondOrNull instead.", level = DeprecationLevel.ERROR)
   inline fun <reified T> getAs(): T? = when (this) {
     is First -> value as? T
     is Second -> value as? T
+    is Third -> value as? T
   }
 
   val isFirst: Boolean
     get() = this is First
   val isSecond: Boolean
     get() = this is Second
+  val isThird: Boolean
+    get() = this is Third
 
   fun asFirstOrNull(): Array<NitroRoutingManeuver>? {
     val value = (this as? First)?.value ?: return null
@@ -40,11 +45,16 @@ sealed class NitroManeuver {
     val value = (this as? Second)?.value ?: return null
     return value
   }
+  fun asThirdOrNull(): NitroLoadingManeuver? {
+    val value = (this as? Third)?.value ?: return null
+    return value
+  }
 
-  inline fun <R> match(first: (Array<NitroRoutingManeuver>) -> R, second: (NitroMessageManeuver) -> R): R {
+  inline fun <R> match(first: (Array<NitroRoutingManeuver>) -> R, second: (NitroMessageManeuver) -> R, third: (NitroLoadingManeuver) -> R): R {
     return when (this) {
       is First -> first(value)
       is Second -> second(value)
+      is Third -> third(value)
     }
   }
 
@@ -55,5 +65,8 @@ sealed class NitroManeuver {
     @JvmStatic
     @DoNotStrip
     fun create(value: NitroMessageManeuver): NitroManeuver = Second(value)
+    @JvmStatic
+    @DoNotStrip
+    fun create(value: NitroLoadingManeuver): NitroManeuver = Third(value)
   }
 }

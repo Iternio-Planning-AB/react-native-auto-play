@@ -13,6 +13,7 @@
 #include "NitroRoutingManeuver.hpp"
 #include <vector>
 #include "NitroMessageManeuver.hpp"
+#include "NitroLoadingManeuver.hpp"
 #include <variant>
 #include "JNitroRoutingManeuver.hpp"
 #include "NitroAttributedString.hpp"
@@ -61,6 +62,7 @@
 #include "ManeuverType.hpp"
 #include "JManeuverType.hpp"
 #include "JNitroMessageManeuver.hpp"
+#include "JNitroLoadingManeuver.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -81,8 +83,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroManeuver(jni::alias_ref<JNitroMessageManeuver>)>("create");
       return method(javaClassStatic(), value);
     }
+    static jni::local_ref<JNitroManeuver> create_2(jni::alias_ref<JNitroLoadingManeuver> value) {
+      static const auto method = javaClassStatic()->getStaticMethod<JNitroManeuver(jni::alias_ref<JNitroLoadingManeuver>)>("create");
+      return method(javaClassStatic(), value);
+    }
 
-    static jni::local_ref<JNitroManeuver> fromCpp(const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& variant) {
+    static jni::local_ref<JNitroManeuver> fromCpp(const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& variant) {
       switch (variant.index()) {
         case 0: return create_0([&]() {
           size_t __size = std::get<0>(variant).size();
@@ -95,11 +101,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __array;
         }());
         case 1: return create_1(JNitroMessageManeuver::fromCpp(std::get<1>(variant)));
+        case 2: return create_2(JNitroLoadingManeuver::fromCpp(std::get<2>(variant)));
         default: throw std::invalid_argument("Variant holds unknown index! (" + std::to_string(variant.index()) + ")");
       }
     }
 
-    [[nodiscard]] std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver> toCpp() const;
+    [[nodiscard]] std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver> toCpp() const;
   };
 
   namespace JNitroManeuver_impl {
@@ -119,6 +126,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
       [[nodiscard]] jni::local_ref<JNitroMessageManeuver> getValue() const {
         static const auto field = javaClassStatic()->getField<JNitroMessageManeuver>("value");
+        return getFieldValue(field);
+      }
+    };
+    
+    class Third: public jni::JavaClass<Third, JNitroManeuver> {
+    public:
+      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Third;";
+    
+      [[nodiscard]] jni::local_ref<JNitroLoadingManeuver> getValue() const {
+        static const auto field = javaClassStatic()->getField<JNitroLoadingManeuver>("value");
         return getFieldValue(field);
       }
     };

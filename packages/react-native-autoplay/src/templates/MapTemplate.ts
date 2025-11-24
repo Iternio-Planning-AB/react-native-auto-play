@@ -320,6 +320,11 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       return;
     }
 
+    if (maneuvers.type === 'loading') {
+      HybridMapTemplate.updateManeuvers(this.id, { isLoading: true });
+      return;
+    }
+
     const messageManeuver = NitroManeuverUtil.convert(maneuvers);
     HybridMapTemplate.updateManeuvers(this.id, messageManeuver);
   }

@@ -2369,7 +2369,7 @@ PODS:
     - React-perflogger (= 0.81.4)
     - React-utils (= 0.81.4)
     - SocketRocket
-  - ReactNativeAutoPlay (0.0.5):
+  - ReactNativeAutoPlay (0.0.10):
     - boost
     - DoubleConversion
     - fast_float
@@ -2708,7 +2708,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: b20fba6c3d091a393925890009999472c8f94d95
   ReactCodegen: cf03d376a26d393f818d511240b026fc8c95313c
   ReactCommon: 00df7b9f859c9d02181844255bb89a8bca544374
-  ReactNativeAutoPlay: cf8895eb52100eca262f46a7c25dbf2d1348c2ba
+  ReactNativeAutoPlay: 8c61136adb84f91f0c2ed9bc12ea7cef32b91e6e
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 922d794dce2af9c437f864bf4093abfa7a131adb
 

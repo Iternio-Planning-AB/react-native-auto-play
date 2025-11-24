@@ -305,10 +305,16 @@ class MapTemplate(
 
             val routingInfo = maneuvers.asFirstOrNull()
             val messageInfo = maneuvers.asSecondOrNull()
+            val loadingInfo = maneuvers.asThirdOrNull()
 
-            if (routingInfo.isNullOrEmpty() && messageInfo == null) {
+            if (routingInfo.isNullOrEmpty() && messageInfo == null && loadingInfo == null) {
                 navigationInfo = null
                 AndroidAutoScreen.invalidateSurfaceScreens()
+                return
+            }
+
+            if (loadingInfo != null) {
+                navigationInfo = RoutingInfo.Builder().setLoading(true).build()
                 return
             }
 
@@ -355,7 +361,9 @@ class MapTemplate(
 
                 val notificationText = currentStep.cue?.toString()
 
-                val notificationTitle = "${currentDistance.displayDistance.toInt()} ${Parser.parseDistanceUnit(currentDistance.displayUnit)}"
+                val notificationTitle = "${currentDistance.displayDistance.toInt()} ${
+                    Parser.parseDistanceUnit(currentDistance.displayUnit)
+                }"
 
                 it.notify(
                     notificationTitle, notificationText, notificationIcon

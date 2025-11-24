@@ -65,6 +65,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripPreview
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroMessageManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMessageManeuver; }
+// Forward declaration of `NitroLoadingManeuver` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `NitroAttributedString` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttributedString; }
 // Forward declaration of `NitroAttributedStringImage` to properly resolve imports.
@@ -167,6 +169,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "JFunc_void_std__string_std__string.hpp"
 #include "NitroRoutingManeuver.hpp"
 #include "NitroMessageManeuver.hpp"
+#include "NitroLoadingManeuver.hpp"
 #include "JNitroManeuver.hpp"
 #include "JNitroRoutingManeuver.hpp"
 #include "NitroAttributedString.hpp"
@@ -195,6 +198,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "ManeuverType.hpp"
 #include "JManeuverType.hpp"
 #include "JNitroMessageManeuver.hpp"
+#include "JNitroLoadingManeuver.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
 
@@ -314,7 +318,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return __array;
     }());
   }
-  void JHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>& maneuvers) {
+  void JHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
     method(_javaPart, jni::make_jstring(templateId), JNitroManeuver::fromCpp(maneuvers));
   }

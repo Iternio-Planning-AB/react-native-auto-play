@@ -76,6 +76,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCarPla
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroLoadingManeuver` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMapButtonType; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -176,6 +178,7 @@ namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
 #include "NitroCarPlayDashboardButton.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
+#include "NitroLoadingManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "NitroMessageManeuver.hpp"
@@ -1435,16 +1438,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return vector;
   }
   
-  // pragma MARK: std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>
+  // pragma MARK: std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>
   /**
-   * Wrapper struct for `std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>`.
+   * Wrapper struct for `std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>`.
    * std::variant cannot be used in Swift because of a Swift bug.
    * Not even specializing it works. So we create a wrapper struct.
    */
-  struct std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_ {
-    std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver> variant;
-    std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_(std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver> variant): variant(variant) { }
-    operator std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>() const noexcept {
+  struct std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_ {
+    std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver> variant;
+    std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver> variant): variant(variant) { }
+    operator std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>() const noexcept {
       return variant;
     }
     inline size_t index() const noexcept {
@@ -1456,12 +1459,18 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     inline NitroMessageManeuver get_1() const noexcept {
       return std::get<1>(variant);
     }
+    inline NitroLoadingManeuver get_2() const noexcept {
+      return std::get<2>(variant);
+    }
   };
-  inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_(const std::vector<NitroRoutingManeuver>& value) noexcept {
-    return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_(value);
+  inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(const std::vector<NitroRoutingManeuver>& value) noexcept {
+    return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(value);
   }
-  inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_(const NitroMessageManeuver& value) noexcept {
-    return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver_(value);
+  inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(const NitroMessageManeuver& value) noexcept {
+    return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(value);
+  }
+  inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(const NitroLoadingManeuver& value) noexcept {
+    return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(value);
   }
   
   // pragma MARK: std::shared_ptr<HybridMapTemplateSpec>

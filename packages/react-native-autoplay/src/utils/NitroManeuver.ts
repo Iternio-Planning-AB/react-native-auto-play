@@ -52,7 +52,14 @@ export interface NitroMessageManeuver {
   cardBackgroundColor: NitroColor;
 }
 
-export type NitroManeuver = Array<NitroRoutingManeuver> | NitroMessageManeuver;
+interface NitroLoadingManeuver {
+  isLoading: true;
+}
+
+export type NitroManeuver =
+  | Array<NitroRoutingManeuver>
+  | NitroMessageManeuver
+  | NitroLoadingManeuver;
 
 function convertManeuverImage(image: ManeuverImage): NitroImage;
 function convertManeuverImage(image: ManeuverImage | undefined): NitroImage | undefined;

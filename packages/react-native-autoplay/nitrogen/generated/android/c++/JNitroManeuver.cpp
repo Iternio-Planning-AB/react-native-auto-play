@@ -9,9 +9,9 @@
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
-   * Converts JNitroManeuver to std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver>
+   * Converts JNitroManeuver to std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>
    */
-  std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver> JNitroManeuver::toCpp() const {
+  std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver> JNitroManeuver::toCpp() const {
     if (isInstanceOf(JNitroManeuver_impl::First::javaClassStatic())) {
       // It's a `std::vector<NitroRoutingManeuver>`
       auto jniValue = static_cast<const JNitroManeuver_impl::First*>(this)->getValue();
@@ -28,6 +28,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     } else if (isInstanceOf(JNitroManeuver_impl::Second::javaClassStatic())) {
       // It's a `NitroMessageManeuver`
       auto jniValue = static_cast<const JNitroManeuver_impl::Second*>(this)->getValue();
+      return jniValue->toCpp();
+    } else if (isInstanceOf(JNitroManeuver_impl::Third::javaClassStatic())) {
+      // It's a `NitroLoadingManeuver`
+      auto jniValue = static_cast<const JNitroManeuver_impl::Third*>(this)->getValue();
       return jniValue->toCpp();
     }
     throw std::invalid_argument("Variant is unknown Kotlin instance!");

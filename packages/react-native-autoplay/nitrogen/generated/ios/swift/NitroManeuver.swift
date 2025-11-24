@@ -9,10 +9,11 @@
 
 /**
  * An Swift enum with associated values representing a Variant/Union type.
- * JS type: `array | struct`
+ * JS type: `array | struct | struct`
  */
 @frozen
 public indirect enum NitroManeuver {
   case first([NitroRoutingManeuver])
   case second(NitroMessageManeuver)
+  case third(NitroLoadingManeuver)
 }
