@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { HybridAutoPlay, type Location } from '..';
 
 export const useVoiceInput = () => {
@@ -10,6 +10,13 @@ export const useVoiceInput = () => {
       }
     | undefined
   >();
+
+  /**
+   * Resets the voice input result to undefined. This is useful when you want to clear the voice input result after processing it.
+   */
+  const resetVoiceInputResult = useCallback(() => {
+    setVoiceInputResult(undefined);
+  }, []);
 
   useEffect(() => {
     const removeDidConnect = HybridAutoPlay.addListener('didConnect', () => setIsConnected(true));
@@ -43,5 +50,5 @@ export const useVoiceInput = () => {
     };
   }, [isConnected]);
 
-  return { voiceInputResult };
+  return { voiceInputResult, resetVoiceInputResult };
 };
