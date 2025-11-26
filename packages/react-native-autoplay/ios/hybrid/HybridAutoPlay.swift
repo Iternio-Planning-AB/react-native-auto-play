@@ -107,6 +107,12 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
+    func addListenerVoiceInput(
+        callback: @escaping (Location?, String?) -> Void
+    ) throws -> () -> Void {
+        // TODO: Inplement voice input
+    }
+
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return Promise.async {
