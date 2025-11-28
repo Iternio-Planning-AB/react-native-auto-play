@@ -7,10 +7,6 @@
 
 import CarPlay
 
-#if RCT_NEW_ARCH_ENABLED
-    import React
-#endif
-
 class AutoPlayScene: UIResponder {
     var initialProperties: [String: Any] = [:]
     var moduleName: String?
@@ -46,22 +42,7 @@ class AutoPlayScene: UIResponder {
     }
 
     func disconnect() {
-        #if RCT_NEW_ARCH_ENABLED
-            if let rootView = self.window?.rootViewController?.view
-                as? RCTSurfaceHostingProxyRootView
-            {
-                rootView.surface.stop()
-            }
-        #else
-            if let rootView = self.window?.rootViewController?.view
-                as? RCTRootView
-            {
-                if let contentView = rootView.contentView as? RCTInvalidating {
-                    contentView.invalidate()
-                }
-            }
-        #endif
-
+        NitroSurface.stop(self.window?.rootViewController?.view)
         self.window = nil
         isConnected = false
 
