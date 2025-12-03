@@ -39,6 +39,13 @@ class AutoPlayScene: UIResponder {
             current
         }
 
+        // Get trait collection from the CarPlay interface controller
+        if let carTraitCollection = interfaceController?.interfaceController
+            .carTraitCollection
+        {
+            self.traitCollection = carTraitCollection
+        }
+
         if let window = self.window {
             ViewUtils.showLaunchScreen(window: window)
             safeAreaInsets = window.safeAreaInsets
@@ -64,7 +71,7 @@ class AutoPlayScene: UIResponder {
                 "window nil for module: \(moduleName)"
             )
         }
-        
+
         guard
             let rootView = ViewUtils.getRootView(
                 moduleName: moduleName,
@@ -84,6 +91,11 @@ class AutoPlayScene: UIResponder {
     }
 
     open func traitCollectionDidChange(traitCollection: UITraitCollection) {
+        if self.traitCollection.userInterfaceStyle
+            == traitCollection.userInterfaceStyle
+        {
+            return
+        }
         self.traitCollection = traitCollection
         TemplateStore.traitCollectionDidChange()
     }
