@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridGridTemplateSpec``
 public protocol HybridGridTemplateSpec_protocol: HybridObject {

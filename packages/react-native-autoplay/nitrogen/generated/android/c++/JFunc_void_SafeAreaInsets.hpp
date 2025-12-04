@@ -12,6 +12,7 @@
 
 #include "SafeAreaInsets.hpp"
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JSafeAreaInsets.hpp"
 #include <optional>
 
@@ -40,7 +41,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_SafeAreaInsets that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_SafeAreaInsets_cxx final: public jni::HybridClass<JFunc_void_SafeAreaInsets_cxx, JFunc_void_SafeAreaInsets> {
+  class JFunc_void_SafeAreaInsets_cxx final: public jni::HybridClass<JFunc_void_SafeAreaInsets_cxx, JFunc_void_SafeAreaInsets> {
   public:
     static jni::local_ref<JFunc_void_SafeAreaInsets::javaobject> fromCpp(const std::function<void(const SafeAreaInsets& /* insets */)>& func) {
       return JFunc_void_SafeAreaInsets_cxx::newObjectCxxArgs(func);

@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridMapTemplateSpec``
 public protocol HybridMapTemplateSpec_protocol: HybridObject {

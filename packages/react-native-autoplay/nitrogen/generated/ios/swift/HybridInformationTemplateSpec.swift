@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridInformationTemplateSpec``
 public protocol HybridInformationTemplateSpec_protocol: HybridObject {

@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridSearchTemplateSpec``
 public protocol HybridSearchTemplateSpec_protocol: HybridObject {

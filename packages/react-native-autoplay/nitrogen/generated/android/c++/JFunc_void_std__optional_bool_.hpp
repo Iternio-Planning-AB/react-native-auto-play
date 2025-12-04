@@ -12,6 +12,7 @@
 
 #include <optional>
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -38,7 +39,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_std__optional_bool_ that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_std__optional_bool__cxx final: public jni::HybridClass<JFunc_void_std__optional_bool__cxx, JFunc_void_std__optional_bool_> {
+  class JFunc_void_std__optional_bool__cxx final: public jni::HybridClass<JFunc_void_std__optional_bool__cxx, JFunc_void_std__optional_bool_> {
   public:
     static jni::local_ref<JFunc_void_std__optional_bool_::javaobject> fromCpp(const std::function<void(std::optional<bool> /* animated */)>& func) {
       return JFunc_void_std__optional_bool__cxx::newObjectCxxArgs(func);

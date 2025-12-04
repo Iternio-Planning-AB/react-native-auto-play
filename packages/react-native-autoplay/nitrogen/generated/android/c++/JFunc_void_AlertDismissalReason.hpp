@@ -12,6 +12,7 @@
 
 #include "AlertDismissalReason.hpp"
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JAlertDismissalReason.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -39,7 +40,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_AlertDismissalReason that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_AlertDismissalReason_cxx final: public jni::HybridClass<JFunc_void_AlertDismissalReason_cxx, JFunc_void_AlertDismissalReason> {
+  class JFunc_void_AlertDismissalReason_cxx final: public jni::HybridClass<JFunc_void_AlertDismissalReason_cxx, JFunc_void_AlertDismissalReason> {
   public:
     static jni::local_ref<JFunc_void_AlertDismissalReason::javaobject> fromCpp(const std::function<void(AlertDismissalReason /* reason */)>& func) {
       return JFunc_void_AlertDismissalReason_cxx::newObjectCxxArgs(func);

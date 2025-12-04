@@ -99,6 +99,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include <string>
 #include <functional>
 #include "JFunc_void_std__string.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
 #include "MapTemplateConfig.hpp"

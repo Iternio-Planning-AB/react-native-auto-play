@@ -50,6 +50,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include <optional>
 #include <functional>
 #include "JFunc_void_std__optional_bool_.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include "JFunc_void.hpp"
 #include "NitroAction.hpp"
 #include <vector>

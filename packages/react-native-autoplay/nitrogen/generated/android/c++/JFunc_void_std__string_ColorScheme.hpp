@@ -13,6 +13,7 @@
 #include <string>
 #include "ColorScheme.hpp"
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JColorScheme.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -40,7 +41,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_std__string_ColorScheme that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_std__string_ColorScheme_cxx final: public jni::HybridClass<JFunc_void_std__string_ColorScheme_cxx, JFunc_void_std__string_ColorScheme> {
+  class JFunc_void_std__string_ColorScheme_cxx final: public jni::HybridClass<JFunc_void_std__string_ColorScheme_cxx, JFunc_void_std__string_ColorScheme> {
   public:
     static jni::local_ref<JFunc_void_std__string_ColorScheme::javaobject> fromCpp(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& func) {
       return JFunc_void_std__string_ColorScheme_cxx::newObjectCxxArgs(func);

@@ -32,6 +32,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 
 #include <functional>
 #include "JFunc_void.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
 #include "EventName.hpp"
@@ -106,9 +107,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return downcast->cthis()->getFunction();
       } else {
         auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
+        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
   }
@@ -121,9 +120,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return downcast->cthis()->getFunction();
       } else {
         auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
+        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
   }
@@ -136,9 +133,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return downcast->cthis()->getFunction();
       } else {
         auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
+        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
   }
@@ -226,9 +221,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return downcast->cthis()->getFunction();
       } else {
         auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
+        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
   }

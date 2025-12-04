@@ -24,6 +24,7 @@
 #include "JNitroColor.hpp"
 #include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NitroColor.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>
@@ -77,9 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onPressRef = jni::make_global(onPress);
-            return [onPressRef](std::optional<bool> checked) -> void {
-              return onPressRef->invoke(checked);
-            };
+            return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onPressRef));
           }
         }()) : std::nullopt,
         selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt

@@ -28,6 +28,7 @@
 #include "NitroColor.hpp"
 #include "NitroRow.hpp"
 #include "NitroSectionType.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>

@@ -12,6 +12,7 @@
 
 #include "VisibilityState.hpp"
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JVisibilityState.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -39,7 +40,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_VisibilityState that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_VisibilityState_cxx final: public jni::HybridClass<JFunc_void_VisibilityState_cxx, JFunc_void_VisibilityState> {
+  class JFunc_void_VisibilityState_cxx final: public jni::HybridClass<JFunc_void_VisibilityState_cxx, JFunc_void_VisibilityState> {
   public:
     static jni::local_ref<JFunc_void_VisibilityState::javaobject> fromCpp(const std::function<void(VisibilityState /* payload */)>& func) {
       return JFunc_void_VisibilityState_cxx::newObjectCxxArgs(func);

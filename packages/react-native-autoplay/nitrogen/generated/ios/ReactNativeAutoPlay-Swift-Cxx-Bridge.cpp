@@ -18,6 +18,7 @@
 #include "HybridMessageTemplateSpecSwift.hpp"
 #include "HybridSearchTemplateSpecSwift.hpp"
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
+#include <NitroModules/NitroDefines.hpp>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
 

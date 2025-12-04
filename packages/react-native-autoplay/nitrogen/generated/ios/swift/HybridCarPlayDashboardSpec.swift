@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridCarPlayDashboardSpec``
 public protocol HybridCarPlayDashboardSpec_protocol: HybridObject {

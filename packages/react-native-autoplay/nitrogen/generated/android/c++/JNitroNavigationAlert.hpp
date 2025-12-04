@@ -31,6 +31,7 @@
 #include "JVariant_GlyphImage_AssetImage.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroColor.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>
@@ -89,9 +90,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onWillShowRef = jni::make_global(onWillShow);
-            return [onWillShowRef]() -> void {
-              return onWillShowRef->invoke();
-            };
+            return JNICallable<JFunc_void, void()>(std::move(onWillShowRef));
           }
         }()) : std::nullopt,
         onDidDismiss != nullptr ? std::make_optional([&]() -> std::function<void(AlertDismissalReason /* reason */)> {
@@ -100,9 +99,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onDidDismissRef = jni::make_global(onDidDismiss);
-            return [onDidDismissRef](AlertDismissalReason reason) -> void {
-              return onDidDismissRef->invoke(reason);
-            };
+            return JNICallable<JFunc_void_AlertDismissalReason, void(AlertDismissalReason)>(std::move(onDidDismissRef));
           }
         }()) : std::nullopt,
         priority

@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridListTemplateSpec``
 public protocol HybridListTemplateSpec_protocol: HybridObject {

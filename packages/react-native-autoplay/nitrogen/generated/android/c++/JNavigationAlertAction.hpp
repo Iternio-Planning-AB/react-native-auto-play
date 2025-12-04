@@ -13,6 +13,7 @@
 #include "AlertActionStyle.hpp"
 #include "JAlertActionStyle.hpp"
 #include "JFunc_void.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>
@@ -51,9 +52,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onPressRef = jni::make_global(onPress);
-            return [onPressRef]() -> void {
-              return onPressRef->invoke();
-            };
+            return JNICallable<JFunc_void, void()>(std::move(onPressRef));
           }
         }()
       );

@@ -18,6 +18,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct StringTelem
 
 #include <functional>
 #include "JFunc_void.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include "Telemetry.hpp"
 #include <optional>
 #include <string>
@@ -71,9 +72,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return downcast->cthis()->getFunction();
       } else {
         auto __resultRef = jni::make_global(__result);
-        return [__resultRef]() -> void {
-          return __resultRef->invoke();
-        };
+        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
   }

@@ -12,6 +12,7 @@
 
 #include "Point.hpp"
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JPoint.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -39,7 +40,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_Point_double that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_Point_double_cxx final: public jni::HybridClass<JFunc_void_Point_double_cxx, JFunc_void_Point_double> {
+  class JFunc_void_Point_double_cxx final: public jni::HybridClass<JFunc_void_Point_double_cxx, JFunc_void_Point_double> {
   public:
     static jni::local_ref<JFunc_void_Point_double::javaobject> fromCpp(const std::function<void(const Point& /* center */, double /* scale */)>& func) {
       return JFunc_void_Point_double_cxx::newObjectCxxArgs(func);

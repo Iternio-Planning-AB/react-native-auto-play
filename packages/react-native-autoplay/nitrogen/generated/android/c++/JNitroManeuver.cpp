@@ -16,15 +16,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       // It's a `std::vector<NitroRoutingManeuver>`
       auto jniValue = static_cast<const JNitroManeuver_impl::First*>(this)->getValue();
       return [&]() {
-      size_t __size = jniValue->size();
-      std::vector<NitroRoutingManeuver> __vector;
-      __vector.reserve(__size);
-      for (size_t __i = 0; __i < __size; __i++) {
-        auto __element = jniValue->getElement(__i);
-        __vector.push_back(__element->toCpp());
-      }
-      return __vector;
-    }();
+        size_t __size = jniValue->size();
+        std::vector<NitroRoutingManeuver> __vector;
+        __vector.reserve(__size);
+        for (size_t __i = 0; __i < __size; __i++) {
+          auto __element = jniValue->getElement(__i);
+          __vector.push_back(__element->toCpp());
+        }
+        return __vector;
+      }();
     } else if (isInstanceOf(JNitroManeuver_impl::Second::javaClassStatic())) {
       // It's a `NitroMessageManeuver`
       auto jniValue = static_cast<const JNitroManeuver_impl::Second*>(this)->getValue();

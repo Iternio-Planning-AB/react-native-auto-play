@@ -7,7 +7,6 @@
 
 import Foundation
 import NitroModules
-import NitroModules
 
 /// See ``HybridAutoPlaySpec``
 public protocol HybridAutoPlaySpec_protocol: HybridObject {

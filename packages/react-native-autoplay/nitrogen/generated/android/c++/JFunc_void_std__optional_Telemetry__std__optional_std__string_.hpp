@@ -14,6 +14,7 @@
 #include <optional>
 #include <string>
 #include <functional>
+#include <NitroModules/JNICallable.hpp>
 #include "JTelemetry.hpp"
 #include "NumericTelemetryItem.hpp"
 #include "JNumericTelemetryItem.hpp"
@@ -47,7 +48,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
    * An implementation of Func_void_std__optional_Telemetry__std__optional_std__string_ that is backed by a C++ implementation (using `std::function<...>`)
    */
-  struct JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx final: public jni::HybridClass<JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx, JFunc_void_std__optional_Telemetry__std__optional_std__string_> {
+  class JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx final: public jni::HybridClass<JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx, JFunc_void_std__optional_Telemetry__std__optional_std__string_> {
   public:
     static jni::local_ref<JFunc_void_std__optional_Telemetry__std__optional_std__string_::javaobject> fromCpp(const std::function<void(const std::optional<Telemetry>& /* tlm */, const std::optional<std::string>& /* error */)>& func) {
       return JFunc_void_std__optional_Telemetry__std__optional_std__string__cxx::newObjectCxxArgs(func);

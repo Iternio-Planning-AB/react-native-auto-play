@@ -47,6 +47,7 @@
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>
@@ -104,9 +105,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onWillAppearRef = jni::make_global(onWillAppear);
-            return [onWillAppearRef](std::optional<bool> animated) -> void {
-              return onWillAppearRef->invoke(animated);
-            };
+            return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onWillAppearRef));
           }
         }()) : std::nullopt,
         onWillDisappear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -115,9 +114,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onWillDisappearRef = jni::make_global(onWillDisappear);
-            return [onWillDisappearRef](std::optional<bool> animated) -> void {
-              return onWillDisappearRef->invoke(animated);
-            };
+            return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onWillDisappearRef));
           }
         }()) : std::nullopt,
         onDidAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -126,9 +123,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onDidAppearRef = jni::make_global(onDidAppear);
-            return [onDidAppearRef](std::optional<bool> animated) -> void {
-              return onDidAppearRef->invoke(animated);
-            };
+            return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onDidAppearRef));
           }
         }()) : std::nullopt,
         onDidDisappear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -137,9 +132,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onDidDisappearRef = jni::make_global(onDidDisappear);
-            return [onDidDisappearRef](std::optional<bool> animated) -> void {
-              return onDidDisappearRef->invoke(animated);
-            };
+            return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onDidDisappearRef));
           }
         }()) : std::nullopt,
         onPopped != nullptr ? std::make_optional([&]() -> std::function<void()> {
@@ -148,9 +141,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto onPoppedRef = jni::make_global(onPopped);
-            return [onPoppedRef]() -> void {
-              return onPoppedRef->invoke();
-            };
+            return JNICallable<JFunc_void, void()>(std::move(onPoppedRef));
           }
         }()) : std::nullopt,
         autoDismissMs != nullptr ? std::make_optional(autoDismissMs->value()) : std::nullopt,

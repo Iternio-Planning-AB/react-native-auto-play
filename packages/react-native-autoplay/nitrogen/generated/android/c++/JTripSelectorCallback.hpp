@@ -11,6 +11,7 @@
 #include "TripSelectorCallback.hpp"
 
 #include "JFunc_void_std__string.hpp"
+#include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <string>
 
@@ -42,9 +43,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return downcast->cthis()->getFunction();
           } else {
             auto setSelectedTripRef = jni::make_global(setSelectedTrip);
-            return [setSelectedTripRef](std::string id) -> void {
-              return setSelectedTripRef->invoke(id);
-            };
+            return JNICallable<JFunc_void_std__string, void(std::string)>(std::move(setSelectedTripRef));
           }
         }()
       );
