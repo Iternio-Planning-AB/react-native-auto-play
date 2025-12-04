@@ -129,14 +129,12 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                 scene,
                 interfaceController in
                 let carPlayTemplate = template.getTemplate()
-                
+
                 if carPlayTemplate is CPMapTemplate {
                     try await MainActor.run {
                         try scene.initRootView()
                     }
                 }
-
-                await template.invalidate()
 
                 let _ = try await interfaceController.setRootTemplate(
                     carPlayTemplate,
@@ -162,9 +160,9 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
             return try await RootModule.withInterfaceController {
                 interfaceController in
-                
+
                 let carPlayTemplate = template.getTemplate()
-                
+
                 if carPlayTemplate is CPAlertTemplate {
                     let animated = try await
                         !interfaceController.dismissTemplate(
