@@ -464,7 +464,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         let selectedTrip = selectedTripId.flatMap { tripId in
             tripPreviews.first(where: { $0.id == tripId })
         }
-        
+
         template.showTripPreviews(
             tripPreviews,
             selectedTrip: selectedTrip,
