@@ -41,6 +41,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
     var onTripStarted: ((_ tripId: String, _ routeId: String) -> Void)?
     var navigationSession: CPNavigationSession?
     var navigationAlert: NavigationAlertWrapper?
+    var currentTripId: String?
 
     var tripSelectorVisible = false
 
@@ -463,7 +464,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         let selectedTrip = selectedTripId.flatMap { tripId in
             tripPreviews.first(where: { $0.id == tripId })
         }
-
+        
         template.showTripPreviews(
             tripPreviews,
             selectedTrip: selectedTrip,
@@ -494,6 +495,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
     }
 
     func hideTripSelector() {
+        currentTripId = nil;
         template.hideTripPreviews()
 
         tripSelectorVisible = false
@@ -509,6 +511,13 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         using routeChoice: CPRouteChoice
     ) {
         let tripId = trip.id
+        
+        if (currentTripId != nil && currentTripId == tripId) {
+            return
+        }
+        
+        currentTripId = trip.id
+        
         let routeId = routeChoice.id
         self.onTripSelected?(tripId, routeId)
 
