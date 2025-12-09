@@ -25,6 +25,7 @@ export enum AutoPlayModules {
 
 export * from './components/SafeAreaView';
 export * from './hooks/useAndroidAutoTelemetry';
+export * from './hooks/useFocusedEffect';
 export * from './hooks/useMapTemplate';
 export * from './hooks/useSafeAreaInsets';
 export * from './hooks/useVoiceInput';
