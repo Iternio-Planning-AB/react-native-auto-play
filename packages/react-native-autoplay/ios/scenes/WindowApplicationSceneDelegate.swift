@@ -30,6 +30,36 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
 
         self.window = window
+
+        if let url = connectionOptions.urlContexts.first?.url {
+            // Linking API -> on app start
+            NitroLinkingManager.shared().launchURL = url
+        }
+
+        if let userActivity = connectionOptions.userActivities.first(where: {
+            userActivity in
+            userActivity.webpageURL != nil
+        }) {
+            // Universal Links -> on app start
+            NitroLinkingManager.shared().launchURL = userActivity.webpageURL
+        }
+    }
+
+    func scene(
+        _ scene: UIScene,
+        openURLContexts URLContexts: Set<UIOpenURLContext>
+    ) {
+        // Linking API -> app already running
+        guard let urlContext = URLContexts.first else { return }
+        NitroLinkingManager.shared().openURL(urlContext)
+    }
+    
+    func scene(
+        _ scene: UIScene,
+        continue userActivity: NSUserActivity
+    ) {
+        // Universal Links -> app already running
+        NitroLinkingManager.shared().continue(userActivity)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
