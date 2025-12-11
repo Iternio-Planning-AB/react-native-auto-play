@@ -2,6 +2,7 @@
 
 
 
+
 # React Native Auto Play
 
 **React Native Auto Play** provides a comprehensive solution for integrating your React Native application with both **Apple CarPlay** and **Android Auto**. This library allows you to build automotive-specific user interfaces using familiar React Native components and concepts.
@@ -322,10 +323,6 @@ export default registerAutoPlay;
 
 -   `HybridAutoPlay`: The primary interface for interacting with the native module, handling connection status and events.
 
-### AppState
-AppState provided by react-native is not working properly on iOS since it does only check for the application state and lacks support for UISceneDelegate. Therefore this library provides a custom state listener working for both Android and iOS.
-Use `HybridAutoPlay.addListenerRenderState` and provide any of the `AutoPlayModules` enum modules names or one of the cluster uuids you received to monitor the scene/session/activity state.
-
 ### Localization
 The library allows you to pass distances and durations and formats them according to the system defaults.
 For iOS make sure to provide all supported app languages in Info.plist CFBundleLocalizations for this to work properly, missing languages will use CFBundleDevelopmentRegion as fallback which is **en** most of the time. This results in a mix up with the region which might result in **en**_AT instead of **de**_AT for example.
@@ -437,6 +434,13 @@ useEffect(() => {
 
 -   `CarPlayDashboard`: A component to render content on the CarPlay dashboard (CarPlay only).
 -   `AutoPlayCluster`: A component to render content on the instrument cluster (CarPlay & Android Auto).
+
+## Known Issues
+
+### iOS
+
+-   **Broken exceptions with `react-native-skia`**: When using `react-native-skia` up to version `2.4.7`, exceptions on iOS are not reported correctly. This is fixed in newer versions of `react-native-skia`. For more details, see this [pull request](https://github.com/Shopify/react-native-skia/pull/3595).
+-   **AppState on iOS**: The `AppState` module from React Native does not work correctly on iOS because this library uses scenes, which are not supported by the stock `AppState` module. This library provides a custom state listener that works for both Android and iOS. Use `HybridAutoPlay.addListenerRenderState` instead of `AppState`.
 
 ## Contributing
 
