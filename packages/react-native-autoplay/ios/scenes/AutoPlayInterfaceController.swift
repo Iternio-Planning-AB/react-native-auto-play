@@ -70,6 +70,9 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     ) async throws -> String? {
         guard let templateId = topTemplateId else { return nil }
 
+        // Ensure at least one template remains
+        guard templates.count > 1 else { return nil }
+
         try await interfaceController.popTemplate(
             animated: animated
         )
