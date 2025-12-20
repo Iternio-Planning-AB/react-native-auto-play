@@ -533,15 +533,6 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         startedTrip trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        if let onTripStarted = self.onTripStarted {
-            let tripId = trip.id
-            let routeId = routeChoice.id
-
-            onTripStarted(tripId, routeId)
-        }
-
-        hideTripSelector()
-
         let trip = CPTrip(
             origin: trip.origin,
             destination: trip.destination,
@@ -550,6 +541,15 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         )
 
         startNavigation(trip: trip)
+        
+        if let onTripStarted = self.onTripStarted {
+            let tripId = trip.id
+            let routeId = routeChoice.id
+
+            onTripStarted(tripId, routeId)
+        }
+        
+        hideTripSelector()
     }
 
     func updateVisibleTravelEstimate(
