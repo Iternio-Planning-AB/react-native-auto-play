@@ -494,6 +494,85 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
     - `trailingNavigationBarButtons` (1–2)
 -   **MapTemplate map buttons**: 1–4 buttons, including the special `pan` button.
 
+### Event & Listener APIs
+
+This section lists the available listeners and lifecycle callbacks so you can wire up connection state, visibility, cluster settings, and system events.
+
+#### HybridAutoPlay listeners
+
+| API | Payload | Notes |
+| --- | --- | --- |
+| `HybridAutoPlay.addListener(event, cb)` | `event: 'didConnect' | 'didDisconnect'` | Connection changes for the head unit. |
+| `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
+| `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only voice input. |
+| `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |
+
+```ts
+import { AutoPlayModules, HybridAutoPlay } from '@iternio/react-native-auto-play';
+
+const cleanup = HybridAutoPlay.addListener('didConnect', () => {
+  console.log('Head unit connected');
+});
+
+const removeVisibility = HybridAutoPlay.addListenerRenderState(
+  AutoPlayModules.AutoPlayRoot,
+  (state) => console.log('AutoPlayRoot state', state)
+);
+```
+
+#### Template lifecycle callbacks
+
+All templates accept these lifecycle callbacks in their config:
+
+- `onWillAppear(animated?)`
+- `onDidAppear(animated?)`
+- `onWillDisappear(animated?)`
+- `onDidDisappear(animated?)`
+- `onPopped()` (not supported on all iOS templates, see notes in code)
+
+```ts
+const template = new ListTemplate({
+  title: { text: 'Menu' },
+  onWillAppear: () => console.log('will appear'),
+  onPopped: () => console.log('popped forever'),
+});
+```
+
+#### MapTemplate callbacks
+
+Map-specific callbacks live on `MapTemplateConfig`:
+
+- `onDidPan({ x, y })`
+- `onDidUpdateZoomGestureWithCenter({ x, y }, scale)`
+- `onClick({ x, y })` (Android)
+- `onDoubleClick({ x, y })` (Android)
+- `onAppearanceDidChange(colorScheme)`
+- `onAutoDriveEnabled(template)` (Android)
+- `onStopNavigation(template)` (**required**)
+
+#### AutoPlayCluster listeners (instrument cluster)
+
+| API | Payload | Notes |
+| --- | --- | --- |
+| `AutoPlayCluster.addListenerColorScheme(cb)` | `(clusterId, colorScheme)` | iOS + Android. |
+| `AutoPlayCluster.addListenerZoom(cb)` | `(clusterId, zoomEvent)` | iOS only. |
+| `AutoPlayCluster.addListenerCompass(cb)` | `(clusterId, enabled)` | iOS only. |
+| `AutoPlayCluster.addListenerSpeedLimit(cb)` | `(clusterId, enabled)` | iOS only. |
+
+```ts
+const removeCompass = AutoPlayCluster.addListenerCompass((clusterId, enabled) => {
+  console.log('Cluster', clusterId, 'compass', enabled);
+});
+```
+
+#### CarPlayDashboard listeners (iOS)
+
+| API | Payload | Notes |
+| --- | --- | --- |
+| `CarPlayDashboard.addListener(event, cb)` | `event: 'didConnect' | 'didDisconnect'` | Connection changes for the dashboard scene. |
+| `CarPlayDashboard.addListenerRenderState(cb)` | `cb(visibility)` | Scene visibility changes. |
+| `CarPlayDashboard.addListenerColorScheme(cb)` | `cb(colorScheme)` | Light/dark changes. |
+
 ### Localization
 The library allows you to pass distances and durations and formats them according to the system defaults.
 For iOS make sure to provide all supported app languages in Info.plist CFBundleLocalizations for this to work properly, missing languages will use CFBundleDevelopmentRegion as fallback which is **en** most of the time. This results in a mix up with the region which might result in **en**_AT instead of **de**_AT for example.
@@ -544,12 +623,33 @@ useEffect(() => {
 
 ### Templates
 
--   `MapTemplate`: For navigation apps.
--   `ListTemplate`: To display a list of items.
--   `GridTemplate`: To display a grid of items.
--   `SearchTemplate`: For search functionality.
--   `InformationTemplate`: For showing information with actions.
--   `MessageTemplate`: For displaying messages.
+| Template | Purpose | Notes |
+| --- | --- | --- |
+| `MapTemplate` | Navigation, map rendering | Use as root; supports map buttons & navigation APIs. |
+| `ListTemplate` | Lists/menus | Supports sections, radio/toggle rows. |
+| `GridTemplate` | Action grid | Use `GridButton` items. |
+| `SearchTemplate` | Search UI | Android-only search bar callbacks. |
+| `InformationTemplate` | Info panels | Android uses PaneTemplate; iOS uses InformationTemplate. |
+| `MessageTemplate` | Modal messages | Always shown on top until popped. |
+
+**Template quick examples:**
+
+```ts
+// MapTemplate
+const map = new MapTemplate({
+  component: MapScreen,
+  onStopNavigation: () => {},
+  headerActions: { android: [{ type: 'image', image: { name: 'list', type: 'glyph' }, onPress: () => {} }] },
+});
+map.setRootTemplate();
+
+// ListTemplate
+new ListTemplate({
+  title: { text: 'Destinations' },
+  sections: [{ type: 'default', title: 'Recent', items: [{ type: 'default', title: { text: 'Home' }, onPress: () => {} }] }],
+  headerActions: { android: { startHeaderAction: { type: 'back', onPress: () => {} } } },
+}).push();
+```
 
 ### Hooks
 
@@ -605,6 +705,31 @@ useEffect(() => {
 
 -   `CarPlayDashboard`: A component to render content on the CarPlay dashboard (CarPlay only).
 -   `AutoPlayCluster`: A component to render content on the instrument cluster (CarPlay & Android Auto).
+
+**Scene APIs (overview):**
+
+**CarPlayDashboard (iOS)**
+- `setComponent(component)` — register the React component (call once).
+- `setButtons(buttons)` — **required** to make the dashboard visible.
+- `addListener(event, cb)` — `didConnect` / `didDisconnect`.
+- `addListenerRenderState(cb)` — scene visibility callbacks.
+- `addListenerColorScheme(cb)` — light/dark changes.
+
+```ts
+CarPlayDashboard.setButtons([
+  {
+    titleVariants: ['Open App'],
+    subtitleVariants: ['Dashboard shortcut'],
+    image: { name: 'directions_car', type: 'glyph' },
+    onPress: () => console.log('open app'),
+  },
+]);
+```
+
+**AutoPlayCluster**
+- `setComponent(component)` — register the cluster component.
+- `setAttributedInactiveDescriptionVariants(variants)` — iOS only inactive text.
+- `addListenerColorScheme(cb)` / `addListenerZoom(cb)` / `addListenerCompass(cb)` / `addListenerSpeedLimit(cb)`.
 
 ## Known Issues
 
