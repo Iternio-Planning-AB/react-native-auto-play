@@ -77,7 +77,6 @@ class MapTemplate(
             val headerActionStrip = config.headerActions?.let { headerActions ->
                 Parser.parseMapHeaderActions(context, headerActions)
             } ?: run {
-                Log.w("MapTemplate", "No header actions provided, using app icon as fallback")
                 ActionStrip.Builder()
                     .addAction(
                         Action.Builder()
