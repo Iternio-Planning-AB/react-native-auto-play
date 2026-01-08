@@ -74,7 +74,7 @@ class MapTemplate(
             config.mapButtons?.let { buttons ->
                 setMapActionStrip(Parser.parseMapActions(context, buttons))
             }
-                        config.headerActions?.let { headerActions ->
+            config.headerActions?.let { headerActions ->
                 setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
             } ?: run {
                 setActionStrip(
