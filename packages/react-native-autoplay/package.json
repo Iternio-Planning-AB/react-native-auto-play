@@ -1,6 +1,6 @@
 {
   "name": "@iternio/react-native-auto-play",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "Android Auto and Apple CarPlay for react-native",
   "main": "lib/index",
   "module": "lib/index",
