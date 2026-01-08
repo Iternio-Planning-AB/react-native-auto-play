@@ -76,8 +76,11 @@ class MapTemplate(
             }
             val headerActionStrip = config.headerActions?.let { headerActions ->
                 Parser.parseMapHeaderActions(context, headerActions)
-             }
-            setActionStrip(headerActionStrip ?: ActionStrip.Builder().build())
+            } ?: run {
+                Log.w("MapTemplate", "No header actions provided, using empty ActionStrip")
+                ActionStrip.Builder().build()
+            }
+            setActionStrip(headerActionStrip)
             }
             val travelEstimates =
                 if (config.visibleTravelEstimate == VisibleTravelEstimate.FIRST) destinationTravelEstimates.firstOrNull() else destinationTravelEstimates.lastOrNull()
