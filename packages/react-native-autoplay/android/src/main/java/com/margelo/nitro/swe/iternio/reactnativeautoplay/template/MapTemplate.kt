@@ -81,7 +81,7 @@ class MapTemplate(
                 ActionStrip.Builder().build()
             }
             setActionStrip(headerActionStrip)
-            }
+            
             val travelEstimates =
                 if (config.visibleTravelEstimate == VisibleTravelEstimate.FIRST) destinationTravelEstimates.firstOrNull() else destinationTravelEstimates.lastOrNull()
             travelEstimates?.let {
