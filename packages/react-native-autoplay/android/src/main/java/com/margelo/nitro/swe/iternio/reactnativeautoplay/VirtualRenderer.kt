@@ -2,6 +2,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import android.app.Presentation
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.graphics.Color
 import android.graphics.Rect
 import android.hardware.display.DisplayManager
@@ -22,6 +23,7 @@ import com.facebook.react.ReactApplication
 import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.UIManager
 import com.facebook.react.fabric.FabricUIManager
 import com.facebook.react.runtime.ReactSurfaceImpl
 import com.facebook.react.runtime.ReactSurfaceView
@@ -42,8 +44,14 @@ class VirtualRenderer(
     private val moduleName: String,
     private val isCluster: Boolean = false
 ) {
-    private lateinit var uiManager: FabricUIManager
+    private lateinit var fabricUiManager: FabricUIManager
+    private lateinit var uiManager: UIManager
+
     private fun isUiManagerInitialized(): Boolean {
+        if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+            return ::fabricUiManager.isInitialized
+        }
+
         return ::uiManager.isInitialized
     }
 
@@ -78,9 +86,18 @@ class VirtualRenderer(
                 ReactContextResolver.getReactContext(context.applicationContext as ReactApplication)
 
             if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-                uiManager = UIManagerHelper.getUIManager(
+                fabricUiManager = UIManagerHelper.getUIManager(
                     reactContext, UIManagerType.FABRIC
                 ) as FabricUIManager
+            } else {
+                // UIManagerType.DEFAULT was deprecated and will eventually be removed, but LEGACY is not available in lower RN versions. 
+                // So make sure both work to be backwards compatible
+                val legacyType = try {
+                    UIManagerType::class.java.getField("LEGACY").getInt(null)
+                } catch (e: NoSuchFieldException) {
+                    UIManagerType.DEFAULT
+                }
+                uiManager = UIManagerHelper.getUIManager(reactContext, legacyType) as UIManager
             }
 
             initRenderer()
@@ -287,6 +304,11 @@ class VirtualRenderer(
                 context, display, height, width, initialProperties, reactNativeScale
             ).show()
         } else {
+            if (!isUiManagerInitialized()) {
+                // this makes sure we have all required instances
+                // no matter if the app is launched on the phone or AA first
+                return
+            }
             MapPresentation(
                 context, display, height, width, initialProperties, reactNativeScale
             ).show()
@@ -312,7 +334,10 @@ class VirtualRenderer(
 
                 val instanceManager =
                     (context.applicationContext as ReactApplication).reactNativeHost.reactInstanceManager
-                reactRootView = ReactRootView(context.applicationContext).apply {
+                // Wrap applicationContext with app theme to support AppCompat widgets like ReactTextView
+                val appTheme = context.applicationContext.applicationInfo.theme
+                val themedContext = ContextThemeWrapper(context.applicationContext, appTheme)
+                reactRootView = ReactRootView(themedContext).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (this@MapPresentation.width / reactNativeScale).toInt(),
                         (this@MapPresentation.height / reactNativeScale).toInt()
@@ -387,7 +412,7 @@ class VirtualRenderer(
                     }
                 }
 
-                reactSurfaceId = uiManager.startSurface(
+                reactSurfaceId = fabricUiManager.startSurface(
                     reactSurfaceView,
                     moduleName,
                     Arguments.fromBundle(initialProperties),
@@ -400,9 +425,9 @@ class VirtualRenderer(
                 )
 
                 // remove ui-managers lifecycle listener to not stop rendering when app is not in foreground/phone screen is off
-                reactContext.removeLifecycleEventListener(uiManager)
+                reactContext.removeLifecycleEventListener(fabricUiManager)
                 // trigger ui-managers onHostResume to make sure the surface is rendered properly even when AA only is starting without the phone app
-                uiManager.onHostResume()
+                fabricUiManager.onHostResume()
             } else {
                 (reactSurfaceView.parent as ViewGroup).removeView(reactSurfaceView)
             }
@@ -479,7 +504,7 @@ class VirtualRenderer(
             if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
                 if (renderer?.isUiManagerInitialized() == true) {
                     renderer.reactSurfaceId?.let {
-                        renderer.uiManager.stopSurface(it)
+                        renderer.fabricUiManager.stopSurface(it)
                     }
                 }
             } else {
