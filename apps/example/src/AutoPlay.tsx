@@ -193,7 +193,7 @@ const registerRunnable = () => {
         console.log('onDidChangePanningInterface', isPanningInterfaceVisible);
       },
     });
-    rootTemplate.setRootTemplate();
+    rootTemplate.setRootTemplate().catch((e) => console.error('*** setRootTemplate', e));
   };
 
   const onDisconnect = () => {

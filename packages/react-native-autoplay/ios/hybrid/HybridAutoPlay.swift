@@ -117,6 +117,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return Promise.async {
+            throw AutoPlayError.initReactRootViewFailed("skia test exception")
             guard
                 let template = TemplateStore.getTemplate(
                     templateId: templateId
