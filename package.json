@@ -8,7 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "start": "yarn workspace example start",
+    "start": "yarn workspace example start ",
     "ios": "yarn workspace example ios",
     "android": "yarn workspace example android",
     "android:adb": "./adb_port_setup.sh",
