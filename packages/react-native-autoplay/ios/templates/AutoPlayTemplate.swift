@@ -16,11 +16,12 @@ protocol AutoPlayTemplate {
     func onWillDisappear(animated: Bool)
     func onDidDisappear(animated: Bool)
     func onPopped()
-    func traitCollectionDidChange()
+    @MainActor func traitCollectionDidChange()
     func getTemplate() -> CPTemplate
 }
 
 extension AutoPlayTemplate {
+    @MainActor
     func traitCollectionDidChange() {
         // this can be implemented optionally
     }

@@ -39,6 +39,7 @@ class TemplateStore {
         store = store.filter { !($0.value.getTemplate() is CPSearchTemplate) }
     }
 
+    @MainActor
     static func traitCollectionDidChange() {
         store.values.forEach { template in template.traitCollectionDidChange() }
     }

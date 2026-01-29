@@ -19,17 +19,18 @@ class AutoPlaySceneViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @MainActor
     override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {
-        SceneStore.getScene(moduleName: moduleName)!.traitCollectionDidChange(
+        SceneStore.getScene(moduleName: moduleName)?.traitCollectionDidChange(
             traitCollection: traitCollection
         )
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        SceneStore.getScene(moduleName: moduleName)!.safeAreaInsetsDidChange(
+        SceneStore.getScene(moduleName: moduleName)?.safeAreaInsetsDidChange(
             safeAreaInsets: self.view.safeAreaInsets
         )
     }

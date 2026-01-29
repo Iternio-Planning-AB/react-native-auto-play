@@ -113,6 +113,7 @@ class DashboardSceneDelegate: AutoPlayScene,
         }
     }
 
+    @MainActor
     override func traitCollectionDidChange(traitCollection: UITraitCollection) {
         super.traitCollectionDidChange(traitCollection: traitCollection)
         HybridCarPlayDashboard.emitColorScheme(

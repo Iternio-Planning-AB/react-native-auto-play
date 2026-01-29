@@ -90,6 +90,7 @@ class AutoPlayScene: UIResponder {
         window.makeKeyAndVisible()
     }
 
+    @MainActor
     open func traitCollectionDidChange(traitCollection: UITraitCollection) {
         if self.traitCollection.userInterfaceStyle
             == traitCollection.userInterfaceStyle

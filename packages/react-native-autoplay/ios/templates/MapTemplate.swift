@@ -178,6 +178,7 @@ class MapTemplate: NSObject, AutoPlayTemplate, AutoPlayHeaderProviding,
         config.onPopped?()
     }
 
+    @MainActor
     func traitCollectionDidChange() {
         let traitCollection = SceneStore.getRootTraitCollection()
         let isDark = traitCollection.userInterfaceStyle == .dark
