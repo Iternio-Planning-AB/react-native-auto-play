@@ -140,12 +140,8 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                     carPlayTemplate,
                     animated: false
                 )
-            }
 
-            DispatchQueue.main.async {
-                if let template = TemplateStore.getTemplate(
-                    templateId: templateId
-                ) {
+                try await MainActor.run {
                     template.invalidate()
                 }
             }
