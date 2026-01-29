@@ -141,9 +141,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                     animated: false
                 )
 
-                try await MainActor.run {
-                    template.invalidate()
-                }
+                await template.invalidate()
             }
         }
     }
