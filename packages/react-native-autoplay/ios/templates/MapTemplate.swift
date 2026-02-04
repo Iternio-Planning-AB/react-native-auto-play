@@ -45,10 +45,10 @@ class MapTemplate: AutoPlayHeaderProviding,
 
     init(config: MapTemplateConfig) {
         self.config = config
-        
+
         mapButtons = config.mapButtons
         visibleTravelEstimate = config.visibleTravelEstimate
-        
+
         template = CPMapTemplate(id: config.id)
 
         if let initialProperties = SceneStore.getRootScene()?.initialProperties,

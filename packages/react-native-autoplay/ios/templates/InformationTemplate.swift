@@ -23,7 +23,7 @@ class InformationTemplate: AutoPlayHeaderProviding {
 
     init(config: InformationTemplateConfig) {
         self.config = config
-        
+
         section = config.section
 
         template = CPInformationTemplate(
@@ -33,9 +33,9 @@ class InformationTemplate: AutoPlayHeaderProviding {
             actions: Parser.parseInformationActions(actions: config.actions),
             id: config.id
         )
-        
-        super.init();
-        
+
+        super.init()
+
         barButtons = config.headerActions
     }
 

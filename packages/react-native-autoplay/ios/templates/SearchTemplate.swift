@@ -28,7 +28,7 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
     init(config: SearchTemplateConfig) {
         self.config = config
         results = config.results
-        
+
         template = CPSearchTemplate(id: config.id)
     }
 

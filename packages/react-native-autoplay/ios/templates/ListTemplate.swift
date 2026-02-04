@@ -23,7 +23,7 @@ class ListTemplate: AutoPlayHeaderProviding {
 
     init(config: ListTemplateConfig) {
         self.config = config
-        
+
         sections = config.sections
 
         template = CPListTemplate(
@@ -32,9 +32,9 @@ class ListTemplate: AutoPlayHeaderProviding {
             assistantCellConfiguration: nil,
             id: config.id
         )
-        
+
         super.init()
-        
+
         barButtons = config.headerActions
     }
 
