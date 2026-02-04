@@ -85,6 +85,11 @@ class SceneStore {
     }
 
     static func getRootTraitCollection() -> UITraitCollection {
-        return store[SceneStore.rootModuleName]!.traitCollection
+        guard let rootScene = store[SceneStore.rootModuleName]
+        else {
+            // Fallback to main screen trait collection if root scene is not available
+            return UIScreen.main.traitCollection
+        }
+        return rootScene.traitCollection
     }
 }
