@@ -29,6 +29,9 @@ jobs:
       - name: Run typecheck auto-play package
         run: yarn typecheck:auto-play
 
+      - name: Build auto-play
+        run: yarn build:auto-play
+
       - name: Run lint example app
         run: yarn lint:example
       
