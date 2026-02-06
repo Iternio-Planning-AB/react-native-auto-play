@@ -1,0 +1,36 @@
+name: Code Quality Checks
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install Yarn
+        run: npm install -g yarn
+      
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      
+      - name: Run lint auto-play package
+        run: yarn lint:auto-play
+      
+      - name: Run typecheck auto-play package
+        run: yarn typecheck:auto-play
+
+      - name: Run lint example app
+        run: yarn lint:example
+      
+      - name: Run typecheck example app
+        run: yarn typecheck:example
