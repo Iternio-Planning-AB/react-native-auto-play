@@ -15,6 +15,7 @@
     "postinstall": "node scripts/conditional-patch.js",
     "lint:auto-play": "yarn workspace @iternio/react-native-auto-play lint",
     "typecheck:auto-play": "yarn workspace @iternio/react-native-auto-play typecheck",
+    "build:auto-play": "yarn workspace @iternio/react-native-auto-play prepare",
     "lint:example": "yarn workspace example lint",
     "typecheck:example": "yarn workspace example typecheck"
   },
