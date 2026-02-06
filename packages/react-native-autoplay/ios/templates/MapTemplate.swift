@@ -81,7 +81,11 @@ class MapTemplate: AutoPlayHeaderProviding,
     }
 
     func parseMapButtons(mapButtons: [NitroMapButton]) -> [CPMapButton] {
-        return mapButtons.map { button in
+        return mapButtons.map { [weak self] button in
+            // Capture onPress callback directly to avoid issues with button lifecycle
+            let onPress = button.onPress
+            let buttonType = button.type
+            
             if let glyphImage = button.image.glyphImage,
                 let icon = SymbolFont.imageFromNitroImage(
                     image: glyphImage,
@@ -89,12 +93,12 @@ class MapTemplate: AutoPlayHeaderProviding,
                     traitCollection: SceneStore.getRootTraitCollection()
                 )
             {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
+                return CPMapButton(image: icon) { [weak self] _ in
+                    if buttonType == .pan {
+                        self?.onPanButtonPress()
                         return
                     }
-                    button.onPress?()
+                    onPress?()
                 }
             }
             if let assetImage = button.image.assetImage,
@@ -103,21 +107,21 @@ class MapTemplate: AutoPlayHeaderProviding,
                     traitCollection: SceneStore.getRootTraitCollection()
                 )
             {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
+                return CPMapButton(image: icon) { [weak self] _ in
+                    if buttonType == .pan {
+                        self?.onPanButtonPress()
                         return
                     }
-                    button.onPress?()
+                    onPress?()
                 }
             }
 
-            return CPMapButton { _ in
-                if button.type == .pan {
-                    self.onPanButtonPress()
+            return CPMapButton { [weak self] _ in
+                if buttonType == .pan {
+                    self?.onPanButtonPress()
                     return
                 }
-                button.onPress?()
+                onPress?()
             }
         }
 
@@ -141,12 +145,12 @@ class MapTemplate: AutoPlayHeaderProviding,
                 self.template.dismissPanningInterface(animated: true)
             }
 
-            let mapButtons =
-                mapButtons?.filter { button in
+            let filteredMapButtons =
+                self.mapButtons?.filter { button in
                     button.type != .pan
                 } ?? []
 
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+            template.mapButtons = parseMapButtons(mapButtons: filteredMapButtons)
 
             return
         }
