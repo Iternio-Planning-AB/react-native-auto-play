@@ -53,12 +53,11 @@ class AutoPlayScene: UIResponder {
     }
 
     func disconnect() {
+        SceneStore.removeScene(moduleName: moduleName)
+        isConnected = false
+        templateStore.disconnect()
         NitroSurface.stop(self.window?.rootViewController?.view)
         self.window = nil
-        isConnected = false
-
-        templateStore.disconnect()
-        SceneStore.removeScene(moduleName: moduleName)
     }
 
     func setState(state: VisibilityState) {
