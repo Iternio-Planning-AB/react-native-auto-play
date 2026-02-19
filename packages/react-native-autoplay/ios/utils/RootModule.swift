@@ -16,9 +16,7 @@ class RootModule {
                 moduleName: SceneStore.rootModuleName
             )
         else {
-            throw AutoPlayError.sceneNotFound(
-                "operation failed, \(SceneStore.rootModuleName) scene not found"
-            )
+            return
         }
 
         try action(scene)
@@ -77,9 +75,7 @@ class RootModule {
                 moduleName: SceneStore.rootModuleName
             )
         else {
-            throw AutoPlayError.sceneNotFound(
-                "operation failed, \(SceneStore.rootModuleName) scene not found"
-            )
+            return
         }
 
         return try await action(scene)
