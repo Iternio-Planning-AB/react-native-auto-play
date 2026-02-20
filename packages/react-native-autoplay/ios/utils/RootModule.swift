@@ -69,13 +69,13 @@ class RootModule {
     static func withScene<T>(
         perform action:
             @escaping (AutoPlayScene) async throws -> T
-    ) async throws -> T {
+    ) async throws -> T? {
         guard
             let scene = SceneStore.getScene(
                 moduleName: SceneStore.rootModuleName
             )
         else {
-            return
+            return nil
         }
 
         return try await action(scene)
@@ -86,7 +86,7 @@ class RootModule {
         perform action:
             @escaping (AutoPlayScene, AutoPlayInterfaceController) async throws
             -> T
-    ) async throws -> T {
+    ) async throws -> T? {
         return try await withScene { scene in
             guard let interfaceController = scene.interfaceController else {
                 throw AutoPlayError.interfaceControllerNotFound(
@@ -102,7 +102,7 @@ class RootModule {
     static func withInterfaceController<T>(
         perform action:
             @escaping (AutoPlayInterfaceController) async throws -> T
-    ) async throws -> T {
+    ) async throws -> T? {
         try await withSceneAndInterfaceController { _, interfaceController in
             try await action(interfaceController)
         }

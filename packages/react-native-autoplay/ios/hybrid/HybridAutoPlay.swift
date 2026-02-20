@@ -147,7 +147,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         -> NitroModules.Promise<Void>
     {
         return Promise.async {
-            return try await RootModule.withSceneAndInterfaceController {
+            try await RootModule.withSceneAndInterfaceController {
                 scene,
                 interfaceController in
 
@@ -196,7 +196,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     func popTemplate(animate: Bool?) throws -> NitroModules.Promise<Void> {
         return Promise.async {
-            return try await RootModule.withInterfaceController {
+            try await RootModule.withInterfaceController {
                 interfaceController in
 
                 if try await interfaceController.dismissTemplate(
@@ -240,7 +240,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         Void
     > {
         return Promise.async {
-            return try await RootModule.withInterfaceController {
+            try await RootModule.withInterfaceController {
                 interfaceController in
 
                 let _ = try await interfaceController.dismissTemplate(
