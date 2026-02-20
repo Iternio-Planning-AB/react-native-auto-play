@@ -65,6 +65,8 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
   }
 
   public updateGrid(buttons: Array<GridButton<GridTemplate>>) {
+    this.assertConnected();
+
     return HybridGridTemplate.updateGridTemplateButtons(
       this.id,
       NitroGridUtil.convert(this.template, buttons)

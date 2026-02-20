@@ -197,11 +197,15 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   }
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
+    this.assertConnected();
+
     const buttons = NitroMapButton.convert(this.template, mapButtons);
     return HybridMapTemplate.setTemplateMapButtons(this.id, buttons);
   }
 
   public override setHeaderActions(headerActions: MapTemplateConfig['headerActions']) {
+    this.assertConnected();
+
     const nitroActions = NitroActionUtil.convert(this.template, headerActions);
     return HybridAutoPlay.setTemplateHeaderActions(this.id, nitroActions);
   }
@@ -212,14 +216,20 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * @returns a callback to dismiss or update the navigation alert
    */
   public showAlert(alert: NavigationAlert) {
+    this.assertConnected();
+
     return HybridMapTemplate.showNavigationAlert(this.id, NitroAlertUtil.convert(alert));
   }
 
   public updateAlert(alertId: number, title: AutoText, subtitle?: AutoText) {
+    this.assertConnected();
+
     HybridMapTemplate.updateNavigationAlert(this.id, alertId, title, subtitle);
   }
 
   public dismissAlert(alertId: number) {
+    this.assertConnected();
+
     HybridMapTemplate.dismissNavigationAlert(this.id, alertId);
   }
 
@@ -249,6 +259,8 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
      */
     mapButtons?: MapTemplateConfig['mapButtons'];
   }): TripSelectorCallback {
+    this.assertConnected();
+
     if (
       trips.length === 0 ||
       trips.some(
@@ -285,10 +297,14 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   }
 
   public hideTripSelector() {
+    this.assertConnected();
+
     HybridMapTemplate.hideTripSelector(this.id);
   }
 
   public updateVisibleTravelEstimate(visibleTravelEstimate: VisibleTravelEstimate) {
+    this.assertConnected();
+
     HybridMapTemplate.updateVisibleTravelEstimate(this.id, visibleTravelEstimate);
   }
 
@@ -297,6 +313,8 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * @param steps all future steps, do not put in origin or passed steps
    */
   public updateTravelEstimates(steps: Array<TripPoint>) {
+    this.assertConnected();
+
     HybridMapTemplate.updateTravelEstimates(this.id, steps);
   }
 
@@ -306,6 +324,8 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * @namespace iOS will update travelEstimates only when passing in maneuvers with the same id
    */
   public updateManeuvers(maneuvers: AutoManeuver) {
+    this.assertConnected();
+
     if (Array.isArray(maneuvers)) {
       const nitroManeuvers = maneuvers.reduce((acc, maneuver) => {
         if (maneuver == null) {
@@ -334,10 +354,14 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * or use this to start a navigation session without asking the user
    */
   public startNavigation(trip: TripConfig) {
+    this.assertConnected();
+
     HybridMapTemplate.startNavigation(this.id, trip);
   }
 
   public stopNavigation() {
+    this.assertConnected();
+
     HybridMapTemplate.stopNavigation(this.id);
   }
 }

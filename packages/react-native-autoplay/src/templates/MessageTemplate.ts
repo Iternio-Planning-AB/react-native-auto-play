@@ -74,8 +74,16 @@ export type MessageTemplateConfig = Omit<
 export class MessageTemplate {
   private template = this;
   public id = uuid.v4();
+  public isConnected = HybridAutoPlay.isConnected();
 
   constructor(config: MessageTemplateConfig) {
+    this.assertConnected();
+
+    const removeDisconnectListener = HybridAutoPlay.addListener('didDisconnect', () => {
+      this.isConnected = false;
+      removeDisconnectListener();
+    });
+
     const { headerActions, image, mapConfig, actions, ...rest } = config;
 
     const platformActions =
@@ -100,10 +108,18 @@ export class MessageTemplate {
     HybridMessageTemplate.createMessageTemplate(nitroConfig);
   }
 
+  public assertConnected() {
+    if (!this.isConnected) {
+      throw new Error(`Template '${this.id}' used after disconnect!`);
+    }
+  }
+
   /**
    * push this template on the stack and show it to the user
    */
   public push() {
+    this.assertConnected();
+
     return HybridAutoPlay.pushTemplate(this.id);
   }
 }

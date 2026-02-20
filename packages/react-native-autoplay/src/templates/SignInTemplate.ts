@@ -97,6 +97,8 @@ export class SignInTemplate extends Template<
    * @returns A promise that resolves when the template is updated.
    */
   updateTemplate(updatedConfig: SignInTemplateUpdateConfig) {
+    this.assertConnected();
+
     const { headerActions, actions, ...rest } = updatedConfig;
     const nitroConfig: NitroSignInTemplateConfig & NitroTemplateConfig = {
       ...rest,

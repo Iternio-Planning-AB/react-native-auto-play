@@ -74,17 +74,33 @@ export interface NitroBaseMapTemplateConfig extends TemplateConfig {
 
 export class Template<TemplateConfigType, ActionsType> {
   public id!: string;
+  public isConnected = HybridAutoPlay.isConnected();
 
   constructor(config: TemplateConfig & TemplateConfigType) {
+    this.assertConnected();
+
     // templates that render on a surface provide their own id, others use a auto generated one
     this.id =
       'id' in config && config.id != null && typeof config.id === 'string' ? config.id : uuid.v4();
+
+    const removeDisconnectListener = HybridAutoPlay.addListener('didDisconnect', () => {
+      this.isConnected = false;
+      removeDisconnectListener();
+    });
+  }
+
+  public assertConnected() {
+    if (!this.isConnected) {
+      throw new Error(`Template '${this.id}' used after disconnect!`);
+    }
   }
 
   /**
    * set as root template on the stack
    */
   public setRootTemplate() {
+    this.assertConnected();
+
     return HybridAutoPlay.setRootTemplate(this.id);
   }
 
@@ -92,6 +108,8 @@ export class Template<TemplateConfigType, ActionsType> {
    * push this template on the stack and show it to the user
    */
   public push() {
+    this.assertConnected();
+
     return HybridAutoPlay.pushTemplate(this.id);
   }
 
@@ -99,10 +117,14 @@ export class Template<TemplateConfigType, ActionsType> {
    * remove all templates above this one from the stack
    */
   public popTo() {
+    this.assertConnected();
+
     return HybridAutoPlay.popToTemplate(this.id);
   }
 
   public setHeaderActions<T>(headerActions?: ActionsType) {
+    this.assertConnected();
+
     const nitroActions = NitroActionUtil.convert(
       this as unknown as T,
       headerActions as HeaderActions<T>

@@ -115,6 +115,8 @@ export class InformationTemplate extends Template<
   }
 
   public updateItems(items?: InformationItems) {
+    this.assertConnected();
+
     const section = this.getSection(items);
     return HybridInformationTemplate.updateInformationTemplateSections(
       this.id,

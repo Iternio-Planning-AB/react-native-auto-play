@@ -122,6 +122,8 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
   }
 
   public updateSections(sections?: Section<ListTemplate>) {
+    this.assertConnected();
+
     return HybridListTemplate.updateListTemplateSections(
       this.id,
       NitroSectionUtil.convert(this.template, sections)
