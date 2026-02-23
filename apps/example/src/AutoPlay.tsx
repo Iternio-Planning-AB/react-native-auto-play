@@ -40,7 +40,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
   const [signedIn, setSignedIn] = useState(Platform.OS !== 'android');
 
   useEffect(() => {
-    if (Platform.OS === 'android' && mapTemplate && !signedIn) {
+    if (Platform.OS === 'android' && mapTemplate.current && !signedIn) {
       const signInFinishedListener = () => {
         setTimeout(() => {
           // delay this a bit, so we show the alert when the map template is visible again, otherwise it will not be shown
@@ -49,7 +49,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       };
       AutoSignInTemplate.getTemplate(signInFinishedListener).push();
     }
-  }, [mapTemplate, signedIn]);
+  }, [mapTemplate.current, signedIn]);
 
   useEffect(() => {
     if (!signedIn) {
@@ -74,7 +74,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
     const timer = setInterval(() => setI((p) => p + 1), 1000);
 
     return () => clearInterval(timer);
-  }, [signedIn, mapTemplate]);
+  }, [signedIn, mapTemplate.current]);
 
   useEffect(() => {
     const listeners: Array<UnsubscribeListener> = [];
@@ -155,7 +155,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
     return () => {
       listeners.forEach((remove) => remove());
     };
-  }, [mapTemplate]);
+  }, [mapTemplate.current]);
 
   return (
     <SafeAreaView
