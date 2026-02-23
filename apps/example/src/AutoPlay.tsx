@@ -56,7 +56,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       return;
     }
 
-    mapTemplate?.showAlert({
+    mapTemplate.current?.showAlert({
       durationMs: 10 * 1000,
       id: 1,
       primaryAction: {
@@ -83,7 +83,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       startAppListening({
         actionCreator: actionStartNavigation,
         effect: (action, { dispatch }) => {
-          if (mapTemplate == null) {
+          if (mapTemplate.current == null) {
             return;
           }
 
@@ -98,9 +98,9 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
           }
 
           dispatch(setSelectedTrip({ routeId, tripId }));
-          mapTemplate.startNavigation({ id: tripId, routeChoice });
-          onTripStarted(tripId, routeId, mapTemplate);
-          updateTripEstimates(mapTemplate, 'initial');
+          mapTemplate.current.startNavigation({ id: tripId, routeChoice });
+          onTripStarted(tripId, routeId, mapTemplate.current);
+          updateTripEstimates(mapTemplate.current, 'initial');
         },
       })
     );
@@ -109,10 +109,10 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       startAppListening({
         actionCreator: actionStopNavigation,
         effect: () => {
-          if (mapTemplate == null) {
+          if (mapTemplate.current == null) {
             return;
           }
-          onTripFinished(mapTemplate);
+          onTripFinished(mapTemplate.current);
         },
       })
     );
@@ -121,14 +121,14 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       startAppListening({
         actionCreator: actionShowAlert,
         effect: (action) => {
-          if (mapTemplate == null) {
+          if (mapTemplate.current == null) {
             return;
           }
           const prio = action.payload;
           let timer: number | null = null;
           const id = Date.now();
 
-          mapTemplate.showAlert({
+          mapTemplate.current.showAlert({
             id,
             title: { text: `Alert ${id}` },
             subtitle: { text: `Prio: ${prio}` },
@@ -144,7 +144,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
             },
             onWillShow: () => {
               timer = setTimeout(() => {
-                mapTemplate.updateAlert(id, { text: `Alert ${Date.now()}` }, undefined);
+                mapTemplate.current?.updateAlert(id, { text: `Alert ${Date.now()}` }, undefined);
               }, 5000);
             },
           });

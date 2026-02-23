@@ -1,10 +1,17 @@
 import { useContext } from 'react';
-import { MapTemplateContext } from '../components/MapTemplateContext';
+import { type MapTemplateRef, MapTemplateContext } from '../components/MapTemplateContext';
+
+export type { MapTemplateRef } from '../components/MapTemplateContext';
 
 /**
- * provides access to the map template
- * obviously this works only on the map template component and its children
+ * Provides access to the map template via a ref.
+ * The returned ref's `.current` is null when disconnected, preventing
+ * native calls after CarPlay/Android Auto disconnects.
+ *
+ * Always check `ref.current` for null before use.
+ * In useEffect cleanups, reading `ref.current` will correctly return null
+ * if a disconnect happened before the cleanup runs.
  */
-export const useMapTemplate = () => {
+export const useMapTemplate = (): MapTemplateRef => {
   return useContext(MapTemplateContext);
 };
