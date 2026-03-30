@@ -27,9 +27,14 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
-        window.makeKeyAndVisible()
-
         self.window = window
+
+        // Defer makeKeyAndVisible to the next run loop iteration so UIKit can
+        // lay out the transplanted view hierarchy in the new scene-based window
+        // before the first render pass.
+        DispatchQueue.main.async {
+            window.makeKeyAndVisible()
+        }
 
         if let url = connectionOptions.urlContexts.first?.url {
             // Linking API -> on app start
