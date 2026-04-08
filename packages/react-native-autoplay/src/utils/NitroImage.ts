@@ -44,6 +44,20 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
+  // Remote URL images (http/https) bypass resolveAssetSource which only handles bundled assets.
+  // We pass the URI directly so native code (Fresco on Android, URLSession on iOS) can fetch it.
+  if (typeof image.image === 'object' && 'uri' in image.image && typeof image.image.uri === 'string'
+      && (image.image.uri.startsWith('http://') || image.image.uri.startsWith('https://'))) {
+    return {
+      height: 0,
+      scale: 1,
+      uri: image.image.uri,
+      width: 0,
+      packager_asset: false,
+      color: NitroColorUtil.convert(image.color),
+    };
+  }
+
   // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
   // so the input allows all optional parameters which are returned as is even though
   // the return type claims to not have any optional parameters...

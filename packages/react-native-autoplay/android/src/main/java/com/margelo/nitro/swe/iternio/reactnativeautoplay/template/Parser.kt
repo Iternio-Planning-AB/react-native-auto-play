@@ -518,9 +518,18 @@ object Parser {
             return bitmap
         }
 
-        val source = ImageSource(context, assetImage.uri)
-        val imageRequest = ImageRequestBuilder.newBuilderWithSource(source.uri).disableDiskCache()
-            .disableMemoryCache().build()
+        val isRemote = assetImage.uri.startsWith("http://") || assetImage.uri.startsWith("https://")
+        val imageUri = if (isRemote) {
+            android.net.Uri.parse(assetImage.uri)
+        } else {
+            ImageSource(context, assetImage.uri).uri
+        }
+        val requestBuilder = ImageRequestBuilder.newBuilderWithSource(imageUri)
+        if (!isRemote) {
+            // Only disable caching for local/bundled assets; remote images benefit from Fresco's cache
+            requestBuilder.disableDiskCache().disableMemoryCache()
+        }
+        val imageRequest = requestBuilder.build()
 
         val dataSource = Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
         val result = DataSources.waitForFinalResult(dataSource)

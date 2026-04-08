@@ -763,25 +763,53 @@ class Parser {
         return nil
     }
 
+    // MARK: - Remote image cache
+    private static let remoteImageCache = NSCache<NSString, UIImage>()
+
     static func parseAssetImage(
         assetImage: AssetImage,
         traitCollection: UITraitCollection
     ) -> UIImage? {
-        let uiImage = NitroConvert.uiImage([
-            "height": assetImage.height, "width": assetImage.width,
-            "uri": assetImage.uri, "scale": assetImage.scale,
-            "__packager_asset": assetImage.packager_asset,
-        ])
+        let uiImage: UIImage?
+
+        if assetImage.uri.hasPrefix("http://") || assetImage.uri.hasPrefix("https://") {
+            uiImage = loadRemoteImage(uri: assetImage.uri)
+        } else {
+            uiImage = NitroConvert.uiImage([
+                "height": assetImage.height, "width": assetImage.width,
+                "uri": assetImage.uri, "scale": assetImage.scale,
+                "__packager_asset": assetImage.packager_asset,
+            ])
+        }
+
+        guard let image = uiImage else { return nil }
 
         guard let color = assetImage.color else {
-            return uiImage
+            return image
         }
 
         return getTintedImageAsset(
             color: color,
-            uiImage: uiImage,
+            uiImage: image,
             traitCollection: traitCollection
         )
+    }
+
+    /// Synchronously loads an image from a remote URL with in-memory caching.
+    /// Uses Data(contentsOf:) for simplicity — matches Android's synchronous Fresco approach.
+    private static func loadRemoteImage(uri: String) -> UIImage? {
+        let cacheKey = uri as NSString
+        if let cached = remoteImageCache.object(forKey: cacheKey) {
+            return cached
+        }
+
+        guard let url = URL(string: uri),
+              let data = try? Data(contentsOf: url),
+              let image = UIImage(data: data)
+        else { return nil }
+
+        remoteImageCache.setObject(image, forKey: cacheKey)
+        return image
     }
 
     static func getTintedImageAsset(
