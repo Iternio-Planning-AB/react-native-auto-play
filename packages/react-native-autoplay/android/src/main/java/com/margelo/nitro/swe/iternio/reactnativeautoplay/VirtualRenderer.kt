@@ -6,6 +6,7 @@ import android.view.ContextThemeWrapper
 import android.graphics.Color
 import android.graphics.Rect
 import android.hardware.display.DisplayManager
+import android.hardware.display.VirtualDisplay
 import android.os.Bundle
 import android.util.Log
 import android.view.Display
@@ -28,6 +29,7 @@ import com.facebook.react.runtime.ReactSurfaceView
 import com.facebook.react.uimanager.DisplayMetricsHolder
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
+import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.Debouncer
@@ -48,7 +50,7 @@ class VirtualRenderer(
         return ::fabricUiManager.isInitialized
     }
 
-    private lateinit var display: Display
+    private lateinit var virtualDisplay: VirtualDisplay
     private lateinit var reactContext: ReactContext
 
     private lateinit var reactSurfaceImpl: ReactSurfaceImpl
@@ -96,7 +98,7 @@ class VirtualRenderer(
                 }
 
                 val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-                val virtualDisplay = manager.createVirtualDisplay(
+                virtualDisplay = manager.createVirtualDisplay(
                     moduleName,
                     surfaceContainer.width,
                     surfaceContainer.height,
@@ -105,7 +107,6 @@ class VirtualRenderer(
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION,
                 )
 
-                display = virtualDisplay.display
                 height = surfaceContainer.height
                 width = surfaceContainer.width
 
@@ -248,7 +249,7 @@ class VirtualRenderer(
     }
 
     private fun initRenderer() {
-        if (!this::display.isInitialized) {
+        if (!this::virtualDisplay.isInitialized) {
             return
         }
 
@@ -277,7 +278,7 @@ class VirtualRenderer(
         }
 
         FabricMapPresentation(
-            context, display, height, width, initialProperties, reactNativeScale
+            context, virtualDisplay.display, height, width, initialProperties, reactNativeScale
         ).show()
     }
 
@@ -407,6 +408,23 @@ class VirtualRenderer(
         })
     }
 
+    private fun stop() {
+        virtualDisplay.release()
+
+        val context = NitroModules.applicationContext ?: return
+
+        val uiManager = UIManagerHelper.getUIManager(
+            context, UIManagerType.FABRIC
+        ) as? FabricUIManager? ?: return
+
+        val surfaceId = reactSurfaceId ?: return
+        try {
+            uiManager.stopSurface(surfaceId)
+        } catch (_: AssertionError) {
+            // Fabric already invalidated
+        }
+    }
+
     companion object {
         const val TAG = "VirtualRenderer"
 
@@ -417,14 +435,7 @@ class VirtualRenderer(
         }
 
         fun removeRenderer(moduleId: String) {
-            val renderer = virtualRenderer[moduleId]
-
-            if (renderer?.isUiManagerInitialized() == true) {
-                renderer.reactSurfaceId?.let {
-                    renderer.fabricUiManager.stopSurface(it)
-                }
-            }
-
+            virtualRenderer[moduleId]?.stop()
             virtualRenderer.remove(moduleId)
         }
     }
