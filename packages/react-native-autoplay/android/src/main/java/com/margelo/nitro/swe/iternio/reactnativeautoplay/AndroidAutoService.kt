@@ -23,7 +23,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
@@ -64,7 +63,7 @@ class AndroidAutoService : CarAppService() {
     }
 
     override fun onCreateSession(sessionInfo: SessionInfo): Session {
-        val session = AndroidAutoSession(sessionInfo, application as ReactApplication)
+        val session = AndroidAutoSession(sessionInfo)
 
         if (sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER) {
             return session
@@ -82,6 +81,8 @@ class AndroidAutoService : CarAppService() {
         stopForeground(STOP_FOREGROUND_REMOVE)
 
         NitroModules.applicationContext?.removeLifecycleEventListener(reactLifecycleObserver)
+
+        VirtualRenderer.remove()
     }
 
     private val reactLifecycleObserver = object : LifecycleEventListener {

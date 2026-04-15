@@ -7,7 +7,6 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Bundle
-import android.util.Log
 import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.MainThread
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
@@ -31,9 +31,7 @@ import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.Debouncer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.floor
 
 class VirtualRenderer(
@@ -41,7 +39,7 @@ class VirtualRenderer(
     private val moduleName: String,
     private val isCluster: Boolean = false
 ) {
-    private lateinit var virtualDisplay: VirtualDisplay
+    private var virtualDisplay: VirtualDisplay? = null
 
     private lateinit var reactSurfaceImpl: ReactSurfaceImpl
     private var reactSurfaceView: ReactSurfaceView? = null
@@ -58,12 +56,12 @@ class VirtualRenderer(
     private val virtualScreenDensity = context.resources.displayMetrics.density
     val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
 
+    private fun isSurfaceReady(surfaceContainer: SurfaceContainer): Boolean {
+        return surfaceContainer.surface != null && surfaceContainer.dpi != 0 && surfaceContainer.height != 0 && surfaceContainer.width != 0
+    }
+
     init {
         virtualRenderer[moduleName] = this
-
-        CoroutineScope(Dispatchers.Main).launch {
-            initRenderer()
-        }
 
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
             val areaDebouncer = Debouncer(200)
@@ -75,10 +73,11 @@ class VirtualRenderer(
             var visibleArea = Rect(0, 0, 0, 0)
 
             override fun onSurfaceAvailable(surfaceContainer: SurfaceContainer) {
-                if (surfaceContainer.surface == null) {
-                    Log.w(TAG, "surface is null")
+                if (!isSurfaceReady(surfaceContainer)) {
                     return
                 }
+
+                virtualDisplay?.release() // in case this is called multiple times release the old instance
 
                 val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
                 virtualDisplay = manager.createVirtualDisplay(
@@ -90,12 +89,15 @@ class VirtualRenderer(
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION,
                 )
 
+                val display = virtualDisplay?.display ?: return
                 height = surfaceContainer.height
                 width = surfaceContainer.width
 
-                CoroutineScope(Dispatchers.Main).launch {
-                    initRenderer()
-                }
+                initRenderer(display)
+            }
+
+            override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
+                stop()
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
@@ -233,11 +235,7 @@ class VirtualRenderer(
         return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(marker)
     }
 
-    private fun initRenderer() {
-        if (!this::virtualDisplay.isInitialized) {
-            return
-        }
-
+    private fun initRenderer(display: Display) {
         val reactContext = NitroModules.applicationContext ?: return
 
         val fabricUiManager = UIManagerHelper.getUIManager(
@@ -263,7 +261,13 @@ class VirtualRenderer(
         val reactNativeScale = virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
 
         FabricMapPresentation(
-            reactContext, virtualDisplay.display, fabricUiManager, height, width, initialProperties, reactNativeScale
+            reactContext,
+            display,
+            fabricUiManager,
+            height,
+            width,
+            initialProperties,
+            reactNativeScale
         ).show()
     }
 
@@ -349,8 +353,7 @@ class VirtualRenderer(
     ): View {
         val root = FrameLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
 
@@ -391,35 +394,41 @@ class VirtualRenderer(
         })
     }
 
+    @MainThread
     private fun stop() {
-        virtualDisplay.release()
+        virtualDisplay?.release()
+        virtualDisplay = null
 
-        val context = NitroModules.applicationContext ?: return
+        val uiManager = NitroModules.applicationContext?.let {
+            UIManagerHelper.getUIManager(
+                it, UIManagerType.FABRIC
+            ) as? FabricUIManager?
+        }
 
-        val uiManager = UIManagerHelper.getUIManager(
-            context, UIManagerType.FABRIC
-        ) as? FabricUIManager? ?: return
-
-        val surfaceId = reactSurfaceId ?: return
         try {
-            uiManager.stopSurface(surfaceId)
+            reactSurfaceId?.let {
+                uiManager?.stopSurface(it)
+            }
         } catch (_: AssertionError) {
             // Fabric already invalidated
+        } finally {
+            reactSurfaceId = null
+            virtualRenderer.remove(moduleName)
         }
     }
 
     companion object {
         const val TAG = "VirtualRenderer"
 
-        private val virtualRenderer = mutableMapOf<String, VirtualRenderer>()
+        private val virtualRenderer = ConcurrentHashMap<String, VirtualRenderer>()
 
         fun hasRenderer(moduleId: String): Boolean {
             return virtualRenderer.contains(moduleId)
         }
 
-        fun removeRenderer(moduleId: String) {
-            virtualRenderer[moduleId]?.stop()
-            virtualRenderer.remove(moduleId)
+        fun remove() {
+            virtualRenderer.forEach { (_, renderer) -> renderer.stop() }
+            virtualRenderer.clear()
         }
     }
 }

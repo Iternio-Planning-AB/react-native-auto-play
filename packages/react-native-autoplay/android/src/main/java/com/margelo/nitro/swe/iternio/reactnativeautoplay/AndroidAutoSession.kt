@@ -12,7 +12,6 @@ import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -22,7 +21,7 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
-class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication: ReactApplication) :
+class AndroidAutoSession(sessionInfo: SessionInfo) :
     Session() {
 
     private val isCluster = sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER
@@ -120,7 +119,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         }
 
         val marker = AndroidAutoScreen.getScreen(ROOT_SESSION)?.marker ?: return
-        val config = AndroidAutoTemplate.getConfig(marker) as MapTemplateConfig? ?: return
+        val config = AndroidAutoTemplate.getConfig(marker) as? MapTemplateConfig? ?: return
 
         if (config.onAppearanceDidChange != null) {
             config.onAppearanceDidChange(colorScheme)
@@ -209,7 +208,6 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
 
         override fun onDestroy(owner: LifecycleOwner) {
             sessions.remove(moduleName)
-            VirtualRenderer.removeRenderer(moduleName)
             clusterId?.let {
                 HybridCluster.emit(ClusterEventName.DIDDISCONNECT, clusterId)
                 clusterSessions.remove(it)
