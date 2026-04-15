@@ -9,6 +9,13 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 class HybridAutoPlay : HybridAutoPlaySpec() {
+    init {
+        listeners.clear()
+        renderStateListeners.clear()
+        voiceInputListeners.clear()
+        safeAreaInsetsListeners.clear()
+    }
+
     override fun addListener(
         eventType: EventName, callback: () -> Unit
     ): () -> Unit {

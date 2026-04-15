@@ -6,6 +6,12 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 class HybridCluster : HybridClusterSpec() {
+    init {
+        listeners.clear()
+        eventQueue.clear()
+        colorSchemeListeners.clear()
+    }
+
     override fun addListener(
         eventType: ClusterEventName, callback: (String) -> Unit
     ): () -> Unit {
