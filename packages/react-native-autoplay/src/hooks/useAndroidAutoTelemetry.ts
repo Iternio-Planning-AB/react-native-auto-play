@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { type Permission, PermissionsAndroid } from 'react-native';
-import { HybridAndroidAutoTelemetry, HybridAutoPlay } from '..';
+import { HybridAndroidAutoTelemetry } from '../hybrid/HybridAndroidAutoTelemetry';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 
 import type { AndroidAutoPermissions, Telemetry } from '../types/Telemetry';
 

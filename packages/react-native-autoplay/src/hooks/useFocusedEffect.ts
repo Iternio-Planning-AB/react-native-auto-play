@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HybridAutoPlay } from '..';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 
 /**
  * An effect hook that only runs when the CarPlay/Android Auto screen is visible to the user and dependencies have changed.

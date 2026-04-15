@@ -36,8 +36,9 @@
     "typescript": "tsc",
     "generate:fonts": "node ./assets/symbolFont/bundleAsset.js",
     "specs": "nitrogen --logLevel=\"debug\"",
-    "prepare": "tsc && nitrogen && npm run generate:fonts",
-    "swift:format": "swift-format format ./ios --in-place --recursive"
+    "prepare": "yarn circular && tsc && nitrogen && npm run generate:fonts",
+    "swift:format": "swift-format format ./ios --in-place --recursive",
+    "circular": "dpdm ./src/* --circular --exit-code circular:1 --no-tree --warning=false --transform"
   },
   "keywords": [
     "react-native",
@@ -60,6 +61,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/react": "^19.1.03",
+    "dpdm": "^4.0.1",
     "nitrogen": "^0.35.3",
     "typescript": "^5.8.3"
   },

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { HybridAutoPlay, type Location } from '..';
+import type { Location } from '..';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 
 export const useVoiceInput = () => {
   const [isConnected, setIsConnected] = useState(false);

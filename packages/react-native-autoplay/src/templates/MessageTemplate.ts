@@ -1,14 +1,14 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import uuid from 'react-native-uuid';
-import {
-  type AutoImage,
-  type BaseMapTemplateConfig,
-  type CustomActionButtonAndroid,
-  type HeaderActionsAndroid,
-  HybridAutoPlay,
-  type TextButton,
+import type {
+  AutoImage,
+  BaseMapTemplateConfig,
+  CustomActionButtonAndroid,
+  HeaderActionsAndroid,
+  TextButton,
 } from '..';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MessageTemplate as NitroMessageTemplate } from '../specs/MessageTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';

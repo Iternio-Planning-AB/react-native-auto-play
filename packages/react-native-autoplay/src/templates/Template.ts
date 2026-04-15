@@ -1,5 +1,5 @@
 import uuid from 'react-native-uuid';
-import { HybridAutoPlay } from '..';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { ActionButtonAndroid, ActionButtonIos, AppButton, BackButton } from '../types/Button';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import type { NitroMapButton } from '../utils/NitroMapButton';

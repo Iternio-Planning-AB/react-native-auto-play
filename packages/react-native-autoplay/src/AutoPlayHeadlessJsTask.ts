@@ -1,19 +1,22 @@
 import { AppRegistry, Platform, type Task, type TaskProvider } from 'react-native';
-import { HybridAutoPlay } from '.';
+import type { AutoPlay as NitroAutoPlay } from './specs/AutoPlay.nitro';
 
-const taskProvider: TaskProvider = (): Task => () =>
-  new Promise((resolve) => {
-    const remove = HybridAutoPlay.addListener('didDisconnect', () => {
-      resolve();
-      remove();
+const createTaskProvider =
+  (hybridAutoPlay: NitroAutoPlay): TaskProvider =>
+  (): Task =>
+  () =>
+    new Promise((resolve) => {
+      const remove = hybridAutoPlay.addListener('didDisconnect', () => {
+        resolve();
+        remove();
+      });
     });
-  });
 
-const registerHeadlessTask = () => {
+const registerHeadlessTask = (hybridAutoPlay: NitroAutoPlay) => {
   if (Platform.OS !== 'android') {
     return;
   }
-  AppRegistry.registerHeadlessTask('AndroidAutoHeadlessJsTask', taskProvider);
+  AppRegistry.registerHeadlessTask('AndroidAutoHeadlessJsTask', createTaskProvider(hybridAutoPlay));
 };
 
 export default { registerHeadlessTask };
