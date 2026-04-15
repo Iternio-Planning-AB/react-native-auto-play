@@ -208,6 +208,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
 
         override fun onDestroy(owner: LifecycleOwner) {
             sessions.remove(moduleName)
+            VirtualRenderer.removeRenderer(moduleName)
             clusterId?.let {
                 HybridCluster.emit(ClusterEventName.DIDDISCONNECT, clusterId)
                 clusterSessions.remove(it)

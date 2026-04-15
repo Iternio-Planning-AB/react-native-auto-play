@@ -77,8 +77,6 @@ class VirtualRenderer(
                     return
                 }
 
-                virtualDisplay?.release() // in case this is called multiple times release the old instance
-
                 val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
                 virtualDisplay = manager.createVirtualDisplay(
                     moduleName,
@@ -97,7 +95,8 @@ class VirtualRenderer(
             }
 
             override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
-                stop()
+                virtualDisplay?.release()
+                virtualDisplay = null
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
@@ -426,9 +425,9 @@ class VirtualRenderer(
             return virtualRenderer.contains(moduleId)
         }
 
-        fun remove() {
-            virtualRenderer.forEach { (_, renderer) -> renderer.stop() }
-            virtualRenderer.clear()
+        fun removeRenderer(moduleId: String) {
+            virtualRenderer[moduleId]?.stop()
+            virtualRenderer.remove(moduleId)
         }
     }
 }

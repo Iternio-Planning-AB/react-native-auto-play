@@ -81,8 +81,6 @@ class AndroidAutoService : CarAppService() {
         stopForeground(STOP_FOREGROUND_REMOVE)
 
         NitroModules.applicationContext?.removeLifecycleEventListener(reactLifecycleObserver)
-
-        VirtualRenderer.remove()
     }
 
     private val reactLifecycleObserver = object : LifecycleEventListener {
