@@ -29,4 +29,13 @@ export type AutoImage =
        */
       color?: ThemedColor | string;
       type: 'asset';
+    }
+  | {
+      /** HTTPS URL to a remote image. HTTP is not supported (blocked by App Transport Security). */
+      uri: string;
+      /**
+       * if specified the image gets tinted, if not it will just use the original image
+       */
+      color?: ThemedColor | string;
+      type: 'remote';
     };

@@ -518,40 +518,69 @@ object Parser {
             return bitmap
         }
 
-        val isRemote = assetImage.uri.startsWith("http://") || assetImage.uri.startsWith("https://")
-        val imageUri = if (isRemote) {
+        val isNetworkUri = assetImage.uri.startsWith("https://")
+        val imageUri = if (isNetworkUri) {
             android.net.Uri.parse(assetImage.uri)
         } else {
             ImageSource(context, assetImage.uri).uri
         }
-        val requestBuilder = ImageRequestBuilder.newBuilderWithSource(imageUri)
-        if (!isRemote) {
-            // Only disable caching for local/bundled assets; remote images benefit from Fresco's cache
-            requestBuilder.disableDiskCache().disableMemoryCache()
-        }
-        val imageRequest = requestBuilder.build()
+        // Disable Fresco's own caching — BitmapCache handles all caching uniformly
+        val imageRequest = ImageRequestBuilder.newBuilderWithSource(imageUri)
+            .disableDiskCache().disableMemoryCache().build()
 
-        val dataSource = Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
-        val result = DataSources.waitForFinalResult(dataSource)
-
-        val image = result?.get()
-        try {
-            if (image is CloseableBitmap) {
-                bitmap = image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
-            } else if (image is CloseableXml) {
-                val drawable = image.buildDrawable()
-                bitmap = drawable?.toBitmap(
-                    width = image.width, height = image.height, Bitmap.Config.ARGB_8888
-                )
+        if (isNetworkUri) {
+            // Network images: fetch with 10s timeout to avoid blocking indefinitely
+            var fetchedBitmap: Bitmap? = null
+            val thread = Thread {
+                val ds = try {
+                    Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
+                } catch (_: Exception) { return@Thread }
+                val res = try {
+                    DataSources.waitForFinalResult(ds)
+                } catch (_: Exception) { ds.close(); return@Thread }
+                val img = res?.get()
+                try {
+                    if (img is CloseableBitmap) {
+                        fetchedBitmap = img.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+                    } else if (img is CloseableXml) {
+                        val drawable = img.buildDrawable()
+                        fetchedBitmap = drawable?.toBitmap(width = img.width, height = img.height, Bitmap.Config.ARGB_8888)
+                    }
+                } finally {
+                    img?.close()
+                    res?.close()
+                    ds.close()
+                }
             }
-        } finally {
-            image?.close()
-            result?.close()
-            dataSource.close()
-        }
-
-        if (bitmap == null) {
-            return null
+            thread.start()
+            thread.join(10_000L)
+            if (thread.isAlive) {
+                thread.interrupt()
+                return null
+            }
+            bitmap = fetchedBitmap ?: return null
+        } else {
+            // Bundled assets: synchronous, no timeout needed
+            val dataSource = try {
+                Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
+            } catch (_: Exception) { return null }
+            val result = try {
+                DataSources.waitForFinalResult(dataSource)
+            } catch (_: Exception) { dataSource.close(); return null }
+            val image = result?.get()
+            try {
+                if (image is CloseableBitmap) {
+                    bitmap = image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+                } else if (image is CloseableXml) {
+                    val drawable = image.buildDrawable()
+                    bitmap = drawable?.toBitmap(width = image.width, height = image.height, Bitmap.Config.ARGB_8888)
+                }
+            } finally {
+                image?.close()
+                result?.close()
+                dataSource.close()
+            }
+            if (bitmap == null) return null
         }
 
         assetImage.color?.get(context)?.let { color ->

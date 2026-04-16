@@ -764,7 +764,12 @@ class Parser {
     }
 
     // MARK: - Remote image cache
-    private static let remoteImageCache = NSCache<NSString, UIImage>()
+    private static let remoteImageCache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = 50
+        cache.totalCostLimit = 8 * 1024 * 1024  // 8 MB, matching Android's BitmapCache
+        return cache
+    }()
 
     static func parseAssetImage(
         assetImage: AssetImage,
@@ -772,7 +777,7 @@ class Parser {
     ) -> UIImage? {
         let uiImage: UIImage?
 
-        if assetImage.uri.hasPrefix("http://") || assetImage.uri.hasPrefix("https://") {
+        if assetImage.uri.hasPrefix("https://") {
             uiImage = loadRemoteImage(uri: assetImage.uri)
         } else {
             uiImage = NitroConvert.uiImage([
@@ -795,20 +800,31 @@ class Parser {
         )
     }
 
-    /// Synchronously loads an image from a remote URL with in-memory caching.
-    /// Uses Data(contentsOf:) for simplicity — matches Android's synchronous Fresco approach.
+    /// Synchronously loads an image from a remote HTTPS URL with in-memory caching.
+    /// Uses URLSession with 10s timeout to avoid blocking indefinitely.
     private static func loadRemoteImage(uri: String) -> UIImage? {
         let cacheKey = uri as NSString
         if let cached = remoteImageCache.object(forKey: cacheKey) {
             return cached
         }
 
-        guard let url = URL(string: uri),
-              let data = try? Data(contentsOf: url),
-              let image = UIImage(data: data)
-        else { return nil }
+        guard let url = URL(string: uri) else { return nil }
 
-        remoteImageCache.setObject(image, forKey: cacheKey)
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 10
+        let session = URLSession(configuration: config)
+        var resultData: Data?
+        let semaphore = DispatchSemaphore(value: 0)
+        session.dataTask(with: url) { data, _, _ in
+            resultData = data
+            semaphore.signal()
+        }.resume()
+        _ = semaphore.wait(timeout: .now() + 10)
+
+        guard let data = resultData, let image = UIImage(data: data) else { return nil }
+
+        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+        remoteImageCache.setObject(image, forKey: cacheKey, cost: cost)
         return image
     }
 

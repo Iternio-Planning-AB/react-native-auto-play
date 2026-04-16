@@ -44,15 +44,14 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
-  // Remote URL images (http/https) bypass resolveAssetSource which only handles bundled assets.
+  // Remote HTTPS images bypass resolveAssetSource which only handles bundled assets.
   // We pass the URI directly so native code (Fresco on Android, URLSession on iOS) can fetch it.
-  if (typeof image.image === 'object' && 'uri' in image.image && typeof image.image.uri === 'string'
-      && (image.image.uri.startsWith('http://') || image.image.uri.startsWith('https://'))) {
+  if (image.type === 'remote') {
     return {
       height: 0,
       scale: 1,
-      uri: image.image.uri,
       width: 0,
+      uri: image.uri,
       packager_asset: false,
       color: NitroColorUtil.convert(image.color),
     };
