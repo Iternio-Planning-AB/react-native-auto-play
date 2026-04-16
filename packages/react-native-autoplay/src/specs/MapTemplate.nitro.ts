@@ -4,6 +4,7 @@ import type {
   TripSelectorCallback,
   VisibleTravelEstimate,
 } from '../templates/MapTemplate';
+import type { ManeuverState } from '../types/Maneuver';
 import type { AutoText } from '../types/Text';
 import type {
   TripConfig,
@@ -48,4 +49,5 @@ export interface MapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swi
   updateManeuvers(templateId: string, maneuvers: NitroManeuver): void;
   startNavigation(templateId: string, trip: TripConfig): void;
   stopNavigation(templateId: string): void;
+  setManeuverState(templateId: string, state: ManeuverState): void;
 }

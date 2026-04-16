@@ -154,4 +154,8 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun stopNavigation(templateId: String) {
         MapTemplate.stopNavigation()
     }
+
+    override fun setManeuverState(templateId: String, state: ManeuverState) {
+        // Android Auto does not have an equivalent to CPManeuverState
+    }
 }

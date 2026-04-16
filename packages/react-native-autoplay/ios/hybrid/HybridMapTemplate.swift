@@ -164,4 +164,11 @@ class HybridMapTemplate: HybridMapTemplateSpec {
             template.stopNavigation()
         }
     }
+
+    func setManeuverState(templateId: String, state: ManeuverState) throws {
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
+            template.setManeuverState(state: state)
+        }
+    }
 }
