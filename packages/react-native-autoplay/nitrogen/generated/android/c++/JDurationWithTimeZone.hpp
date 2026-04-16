@@ -21,7 +21,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JDurationWithTimeZone final: public jni::JavaClass<JDurationWithTimeZone> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/DurationWithTimeZone;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/DurationWithTimeZone;";
 
   public:
     /**

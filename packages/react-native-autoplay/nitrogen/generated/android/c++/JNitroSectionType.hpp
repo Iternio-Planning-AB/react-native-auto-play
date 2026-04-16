@@ -19,7 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JNitroSectionType final: public jni::JavaClass<JNitroSectionType> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroSectionType;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroSectionType;";
 
   public:
     /**

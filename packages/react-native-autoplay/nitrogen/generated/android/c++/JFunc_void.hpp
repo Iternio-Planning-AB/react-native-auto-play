@@ -23,7 +23,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void: public jni::JavaClass<JFunc_void> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void;";
 
   public:
     /**
@@ -59,7 +59,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_cxx;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_cxx::invoke_cxx)});
     }

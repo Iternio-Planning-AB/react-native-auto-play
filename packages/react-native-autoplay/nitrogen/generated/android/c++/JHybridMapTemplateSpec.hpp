@@ -18,33 +18,34 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
-  class JHybridMapTemplateSpec: public virtual HybridMapTemplateSpec, public virtual JHybridObject {
+  class JHybridMapTemplateSpec: public jni::HybridClass<JHybridMapTemplateSpec, JHybridObject>,
+                                public virtual HybridMapTemplateSpec {
   public:
-    struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMapTemplateSpec;";
-      std::shared_ptr<JHybridMapTemplateSpec> getJHybridMapTemplateSpec();
-    };
-    struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMapTemplateSpec$CxxPart;";
-      static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-      static void registerNatives();
-      using HybridBase::HybridBase;
-    protected:
-      std::shared_ptr<JHybridObject> createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) override;
-    };
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMapTemplateSpec;";
+    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
+    static void registerNatives();
+
+  protected:
+    // C++ constructor (called from Java via `initHybrid()`)
+    explicit JHybridMapTemplateSpec(jni::alias_ref<jhybridobject> jThis) :
+      HybridObject(HybridMapTemplateSpec::TAG),
+      HybridBase(jThis),
+      _javaPart(jni::make_global(jThis)) {}
 
   public:
-    explicit JHybridMapTemplateSpec(const jni::local_ref<JHybridMapTemplateSpec::JavaPart>& javaPart):
-      HybridObject(HybridMapTemplateSpec::TAG),
-      JHybridObject(javaPart),
-      _javaPart(jni::make_global(javaPart)) {}
     ~JHybridMapTemplateSpec() override {
       // Hermes GC can destroy JS objects on a non-JNI Thread.
       jni::ThreadScope::WithClassLoader([&] { _javaPart.reset(); });
     }
 
   public:
-    inline const jni::global_ref<JHybridMapTemplateSpec::JavaPart>& getJavaPart() const noexcept {
+    size_t getExternalMemorySize() noexcept override;
+    bool equals(const std::shared_ptr<HybridObject>& other) override;
+    void dispose() noexcept override;
+    std::string toString() override;
+
+  public:
+    inline const jni::global_ref<JHybridMapTemplateSpec::javaobject>& getJavaPart() const noexcept {
       return _javaPart;
     }
 
@@ -66,9 +67,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) override;
     void startNavigation(const std::string& templateId, const TripConfig& trip) override;
     void stopNavigation(const std::string& templateId) override;
+    void setManeuverState(const std::string& templateId, ManeuverState state) override;
 
   private:
-    jni::global_ref<JHybridMapTemplateSpec::JavaPart> _javaPart;
+    friend HybridBase;
+    using HybridBase::HybridBase;
+    jni::global_ref<JHybridMapTemplateSpec::javaobject> _javaPart;
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

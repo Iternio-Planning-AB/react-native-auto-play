@@ -57,7 +57,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JMessageTemplateConfig final: public jni::JavaClass<JMessageTemplateConfig> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/MessageTemplateConfig;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/MessageTemplateConfig;";
 
   public:
     /**

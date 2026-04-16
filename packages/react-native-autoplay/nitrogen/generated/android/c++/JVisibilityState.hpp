@@ -19,7 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JVisibilityState final: public jni::JavaClass<JVisibilityState> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/VisibilityState;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/VisibilityState;";
 
   public:
     /**

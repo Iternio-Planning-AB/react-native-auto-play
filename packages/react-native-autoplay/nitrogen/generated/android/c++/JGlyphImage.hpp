@@ -23,7 +23,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JGlyphImage final: public jni::JavaClass<JGlyphImage> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GlyphImage;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GlyphImage;";
 
   public:
     /**

@@ -40,7 +40,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JTripsConfig final: public jni::JavaClass<JTripsConfig> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripsConfig;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripsConfig;";
 
   public:
     /**

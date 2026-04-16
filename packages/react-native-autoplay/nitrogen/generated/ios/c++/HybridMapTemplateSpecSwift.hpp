@@ -98,6 +98,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Traffic
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
+// Forward declaration of `ManeuverState` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -148,6 +150,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "TrafficSide.hpp"
 #include "ManeuverType.hpp"
 #include "TripConfig.hpp"
+#include "ManeuverState.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -271,6 +274,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
     inline void stopNavigation(const std::string& templateId) override {
       auto __result = _swiftPart.stopNavigation(templateId);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setManeuverState(const std::string& templateId, ManeuverState state) override {
+      auto __result = _swiftPart.setManeuverState(templateId, static_cast<int>(state));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

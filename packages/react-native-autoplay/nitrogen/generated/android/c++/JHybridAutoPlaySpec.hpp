@@ -18,33 +18,34 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
-  class JHybridAutoPlaySpec: public virtual HybridAutoPlaySpec, public virtual JHybridObject {
+  class JHybridAutoPlaySpec: public jni::HybridClass<JHybridAutoPlaySpec, JHybridObject>,
+                             public virtual HybridAutoPlaySpec {
   public:
-    struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlaySpec;";
-      std::shared_ptr<JHybridAutoPlaySpec> getJHybridAutoPlaySpec();
-    };
-    struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlaySpec$CxxPart;";
-      static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-      static void registerNatives();
-      using HybridBase::HybridBase;
-    protected:
-      std::shared_ptr<JHybridObject> createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) override;
-    };
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlaySpec;";
+    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
+    static void registerNatives();
+
+  protected:
+    // C++ constructor (called from Java via `initHybrid()`)
+    explicit JHybridAutoPlaySpec(jni::alias_ref<jhybridobject> jThis) :
+      HybridObject(HybridAutoPlaySpec::TAG),
+      HybridBase(jThis),
+      _javaPart(jni::make_global(jThis)) {}
 
   public:
-    explicit JHybridAutoPlaySpec(const jni::local_ref<JHybridAutoPlaySpec::JavaPart>& javaPart):
-      HybridObject(HybridAutoPlaySpec::TAG),
-      JHybridObject(javaPart),
-      _javaPart(jni::make_global(javaPart)) {}
     ~JHybridAutoPlaySpec() override {
       // Hermes GC can destroy JS objects on a non-JNI Thread.
       jni::ThreadScope::WithClassLoader([&] { _javaPart.reset(); });
     }
 
   public:
-    inline const jni::global_ref<JHybridAutoPlaySpec::JavaPart>& getJavaPart() const noexcept {
+    size_t getExternalMemorySize() noexcept override;
+    bool equals(const std::shared_ptr<HybridObject>& other) override;
+    void dispose() noexcept override;
+    std::string toString() override;
+
+  public:
+    inline const jni::global_ref<JHybridAutoPlaySpec::javaobject>& getJavaPart() const noexcept {
       return _javaPart;
     }
 
@@ -67,7 +68,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     bool isConnected() override;
 
   private:
-    jni::global_ref<JHybridAutoPlaySpec::JavaPart> _javaPart;
+    friend HybridBase;
+    using HybridBase::HybridBase;
+    jni::global_ref<JHybridAutoPlaySpec::javaobject> _javaPart;
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

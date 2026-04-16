@@ -46,13 +46,6 @@ public extension AutoText {
   
   @inline(__always)
   var duration: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__duration) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__duration)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__duration.value
   }
 }

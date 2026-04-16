@@ -21,7 +21,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JAppFocusState final: public jni::JavaClass<JAppFocusState> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AppFocusState;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AppFocusState;";
 
   public:
     /**

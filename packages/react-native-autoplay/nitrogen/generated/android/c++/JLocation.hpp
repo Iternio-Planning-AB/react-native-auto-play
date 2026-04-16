@@ -21,7 +21,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JLocation final: public jni::JavaClass<JLocation> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Location;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Location;";
 
   public:
     /**

@@ -25,7 +25,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void_VisibilityState: public jni::JavaClass<JFunc_void_VisibilityState> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_VisibilityState;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_VisibilityState;";
 
   public:
     /**
@@ -61,7 +61,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_VisibilityState_cxx;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_VisibilityState_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_VisibilityState_cxx::invoke_cxx)});
     }

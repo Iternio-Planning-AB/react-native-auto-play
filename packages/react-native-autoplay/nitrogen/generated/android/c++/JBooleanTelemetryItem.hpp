@@ -21,7 +21,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JBooleanTelemetryItem final: public jni::JavaClass<JBooleanTelemetryItem> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/BooleanTelemetryItem;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/BooleanTelemetryItem;";
 
   public:
     /**

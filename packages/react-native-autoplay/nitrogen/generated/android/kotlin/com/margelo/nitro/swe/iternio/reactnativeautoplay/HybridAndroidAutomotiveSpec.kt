@@ -24,6 +24,23 @@ import com.margelo.nitro.core.HybridObject
   "LocalVariableName", "PropertyName", "PrivatePropertyName", "FunctionName"
 )
 abstract class HybridAndroidAutomotiveSpec: HybridObject() {
+  @DoNotStrip
+  private var mHybridData: HybridData = initHybrid()
+
+  init {
+    super.updateNative(mHybridData)
+  }
+
+  override fun updateNative(hybridData: HybridData) {
+    mHybridData = hybridData
+    super.updateNative(hybridData)
+  }
+
+  // Default implementation of `HybridObject.toString()`
+  override fun toString(): String {
+    return "[HybridObject AndroidAutomotive]"
+  }
+
   // Properties
   
 
@@ -63,21 +80,7 @@ abstract class HybridAndroidAutomotiveSpec: HybridObject() {
     return Func_void_java(__result)
   }
 
-  // Default implementation of `HybridObject.toString()`
-  override fun toString(): String {
-    return "[HybridObject AndroidAutomotive]"
-  }
-
-  // C++ backing class
-  @DoNotStrip
-  @Keep
-  protected open class CxxPart(javaPart: HybridAndroidAutomotiveSpec): HybridObject.CxxPart(javaPart) {
-    // C++ JHybridAndroidAutomotiveSpec::CxxPart::initHybrid(...)
-    external override fun initHybrid(): HybridData
-  }
-  override fun createCxxPart(): CxxPart {
-    return CxxPart(this)
-  }
+  private external fun initHybrid(): HybridData
 
   companion object {
     protected const val TAG = "HybridAndroidAutomotiveSpec"

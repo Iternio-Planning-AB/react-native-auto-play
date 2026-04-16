@@ -39,6 +39,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMessag
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
+// Forward declaration of `ManeuverState` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -59,6 +61,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "NitroLoadingManeuver.hpp"
 #include <variant>
 #include "TripConfig.hpp"
+#include "ManeuverState.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -103,6 +106,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       virtual void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) = 0;
       virtual void startNavigation(const std::string& templateId, const TripConfig& trip) = 0;
       virtual void stopNavigation(const std::string& templateId) = 0;
+      virtual void setManeuverState(const std::string& templateId, ManeuverState state) = 0;
 
     protected:
       // Hybrid Setup

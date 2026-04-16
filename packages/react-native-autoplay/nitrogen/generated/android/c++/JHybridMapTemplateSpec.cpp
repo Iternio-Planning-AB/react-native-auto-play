@@ -93,6 +93,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Traffic
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
+// Forward declaration of `ManeuverState` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
 
 #include "TripSelectorCallback.hpp"
 #include "JTripSelectorCallback.hpp"
@@ -203,34 +205,42 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "JNitroLoadingManeuver.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
+#include "ManeuverState.hpp"
+#include "JManeuverState.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  std::shared_ptr<JHybridMapTemplateSpec> JHybridMapTemplateSpec::JavaPart::getJHybridMapTemplateSpec() {
-    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
-    auto castHybridObject = std::dynamic_pointer_cast<JHybridMapTemplateSpec>(hybridObject);
-    if (castHybridObject == nullptr) [[unlikely]] {
-      throw std::runtime_error("Failed to downcast JHybridObject to JHybridMapTemplateSpec!");
-    }
-    return castHybridObject;
-  }
-
-  jni::local_ref<JHybridMapTemplateSpec::CxxPart::jhybriddata> JHybridMapTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  jni::local_ref<JHybridMapTemplateSpec::jhybriddata> JHybridMapTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  std::shared_ptr<JHybridObject> JHybridMapTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
-    auto castJavaPart = jni::dynamic_ref_cast<JHybridMapTemplateSpec::JavaPart>(javaPart);
-    if (castJavaPart == nullptr) [[unlikely]] {
-      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridMapTemplateSpec::JavaPart!");
-    }
-    return std::make_shared<JHybridMapTemplateSpec>(castJavaPart);
+  void JHybridMapTemplateSpec::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridMapTemplateSpec::initHybrid),
+    });
   }
 
-  void JHybridMapTemplateSpec::CxxPart::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridMapTemplateSpec::CxxPart::initHybrid),
-    });
+  size_t JHybridMapTemplateSpec::getExternalMemorySize() noexcept {
+    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
+    return method(_javaPart);
+  }
+
+  bool JHybridMapTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
+    if (auto otherCast = std::dynamic_pointer_cast<JHybridMapTemplateSpec>(other)) {
+      return _javaPart == otherCast->_javaPart;
+    }
+    return false;
+  }
+
+  void JHybridMapTemplateSpec::dispose() noexcept {
+    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
+    method(_javaPart);
+  }
+
+  std::string JHybridMapTemplateSpec::toString() {
+    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
+    auto javaString = method(_javaPart);
+    return javaString->toStdString();
   }
 
   // Properties
@@ -238,23 +248,23 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridMapTemplateSpec::createMapTemplate(const MapTemplateConfig& config) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JMapTemplateConfig> /* config */)>("createMapTemplate");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JMapTemplateConfig> /* config */)>("createMapTemplate");
     method(_javaPart, JMapTemplateConfig::fromCpp(config));
   }
   void JHybridMapTemplateSpec::showNavigationAlert(const std::string& templateId, const NitroNavigationAlert& alert) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroNavigationAlert> /* alert */)>("showNavigationAlert");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroNavigationAlert> /* alert */)>("showNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), JNitroNavigationAlert::fromCpp(alert));
   }
   void JHybridMapTemplateSpec::updateNavigationAlert(const std::string& templateId, double navigationAlertId, const AutoText& title, const std::optional<AutoText>& subtitle) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, double /* navigationAlertId */, jni::alias_ref<JAutoText> /* title */, jni::alias_ref<JAutoText> /* subtitle */)>("updateNavigationAlert");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, double /* navigationAlertId */, jni::alias_ref<JAutoText> /* title */, jni::alias_ref<JAutoText> /* subtitle */)>("updateNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), navigationAlertId, JAutoText::fromCpp(title), subtitle.has_value() ? JAutoText::fromCpp(subtitle.value()) : nullptr);
   }
   void JHybridMapTemplateSpec::dismissNavigationAlert(const std::string& templateId, double navigationAlertId) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, double /* navigationAlertId */)>("dismissNavigationAlert");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, double /* navigationAlertId */)>("dismissNavigationAlert");
     method(_javaPart, jni::make_jstring(templateId), navigationAlertId);
   }
   TripSelectorCallback JHybridMapTemplateSpec::showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted, const std::function<void()>& onBackPressed, const std::vector<NitroMapButton>& mapButtons) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JTripSelectorCallback>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripsConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */, jni::alias_ref<JFunc_void::javaobject> /* onBackPressed */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* mapButtons */)>("showTripSelector_cxx");
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JTripSelectorCallback>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripsConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */, jni::alias_ref<JFunc_void::javaobject> /* onBackPressed */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* mapButtons */)>("showTripSelector_cxx");
     auto __result = method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = trips.size();
       jni::local_ref<jni::JArrayClass<JTripsConfig>> __array = jni::JArrayClass<JTripsConfig>::newArray(__size);
@@ -277,11 +287,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     return __result->toCpp();
   }
   void JHybridMapTemplateSpec::hideTripSelector(const std::string& templateId) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("hideTripSelector");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("hideTripSelector");
     method(_javaPart, jni::make_jstring(templateId));
   }
   std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
     auto __result = method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
       size_t __size = buttons.value().size();
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
@@ -305,11 +315,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   void JHybridMapTemplateSpec::updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JVisibleTravelEstimate> /* visibleTravelEstimate */)>("updateVisibleTravelEstimate");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JVisibleTravelEstimate> /* visibleTravelEstimate */)>("updateVisibleTravelEstimate");
     method(_javaPart, jni::make_jstring(templateId), JVisibleTravelEstimate::fromCpp(visibleTravelEstimate));
   }
   void JHybridMapTemplateSpec::updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripPoint>> /* steps */)>("updateTravelEstimates");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripPoint>> /* steps */)>("updateTravelEstimates");
     method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = steps.size();
       jni::local_ref<jni::JArrayClass<JTripPoint>> __array = jni::JArrayClass<JTripPoint>::newArray(__size);
@@ -322,16 +332,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }());
   }
   void JHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
     method(_javaPart, jni::make_jstring(templateId), JNitroManeuver::fromCpp(maneuvers));
   }
   void JHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
     method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
   }
   void JHybridMapTemplateSpec::stopNavigation(const std::string& templateId) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");
     method(_javaPart, jni::make_jstring(templateId));
+  }
+  void JHybridMapTemplateSpec::setManeuverState(const std::string& templateId, ManeuverState state) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JManeuverState> /* state */)>("setManeuverState");
+    method(_javaPart, jni::make_jstring(templateId), JManeuverState::fromCpp(state));
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

@@ -18,33 +18,34 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
-  class JHybridSearchTemplateSpec: public virtual HybridSearchTemplateSpec, public virtual JHybridObject {
+  class JHybridSearchTemplateSpec: public jni::HybridClass<JHybridSearchTemplateSpec, JHybridObject>,
+                                   public virtual HybridSearchTemplateSpec {
   public:
-    struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSearchTemplateSpec;";
-      std::shared_ptr<JHybridSearchTemplateSpec> getJHybridSearchTemplateSpec();
-    };
-    struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSearchTemplateSpec$CxxPart;";
-      static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-      static void registerNatives();
-      using HybridBase::HybridBase;
-    protected:
-      std::shared_ptr<JHybridObject> createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) override;
-    };
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSearchTemplateSpec;";
+    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
+    static void registerNatives();
+
+  protected:
+    // C++ constructor (called from Java via `initHybrid()`)
+    explicit JHybridSearchTemplateSpec(jni::alias_ref<jhybridobject> jThis) :
+      HybridObject(HybridSearchTemplateSpec::TAG),
+      HybridBase(jThis),
+      _javaPart(jni::make_global(jThis)) {}
 
   public:
-    explicit JHybridSearchTemplateSpec(const jni::local_ref<JHybridSearchTemplateSpec::JavaPart>& javaPart):
-      HybridObject(HybridSearchTemplateSpec::TAG),
-      JHybridObject(javaPart),
-      _javaPart(jni::make_global(javaPart)) {}
     ~JHybridSearchTemplateSpec() override {
       // Hermes GC can destroy JS objects on a non-JNI Thread.
       jni::ThreadScope::WithClassLoader([&] { _javaPart.reset(); });
     }
 
   public:
-    inline const jni::global_ref<JHybridSearchTemplateSpec::JavaPart>& getJavaPart() const noexcept {
+    size_t getExternalMemorySize() noexcept override;
+    bool equals(const std::shared_ptr<HybridObject>& other) override;
+    void dispose() noexcept override;
+    std::string toString() override;
+
+  public:
+    inline const jni::global_ref<JHybridSearchTemplateSpec::javaobject>& getJavaPart() const noexcept {
       return _javaPart;
     }
 
@@ -58,7 +59,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::shared_ptr<Promise<void>> updateSearchResults(const std::string& templateId, const NitroSection& results) override;
 
   private:
-    jni::global_ref<JHybridSearchTemplateSpec::JavaPart> _javaPart;
+    friend HybridBase;
+    using HybridBase::HybridBase;
+    jni::global_ref<JHybridSearchTemplateSpec::javaobject> _javaPart;
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

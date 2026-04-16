@@ -23,7 +23,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JQrSignIn final: public jni::JavaClass<JQrSignIn> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/QrSignIn;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/QrSignIn;";
 
   public:
     /**

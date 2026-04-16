@@ -33,7 +33,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JNitroAttributedString final: public jni::JavaClass<JNitroAttributedString> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroAttributedString;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroAttributedString;";
 
   public:
     /**

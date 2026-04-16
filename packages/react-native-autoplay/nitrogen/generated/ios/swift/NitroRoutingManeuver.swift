@@ -179,14 +179,7 @@ public extension NitroRoutingManeuver {
   
   @inline(__always)
   var angle: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__angle) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__angle)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__angle.value
   }
   
   @inline(__always)
@@ -203,14 +196,7 @@ public extension NitroRoutingManeuver {
   
   @inline(__always)
   var exitNumber: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__exitNumber) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__exitNumber)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__exitNumber.value
   }
   
   @inline(__always)

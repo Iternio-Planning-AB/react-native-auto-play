@@ -59,7 +59,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JGridTemplateConfig final: public jni::JavaClass<JGridTemplateConfig> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GridTemplateConfig;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GridTemplateConfig;";
 
   public:
     /**

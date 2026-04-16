@@ -138,14 +138,7 @@ public extension NitroAction {
   
   @inline(__always)
   var flags: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__flags) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__flags)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__flags.value
   }
   
   @inline(__always)

@@ -24,7 +24,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JTripSelectorCallback final: public jni::JavaClass<JTripSelectorCallback> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripSelectorCallback;";
+    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripSelectorCallback;";
 
   public:
     /**

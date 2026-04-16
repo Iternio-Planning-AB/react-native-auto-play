@@ -291,14 +291,7 @@ public extension MapTemplateConfig {
   
   @inline(__always)
   var autoDismissMs: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__autoDismissMs) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__autoDismissMs)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__autoDismissMs.value
   }
   
   @inline(__always)
@@ -450,14 +443,7 @@ public extension MapTemplateConfig {
   
   @inline(__always)
   var panButtonScrollPercentage: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__panButtonScrollPercentage) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__panButtonScrollPercentage)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+    return self.__panButtonScrollPercentage.value
   }
   
   @inline(__always)
