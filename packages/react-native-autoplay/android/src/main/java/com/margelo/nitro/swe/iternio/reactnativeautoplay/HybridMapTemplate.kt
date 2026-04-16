@@ -13,7 +13,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
 
     override fun createMapTemplate(config: MapTemplateConfig) {
         val context = AndroidAutoSession.getCarContext(config.id) ?: throw IllegalArgumentException(
-            "createMapTemplate failed, carContext found"
+            "createMapTemplate failed, carContext not found"
         )
 
         val template = MapTemplate(context, config, initNavigationManager = true)
@@ -50,7 +50,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     ) {
         val carContext = AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
             ?: throw IllegalArgumentException(
-                "dismissNavigationAlert failed, carContext found"
+                "dismissNavigationAlert failed, carContext not found"
             )
         carContext.getCarService(AppManager::class.java).dismissAlert(navigationAlertId.toInt())
     }
