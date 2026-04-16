@@ -1,10 +1,15 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.os.Build
 import com.facebook.react.bridge.UiThreadUtil
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import com.margelo.nitro.core.ArrayBuffer
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
+import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -241,6 +246,51 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
+    override fun requestVoiceInputPermission(): Promise<Boolean> {
+        return Promise.async {
+            val carContext = AndroidAutoSession.getRootContext()
+                ?: throw IllegalStateException("requestVoiceInputPermission failed: car context not available")
+
+            suspendCoroutine { cont ->
+                carContext.requestPermissions(
+                    listOf(android.Manifest.permission.RECORD_AUDIO)
+                ) { approved, _ ->
+                    cont.resume(approved.contains(android.Manifest.permission.RECORD_AUDIO))
+                }
+            }
+        }
+    }
+
+    override fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?): Promise<ArrayBuffer> {
+        return Promise.async {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                throw UnsupportedOperationException("startVoiceInput requires at least API level ${Build.VERSION_CODES.O}")
+            }
+
+            val carContext = AndroidAutoSession.getRootContext()
+                ?: throw IllegalStateException("startVoiceInput failed: car context not available")
+
+            val manager = VoiceInputManager(carContext)
+            voiceInputManager = manager
+
+            try {
+                val pcmBytes = manager.start(
+                    silenceThresholdMs = silenceThresholdMs?.toLong() ?: 1_500L,
+                    maxDurationMs = maxDurationMs?.toLong() ?: 10_000L,
+                )
+                val directBuffer = ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
+                ArrayBuffer.wrap(directBuffer)
+            } finally {
+                voiceInputManager = null
+                manager.dispose()
+            }
+        }
+    }
+
+    override fun stopVoiceInput() {
+        voiceInputManager?.stop()
+    }
+
     companion object {
         const val TAG = "HybridAutoPlay"
 
@@ -250,6 +300,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
         private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
+        @Volatile private var voiceInputManager: VoiceInputManager? = null
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()

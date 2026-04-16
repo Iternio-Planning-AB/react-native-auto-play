@@ -12,6 +12,7 @@ import {
   type VisibleTravelEstimate,
 } from '@iternio/react-native-auto-play';
 import { Platform } from 'react-native';
+import { toWavBase64 } from '../audioUtils';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { getCarPlayDashboardButtons } from '../config/CarPlayDashboardButtons';
@@ -351,32 +352,44 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
-      name: 'ev_station',
+      name: 'mic',
       color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
       type: 'glyph',
     },
     onPress: (template) => {
-      var remaining = 10000;
-      const alert = AutoAlert(remaining);
-
-      alertTimer = setInterval(() => {
-        remaining -= 1000;
-        if (remaining > 0) {
-          template.updateAlert(
-            alert.id,
-            {
-              text: `alert ${remaining}ms`,
-            },
-            undefined
-          );
+      HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+        if (!isGranted) {
           return;
         }
-        if (alertTimer != null) {
-          clearInterval(alertTimer);
-        }
-      }, 1000);
-      template.showAlert(alert);
+
+        HybridAutoPlay.startVoiceInput().then((audio) => {
+          const encoded = toWavBase64(audio);
+
+          console.log(`received ${audio.byteLength} bytes`);
+          console.log(`echo "${encoded}" | base64 -d > recording.wav`);
+        });
+      });
+      // var remaining = 10000;
+      // const alert = AutoAlert(remaining);
+
+      // alertTimer = setInterval(() => {
+      //   remaining -= 1000;
+      //   if (remaining > 0) {
+      //     template.updateAlert(
+      //       alert.id,
+      //       {
+      //         text: `alert ${remaining}ms`,
+      //       },
+      //       undefined
+      //     );
+      //     return;
+      //   }
+      //   if (alertTimer != null) {
+      //     clearInterval(alertTimer);
+      //   }
+      // }, 1000);
+      // template.showAlert(alert);
     },
   },
   {

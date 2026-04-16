@@ -34,7 +34,8 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   ): CleanupCallback;
 
   /**
-   * Adds a listener for voice input events. Not implemented on iOS.
+   * Adds a listener for voice input events fired by the OS (Android Auto only).
+   * On iOS this is a no-op — use startVoiceInput instead.
    * @param callback the callback to receive the voice input
    * @returns callback to remove the listener
    * @namespace Android
@@ -42,6 +43,37 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   addListenerVoiceInput(
     callback: (coordinates: Location | undefined, query: string | undefined) => void
   ): CleanupCallback;
+
+  /**
+   * Request microphone permission from the user.
+   * On iOS: triggers the AVAudioSession record permission dialog.
+   * On Android: triggers the Car App Library permission request (shown on the phone).
+   * Returns true if permission was granted, false if denied.
+   * @namespace all
+   */
+  requestVoiceInputPermission(): Promise<boolean>;
+
+  /**
+   * Start an in-app voice recording session.
+   * On iOS: presents CPVoiceControlTemplate and begins capturing audio.
+   * On Android: acquires audio focus and begins capturing via CarAudioRecord.
+   * Resolves with the complete raw PCM buffer (16 kHz, 16-bit, mono) when
+   * stopVoiceInput() is called.
+   * Rejects if the microphone permission has not been granted or recording
+   * fails to start.
+   * @namespace all
+   */
+  startVoiceInput(silenceThresholdMs?: number, maxDurationMs?: number, listeningText?: string): Promise<ArrayBuffer>;
+
+  /**
+   * Stop the active voice recording session. Causes the Promise returned by
+   * startVoiceInput() to resolve with the recorded audio.
+   * On iOS: dismisses CPVoiceControlTemplate.
+   * On Android: releases audio focus.
+   * No-op if no recording is in progress.
+   * @namespace all
+   */
+  stopVoiceInput(): void;
 
   /**
    * sets the specified template as root template, initializes a new stack
