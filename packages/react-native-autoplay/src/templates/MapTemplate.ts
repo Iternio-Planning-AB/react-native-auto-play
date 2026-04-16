@@ -7,7 +7,7 @@ import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
-import type { AutoManeuver, ManeuverState } from '../types/Maneuver';
+import type { AutoManeuver } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
   TripConfig,
