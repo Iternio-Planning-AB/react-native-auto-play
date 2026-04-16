@@ -85,37 +85,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridGridTemplateSpec::jhybriddata> JHybridGridTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridGridTemplateSpec> JHybridGridTemplateSpec::JavaPart::getJHybridGridTemplateSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridGridTemplateSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridGridTemplateSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridGridTemplateSpec::CxxPart::jhybriddata> JHybridGridTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridGridTemplateSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridGridTemplateSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridGridTemplateSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridGridTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridGridTemplateSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridGridTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridGridTemplateSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridGridTemplateSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridGridTemplateSpec>(castJavaPart);
   }
 
-  void JHybridGridTemplateSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridGridTemplateSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridGridTemplateSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridGridTemplateSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -123,11 +117,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridGridTemplateSpec::createGridTemplate(const GridTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JGridTemplateConfig> /* config */)>("createGridTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JGridTemplateConfig> /* config */)>("createGridTemplate");
     method(_javaPart, JGridTemplateConfig::fromCpp(config));
   }
   std::shared_ptr<Promise<void>> JHybridGridTemplateSpec::updateGridTemplateButtons(const std::string& templateId, const std::vector<NitroGridButton>& buttons) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroGridButton>> /* buttons */)>("updateGridTemplateButtons");
     auto __result = method(_javaPart, jni::make_jstring(templateId), [&]() {
       size_t __size = buttons.size();
       jni::local_ref<jni::JArrayClass<JNitroGridButton>> __array = jni::JArrayClass<JNitroGridButton>::newArray(__size);

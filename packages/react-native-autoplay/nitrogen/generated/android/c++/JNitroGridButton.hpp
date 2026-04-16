@@ -39,7 +39,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JNitroGridButton final: public jni::JavaClass<JNitroGridButton> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroGridButton;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroGridButton;";
 
   public:
     /**

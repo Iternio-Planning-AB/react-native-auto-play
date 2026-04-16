@@ -25,7 +25,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void_Point_double: public jni::JavaClass<JFunc_void_Point_double> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_Point_double;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_Point_double;";
 
   public:
     /**
@@ -61,7 +61,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_Point_double_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_Point_double_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_Point_double_cxx::invoke_cxx)});
     }

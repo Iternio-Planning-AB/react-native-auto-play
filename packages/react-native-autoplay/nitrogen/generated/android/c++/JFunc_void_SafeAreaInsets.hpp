@@ -26,7 +26,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void_SafeAreaInsets: public jni::JavaClass<JFunc_void_SafeAreaInsets> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_SafeAreaInsets;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_SafeAreaInsets;";
 
   public:
     /**
@@ -62,7 +62,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_SafeAreaInsets_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_SafeAreaInsets_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_SafeAreaInsets_cxx::invoke_cxx)});
     }

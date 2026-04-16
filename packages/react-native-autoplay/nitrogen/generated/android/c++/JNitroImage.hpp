@@ -29,7 +29,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   class JNitroImage: public jni::JavaClass<JNitroImage> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage;";
 
     static jni::local_ref<JNitroImage> create_0(jni::alias_ref<JGlyphImage> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JGlyphImage>)>("create");
@@ -54,7 +54,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   namespace JNitroImage_impl {
     class First final: public jni::JavaClass<First, JNitroImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$First;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$First;";
     
       [[nodiscard]] jni::local_ref<JGlyphImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JGlyphImage>("value");
@@ -64,7 +64,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Second final: public jni::JavaClass<Second, JNitroImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$Second;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$Second;";
     
       [[nodiscard]] jni::local_ref<JAssetImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JAssetImage>("value");

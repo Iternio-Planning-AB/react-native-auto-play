@@ -22,7 +22,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JPermissionRequestResult final: public jni::JavaClass<JPermissionRequestResult> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/PermissionRequestResult;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/PermissionRequestResult;";
 
   public:
     /**

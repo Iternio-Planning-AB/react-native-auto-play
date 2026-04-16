@@ -35,7 +35,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void_std__optional_Telemetry_: public jni::JavaClass<JFunc_void_std__optional_Telemetry_> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry_;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry_;";
 
   public:
     /**
@@ -71,7 +71,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry__cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Telemetry__cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_std__optional_Telemetry__cxx::invoke_cxx)});
     }

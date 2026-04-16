@@ -43,7 +43,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   class JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn: public jni::JavaClass<JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn;";
 
     static jni::local_ref<JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> create_0(jni::alias_ref<JQrSignIn> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn(jni::alias_ref<JQrSignIn>)>("create");
@@ -78,7 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   namespace JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn_impl {
     class First final: public jni::JavaClass<First, JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$First;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$First;";
     
       [[nodiscard]] jni::local_ref<JQrSignIn> getValue() const {
         static const auto field = javaClassStatic()->getField<JQrSignIn>("value");
@@ -88,7 +88,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Second final: public jni::JavaClass<Second, JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Second;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Second;";
     
       [[nodiscard]] jni::local_ref<JPinSignIn> getValue() const {
         static const auto field = javaClassStatic()->getField<JPinSignIn>("value");
@@ -98,7 +98,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Third final: public jni::JavaClass<Third, JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Third;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Third;";
     
       [[nodiscard]] jni::local_ref<JInputSignIn> getValue() const {
         static const auto field = javaClassStatic()->getField<JInputSignIn>("value");
@@ -108,7 +108,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Fourth final: public jni::JavaClass<Fourth, JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Fourth;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn$Fourth;";
     
       [[nodiscard]] jni::local_ref<JGoogleSignIn> getValue() const {
         static const auto field = javaClassStatic()->getField<JGoogleSignIn>("value");

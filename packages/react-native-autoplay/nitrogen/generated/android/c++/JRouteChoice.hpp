@@ -38,7 +38,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JRouteChoice final: public jni::JavaClass<JRouteChoice> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/RouteChoice;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/RouteChoice;";
 
   public:
     /**

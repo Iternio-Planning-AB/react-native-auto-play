@@ -31,7 +31,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JInputSignIn final: public jni::JavaClass<JInputSignIn> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/InputSignIn;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/InputSignIn;";
 
   public:
     /**

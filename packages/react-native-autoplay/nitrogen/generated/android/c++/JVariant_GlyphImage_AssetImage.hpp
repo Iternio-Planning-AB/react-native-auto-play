@@ -29,7 +29,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   class JVariant_GlyphImage_AssetImage: public jni::JavaClass<JVariant_GlyphImage_AssetImage> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage;";
 
     static jni::local_ref<JVariant_GlyphImage_AssetImage> create_0(jni::alias_ref<JGlyphImage> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JVariant_GlyphImage_AssetImage(jni::alias_ref<JGlyphImage>)>("create");
@@ -54,7 +54,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   namespace JVariant_GlyphImage_AssetImage_impl {
     class First final: public jni::JavaClass<First, JVariant_GlyphImage_AssetImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage$First;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage$First;";
     
       [[nodiscard]] jni::local_ref<JGlyphImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JGlyphImage>("value");
@@ -64,7 +64,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Second final: public jni::JavaClass<Second, JVariant_GlyphImage_AssetImage> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage$Second;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Variant_GlyphImage_AssetImage$Second;";
     
       [[nodiscard]] jni::local_ref<JAssetImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JAssetImage>("value");

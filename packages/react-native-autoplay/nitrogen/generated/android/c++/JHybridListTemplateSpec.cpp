@@ -93,37 +93,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridListTemplateSpec::jhybriddata> JHybridListTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridListTemplateSpec> JHybridListTemplateSpec::JavaPart::getJHybridListTemplateSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridListTemplateSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridListTemplateSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridListTemplateSpec::CxxPart::jhybriddata> JHybridListTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridListTemplateSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridListTemplateSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridListTemplateSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridListTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridListTemplateSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridListTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridListTemplateSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridListTemplateSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridListTemplateSpec>(castJavaPart);
   }
 
-  void JHybridListTemplateSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridListTemplateSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridListTemplateSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridListTemplateSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -131,11 +125,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridListTemplateSpec::createListTemplate(const ListTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JListTemplateConfig> /* config */)>("createListTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JListTemplateConfig> /* config */)>("createListTemplate");
     method(_javaPart, JListTemplateConfig::fromCpp(config));
   }
   std::shared_ptr<Promise<void>> JHybridListTemplateSpec::updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroSection>> /* sections */)>("updateListTemplateSections");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroSection>> /* sections */)>("updateListTemplateSections");
     auto __result = method(_javaPart, jni::make_jstring(templateId), sections.has_value() ? [&]() {
       size_t __size = sections.value().size();
       jni::local_ref<jni::JArrayClass<JNitroSection>> __array = jni::JArrayClass<JNitroSection>::newArray(__size);

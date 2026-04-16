@@ -76,7 +76,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   class JNitroManeuver: public jni::JavaClass<JNitroManeuver> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver;";
 
     static jni::local_ref<JNitroManeuver> create_0(jni::alias_ref<jni::JArrayClass<JNitroRoutingManeuver>> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroManeuver(jni::alias_ref<jni::JArrayClass<JNitroRoutingManeuver>>)>("create");
@@ -115,7 +115,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   namespace JNitroManeuver_impl {
     class First final: public jni::JavaClass<First, JNitroManeuver> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$First;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$First;";
     
       [[nodiscard]] jni::local_ref<jni::JArrayClass<JNitroRoutingManeuver>> getValue() const {
         static const auto field = javaClassStatic()->getField<jni::JArrayClass<JNitroRoutingManeuver>>("value");
@@ -125,7 +125,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Second final: public jni::JavaClass<Second, JNitroManeuver> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Second;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Second;";
     
       [[nodiscard]] jni::local_ref<JNitroMessageManeuver> getValue() const {
         static const auto field = javaClassStatic()->getField<JNitroMessageManeuver>("value");
@@ -135,7 +135,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
     class Third final: public jni::JavaClass<Third, JNitroManeuver> {
     public:
-      static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Third;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroManeuver$Third;";
     
       [[nodiscard]] jni::local_ref<JNitroLoadingManeuver> getValue() const {
         static const auto field = javaClassStatic()->getField<JNitroLoadingManeuver>("value");

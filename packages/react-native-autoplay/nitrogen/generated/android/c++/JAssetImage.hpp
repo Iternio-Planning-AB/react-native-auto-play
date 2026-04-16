@@ -24,7 +24,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JAssetImage final: public jni::JavaClass<JAssetImage> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AssetImage;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AssetImage;";
 
   public:
     /**

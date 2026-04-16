@@ -23,7 +23,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JActiveCarUxRestrictions final: public jni::JavaClass<JActiveCarUxRestrictions> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/ActiveCarUxRestrictions;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/ActiveCarUxRestrictions;";
 
   public:
     /**

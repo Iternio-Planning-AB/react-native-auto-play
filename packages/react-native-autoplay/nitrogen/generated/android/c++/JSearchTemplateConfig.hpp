@@ -56,7 +56,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JSearchTemplateConfig final: public jni::JavaClass<JSearchTemplateConfig> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/SearchTemplateConfig;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/SearchTemplateConfig;";
 
   public:
     /**

@@ -80,37 +80,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSe
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridSearchTemplateSpec::jhybriddata> JHybridSearchTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridSearchTemplateSpec> JHybridSearchTemplateSpec::JavaPart::getJHybridSearchTemplateSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridSearchTemplateSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridSearchTemplateSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridSearchTemplateSpec::CxxPart::jhybriddata> JHybridSearchTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridSearchTemplateSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridSearchTemplateSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridSearchTemplateSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridSearchTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridSearchTemplateSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridSearchTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridSearchTemplateSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridSearchTemplateSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridSearchTemplateSpec>(castJavaPart);
   }
 
-  void JHybridSearchTemplateSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridSearchTemplateSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridSearchTemplateSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridSearchTemplateSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -118,11 +112,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridSearchTemplateSpec::createSearchTemplate(const SearchTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JSearchTemplateConfig> /* config */)>("createSearchTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JSearchTemplateConfig> /* config */)>("createSearchTemplate");
     method(_javaPart, JSearchTemplateConfig::fromCpp(config));
   }
   std::shared_ptr<Promise<void>> JHybridSearchTemplateSpec::updateSearchResults(const std::string& templateId, const NitroSection& results) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* results */)>("updateSearchResults");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* results */)>("updateSearchResults");
     auto __result = method(_javaPart, jni::make_jstring(templateId), JNitroSection::fromCpp(results));
     return [&]() {
       auto __promise = Promise<void>::create();

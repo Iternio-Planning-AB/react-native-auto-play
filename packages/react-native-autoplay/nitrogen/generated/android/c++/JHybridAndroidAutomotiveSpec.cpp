@@ -30,37 +30,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AppFocusSta
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridAndroidAutomotiveSpec::jhybriddata> JHybridAndroidAutomotiveSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridAndroidAutomotiveSpec> JHybridAndroidAutomotiveSpec::JavaPart::getJHybridAndroidAutomotiveSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridAndroidAutomotiveSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridAndroidAutomotiveSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridAndroidAutomotiveSpec::CxxPart::jhybriddata> JHybridAndroidAutomotiveSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridAndroidAutomotiveSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridAndroidAutomotiveSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridAndroidAutomotiveSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridAndroidAutomotiveSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridAndroidAutomotiveSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridAndroidAutomotiveSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridAndroidAutomotiveSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridAndroidAutomotiveSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridAndroidAutomotiveSpec>(castJavaPart);
   }
 
-  void JHybridAndroidAutomotiveSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridAndroidAutomotiveSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridAndroidAutomotiveSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridAndroidAutomotiveSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -68,7 +62,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   std::function<void()> JHybridAndroidAutomotiveSpec::registerCarUxRestrictionsListener(const std::function<void(const ActiveCarUxRestrictions& /* restrictions */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_ActiveCarUxRestrictions::javaobject> /* callback */)>("registerCarUxRestrictionsListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_ActiveCarUxRestrictions::javaobject> /* callback */)>("registerCarUxRestrictionsListener_cxx");
     auto __result = method(_javaPart, JFunc_void_ActiveCarUxRestrictions_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -81,12 +75,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   ActiveCarUxRestrictions JHybridAndroidAutomotiveSpec::getCarUxRestrictions() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JActiveCarUxRestrictions>()>("getCarUxRestrictions");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JActiveCarUxRestrictions>()>("getCarUxRestrictions");
     auto __result = method(_javaPart);
     return __result->toCpp();
   }
   std::function<void()> JHybridAndroidAutomotiveSpec::registerAppFocusListener(const std::function<void(const AppFocusState& /* state */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_AppFocusState::javaobject> /* callback */)>("registerAppFocusListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_AppFocusState::javaobject> /* callback */)>("registerAppFocusListener_cxx");
     auto __result = method(_javaPart, JFunc_void_AppFocusState_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -99,12 +93,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   AppFocusState JHybridAndroidAutomotiveSpec::getAppFocusState() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JAppFocusState>()>("getAppFocusState");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JAppFocusState>()>("getAppFocusState");
     auto __result = method(_javaPart);
     return __result->toCpp();
   }
   std::function<void()> JHybridAndroidAutomotiveSpec::requestAppFocus() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>()>("requestAppFocus_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>()>("requestAppFocus_cxx");
     auto __result = method(_javaPart);
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {

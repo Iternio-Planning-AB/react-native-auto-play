@@ -27,7 +27,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JNavigationAlertAction final: public jni::JavaClass<JNavigationAlertAction> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NavigationAlertAction;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NavigationAlertAction;";
 
   public:
     /**

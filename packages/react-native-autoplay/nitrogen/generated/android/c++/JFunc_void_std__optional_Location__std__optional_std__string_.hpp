@@ -27,7 +27,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JFunc_void_std__optional_Location__std__optional_std__string_: public jni::JavaClass<JFunc_void_std__optional_Location__std__optional_std__string_> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Location__std__optional_std__string_;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Location__std__optional_std__string_;";
 
   public:
     /**
@@ -63,7 +63,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
 
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Location__std__optional_std__string__cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Func_void_std__optional_Location__std__optional_std__string__cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_std__optional_Location__std__optional_std__string__cxx::invoke_cxx)});
     }

@@ -33,7 +33,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JTravelEstimates final: public jni::JavaClass<JTravelEstimates> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TravelEstimates;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TravelEstimates;";
 
   public:
     /**

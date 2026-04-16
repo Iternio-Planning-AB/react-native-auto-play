@@ -19,7 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JVisibleTravelEstimate final: public jni::JavaClass<JVisibleTravelEstimate> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/VisibleTravelEstimate;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/VisibleTravelEstimate;";
 
   public:
     /**

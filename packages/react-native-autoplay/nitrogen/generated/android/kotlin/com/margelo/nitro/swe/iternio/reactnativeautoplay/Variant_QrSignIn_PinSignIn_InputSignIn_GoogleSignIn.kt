@@ -25,14 +25,6 @@ sealed class Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn {
   @DoNotStrip
   data class Fourth(@DoNotStrip val value: GoogleSignIn): Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn()
 
-  @Deprecated("getAs() is not type-safe. Use fold/asFirstOrNull/asSecondOrNull instead.", level = DeprecationLevel.ERROR)
-  inline fun <reified T> getAs(): T? = when (this) {
-    is First -> value as? T
-    is Second -> value as? T
-    is Third -> value as? T
-    is Fourth -> value as? T
-  }
-
   val isFirst: Boolean
     get() = this is First
   val isSecond: Boolean

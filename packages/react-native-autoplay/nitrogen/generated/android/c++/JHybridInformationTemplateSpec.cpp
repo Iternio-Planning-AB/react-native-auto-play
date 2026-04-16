@@ -93,37 +93,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridInformationTemplateSpec::jhybriddata> JHybridInformationTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridInformationTemplateSpec> JHybridInformationTemplateSpec::JavaPart::getJHybridInformationTemplateSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridInformationTemplateSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridInformationTemplateSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridInformationTemplateSpec::CxxPart::jhybriddata> JHybridInformationTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridInformationTemplateSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridInformationTemplateSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridInformationTemplateSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridInformationTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridInformationTemplateSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridInformationTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridInformationTemplateSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridInformationTemplateSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridInformationTemplateSpec>(castJavaPart);
   }
 
-  void JHybridInformationTemplateSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridInformationTemplateSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridInformationTemplateSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridInformationTemplateSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -131,11 +125,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridInformationTemplateSpec::createInformationTemplate(const InformationTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JInformationTemplateConfig> /* config */)>("createInformationTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JInformationTemplateConfig> /* config */)>("createInformationTemplate");
     method(_javaPart, JInformationTemplateConfig::fromCpp(config));
   }
   std::shared_ptr<Promise<void>> JHybridInformationTemplateSpec::updateInformationTemplateSections(const std::string& templateId, const NitroSection& section) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* section */)>("updateInformationTemplateSections");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroSection> /* section */)>("updateInformationTemplateSections");
     auto __result = method(_javaPart, jni::make_jstring(templateId), JNitroSection::fromCpp(section));
     return [&]() {
       auto __promise = Promise<void>::create();

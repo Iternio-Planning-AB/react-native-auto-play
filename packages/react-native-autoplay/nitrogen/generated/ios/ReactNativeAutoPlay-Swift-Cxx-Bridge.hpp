@@ -277,7 +277,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline Location get_std__optional_Location_(const std::optional<Location>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::string>
@@ -292,7 +292,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>
@@ -363,7 +363,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const SafeAreaInsets& /* insets */)>
@@ -400,7 +400,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroColor>
@@ -415,7 +415,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NitroColor get_std__optional_NitroColor_(const std::optional<NitroColor>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::variant<GlyphImage, AssetImage>
@@ -459,7 +459,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::variant<GlyphImage, AssetImage> get_std__optional_std__variant_GlyphImage__AssetImage__(const std::optional<std::variant<GlyphImage, AssetImage>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroAlignment>
@@ -474,7 +474,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NitroAlignment get_std__optional_NitroAlignment_(const std::optional<NitroAlignment>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroButtonStyle>
@@ -489,7 +489,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NitroButtonStyle get_std__optional_NitroButtonStyle_(const std::optional<NitroButtonStyle>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroAction>
@@ -515,7 +515,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<NitroAction> get_std__optional_std__vector_NitroAction__(const std::optional<std::vector<NitroAction>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridAutoPlaySpec>
@@ -658,7 +658,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<NitroAttributedStringImage> get_std__optional_std__vector_NitroAttributedStringImage__(const std::optional<std::vector<NitroAttributedStringImage>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroAttributedString>
@@ -793,7 +793,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(std::optional<bool> /* animated */)> get_std__optional_std__function_void_std__optional_bool_____animated______(const std::optional<std::function<void(std::optional<bool> /* animated */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::function<void()>>
@@ -808,7 +808,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void()> get_std__optional_std__function_void____(const std::optional<std::function<void()>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Distance>
@@ -823,7 +823,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline Distance get_std__optional_Distance_(const std::optional<Distance>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroGridButton>
@@ -860,7 +860,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<NitroMapButton> get_std__optional_std__vector_NitroMapButton__(const std::optional<std::vector<NitroMapButton>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(bool /* isPanningInterfaceVisible */)>
@@ -897,7 +897,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(bool /* isPanningInterfaceVisible */)> get_std__optional_std__function_void_bool____isPanningInterfaceVisible______(const std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroBaseMapTemplateConfig>
@@ -912,7 +912,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NitroBaseMapTemplateConfig get_std__optional_NitroBaseMapTemplateConfig_(const std::optional<NitroBaseMapTemplateConfig>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridGridTemplateSpec>
@@ -939,7 +939,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline AutoText get_std__optional_AutoText_(const std::optional<AutoText>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::function<void(std::optional<bool> /* checked */)>>
@@ -954,7 +954,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(std::optional<bool> /* checked */)> get_std__optional_std__function_void_std__optional_bool_____checked______(const std::optional<std::function<void(std::optional<bool> /* checked */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroRow>
@@ -1003,7 +1003,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<NitroSection> get_std__optional_std__vector_NitroSection__(const std::optional<std::vector<NitroSection>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridListTemplateSpec>
@@ -1030,7 +1030,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline VisibleTravelEstimate get_std__optional_VisibleTravelEstimate_(const std::optional<VisibleTravelEstimate>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<Point>
@@ -1045,7 +1045,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline Point get_std__optional_Point_(const std::optional<Point>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>
@@ -1082,7 +1082,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> get_std__optional_std__function_void_const_Point_____translation_____const_std__optional_Point______velocity______(const std::optional<std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const Point& /* center */, double /* scale */)>
@@ -1119,7 +1119,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const Point& /* center */, double /* scale */)> get_std__optional_std__function_void_const_Point_____center_____double____scale______(const std::optional<std::function<void(const Point& /* center */, double /* scale */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const Point& /* center */)>
@@ -1156,7 +1156,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const Point& /* center */)> get_std__optional_std__function_void_const_Point_____center______(const std::optional<std::function<void(const Point& /* center */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::function<void(ColorScheme /* colorScheme */)>>
@@ -1171,7 +1171,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(ColorScheme /* colorScheme */)> get_std__optional_std__function_void_ColorScheme____colorScheme______(const std::optional<std::function<void(ColorScheme /* colorScheme */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<AlertActionStyle>
@@ -1186,7 +1186,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline AlertActionStyle get_std__optional_AlertActionStyle_(const std::optional<AlertActionStyle>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NavigationAlertAction>
@@ -1201,7 +1201,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NavigationAlertAction get_std__optional_NavigationAlertAction_(const std::optional<NavigationAlertAction>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(AlertDismissalReason /* reason */)>
@@ -1238,7 +1238,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(AlertDismissalReason /* reason */)> get_std__optional_std__function_void_AlertDismissalReason____reason______(const std::optional<std::function<void(AlertDismissalReason /* reason */)>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<TripPoint>
@@ -1308,7 +1308,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline TurnType get_std__optional_TurnType_(const std::optional<TurnType>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<double>
@@ -1334,7 +1334,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<double> get_std__optional_std__vector_double__(const std::optional<std::vector<double>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<OffRampType>
@@ -1349,7 +1349,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline OffRampType get_std__optional_OffRampType_(const std::optional<OffRampType>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<OnRampType>
@@ -1364,7 +1364,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline OnRampType get_std__optional_OnRampType_(const std::optional<OnRampType>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<ForkType>
@@ -1379,7 +1379,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline ForkType get_std__optional_ForkType_(const std::optional<ForkType>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<KeepType>
@@ -1394,7 +1394,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline KeepType get_std__optional_KeepType_(const std::optional<KeepType>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::variant<PreferredImageLane, ImageLane>
@@ -1449,7 +1449,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline LaneGuidance get_std__optional_LaneGuidance_(const std::optional<LaneGuidance>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::optional<std::vector<std::string>>
@@ -1464,7 +1464,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::vector<std::string> get_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
-    return *optional;
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroRoutingManeuver>

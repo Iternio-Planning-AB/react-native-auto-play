@@ -70,7 +70,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JNitroRoutingManeuver final: public jni::JavaClass<JNitroRoutingManeuver> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroRoutingManeuver;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroRoutingManeuver;";
 
   public:
     /**

@@ -63,7 +63,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JInformationTemplateConfig final: public jni::JavaClass<JInformationTemplateConfig> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/InformationTemplateConfig;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/InformationTemplateConfig;";
 
   public:
     /**

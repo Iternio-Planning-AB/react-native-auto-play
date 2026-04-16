@@ -30,7 +30,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JTelemetry final: public jni::JavaClass<JTelemetry> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Telemetry;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Telemetry;";
 
   public:
     /**

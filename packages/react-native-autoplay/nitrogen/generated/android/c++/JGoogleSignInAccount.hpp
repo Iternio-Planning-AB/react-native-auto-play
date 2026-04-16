@@ -22,7 +22,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JGoogleSignInAccount final: public jni::JavaClass<JGoogleSignInAccount> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GoogleSignInAccount;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/GoogleSignInAccount;";
 
   public:
     /**

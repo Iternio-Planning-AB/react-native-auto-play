@@ -26,7 +26,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JAutoText final: public jni::JavaClass<JAutoText> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AutoText;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/AutoText;";
 
   public:
     /**

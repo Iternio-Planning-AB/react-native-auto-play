@@ -18,34 +18,33 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
-  class JHybridAndroidAutoTelemetrySpec: public jni::HybridClass<JHybridAndroidAutoTelemetrySpec, JHybridObject>,
-                                         public virtual HybridAndroidAutoTelemetrySpec {
+  class JHybridAndroidAutoTelemetrySpec: public virtual HybridAndroidAutoTelemetrySpec, public virtual JHybridObject {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutoTelemetrySpec;";
-    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-    static void registerNatives();
+    struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutoTelemetrySpec;";
+      std::shared_ptr<JHybridAndroidAutoTelemetrySpec> getJHybridAndroidAutoTelemetrySpec();
+    };
+    struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutoTelemetrySpec$CxxPart;";
+      static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
+      static void registerNatives();
+      using HybridBase::HybridBase;
+    protected:
+      std::shared_ptr<JHybridObject> createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) override;
+    };
 
-  protected:
-    // C++ constructor (called from Java via `initHybrid()`)
-    explicit JHybridAndroidAutoTelemetrySpec(jni::alias_ref<jhybridobject> jThis) :
+  public:
+    explicit JHybridAndroidAutoTelemetrySpec(const jni::local_ref<JHybridAndroidAutoTelemetrySpec::JavaPart>& javaPart):
       HybridObject(HybridAndroidAutoTelemetrySpec::TAG),
-      HybridBase(jThis),
-      _javaPart(jni::make_global(jThis)) {}
-
-  public:
+      JHybridObject(javaPart),
+      _javaPart(jni::make_global(javaPart)) {}
     ~JHybridAndroidAutoTelemetrySpec() override {
       // Hermes GC can destroy JS objects on a non-JNI Thread.
       jni::ThreadScope::WithClassLoader([&] { _javaPart.reset(); });
     }
 
   public:
-    size_t getExternalMemorySize() noexcept override;
-    bool equals(const std::shared_ptr<HybridObject>& other) override;
-    void dispose() noexcept override;
-    std::string toString() override;
-
-  public:
-    inline const jni::global_ref<JHybridAndroidAutoTelemetrySpec::javaobject>& getJavaPart() const noexcept {
+    inline const jni::global_ref<JHybridAndroidAutoTelemetrySpec::JavaPart>& getJavaPart() const noexcept {
       return _javaPart;
     }
 
@@ -59,9 +58,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::shared_ptr<Promise<PermissionRequestResult>> requestAutomotivePermissions(const std::vector<std::string>& permissions, const std::string& message, const std::string& grantButtonText, const std::optional<std::string>& cancelButtonText) override;
 
   private:
-    friend HybridBase;
-    using HybridBase::HybridBase;
-    jni::global_ref<JHybridAndroidAutoTelemetrySpec::javaobject> _javaPart;
+    jni::global_ref<JHybridAndroidAutoTelemetrySpec::JavaPart> _javaPart;
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

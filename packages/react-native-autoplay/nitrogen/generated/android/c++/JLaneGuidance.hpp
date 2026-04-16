@@ -36,7 +36,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JLaneGuidance final: public jni::JavaClass<JLaneGuidance> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/LaneGuidance;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/LaneGuidance;";
 
   public:
     /**

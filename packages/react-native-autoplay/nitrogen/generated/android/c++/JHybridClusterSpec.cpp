@@ -58,37 +58,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridClusterSpec::jhybriddata> JHybridClusterSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridClusterSpec> JHybridClusterSpec::JavaPart::getJHybridClusterSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridClusterSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridClusterSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridClusterSpec::CxxPart::jhybriddata> JHybridClusterSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridClusterSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridClusterSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridClusterSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridClusterSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridClusterSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridClusterSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridClusterSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridClusterSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridClusterSpec>(castJavaPart);
   }
 
-  void JHybridClusterSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridClusterSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridClusterSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridClusterSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -96,7 +90,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   std::function<void()> JHybridClusterSpec::addListener(ClusterEventName eventType, const std::function<void(const std::string& /* clusterId */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JClusterEventName> /* eventType */, jni::alias_ref<JFunc_void_std__string::javaobject> /* callback */)>("addListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JClusterEventName> /* eventType */, jni::alias_ref<JFunc_void_std__string::javaobject> /* callback */)>("addListener_cxx");
     auto __result = method(_javaPart, JClusterEventName::fromCpp(eventType), JFunc_void_std__string_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -109,7 +103,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridClusterSpec::initRootView(const std::string& clusterId) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* clusterId */)>("initRootView");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* clusterId */)>("initRootView");
     auto __result = method(_javaPart, jni::make_jstring(clusterId));
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -124,7 +118,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   void JHybridClusterSpec::setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* clusterId */, jni::alias_ref<jni::JArrayClass<JNitroAttributedString>> /* attributedInactiveDescriptionVariants */)>("setAttributedInactiveDescriptionVariants");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* clusterId */, jni::alias_ref<jni::JArrayClass<JNitroAttributedString>> /* attributedInactiveDescriptionVariants */)>("setAttributedInactiveDescriptionVariants");
     method(_javaPart, jni::make_jstring(clusterId), [&]() {
       size_t __size = attributedInactiveDescriptionVariants.size();
       jni::local_ref<jni::JArrayClass<JNitroAttributedString>> __array = jni::JArrayClass<JNitroAttributedString>::newArray(__size);
@@ -137,7 +131,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }());
   }
   std::function<void()> JHybridClusterSpec::addListenerColorScheme(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ColorScheme::javaobject> /* callback */)>("addListenerColorScheme_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ColorScheme::javaobject> /* callback */)>("addListenerColorScheme_cxx");
     auto __result = method(_javaPart, JFunc_void_std__string_ColorScheme_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -150,7 +144,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridClusterSpec::addListenerZoom(const std::function<void(const std::string& /* clusterId */, ZoomEvent /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ZoomEvent::javaobject> /* callback */)>("addListenerZoom_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ZoomEvent::javaobject> /* callback */)>("addListenerZoom_cxx");
     auto __result = method(_javaPart, JFunc_void_std__string_ZoomEvent_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -163,7 +157,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridClusterSpec::addListenerCompass(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerCompass_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerCompass_cxx");
     auto __result = method(_javaPart, JFunc_void_std__string_bool_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -176,7 +170,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridClusterSpec::addListenerSpeedLimit(const std::function<void(const std::string& /* clusterId */, bool /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerSpeedLimit_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_bool::javaobject> /* callback */)>("addListenerSpeedLimit_cxx");
     auto __result = method(_javaPart, JFunc_void_std__string_bool_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {

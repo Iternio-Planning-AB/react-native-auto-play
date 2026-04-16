@@ -21,7 +21,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JTripPreviewTextConfiguration final: public jni::JavaClass<JTripPreviewTextConfiguration> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripPreviewTextConfiguration;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/TripPreviewTextConfiguration;";
 
   public:
     /**

@@ -31,7 +31,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JImageLane final: public jni::JavaClass<JImageLane> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/ImageLane;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/ImageLane;";
 
   public:
     /**

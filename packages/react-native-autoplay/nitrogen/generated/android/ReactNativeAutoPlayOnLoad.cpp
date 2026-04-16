@@ -46,51 +46,209 @@
 #include "JHybridSearchTemplateSpec.hpp"
 #include "JHybridSignInTemplateSpec.hpp"
 #include "JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount_.hpp"
+#include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
 int initialize(JavaVM* vm) {
+  return facebook::jni::initialize(vm, []() {
+    ::margelo::nitro::swe::iternio::reactnativeautoplay::registerAllNatives();
+  });
+}
+
+struct JHybridAutoPlaySpecImpl: public jni::JavaClass<JHybridAutoPlaySpecImpl, JHybridAutoPlaySpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlay;";
+  static std::shared_ptr<JHybridAutoPlaySpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAutoPlaySpecImpl::javaobject()>();
+    jni::local_ref<JHybridAutoPlaySpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAutoPlaySpec();
+  }
+};
+struct JHybridAndroidAutoTelemetrySpecImpl: public jni::JavaClass<JHybridAndroidAutoTelemetrySpecImpl, JHybridAndroidAutoTelemetrySpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutoTelemetry;";
+  static std::shared_ptr<JHybridAndroidAutoTelemetrySpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAndroidAutoTelemetrySpecImpl::javaobject()>();
+    jni::local_ref<JHybridAndroidAutoTelemetrySpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAndroidAutoTelemetrySpec();
+  }
+};
+struct JHybridAndroidAutomotiveSpecImpl: public jni::JavaClass<JHybridAndroidAutomotiveSpecImpl, JHybridAndroidAutomotiveSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutomotive;";
+  static std::shared_ptr<JHybridAndroidAutomotiveSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAndroidAutomotiveSpecImpl::javaobject()>();
+    jni::local_ref<JHybridAndroidAutomotiveSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAndroidAutomotiveSpec();
+  }
+};
+struct JHybridSignInTemplateSpecImpl: public jni::JavaClass<JHybridSignInTemplateSpecImpl, JHybridSignInTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSignInTemplate;";
+  static std::shared_ptr<JHybridSignInTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridSignInTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridSignInTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridSignInTemplateSpec();
+  }
+};
+struct JHybridListTemplateSpecImpl: public jni::JavaClass<JHybridListTemplateSpecImpl, JHybridListTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridListTemplate;";
+  static std::shared_ptr<JHybridListTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridListTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridListTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridListTemplateSpec();
+  }
+};
+struct JHybridInformationTemplateSpecImpl: public jni::JavaClass<JHybridInformationTemplateSpecImpl, JHybridInformationTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridInformationTemplate;";
+  static std::shared_ptr<JHybridInformationTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridInformationTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridInformationTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridInformationTemplateSpec();
+  }
+};
+struct JHybridGridTemplateSpecImpl: public jni::JavaClass<JHybridGridTemplateSpecImpl, JHybridGridTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridGridTemplate;";
+  static std::shared_ptr<JHybridGridTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridGridTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridGridTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridGridTemplateSpec();
+  }
+};
+struct JHybridMapTemplateSpecImpl: public jni::JavaClass<JHybridMapTemplateSpecImpl, JHybridMapTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMapTemplate;";
+  static std::shared_ptr<JHybridMapTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridMapTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridMapTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridMapTemplateSpec();
+  }
+};
+struct JHybridMessageTemplateSpecImpl: public jni::JavaClass<JHybridMessageTemplateSpecImpl, JHybridMessageTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMessageTemplate;";
+  static std::shared_ptr<JHybridMessageTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridMessageTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridMessageTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridMessageTemplateSpec();
+  }
+};
+struct JHybridSearchTemplateSpecImpl: public jni::JavaClass<JHybridSearchTemplateSpecImpl, JHybridSearchTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSearchTemplate;";
+  static std::shared_ptr<JHybridSearchTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridSearchTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridSearchTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridSearchTemplateSpec();
+  }
+};
+struct JHybridClusterSpecImpl: public jni::JavaClass<JHybridClusterSpecImpl, JHybridClusterSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridCluster;";
+  static std::shared_ptr<JHybridClusterSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridClusterSpecImpl::javaobject()>();
+    jni::local_ref<JHybridClusterSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridClusterSpec();
+  }
+};
+
+void registerAllNatives() {
   using namespace margelo::nitro;
   using namespace margelo::nitro::swe::iternio::reactnativeautoplay;
-  using namespace facebook;
 
-  return facebook::jni::initialize(vm, [] {
-    // Register native JNI methods
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutomotiveSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ActiveCarUxRestrictions_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AppFocusState_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutoTelemetrySpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Telemetry__cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlaySpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VisibilityState_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Location__std__optional_std__string__cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_SafeAreaInsets_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridClusterSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_ColorScheme_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_ZoomEvent_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_bool_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridGridTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_bool__cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_bool_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridInformationTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridListTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMapTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_double_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ColorScheme_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AlertDismissalReason_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_std__string_cxx::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMessageTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::registerNatives();
-    margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount__cxx::registerNatives();
+  // Register native JNI methods
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutomotiveSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ActiveCarUxRestrictions_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AppFocusState_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutoTelemetrySpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Telemetry__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlaySpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VisibilityState_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Location__std__optional_std__string__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_SafeAreaInsets_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridClusterSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_ColorScheme_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_ZoomEvent_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_bool_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridGridTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_bool__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_bool_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridInformationTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridListTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMapTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_double_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ColorScheme_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AlertDismissalReason_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_std__string_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMessageTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount__cxx::registerNatives();
 
-    // Register Nitro Hybrid Objects
-    
-  });
+  // Register Nitro Hybrid Objects
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AutoPlay",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAutoPlaySpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AndroidAutoTelemetry",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAndroidAutoTelemetrySpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AndroidAutomotive",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAndroidAutomotiveSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "SignInTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridSignInTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "ListTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridListTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "InformationTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridInformationTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "GridTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridGridTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "MapTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridMapTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "MessageTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridMessageTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "SearchTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridSearchTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "Cluster",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridClusterSpecImpl::create();
+    }
+  );
 }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

@@ -69,37 +69,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridAutoPlaySpec::jhybriddata> JHybridAutoPlaySpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridAutoPlaySpec> JHybridAutoPlaySpec::JavaPart::getJHybridAutoPlaySpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridAutoPlaySpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridAutoPlaySpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridAutoPlaySpec::CxxPart::jhybriddata> JHybridAutoPlaySpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridAutoPlaySpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridAutoPlaySpec::initHybrid),
-    });
-  }
-
-  size_t JHybridAutoPlaySpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridAutoPlaySpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridAutoPlaySpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridAutoPlaySpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridAutoPlaySpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridAutoPlaySpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridAutoPlaySpec>(castJavaPart);
   }
 
-  void JHybridAutoPlaySpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridAutoPlaySpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridAutoPlaySpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridAutoPlaySpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -107,7 +101,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   std::function<void()> JHybridAutoPlaySpec::addListener(EventName eventType, const std::function<void()>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JEventName> /* eventType */, jni::alias_ref<JFunc_void::javaobject> /* callback */)>("addListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JEventName> /* eventType */, jni::alias_ref<JFunc_void::javaobject> /* callback */)>("addListener_cxx");
     auto __result = method(_javaPart, JEventName::fromCpp(eventType), JFunc_void_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -120,7 +114,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridAutoPlaySpec::addListenerRenderState(const std::string& moduleName, const std::function<void(VisibilityState /* payload */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_VisibilityState::javaobject> /* callback */)>("addListenerRenderState_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_VisibilityState::javaobject> /* callback */)>("addListenerRenderState_cxx");
     auto __result = method(_javaPart, jni::make_jstring(moduleName), JFunc_void_VisibilityState_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -133,7 +127,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridAutoPlaySpec::addListenerVoiceInput(const std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__optional_Location__std__optional_std__string_::javaobject> /* callback */)>("addListenerVoiceInput_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__optional_Location__std__optional_std__string_::javaobject> /* callback */)>("addListenerVoiceInput_cxx");
     auto __result = method(_javaPart, JFunc_void_std__optional_Location__std__optional_std__string__cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -146,7 +140,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId));
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -161,7 +155,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::pushTemplate(const std::string& templateId) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("pushTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("pushTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId));
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -176,7 +170,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::popTemplate(std::optional<bool> animate) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popTemplate");
     auto __result = method(_javaPart, animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -191,7 +185,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::popToRootTemplate(std::optional<bool> animate) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popToRootTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JBoolean> /* animate */)>("popToRootTemplate");
     auto __result = method(_javaPart, animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -206,7 +200,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::popToTemplate(const std::string& templateId, std::optional<bool> animate) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JBoolean> /* animate */)>("popToTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JBoolean> /* animate */)>("popToTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId), animate.has_value() ? jni::JBoolean::valueOf(animate.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
@@ -221,7 +215,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::function<void()> JHybridAutoPlaySpec::addSafeAreaInsetsListener(const std::string& moduleName, const std::function<void(const SafeAreaInsets& /* insets */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_SafeAreaInsets::javaobject> /* callback */)>("addSafeAreaInsetsListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_SafeAreaInsets::javaobject> /* callback */)>("addSafeAreaInsetsListener_cxx");
     auto __result = method(_javaPart, jni::make_jstring(moduleName), JFunc_void_SafeAreaInsets_cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -234,7 +228,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroAction>> /* headerActions */)>("setTemplateHeaderActions");
     auto __result = method(_javaPart, jni::make_jstring(templateId), headerActions.has_value() ? [&]() {
       size_t __size = headerActions.value().size();
       jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
@@ -258,7 +252,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   bool JHybridAutoPlaySpec::isConnected() {
-    static const auto method = javaClassStatic()->getMethod<jboolean()>("isConnected");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jboolean()>("isConnected");
     auto __result = method(_javaPart);
     return static_cast<bool>(__result);
   }

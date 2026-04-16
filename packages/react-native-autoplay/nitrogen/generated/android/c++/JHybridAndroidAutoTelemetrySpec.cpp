@@ -44,37 +44,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct BooleanTele
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridAndroidAutoTelemetrySpec::jhybriddata> JHybridAndroidAutoTelemetrySpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridAndroidAutoTelemetrySpec> JHybridAndroidAutoTelemetrySpec::JavaPart::getJHybridAndroidAutoTelemetrySpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridAndroidAutoTelemetrySpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridAndroidAutoTelemetrySpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridAndroidAutoTelemetrySpec::CxxPart::jhybriddata> JHybridAndroidAutoTelemetrySpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridAndroidAutoTelemetrySpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridAndroidAutoTelemetrySpec::initHybrid),
-    });
-  }
-
-  size_t JHybridAndroidAutoTelemetrySpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridAndroidAutoTelemetrySpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridAndroidAutoTelemetrySpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridAndroidAutoTelemetrySpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridAndroidAutoTelemetrySpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridAndroidAutoTelemetrySpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridAndroidAutoTelemetrySpec>(castJavaPart);
   }
 
-  void JHybridAndroidAutoTelemetrySpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridAndroidAutoTelemetrySpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridAndroidAutoTelemetrySpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridAndroidAutoTelemetrySpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -82,7 +76,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   std::function<void()> JHybridAndroidAutoTelemetrySpec::registerTelemetryListener(const std::function<void(const std::optional<Telemetry>& /* tlm */)>& callback) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__optional_Telemetry_::javaobject> /* callback */)>("registerTelemetryListener_cxx");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__optional_Telemetry_::javaobject> /* callback */)>("registerTelemetryListener_cxx");
     auto __result = method(_javaPart, JFunc_void_std__optional_Telemetry__cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -95,7 +89,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }();
   }
   std::shared_ptr<Promise<PermissionRequestResult>> JHybridAndroidAutoTelemetrySpec::requestAutomotivePermissions(const std::vector<std::string>& permissions, const std::string& message, const std::string& grantButtonText, const std::optional<std::string>& cancelButtonText) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JArrayClass<jni::JString>> /* permissions */, jni::alias_ref<jni::JString> /* message */, jni::alias_ref<jni::JString> /* grantButtonText */, jni::alias_ref<jni::JString> /* cancelButtonText */)>("requestAutomotivePermissions");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JArrayClass<jni::JString>> /* permissions */, jni::alias_ref<jni::JString> /* message */, jni::alias_ref<jni::JString> /* grantButtonText */, jni::alias_ref<jni::JString> /* cancelButtonText */)>("requestAutomotivePermissions");
     auto __result = method(_javaPart, [&]() {
       size_t __size = permissions.size();
       jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);

@@ -219,7 +219,14 @@ public extension InformationTemplateConfig {
   
   @inline(__always)
   var autoDismissMs: Double? {
-    return self.__autoDismissMs.value
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__autoDismissMs) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__autoDismissMs)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

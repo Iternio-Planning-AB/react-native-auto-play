@@ -6,20 +6,29 @@
 ///
 
 #include <jni.h>
+#include <functional>
 #include <NitroModules/NitroDefines.hpp>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
+  [[deprecated("Use registerNatives() instead.")]]
+  int initialize(JavaVM* vm);
+
   /**
-   * Initializes the native (C++) part of ReactNativeAutoPlay, and autolinks all Hybrid Objects.
-   * Call this in your `JNI_OnLoad` function (probably inside `cpp-adapter.cpp`).
+   * Register the native (C++) part of ReactNativeAutoPlay, and autolinks all Hybrid Objects.
+   * Call this in your `JNI_OnLoad` function (probably inside `cpp-adapter.cpp`),
+   * inside a `facebook::jni::initialize(vm, ...)` call.
    * Example:
    * ```cpp (cpp-adapter.cpp)
    * JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
-   *   return margelo::nitro::swe::iternio::reactnativeautoplay::initialize(vm);
+   *   return facebook::jni::initialize(vm, []() {
+   *     // register all ReactNativeAutoPlay HybridObjects
+   *     margelo::nitro::swe::iternio::reactnativeautoplay::registerNatives();
+   *     // any other custom registrations go here.
+   *   });
    * }
    * ```
    */
-  int initialize(JavaVM* vm);
+  void registerAllNatives();
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

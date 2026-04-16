@@ -22,7 +22,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct JDistance final: public jni::JavaClass<JDistance> {
   public:
-    static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Distance;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/Distance;";
 
   public:
     /**

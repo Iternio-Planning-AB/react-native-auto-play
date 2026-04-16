@@ -90,37 +90,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
-  jni::local_ref<JHybridSignInTemplateSpec::jhybriddata> JHybridSignInTemplateSpec::initHybrid(jni::alias_ref<jhybridobject> jThis) {
+  std::shared_ptr<JHybridSignInTemplateSpec> JHybridSignInTemplateSpec::JavaPart::getJHybridSignInTemplateSpec() {
+    auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
+    auto castHybridObject = std::dynamic_pointer_cast<JHybridSignInTemplateSpec>(hybridObject);
+    if (castHybridObject == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to downcast JHybridObject to JHybridSignInTemplateSpec!");
+    }
+    return castHybridObject;
+  }
+
+  jni::local_ref<JHybridSignInTemplateSpec::CxxPart::jhybriddata> JHybridSignInTemplateSpec::CxxPart::initHybrid(jni::alias_ref<jhybridobject> jThis) {
     return makeCxxInstance(jThis);
   }
 
-  void JHybridSignInTemplateSpec::registerNatives() {
-    registerHybrid({
-      makeNativeMethod("initHybrid", JHybridSignInTemplateSpec::initHybrid),
-    });
-  }
-
-  size_t JHybridSignInTemplateSpec::getExternalMemorySize() noexcept {
-    static const auto method = javaClassStatic()->getMethod<jlong()>("getMemorySize");
-    return method(_javaPart);
-  }
-
-  bool JHybridSignInTemplateSpec::equals(const std::shared_ptr<HybridObject>& other) {
-    if (auto otherCast = std::dynamic_pointer_cast<JHybridSignInTemplateSpec>(other)) {
-      return _javaPart == otherCast->_javaPart;
+  std::shared_ptr<JHybridObject> JHybridSignInTemplateSpec::CxxPart::createHybridObject(const jni::local_ref<JHybridObject::JavaPart>& javaPart) {
+    auto castJavaPart = jni::dynamic_ref_cast<JHybridSignInTemplateSpec::JavaPart>(javaPart);
+    if (castJavaPart == nullptr) [[unlikely]] {
+      throw std::runtime_error("Failed to cast JHybridObject::JavaPart to JHybridSignInTemplateSpec::JavaPart!");
     }
-    return false;
+    return std::make_shared<JHybridSignInTemplateSpec>(castJavaPart);
   }
 
-  void JHybridSignInTemplateSpec::dispose() noexcept {
-    static const auto method = javaClassStatic()->getMethod<void()>("dispose");
-    method(_javaPart);
-  }
-
-  std::string JHybridSignInTemplateSpec::toString() {
-    static const auto method = javaClassStatic()->getMethod<jni::JString()>("toString");
-    auto javaString = method(_javaPart);
-    return javaString->toStdString();
+  void JHybridSignInTemplateSpec::CxxPart::registerNatives() {
+    registerHybrid({
+      makeNativeMethod("initHybrid", JHybridSignInTemplateSpec::CxxPart::initHybrid),
+    });
   }
 
   // Properties
@@ -128,11 +122,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   // Methods
   void JHybridSignInTemplateSpec::createSignInTemplate(const SignInTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JSignInTemplateConfig> /* config */)>("createSignInTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JSignInTemplateConfig> /* config */)>("createSignInTemplate");
     method(_javaPart, JSignInTemplateConfig::fromCpp(config));
   }
   std::shared_ptr<Promise<void>> JHybridSignInTemplateSpec::updateTemplate(const std::string& templateId, const SignInTemplateConfig& config) {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JSignInTemplateConfig> /* config */)>("updateTemplate");
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JSignInTemplateConfig> /* config */)>("updateTemplate");
     auto __result = method(_javaPart, jni::make_jstring(templateId), JSignInTemplateConfig::fromCpp(config));
     return [&]() {
       auto __promise = Promise<void>::create();

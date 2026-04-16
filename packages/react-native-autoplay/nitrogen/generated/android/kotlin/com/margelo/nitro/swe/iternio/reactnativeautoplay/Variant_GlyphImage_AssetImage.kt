@@ -21,12 +21,6 @@ sealed class Variant_GlyphImage_AssetImage {
   @DoNotStrip
   data class Second(@DoNotStrip val value: AssetImage): Variant_GlyphImage_AssetImage()
 
-  @Deprecated("getAs() is not type-safe. Use fold/asFirstOrNull/asSecondOrNull instead.", level = DeprecationLevel.ERROR)
-  inline fun <reified T> getAs(): T? = when (this) {
-    is First -> value as? T
-    is Second -> value as? T
-  }
-
   val isFirst: Boolean
     get() = this is First
   val isSecond: Boolean
