@@ -5,6 +5,7 @@ import androidx.car.app.Screen
 import androidx.car.app.model.Template
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
     abstract fun parse(): Template
@@ -27,7 +28,7 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
 
     companion object {
         const val TAG = "AndroidAutoTemplate"
-        val templates = mutableMapOf<String, AndroidAutoTemplate<*>>()
+        val templates = ConcurrentHashMap<String, AndroidAutoTemplate<*>>()
 
         fun <T> setTemplate(id: String, template: AndroidAutoTemplate<T>) {
             templates.put(id, template)
