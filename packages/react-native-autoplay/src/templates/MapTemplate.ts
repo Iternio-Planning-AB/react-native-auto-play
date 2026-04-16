@@ -391,14 +391,4 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   public stopNavigation() {
     HybridMapTemplate.stopNavigation(this.id);
   }
-
-  /**
-   * Sets the current maneuver state indicating progress within a maneuver.
-   * Transition through: continue → initial → prepare → execute → continue
-   * @namespace iOS sets CPManeuverState on the CPNavigationSession, used by instrument cluster and HUD
-   * @namespace Android no-op, Android Auto does not have an equivalent API
-   */
-  public setManeuverState(state: ManeuverState) {
-    HybridMapTemplate.setManeuverState(this.id, state);
-  }
 }
