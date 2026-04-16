@@ -141,6 +141,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       }
     }();
   }
+  bool JHybridAutoPlaySpec::hasVoiceInputPermission() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jboolean()>("hasVoiceInputPermission");
+    auto __result = method(_javaPart);
+    return static_cast<bool>(__result);
+  }
   std::shared_ptr<Promise<bool>> JHybridAutoPlaySpec::requestVoiceInputPermission() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("requestVoiceInputPermission");
     auto __result = method(_javaPart);

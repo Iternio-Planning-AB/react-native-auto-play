@@ -131,6 +131,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline bool hasVoiceInputPermission() override {
+      auto __result = _swiftPart.hasVoiceInputPermission();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
     inline std::shared_ptr<Promise<bool>> requestVoiceInputPermission() override {
       auto __result = _swiftPart.requestVoiceInputPermission();
       if (__result.hasError()) [[unlikely]] {

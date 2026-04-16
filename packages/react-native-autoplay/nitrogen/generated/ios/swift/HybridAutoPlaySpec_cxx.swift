@@ -197,6 +197,18 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func hasVoiceInputPermission() -> bridge.Result_bool_ {
+    do {
+      let __result = try self.__implementation.hasVoiceInputPermission()
+      let __resultCpp = __result
+      return bridge.create_Result_bool_(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_bool_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func requestVoiceInputPermission() -> bridge.Result_std__shared_ptr_Promise_bool___ {
     do {
       let __result = try self.__implementation.requestVoiceInputPermission()

@@ -51,6 +51,7 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * Returns true if permission was granted, false if denied.
    * @namespace all
    */
+  hasVoiceInputPermission(): boolean;
   requestVoiceInputPermission(): Promise<boolean>;
 
   /**

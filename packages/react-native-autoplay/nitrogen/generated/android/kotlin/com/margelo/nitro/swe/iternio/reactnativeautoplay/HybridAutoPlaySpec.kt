@@ -59,6 +59,10 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   
   @DoNotStrip
   @Keep
+  abstract fun hasVoiceInputPermission(): Boolean
+  
+  @DoNotStrip
+  @Keep
   abstract fun requestVoiceInputPermission(): Promise<Boolean>
   
   @DoNotStrip

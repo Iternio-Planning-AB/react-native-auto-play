@@ -1,7 +1,10 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.UiThreadUtil
+import com.margelo.nitro.NitroModules
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import com.margelo.nitro.core.ArrayBuffer
@@ -9,6 +12,7 @@ import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -246,12 +250,20 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
+    override fun hasVoiceInputPermission(): Boolean {
+        val context = NitroModules.applicationContext ?: return false
+        return ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     override fun requestVoiceInputPermission(): Promise<Boolean> {
         return Promise.async {
             val carContext = AndroidAutoSession.getRootContext()
                 ?: throw IllegalStateException("requestVoiceInputPermission failed: car context not available")
 
-            suspendCoroutine { cont ->
+            suspendCancellableCoroutine { cont ->
                 carContext.requestPermissions(
                     listOf(android.Manifest.permission.RECORD_AUDIO)
                 ) { approved, _ ->

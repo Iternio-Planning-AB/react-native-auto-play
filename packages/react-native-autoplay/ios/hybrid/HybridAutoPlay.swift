@@ -123,6 +123,10 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         return {}
     }
 
+    func hasVoiceInputPermission() throws -> Bool {
+        return AVAudioSession.sharedInstance().recordPermission == .granted
+    }
+
     func requestVoiceInputPermission() throws -> Promise<Bool> {
         return Promise.async {
             return await withCheckedContinuation { cont in

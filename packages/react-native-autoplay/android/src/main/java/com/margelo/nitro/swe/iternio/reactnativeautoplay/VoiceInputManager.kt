@@ -9,16 +9,19 @@ import androidx.annotation.RequiresApi
 import androidx.car.app.CarContext
 import androidx.car.app.media.CarAudioRecord
 import androidx.core.content.ContextCompat
+import com.margelo.nitro.NitroModules
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.ByteArrayOutputStream
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import kotlin.math.abs
 
 /**
  * Captures audio via CarAudioRecord and buffers raw 16-bit PCM (16 kHz, mono).
@@ -43,17 +46,21 @@ class VoiceInputManager(private val carContext: CarContext) {
     suspend fun start(
         silenceThresholdMs: Long = 1_500,
         maxDurationMs: Long = 10_000,
-    ): ByteArray = suspendCoroutine { cont ->
-        if (ContextCompat.checkSelfPermission(carContext, android.Manifest.permission.RECORD_AUDIO)
+    ): ByteArray = suspendCancellableCoroutine { cont ->
+        val appContext = NitroModules.applicationContext
+        if (appContext == null || ContextCompat.checkSelfPermission(
+                appContext,
+                android.Manifest.permission.RECORD_AUDIO
+            )
             != PackageManager.PERMISSION_GRANTED
         ) {
             cont.resumeWithException(SecurityException("RECORD_AUDIO permission not granted"))
-            return@suspendCoroutine
+            return@suspendCancellableCoroutine
         }
 
         continuation = cont
 
-        val audioManager = carContext.getSystemService(AudioManager::class.java)
+        val audioManager = appContext.getSystemService(AudioManager::class.java)
 
         val audioAttributes = AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
@@ -73,7 +80,7 @@ class VoiceInputManager(private val carContext: CarContext) {
         if (audioManager.requestAudioFocus(focusRequest) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             continuation = null
             cont.resumeWithException(IllegalStateException("Audio focus request denied"))
-            return@suspendCoroutine
+            return@suspendCancellableCoroutine
         }
 
         audioFocusRequest = focusRequest
@@ -109,15 +116,16 @@ class VoiceInputManager(private val carContext: CarContext) {
                         var peak = 0
                         var i = 0
                         while (i < read - 1) {
-                            val sample = (buffer[i].toInt() and 0xFF) or (buffer[i + 1].toInt() shl 8)
-                            val abs = Math.abs(sample.toShort().toInt())
+                            val sample =
+                                (buffer[i].toInt() and 0xFF) or (buffer[i + 1].toInt() shl 8)
+                            val abs = abs(sample.toShort().toInt())
                             if (abs > peak) peak = abs
                             i += 2
                         }
 
                         if (peak < SILENCE_AMPLITUDE_THRESHOLD) {
                             if (silenceStart == null) silenceStart = now
-                            if (now - silenceStart!! >= silenceThresholdMs) break
+                            if (now - silenceStart >= silenceThresholdMs) break
                         } else {
                             silenceStart = null
                         }
@@ -146,7 +154,9 @@ class VoiceInputManager(private val carContext: CarContext) {
         carAudioRecord = null
         recordingJob = null
         audioFocusRequest?.let {
-            carContext.getSystemService(AudioManager::class.java).abandonAudioFocusRequest(it)
+            val audioManager = (NitroModules.applicationContext ?: carContext)
+                .getSystemService(AudioManager::class.java)
+            audioManager.abandonAudioFocusRequest(it)
         }
         audioFocusRequest = null
     }
