@@ -27,7 +27,7 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
             ? button.image.backgroundColor
             : 'transparent';
 
-      const fontScale = (button.image.fontScale ?? Platform.OS === 'android') ? 1.0 : 0.65;
+      const fontScale = button.image.fontScale ?? (Platform.OS === 'android' ? 1.0 : 0.65);
 
       return {
         type,
