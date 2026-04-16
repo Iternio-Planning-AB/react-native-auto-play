@@ -8,8 +8,8 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroColor
 
 object BitmapCache {
-    private val maxMemory = Runtime.getRuntime().maxMemory().toInt()
-    private val cacheSize = minOf(maxMemory / 8, 8388608) //limit cache to 8 megabyte
+    private val maxMemory = Runtime.getRuntime().maxMemory()
+    private val cacheSize = minOf(maxMemory / 8, 8388608).toInt() //limit cache to 8 megabyte
 
     private val bitmapCache = object : LruCache<String, Bitmap>(cacheSize) {
         override fun sizeOf(key: String, bitmap: Bitmap): Int {
