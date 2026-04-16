@@ -7,11 +7,6 @@
 
 #pragma once
 
-#if __has_include(<NitroModules/NitroHash.hpp>)
-#include <NitroModules/NitroHash.hpp>
-#else
-#error NitroModules cannot be found! Are you sure you installed NitroModules properly?
-#endif
 #if __has_include(<NitroModules/JSIConverter.hpp>)
 #include <NitroModules/JSIConverter.hpp>
 #else
@@ -26,7 +21,7 @@
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   /**
-   * An enum which can be represented as a JavaScript union (ManeuverState).
+   * An enum which can be represented as a JavaScript enum (ManeuverState).
    */
   enum class ManeuverState {
     CONTINUE      SWIFT_NAME(continue) = 0,
@@ -39,45 +34,30 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
 namespace margelo::nitro {
 
-  // C++ ManeuverState <> JS ManeuverState (union)
+  // C++ ManeuverState <> JS ManeuverState (enum)
   template <>
   struct JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState> final {
     static inline margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
-      std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, arg);
-      switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("continue"): return margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::CONTINUE;
-        case hashString("initial"): return margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::INITIAL;
-        case hashString("prepare"): return margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::PREPARE;
-        case hashString("execute"): return margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::EXECUTE;
-        default: [[unlikely]]
-          throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum ManeuverState - invalid value!");
-      }
+      int enumValue = JSIConverter<int>::fromJSI(runtime, arg);
+      return static_cast<margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState>(enumValue);
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState arg) {
-      switch (arg) {
-        case margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::CONTINUE: return JSIConverter<std::string>::toJSI(runtime, "continue");
-        case margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::INITIAL: return JSIConverter<std::string>::toJSI(runtime, "initial");
-        case margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::PREPARE: return JSIConverter<std::string>::toJSI(runtime, "prepare");
-        case margelo::nitro::swe::iternio::reactnativeautoplay::ManeuverState::EXECUTE: return JSIConverter<std::string>::toJSI(runtime, "execute");
-        default: [[unlikely]]
-          throw std::invalid_argument("Cannot convert ManeuverState to JS - invalid value: "
-                                    + std::to_string(static_cast<int>(arg)) + "!");
-      }
+      int enumValue = static_cast<int>(arg);
+      return JSIConverter<int>::toJSI(runtime, enumValue);
     }
-    static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
-      if (!value.isString()) {
+    static inline bool canConvert(jsi::Runtime&, const jsi::Value& value) {
+      if (!value.isNumber()) {
         return false;
       }
-      std::string unionValue = JSIConverter<std::string>::fromJSI(runtime, value);
-      switch (hashString(unionValue.c_str(), unionValue.size())) {
-        case hashString("continue"):
-        case hashString("initial"):
-        case hashString("prepare"):
-        case hashString("execute"):
-          return true;
-        default:
-          return false;
+      double number = value.getNumber();
+      int integer = static_cast<int>(number);
+      if (number != integer) {
+        // The integer is not the same value as the double - we truncated floating points.
+        // Enums are all integers, so the input floating point number is obviously invalid.
+        return false;
       }
+      // Check if we are within the bounds of the enum.
+      return integer >= 0 && integer <= 3;
     }
   };
 

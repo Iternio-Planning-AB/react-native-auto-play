@@ -6,7 +6,7 @@
 ///
 
 /**
- * Represents the JS union `ManeuverState`, backed by a C++ enum.
+ * Represents the JS enum `ManeuverState`, backed by a C++ enum.
  */
 public typealias ManeuverState = margelo.nitro.swe.iternio.reactnativeautoplay.ManeuverState
 
@@ -17,13 +17,13 @@ public extension ManeuverState {
    */
   init?(fromString string: String) {
     switch string {
-      case "continue":
+      case "Continue":
         self = .continue
-      case "initial":
+      case "Initial":
         self = .initial
-      case "prepare":
+      case "Prepare":
         self = .prepare
-      case "execute":
+      case "Execute":
         self = .execute
       default:
         return nil
@@ -36,13 +36,13 @@ public extension ManeuverState {
   var stringValue: String {
     switch self {
       case .continue:
-        return "continue"
+        return "Continue"
       case .initial:
-        return "initial"
+        return "Initial"
       case .prepare:
-        return "prepare"
+        return "Prepare"
       case .execute:
-        return "execute"
+        return "Execute"
     }
   }
 }
