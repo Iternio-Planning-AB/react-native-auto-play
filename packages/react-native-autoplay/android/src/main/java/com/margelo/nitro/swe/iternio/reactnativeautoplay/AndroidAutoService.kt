@@ -23,17 +23,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
-import com.facebook.react.bridge.ReactContext
+import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ReactContextResolver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class AndroidAutoService : CarAppService() {
-    private lateinit var reactContext: ReactContext
     private lateinit var notificationManager: NotificationManager
 
     private var isServiceBound = false
@@ -54,10 +48,7 @@ class AndroidAutoService : CarAppService() {
         super.onCreate()
         instance = this
 
-        CoroutineScope(Dispatchers.Main).launch {
-            reactContext = ReactContextResolver.getReactContext(application as ReactApplication)
-            reactContext.addLifecycleEventListener(reactLifecycleObserver)
-        }
+        NitroModules.applicationContext?.addLifecycleEventListener(reactLifecycleObserver)
 
         notificationManager = getSystemService(NotificationManager::class.java)
         val appLabel = AppInfo.getApplicationLabel(this)
@@ -72,7 +63,7 @@ class AndroidAutoService : CarAppService() {
     }
 
     override fun onCreateSession(sessionInfo: SessionInfo): Session {
-        val session = AndroidAutoSession(sessionInfo, application as ReactApplication)
+        val session = AndroidAutoSession(sessionInfo)
 
         if (sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER) {
             return session
@@ -89,11 +80,7 @@ class AndroidAutoService : CarAppService() {
 
         stopForeground(STOP_FOREGROUND_REMOVE)
 
-        if (!this::reactContext.isInitialized) {
-            return
-        }
-
-        reactContext.removeLifecycleEventListener(reactLifecycleObserver)
+        NitroModules.applicationContext?.removeLifecycleEventListener(reactLifecycleObserver)
     }
 
     private val reactLifecycleObserver = object : LifecycleEventListener {

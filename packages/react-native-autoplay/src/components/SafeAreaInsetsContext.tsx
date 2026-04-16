@@ -1,6 +1,7 @@
 import type React from 'react';
 import { createContext, useEffect, useState } from 'react';
-import { HybridAutoPlay, type SafeAreaInsets } from '..';
+import type { SafeAreaInsets } from '..';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 
 const DEFAULT: SafeAreaInsets = { top: 0, bottom: 0, left: 0, right: 0 };
 

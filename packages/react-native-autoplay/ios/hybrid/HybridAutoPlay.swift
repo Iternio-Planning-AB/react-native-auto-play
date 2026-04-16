@@ -21,6 +21,13 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
+    override init() {
+        HybridAutoPlay.listeners.removeAll()
+        HybridAutoPlay.renderStateListeners.removeAll()
+        HybridAutoPlay.safeAreaInsetsListeners.removeAll()
+        super.init()
+    }
+
     func addListener(eventType: EventName, callback: @escaping () -> Void)
         throws -> () -> Void
     {

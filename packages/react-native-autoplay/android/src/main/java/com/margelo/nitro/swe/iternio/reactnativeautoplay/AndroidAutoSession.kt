@@ -12,21 +12,16 @@ import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
-import com.facebook.react.bridge.ReactContext
+import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ReactContextResolver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
-class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication: ReactApplication) :
+class AndroidAutoSession(sessionInfo: SessionInfo) :
     Session() {
 
     private val isCluster = sessionInfo.displayType == SessionInfo.DISPLAY_TYPE_CLUSTER
@@ -89,34 +84,29 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         }
 
         lifecycle.addObserver(sessionLifecycleObserver)
+        NitroModules.applicationContext?.addLifecycleEventListener(reactLifecycleObserver)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            reactContext = ReactContextResolver.getReactContext(reactApplication)
-            reactContext.addLifecycleEventListener(reactLifecycleObserver)
-
-            // TODO this is not required for templates that host a component, check if we need this for non-rendering templates
-            /*
-            val appRegistry = reactContext.getJSModule(AppRegistry::class.java)
-                ?: throw ClassNotFoundException("could not get AppRegistry instance")
-            val jsAppModuleName = if (isCluster) "AndroidAutoCluster" else "AndroidAuto"
-            val appParams = WritableNativeMap().apply {
-                putMap("initialProps", Arguments.createMap().apply {
-                    putString("id", clusterTemplateId)
-                })
-            }
-
-            appRegistry.runApplication(jsAppModuleName, appParams)
-            */
-
-            if (clusterId != null) {
-                HybridCluster.emit(ClusterEventName.DIDCONNECTWITHWINDOW, clusterId)
-                return@launch
-            }
-
+        if (clusterId == null) {
             HybridAutoPlay.emit(EventName.DIDCONNECT)
+        } else {
+            HybridCluster.emit(ClusterEventName.DIDCONNECTWITHWINDOW, clusterId)
         }
 
         return screen
+
+        // TODO this is not required for templates that host a component, check if we need this for non-rendering templates
+        /*
+        val appRegistry = reactContext.getJSModule(AppRegistry::class.java)
+            ?: throw ClassNotFoundException("could not get AppRegistry instance")
+        val jsAppModuleName = if (isCluster) "AndroidAutoCluster" else "AndroidAuto"
+        val appParams = WritableNativeMap().apply {
+            putMap("initialProps", Arguments.createMap().apply {
+                putString("id", clusterTemplateId)
+            })
+        }
+
+        appRegistry.runApplication(jsAppModuleName, appParams)
+        */
     }
 
     override fun onCarConfigurationChanged(configuration: Configuration) {
@@ -129,7 +119,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         }
 
         val marker = AndroidAutoScreen.getScreen(ROOT_SESSION)?.marker ?: return
-        val config = AndroidAutoTemplate.getConfig(marker) as MapTemplateConfig? ?: return
+        val config = AndroidAutoTemplate.getConfig(marker) as? MapTemplateConfig? ?: return
 
         if (config.onAppearanceDidChange != null) {
             config.onAppearanceDidChange(colorScheme)
@@ -247,7 +237,6 @@ class AndroidAutoSession(sessionInfo: SessionInfo, private val reactApplication:
         const val TAG = "AndroidAutoSession"
         const val ROOT_SESSION = "AutoPlayRoot"
 
-        private lateinit var reactContext: ReactContext
         private val sessions = ConcurrentHashMap<String, ScreenContext>()
 
         private val clusterSessions = CopyOnWriteArrayList<String>()

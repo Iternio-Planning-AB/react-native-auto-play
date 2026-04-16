@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import { type AutoText, HybridAutoPlay } from '..';
+import type { AutoText } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
 import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
 import type { AutoManeuver } from '../types/Maneuver';

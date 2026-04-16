@@ -31,6 +31,16 @@ class HybridCluster: HybridClusterSpec {
         String: (_: String, _: Bool) -> Void
     ]()
 
+    override init() {
+        HybridCluster.listeners.removeAll()
+        HybridCluster.eventQueue.removeAll()
+        HybridCluster.colorSchemeListeners.removeAll()
+        HybridCluster.zoomListeners.removeAll()
+        HybridCluster.compassListeners.removeAll()
+        HybridCluster.speedLimitListeners.removeAll()
+        super.init()
+    }
+
     func addListener(
         eventType: ClusterEventName,
         callback: @escaping (_ clusterId: String) -> Void
@@ -57,12 +67,14 @@ class HybridCluster: HybridClusterSpec {
         return Promise.async {
             if #available(iOS 15.4, *) {
                 try await MainActor.run {
-                    guard let scene = SceneStore.getClusterScene(
-                        clusterId: clusterId
-                    ) else {
+                    guard
+                        let scene = SceneStore.getClusterScene(
+                            clusterId: clusterId
+                        )
+                    else {
                         return
                     }
-                    
+
                     try scene.initRootView()
                 }
             }
@@ -80,12 +92,14 @@ class HybridCluster: HybridClusterSpec {
             [NitroAttributedString]
     ) throws {
         if #available(iOS 15.4, *) {
-            guard let scene = SceneStore.getClusterScene(
-                clusterId: clusterId
-            ) else {
+            guard
+                let scene = SceneStore.getClusterScene(
+                    clusterId: clusterId
+                )
+            else {
                 return
             }
-            
+
             scene.setAttributedInactiveDescriptionVariants(
                 attributedInactiveDescriptionVariants:
                     attributedInactiveDescriptionVariants

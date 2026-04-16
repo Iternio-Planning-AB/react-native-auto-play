@@ -1,18 +1,14 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import AutoPlayHeadlessJsTask from './AutoPlayHeadlessJsTask';
+import { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
+import { HybridAutoPlay } from './hybrid/HybridAutoPlay';
 import type { AndroidAutomotive } from './specs/AndroidAutomotive.nitro';
-import type { AndroidAutoTelemetry as NitroAndroidAutoTelemetry } from './specs/AndroidAutoTelemetry.nitro';
-import type { AutoPlay as NitroAutoPlay } from './specs/AutoPlay.nitro';
 
-AutoPlayHeadlessJsTask.registerHeadlessTask();
+AutoPlayHeadlessJsTask.registerHeadlessTask(HybridAutoPlay);
 
-export const HybridAutoPlay = NitroModules.createHybridObject<NitroAutoPlay>('AutoPlay');
-
-export const HybridAndroidAutoTelemetry =
-  Platform.OS === 'android'
-    ? NitroModules.createHybridObject<NitroAndroidAutoTelemetry>('AndroidAutoTelemetry')
-    : null;
+export { HybridAutoPlay };
+export { HybridAndroidAutoTelemetry };
 
 export const HybridAndroidAutomotive =
   Platform.OS === 'android'

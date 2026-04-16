@@ -2,12 +2,11 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import android.app.Presentation
 import android.content.Context
-import android.view.ContextThemeWrapper
 import android.graphics.Color
 import android.graphics.Rect
 import android.hardware.display.DisplayManager
+import android.hardware.display.VirtualDisplay
 import android.os.Bundle
-import android.util.Log
 import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +14,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.MainThread
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
-import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.fabric.FabricUIManager
@@ -28,13 +27,11 @@ import com.facebook.react.runtime.ReactSurfaceView
 import com.facebook.react.uimanager.DisplayMetricsHolder
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
+import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.Debouncer
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ReactContextResolver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.floor
 
 class VirtualRenderer(
@@ -42,14 +39,7 @@ class VirtualRenderer(
     private val moduleName: String,
     private val isCluster: Boolean = false
 ) {
-    private lateinit var fabricUiManager: FabricUIManager
-
-    private fun isUiManagerInitialized(): Boolean {
-        return ::fabricUiManager.isInitialized
-    }
-
-    private lateinit var display: Display
-    private lateinit var reactContext: ReactContext
+    private var virtualDisplay: VirtualDisplay? = null
 
     private lateinit var reactSurfaceImpl: ReactSurfaceImpl
     private var reactSurfaceView: ReactSurfaceView? = null
@@ -66,19 +56,12 @@ class VirtualRenderer(
     private val virtualScreenDensity = context.resources.displayMetrics.density
     val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
 
+    private fun isSurfaceReady(surfaceContainer: SurfaceContainer): Boolean {
+        return surfaceContainer.surface != null && surfaceContainer.dpi != 0 && surfaceContainer.height != 0 && surfaceContainer.width != 0
+    }
+
     init {
         virtualRenderer[moduleName] = this
-
-        CoroutineScope(Dispatchers.Main).launch {
-            reactContext =
-                ReactContextResolver.getReactContext(context.applicationContext as ReactApplication)
-
-            fabricUiManager = UIManagerHelper.getUIManager(
-                reactContext, UIManagerType.FABRIC
-            ) as FabricUIManager
-
-            initRenderer()
-        }
 
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
             val areaDebouncer = Debouncer(200)
@@ -90,13 +73,12 @@ class VirtualRenderer(
             var visibleArea = Rect(0, 0, 0, 0)
 
             override fun onSurfaceAvailable(surfaceContainer: SurfaceContainer) {
-                if (surfaceContainer.surface == null) {
-                    Log.w(TAG, "surface is null")
+                if (!isSurfaceReady(surfaceContainer)) {
                     return
                 }
 
                 val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-                val virtualDisplay = manager.createVirtualDisplay(
+                virtualDisplay = manager.createVirtualDisplay(
                     moduleName,
                     surfaceContainer.width,
                     surfaceContainer.height,
@@ -105,11 +87,16 @@ class VirtualRenderer(
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION,
                 )
 
-                display = virtualDisplay.display
+                val display = virtualDisplay?.display ?: return
                 height = surfaceContainer.height
                 width = surfaceContainer.width
 
-                initRenderer()
+                initRenderer(display)
+            }
+
+            override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
+                virtualDisplay?.release()
+                virtualDisplay = null
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
@@ -247,10 +234,12 @@ class VirtualRenderer(
         return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(marker)
     }
 
-    private fun initRenderer() {
-        if (!this::display.isInitialized) {
-            return
-        }
+    private fun initRenderer(display: Display) {
+        val reactContext = NitroModules.applicationContext ?: return
+
+        val fabricUiManager = UIManagerHelper.getUIManager(
+            reactContext, UIManagerType.FABRIC
+        ) as? FabricUIManager? ?: return
 
         val initialProperties = Bundle().apply {
             putString("id", moduleName)
@@ -270,20 +259,21 @@ class VirtualRenderer(
         val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
         val reactNativeScale = virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
 
-        if (!isUiManagerInitialized()) {
-            // this makes sure we have all required instances
-            // no matter if the app is launched on the phone or AA first
-            return
-        }
-
         FabricMapPresentation(
-            context, display, height, width, initialProperties, reactNativeScale
+            reactContext,
+            display,
+            fabricUiManager,
+            height,
+            width,
+            initialProperties,
+            reactNativeScale
         ).show()
     }
 
     inner class FabricMapPresentation(
-        private val context: CarContext,
+        private val context: ReactContext,
         display: Display,
+        private val fabricUiManager: FabricUIManager,
         private val height: Int,
         private val width: Int,
         private val initialProperties: Bundle,
@@ -292,11 +282,8 @@ class VirtualRenderer(
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
-            val appTheme = context.applicationContext.applicationInfo.theme
-            val themedContext = ContextThemeWrapper(context.applicationContext, appTheme)
-
             if (!this@VirtualRenderer::reactSurfaceImpl.isInitialized) {
-                reactSurfaceImpl = ReactSurfaceImpl(themedContext, moduleName, initialProperties)
+                reactSurfaceImpl = ReactSurfaceImpl(context, moduleName, initialProperties)
             }
 
             var splashScreenView: View? = null
@@ -305,9 +292,9 @@ class VirtualRenderer(
                 (it.parent as ViewGroup).removeView(it)
             } ?: run {
                 splashScreenView =
-                    if (isCluster) getClusterSplashScreen(themedContext, height, width) else null
+                    if (isCluster) getClusterSplashScreen(context, height, width) else null
 
-                val surfaceView = ReactSurfaceView(themedContext, reactSurfaceImpl).apply {
+                val surfaceView = ReactSurfaceView(context, reactSurfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
                     )
@@ -335,7 +322,7 @@ class VirtualRenderer(
                 )
 
                 // remove ui-managers lifecycle listener to not stop rendering when app is not in foreground/phone screen is off
-                reactContext.removeLifecycleEventListener(fabricUiManager)
+                context.removeLifecycleEventListener(fabricUiManager)
                 // trigger ui-managers onHostResume to make sure the surface is rendered properly even when AA only is starting without the phone app
                 fabricUiManager.onHostResume()
 
@@ -343,7 +330,7 @@ class VirtualRenderer(
             }
 
 
-            val rootContainer = FrameLayout(themedContext).apply {
+            val rootContainer = FrameLayout(context).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
@@ -365,8 +352,7 @@ class VirtualRenderer(
     ): View {
         val root = FrameLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
 
@@ -407,24 +393,40 @@ class VirtualRenderer(
         })
     }
 
+    @MainThread
+    private fun stop() {
+        virtualDisplay?.release()
+        virtualDisplay = null
+
+        val uiManager = NitroModules.applicationContext?.let {
+            UIManagerHelper.getUIManager(
+                it, UIManagerType.FABRIC
+            ) as? FabricUIManager?
+        }
+
+        try {
+            reactSurfaceId?.let {
+                uiManager?.stopSurface(it)
+            }
+        } catch (_: AssertionError) {
+            // Fabric already invalidated
+        } finally {
+            reactSurfaceId = null
+            virtualRenderer.remove(moduleName)
+        }
+    }
+
     companion object {
         const val TAG = "VirtualRenderer"
 
-        private val virtualRenderer = mutableMapOf<String, VirtualRenderer>()
+        private val virtualRenderer = ConcurrentHashMap<String, VirtualRenderer>()
 
         fun hasRenderer(moduleId: String): Boolean {
             return virtualRenderer.contains(moduleId)
         }
 
         fun removeRenderer(moduleId: String) {
-            val renderer = virtualRenderer[moduleId]
-
-            if (renderer?.isUiManagerInitialized() == true) {
-                renderer.reactSurfaceId?.let {
-                    renderer.fabricUiManager.stopSurface(it)
-                }
-            }
-
+            virtualRenderer[moduleId]?.stop()
             virtualRenderer.remove(moduleId)
         }
     }

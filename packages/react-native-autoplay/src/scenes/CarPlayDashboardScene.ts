@@ -1,8 +1,8 @@
 import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import { HybridAutoPlay } from '..';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
+import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type {
   BaseCarPlayDashboardButton,
   CarPlayDashboard as NitroCarPlayDashboard,
