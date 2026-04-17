@@ -169,7 +169,6 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       headerActions,
       onStopNavigation,
       onAutoDriveEnabled,
-      onDidAppear,
       ...baseConfig
     } = config;
 

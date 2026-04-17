@@ -19,7 +19,7 @@ export default function OnAppearedChildRenderer({ children, moduleName }: Props)
     });
 
     return () => remove();
-  });
+  }, [moduleName]);
 
   if (didAppear) {
     return children;
