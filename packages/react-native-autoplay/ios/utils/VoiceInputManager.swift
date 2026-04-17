@@ -13,7 +13,6 @@ class VoiceInputManager {
     // Timing
     private var recordingStart: Date?
     private var silenceStart: Date?
-    private weak var storedInterfaceController: AutoPlayInterfaceController?
 
     private static let sampleRate: Double = 16_000
     private static let tapBufferSize: AVAudioFrameCount = 4_096
@@ -35,8 +34,6 @@ class VoiceInputManager {
         maxDurationMs: Double,
         listeningText: String
     ) async throws -> Data {
-        storedInterfaceController = interfaceController
-
         let samples = try await withCheckedThrowingContinuation {
             (cont: CheckedContinuation<[Int16], Error>) in
             self.continuation = cont
@@ -50,7 +47,8 @@ class VoiceInputManager {
                     maxDurationMs: maxDurationMs,
                     listeningText: listeningText
                 )
-            } catch {
+            }
+            catch {
                 cont.resume(throwing: error)
                 self.continuation = nil
             }
@@ -63,7 +61,7 @@ class VoiceInputManager {
         guard !isStopping else { return }
         isStopping = true
 
-        stopCapture(interfaceController: interfaceController ?? storedInterfaceController)
+        stopCapture(interfaceController: interfaceController)
         continuation?.resume(returning: samples)
         continuation = nil
         samples = []
@@ -124,7 +122,8 @@ class VoiceInputManager {
 
             var conversionError: NSError?
             let status = converter.convert(to: outputBuffer, error: &conversionError) {
-                _, outStatus in
+                _,
+                outStatus in
                 outStatus.pointee = .haveData
                 return buffer
             }
@@ -141,7 +140,7 @@ class VoiceInputManager {
             if let start = self.recordingStart,
                 now.timeIntervalSince(start) * 1000 >= maxDurationMs
             {
-                self.triggerAutoStop()
+                self.triggerAutoStop(interfaceController: interfaceController)
                 return
             }
 
@@ -156,9 +155,10 @@ class VoiceInputManager {
                     if let silenceBegin = self.silenceStart,
                         now.timeIntervalSince(silenceBegin) * 1000 >= silenceThresholdMs
                     {
-                        self.triggerAutoStop()
+                        self.triggerAutoStop(interfaceController: interfaceController)
                     }
-                } else {
+                }
+                else {
                     self.silenceStart = nil
                 }
             }
@@ -168,9 +168,9 @@ class VoiceInputManager {
         audioEngine = engine
     }
 
-    private func triggerAutoStop() {
+    private func triggerAutoStop(interfaceController: AutoPlayInterfaceController?) {
         DispatchQueue.global(qos: .userInitiated).async {
-            self.stop()
+            self.stop(interfaceController: interfaceController)
         }
     }
 

@@ -137,7 +137,9 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?) throws -> Promise<ArrayBuffer> {
+    func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?) throws -> Promise<
+        ArrayBuffer
+    > {
         return Promise.async {
             let interfaceController = try? await RootModule.withInterfaceController { $0 }
 
@@ -158,7 +160,10 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func stopVoiceInput() throws {
-        HybridAutoPlay.voiceInputManager?.stop()
+        Task { @MainActor in
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
+            HybridAutoPlay.voiceInputManager?.stop(interfaceController: interfaceController)
+        }
     }
 
     // MARK: set/push/pop templates
