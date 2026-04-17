@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { AutoText } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
+import OnAppearedChildRenderer from '../components/OnAppearedChildRenderer';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
@@ -155,48 +156,6 @@ export interface TripSelectorCallback {
   setSelectedTrip: (id: string) => void;
 }
 
-type StartRenderListener = {
-  subscribe: (listener: () => void) => () => void;
-  fire: () => void;
-};
-
-function createStartRenderListener(): StartRenderListener {
-  let fired = false;
-  const listeners = new Set<() => void>();
-  return {
-    subscribe(listener) {
-      if (fired) {
-        listener();
-        return () => {};
-      }
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-    fire() {
-      fired = true;
-      for (const listener of listeners) listener();
-      listeners.clear();
-    },
-  };
-}
-
-function createDelayedMapComponent(
-  Component: React.ComponentType<RootComponentInitialProps>,
-  startRenderListener: StartRenderListener
-): React.ComponentType<RootComponentInitialProps> {
-  const DelayedComponent = (props: RootComponentInitialProps) => {
-    const [shouldRender, setShouldRender] = useState(false);
-
-    useEffect(() => {
-      return startRenderListener.subscribe(() => setShouldRender(true));
-    }, []);
-
-    return shouldRender ? React.createElement(Component, props) : null;
-  };
-
-  return DelayedComponent;
-}
-
 export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['headerActions']> {
   id = 'AutoPlayRoot';
   private template = this;
@@ -214,9 +173,6 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       ...baseConfig
     } = config;
 
-    const startRenderListener = createStartRenderListener();
-    const DelayedComponent = createDelayedMapComponent(component, startRenderListener);
-
     AppRegistry.registerComponent(
       this.id,
       () => (props) =>
@@ -226,7 +182,11 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
           children: React.createElement(SafeAreaInsetsProvider, {
             moduleName: this.id,
             // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-            children: React.createElement(DelayedComponent, props),
+            children: React.createElement(OnAppearedChildRenderer, {
+              // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
+              children: React.createElement(component, props),
+              moduleName: this.id,
+            }),
           }),
         })
     );
@@ -238,10 +198,6 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       mapButtons: NitroMapButton.convert(this.template, mapButtons),
       onStopNavigation: () => onStopNavigation(this.template),
       onAutoDriveEnabled: onAutoDriveEnabled ? () => onAutoDriveEnabled(this.template) : undefined,
-      onDidAppear: (...args) => {
-        startRenderListener.fire();
-        onDidAppear?.(...args);
-      },
     };
 
     HybridMapTemplate.createMapTemplate(nitroConfig);
