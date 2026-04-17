@@ -45,34 +45,39 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   ): CleanupCallback;
 
   /**
-   * Request microphone permission from the user.
-   * On iOS: triggers the AVAudioSession record permission dialog.
-   * On Android: triggers the Car App Library permission request (shown on the phone).
-   * Returns true if permission was granted, false if denied.
-   * @namespace all
+   * Returns true if microphone permission has already been granted.
    */
   hasVoiceInputPermission(): boolean;
+
+  /**
+   * Request microphone permission from the user.
+   * On Android: uses the car context when Android Auto is connected, otherwise
+   * falls back to the React Native application context.
+   * On iOS: uses AVAudioApplication (iOS 17+) or AVAudioSession (iOS 15–16).
+   * Returns true if permission was granted, false if denied.
+   */
   requestVoiceInputPermission(): Promise<boolean>;
 
   /**
    * Start an in-app voice recording session.
-   * On iOS: presents CPVoiceControlTemplate and begins capturing audio.
-   * On Android: acquires audio focus and begins capturing via CarAudioRecord.
+   * On Android: acquires audio focus and captures via CarAudioRecord when
+   * Android Auto is connected, otherwise uses standard AudioRecord.
+   * On iOS: presents CPVoiceControlTemplate (when a car is connected) and
+   * captures audio via AVAudioEngine.
    * Resolves with the complete raw PCM buffer (16 kHz, 16-bit, mono) when
-   * stopVoiceInput() is called.
-   * Rejects if the microphone permission has not been granted or recording
-   * fails to start.
-   * @namespace all
+   * silence is detected, the max duration is reached, or stopVoiceInput() is called.
+   * Rejects if microphone permission has not been granted or recording fails to start.
    */
-  startVoiceInput(silenceThresholdMs?: number, maxDurationMs?: number, listeningText?: string): Promise<ArrayBuffer>;
+  startVoiceInput(
+    silenceThresholdMs?: number,
+    maxDurationMs?: number,
+    listeningText?: string
+  ): Promise<ArrayBuffer>;
 
   /**
-   * Stop the active voice recording session. Causes the Promise returned by
-   * startVoiceInput() to resolve with the recorded audio.
-   * On iOS: dismisses CPVoiceControlTemplate.
-   * On Android: releases audio focus.
+   * Stop the active voice recording session early. Causes the Promise returned
+   * by startVoiceInput() to resolve with the audio captured so far.
    * No-op if no recording is in progress.
-   * @namespace all
    */
   stopVoiceInput(): void;
 

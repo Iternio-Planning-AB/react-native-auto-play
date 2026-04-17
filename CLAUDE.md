@@ -90,12 +90,26 @@ Templates accept a React component (`component` prop) that renders on the car's 
 - `CarPlayDashboard` (iOS only) — Dashboard widget rendered alongside the main app
 - `AutoPlayCluster` (both platforms) — Instrument cluster display
 
+### Voice Input
+
+The library exposes a cross-platform in-app voice recording API:
+
+- `HybridAutoPlay.hasVoiceInputPermission()` — synchronously checks microphone permission
+- `HybridAutoPlay.requestVoiceInputPermission()` — requests microphone permission. On Android uses the car context when Android Auto is connected, otherwise falls back to the React Native application context (`PermissionAwareActivity`). On iOS uses `AVAudioApplication` (iOS 17+) or `AVAudioSession` (iOS 15–16).
+- `HybridAutoPlay.startVoiceInput(silenceThresholdMs?, maxDurationMs?, listeningText?)` — starts recording. On Android uses `CarAudioRecord` when connected, otherwise standard `AudioRecord`. On iOS uses `AVAudioEngine`; presents `CPVoiceControlTemplate` when CarPlay is connected. Resolves with a raw PCM `ArrayBuffer` (16 kHz, 16-bit, mono).
+- `HybridAutoPlay.stopVoiceInput()` — stops recording early, resolving the `startVoiceInput` promise with audio captured so far.
+- `HybridAutoPlay.addListenerVoiceInput(cb)` — Android-only; fires when the OS triggers a voice action (e.g. "Hey Google, navigate to…"). No-op on iOS.
+
+Native implementations:
+- iOS: `packages/react-native-autoplay/ios/utils/VoiceInputManager.swift`
+- Android: `packages/react-native-autoplay/android/src/main/java/com/margelo/nitro/swe/iternio/reactnativeautoplay/VoiceInputManager.kt`
+
 ### Hooks
 
 | Hook | Platform | Purpose |
 |---|---|---|
 | `useMapTemplate()` | both | Access current `MapTemplate` instance |
-| `useVoiceInput()` | Android | Location + speech query on voice trigger |
+| `useVoiceInput()` | Android | Reactively exposes latest OS-triggered voice input (`location`, `query`). For in-app recording use `startVoiceInput`/`stopVoiceInput` directly. |
 | `useSafeAreaInsets()` | both | Screen-safe padding values |
 | `useFocusedEffect()` | both | Like `useEffect` but tied to template visibility |
 | `useAndroidAutoTelemetry()` | Android | Vehicle telemetry (speed, fuel, battery, etc.) |
@@ -114,7 +128,7 @@ Conversion utilities in `src/utils/` translate TypeScript types to the NitroModu
 ### Platform Differences
 
 - **iOS-only:** `CarPlayDashboard`, scene delegate setup, CarPlay entitlements
-- **Android-only:** `SignInTemplate`, `useVoiceInput`, `useAndroidAutoTelemetry`, Android Automotive support
+- **Android-only:** `SignInTemplate`, `useVoiceInput` (OS-triggered), `useAndroidAutoTelemetry`, Android Automotive support
 - Platform-split files use `.android.ts` / `.ios.ts` suffixes
 
 ## Code Style
