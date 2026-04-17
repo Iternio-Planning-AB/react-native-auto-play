@@ -64,6 +64,19 @@ export enum KeepType {
   FollowRoad = 2,
 }
 
+/**
+ * Describes the progress within a maneuver.
+ * Transition through: Continue → Initial → Prepare → Execute → Continue
+ * @namespace iOS sets CPManeuverState on the CPNavigationSession
+ * @namespace Android no-op, Android Auto does not have an equivalent API
+ */
+export enum ManeuverState {
+  Continue = 0, // iOS .continue
+  Initial = 1, // iOS .initial
+  Prepare = 2, // iOS .prepare
+  Execute = 3, // iOS .execute
+}
+
 export interface BaseManeuver {
   /**
    * @namespace iOS specify a unique identifier, sending over a Maneuver with a known id will only update the travelEstimates on the previously sent Maneuver
