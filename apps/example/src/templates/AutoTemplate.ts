@@ -241,7 +241,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
     {
       type: 'image',
       image: { name: 'mic', type: 'glyph' },
-      onPress: (t) => {
+      onPress: () => {
         HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
           if (!isGranted) {
             return;
@@ -284,10 +284,21 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       {
         type: 'image',
         image: {
-          name: 'list',
+          name: 'mic',
           type: 'glyph',
         },
-        onPress: () => AutoListTemplate.getTemplate().push(),
+        onPress: () => {
+          HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+            if (!isGranted) {
+              return;
+            }
+
+            HybridAutoPlay.startVoiceInput().then((audio) => {
+              console.log(`received ${audio.byteLength} bytes`);
+              dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+            });
+          });
+        },
       },
       {
         type: 'image',
