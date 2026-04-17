@@ -372,7 +372,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
-      name: 'mic',
+      name: 'ev_charger',
       color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
       type: 'glyph',
