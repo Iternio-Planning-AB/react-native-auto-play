@@ -574,7 +574,12 @@ object Parser {
         val thread = Thread { fetched = fetchSync(context, imageRequest) }
         thread.start()
         thread.join(timeoutMs)
-        if (thread.isAlive) return null
+        if (thread.isAlive) {
+            // Fresco's waitForFinalResult is not interruptible, but setting the flag
+            // lets any subsequent interruptible call exit and signals intent to exit.
+            thread.interrupt()
+            return null
+        }
         return fetched
     }
 
