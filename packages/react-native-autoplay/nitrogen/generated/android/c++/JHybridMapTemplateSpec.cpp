@@ -93,6 +93,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Traffic
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
 // Forward declaration of `TripConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
+// Forward declaration of `ManeuverState` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
 
 #include "TripSelectorCallback.hpp"
 #include "JTripSelectorCallback.hpp"
@@ -203,6 +205,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig;
 #include "JNitroLoadingManeuver.hpp"
 #include "TripConfig.hpp"
 #include "JTripConfig.hpp"
+#include "ManeuverState.hpp"
+#include "JManeuverState.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -332,6 +336,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   void JHybridMapTemplateSpec::stopNavigation(const std::string& templateId) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");
     method(_javaPart, jni::make_jstring(templateId));
+  }
+  void JHybridMapTemplateSpec::setManeuverState(const std::string& templateId, ManeuverState state) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JManeuverState> /* state */)>("setManeuverState");
+    method(_javaPart, jni::make_jstring(templateId), JManeuverState::fromCpp(state));
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

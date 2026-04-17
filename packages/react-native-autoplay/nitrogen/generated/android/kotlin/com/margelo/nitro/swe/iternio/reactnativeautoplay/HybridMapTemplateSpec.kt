@@ -81,6 +81,10 @@ abstract class HybridMapTemplateSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun stopNavigation(templateId: String): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setManeuverState(templateId: String, state: ManeuverState): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

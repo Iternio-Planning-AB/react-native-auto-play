@@ -784,4 +784,20 @@ class MapTemplate: AutoPlayHeaderProviding,
         navigationSession?.finishTrip()
         navigationSession = nil
     }
+
+    func setManeuverState(state: ManeuverState) {
+        guard #available(iOS 17.4, *) else { return }
+        guard let navigationSession = navigationSession else { return }
+
+        switch state {
+        case .continue:
+            navigationSession.maneuverState = .continue
+        case .initial:
+            navigationSession.maneuverState = .initial
+        case .prepare:
+            navigationSession.maneuverState = .prepare
+        case .execute:
+            navigationSession.maneuverState = .execute
+        }
+    }
 }
