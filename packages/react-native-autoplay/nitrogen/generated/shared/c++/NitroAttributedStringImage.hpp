@@ -32,9 +32,12 @@
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -44,12 +47,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct NitroAttributedStringImage final {
   public:
-    std::variant<GlyphImage, AssetImage> image     SWIFT_PRIVATE;
+    std::variant<GlyphImage, AssetImage, RemoteImage> image     SWIFT_PRIVATE;
     double position     SWIFT_PRIVATE;
 
   public:
     NitroAttributedStringImage() = default;
-    explicit NitroAttributedStringImage(std::variant<GlyphImage, AssetImage> image, double position): image(image), position(position) {}
+    explicit NitroAttributedStringImage(std::variant<GlyphImage, AssetImage, RemoteImage> image, double position): image(image), position(position) {}
 
   public:
     friend bool operator==(const NitroAttributedStringImage& lhs, const NitroAttributedStringImage& rhs) = default;
@@ -65,13 +68,13 @@ namespace margelo::nitro {
     static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage(
-        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedStringImage& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "position"), JSIConverter<double>::toJSI(runtime, arg.position));
       return obj;
     }
@@ -83,7 +86,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "position")))) return false;
       return true;
     }

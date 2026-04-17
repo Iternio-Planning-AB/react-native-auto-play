@@ -17,6 +17,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttrib
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -42,12 +44,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "JNitroAttributedStringImage.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include "JNitroImage.hpp"
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include "JAssetImage.hpp"
+#include "JRemoteImage.hpp"
 #include "ColorScheme.hpp"
 #include "JFunc_void_std__string_ColorScheme.hpp"
 #include "JColorScheme.hpp"

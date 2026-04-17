@@ -34,10 +34,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 
 #include "NitroMapButtonType.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include <functional>
 #include <optional>
@@ -50,12 +53,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   struct NitroMapButton final {
   public:
     NitroMapButtonType type     SWIFT_PRIVATE;
-    std::variant<GlyphImage, AssetImage> image     SWIFT_PRIVATE;
+    std::variant<GlyphImage, AssetImage, RemoteImage> image     SWIFT_PRIVATE;
     std::optional<std::function<void()>> onPress     SWIFT_PRIVATE;
 
   public:
     NitroMapButton() = default;
-    explicit NitroMapButton(NitroMapButtonType type, std::variant<GlyphImage, AssetImage> image, std::optional<std::function<void()>> onPress): type(type), image(image), onPress(onPress) {}
+    explicit NitroMapButton(NitroMapButtonType type, std::variant<GlyphImage, AssetImage, RemoteImage> image, std::optional<std::function<void()>> onPress): type(type), image(image), onPress(onPress) {}
 
   public:
     // NitroMapButton is not equatable because these properties are not equatable: onPress
@@ -72,14 +75,14 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton(
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButtonType>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type"))),
-        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "type"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButtonType>::toJSI(runtime, arg.type));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onPress"), JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPress));
       return obj;
     }
@@ -92,7 +95,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButtonType>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type")))) return false;
-      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))) return false;
       return true;
     }

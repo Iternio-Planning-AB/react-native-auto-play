@@ -31,7 +31,8 @@
 #include "JNitroRow.hpp"
 #include "JNitroSection.hpp"
 #include "JNitroSectionType.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
@@ -40,6 +41,7 @@
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
+#include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

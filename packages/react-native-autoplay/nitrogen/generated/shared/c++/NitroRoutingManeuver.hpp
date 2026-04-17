@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAttrib
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `TurnType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnType; }
 // Forward declaration of `OffRampType` to properly resolve imports.
@@ -59,6 +61,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 #include <vector>
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include <optional>
 #include "TurnType.hpp"
@@ -81,8 +84,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   struct NitroRoutingManeuver final {
   public:
     std::vector<NitroAttributedString> attributedInstructionVariants     SWIFT_PRIVATE;
-    std::variant<GlyphImage, AssetImage> symbolImage     SWIFT_PRIVATE;
-    std::optional<std::variant<GlyphImage, AssetImage>> junctionImage     SWIFT_PRIVATE;
+    std::variant<GlyphImage, AssetImage, RemoteImage> symbolImage     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> junctionImage     SWIFT_PRIVATE;
     std::optional<TurnType> turnType     SWIFT_PRIVATE;
     std::optional<double> angle     SWIFT_PRIVATE;
     std::optional<std::vector<double>> elementAngles     SWIFT_PRIVATE;
@@ -102,7 +105,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     NitroRoutingManeuver() = default;
-    explicit NitroRoutingManeuver(std::vector<NitroAttributedString> attributedInstructionVariants, std::variant<GlyphImage, AssetImage> symbolImage, std::optional<std::variant<GlyphImage, AssetImage>> junctionImage, std::optional<TurnType> turnType, std::optional<double> angle, std::optional<std::vector<double>> elementAngles, std::optional<double> exitNumber, std::optional<OffRampType> offRampType, std::optional<OnRampType> onRampType, std::optional<ForkType> forkType, std::optional<KeepType> keepType, std::optional<LaneGuidance> linkedLaneGuidance, NitroColor cardBackgroundColor, std::string id, TravelEstimates travelEstimates, TrafficSide trafficSide, ManeuverType maneuverType, std::optional<std::vector<std::string>> roadName, std::optional<std::string> highwayExitLabel): attributedInstructionVariants(attributedInstructionVariants), symbolImage(symbolImage), junctionImage(junctionImage), turnType(turnType), angle(angle), elementAngles(elementAngles), exitNumber(exitNumber), offRampType(offRampType), onRampType(onRampType), forkType(forkType), keepType(keepType), linkedLaneGuidance(linkedLaneGuidance), cardBackgroundColor(cardBackgroundColor), id(id), travelEstimates(travelEstimates), trafficSide(trafficSide), maneuverType(maneuverType), roadName(roadName), highwayExitLabel(highwayExitLabel) {}
+    explicit NitroRoutingManeuver(std::vector<NitroAttributedString> attributedInstructionVariants, std::variant<GlyphImage, AssetImage, RemoteImage> symbolImage, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> junctionImage, std::optional<TurnType> turnType, std::optional<double> angle, std::optional<std::vector<double>> elementAngles, std::optional<double> exitNumber, std::optional<OffRampType> offRampType, std::optional<OnRampType> onRampType, std::optional<ForkType> forkType, std::optional<KeepType> keepType, std::optional<LaneGuidance> linkedLaneGuidance, NitroColor cardBackgroundColor, std::string id, TravelEstimates travelEstimates, TrafficSide trafficSide, ManeuverType maneuverType, std::optional<std::vector<std::string>> roadName, std::optional<std::string> highwayExitLabel): attributedInstructionVariants(attributedInstructionVariants), symbolImage(symbolImage), junctionImage(junctionImage), turnType(turnType), angle(angle), elementAngles(elementAngles), exitNumber(exitNumber), offRampType(offRampType), onRampType(onRampType), forkType(forkType), keepType(keepType), linkedLaneGuidance(linkedLaneGuidance), cardBackgroundColor(cardBackgroundColor), id(id), travelEstimates(travelEstimates), trafficSide(trafficSide), maneuverType(maneuverType), roadName(roadName), highwayExitLabel(highwayExitLabel) {}
 
   public:
     // NitroRoutingManeuver is not equatable because these properties are not equatable: travelEstimates
@@ -119,8 +122,8 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver(
         JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "attributedInstructionVariants"))),
-        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "symbolImage"))),
-        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "junctionImage"))),
+        JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "symbolImage"))),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "junctionImage"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "turnType"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "angle"))),
         JSIConverter<std::optional<std::vector<double>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "elementAngles"))),
@@ -142,8 +145,8 @@ namespace margelo::nitro {
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroRoutingManeuver& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "attributedInstructionVariants"), JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::toJSI(runtime, arg.attributedInstructionVariants));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "symbolImage"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::toJSI(runtime, arg.symbolImage));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "junctionImage"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.junctionImage));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "symbolImage"), JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::toJSI(runtime, arg.symbolImage));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "junctionImage"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::toJSI(runtime, arg.junctionImage));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "turnType"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::toJSI(runtime, arg.turnType));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "angle"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.angle));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "elementAngles"), JSIConverter<std::optional<std::vector<double>>>::toJSI(runtime, arg.elementAngles));
@@ -171,8 +174,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAttributedString>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "attributedInstructionVariants")))) return false;
-      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "symbolImage")))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "junctionImage")))) return false;
+      if (!JSIConverter<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "symbolImage")))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "junctionImage")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::TurnType>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "turnType")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "angle")))) return false;
       if (!JSIConverter<std::optional<std::vector<double>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "elementAngles")))) return false;

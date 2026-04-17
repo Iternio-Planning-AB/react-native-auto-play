@@ -20,6 +20,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCarPla
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -32,6 +34,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ColorSc
 #include <vector>
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include "NitroColor.hpp"
 #include <optional>

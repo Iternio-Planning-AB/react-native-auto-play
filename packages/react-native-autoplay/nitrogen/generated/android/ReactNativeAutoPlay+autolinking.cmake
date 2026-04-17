@@ -49,7 +49,7 @@ target_sources(
   ../nitrogen/generated/android/c++/JHybridAndroidAutomotiveSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAndroidAutoTelemetrySpec.cpp
   ../nitrogen/generated/android/c++/JHybridAutoPlaySpec.cpp
-  ../nitrogen/generated/android/c++/JVariant_GlyphImage_AssetImage.cpp
+  ../nitrogen/generated/android/c++/JVariant_GlyphImage_AssetImage_RemoteImage.cpp
   ../nitrogen/generated/android/c++/JHybridClusterSpec.cpp
   ../nitrogen/generated/android/c++/JNitroImage.cpp
   ../nitrogen/generated/android/c++/JHybridGridTemplateSpec.cpp

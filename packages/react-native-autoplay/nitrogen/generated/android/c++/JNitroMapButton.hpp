@@ -18,8 +18,10 @@
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JRemoteImage.hpp"
 #include "NitroColor.hpp"
 #include "NitroMapButtonType.hpp"
+#include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

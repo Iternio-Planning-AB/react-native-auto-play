@@ -12,6 +12,7 @@
 
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
@@ -19,6 +20,7 @@
 #include <optional>
 #include "JAssetImage.hpp"
 #include <string>
+#include "JRemoteImage.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -39,16 +41,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JAssetImage>)>("create");
       return method(javaClassStatic(), value);
     }
+    static jni::local_ref<JNitroImage> create_2(jni::alias_ref<JRemoteImage> value) {
+      static const auto method = javaClassStatic()->getStaticMethod<JNitroImage(jni::alias_ref<JRemoteImage>)>("create");
+      return method(javaClassStatic(), value);
+    }
 
-    static jni::local_ref<JNitroImage> fromCpp(const std::variant<GlyphImage, AssetImage>& variant) {
+    static jni::local_ref<JNitroImage> fromCpp(const std::variant<GlyphImage, AssetImage, RemoteImage>& variant) {
       switch (variant.index()) {
         case 0: return create_0(JGlyphImage::fromCpp(std::get<0>(variant)));
         case 1: return create_1(JAssetImage::fromCpp(std::get<1>(variant)));
+        case 2: return create_2(JRemoteImage::fromCpp(std::get<2>(variant)));
         default: throw std::invalid_argument("Variant holds unknown index! (" + std::to_string(variant.index()) + ")");
       }
     }
 
-    [[nodiscard]] std::variant<GlyphImage, AssetImage> toCpp() const;
+    [[nodiscard]] std::variant<GlyphImage, AssetImage, RemoteImage> toCpp() const;
   };
 
   namespace JNitroImage_impl {
@@ -68,6 +75,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     
       [[nodiscard]] jni::local_ref<JAssetImage> getValue() const {
         static const auto field = javaClassStatic()->getField<JAssetImage>("value");
+        return getFieldValue(field);
+      }
+    };
+    
+    class Third final: public jni::JavaClass<Third, JNitroImage> {
+    public:
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/NitroImage$Third;";
+    
+      [[nodiscard]] jni::local_ref<JRemoteImage> getValue() const {
+        static const auto field = javaClassStatic()->getField<JRemoteImage>("value");
         return getFieldValue(field);
       }
     };

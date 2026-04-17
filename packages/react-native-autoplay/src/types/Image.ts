@@ -37,5 +37,10 @@ export type AutoImage =
        * if specified the image gets tinted, if not it will just use the original image
        */
       color?: ThemedColor | string;
+      /**
+       * Network timeout in milliseconds before the remote fetch is abandoned and `null` is returned.
+       * Defaults to 500ms when not specified.
+       */
+      timeoutMs?: number;
       type: 'remote';
     };

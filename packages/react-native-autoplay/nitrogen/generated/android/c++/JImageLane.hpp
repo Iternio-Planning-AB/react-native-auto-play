@@ -16,7 +16,9 @@
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
+#include "JRemoteImage.hpp"
 #include "NitroColor.hpp"
+#include "RemoteImage.hpp"
 #include <optional>
 #include <string>
 #include <variant>

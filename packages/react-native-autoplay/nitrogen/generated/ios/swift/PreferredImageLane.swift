@@ -19,12 +19,14 @@ public extension PreferredImageLane {
    * Create a new instance of `PreferredImageLane`.
    */
   init(image: NitroImage, highlightedAngle: Double, isPreferred: Bool, angles: [Double]) {
-    self.init({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+    self.init({ () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
       switch image {
         case .first(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
         case .second(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
+        case .third(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
       }
     }().variant, highlightedAngle, isPreferred, { () -> bridge.std__vector_double_ in
       var __vector = bridge.create_std__vector_double_(angles.count)
@@ -38,7 +40,7 @@ public extension PreferredImageLane {
   @inline(__always)
   var image: NitroImage {
     return { () -> NitroImage in
-      let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__image)
+      let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(self.__image)
       switch __variant.index() {
         case 0:
           let __actual = __variant.get_0()
@@ -46,6 +48,9 @@ public extension PreferredImageLane {
         case 1:
           let __actual = __variant.get_1()
           return .second(__actual)
+        case 2:
+          let __actual = __variant.get_2()
+          return .third(__actual)
         default:
           fatalError("Variant can never have index \(__variant.index())!")
       }

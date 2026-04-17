@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAlertAction; }
 // Forward declaration of `AlertDismissalReason` to properly resolve imports.
@@ -43,6 +45,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class AlertDi
 #include <optional>
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include "NavigationAlertAction.hpp"
 #include <functional>
@@ -58,7 +61,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     double id     SWIFT_PRIVATE;
     AutoText title     SWIFT_PRIVATE;
     std::optional<AutoText> subtitle     SWIFT_PRIVATE;
-    std::optional<std::variant<GlyphImage, AssetImage>> image     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image     SWIFT_PRIVATE;
     NavigationAlertAction primaryAction     SWIFT_PRIVATE;
     std::optional<NavigationAlertAction> secondaryAction     SWIFT_PRIVATE;
     double durationMs     SWIFT_PRIVATE;
@@ -68,7 +71,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     NitroNavigationAlert() = default;
-    explicit NitroNavigationAlert(double id, AutoText title, std::optional<AutoText> subtitle, std::optional<std::variant<GlyphImage, AssetImage>> image, NavigationAlertAction primaryAction, std::optional<NavigationAlertAction> secondaryAction, double durationMs, std::optional<std::function<void()>> onWillShow, std::optional<std::function<void(AlertDismissalReason /* reason */)>> onDidDismiss, double priority): id(id), title(title), subtitle(subtitle), image(image), primaryAction(primaryAction), secondaryAction(secondaryAction), durationMs(durationMs), onWillShow(onWillShow), onDidDismiss(onDidDismiss), priority(priority) {}
+    explicit NitroNavigationAlert(double id, AutoText title, std::optional<AutoText> subtitle, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, NavigationAlertAction primaryAction, std::optional<NavigationAlertAction> secondaryAction, double durationMs, std::optional<std::function<void()>> onWillShow, std::optional<std::function<void(AlertDismissalReason /* reason */)>> onDidDismiss, double priority): id(id), title(title), subtitle(subtitle), image(image), primaryAction(primaryAction), secondaryAction(secondaryAction), durationMs(durationMs), onWillShow(onWillShow), onDidDismiss(onDidDismiss), priority(priority) {}
 
   public:
     // NitroNavigationAlert is not equatable because these properties are not equatable: primaryAction, secondaryAction, onWillShow, onDidDismiss
@@ -87,7 +90,7 @@ namespace margelo::nitro {
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "id"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "subtitle"))),
-        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "primaryAction"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "secondaryAction"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "durationMs"))),
@@ -101,7 +104,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "id"), JSIConverter<double>::toJSI(runtime, arg.id));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "subtitle"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::toJSI(runtime, arg.subtitle));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "primaryAction"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>::toJSI(runtime, arg.primaryAction));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "secondaryAction"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>>::toJSI(runtime, arg.secondaryAction));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "durationMs"), JSIConverter<double>::toJSI(runtime, arg.durationMs));
@@ -121,7 +124,7 @@ namespace margelo::nitro {
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "id")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "subtitle")))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "primaryAction")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "secondaryAction")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "durationMs")))) return false;

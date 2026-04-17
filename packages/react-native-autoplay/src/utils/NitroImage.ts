@@ -15,11 +15,17 @@ interface GlyphImage {
   fontScale?: number;
 }
 
+interface RemoteImage {
+  uri: string;
+  color?: NitroColor;
+  timeoutMs?: number;
+}
+
 /**
  * we need to map the ButtonImage.name from GlyphName to
  * the actual numeric value so we need a nitro specific type
  */
-export type NitroImage = GlyphImage | AssetImage;
+export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
 function convert(image: AutoImage): NitroImage;
 function convert(image?: AutoImage): NitroImage | undefined;
@@ -44,16 +50,11 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
-  // Remote HTTPS images bypass resolveAssetSource which only handles bundled assets.
-  // We pass the URI directly so native code (Fresco on Android, URLSession on iOS) can fetch it.
   if (image.type === 'remote') {
     return {
-      height: 0,
-      scale: 1,
-      width: 0,
       uri: image.uri,
-      packager_asset: false,
       color: NitroColorUtil.convert(image.color),
+      timeoutMs: image.timeoutMs,
     };
   }
 

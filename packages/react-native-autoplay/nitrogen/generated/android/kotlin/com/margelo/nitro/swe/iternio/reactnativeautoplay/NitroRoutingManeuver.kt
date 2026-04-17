@@ -25,7 +25,7 @@ data class NitroRoutingManeuver(
   val symbolImage: NitroImage,
   @DoNotStrip
   @Keep
-  val junctionImage: Variant_GlyphImage_AssetImage?,
+  val junctionImage: Variant_GlyphImage_AssetImage_RemoteImage?,
   @DoNotStrip
   @Keep
   val turnType: TurnType?,
@@ -85,7 +85,7 @@ data class NitroRoutingManeuver(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(attributedInstructionVariants: Array<NitroAttributedString>, symbolImage: NitroImage, junctionImage: Variant_GlyphImage_AssetImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: NitroColor, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroRoutingManeuver {
+    private fun fromCpp(attributedInstructionVariants: Array<NitroAttributedString>, symbolImage: NitroImage, junctionImage: Variant_GlyphImage_AssetImage_RemoteImage?, turnType: TurnType?, angle: Double?, elementAngles: DoubleArray?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: NitroColor, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: Array<String>?, highwayExitLabel: String?): NitroRoutingManeuver {
       return NitroRoutingManeuver(attributedInstructionVariants, symbolImage, junctionImage, turnType, angle, elementAngles, exitNumber, offRampType, onRampType, forkType, keepType, linkedLaneGuidance, cardBackgroundColor, id, travelEstimates, trafficSide, maneuverType, roadName, highwayExitLabel)
     }
   }

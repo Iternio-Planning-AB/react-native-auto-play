@@ -37,10 +37,11 @@
 #include "JOffRampType.hpp"
 #include "JOnRampType.hpp"
 #include "JPreferredImageLane.hpp"
+#include "JRemoteImage.hpp"
 #include "JTrafficSide.hpp"
 #include "JTravelEstimates.hpp"
 #include "JTurnType.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
@@ -51,6 +52,7 @@
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "PreferredImageLane.hpp"
+#include "RemoteImage.hpp"
 #include "TrafficSide.hpp"
 #include "TravelEstimates.hpp"
 #include "TurnType.hpp"
@@ -84,8 +86,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroAttributedString>> attributedInstructionVariants = this->getFieldValue(fieldAttributedInstructionVariants);
       static const auto fieldSymbolImage = clazz->getField<JNitroImage>("symbolImage");
       jni::local_ref<JNitroImage> symbolImage = this->getFieldValue(fieldSymbolImage);
-      static const auto fieldJunctionImage = clazz->getField<JVariant_GlyphImage_AssetImage>("junctionImage");
-      jni::local_ref<JVariant_GlyphImage_AssetImage> junctionImage = this->getFieldValue(fieldJunctionImage);
+      static const auto fieldJunctionImage = clazz->getField<JVariant_GlyphImage_AssetImage_RemoteImage>("junctionImage");
+      jni::local_ref<JVariant_GlyphImage_AssetImage_RemoteImage> junctionImage = this->getFieldValue(fieldJunctionImage);
       static const auto fieldTurnType = clazz->getField<JTurnType>("turnType");
       jni::local_ref<JTurnType> turnType = this->getFieldValue(fieldTurnType);
       static const auto fieldAngle = clazz->getField<jni::JDouble>("angle");
@@ -170,7 +172,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRoutingManeuver::javaobject> fromCpp(const NitroRoutingManeuver& value) {
-      using JSignature = JNitroRoutingManeuver(jni::alias_ref<jni::JArrayClass<JNitroAttributedString>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
+      using JSignature = JNitroRoutingManeuver(jni::alias_ref<jni::JArrayClass<JNitroAttributedString>>, jni::alias_ref<JNitroImage>, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JTurnType>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JOffRampType>, jni::alias_ref<JOnRampType>, jni::alias_ref<JForkType>, jni::alias_ref<JKeepType>, jni::alias_ref<JLaneGuidance>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JString>, jni::alias_ref<JTravelEstimates>, jni::alias_ref<JTrafficSide>, jni::alias_ref<JManeuverType>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -186,7 +188,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __array;
         }(),
         JNitroImage::fromCpp(value.symbolImage),
-        value.junctionImage.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.junctionImage.value()) : nullptr,
+        value.junctionImage.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.junctionImage.value()) : nullptr,
         value.turnType.has_value() ? JTurnType::fromCpp(value.turnType.value()) : nullptr,
         value.angle.has_value() ? jni::JDouble::valueOf(value.angle.value()) : nullptr,
         value.elementAngles.has_value() ? [&]() {

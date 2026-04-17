@@ -19,9 +19,11 @@
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
 #include "JPreferredImageLane.hpp"
+#include "JRemoteImage.hpp"
 #include "JVariant_PreferredImageLane_ImageLane.hpp"
 #include "NitroColor.hpp"
 #include "PreferredImageLane.hpp"
+#include "RemoteImage.hpp"
 #include <optional>
 #include <string>
 #include <variant>

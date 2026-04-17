@@ -120,6 +120,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OnRampT
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `PreferredImageLane` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct PreferredImageLane; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
@@ -206,6 +208,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "OnRampType.hpp"
 #include "Point.hpp"
 #include "PreferredImageLane.hpp"
+#include "RemoteImage.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "SearchTemplateConfig.hpp"
