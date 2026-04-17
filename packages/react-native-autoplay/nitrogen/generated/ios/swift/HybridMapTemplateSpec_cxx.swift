@@ -308,4 +308,15 @@ open class HybridMapTemplateSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func setManeuverState(templateId: std.string, state: Int32) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setManeuverState(templateId: String(templateId), state: margelo.nitro.swe.iternio.reactnativeautoplay.ManeuverState(rawValue: state)!)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }
