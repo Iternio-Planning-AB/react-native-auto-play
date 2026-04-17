@@ -6,7 +6,7 @@ const initialState: AudioState = {
 };
 
 const audioSlice = createSlice({
-  name: SliceName.Navigation,
+  name: SliceName.Audio,
   initialState,
   reducers: {
     setRecording(state, action: PayloadAction<string>) {
