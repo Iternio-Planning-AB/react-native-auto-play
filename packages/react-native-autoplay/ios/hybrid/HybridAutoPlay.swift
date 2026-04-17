@@ -139,32 +139,26 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?) throws -> Promise<ArrayBuffer> {
         return Promise.async {
-            try await RootModule.withInterfaceController { interfaceController in
-                let manager = VoiceInputManager()
-                HybridAutoPlay.voiceInputManager = manager
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
 
-                let data = try await manager.start(
-                    interfaceController: interfaceController,
-                    silenceThresholdMs: silenceThresholdMs ?? 1_500,
-                    maxDurationMs: maxDurationMs ?? 10_000,
-                    listeningText: listeningText ?? "Listening..."
-                )
+            let manager = VoiceInputManager()
+            HybridAutoPlay.voiceInputManager = manager
 
-                HybridAutoPlay.voiceInputManager = nil
+            let data = try await manager.start(
+                interfaceController: interfaceController,
+                silenceThresholdMs: silenceThresholdMs ?? 1_500,
+                maxDurationMs: maxDurationMs ?? 10_000,
+                listeningText: listeningText ?? "Listening..."
+            )
 
-                return try ArrayBuffer.copy(data: data)
-            } ?? ArrayBuffer.allocate(size: 0)
+            HybridAutoPlay.voiceInputManager = nil
+
+            return try ArrayBuffer.copy(data: data)
         }
     }
 
     func stopVoiceInput() throws {
-        guard let manager = HybridAutoPlay.voiceInputManager else { return }
-
-        Task { @MainActor in
-            try? await RootModule.withInterfaceController { interfaceController in
-                manager.stop(interfaceController: interfaceController)
-            }
-        }
+        HybridAutoPlay.voiceInputManager?.stop()
     }
 
     // MARK: set/push/pop templates

@@ -7,11 +7,13 @@ import {
   useSelector,
   useStore,
 } from 'react-redux';
+import { audioReducer } from './audioSlice';
 import { navigationReducer } from './navigationSlice';
 import { SliceName } from './types';
 
 const rootReducer = {
   [SliceName.Navigation]: navigationReducer,
+  [SliceName.Audio]: audioReducer,
 };
 
 export const listenerMiddleware = createListenerMiddleware();

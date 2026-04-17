@@ -11,11 +11,12 @@ import {
   type TripPoint,
   type VisibleTravelEstimate,
 } from '@iternio/react-native-auto-play';
+import { Buffer } from 'buffer';
 import { Platform } from 'react-native';
-import { toWavBase64 } from '../audioUtils';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { getCarPlayDashboardButtons } from '../config/CarPlayDashboardButtons';
+import { setRecording } from '../state/audioSlice';
 import { actionStopNavigation, setIsNavigating, setSelectedTrip } from '../state/navigationSlice';
 import { dispatch } from '../state/store';
 import { AutoGridTemplate } from './AutoGridTemplate';
@@ -364,10 +365,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
         }
 
         HybridAutoPlay.startVoiceInput().then((audio) => {
-          const encoded = toWavBase64(audio);
-
           console.log(`received ${audio.byteLength} bytes`);
-          console.log(`echo "${encoded}" | base64 -d > recording.wav`);
+          dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
         });
       });
       // var remaining = 10000;

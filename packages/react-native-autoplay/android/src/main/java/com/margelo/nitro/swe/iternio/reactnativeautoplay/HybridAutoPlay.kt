@@ -4,9 +4,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.modules.core.PermissionAwareActivity
+import com.facebook.react.modules.core.PermissionListener
 import com.margelo.nitro.NitroModules
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import com.margelo.nitro.core.ArrayBuffer
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -16,6 +16,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.coroutines.resume
 
 class HybridAutoPlay : HybridAutoPlaySpec() {
     init {
@@ -253,36 +254,60 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun hasVoiceInputPermission(): Boolean {
         val context = NitroModules.applicationContext ?: return false
         return ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.RECORD_AUDIO
+            context, android.Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun requestVoiceInputPermission(): Promise<Boolean> {
         return Promise.async {
-            val carContext = AndroidAutoSession.getRootContext()
-                ?: throw IllegalStateException("requestVoiceInputPermission failed: car context not available")
+            if (hasVoiceInputPermission()) {
+                return@async true
+            }
 
-            suspendCancellableCoroutine { cont ->
-                carContext.requestPermissions(
-                    listOf(android.Manifest.permission.RECORD_AUDIO)
-                ) { approved, _ ->
-                    cont.resume(approved.contains(android.Manifest.permission.RECORD_AUDIO))
+            val carContext = AndroidAutoSession.getRootContext()
+
+            if (carContext != null) {
+                suspendCancellableCoroutine {
+                    carContext.requestPermissions(listOf(android.Manifest.permission.RECORD_AUDIO)) { approved, _ ->
+                        it.resume(approved.contains(android.Manifest.permission.RECORD_AUDIO))
+                    }
+                }
+            } else {
+                val context = NitroModules.applicationContext ?: return@async false
+                val activity =
+                    context.currentActivity as? PermissionAwareActivity ?: return@async false
+                val code = (Math.random() * 10000).toInt()
+
+                suspendCancellableCoroutine {
+                    activity.requestPermissions(
+                        arrayOf(android.Manifest.permission.RECORD_AUDIO),
+                        code,
+                        PermissionListener { requestCode, _, grantResults ->
+                            if (requestCode != code) {
+                                return@PermissionListener false
+                            }
+
+                            val granted =
+                                grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED
+
+                            it.resume(granted)
+
+                            return@PermissionListener true
+                        })
                 }
             }
         }
     }
 
-    override fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?): Promise<ArrayBuffer> {
+    override fun startVoiceInput(
+        silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?
+    ): Promise<ArrayBuffer> {
         return Promise.async {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 throw UnsupportedOperationException("startVoiceInput requires at least API level ${Build.VERSION_CODES.O}")
             }
 
-            val carContext = AndroidAutoSession.getRootContext()
-                ?: throw IllegalStateException("startVoiceInput failed: car context not available")
-
-            val manager = VoiceInputManager(carContext)
+            val manager = VoiceInputManager(AndroidAutoSession.getRootContext())
             voiceInputManager = manager
 
             try {
@@ -290,7 +315,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                     silenceThresholdMs = silenceThresholdMs?.toLong() ?: 1_500L,
                     maxDurationMs = maxDurationMs?.toLong() ?: 10_000L,
                 )
-                val directBuffer = ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
+                val directBuffer =
+                    ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
                 ArrayBuffer.wrap(directBuffer)
             } finally {
                 voiceInputManager = null
@@ -312,7 +338,9 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
         private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
-        @Volatile private var voiceInputManager: VoiceInputManager? = null
+
+        @Volatile
+        private var voiceInputManager: VoiceInputManager? = null
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()

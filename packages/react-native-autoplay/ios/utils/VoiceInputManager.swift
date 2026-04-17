@@ -30,7 +30,7 @@ class VoiceInputManager {
     // MARK: - Public
 
     func start(
-        interfaceController: AutoPlayInterfaceController,
+        interfaceController: AutoPlayInterfaceController?,
         silenceThresholdMs: Double,
         maxDurationMs: Double,
         listeningText: String
@@ -59,11 +59,11 @@ class VoiceInputManager {
         return samplesAsData(samples)
     }
 
-    func stop(interfaceController: AutoPlayInterfaceController) {
+    func stop(interfaceController: AutoPlayInterfaceController? = nil) {
         guard !isStopping else { return }
         isStopping = true
 
-        stopCapture(interfaceController: interfaceController)
+        stopCapture(interfaceController: interfaceController ?? storedInterfaceController)
         continuation?.resume(returning: samples)
         continuation = nil
         samples = []
@@ -72,7 +72,7 @@ class VoiceInputManager {
     // MARK: - Private
 
     private func startCapture(
-        interfaceController: AutoPlayInterfaceController,
+        interfaceController: AutoPlayInterfaceController?,
         silenceThresholdMs: Double,
         maxDurationMs: Double,
         listeningText: String
@@ -86,7 +86,9 @@ class VoiceInputManager {
         try session.setCategory(.playAndRecord, mode: .measurement, options: [.mixWithOthers])
         try session.setActive(true)
 
-        presentVoiceTemplate(interfaceController: interfaceController, listeningText: listeningText)
+        if let interfaceController {
+            presentVoiceTemplate(interfaceController: interfaceController, listeningText: listeningText)
+        }
 
         let engine = AVAudioEngine()
         let inputNode = engine.inputNode
@@ -167,20 +169,21 @@ class VoiceInputManager {
     }
 
     private func triggerAutoStop() {
-        guard let interfaceController = storedInterfaceController else { return }
         DispatchQueue.global(qos: .userInitiated).async {
-            self.stop(interfaceController: interfaceController)
+            self.stop()
         }
     }
 
-    private func stopCapture(interfaceController: AutoPlayInterfaceController) {
+    private func stopCapture(interfaceController: AutoPlayInterfaceController?) {
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine?.stop()
         audioEngine = nil
         recordingStart = nil
         silenceStart = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        dismissVoiceTemplate(interfaceController: interfaceController)
+        if let interfaceController {
+            dismissVoiceTemplate(interfaceController: interfaceController)
+        }
     }
 
     private func presentVoiceTemplate(interfaceController: AutoPlayInterfaceController, listeningText: String) {
