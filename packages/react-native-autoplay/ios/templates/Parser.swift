@@ -74,6 +74,12 @@ class Parser {
                         traitCollection: traitCollection
                     )
                 }
+                if let remoteImage = action.image?.remoteImage {
+                    image = Parser.parseRemoteImage(
+                        remoteImage: remoteImage,
+                        traitCollection: traitCollection
+                    )
+                }
 
                 var button: CPBarButton
 
@@ -760,6 +766,13 @@ class Parser {
             )
         }
 
+        if let remoteImage = image?.remoteImage {
+            return Parser.parseRemoteImage(
+                remoteImage: remoteImage,
+                traitCollection: traitCollection
+            )
+        }
+
         return nil
     }
 
@@ -771,27 +784,47 @@ class Parser {
         return cache
     }()
 
+    /// Default network timeout for remote images when no `timeoutMs` is provided.
+    private static let defaultRemoteTimeoutSeconds: TimeInterval = 0.5
+
     static func parseAssetImage(
         assetImage: AssetImage,
         traitCollection: UITraitCollection
     ) -> UIImage? {
-        let uiImage: UIImage?
+        let uiImage = NitroConvert.uiImage([
+            "height": assetImage.height, "width": assetImage.width,
+            "uri": assetImage.uri, "scale": assetImage.scale,
+            "__packager_asset": assetImage.packager_asset,
+        ])
 
-        if assetImage.uri.hasPrefix("https://") {
-            uiImage = loadRemoteImage(uri: assetImage.uri)
-        } else {
-            uiImage = NitroConvert.uiImage([
-                "height": assetImage.height, "width": assetImage.width,
-                "uri": assetImage.uri, "scale": assetImage.scale,
-                "__packager_asset": assetImage.packager_asset,
-            ])
-        }
+        return applyTint(
+            uiImage: uiImage,
+            color: assetImage.color,
+            traitCollection: traitCollection
+        )
+    }
 
+    static func parseRemoteImage(
+        remoteImage: RemoteImage,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 } ?? defaultRemoteTimeoutSeconds
+        let uiImage = loadRemoteImage(uri: remoteImage.uri, timeoutSeconds: timeoutSeconds)
+
+        return applyTint(
+            uiImage: uiImage,
+            color: remoteImage.color,
+            traitCollection: traitCollection
+        )
+    }
+
+    private static func applyTint(
+        uiImage: UIImage?,
+        color: NitroColor?,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
         guard let image = uiImage else { return nil }
-
-        guard let color = assetImage.color else {
-            return image
-        }
+        guard let color else { return image }
 
         return getTintedImageAsset(
             color: color,
@@ -801,8 +834,9 @@ class Parser {
     }
 
     /// Synchronously loads an image from a remote HTTPS URL with in-memory caching.
-    /// Uses URLSession with 10s timeout to avoid blocking indefinitely.
-    private static func loadRemoteImage(uri: String) -> UIImage? {
+    /// `parseRemoteImage` is always invoked on a background thread by the Car App rendering pipeline,
+    /// so the semaphore wait cannot block the main thread.
+    private static func loadRemoteImage(uri: String, timeoutSeconds: TimeInterval) -> UIImage? {
         let cacheKey = uri as NSString
         if let cached = remoteImageCache.object(forKey: cacheKey) {
             return cached
@@ -811,7 +845,7 @@ class Parser {
         guard let url = URL(string: uri) else { return nil }
 
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 10
+        config.timeoutIntervalForRequest = timeoutSeconds
         let session = URLSession(configuration: config)
         var resultData: Data?
         let semaphore = DispatchSemaphore(value: 0)
@@ -819,7 +853,7 @@ class Parser {
             resultData = data
             semaphore.signal()
         }.resume()
-        _ = semaphore.wait(timeout: .now() + 10)
+        _ = semaphore.wait(timeout: .now() + timeoutSeconds)
 
         guard let data = resultData, let image = UIImage(data: data) else { return nil }
 

@@ -69,6 +69,13 @@ class GridTemplate: AutoPlayHeaderProviding {
                 )
             }
 
+            if let remoteImage = button.image.remoteImage {
+                image = Parser.parseRemoteImage(
+                    remoteImage: remoteImage,
+                    traitCollection: traitCollection
+                )
+            }
+
             guard let image = image else { return nil }
             guard let title = Parser.parseText(text: button.title) else { return nil }
 

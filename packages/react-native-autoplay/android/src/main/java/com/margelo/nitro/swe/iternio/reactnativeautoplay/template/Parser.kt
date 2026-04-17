@@ -40,6 +40,7 @@ import com.facebook.datasource.DataSources
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableXml
+import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.react.views.imagehelper.ImageSource
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
@@ -67,10 +68,11 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroRow
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSectionType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.OffRampType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.OnRampType
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.RemoteImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TrafficSide
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TravelEstimates
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TurnType
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.Variant_GlyphImage_AssetImage
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.Variant_GlyphImage_AssetImage_RemoteImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.BitmapCache
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.SymbolFont
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.get
@@ -210,16 +212,21 @@ object Parser {
         }.build()
     }
 
-    fun parseImage(context: CarContext, image: Variant_GlyphImage_AssetImage): CarIcon {
-        return parseImage(context, image.asFirstOrNull(), image.asSecondOrNull())
+    fun parseImage(context: CarContext, image: Variant_GlyphImage_AssetImage_RemoteImage): CarIcon {
+        return parseImage(context, image.asFirstOrNull(), image.asSecondOrNull(), image.asThirdOrNull())
     }
 
     fun parseImage(context: CarContext, image: NitroImage): CarIcon {
-        return parseImage(context, image.asFirstOrNull(), image.asSecondOrNull())
+        return parseImage(context, image.asFirstOrNull(), image.asSecondOrNull(), image.asThirdOrNull())
     }
 
-    fun parseImage(context: CarContext, glyphImage: GlyphImage?, assetImage: AssetImage?): CarIcon {
-        val bitmap = parseImageToBitmap(context, glyphImage, assetImage)
+    fun parseImage(
+        context: CarContext,
+        glyphImage: GlyphImage?,
+        assetImage: AssetImage?,
+        remoteImage: RemoteImage?
+    ): CarIcon {
+        val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage)
 
         bitmap?.let {
             return CarIcon.Builder(IconCompat.createWithBitmap(it)).build()
@@ -230,7 +237,10 @@ object Parser {
     }
 
     fun parseImageToBitmap(
-        context: CarContext, glyphImage: GlyphImage?, assetImage: AssetImage?
+        context: CarContext,
+        glyphImage: GlyphImage?,
+        assetImage: AssetImage?,
+        remoteImage: RemoteImage?
     ): Bitmap? {
         glyphImage?.let {
             return SymbolFont.imageFromNitroImage(
@@ -239,6 +249,9 @@ object Parser {
         }
         assetImage?.let {
             return parseAssetImage(context, it)
+        }
+        remoteImage?.let {
+            return parseRemoteImage(context, it)
         }
 
         return null
@@ -253,7 +266,7 @@ object Parser {
     ): IconCompat {
         val bitmaps = images.map {
             parseImageToBitmap(
-                context, it.asFirstOrNull(), it.asSecondOrNull()
+                context, it.asFirstOrNull(), it.asSecondOrNull(), it.asThirdOrNull()
             )!!
         }
 
@@ -512,92 +525,101 @@ object Parser {
     }
 
     fun parseAssetImage(context: CarContext, assetImage: AssetImage): Bitmap? {
-        var bitmap = BitmapCache.get(context, assetImage)
+        BitmapCache.get(context, assetImage)?.let { return it }
 
-        if (bitmap != null) {
-            return bitmap
-        }
+        val imageRequest = buildImageRequest(ImageSource(context, assetImage.uri).uri)
+        val bitmap = fetchBitmap(context, imageRequest, timeoutMs = null) ?: return null
 
-        val isNetworkUri = assetImage.uri.startsWith("https://")
-        val imageUri = if (isNetworkUri) {
-            android.net.Uri.parse(assetImage.uri)
-        } else {
-            ImageSource(context, assetImage.uri).uri
-        }
-        // Disable Fresco's own caching — BitmapCache handles all caching uniformly
-        val imageRequest = ImageRequestBuilder.newBuilderWithSource(imageUri)
+        return applyTintAndCache(
+            context = context,
+            color = assetImage.color,
+            bitmap = bitmap,
+            cache = { result -> BitmapCache.put(context, assetImage, result) }
+        )
+    }
+
+    fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
+        BitmapCache.get(context, remoteImage)?.let { return it }
+
+        val imageRequest = buildImageRequest(android.net.Uri.parse(remoteImage.uri))
+        val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
+        val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs) ?: return null
+
+        return applyTintAndCache(
+            context = context,
+            color = remoteImage.color,
+            bitmap = bitmap,
+            cache = { result -> BitmapCache.put(context, remoteImage, result) }
+        )
+    }
+
+    // Disable Fresco's own caching — BitmapCache handles all caching uniformly
+    private fun buildImageRequest(uri: android.net.Uri): ImageRequest =
+        ImageRequestBuilder.newBuilderWithSource(uri)
             .disableDiskCache().disableMemoryCache().build()
 
-        if (isNetworkUri) {
-            // Network images: fetch with 10s timeout to avoid blocking indefinitely
-            var fetchedBitmap: Bitmap? = null
-            val thread = Thread {
-                val ds = try {
-                    Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
-                } catch (_: Exception) { return@Thread }
-                val res = try {
-                    DataSources.waitForFinalResult(ds)
-                } catch (_: Exception) { ds.close(); return@Thread }
-                val img = res?.get()
-                try {
-                    if (img is CloseableBitmap) {
-                        fetchedBitmap = img.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
-                    } else if (img is CloseableXml) {
-                        val drawable = img.buildDrawable()
-                        fetchedBitmap = drawable?.toBitmap(width = img.width, height = img.height, Bitmap.Config.ARGB_8888)
-                    }
-                } finally {
-                    img?.close()
-                    res?.close()
-                    ds.close()
-                }
-            }
-            thread.start()
-            thread.join(10_000L)
-            if (thread.isAlive) {
-                thread.interrupt()
-                return null
-            }
-            bitmap = fetchedBitmap ?: return null
-        } else {
-            // Bundled assets: synchronous, no timeout needed
-            val dataSource = try {
-                Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
-            } catch (_: Exception) { return null }
-            val result = try {
-                DataSources.waitForFinalResult(dataSource)
-            } catch (_: Exception) { dataSource.close(); return null }
-            val image = result?.get()
-            try {
-                if (image is CloseableBitmap) {
-                    bitmap = image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
-                } else if (image is CloseableXml) {
-                    val drawable = image.buildDrawable()
-                    bitmap = drawable?.toBitmap(width = image.width, height = image.height, Bitmap.Config.ARGB_8888)
-                }
-            } finally {
-                image?.close()
-                result?.close()
-                dataSource.close()
-            }
-            if (bitmap == null) return null
-        }
+    /**
+     * Fetches a bitmap via Fresco's image pipeline.
+     * When [timeoutMs] is provided, the fetch runs on a background thread and is abandoned on timeout.
+     * When `null`, the fetch runs synchronously (bundled assets, no network I/O).
+     */
+    private fun fetchBitmap(
+        context: CarContext,
+        imageRequest: ImageRequest,
+        timeoutMs: Long?
+    ): Bitmap? {
+        if (timeoutMs == null) return fetchSync(context, imageRequest)
 
-        assetImage.color?.get(context)?.let { color ->
-            val result = createBitmap(bitmap.width, bitmap.height)
-            val canvas = Canvas(result)
+        var fetched: Bitmap? = null
+        val thread = Thread { fetched = fetchSync(context, imageRequest) }
+        thread.start()
+        thread.join(timeoutMs)
+        if (thread.isAlive) return null
+        return fetched
+    }
+
+    private fun fetchSync(context: CarContext, imageRequest: ImageRequest): Bitmap? {
+        val dataSource = try {
+            Fresco.getImagePipeline().fetchDecodedImage(imageRequest, context)
+        } catch (_: Exception) { return null }
+        val result = try {
+            DataSources.waitForFinalResult(dataSource)
+        } catch (_: Exception) { dataSource.close(); return null }
+        val image = result?.get()
+        try {
+            if (image is CloseableBitmap) {
+                return image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+            } else if (image is CloseableXml) {
+                val drawable = image.buildDrawable()
+                return drawable?.toBitmap(width = image.width, height = image.height, Bitmap.Config.ARGB_8888)
+            }
+        } finally {
+            image?.close()
+            result?.close()
+            dataSource.close()
+        }
+        return null
+    }
+
+    private fun applyTintAndCache(
+        context: CarContext,
+        color: NitroColor?,
+        bitmap: Bitmap,
+        cache: (Bitmap) -> Unit
+    ): Bitmap {
+        color?.get(context)?.let { tint ->
+            val tinted = createBitmap(bitmap.width, bitmap.height)
+            val canvas = Canvas(tinted)
             val paint = Paint()
 
-            paint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+            paint.colorFilter = PorterDuffColorFilter(tint, PorterDuff.Mode.SRC_IN)
             canvas.drawBitmap(bitmap, 0f, 0f, paint)
 
-            BitmapCache.put(context, assetImage, result)
-
-            return result
+            cache(tinted)
+            return tinted
         }
 
-        BitmapCache.put(context, assetImage, bitmap)
-
+        cache(bitmap)
         return bitmap
     }
 
