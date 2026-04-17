@@ -8,6 +8,7 @@ import {
   type ToggleRow,
 } from '@iternio/react-native-auto-play';
 import { DefaultTemplateImageColor } from '../config/Color';
+import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
@@ -51,7 +52,7 @@ const getMainSection = (): Section<ListTemplate> => {
   const items: Array<DefaultRow<ListTemplate> | ToggleRow<ListTemplate> | TextRow> = [
     {
       type: 'toggle',
-      title: { text: 'row #1' },
+      title: { text: 'toggle radio list' },
       checked: checked[0],
       image: {
         name: 'alarm',
@@ -84,12 +85,25 @@ const getMainSection = (): Section<ListTemplate> => {
       detailedText: { text: 'text only row' },
       image: { name: 'text_ad', type: 'glyph', color: DefaultTemplateImageColor },
     },
+    {
+      type: 'default',
+      onPress: () => {
+        AutoGridTemplate.getTemplate().push();
+      },
+      title: { text: 'grid template' },
+      image: {
+        type: 'glyph',
+        name: 'grid_3x3',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
+    },
   ];
 
   if (checked[0]) {
     items.push({
       type: 'default',
-      title: { text: 'row #3' },
+      title: { text: 'radio list template' },
       browsable: true,
       image: {
         name: 'rotate_auto',

@@ -240,10 +240,18 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
   android: [
     {
       type: 'image',
-      image: { name: 'grid_3x3', type: 'glyph' },
+      image: { name: 'mic', type: 'glyph' },
       onPress: (t) => {
-        console.log('***', t.id);
-        AutoGridTemplate.getTemplate().push();
+        HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+          if (!isGranted) {
+            return;
+          }
+
+          HybridAutoPlay.startVoiceInput().then((audio) => {
+            console.log(`received ${audio.byteLength} bytes`);
+            dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+          });
+        });
       },
     },
     {
@@ -359,36 +367,26 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
       type: 'glyph',
     },
     onPress: (template) => {
-      HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
-        if (!isGranted) {
+      var remaining = 10000;
+      const alert = AutoAlert(remaining);
+
+      alertTimer = setInterval(() => {
+        remaining -= 1000;
+        if (remaining > 0) {
+          template.updateAlert(
+            alert.id,
+            {
+              text: `alert ${remaining}ms`,
+            },
+            undefined
+          );
           return;
         }
-
-        HybridAutoPlay.startVoiceInput().then((audio) => {
-          console.log(`received ${audio.byteLength} bytes`);
-          dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
-        });
-      });
-      // var remaining = 10000;
-      // const alert = AutoAlert(remaining);
-
-      // alertTimer = setInterval(() => {
-      //   remaining -= 1000;
-      //   if (remaining > 0) {
-      //     template.updateAlert(
-      //       alert.id,
-      //       {
-      //         text: `alert ${remaining}ms`,
-      //       },
-      //       undefined
-      //     );
-      //     return;
-      //   }
-      //   if (alertTimer != null) {
-      //     clearInterval(alertTimer);
-      //   }
-      // }, 1000);
-      // template.showAlert(alert);
+        if (alertTimer != null) {
+          clearInterval(alertTimer);
+        }
+      }, 1000);
+      template.showAlert(alert);
     },
   },
   {
