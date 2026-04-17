@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
+import type { CleanupCallback } from '../types/Event';
 
 type Props = { children: React.ReactNode; moduleName: string };
 
@@ -11,14 +12,21 @@ export default function OnAppearedChildRenderer({ children, moduleName }: Props)
   const [didAppear, setDidAppear] = useState(false);
 
   useEffect(() => {
-    const remove = HybridAutoPlay.addListenerRenderState(moduleName, (renderState) => {
-      if (renderState === 'didAppear') {
-        remove();
-        setDidAppear(true);
+    let remove: CleanupCallback | null = HybridAutoPlay.addListenerRenderState(
+      moduleName,
+      (renderState) => {
+        if (renderState === 'didAppear') {
+          remove?.();
+          remove = null;
+          setDidAppear(true);
+        }
       }
-    });
+    );
 
-    return () => remove();
+    return () => {
+      remove?.();
+      remove = null;
+    };
   }, [moduleName]);
 
   if (didAppear) {
