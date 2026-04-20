@@ -18,6 +18,7 @@ import type {
 } from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
+import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
 import { NitroManeuverUtil, type NitroRoutingManeuver } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import {
@@ -80,6 +81,8 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
   mapButtons?: Array<NitroMapButton>;
   headerActions?: Array<NitroAction>;
 
+  defaultGuidanceBackgroundColor?: NitroColor;
+
   /**
    * specify the percentage of screen height/width the pan button should scroll
    * @namespace iOS
@@ -131,7 +134,11 @@ export type BaseMapTemplateConfig<T> = {
 
 export type MapTemplateConfig = Omit<
   NitroMapTemplateConfig,
-  'mapButtons' | 'headerActions' | 'onStopNavigation' | 'onAutoDriveEnabled'
+  | 'mapButtons'
+  | 'headerActions'
+  | 'onStopNavigation'
+  | 'onAutoDriveEnabled'
+  | 'defaultGuidanceBackgroundColor'
 > &
   BaseMapTemplateConfig<MapTemplate> & {
     /**
@@ -150,6 +157,11 @@ export type MapTemplateConfig = Omit<
      * @namespace Android
      */
     onAutoDriveEnabled?: (template: MapTemplate) => void;
+
+    /**
+     * Initial navigation maneuver background color. Mainly useful, when in CarPlay the default loading maneuver does not have the right color.
+     */
+    defaultGuidanceBackgroundColor?: ThemedColor | string;
   };
 
 export interface TripSelectorCallback {
@@ -169,6 +181,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       headerActions,
       onStopNavigation,
       onAutoDriveEnabled,
+      defaultGuidanceBackgroundColor,
       ...baseConfig
     } = config;
 
@@ -197,6 +210,10 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       mapButtons: NitroMapButton.convert(this.template, mapButtons),
       onStopNavigation: () => onStopNavigation(this.template),
       onAutoDriveEnabled: onAutoDriveEnabled ? () => onAutoDriveEnabled(this.template) : undefined,
+      defaultGuidanceBackgroundColor:
+        defaultGuidanceBackgroundColor != null
+          ? NitroColorUtil.convert(defaultGuidanceBackgroundColor)
+          : undefined,
     };
 
     HybridMapTemplate.createMapTemplate(nitroConfig);
@@ -327,7 +344,11 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     }
 
     if (maneuvers.type === 'loading') {
-      HybridMapTemplate.updateManeuvers(this.id, { isLoading: true });
+      HybridMapTemplate.updateManeuvers(this.id, {
+        isLoading: true,
+        cardBackgroundColor: NitroColorUtil.convert(maneuvers.cardBackgroundColor),
+        text: maneuvers.text != null ? maneuvers.text : undefined,
+      });
       return;
     }
 

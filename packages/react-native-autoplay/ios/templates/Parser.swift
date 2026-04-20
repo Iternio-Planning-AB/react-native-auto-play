@@ -503,6 +503,21 @@ class Parser {
         )
     }
 
+    /// Card background `UIColor` for routing maneuvers and loading pause — same light/dark component pick as `parseManeuver`.
+    static func routingManeuverCardBackgroundUIColor(
+        color: NitroColor,
+        traitCollection: UITraitCollection
+    ) -> UIColor {
+        if #available(iOS 15.4, *) {
+            let component =
+                traitCollection.userInterfaceStyle == .dark
+                ? color.darkColor
+                : color.lightColor
+            return doubleToColor(value: component)
+        }
+        return parseColor(color: color)
+    }
+
     static func parseManeuver(
         nitroManeuver: NitroRoutingManeuver,
         traitCollection: UITraitCollection
@@ -528,13 +543,9 @@ class Parser {
         )
 
         if #available(iOS 15.4, *) {
-            let cardBackgroundColor =
-                traitCollection.userInterfaceStyle == .dark
-                ? nitroManeuver.cardBackgroundColor.darkColor
-                : nitroManeuver.cardBackgroundColor.lightColor
-
-            maneuver.cardBackgroundColor = doubleToColor(
-                value: cardBackgroundColor
+            maneuver.cardBackgroundColor = routingManeuverCardBackgroundUIColor(
+                color: nitroManeuver.cardBackgroundColor,
+                traitCollection: traitCollection
             )
         }
 
