@@ -784,6 +784,9 @@ class Parser {
         return cache
     }()
 
+    /// Shared session — long-lived by design; failed tasks don't invalidate it.
+    private static let remoteImageSession = URLSession(configuration: .default)
+
     /// Default network timeout for remote images when no `timeoutMs` is provided.
     private static let defaultRemoteTimeoutSeconds: TimeInterval = 0.5
 
@@ -844,16 +847,20 @@ class Parser {
 
         guard let url = URL(string: uri) else { return nil }
 
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = timeoutSeconds
-        let session = URLSession(configuration: config)
+        var request = URLRequest(url: url)
+        request.timeoutInterval = timeoutSeconds
+
         var resultData: Data?
         let semaphore = DispatchSemaphore(value: 0)
-        session.dataTask(with: url) { data, _, _ in
+        let task = remoteImageSession.dataTask(with: request) { data, _, _ in
             resultData = data
             semaphore.signal()
-        }.resume()
-        _ = semaphore.wait(timeout: .now() + timeoutSeconds)
+        }
+        task.resume()
+        if semaphore.wait(timeout: .now() + timeoutSeconds) == .timedOut {
+            task.cancel()
+            return nil
+        }
 
         guard let data = resultData, let image = UIImage(data: data) else { return nil }
 
