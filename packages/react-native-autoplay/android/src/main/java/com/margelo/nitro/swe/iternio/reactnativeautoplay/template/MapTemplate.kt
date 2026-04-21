@@ -66,6 +66,10 @@ class MapTemplate(
                 navigationManager.setNavigationManagerCallback(navigationManagerCallback)
             }
         }
+
+        config.defaultGuidanceBackgroundColor?.let { nitroColor ->
+            MapTemplate.cardBackgroundColor = Parser.parseColor(nitroColor)
+        }
     }
 
     override fun parse(): Template {
@@ -329,7 +333,9 @@ class MapTemplate(
             }
 
             if (loadingInfo != null) {
+                cardBackgroundColor = Parser.parseColor(loadingInfo.cardBackgroundColor)
                 navigationInfo = RoutingInfo.Builder().setLoading(true).build()
+                AndroidAutoScreen.invalidateSurfaceScreens()
                 return
             }
 

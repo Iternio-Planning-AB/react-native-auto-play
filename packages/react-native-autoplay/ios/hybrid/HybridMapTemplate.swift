@@ -138,12 +138,9 @@ class HybridMapTemplate: HybridMapTemplateSpec {
                 {
                     template.updateManeuvers(messageManeuver: messageManeuver)
                 }()
-            case .third(let loadingManeuver):
+            case .third(let loading):
                 {
-                    template.navigationSession?.pauseTrip(
-                        for: .loading,
-                        description: nil
-                    )
+                    template.updateManeuversLoading(loading: loading)
                 }()
             }
 

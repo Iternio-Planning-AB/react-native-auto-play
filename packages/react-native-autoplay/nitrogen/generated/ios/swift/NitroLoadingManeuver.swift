@@ -18,12 +18,35 @@ public extension NitroLoadingManeuver {
   /**
    * Create a new instance of `NitroLoadingManeuver`.
    */
-  init(isLoading: Bool) {
-    self.init(isLoading)
+  init(isLoading: Bool, cardBackgroundColor: NitroColor, text: String?) {
+    self.init(isLoading, cardBackgroundColor, { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = text {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
   var isLoading: Bool {
     return self.__isLoading
+  }
+  
+  @inline(__always)
+  var cardBackgroundColor: NitroColor {
+    return self.__cardBackgroundColor
+  }
+  
+  @inline(__always)
+  var text: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__text) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__text)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
 }

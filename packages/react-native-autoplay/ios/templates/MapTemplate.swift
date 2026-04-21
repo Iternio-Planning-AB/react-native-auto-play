@@ -50,6 +50,18 @@ class MapTemplate: AutoPlayHeaderProviding,
         visibleTravelEstimate = config.visibleTravelEstimate
 
         template = CPMapTemplate(id: config.id)
+        if let nitroColor = config.defaultGuidanceBackgroundColor,
+            let traitCollection = SceneStore.getRootTraitCollection()
+        {
+            let cardBackgroundColor = Parser.routingManeuverCardBackgroundUIColor(
+                color: nitroColor,
+                traitCollection: traitCollection
+            )
+            template.guidanceBackgroundColor = cardBackgroundColor
+        }
+        else {
+            template.guidanceBackgroundColor = .black
+        }
 
         if let initialProperties = SceneStore.getRootScene()?.initialProperties,
             let windowDict = initialProperties["window"] as? [String: Any],
@@ -619,6 +631,35 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
 
         updateVisibleTravelEstimate(visibleTravelEstimate: nil)
+    }
+
+    func updateManeuversLoading(loading: NitroLoadingManeuver) {
+        guard let navigationSession = navigationSession else { return }
+
+        let description = loading.text
+
+        guard let traitCollection = SceneStore.getRootTraitCollection() else {
+            navigationSession.pauseTrip(for: .loading, description: description)
+            return
+        }
+
+        let cardBackgroundColor = Parser.routingManeuverCardBackgroundUIColor(
+            color: loading.cardBackgroundColor,
+            traitCollection: traitCollection
+        )
+
+        template.guidanceBackgroundColor = cardBackgroundColor
+
+        if #available(iOS 18.0, *) {
+            navigationSession.pauseTrip(
+                for: .loading,
+                description: description,
+                turnCardColor: cardBackgroundColor
+            )
+        }
+        else {
+            navigationSession.pauseTrip(for: .loading, description: description)
+        }
     }
 
     func updateManeuvers(messageManeuver: NitroMessageManeuver) {

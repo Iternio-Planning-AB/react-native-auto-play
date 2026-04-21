@@ -19,7 +19,13 @@ import com.facebook.proguard.annotations.DoNotStrip
 data class NitroLoadingManeuver(
   @DoNotStrip
   @Keep
-  val isLoading: Boolean
+  val isLoading: Boolean,
+  @DoNotStrip
+  @Keep
+  val cardBackgroundColor: NitroColor,
+  @DoNotStrip
+  @Keep
+  val text: String?
 ) {
   /* primary constructor */
 
@@ -31,8 +37,8 @@ data class NitroLoadingManeuver(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(isLoading: Boolean): NitroLoadingManeuver {
-      return NitroLoadingManeuver(isLoading)
+    private fun fromCpp(isLoading: Boolean, cardBackgroundColor: NitroColor, text: String?): NitroLoadingManeuver {
+      return NitroLoadingManeuver(isLoading, cardBackgroundColor, text)
     }
   }
 }
