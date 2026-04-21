@@ -7,14 +7,22 @@ import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 
 class PCMPlayerPackage : TurboReactPackage() {
-    override fun getModule(name: String, context: ReactApplicationContext): NativeModule? =
-        if (name == PCMPlayerModule.NAME) PCMPlayerModule(context) else null
+    override fun getModule(
+        name: String,
+        context: ReactApplicationContext,
+    ): NativeModule? = if (name == PCMPlayerModule.NAME) PCMPlayerModule(context) else null
 
     override fun getReactModuleInfoProvider() = ReactModuleInfoProvider {
         mapOf(
             PCMPlayerModule.NAME to ReactModuleInfo(
-                PCMPlayerModule.NAME, PCMPlayerModule.NAME, false, false, false, false, false
-            )
+                PCMPlayerModule.NAME,
+                PCMPlayerModule.NAME,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
         )
     }
 }

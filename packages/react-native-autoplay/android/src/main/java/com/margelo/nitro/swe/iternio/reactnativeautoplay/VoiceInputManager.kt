@@ -30,8 +30,9 @@ import kotlin.math.abs
  * When [carContext] is provided uses CarAudioRecord (Android Auto/Automotive).
  * When [carContext] is null falls back to standard AudioRecord (phone-only).
  */
-class VoiceInputManager(private val carContext: CarContext?) {
-
+class VoiceInputManager(
+    private val carContext: CarContext?,
+) {
     private var carAudioRecord: CarAudioRecord? = null
     private var audioRecord: AudioRecord? = null
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -54,7 +55,8 @@ class VoiceInputManager(private val carContext: CarContext?) {
     ): ByteArray = suspendCancellableCoroutine { cont ->
         val appContext = NitroModules.applicationContext
         if (appContext == null || ContextCompat.checkSelfPermission(
-                appContext, android.Manifest.permission.RECORD_AUDIO
+                appContext,
+                android.Manifest.permission.RECORD_AUDIO,
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             cont.resumeWithException(SecurityException("RECORD_AUDIO permission not granted"))
@@ -72,7 +74,9 @@ class VoiceInputManager(private val carContext: CarContext?) {
         val focusRequest =
             AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
                 .setAudioAttributes(audioAttributes).setOnAudioFocusChangeListener { state ->
-                    if (state == AudioManager.AUDIOFOCUS_LOSS) stop()
+                    if (state == AudioManager.AUDIOFOCUS_LOSS) {
+                        stop()
+                    }
                 }.build()
 
         if (audioManager.requestAudioFocus(focusRequest) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -93,7 +97,9 @@ class VoiceInputManager(private val carContext: CarContext?) {
             record.startRecording()
         } else {
             val minBuffer = AudioRecord.getMinBufferSize(
-                SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT
+                SAMPLE_RATE,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
             )
             bufferSize = maxOf(minBuffer, PHONE_BUFFER_SIZE)
             val record = AudioRecord(
@@ -101,7 +107,7 @@ class VoiceInputManager(private val carContext: CarContext?) {
                 SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
-                bufferSize
+                bufferSize,
             )
             audioRecord = record
             isRecording = true
@@ -118,7 +124,9 @@ class VoiceInputManager(private val carContext: CarContext?) {
             try {
                 while (isRecording) {
                     val read = carAudioRecord?.read(buffer, 0, bufferSize) ?: audioRecord?.read(
-                        buffer, 0, bufferSize
+                        buffer,
+                        0,
+                        bufferSize,
                     ) ?: -1
 
                     if (read < 0) {
@@ -131,7 +139,9 @@ class VoiceInputManager(private val carContext: CarContext?) {
                         val now = System.currentTimeMillis()
                         val elapsedMs = now - recordingStart
 
-                        if (elapsedMs >= maxDurationMs) break
+                        if (elapsedMs >= maxDurationMs) {
+                            break
+                        }
 
                         // Silence detection — skip during warm-up
                         if (elapsedMs >= WARMUP_MS) {
@@ -146,8 +156,12 @@ class VoiceInputManager(private val carContext: CarContext?) {
                             }
 
                             if (peak < SILENCE_AMPLITUDE_THRESHOLD) {
-                                if (silenceStart == null) silenceStart = now
-                                if (now - silenceStart >= silenceThresholdMs) break
+                                if (silenceStart == null) {
+                                    silenceStart = now
+                                }
+                                if (now - silenceStart >= silenceThresholdMs) {
+                                    break
+                                }
                             } else {
                                 silenceStart = null
                             }
@@ -179,7 +193,7 @@ class VoiceInputManager(private val carContext: CarContext?) {
         recordingJob = null
         audioFocusRequest?.let {
             val audioManager = (NitroModules.applicationContext ?: carContext)?.getSystemService(
-                AudioManager::class.java
+                AudioManager::class.java,
             )
             audioManager?.abandonAudioFocusRequest(it)
         }

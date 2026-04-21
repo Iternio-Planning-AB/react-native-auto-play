@@ -10,9 +10,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
-class PCMPlayerModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
-
+class PCMPlayerModule(
+    reactContext: ReactApplicationContext,
+) : ReactContextBaseJavaModule(reactContext) {
     override fun getName() = NAME
 
     companion object {
@@ -20,7 +20,11 @@ class PCMPlayerModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun playPCM(base64: String, sampleRate: Int, promise: Promise) {
+    fun playPCM(
+        base64: String,
+        sampleRate: Int,
+        promise: Promise,
+    ) {
         Log.d(NAME, "playPCM called, base64 length=${base64.length}, sampleRate=$sampleRate")
         try {
             val pcm = Base64.decode(base64, Base64.DEFAULT)
@@ -29,31 +33,25 @@ class PCMPlayerModule(reactContext: ReactApplicationContext) :
             val minBuffer = AudioTrack.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
+                AudioFormat.ENCODING_PCM_16BIT,
             )
 
-            val audioTrack = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(sampleRate)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setBufferSizeInBytes(minBuffer)
-                .setTransferMode(AudioTrack.MODE_STREAM)
-                .build()
+            val audioTrack = AudioTrack.Builder().setAudioAttributes(
+                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build(),
+                ).setAudioFormat(
+                    AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                        .setSampleRate(sampleRate).setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                        .build(),
+                ).setBufferSizeInBytes(minBuffer).setTransferMode(AudioTrack.MODE_STREAM).build()
 
             Log.d(NAME, "AudioTrack state=${audioTrack.state} playState=${audioTrack.playState}")
 
             if (audioTrack.state != AudioTrack.STATE_INITIALIZED) {
-                promise.reject("INIT_ERROR", "AudioTrack failed to initialize (state=${audioTrack.state})")
+                promise.reject(
+                    "INIT_ERROR",
+                    "AudioTrack failed to initialize (state=${audioTrack.state})"
+                )
                 return
             }
 
@@ -64,7 +62,9 @@ class PCMPlayerModule(reactContext: ReactApplicationContext) :
                     var offset = 0
                     while (offset < pcm.size) {
                         val written = audioTrack.write(pcm, offset, pcm.size - offset)
-                        if (written < 0) break
+                        if (written < 0) {
+                            break
+                        }
                         offset += written
                     }
                     // Wait for playback to drain then release
