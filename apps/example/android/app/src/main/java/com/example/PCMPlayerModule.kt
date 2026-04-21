@@ -62,7 +62,7 @@ class PCMPlayerModule(
                     var offset = 0
                     while (offset < pcm.size) {
                         val written = audioTrack.write(pcm, offset, pcm.size - offset)
-                        if (written < 0) {
+                        if (written <= 0) {
                             break
                         }
                         offset += written
