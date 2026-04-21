@@ -265,10 +265,14 @@ object Parser {
     fun imageFromNitroImages(
         context: CarContext, images: List<NitroImage>
     ): IconCompat {
-        val bitmaps = images.map {
+        val bitmaps = images.mapNotNull {
             parseImageToBitmap(
                 context, it.asFirstOrNull(), it.asSecondOrNull(), it.asThirdOrNull()
-            )!!
+            )
+        }
+
+        if (bitmaps.isEmpty()) {
+            return IconCompat.createWithBitmap(createBitmap(1, 1))
         }
 
         val height = bitmaps.maxOf { it.height }
