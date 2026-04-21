@@ -81,6 +81,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.abs
+import androidx.core.net.toUri
 
 object Parser {
     const val TAG = "Parser"
@@ -232,8 +233,8 @@ object Parser {
             return CarIcon.Builder(IconCompat.createWithBitmap(it)).build()
         }
 
-        // this should not be possible, we just wanna satisfy kotlin
-        return CarIcon.APP_ICON
+        // remote images might fail to load so we provide some placeholder then
+        return CarIcon.ALERT
     }
 
     fun parseImageToBitmap(
@@ -541,7 +542,7 @@ object Parser {
     fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
         BitmapCache.get(context, remoteImage)?.let { return it }
 
-        val imageRequest = buildImageRequest(android.net.Uri.parse(remoteImage.uri))
+        val imageRequest = buildImageRequest(remoteImage.uri.toUri())
         val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
         val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs) ?: return null
 

@@ -859,10 +859,12 @@ class Parser {
         task.resume()
         if semaphore.wait(timeout: .now() + timeoutSeconds) == .timedOut {
             task.cancel()
-            return nil
+            return UIImage(systemName: "exclamationmark.circle")
         }
 
-        guard let data = resultData, let image = UIImage(data: data) else { return nil }
+        guard let data = resultData, let image = UIImage(data: data) else {
+            return UIImage(systemName: "exclamationmark.circle")
+        }
 
         let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
         remoteImageCache.setObject(image, forKey: cacheKey, cost: cost)
