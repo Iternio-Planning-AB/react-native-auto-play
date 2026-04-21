@@ -29,4 +29,18 @@ export type AutoImage =
        */
       color?: ThemedColor | string;
       type: 'asset';
+    }
+  | {
+      /** HTTPS URL to a remote image. HTTP is not supported (blocked by App Transport Security). */
+      uri: string;
+      /**
+       * if specified the image gets tinted, if not it will just use the original image
+       */
+      color?: ThemedColor | string;
+      /**
+       * Network timeout in milliseconds before the remote fetch is abandoned and `null` is returned.
+       * Defaults to 500ms when not specified.
+       */
+      timeoutMs?: number;
+      type: 'remote';
     };

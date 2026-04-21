@@ -24,10 +24,12 @@
 #include "JNitroColor.hpp"
 #include "JNitroRow.hpp"
 #include "JNitroSectionType.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "NitroColor.hpp"
 #include "NitroRow.hpp"
 #include "NitroSectionType.hpp"
+#include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

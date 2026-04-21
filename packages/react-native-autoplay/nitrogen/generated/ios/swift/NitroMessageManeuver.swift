@@ -18,21 +18,23 @@ public extension NitroMessageManeuver {
   /**
    * Create a new instance of `NitroMessageManeuver`.
    */
-  init(title: String, text: String?, image: Variant_GlyphImage_AssetImage?, cardBackgroundColor: NitroColor) {
+  init(title: String, text: String?, image: Variant_GlyphImage_AssetImage_RemoteImage?, cardBackgroundColor: NitroColor) {
     self.init(std.string(title), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = text {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
+    }(), { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__ in
       if let __unwrappedValue = image {
-        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__({ () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
           switch __unwrappedValue {
             case .first(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
             case .second(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
+            case .third(let __value):
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
           }
         }().variant)
       } else {
@@ -59,12 +61,12 @@ public extension NitroMessageManeuver {
   }
   
   @inline(__always)
-  var image: Variant_GlyphImage_AssetImage? {
-    return { () -> Variant_GlyphImage_AssetImage? in
-      if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__(self.__image) {
-        let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__(self.__image)
-        return { () -> Variant_GlyphImage_AssetImage in
-          let __variant = bridge.std__variant_GlyphImage__AssetImage_(__unwrapped)
+  var image: Variant_GlyphImage_AssetImage_RemoteImage? {
+    return { () -> Variant_GlyphImage_AssetImage_RemoteImage? in
+      if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(self.__image) {
+        let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(self.__image)
+        return { () -> Variant_GlyphImage_AssetImage_RemoteImage in
+          let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(__unwrapped)
           switch __variant.index() {
             case 0:
               let __actual = __variant.get_0()
@@ -72,6 +74,9 @@ public extension NitroMessageManeuver {
             case 1:
               let __actual = __variant.get_1()
               return .second(__actual)
+            case 2:
+              let __actual = __variant.get_2()
+              return .third(__actual)
             default:
               fatalError("Variant can never have index \(__variant.index())!")
           }

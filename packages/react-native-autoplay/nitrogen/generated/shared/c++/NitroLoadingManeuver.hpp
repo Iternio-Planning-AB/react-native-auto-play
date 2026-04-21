@@ -28,9 +28,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `NitroColor` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 
-
-
+#include "NitroColor.hpp"
+#include <string>
+#include <optional>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -40,10 +43,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   struct NitroLoadingManeuver final {
   public:
     bool isLoading     SWIFT_PRIVATE;
+    NitroColor cardBackgroundColor     SWIFT_PRIVATE;
+    std::optional<std::string> text     SWIFT_PRIVATE;
 
   public:
     NitroLoadingManeuver() = default;
-    explicit NitroLoadingManeuver(bool isLoading): isLoading(isLoading) {}
+    explicit NitroLoadingManeuver(bool isLoading, NitroColor cardBackgroundColor, std::optional<std::string> text): isLoading(isLoading), cardBackgroundColor(cardBackgroundColor), text(text) {}
 
   public:
     friend bool operator==(const NitroLoadingManeuver& lhs, const NitroLoadingManeuver& rhs) = default;
@@ -59,12 +64,16 @@ namespace margelo::nitro {
     static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroLoadingManeuver fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroLoadingManeuver(
-        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isLoading")))
+        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isLoading"))),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "cardBackgroundColor"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "text")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroLoadingManeuver& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "isLoading"), JSIConverter<bool>::toJSI(runtime, arg.isLoading));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "cardBackgroundColor"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.cardBackgroundColor));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "text"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.text));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -76,6 +85,8 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isLoading")))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "cardBackgroundColor")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "text")))) return false;
       return true;
     }
   };

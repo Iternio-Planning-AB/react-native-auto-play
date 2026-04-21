@@ -104,6 +104,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OnRampT
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `PreferredImageLane` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct PreferredImageLane; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `RouteChoice` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RouteChoice; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
@@ -195,6 +197,7 @@ namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
 #include "OnRampType.hpp"
 #include "Point.hpp"
 #include "PreferredImageLane.hpp"
+#include "RemoteImage.hpp"
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "TrafficSide.hpp"
@@ -490,16 +493,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.value();
   }
   
-  // pragma MARK: std::variant<GlyphImage, AssetImage>
+  // pragma MARK: std::variant<GlyphImage, AssetImage, RemoteImage>
   /**
-   * Wrapper struct for `std::variant<GlyphImage, AssetImage>`.
+   * Wrapper struct for `std::variant<GlyphImage, AssetImage, RemoteImage>`.
    * std::variant cannot be used in Swift because of a Swift bug.
    * Not even specializing it works. So we create a wrapper struct.
    */
-  struct std__variant_GlyphImage__AssetImage_ final {
-    std::variant<GlyphImage, AssetImage> variant;
-    std__variant_GlyphImage__AssetImage_(std::variant<GlyphImage, AssetImage> variant): variant(variant) { }
-    operator std::variant<GlyphImage, AssetImage>() const noexcept {
+  struct std__variant_GlyphImage__AssetImage__RemoteImage_ final {
+    std::variant<GlyphImage, AssetImage, RemoteImage> variant;
+    std__variant_GlyphImage__AssetImage__RemoteImage_(std::variant<GlyphImage, AssetImage, RemoteImage> variant): variant(variant) { }
+    operator std::variant<GlyphImage, AssetImage, RemoteImage>() const noexcept {
       return variant;
     }
     inline size_t index() const noexcept {
@@ -511,26 +514,32 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     inline AssetImage get_1() const noexcept {
       return std::get<1>(variant);
     }
+    inline RemoteImage get_2() const noexcept {
+      return std::get<2>(variant);
+    }
   };
-  inline std__variant_GlyphImage__AssetImage_ create_std__variant_GlyphImage__AssetImage_(const GlyphImage& value) noexcept {
-    return std__variant_GlyphImage__AssetImage_(value);
+  inline std__variant_GlyphImage__AssetImage__RemoteImage_ create_std__variant_GlyphImage__AssetImage__RemoteImage_(const GlyphImage& value) noexcept {
+    return std__variant_GlyphImage__AssetImage__RemoteImage_(value);
   }
-  inline std__variant_GlyphImage__AssetImage_ create_std__variant_GlyphImage__AssetImage_(const AssetImage& value) noexcept {
-    return std__variant_GlyphImage__AssetImage_(value);
+  inline std__variant_GlyphImage__AssetImage__RemoteImage_ create_std__variant_GlyphImage__AssetImage__RemoteImage_(const AssetImage& value) noexcept {
+    return std__variant_GlyphImage__AssetImage__RemoteImage_(value);
+  }
+  inline std__variant_GlyphImage__AssetImage__RemoteImage_ create_std__variant_GlyphImage__AssetImage__RemoteImage_(const RemoteImage& value) noexcept {
+    return std__variant_GlyphImage__AssetImage__RemoteImage_(value);
   }
   
-  // pragma MARK: std::optional<std::variant<GlyphImage, AssetImage>>
+  // pragma MARK: std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>
   /**
-   * Specialized version of `std::optional<std::variant<GlyphImage, AssetImage>>`.
+   * Specialized version of `std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>`.
    */
-  using std__optional_std__variant_GlyphImage__AssetImage__ = std::optional<std::variant<GlyphImage, AssetImage>>;
-  inline std::optional<std::variant<GlyphImage, AssetImage>> create_std__optional_std__variant_GlyphImage__AssetImage__(const std::variant<GlyphImage, AssetImage>& value) noexcept {
-    return std::optional<std::variant<GlyphImage, AssetImage>>(value);
+  using std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__ = std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>;
+  inline std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> create_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(const std::variant<GlyphImage, AssetImage, RemoteImage>& value) noexcept {
+    return std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>(value);
   }
-  inline bool has_value_std__optional_std__variant_GlyphImage__AssetImage__(const std::optional<std::variant<GlyphImage, AssetImage>>& optional) noexcept {
+  inline bool has_value_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& optional) noexcept {
     return optional.has_value();
   }
-  inline std::variant<GlyphImage, AssetImage> get_std__optional_std__variant_GlyphImage__AssetImage__(const std::optional<std::variant<GlyphImage, AssetImage>>& optional) noexcept {
+  inline std::variant<GlyphImage, AssetImage, RemoteImage> get_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& optional) noexcept {
     return optional.value();
   }
   

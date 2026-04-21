@@ -10,7 +10,10 @@
 #include <fbjni/fbjni.h>
 #include "NitroLoadingManeuver.hpp"
 
-
+#include "JNitroColor.hpp"
+#include "NitroColor.hpp"
+#include <optional>
+#include <string>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -33,8 +36,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldIsLoading = clazz->getField<jboolean>("isLoading");
       jboolean isLoading = this->getFieldValue(fieldIsLoading);
+      static const auto fieldCardBackgroundColor = clazz->getField<JNitroColor>("cardBackgroundColor");
+      jni::local_ref<JNitroColor> cardBackgroundColor = this->getFieldValue(fieldCardBackgroundColor);
+      static const auto fieldText = clazz->getField<jni::JString>("text");
+      jni::local_ref<jni::JString> text = this->getFieldValue(fieldText);
       return NitroLoadingManeuver(
-        static_cast<bool>(isLoading)
+        static_cast<bool>(isLoading),
+        cardBackgroundColor->toCpp(),
+        text != nullptr ? std::make_optional(text->toStdString()) : std::nullopt
       );
     }
 
@@ -44,12 +53,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroLoadingManeuver::javaobject> fromCpp(const NitroLoadingManeuver& value) {
-      using JSignature = JNitroLoadingManeuver(jboolean);
+      using JSignature = JNitroLoadingManeuver(jboolean, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.isLoading
+        value.isLoading,
+        JNitroColor::fromCpp(value.cardBackgroundColor),
+        value.text.has_value() ? jni::make_jstring(value.text.value()) : nullptr
       );
     }
   };

@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
 
@@ -47,6 +49,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 #include "AutoText.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include "NitroBaseMapTemplateConfig.hpp"
 
@@ -68,12 +71,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<AutoText> title     SWIFT_PRIVATE;
     AutoText message     SWIFT_PRIVATE;
     std::optional<std::vector<NitroAction>> actions     SWIFT_PRIVATE;
-    std::optional<std::variant<GlyphImage, AssetImage>> image     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image     SWIFT_PRIVATE;
     std::optional<NitroBaseMapTemplateConfig> mapConfig     SWIFT_PRIVATE;
 
   public:
     MessageTemplateConfig() = default;
-    explicit MessageTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, std::optional<AutoText> title, AutoText message, std::optional<std::vector<NitroAction>> actions, std::optional<std::variant<GlyphImage, AssetImage>> image, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), message(message), actions(actions), image(image), mapConfig(mapConfig) {}
+    explicit MessageTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, std::optional<AutoText> title, AutoText message, std::optional<std::vector<NitroAction>> actions, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), message(message), actions(actions), image(image), mapConfig(mapConfig) {}
 
   public:
     // MessageTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, actions, mapConfig
@@ -100,7 +103,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message"))),
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "actions"))),
-        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))
       );
     }
@@ -117,7 +120,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "message"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.message));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "actions"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.actions));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "mapConfig"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::toJSI(runtime, arg.mapConfig));
       return obj;
     }
@@ -140,7 +143,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message")))) return false;
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "actions")))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))) return false;
       return true;
     }

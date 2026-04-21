@@ -15,8 +15,10 @@
 #include "JAssetImage.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "NitroColor.hpp"
+#include "RemoteImage.hpp"
 #include <optional>
 #include <string>
 #include <variant>
@@ -44,8 +46,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
       static const auto fieldText = clazz->getField<jni::JString>("text");
       jni::local_ref<jni::JString> text = this->getFieldValue(fieldText);
-      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
-      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage_RemoteImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage_RemoteImage> image = this->getFieldValue(fieldImage);
       static const auto fieldCardBackgroundColor = clazz->getField<JNitroColor>("cardBackgroundColor");
       jni::local_ref<JNitroColor> cardBackgroundColor = this->getFieldValue(fieldCardBackgroundColor);
       return NitroMessageManeuver(
@@ -62,14 +64,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroMessageManeuver::javaobject> fromCpp(const NitroMessageManeuver& value) {
-      using JSignature = JNitroMessageManeuver(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JNitroColor>);
+      using JSignature = JNitroMessageManeuver(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JNitroColor>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.title),
         value.text.has_value() ? jni::make_jstring(value.text.value()) : nullptr,
-        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.image.value()) : nullptr,
         JNitroColor::fromCpp(value.cardBackgroundColor)
       );
     }

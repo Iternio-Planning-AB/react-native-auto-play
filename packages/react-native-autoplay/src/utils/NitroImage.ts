@@ -15,11 +15,17 @@ interface GlyphImage {
   fontScale?: number;
 }
 
+interface RemoteImage {
+  uri: string;
+  color?: NitroColor;
+  timeoutMs?: number;
+}
+
 /**
  * we need to map the ButtonImage.name from GlyphName to
  * the actual numeric value so we need a nitro specific type
  */
-export type NitroImage = GlyphImage | AssetImage;
+export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
 function convert(image: AutoImage): NitroImage;
 function convert(image?: AutoImage): NitroImage | undefined;
@@ -41,6 +47,14 @@ function convert(image?: AutoImage): NitroImage | undefined {
       color: NitroColorUtil.convert(color),
       backgroundColor: NitroColorUtil.convert(backgroundColor),
       fontScale,
+    };
+  }
+
+  if (image.type === 'remote') {
+    return {
+      uri: image.uri,
+      color: NitroColorUtil.convert(image.color),
+      timeoutMs: image.timeoutMs,
     };
   }
 

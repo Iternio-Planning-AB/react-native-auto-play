@@ -55,6 +55,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 null,
                 arrayOf(action),
                 null,
+                null,
                 null
             )
 

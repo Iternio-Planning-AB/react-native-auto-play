@@ -9,9 +9,9 @@
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   /**
-   * Converts JNitroImage to std::variant<GlyphImage, AssetImage>
+   * Converts JNitroImage to std::variant<GlyphImage, AssetImage, RemoteImage>
    */
-  std::variant<GlyphImage, AssetImage> JNitroImage::toCpp() const {
+  std::variant<GlyphImage, AssetImage, RemoteImage> JNitroImage::toCpp() const {
     if (isInstanceOf(JNitroImage_impl::First::javaClassStatic())) {
       // It's a `GlyphImage`
       auto jniValue = static_cast<const JNitroImage_impl::First*>(this)->getValue();
@@ -19,6 +19,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     } else if (isInstanceOf(JNitroImage_impl::Second::javaClassStatic())) {
       // It's a `AssetImage`
       auto jniValue = static_cast<const JNitroImage_impl::Second*>(this)->getValue();
+      return jniValue->toCpp();
+    } else if (isInstanceOf(JNitroImage_impl::Third::javaClassStatic())) {
+      // It's a `RemoteImage`
+      auto jniValue = static_cast<const JNitroImage_impl::Third*>(this)->getValue();
       return jniValue->toCpp();
     }
     throw std::invalid_argument("Variant is unknown Kotlin instance!");

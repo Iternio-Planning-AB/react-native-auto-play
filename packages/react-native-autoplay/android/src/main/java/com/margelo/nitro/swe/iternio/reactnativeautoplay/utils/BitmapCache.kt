@@ -6,6 +6,7 @@ import androidx.car.app.CarContext
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AssetImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroColor
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.RemoteImage
 
 object BitmapCache {
     private val maxMemory = Runtime.getRuntime().maxMemory()
@@ -37,6 +38,16 @@ object BitmapCache {
         put(key, bitmap)
     }
 
+    fun get(context: CarContext, image: RemoteImage): Bitmap? {
+        val key = image.cacheKey(context)
+        return get(key)
+    }
+
+    fun put(context: CarContext, image: RemoteImage, bitmap: Bitmap) {
+        val key = image.cacheKey(context)
+        put(key, bitmap)
+    }
+
     private fun get(key: String): Bitmap? {
         synchronized(bitmapCache) {
             return bitmapCache.get(key)
@@ -54,6 +65,9 @@ fun NitroColor.get(context: CarContext): Int =
     if (context.isDarkMode) this.darkColor.toInt() else this.lightColor.toInt()
 
 fun AssetImage.cacheKey(context: CarContext): String =
+    this.color?.let { "${this.uri}/${it.get(context)}" } ?: run { this.uri }
+
+fun RemoteImage.cacheKey(context: CarContext): String =
     this.color?.let { "${this.uri}/${it.get(context)}" } ?: run { this.uri }
 
 fun GlyphImage.cacheKey(context: CarContext): String =

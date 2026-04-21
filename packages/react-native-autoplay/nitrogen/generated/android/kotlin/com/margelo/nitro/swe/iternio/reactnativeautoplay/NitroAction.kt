@@ -22,7 +22,7 @@ data class NitroAction(
   val title: String?,
   @DoNotStrip
   @Keep
-  val image: Variant_GlyphImage_AssetImage?,
+  val image: Variant_GlyphImage_AssetImage_RemoteImage?,
   @DoNotStrip
   @Keep
   val enabled: Boolean?,
@@ -45,7 +45,7 @@ data class NitroAction(
   /**
    * Create a new instance of NitroAction from Kotlin
    */
-  constructor(title: String?, image: Variant_GlyphImage_AssetImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: NitroButtonStyle?):
+  constructor(title: String?, image: Variant_GlyphImage_AssetImage_RemoteImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: NitroButtonStyle?):
          this(title, image, enabled, Func_void_java(onPress), type, alignment, flags, style)
 
   companion object {
@@ -56,7 +56,7 @@ data class NitroAction(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: String?, image: Variant_GlyphImage_AssetImage?, enabled: Boolean?, onPress: Func_void, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: NitroButtonStyle?): NitroAction {
+    private fun fromCpp(title: String?, image: Variant_GlyphImage_AssetImage_RemoteImage?, enabled: Boolean?, onPress: Func_void, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: NitroButtonStyle?): NitroAction {
       return NitroAction(title, image, enabled, onPress, type, alignment, flags, style)
     }
   }

@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -154,6 +154,12 @@ public extension MapTemplateConfig {
           }
           return __vector
         }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_NitroColor_ in
+      if let __unwrappedValue = defaultGuidanceBackgroundColor {
+        return bridge.create_std__optional_NitroColor_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -446,6 +452,11 @@ public extension MapTemplateConfig {
         return nil
       }
     }()
+  }
+  
+  @inline(__always)
+  var defaultGuidanceBackgroundColor: NitroColor? {
+    return self.__defaultGuidanceBackgroundColor.value
   }
   
   @inline(__always)

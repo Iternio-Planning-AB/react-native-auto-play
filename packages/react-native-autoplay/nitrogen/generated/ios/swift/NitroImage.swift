@@ -9,10 +9,11 @@
 
 /**
  * An Swift enum with associated values representing a Variant/Union type.
- * JS type: `struct | struct`
+ * JS type: `struct | struct | struct`
  */
 @frozen
 public indirect enum NitroImage {
   case first(GlyphImage)
   case second(AssetImage)
+  case third(RemoteImage)
 }

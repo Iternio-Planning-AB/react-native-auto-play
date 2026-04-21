@@ -23,7 +23,9 @@
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
+#include "JRemoteImage.hpp"
 #include "NitroColor.hpp"
+#include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

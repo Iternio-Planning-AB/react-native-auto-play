@@ -13,11 +13,8 @@ const getButtons = (
   {
     title: { text: '#1' },
     image: {
-      name: 'star',
-      color: { darkColor, lightColor },
-      backgroundColor: selectedIdx === 0 ? 'rgba(0, 255, 255, 1)' : undefined,
-      type: 'glyph',
-      fontScale: 0.9,
+      type: 'remote',
+      uri: 'https://raw.githubusercontent.com/Iternio-Planning-AB/react-native-auto-play/master/apps/example/assets/flower%401x.png',
     },
     onPress: (template) => {
       template.updateGrid(getButtons('red', 'green', 0));

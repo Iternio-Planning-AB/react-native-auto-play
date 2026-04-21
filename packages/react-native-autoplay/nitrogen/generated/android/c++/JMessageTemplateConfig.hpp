@@ -32,7 +32,8 @@
 #include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
@@ -41,6 +42,7 @@
 #include "NitroColor.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
+#include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
@@ -89,8 +91,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JAutoText> message = this->getFieldValue(fieldMessage);
       static const auto fieldActions = clazz->getField<jni::JArrayClass<JNitroAction>>("actions");
       jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
-      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage>("image");
-      jni::local_ref<JVariant_GlyphImage_AssetImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage_RemoteImage>("image");
+      jni::local_ref<JVariant_GlyphImage_AssetImage_RemoteImage> image = this->getFieldValue(fieldImage);
       static const auto fieldMapConfig = clazz->getField<JNitroBaseMapTemplateConfig>("mapConfig");
       jni::local_ref<JNitroBaseMapTemplateConfig> mapConfig = this->getFieldValue(fieldMapConfig);
       return MessageTemplateConfig(
@@ -174,7 +176,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JMessageTemplateConfig::javaobject> fromCpp(const MessageTemplateConfig& value) {
-      using JSignature = JMessageTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JVariant_GlyphImage_AssetImage>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
+      using JSignature = JMessageTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -208,7 +210,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __array;
         }() : nullptr,
-        value.image.has_value() ? JVariant_GlyphImage_AssetImage::fromCpp(value.image.value()) : nullptr,
+        value.image.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.image.value()) : nullptr,
         value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr
       );
     }

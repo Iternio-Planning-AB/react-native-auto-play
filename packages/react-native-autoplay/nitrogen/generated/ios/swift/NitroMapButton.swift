@@ -19,12 +19,14 @@ public extension NitroMapButton {
    * Create a new instance of `NitroMapButton`.
    */
   init(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Void)?) {
-    self.init(type, { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+    self.init(type, { () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
       switch image {
         case .first(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
         case .second(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
+        case .third(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
       }
     }().variant, { () -> bridge.std__optional_std__function_void____ in
       if let __unwrappedValue = onPress {
@@ -46,7 +48,7 @@ public extension NitroMapButton {
   @inline(__always)
   var image: NitroImage {
     return { () -> NitroImage in
-      let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__image)
+      let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(self.__image)
       switch __variant.index() {
         case 0:
           let __actual = __variant.get_0()
@@ -54,6 +56,9 @@ public extension NitroMapButton {
         case 1:
           let __actual = __variant.get_1()
           return .second(__actual)
+        case 2:
+          let __actual = __variant.get_2()
+          return .third(__actual)
         default:
           fatalError("Variant can never have index \(__variant.index())!")
       }

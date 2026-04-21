@@ -54,6 +54,8 @@ export interface NitroMessageManeuver {
 
 interface NitroLoadingManeuver {
   isLoading: true;
+  cardBackgroundColor: NitroColor;
+  text?: string;
 }
 
 export type NitroManeuver =

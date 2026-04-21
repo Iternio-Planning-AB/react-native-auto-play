@@ -32,6 +32,8 @@
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAlignment` to properly resolve imports.
@@ -43,6 +45,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 #include <optional>
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
 #include <functional>
 #include "NitroActionType.hpp"
@@ -57,7 +60,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   struct NitroAction final {
   public:
     std::optional<std::string> title     SWIFT_PRIVATE;
-    std::optional<std::variant<GlyphImage, AssetImage>> image     SWIFT_PRIVATE;
+    std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image     SWIFT_PRIVATE;
     std::optional<bool> enabled     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
     NitroActionType type     SWIFT_PRIVATE;
@@ -67,7 +70,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     NitroAction() = default;
-    explicit NitroAction(std::optional<std::string> title, std::optional<std::variant<GlyphImage, AssetImage>> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags, std::optional<NitroButtonStyle> style): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags), style(style) {}
+    explicit NitroAction(std::optional<std::string> title, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, std::optional<bool> enabled, std::function<void()> onPress, NitroActionType type, std::optional<NitroAlignment> alignment, std::optional<double> flags, std::optional<NitroButtonStyle> style): title(title), image(image), enabled(enabled), onPress(onPress), type(type), alignment(alignment), flags(flags), style(style) {}
 
   public:
     // NitroAction is not equatable because these properties are not equatable: onPress
@@ -84,7 +87,7 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
-        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
+        JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "enabled"))),
         JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type"))),
@@ -96,7 +99,7 @@ namespace margelo::nitro {
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::toJSI(runtime, arg.image));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "enabled"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.enabled));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onPress"), JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "type"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::toJSI(runtime, arg.type));
@@ -114,7 +117,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
-      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
+      if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "enabled")))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroActionType>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "type")))) return false;

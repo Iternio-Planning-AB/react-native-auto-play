@@ -252,6 +252,12 @@ export type MessageManeuver = {
 
 export type LoadingManeuver = {
   type: 'loading';
+  cardBackgroundColor: ThemedColor | string;
+  /**
+   * @namespace iOS CarPlay — shows text on the loading maneuver card
+   * @namespace Android Auto — not supported
+   */
+  text?: string;
 };
 
 export type AutoManeuver =

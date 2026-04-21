@@ -18,28 +18,32 @@ public extension NitroRoutingManeuver {
   /**
    * Create a new instance of `NitroRoutingManeuver`.
    */
-  init(attributedInstructionVariants: [NitroAttributedString], symbolImage: NitroImage, junctionImage: Variant_GlyphImage_AssetImage?, turnType: TurnType?, angle: Double?, elementAngles: [Double]?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: NitroColor, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: [String]?, highwayExitLabel: String?) {
+  init(attributedInstructionVariants: [NitroAttributedString], symbolImage: NitroImage, junctionImage: Variant_GlyphImage_AssetImage_RemoteImage?, turnType: TurnType?, angle: Double?, elementAngles: [Double]?, exitNumber: Double?, offRampType: OffRampType?, onRampType: OnRampType?, forkType: ForkType?, keepType: KeepType?, linkedLaneGuidance: LaneGuidance?, cardBackgroundColor: NitroColor, id: String, travelEstimates: TravelEstimates, trafficSide: TrafficSide, maneuverType: ManeuverType, roadName: [String]?, highwayExitLabel: String?) {
     self.init({ () -> bridge.std__vector_NitroAttributedString_ in
       var __vector = bridge.create_std__vector_NitroAttributedString_(attributedInstructionVariants.count)
       for __item in attributedInstructionVariants {
         __vector.push_back(__item)
       }
       return __vector
-    }(), { () -> bridge.std__variant_GlyphImage__AssetImage_ in
+    }(), { () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
       switch symbolImage {
         case .first(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
         case .second(let __value):
-          return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
+        case .third(let __value):
+          return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
       }
-    }().variant, { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__ in
+    }().variant, { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__ in
       if let __unwrappedValue = junctionImage {
-        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__({ () -> bridge.std__variant_GlyphImage__AssetImage_ in
+        return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__({ () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
           switch __unwrappedValue {
             case .first(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
             case .second(let __value):
-              return bridge.create_std__variant_GlyphImage__AssetImage_(__value)
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
+            case .third(let __value):
+              return bridge.create_std__variant_GlyphImage__AssetImage__RemoteImage_(__value)
           }
         }().variant)
       } else {
@@ -134,7 +138,7 @@ public extension NitroRoutingManeuver {
   @inline(__always)
   var symbolImage: NitroImage {
     return { () -> NitroImage in
-      let __variant = bridge.std__variant_GlyphImage__AssetImage_(self.__symbolImage)
+      let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(self.__symbolImage)
       switch __variant.index() {
         case 0:
           let __actual = __variant.get_0()
@@ -142,6 +146,9 @@ public extension NitroRoutingManeuver {
         case 1:
           let __actual = __variant.get_1()
           return .second(__actual)
+        case 2:
+          let __actual = __variant.get_2()
+          return .third(__actual)
         default:
           fatalError("Variant can never have index \(__variant.index())!")
       }
@@ -149,12 +156,12 @@ public extension NitroRoutingManeuver {
   }
   
   @inline(__always)
-  var junctionImage: Variant_GlyphImage_AssetImage? {
-    return { () -> Variant_GlyphImage_AssetImage? in
-      if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__(self.__junctionImage) {
-        let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__(self.__junctionImage)
-        return { () -> Variant_GlyphImage_AssetImage in
-          let __variant = bridge.std__variant_GlyphImage__AssetImage_(__unwrapped)
+  var junctionImage: Variant_GlyphImage_AssetImage_RemoteImage? {
+    return { () -> Variant_GlyphImage_AssetImage_RemoteImage? in
+      if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(self.__junctionImage) {
+        let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(self.__junctionImage)
+        return { () -> Variant_GlyphImage_AssetImage_RemoteImage in
+          let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(__unwrapped)
           switch __variant.index() {
             case 0:
               let __actual = __variant.get_0()
@@ -162,6 +169,9 @@ public extension NitroRoutingManeuver {
             case 1:
               let __actual = __variant.get_1()
               return .second(__actual)
+            case 2:
+              let __actual = __variant.get_2()
+              return .third(__actual)
             default:
               fatalError("Variant can never have index \(__variant.index())!")
           }
