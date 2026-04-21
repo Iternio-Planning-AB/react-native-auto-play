@@ -118,14 +118,11 @@ class VoiceInputManager(private val carContext: CarContext?) {
             try {
                 while (isRecording) {
                     val read = carAudioRecord?.read(buffer, 0, bufferSize) ?: audioRecord?.read(
-                        buffer,
-                        0,
-                        bufferSize
+                        buffer, 0, bufferSize
                     ) ?: -1
 
                     if (read < 0) {
-                        if (outputStream.size() > 0) break
-                        continue
+                        break
                     }
 
                     if (read > 0) {
@@ -150,7 +147,7 @@ class VoiceInputManager(private val carContext: CarContext?) {
 
                             if (peak < SILENCE_AMPLITUDE_THRESHOLD) {
                                 if (silenceStart == null) silenceStart = now
-                                if (now - silenceStart!! >= silenceThresholdMs) break
+                                if (now - silenceStart >= silenceThresholdMs) break
                             } else {
                                 silenceStart = null
                             }
