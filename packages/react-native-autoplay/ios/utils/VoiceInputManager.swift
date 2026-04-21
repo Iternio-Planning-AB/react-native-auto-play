@@ -9,6 +9,7 @@ class VoiceInputManager {
     private var continuation: CheckedContinuation<[Int16], Error>?
     private var samples: [Int16] = []
     private var isStopping = false
+    private let stopLock = NSLock()
 
     // Timing
     private var recordingStart: Date?
@@ -58,13 +59,20 @@ class VoiceInputManager {
     }
 
     func stop(interfaceController: AutoPlayInterfaceController? = nil) {
-        guard !isStopping else { return }
+        stopLock.lock()
+        guard !isStopping else {
+            stopLock.unlock()
+            return
+        }
         isStopping = true
-
-        stopCapture(interfaceController: interfaceController)
-        continuation?.resume(returning: samples)
+        let capturedContinuation = continuation
+        let capturedSamples = samples
         continuation = nil
         samples = []
+        stopLock.unlock()
+
+        stopCapture(interfaceController: interfaceController)
+        capturedContinuation?.resume(returning: capturedSamples)
     }
 
     // MARK: - Private
