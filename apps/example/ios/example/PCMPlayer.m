@@ -1,6 +1,8 @@
 #import <React/RCTBridgeModule.h>
 #import <AVFoundation/AVFoundation.h>
 
+// NOTE: This module exists solely for testing voice input in the example app.
+// It is not production-ready and should not be used as a reference implementation.
 @interface PCMPlayer : NSObject <RCTBridgeModule>
 @end
 

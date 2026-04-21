@@ -10,6 +10,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
+// NOTE: This module exists solely for testing voice input in the example app.
+// It is not production-ready and should not be used as a reference implementation.
 class PCMPlayerModule(
     reactContext: ReactApplicationContext,
 ) : ReactContextBaseJavaModule(reactContext) {
