@@ -16,6 +16,7 @@
 #include "JPreferredImageLane.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include "JNitroImage.hpp"
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
@@ -23,6 +24,7 @@
 #include <optional>
 #include "JAssetImage.hpp"
 #include <string>
+#include "JRemoteImage.hpp"
 #include <vector>
 #include "JImageLane.hpp"
 

@@ -17,8 +17,10 @@
 #include "JNitroAttributedStringImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"
+#include "JRemoteImage.hpp"
 #include "NitroAttributedStringImage.hpp"
 #include "NitroColor.hpp"
+#include "RemoteImage.hpp"
 #include <optional>
 #include <string>
 #include <variant>

@@ -115,6 +115,20 @@ class MapTemplate: AutoPlayHeaderProviding,
                     button.onPress?()
                 }
             }
+            if let remoteImage = button.image.remoteImage,
+                let icon = Parser.parseRemoteImage(
+                    remoteImage: remoteImage,
+                    traitCollection: traitCollection
+                )
+            {
+                return CPMapButton(image: icon) { _ in
+                    if button.type == .pan {
+                        self.onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
+                }
+            }
 
             return CPMapButton { _ in
                 if button.type == .pan {

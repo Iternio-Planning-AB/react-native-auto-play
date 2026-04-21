@@ -74,6 +74,12 @@ class Parser {
                         traitCollection: traitCollection
                     )
                 }
+                if let remoteImage = action.image?.remoteImage {
+                    image = Parser.parseRemoteImage(
+                        remoteImage: remoteImage,
+                        traitCollection: traitCollection
+                    )
+                }
 
                 var button: CPBarButton
 
@@ -760,8 +766,29 @@ class Parser {
             )
         }
 
+        if let remoteImage = image?.remoteImage {
+            return Parser.parseRemoteImage(
+                remoteImage: remoteImage,
+                traitCollection: traitCollection
+            )
+        }
+
         return nil
     }
+
+    // MARK: - Remote image cache
+    private static let remoteImageCache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = 50
+        cache.totalCostLimit = 8 * 1024 * 1024  // 8 MB, matching Android's BitmapCache
+        return cache
+    }()
+
+    /// Shared session — long-lived by design; failed tasks don't invalidate it.
+    private static let remoteImageSession = URLSession(configuration: .default)
+
+    /// Default network timeout for remote images when no `timeoutMs` is provided.
+    private static let defaultRemoteTimeoutSeconds: TimeInterval = 0.5
 
     static func parseAssetImage(
         assetImage: AssetImage,
@@ -773,15 +800,75 @@ class Parser {
             "__packager_asset": assetImage.packager_asset,
         ])
 
-        guard let color = assetImage.color else {
-            return uiImage
-        }
+        return applyTint(
+            uiImage: uiImage,
+            color: assetImage.color,
+            traitCollection: traitCollection
+        )
+    }
+
+    static func parseRemoteImage(
+        remoteImage: RemoteImage,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 } ?? defaultRemoteTimeoutSeconds
+        let uiImage = loadRemoteImage(uri: remoteImage.uri, timeoutSeconds: timeoutSeconds)
+
+        return applyTint(
+            uiImage: uiImage,
+            color: remoteImage.color,
+            traitCollection: traitCollection
+        )
+    }
+
+    private static func applyTint(
+        uiImage: UIImage?,
+        color: NitroColor?,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        guard let image = uiImage else { return nil }
+        guard let color else { return image }
 
         return getTintedImageAsset(
             color: color,
-            uiImage: uiImage,
+            uiImage: image,
             traitCollection: traitCollection
         )
+    }
+
+    /// Synchronously loads an image from a remote HTTPS URL with in-memory caching.
+    /// `parseRemoteImage` is always invoked on a background thread by the Car App rendering pipeline,
+    /// so the semaphore wait cannot block the main thread.
+    private static func loadRemoteImage(uri: String, timeoutSeconds: TimeInterval) -> UIImage? {
+        let cacheKey = uri as NSString
+        if let cached = remoteImageCache.object(forKey: cacheKey) {
+            return cached
+        }
+
+        guard let url = URL(string: uri) else { return nil }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = timeoutSeconds
+
+        var resultData: Data?
+        let semaphore = DispatchSemaphore(value: 0)
+        let task = remoteImageSession.dataTask(with: request) { data, _, _ in
+            resultData = data
+            semaphore.signal()
+        }
+        task.resume()
+        if semaphore.wait(timeout: .now() + timeoutSeconds) == .timedOut {
+            task.cancel()
+            return UIImage(systemName: "exclamationmark.circle")
+        }
+
+        guard let data = resultData, let image = UIImage(data: data) else {
+            return UIImage(systemName: "exclamationmark.circle")
+        }
+
+        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+        remoteImageCache.setObject(image, forKey: cacheKey, cost: cost)
+        return image
     }
 
     static func getTintedImageAsset(

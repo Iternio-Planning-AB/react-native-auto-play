@@ -371,7 +371,8 @@ class MapTemplate(
                 val notificationIcon = Parser.parseImageToBitmap(
                     context,
                     current.symbolImage.asFirstOrNull(),
-                    current.symbolImage.asSecondOrNull()
+                    current.symbolImage.asSecondOrNull(),
+                    current.symbolImage.asThirdOrNull()
                 )
 
                 val notificationText = currentStep.cue?.toString()

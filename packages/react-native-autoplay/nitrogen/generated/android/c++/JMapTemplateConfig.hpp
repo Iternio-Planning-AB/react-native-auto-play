@@ -32,7 +32,8 @@
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
 #include "JPoint.hpp"
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "JVisibleTravelEstimate.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
@@ -42,6 +43,7 @@
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "Point.hpp"
+#include "RemoteImage.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>

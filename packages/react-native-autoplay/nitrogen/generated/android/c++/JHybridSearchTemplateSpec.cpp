@@ -15,6 +15,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
+// Forward declaration of `RemoteImage` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
@@ -52,12 +54,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSe
 #include "JNitroAction.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
+#include "RemoteImage.hpp"
 #include <variant>
-#include "JVariant_GlyphImage_AssetImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include "JAssetImage.hpp"
+#include "JRemoteImage.hpp"
 #include "NitroActionType.hpp"
 #include "JNitroActionType.hpp"
 #include "NitroAlignment.hpp"
