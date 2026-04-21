@@ -11,10 +11,12 @@ import {
   type TripPoint,
   type VisibleTravelEstimate,
 } from '@iternio/react-native-auto-play';
+import { Buffer } from 'buffer';
 import { Platform } from 'react-native';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { getCarPlayDashboardButtons } from '../config/CarPlayDashboardButtons';
+import { setRecording } from '../state/audioSlice';
 import { actionStopNavigation, setIsNavigating, setSelectedTrip } from '../state/navigationSlice';
 import { dispatch } from '../state/store';
 import { AutoGridTemplate } from './AutoGridTemplate';
@@ -238,10 +240,18 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
   android: [
     {
       type: 'image',
-      image: { name: 'grid_3x3', type: 'glyph' },
-      onPress: (t) => {
-        console.log('***', t.id);
-        AutoGridTemplate.getTemplate().push();
+      image: { name: 'mic', type: 'glyph' },
+      onPress: () => {
+        HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+          if (!isGranted) {
+            return;
+          }
+
+          HybridAutoPlay.startVoiceInput().then((audio) => {
+            console.log(`received ${audio.byteLength} bytes`);
+            dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+          });
+        });
       },
     },
     {
@@ -274,10 +284,21 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       {
         type: 'image',
         image: {
-          name: 'list',
+          name: 'mic',
           type: 'glyph',
         },
-        onPress: () => AutoListTemplate.getTemplate().push(),
+        onPress: () => {
+          HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+            if (!isGranted) {
+              return;
+            }
+
+            HybridAutoPlay.startVoiceInput().then((audio) => {
+              console.log(`received ${audio.byteLength} bytes`);
+              dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+            });
+          });
+        },
       },
       {
         type: 'image',
@@ -351,7 +372,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
-      name: 'ev_station',
+      name: 'ev_charger',
       color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
       backgroundColor: 'rgba(66, 66, 66, 0.5)',
       type: 'glyph',

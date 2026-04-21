@@ -197,6 +197,88 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func hasVoiceInputPermission() -> bridge.Result_bool_ {
+    do {
+      let __result = try self.__implementation.hasVoiceInputPermission()
+      let __resultCpp = __result
+      return bridge.create_Result_bool_(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_bool_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func requestVoiceInputPermission() -> bridge.Result_std__shared_ptr_Promise_bool___ {
+    do {
+      let __result = try self.__implementation.requestVoiceInputPermission()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_bool__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_bool__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_bool__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_bool___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_bool___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____ {
+    do {
+      let __result = try self.__implementation.startVoiceInput(silenceThresholdMs: { () -> Double? in
+        if bridge.has_value_std__optional_double_(silenceThresholdMs) {
+          let __unwrapped = bridge.get_std__optional_double_(silenceThresholdMs)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }(), maxDurationMs: { () -> Double? in
+        if bridge.has_value_std__optional_double_(maxDurationMs) {
+          let __unwrapped = bridge.get_std__optional_double_(maxDurationMs)
+          return __unwrapped
+        } else {
+          return nil
+        }
+      }(), listeningText: { () -> String? in
+        if bridge.has_value_std__optional_std__string_(listeningText) {
+          let __unwrapped = bridge.get_std__optional_std__string_(listeningText)
+          return String(__unwrapped)
+        } else {
+          return nil
+        }
+      }())
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result.getArrayBuffer()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func stopVoiceInput() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.stopVoiceInput()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func setRootTemplate(templateId: std.string) -> bridge.Result_std__shared_ptr_Promise_void___ {
     do {
       let __result = try self.__implementation.setRootTemplate(templateId: String(templateId))

@@ -613,7 +613,7 @@ This section lists the available listeners and lifecycle callbacks so you can wi
 | --- | --- | --- |
 | `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'` | Connection changes for the head unit. |
 | `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
-| `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only voice input. |
+| `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only. Fires when the OS triggers a voice input event (e.g. "Hey Google, navigate to…"). For in-app recording use `startVoiceInput` instead. |
 | `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |
 
 ```ts
@@ -760,10 +760,68 @@ new ListTemplate({
 }).push();
 ```
 
+### Voice Input
+
+The library provides a cross-platform in-app voice recording API built on top of the car microphone (when connected) or the device microphone (when no car is connected).
+
+#### Permission
+
+```ts
+// Check whether permission is already granted
+const granted = HybridAutoPlay.hasVoiceInputPermission();
+
+// Request permission if not yet granted
+const granted = await HybridAutoPlay.requestVoiceInputPermission();
+```
+
+#### Recording
+
+```ts
+// Start recording — resolves with a raw PCM ArrayBuffer (16 kHz, 16-bit, mono)
+// Recording stops automatically on silence or when maxDurationMs is reached
+const pcmBuffer = await HybridAutoPlay.startVoiceInput(
+  1500,       // silenceThresholdMs (default 1500)
+  10_000,     // maxDurationMs (default 10 000)
+  'Listening...' // text shown on the car screen while recording (iOS CarPlay)
+);
+
+// Stop recording early — resolves startVoiceInput with the audio captured so far
+HybridAutoPlay.stopVoiceInput();
+```
+
+On **Android**: uses `CarAudioRecord` when Android Auto is connected, otherwise falls back to standard `AudioRecord`.
+
+On **iOS**: presents `CPVoiceControlTemplate` on the car screen when CarPlay is connected, and captures audio via `AVAudioEngine`.
+
+#### OS-triggered voice input (Android only)
+
+`addListenerVoiceInput` fires when the OS itself initiates a voice action (e.g. "Hey Google, navigate to…"). It is a no-op on iOS — use `startVoiceInput` for in-app recording on both platforms.
+
+```ts
+const cleanup = HybridAutoPlay.addListenerVoiceInput((location, query) => {
+  console.log('Voice query:', query, 'near', location);
+});
+```
+
+#### useVoiceInput hook (Android only)
+
+A convenience hook that wires up `addListenerVoiceInput` and exposes the latest `location` and `query` values reactively.
+
+```tsx
+import { useVoiceInput } from '@iternio/react-native-auto-play';
+
+const MyScreen = () => {
+  const { location, query } = useVoiceInput();
+  return <Text>{query ?? 'Say something…'}</Text>;
+};
+```
+
+---
+
 ### Hooks
 
 -   `useMapTemplate()`: Get a reference to the parent `MapTemplate` instance.
--   `useVoiceInput()`: Access voice input functionality - Android Auto only.
+-   `useVoiceInput()`: Reactively exposes the latest OS-triggered voice input (`location`, `query`). Android only — for in-app recording use `startVoiceInput` / `stopVoiceInput` directly.
 -   `useSafeAreaInsets()`: Get safe area insets for any root component.
 -   `useFocusedEffect()`: A useEffect alternative that executes when the specified component is visible to the user - use any of the `AutoPlayModules` enum or a cluster uuid to sepcify the component the effect should listen for.
 -   `useAndroidAutoTelemetry()`: Access to car telemetry data on Android Auto and Android Automotive.

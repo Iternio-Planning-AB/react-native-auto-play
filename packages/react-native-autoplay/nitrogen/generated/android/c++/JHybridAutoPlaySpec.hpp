@@ -57,6 +57,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) override;
     std::function<void()> addListenerRenderState(const std::string& moduleName, const std::function<void(VisibilityState /* payload */)>& callback) override;
     std::function<void()> addListenerVoiceInput(const std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>& callback) override;
+    bool hasVoiceInputPermission() override;
+    std::shared_ptr<Promise<bool>> requestVoiceInputPermission() override;
+    std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText) override;
+    void stopVoiceInput() override;
     std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) override;
     std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) override;
     std::shared_ptr<Promise<void>> popTemplate(std::optional<bool> animate) override;

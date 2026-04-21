@@ -223,6 +223,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "ZoomEvent.hpp"
+#include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>

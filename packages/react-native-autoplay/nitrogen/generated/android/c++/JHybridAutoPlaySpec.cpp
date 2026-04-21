@@ -37,6 +37,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 #include <NitroModules/JNICallable.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
+#include <NitroModules/ArrayBuffer.hpp>
+#include <NitroModules/JArrayBuffer.hpp>
 #include <NitroModules/JUnit.hpp>
 #include "EventName.hpp"
 #include "JEventName.hpp"
@@ -142,6 +144,47 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         return JNICallable<JFunc_void, void()>(std::move(__resultRef));
       }
     }();
+  }
+  bool JHybridAutoPlaySpec::hasVoiceInputPermission() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jboolean()>("hasVoiceInputPermission");
+    auto __result = method(_javaPart);
+    return static_cast<bool>(__result);
+  }
+  std::shared_ptr<Promise<bool>> JHybridAutoPlaySpec::requestVoiceInputPermission() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("requestVoiceInputPermission");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<bool>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JBoolean>(__boxedResult);
+        __promise->resolve(static_cast<bool>(__result->value()));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> JHybridAutoPlaySpec::startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JDouble> /* silenceThresholdMs */, jni::alias_ref<jni::JDouble> /* maxDurationMs */, jni::alias_ref<jni::JString> /* listeningText */)>("startVoiceInput");
+    auto __result = method(_javaPart, silenceThresholdMs.has_value() ? jni::JDouble::valueOf(silenceThresholdMs.value()) : nullptr, maxDurationMs.has_value() ? jni::JDouble::valueOf(maxDurationMs.value()) : nullptr, listeningText.has_value() ? jni::make_jstring(listeningText.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<std::shared_ptr<ArrayBuffer>>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JArrayBuffer::javaobject>(__boxedResult);
+        __promise->resolve(__result->cthis()->getArrayBuffer());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridAutoPlaySpec::stopVoiceInput() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("stopVoiceInput");
+    method(_javaPart);
   }
   std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::setRootTemplate(const std::string& templateId) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */)>("setRootTemplate");

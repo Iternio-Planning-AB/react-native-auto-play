@@ -18,6 +18,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class EventNa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `Location` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
+// Forward declaration of `ArrayBufferHolder` to properly resolve imports.
+namespace NitroModules { class ArrayBufferHolder; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -44,6 +46,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 #include "Location.hpp"
 #include <optional>
 #include <NitroModules/Promise.hpp>
+#include <NitroModules/ArrayBuffer.hpp>
+#include <NitroModules/ArrayBufferHolder.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
 #include <vector>
@@ -129,6 +133,36 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline bool hasVoiceInputPermission() override {
+      auto __result = _swiftPart.hasVoiceInputPermission();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<bool>> requestVoiceInputPermission() override {
+      auto __result = _swiftPart.requestVoiceInputPermission();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText) override {
+      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void stopVoiceInput() override {
+      auto __result = _swiftPart.stopVoiceInput();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
     inline std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) override {
       auto __result = _swiftPart.setRootTemplate(templateId);

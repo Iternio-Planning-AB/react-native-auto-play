@@ -1,3 +1,4 @@
+import AVFoundation
 import CarPlay
 import NitroModules
 
@@ -20,6 +21,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var listeners = [EventName: [StateListener]]()
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
+    private static var voiceInputManager: VoiceInputManager?
 
     override init() {
         HybridAutoPlay.listeners.removeAll()
@@ -117,8 +119,53 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     func addListenerVoiceInput(
         callback: @escaping (Location?, String?) -> Void
     ) throws -> () -> Void {
-        // TODO: Inplement voice input
+        // iOS does not use the OS-triggered voice input path — use startVoiceInput() instead.
         return {}
+    }
+
+    func hasVoiceInputPermission() throws -> Bool {
+        return AVAudioSession.sharedInstance().recordPermission == .granted
+    }
+
+    func requestVoiceInputPermission() throws -> Promise<Bool> {
+        return Promise.async {
+            return await withCheckedContinuation { cont in
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    cont.resume(returning: granted)
+                }
+            }
+        }
+    }
+
+    func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?) throws -> Promise<
+        ArrayBuffer
+    > {
+        return Promise.async {
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
+
+            let manager = VoiceInputManager()
+            HybridAutoPlay.voiceInputManager = manager
+
+            defer {
+                HybridAutoPlay.voiceInputManager = nil
+            }
+
+            let data = try await manager.start(
+                interfaceController: interfaceController,
+                silenceThresholdMs: silenceThresholdMs ?? 1_500,
+                maxDurationMs: maxDurationMs ?? 10_000,
+                listeningText: listeningText ?? "Listening..."
+            )
+
+            return try ArrayBuffer.copy(data: data)
+        }
+    }
+
+    func stopVoiceInput() throws {
+        Task { @MainActor in
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
+            HybridAutoPlay.voiceInputManager?.stop(interfaceController: interfaceController)
+        }
     }
 
     // MARK: set/push/pop templates
@@ -151,7 +198,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func pushTemplate(templateId: String) throws
-        -> NitroModules.Promise<Void>
+        -> Promise<Void>
     {
         return Promise.async {
             try await RootModule.withSceneAndInterfaceController {
@@ -201,7 +248,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func popTemplate(animate: Bool?) throws -> NitroModules.Promise<Void> {
+    func popTemplate(animate: Bool?) throws -> Promise<Void> {
         return Promise.async {
             try await RootModule.withInterfaceController {
                 interfaceController in
@@ -222,7 +269,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func popToRootTemplate(animate: Bool?) throws -> NitroModules.Promise<Void> {
+    func popToRootTemplate(animate: Bool?) throws -> Promise<Void> {
         return Promise.async {
             try await RootModule.withInterfaceController {
                 interfaceController in

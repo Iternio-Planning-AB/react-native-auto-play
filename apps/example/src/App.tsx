@@ -3,10 +3,13 @@ import {
   type CleanupCallback,
   HybridAutoPlay,
 } from '@iternio/react-native-auto-play';
+import { Buffer } from 'buffer';
 import { useEffect, useState } from 'react';
 import { Button, Platform, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AutoTrip } from './config/AutoTrip';
+import { playPCM } from './PCMPlayer';
+import { setRecording } from './state/audioSlice';
 import {
   actionShowAlert,
   actionStartNavigation,
@@ -39,6 +42,7 @@ function AppContent() {
 
   const isNavigating = useAppSelector((state) => state.navigation.isNavigating);
   const selectedTrip = useAppSelector((state) => state.navigation.selectedTrip);
+  const recording = useAppSelector((state) => state.audio.recording);
 
   const [isConnected, setIsConnected] = useState(HybridAutoPlay.isConnected());
   const [isRootVisible, setIsRootVisible] = useState(false);
@@ -107,6 +111,30 @@ function AppContent() {
             title="high prio"
             onPress={() => {
               dispatch(actionShowAlert('high'));
+            }}
+          />
+        </View>
+        <View style={styles.buttonRow}>
+          <Button
+            title="record audio"
+            onPress={async () => {
+              const granted = await HybridAutoPlay.requestVoiceInputPermission();
+              if (!granted) {
+                return;
+              }
+
+              const audio = await HybridAutoPlay.startVoiceInput();
+              console.log(`received ${audio.byteLength} bytes`);
+              dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+            }}
+          />
+          <Button
+            title="play recording"
+            onPress={() => {
+              if (recording == null) {
+                return;
+              }
+              playPCM(recording);
             }}
           />
         </View>
