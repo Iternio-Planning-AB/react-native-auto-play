@@ -50,8 +50,9 @@ class VoiceInputManager {
                 )
             }
             catch {
-                cont.resume(throwing: error)
+                self.stopCapture(interfaceController: interfaceController)
                 self.continuation = nil
+                cont.resume(throwing: error)
             }
         }
 

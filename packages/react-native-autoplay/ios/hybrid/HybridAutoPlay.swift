@@ -146,14 +146,16 @@ class HybridAutoPlay: HybridAutoPlaySpec {
             let manager = VoiceInputManager()
             HybridAutoPlay.voiceInputManager = manager
 
+            defer {
+                HybridAutoPlay.voiceInputManager = nil
+            }
+
             let data = try await manager.start(
                 interfaceController: interfaceController,
                 silenceThresholdMs: silenceThresholdMs ?? 1_500,
                 maxDurationMs: maxDurationMs ?? 10_000,
                 listeningText: listeningText ?? "Listening..."
             )
-
-            HybridAutoPlay.voiceInputManager = nil
 
             return try ArrayBuffer.copy(data: data)
         }
