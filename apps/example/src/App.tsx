@@ -15,8 +15,9 @@ import {
   actionStartNavigation,
   actionStopNavigation,
 } from './state/navigationSlice';
-import { useAppDispatch, useAppSelector } from './state/store';
+import { useAppSelector, useAppStore } from './state/store';
 import TelemetryView from './TelemetryView';
+import saveVoiceRecording from './utils/saveVoiceRecording';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -38,14 +39,14 @@ function App() {
 }
 
 function AppContent() {
-  const dispatch = useAppDispatch();
+  const { dispatch, getState } = useAppStore();
 
   const isNavigating = useAppSelector((state) => state.navigation.isNavigating);
   const selectedTrip = useAppSelector((state) => state.navigation.selectedTrip);
-  const recording = useAppSelector((state) => state.audio.recording);
 
   const [isConnected, setIsConnected] = useState(HybridAutoPlay.isConnected());
   const [isRootVisible, setIsRootVisible] = useState(false);
+  const [savedVoiceRecording, setSavedVoiceRecording] = useState('');
 
   useEffect(() => {
     const listeners: Array<CleanupCallback> = [];
@@ -114,6 +115,7 @@ function AppContent() {
             }}
           />
         </View>
+        <Text>Saved recording: {savedVoiceRecording}</Text>
         <View style={styles.buttonRow}>
           <Button
             title="record audio"
@@ -131,10 +133,18 @@ function AppContent() {
           <Button
             title="play recording"
             onPress={() => {
+              const recording = getState().audio.recording;
               if (recording == null) {
                 return;
               }
               playPCM(recording);
+            }}
+          />
+          <Button
+            title="save recording"
+            onPress={async () => {
+              const result = await saveVoiceRecording(getState);
+              setSavedVoiceRecording(result);
             }}
           />
         </View>

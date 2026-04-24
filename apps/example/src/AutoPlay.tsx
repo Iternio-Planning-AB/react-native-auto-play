@@ -3,8 +3,10 @@ import {
   CarPlayDashboard,
   HybridAutoPlay,
   MapTemplate,
+  MessageTemplate,
   type RootComponentInitialProps,
   SafeAreaView,
+  type TextButton,
   useMapTemplate,
 } from '@iternio/react-native-auto-play';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
@@ -15,6 +17,7 @@ import { Cluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
 import { AutoManeuverUtil } from './config/AutoManeuver';
 import { AutoTrip } from './config/AutoTrip';
+import { setRecording } from './state/audioSlice';
 import {
   actionShowAlert,
   actionStartNavigation,
@@ -30,6 +33,7 @@ import {
   onTripStarted,
   updateTripEstimates,
 } from './templates/AutoTemplate';
+import saveVoiceRecording from './utils/saveVoiceRecording';
 import { VoiceInputView } from './VoiceInputView';
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
@@ -148,6 +152,53 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
               }, 5000);
             },
           });
+        },
+      })
+    );
+
+    listeners.push(
+      startAppListening({
+        actionCreator: setRecording,
+        effect: (_, { getState }) => {
+          const actions: [TextButton, TextButton] = [
+            {
+              type: 'text',
+              title: 'Yes',
+              onPress: () => {
+                void saveVoiceRecording(getState).then((result) => {
+                  mapTemplate?.showAlert({
+                    durationMs: 3000,
+                    id: 42,
+                    primaryAction: {
+                      title: result,
+                      onPress: () => {
+                        mapTemplate.dismissAlert(42);
+                      },
+                    },
+                    priority: 'medium',
+                    title: {
+                      text: 'Saved recording',
+                    },
+                  });
+                });
+                HybridAutoPlay.popTemplate();
+              },
+            },
+            {
+              type: 'text',
+              title: 'No',
+              onPress: () => {
+                HybridAutoPlay.popTemplate();
+              },
+            },
+          ];
+          new MessageTemplate({
+            message: { text: 'Save recording?' },
+            actions: {
+              android: actions,
+              ios: actions,
+            },
+          }).push();
         },
       })
     );
