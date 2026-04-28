@@ -90,7 +90,7 @@ class VoiceInputManager {
 
         // Activate the session first so inputNode reports the correct hardware format
         let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playAndRecord, mode: .measurement, options: [.mixWithOthers])
+        try session.setCategory(.playAndRecord, mode: .measurement, options: [])
         try session.setActive(true)
 
         if let interfaceController {

@@ -302,8 +302,11 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       },
       {
         type: 'image',
-        image: { name: 'grid_3x3', type: 'glyph' },
-        onPress: () => AutoGridTemplate.getTemplate().push(),
+        image: {
+          name: 'list',
+          type: 'glyph',
+        },
+        onPress: () => AutoListTemplate.getTemplate().push(),
       },
     ],
     trailingNavigationBarButtons: [
