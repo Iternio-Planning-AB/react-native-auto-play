@@ -598,11 +598,20 @@ object Parser {
         val image = result?.get()
         try {
             if (image is CloseableBitmap) {
-                return image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+                // underlyingBitmap can be null when Fresco decodes to a CloseableBitmap
+                // whose backing bitmap has already been recycled or failed to allocate;
+                // copy() can also throw (e.g., OOM on very large remote images). Either
+                // way we return null so the caller falls back to a placeholder icon.
+                return image.underlyingBitmap?.copy(Bitmap.Config.ARGB_8888, false)
             } else if (image is CloseableXml) {
                 val drawable = image.buildDrawable()
                 return drawable?.toBitmap(width = image.width, height = image.height, Bitmap.Config.ARGB_8888)
             }
+        } catch (_: Exception) {
+            // Any decode/copy failure (OOM, recycled bitmap, invalid config, …) should
+            // not crash the car app — the image is optional decoration and the caller
+            // handles a null return with CarIcon.ALERT.
+            return null
         } finally {
             image?.close()
             result?.close()
