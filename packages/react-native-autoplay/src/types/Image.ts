@@ -5,11 +5,11 @@ import type { GlyphName } from './Glyphmap';
 /**
  * Optional custom font for `type: 'glyph'` images. When omitted, the bundled Material Symbols font is used.
  *
- * The value is passed to native as **`customFontName`**: Android resolves `res/font/<name>.ttf` (no extension);
- * iOS uses `UIFont(name:size:)`. Use one identifier that works for both after you add the font to each platform.
+ * The value is passed to native as **`customFontName`**: Android resolves `res/font/<name>.ttf` using the id
+ * lowercased (Android font resource names must be lowercase); iOS uses the original string with `UIFont(name:size:)`.
  */
 export type GlyphFontSource = {
-  /** Font id shared by Android (`res/font/<name>.ttf`) and iOS (`UIFont(name:size:)`). */
+  /** Font id: Android lowercases for `res/font/<name>.ttf`; iOS uses this string as-is for `UIFont(name:size:)`. */
   name: string;
 };
 

@@ -308,7 +308,7 @@ The library is using [Material Symbols](https://fonts.google.com/icons) for icon
 
 Glyph images (`type: 'glyph'`) can also use **your own font** via the optional `font` field — add the font file to native projects, then pass:
 
-- **`font: { name: 'FontName' }`** — Single id used for Android `res/font/FontName.ttf` and for iOS `UIFont("FontName", size:)`. Your `.ttf` and platform setup need to match that string on both sides.
+- **`font: { name: 'FontName' }`** — iOS uses that string for `UIFont(name:size:)`. Android resolves `res/font/fontname.ttf` by lowercasing the id for the `res/font` lookup only (resource names must be lowercase).
 
 Use `{ type: 'glyph', name: '<MaterialName>', ... }` for bundled symbols, or `{ type: 'glyph', codepoint: 0xe900, font: ..., ... }` when the glyph is not in the Material map. You can still pass `name` plus `codepoint` to override the mapped code point for a Material name.
 

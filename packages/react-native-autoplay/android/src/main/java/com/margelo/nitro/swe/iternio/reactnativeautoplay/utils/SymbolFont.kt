@@ -29,17 +29,18 @@ object SymbolFont {
     }
 
     private fun typefaceForGlyph(context: Context, image: GlyphImage): Typeface? {
-        val fontResName = image.customFontName?.trim().orEmpty()
-        if (fontResName.isNotEmpty()) {
-            androidResTypefaces[fontResName]?.let {
+        val rawName = image.customFontName?.trim().orEmpty()
+        if (rawName.isNotEmpty()) {
+            val resName = rawName.lowercase()
+            androidResTypefaces[resName]?.let {
                 return it
             }
-            val id = context.resources.getIdentifier(fontResName, "font", context.packageName)
+            val id = context.resources.getIdentifier(resName, "font", context.packageName)
             if (id == 0) {
                 return null
             }
             val fromRes = ResourcesCompat.getFont(context, id) ?: return null
-            androidResTypefaces[fontResName] = fromRes
+            androidResTypefaces[resName] = fromRes
             return fromRes
         }
 
