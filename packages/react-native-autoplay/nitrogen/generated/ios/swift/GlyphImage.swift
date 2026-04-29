@@ -18,10 +18,16 @@ public extension GlyphImage {
   /**
    * Create a new instance of `GlyphImage`.
    */
-  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?) {
+  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?, customFontName: String?) {
     self.init(glyph, color, backgroundColor, { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = fontScale {
         return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = customFontName {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
@@ -49,6 +55,18 @@ public extension GlyphImage {
       if bridge.has_value_std__optional_double_(self.__fontScale) {
         let __unwrapped = bridge.get_std__optional_double_(self.__fontScale)
         return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var customFontName: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__customFontName) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__customFontName)
+        return String(__unwrapped)
       } else {
         return nil
       }

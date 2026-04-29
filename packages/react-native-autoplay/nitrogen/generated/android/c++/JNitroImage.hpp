@@ -18,8 +18,8 @@
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
-#include "JAssetImage.hpp"
 #include <string>
+#include "JAssetImage.hpp"
 #include "JRemoteImage.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {

@@ -22,8 +22,8 @@
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
-#include "JAssetImage.hpp"
 #include <string>
+#include "JAssetImage.hpp"
 #include "JRemoteImage.hpp"
 #include <vector>
 #include "JImageLane.hpp"

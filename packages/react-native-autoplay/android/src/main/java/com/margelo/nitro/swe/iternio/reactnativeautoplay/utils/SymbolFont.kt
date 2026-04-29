@@ -10,39 +10,53 @@ import android.graphics.Typeface
 import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.IconCompat
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.Parser
 
 object SymbolFont {
     const val TAG = "SymbolFont"
 
-    private var typeface: Typeface? = null
+    private var defaultMaterialTypeface: Typeface? = null
+    private val androidResTypefaces = mutableMapOf<String, Typeface>()
 
-    private fun loadFont(context: Context) {
-        if (typeface != null) {
-            return
+    private fun materialTypeface(context: Context): Typeface? {
+        if (defaultMaterialTypeface == null) {
+            defaultMaterialTypeface =
+                ResourcesCompat.getFont(context, R.font.materialsymbolsoutlined_regular)
+        }
+        return defaultMaterialTypeface
+    }
+
+    private fun typefaceForGlyph(context: Context, image: GlyphImage): Typeface? {
+        val fontResName = image.customFontName?.trim().orEmpty()
+        if (fontResName.isNotEmpty()) {
+            androidResTypefaces[fontResName]?.let {
+                return it
+            }
+            val id = context.resources.getIdentifier(fontResName, "font", context.packageName)
+            if (id == 0) {
+                return null
+            }
+            val fromRes = ResourcesCompat.getFont(context, id) ?: return null
+            androidResTypefaces[fontResName] = fromRes
+            return fromRes
         }
 
-        typeface = ResourcesCompat.getFont(context, R.font.materialsymbolsoutlined_regular)
+        return materialTypeface(context)
     }
 
     private fun imageFromGlyph(
         context: Context,
-        glyph: Double,
+        image: GlyphImage,
         color: Int,
         backgroundColor: Int,
         cornerRadius: Float = 8f, //TODO: make accessible and add it to GlyphImage.cacheKey
-        fontScale: Float,
     ): Bitmap? {
-        loadFont(context)
-
-        val font = typeface ?: run {
-            return null
-        }
+        val font =
+            typefaceForGlyph(context, image) ?: run {
+                return null
+            }
 
         val virtualScreenDensity = context.resources.displayMetrics.density
         val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
@@ -59,6 +73,8 @@ object SymbolFont {
         }
         canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
 
+        val fontScale = (image.fontScale ?: 1.0).toFloat()
+
         // Setup text paint
         paint.reset()
         paint = Paint().apply {
@@ -70,7 +86,7 @@ object SymbolFont {
         }
 
         // Get the character from codepoint
-        val codepoint = glyph.toInt()
+        val codepoint = image.glyph.toInt()
         val text = String(Character.toChars(codepoint))
 
         // Measure text
@@ -94,13 +110,13 @@ object SymbolFont {
             return bitmap
         }
 
-        bitmap = imageFromGlyph(
-            context = context,
-            glyph = image.glyph,
-            color = image.color.get(context),
-            backgroundColor = image.backgroundColor.get(context),
-            fontScale = (image.fontScale ?: 1.0).toFloat()
-        )
+        bitmap =
+            imageFromGlyph(
+                context = context,
+                image = image,
+                color = image.color.get(context),
+                backgroundColor = image.backgroundColor.get(context),
+            )
 
         bitmap?.let {
             BitmapCache.put(context, image, it)

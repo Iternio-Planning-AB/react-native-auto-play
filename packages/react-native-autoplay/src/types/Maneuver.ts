@@ -1,6 +1,7 @@
 import type { ImageSourcePropType } from 'react-native';
 import type { ThemedColor } from '../utils/NitroColor';
 import type { GlyphName } from './Glyphmap';
+import type { GlyphFontSource } from './Image';
 import type { TravelEstimates } from './Trip';
 
 export enum ManeuverType {
@@ -176,10 +177,19 @@ export interface PreferredLane extends Lane {
 export type ManeuverImage =
   | {
       name: GlyphName;
+      /** Overrides the code point from the Material map when set. */
+      codepoint?: number;
+      font?: GlyphFontSource;
       /**
        * make sure to specify a color with a proper contrast ratio to cardBackgroundColor otherwise it might not get applied
        * defaults to white/black for dark/light mode
        */
+      color?: ThemedColor | string;
+      type: 'glyph';
+    }
+  | {
+      codepoint: number;
+      font?: GlyphFontSource;
       color?: ThemedColor | string;
       type: 'glyph';
     }

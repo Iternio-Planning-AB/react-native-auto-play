@@ -1,7 +1,30 @@
 import { Image, type ImageResolvedAssetSource } from 'react-native';
 import { glyphMap } from '../types/Glyphmap';
-import type { AutoImage } from '../types/Image';
+import type { AutoImage, GlyphFontSource } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
+
+function glyphFontToBridge(font?: GlyphFontSource): { customFontName?: string } {
+  if (font == null) {
+    return {};
+  }
+  const n = font.name.trim();
+  if (n.length === 0) {
+    return {};
+  }
+  return { customFontName: n };
+}
+
+function resolveGlyphScalar(image: AutoGlyphForConvert): number {
+  if ('name' in image && image.name !== undefined) {
+    return image.codepoint ?? glyphMap[image.name];
+  }
+  if (image.codepoint !== undefined) {
+    return image.codepoint;
+  }
+  throw new Error('Glyph image must set `name` or `codepoint`');
+}
+
+type AutoGlyphForConvert = Extract<AutoImage, { type: 'glyph' }>;
 
 interface AssetImage extends ImageResolvedAssetSource {
   color?: NitroColor;
@@ -13,6 +36,8 @@ interface GlyphImage {
   color: NitroColor;
   backgroundColor: NitroColor;
   fontScale?: number;
+  /** Same id for Android `res/font/<name>.ttf` and iOS `UIFont(name:size:)`. */
+  customFontName?: string;
 }
 
 interface RemoteImage {
@@ -38,15 +63,16 @@ function convert(image?: AutoImage): NitroImage | undefined {
     const {
       color = { darkColor: 'white', lightColor: 'black' },
       fontScale,
-      name,
       backgroundColor = 'transparent',
+      font,
     } = image;
 
     return {
-      glyph: glyphMap[name],
+      glyph: resolveGlyphScalar(image),
       color: NitroColorUtil.convert(color),
       backgroundColor: NitroColorUtil.convert(backgroundColor),
       fontScale,
+      ...glyphFontToBridge(font),
     };
   }
 
