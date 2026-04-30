@@ -9,6 +9,16 @@
     "androidCxxLibName": "ReactNativeAutoPlay"
   },
   "autolinking": {
+    "Voice": {
+      "android": {
+        "implementationClassName": "HybridVoice",
+        "language": "kotlin"
+      },
+      "ios": {
+        "implementationClassName": "HybridVoice",
+        "language": "swift"
+      }
+    },
     "AutoPlay": {
       "android": {
         "implementationClassName": "HybridAutoPlay",

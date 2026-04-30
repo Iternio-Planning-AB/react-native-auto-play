@@ -1,15 +1,46 @@
 import AVFoundation
 import CarPlay
+import NitroModules
+import Speech
 
-/// Captures audio from the car microphone and buffers raw 16 kHz / 16-bit / mono PCM.
-/// Recording stops automatically when silence is detected or the max duration is reached.
+/// Wraps CheckedContinuation so it can only be resumed once even when
+/// shared between a stop() call and an async recognition task callback.
+private final class ResultBox: @unchecked Sendable {
+    private var continuation: CheckedContinuation<VoiceInputResult, Error>?
+    private let lock = NSLock()
+
+    init(_ continuation: CheckedContinuation<VoiceInputResult, Error>) {
+        self.continuation = continuation
+    }
+
+    func resume(returning result: VoiceInputResult) {
+        lock.lock()
+        defer { lock.unlock() }
+        continuation?.resume(returning: result)
+        continuation = nil
+    }
+
+    func resume(throwing error: Error) {
+        lock.lock()
+        defer { lock.unlock() }
+        continuation?.resume(throwing: error)
+        continuation = nil
+    }
+}
+
+/// Captures audio from the car microphone and buffers raw 16 kHz / 16-bit / mono PCM,
+/// or transcribes it via SFSpeechRecognizer when preferSpeechToText is true.
 class VoiceInputManager {
     private var audioEngine: AVAudioEngine?
     private var voiceControlTemplate: CPVoiceControlTemplate?
-    private var continuation: CheckedContinuation<[Int16], Error>?
+    private var resultBox: ResultBox?
     private var samples: [Int16] = []
     private var isStopping = false
     private let stopLock = NSLock()
+
+    // STT
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var isSTTMode = false
 
     // Timing
     private var recordingStart: Date?
@@ -33,30 +64,33 @@ class VoiceInputManager {
         interfaceController: AutoPlayInterfaceController?,
         silenceThresholdMs: Double,
         maxDurationMs: Double,
-        listeningText: String
-    ) async throws -> Data {
-        let samples = try await withCheckedThrowingContinuation {
-            (cont: CheckedContinuation<[Int16], Error>) in
-            self.continuation = cont
+        listeningText: String,
+        preferSpeechToText: Bool,
+        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?
+    ) async throws -> VoiceInputResult {
+        return try await withCheckedThrowingContinuation { cont in
+            let box = ResultBox(cont)
+            self.resultBox = box
             self.samples = []
             self.isStopping = false
+            self.isSTTMode = preferSpeechToText
 
             do {
                 try self.startCapture(
                     interfaceController: interfaceController,
                     silenceThresholdMs: silenceThresholdMs,
                     maxDurationMs: maxDurationMs,
-                    listeningText: listeningText
+                    listeningText: listeningText,
+                    preferSpeechToText: preferSpeechToText,
+                    onChunk: onChunk,
+                    box: box
                 )
             }
             catch {
-                self.stopCapture(interfaceController: interfaceController)
-                self.continuation = nil
-                cont.resume(throwing: error)
+                self.cleanup(interfaceController: interfaceController)
+                box.resume(throwing: error)
             }
         }
-
-        return samplesAsData(samples)
     }
 
     func stop(interfaceController: AutoPlayInterfaceController? = nil) {
@@ -66,14 +100,22 @@ class VoiceInputManager {
             return
         }
         isStopping = true
-        let capturedContinuation = continuation
+        let wasSTTMode = isSTTMode
+        let box = resultBox
         let capturedSamples = samples
-        continuation = nil
+        resultBox = nil
         samples = []
         stopLock.unlock()
 
-        stopCapture(interfaceController: interfaceController)
-        capturedContinuation?.resume(returning: capturedSamples)
+        if wasSTTMode {
+            // endAudio() causes the recognition task to fire its final result,
+            // which resumes the box. Engine teardown happens there too.
+            recognitionRequest?.endAudio()
+        }
+        else {
+            cleanup(interfaceController: interfaceController)
+            box?.resume(returning: makePCMResult(from: capturedSamples))
+        }
     }
 
     // MARK: - Private
@@ -82,13 +124,15 @@ class VoiceInputManager {
         interfaceController: AutoPlayInterfaceController?,
         silenceThresholdMs: Double,
         maxDurationMs: Double,
-        listeningText: String
+        listeningText: String,
+        preferSpeechToText: Bool,
+        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
+        box: ResultBox
     ) throws {
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
             throw VoiceInputError.microphonePermissionDenied
         }
 
-        // Activate the session first so inputNode reports the correct hardware format
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playAndRecord, mode: .measurement, options: [])
         try session.setActive(true)
@@ -97,12 +141,59 @@ class VoiceInputManager {
             presentVoiceTemplate(interfaceController: interfaceController, listeningText: listeningText)
         }
 
+        var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
+
+        if preferSpeechToText, SFSpeechRecognizer.authorizationStatus() == .authorized,
+            let recognizer = SFSpeechRecognizer(locale: Locale.current),
+            recognizer.isAvailable
+        {
+            let request = SFSpeechAudioBufferRecognitionRequest()
+            request.shouldReportPartialResults = true
+            recognitionRequest = request
+            activeRecognitionRequest = request
+
+            recognizer.recognitionTask(with: request) { [weak self] result, error in
+                guard let self else { return }
+
+                if error != nil {
+                    // STT failed — fall back to whatever PCM was accumulated
+                    self.stopLock.lock()
+                    let capturedSamples = self.samples
+                    self.samples = []
+                    self.stopLock.unlock()
+
+                    self.cleanup(interfaceController: interfaceController)
+                    box.resume(returning: self.makePCMResult(from: capturedSamples))
+                    return
+                }
+
+                guard let result else { return }
+
+                if result.isFinal {
+                    self.stopLock.lock()
+                    self.isStopping = true
+                    self.samples = []
+                    self.stopLock.unlock()
+
+                    self.cleanup(interfaceController: interfaceController)
+                    box.resume(
+                        returning: VoiceInputResult(
+                            transcription: result.bestTranscription.formattedString,
+                            audio: nil
+                        )
+                    )
+                }
+                else {
+                    onChunk?(VoiceInputChunk(partial: result.bestTranscription.formattedString, audio: nil))
+                }
+            }
+        }
+
         let engine = AVAudioEngine()
         let inputNode = engine.inputNode
         let nativeFormat = inputNode.outputFormat(forBus: 0)
 
-        let targetFormat = VoiceInputManager.targetFormat
-        guard let converter = AVAudioConverter(from: nativeFormat, to: targetFormat) else {
+        guard let converter = AVAudioConverter(from: nativeFormat, to: VoiceInputManager.targetFormat) else {
             throw VoiceInputError.converterUnavailable
         }
 
@@ -116,36 +207,43 @@ class VoiceInputManager {
         ) { [weak self] buffer, _ in
             guard let self, !self.isStopping else { return }
 
-            let outputFrameCapacity = AVAudioFrameCount(
-                Double(buffer.frameLength)
-                    * VoiceInputManager.sampleRate
-                    / nativeFormat.sampleRate
-            )
+            // Feed STT if active
+            activeRecognitionRequest?.append(buffer)
 
+            // Convert to 16kHz int16 for accumulation and PCM chunks
+            let outputFrameCapacity = AVAudioFrameCount(
+                Double(buffer.frameLength) * VoiceInputManager.sampleRate / nativeFormat.sampleRate
+            )
             guard
                 let outputBuffer = AVAudioPCMBuffer(
-                    pcmFormat: targetFormat,
+                    pcmFormat: VoiceInputManager.targetFormat,
                     frameCapacity: outputFrameCapacity
                 )
             else { return }
 
             var conversionError: NSError?
-            let status = converter.convert(to: outputBuffer, error: &conversionError) {
-                _,
-                outStatus in
+            let status = converter.convert(to: outputBuffer, error: &conversionError) { _, outStatus in
                 outStatus.pointee = .haveData
                 return buffer
             }
-
             guard status != .error, let int16Data = outputBuffer.int16ChannelData else { return }
 
             let frameCount = Int(outputBuffer.frameLength)
             let newSamples = Array(UnsafeBufferPointer(start: int16Data[0], count: frameCount))
             self.samples.append(contentsOf: newSamples)
 
+            // PCM chunk callback
+            if activeRecognitionRequest == nil, let onChunk {
+                if let chunkBuffer = try? ArrayBuffer.copy(
+                    data: newSamples.withUnsafeBufferPointer { Data(buffer: $0) }
+                ) {
+                    onChunk(VoiceInputChunk(partial: nil, audio: chunkBuffer))
+                }
+            }
+
             let now = Date()
 
-            // Max duration check
+            // Max duration — applies in both modes
             if let start = self.recordingStart,
                 now.timeIntervalSince(start) * 1000 >= maxDurationMs
             {
@@ -160,7 +258,9 @@ class VoiceInputManager {
             {
                 let peak = newSamples.reduce(0) { max($0, abs(Int($1))) }
                 if peak < VoiceInputManager.silenceAmplitudeThreshold {
-                    if self.silenceStart == nil { self.silenceStart = now }
+                    if self.silenceStart == nil {
+                        self.silenceStart = now
+                    }
                     if let silenceBegin = self.silenceStart,
                         now.timeIntervalSince(silenceBegin) * 1000 >= silenceThresholdMs
                     {
@@ -183,16 +283,23 @@ class VoiceInputManager {
         }
     }
 
-    private func stopCapture(interfaceController: AutoPlayInterfaceController?) {
+    private func cleanup(interfaceController: AutoPlayInterfaceController?) {
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine?.stop()
         audioEngine = nil
+        recognitionRequest = nil
         recordingStart = nil
         silenceStart = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         if let interfaceController {
             dismissVoiceTemplate(interfaceController: interfaceController)
         }
+    }
+
+    private func makePCMResult(from samples: [Int16]) -> VoiceInputResult {
+        let data = samples.withUnsafeBufferPointer { Data(buffer: $0) }
+        let buffer = try? ArrayBuffer.copy(data: data)
+        return VoiceInputResult(transcription: nil, audio: buffer)
     }
 
     private func presentVoiceTemplate(interfaceController: AutoPlayInterfaceController, listeningText: String) {
@@ -217,12 +324,6 @@ class VoiceInputManager {
             try? await interfaceController.dismissTemplate(animated: true)
         }
         voiceControlTemplate = nil
-    }
-
-    private func samplesAsData(_ samples: [Int16]) -> Data {
-        samples.withUnsafeBufferPointer { ptr in
-            Data(buffer: ptr)
-        }
     }
 }
 

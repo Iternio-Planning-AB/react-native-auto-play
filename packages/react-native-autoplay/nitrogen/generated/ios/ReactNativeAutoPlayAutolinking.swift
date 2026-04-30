@@ -12,6 +12,18 @@ import NitroModules
 public final class ReactNativeAutoPlayAutolinking {
   public typealias bridge = margelo.nitro.swe.iternio.reactnativeautoplay.bridge.swift
 
+  public static func createVoice() -> bridge.std__shared_ptr_HybridVoiceSpec_ {
+    let hybridObject = HybridVoice()
+    return { () -> bridge.std__shared_ptr_HybridVoiceSpec_ in
+      let __cxxWrapped = hybridObject.getCxxWrapper()
+      return __cxxWrapped.getCxxPart()
+    }()
+  }
+  
+  public static func isVoiceRecyclable() -> Bool {
+    return HybridVoice.self is any RecyclableView.Type
+  }
+  
   public static func createAutoPlay() -> bridge.std__shared_ptr_HybridAutoPlaySpec_ {
     let hybridObject = HybridAutoPlay()
     return { () -> bridge.std__shared_ptr_HybridAutoPlaySpec_ in

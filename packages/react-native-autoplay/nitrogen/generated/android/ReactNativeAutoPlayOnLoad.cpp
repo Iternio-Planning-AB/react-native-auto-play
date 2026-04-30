@@ -46,6 +46,8 @@
 #include "JHybridSearchTemplateSpec.hpp"
 #include "JHybridSignInTemplateSpec.hpp"
 #include "JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount_.hpp"
+#include "JHybridVoiceSpec.hpp"
+#include "JFunc_void_VoiceInputChunk.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -56,6 +58,14 @@ int initialize(JavaVM* vm) {
   });
 }
 
+struct JHybridVoiceSpecImpl: public jni::JavaClass<JHybridVoiceSpecImpl, JHybridVoiceSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridVoice;";
+  static std::shared_ptr<JHybridVoiceSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridVoiceSpecImpl::javaobject()>();
+    jni::local_ref<JHybridVoiceSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridVoiceSpec();
+  }
+};
 struct JHybridAutoPlaySpecImpl: public jni::JavaClass<JHybridAutoPlaySpecImpl, JHybridAutoPlaySpec::JavaPart> {
   static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlay;";
   static std::shared_ptr<JHybridAutoPlaySpec> create() {
@@ -181,8 +191,16 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridVoiceSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VoiceInputChunk_cxx::registerNatives();
 
   // Register Nitro Hybrid Objects
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "Voice",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridVoiceSpecImpl::create();
+    }
+  );
   HybridObjectRegistry::registerHybridObjectConstructor(
     "AutoPlay",
     []() -> std::shared_ptr<HybridObject> {

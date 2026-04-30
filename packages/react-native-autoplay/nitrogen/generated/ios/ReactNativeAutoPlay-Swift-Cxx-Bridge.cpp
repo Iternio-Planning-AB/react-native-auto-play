@@ -17,6 +17,7 @@
 #include "HybridMapTemplateSpecSwift.hpp"
 #include "HybridMessageTemplateSpecSwift.hpp"
 #include "HybridSearchTemplateSpecSwift.hpp"
+#include "HybridVoiceSpecSwift.hpp"
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 #include <NitroModules/NitroDefines.hpp>
 
@@ -46,27 +47,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(bool /* result */)>
-  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = ReactNativeAutoPlay::Func_void_bool::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](bool result) mutable -> void {
-      swiftClosure.call(result);
-    };
-  }
-  
   // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = ReactNativeAutoPlay::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
       swiftClosure.call(error);
-    };
-  }
-  
-  // pragma MARK: std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>
-  Func_void_std__shared_ptr_ArrayBuffer_ create_Func_void_std__shared_ptr_ArrayBuffer_(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = ReactNativeAutoPlay::Func_void_std__shared_ptr_ArrayBuffer_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const std::shared_ptr<ArrayBuffer>& result) mutable -> void {
-      swiftClosure.call(ArrayBufferHolder(result));
     };
   }
   
@@ -171,6 +156,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     auto swiftClosure = ReactNativeAutoPlay::Func_void_std__optional_bool_::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](std::optional<bool> animated) mutable -> void {
       swiftClosure.call(animated);
+    };
+  }
+  
+  // pragma MARK: std::function<void(bool /* isPanningInterfaceVisible */)>
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_bool::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](bool isPanningInterfaceVisible) mutable -> void {
+      swiftClosure.call(isPanningInterfaceVisible);
     };
   }
   
@@ -307,6 +300,38 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     }
     #endif
     ReactNativeAutoPlay::HybridSearchTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::function<void(const VoiceInputResult& /* result */)>
+  Func_void_VoiceInputResult create_Func_void_VoiceInputResult(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_VoiceInputResult::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const VoiceInputResult& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const VoiceInputChunk& /* chunk */)>
+  Func_void_VoiceInputChunk create_Func_void_VoiceInputChunk(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_VoiceInputChunk::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const VoiceInputChunk& chunk) mutable -> void {
+      swiftClosure.call(chunk);
+    };
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridVoiceSpec>
+  std::shared_ptr<HybridVoiceSpec> create_std__shared_ptr_HybridVoiceSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    ReactNativeAutoPlay::HybridVoiceSpec_cxx swiftPart = ReactNativeAutoPlay::HybridVoiceSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::swe::iternio::reactnativeautoplay::HybridVoiceSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridVoiceSpec_(std__shared_ptr_HybridVoiceSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::swe::iternio::reactnativeautoplay::HybridVoiceSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::swe::iternio::reactnativeautoplay::HybridVoiceSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridVoiceSpec\" is not implemented in Swift!");
+    }
+    #endif
+    ReactNativeAutoPlay::HybridVoiceSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
 

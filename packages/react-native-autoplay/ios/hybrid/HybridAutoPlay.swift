@@ -21,7 +21,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var listeners = [EventName: [StateListener]]()
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
-    private static var voiceInputManager: VoiceInputManager?
+
 
     override init() {
         HybridAutoPlay.listeners.removeAll()
@@ -119,53 +119,8 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     func addListenerVoiceInput(
         callback: @escaping (Location?, String?) -> Void
     ) throws -> () -> Void {
-        // iOS does not use the OS-triggered voice input path — use startVoiceInput() instead.
+        // iOS does not use the OS-triggered voice input path — use HybridVoice instead.
         return {}
-    }
-
-    func hasVoiceInputPermission() throws -> Bool {
-        return AVAudioSession.sharedInstance().recordPermission == .granted
-    }
-
-    func requestVoiceInputPermission() throws -> Promise<Bool> {
-        return Promise.async {
-            return await withCheckedContinuation { cont in
-                AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                    cont.resume(returning: granted)
-                }
-            }
-        }
-    }
-
-    func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?) throws -> Promise<
-        ArrayBuffer
-    > {
-        return Promise.async {
-            let interfaceController = try? await RootModule.withInterfaceController { $0 }
-
-            let manager = VoiceInputManager()
-            HybridAutoPlay.voiceInputManager = manager
-
-            defer {
-                HybridAutoPlay.voiceInputManager = nil
-            }
-
-            let data = try await manager.start(
-                interfaceController: interfaceController,
-                silenceThresholdMs: silenceThresholdMs ?? 1_500,
-                maxDurationMs: maxDurationMs ?? 10_000,
-                listeningText: listeningText ?? "Listening..."
-            )
-
-            return try ArrayBuffer.copy(data: data)
-        }
-    }
-
-    func stopVoiceInput() throws {
-        Task { @MainActor in
-            let interfaceController = try? await RootModule.withInterfaceController { $0 }
-            HybridAutoPlay.voiceInputManager?.stop(interfaceController: interfaceController)
-        }
     }
 
     // MARK: set/push/pop templates
