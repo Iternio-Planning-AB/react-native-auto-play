@@ -9,12 +9,12 @@ import CoreText
 import UIKit
 
 class SymbolFont {
-    /// Cache of fontName → registered PostScript name
-    private static var registeredFonts = [String: String]()
+    private static var cachedFontName: String?
+    private static var cachedPSName: String?
 
     private static func loadFont(named fontName: String) -> String? {
-        if let cached = registeredFonts[fontName] {
-            return cached
+        if fontName == cachedFontName {
+            return cachedPSName
         }
 
         guard let url = Bundle.main.url(forResource: fontName, withExtension: "ttf") else {
@@ -37,7 +37,8 @@ class SymbolFont {
             return nil
         }
 
-        registeredFonts[fontName] = psName
+        cachedFontName = fontName
+        cachedPSName = psName
         return psName
     }
 
