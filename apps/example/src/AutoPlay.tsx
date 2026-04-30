@@ -6,9 +6,11 @@ import {
   MessageTemplate,
   type RootComponentInitialProps,
   SafeAreaView,
+  setIconFont,
   type TextButton,
   useMapTemplate,
 } from '@iternio/react-native-auto-play';
+import { glyphMap } from '../assets/symbolFont/Glyphmap';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
@@ -229,6 +231,8 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
 };
 
 const registerRunnable = () => {
+  setIconFont('material_symbols', glyphMap);
+
   const onConnect = () => {
     const rootTemplate = new MapTemplate({
       component: AutoPlayRoot,

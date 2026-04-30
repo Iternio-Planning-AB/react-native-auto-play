@@ -304,27 +304,47 @@ When using build variants, Android Studio may not be aware of the selected varia
 To work around this and allow for debugging or enhancing the Android Automotive-specific implementation, you can temporarily set the automotive flags in your `gradle.properties` file or your default `.env` file before running a Gradle sync.
 
 ## Icons
-The library does **not** bundle any icon font — the consuming app must provide one. Add a `.ttf` file to your native projects and register it once at startup:
+The library does **not** bundle any icon font — the consuming app must provide one.
 
-```ts
-import { setIconFont } from '@iternio/react-native-auto-play';
+### Setup
 
-setIconFont('material_symbols');
-```
+1. Add a `.ttf` font file to your native projects:
+   - **iOS** — add `<name>.ttf` to your app bundle (no `UIAppFonts` entry needed — the library registers it via CoreText automatically).
+   - **Android** — place `<name>.ttf` in `res/font/`.
 
-Then use glyph images with code points:
+   For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
 
-```ts
-{ type: 'glyph', codepoint: 0xe531 }
-```
+2. Register the font and an optional glyph map at startup:
 
-**Native setup:**
-- **iOS** — add `<name>.ttf` to your app bundle (no `UIAppFonts` entry needed — the library registers it via CoreText automatically).
-- **Android** — place `<name>.ttf` in `res/font/`.
+   ```ts
+   import { setIconFont } from '@iternio/react-native-auto-play';
+   import { glyphMap } from './assets/Glyphmap';
 
-For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
+   setIconFont('material_symbols', glyphMap);
+   ```
+
+3. Use glyph images by name or code point:
+
+   ```ts
+   { type: 'glyph', name: 'directions_car' }
+   { type: 'glyph', codepoint: 0xe531 }
+   ```
 
 If `setIconFont` is not called before the first glyph is used, the library throws an error.
+
+### Type-safe glyph names
+
+To get autocompletion and type checking for glyph names, create a declaration file in your app (e.g. `autoplay-glyphs.d.ts`):
+
+```ts
+import type { GlyphName } from './assets/Glyphmap';
+
+declare module '@iternio/react-native-auto-play' {
+  interface AutoPlayGlyphMap extends Record<GlyphName, number> {}
+}
+```
+
+Without this augmentation, `name` accepts any `string`. With it, only keys from your glyph map are allowed and you get full autocompletion.
 
 The example app uses [Material Symbols](https://fonts.google.com/icons). See `apps/example/assets/symbolFont/` for the glyph map generation script.
 

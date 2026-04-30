@@ -3,24 +3,31 @@ import type { AutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 let _iconFont: string | undefined;
+let _glyphMap: Record<string, number> | undefined;
 
 /**
- * Set the icon font name used for all glyph images. Must be called before
- * creating any templates.
+ * Register the icon font and (optionally) a glyph map for name-based lookups.
+ * Must be called before creating any templates.
  *
- * The name maps directly to a native font asset:
+ * The font name maps directly to a native font asset:
  * - **Android** — `res/font/<name>.ttf` (must be lowercase)
  * - **iOS** — `<name>.ttf` in the app bundle (registered via CoreText automatically)
  *
  * For cross-platform compatibility use lowercase with underscores only.
  *
+ * @param name  Native font asset name (without extension).
+ * @param glyphMap  Optional map of glyph names to Unicode code points.
+ *                  When provided, glyphs can use `{ type: 'glyph', name: 'icon_name' }`.
+ *
  * @example
  * ```ts
- * setIconFont('material_symbols');
+ * import { glyphMap } from './assets/Glyphmap';
+ * setIconFont('material_symbols', glyphMap);
  * ```
  */
-export function setIconFont(name: string): void {
+export function setIconFont(name: string, glyphMap?: Record<string, number>): void {
   _iconFont = name;
+  _glyphMap = glyphMap;
 }
 
 function getIconFont(): string {
@@ -30,6 +37,28 @@ function getIconFont(): string {
     );
   }
   return _iconFont;
+}
+
+function resolveGlyph(image: Extract<AutoImage, { type: 'glyph' }>): number {
+  if ('name' in image && image.name !== undefined) {
+    if (image.codepoint !== undefined) {
+      return image.codepoint;
+    }
+    if (_glyphMap == null) {
+      throw new Error(
+        `Glyph name "${image.name}" used but no glyph map was provided to setIconFont().`
+      );
+    }
+    const cp = _glyphMap[image.name];
+    if (cp === undefined) {
+      throw new Error(`Glyph name "${image.name}" not found in the glyph map.`);
+    }
+    return cp;
+  }
+  if (image.codepoint !== undefined) {
+    return image.codepoint;
+  }
+  throw new Error('Glyph image must provide either `name` or `codepoint`.');
 }
 
 interface AssetImage extends ImageResolvedAssetSource {
@@ -71,7 +100,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
     } = image;
 
     return {
-      glyph: image.codepoint,
+      glyph: resolveGlyph(image),
       fontName: getIconFont(),
       color: NitroColorUtil.convert(color),
       backgroundColor: NitroColorUtil.convert(backgroundColor),
