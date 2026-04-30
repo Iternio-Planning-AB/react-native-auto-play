@@ -14,16 +14,18 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 
 object SymbolFont {
-    private val typefaceCache = mutableMapOf<String, Typeface>()
+    private var cachedFontName: String? = null
+    private var cachedTypeface: Typeface? = null
 
     private fun loadTypeface(context: Context, fontName: String): Typeface? {
-        typefaceCache[fontName]?.let { return it }
+        if (fontName == cachedFontName) return cachedTypeface
         val id = context.resources.getIdentifier(
             fontName.lowercase(), "font", context.packageName
         )
         if (id == 0) return null
         val tf = ResourcesCompat.getFont(context, id) ?: return null
-        typefaceCache[fontName] = tf
+        cachedFontName = fontName
+        cachedTypeface = tf
         return tf
     }
 
