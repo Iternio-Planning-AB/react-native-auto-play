@@ -330,7 +330,7 @@ The library does **not** bundle any icon font — the consuming app must provide
    { type: 'glyph', codepoint: 0xe531 }
    ```
 
-If `setIconFont` is not called before the first glyph is used, the library throws an error.
+`setIconFont` must be called once before the first glyph is used (subsequent calls are ignored). If no font is registered, the library throws an error when a glyph image is rendered.
 
 ### Type-safe glyph names
 

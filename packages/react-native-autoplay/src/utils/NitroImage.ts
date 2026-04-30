@@ -7,7 +7,7 @@ let _glyphMap: Record<string, number> | undefined;
 
 /**
  * Register the icon font and (optionally) a glyph map for name-based lookups.
- * Must be called before creating any templates.
+ * Must be called **once** before creating any templates. Subsequent calls are ignored.
  *
  * The font name maps directly to a native font asset:
  * - **Android** — `res/font/<name>.ttf` (must be lowercase)
@@ -26,6 +26,9 @@ let _glyphMap: Record<string, number> | undefined;
  * ```
  */
 export function setIconFont(name: string, glyphMap?: Record<string, number>): void {
+  if (_iconFont != null) {
+    return;
+  }
   _iconFont = name;
   _glyphMap = glyphMap;
 }
