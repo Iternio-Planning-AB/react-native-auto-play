@@ -313,8 +313,8 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       {
         type: 'image',
         image: {
-          type: 'glyph',
           name: 'flag_check',
+          type: 'glyph',
         },
         onPress: mapButtonHandler,
       },
