@@ -39,6 +39,11 @@ class SymbolFont {
         var error: Unmanaged<CFError>?
         CTFontManagerRegisterGraphicsFont(font, &error)
 
+        if let error = error?.takeUnretainedValue() {
+            print("Failed to register Material font: \(error)")
+            return
+        }
+
         SymbolFont.materialFontName = font.fullName as? String
         SymbolFont.isMaterialRegistered = true
     }

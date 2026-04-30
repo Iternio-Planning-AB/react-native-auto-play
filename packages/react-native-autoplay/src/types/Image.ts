@@ -31,14 +31,14 @@ type GlyphStyleFields = {
 };
 
 /** Material symbol by name from the bundled map; optional `codepoint` overrides the mapped value. */
-type AutoGlyphByName = GlyphStyleFields & {
+export type AutoGlyphByName = GlyphStyleFields & {
   type: 'glyph';
   name: GlyphName;
   codepoint?: number;
 };
 
 /** Raw Unicode scalar for icon fonts not covered by the Material map (e.g. custom TTF). */
-type AutoGlyphByCodepoint = GlyphStyleFields & {
+export type AutoGlyphByCodepoint = GlyphStyleFields & {
   type: 'glyph';
   codepoint: number;
 };
