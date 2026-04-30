@@ -9,119 +9,46 @@ import CoreText
 import UIKit
 
 class SymbolFont {
-    private static var isMaterialRegistered = false
-    private static var materialFontName: String?
-    private static var uriFontNames = [String: String]()
+    /// Cache of fontName → registered PostScript name
+    private static var registeredFonts = [String: String]()
 
-    static func loadMaterialFont() {
-        let podBundle = Bundle(for: SymbolFont.self)
-
-        guard
-            let bundleURL = podBundle.url(
-                forResource: "ReactNativeAutoPlay",
-                withExtension: "bundle"
-            ),
-            let resourceBundle = Bundle(url: bundleURL),
-            let fontURL = resourceBundle.url(
-                forResource: "MaterialSymbolsOutlined-Regular",
-                withExtension: "ttf"
-            )
-        else {
-            return
+    private static func loadFont(named fontName: String) -> String? {
+        if let cached = registeredFonts[fontName] {
+            return cached
         }
 
-        guard let fontData = try? Data(contentsOf: fontURL) as CFData,
+        guard let url = Bundle.main.url(forResource: fontName, withExtension: "ttf") else {
+            print("[AutoPlay] \(fontName).ttf not found in the app bundle — glyph images will not render.")
+            return nil
+        }
+
+        guard let fontData = try? Data(contentsOf: url) as CFData,
             let provider = CGDataProvider(data: fontData),
             let font = CGFont(provider)
         else {
-            return
+            return nil
         }
 
         var error: Unmanaged<CFError>?
         CTFontManagerRegisterGraphicsFont(font, &error)
+        // Ignore already-registered errors (e.g. hot reload)
 
-        if let error = error?.takeUnretainedValue() {
-            print("Failed to register Material font: \(error)")
-            return
+        guard let psName = font.fullName as? String else {
+            return nil
         }
 
-        SymbolFont.materialFontName = font.fullName as? String
-        SymbolFont.isMaterialRegistered = true
+        registeredFonts[fontName] = psName
+        return psName
     }
 
     private static func uiFont(for image: GlyphImage, size: CGFloat, fontScale: CGFloat) -> UIFont? {
         let pointSize = size * fontScale
 
-        // Priority 1: font registered natively by name
-        if let customName = image.customFontName?.trimmingCharacters(in: .whitespacesAndNewlines),
-            !customName.isEmpty
-        {
-            guard let font = UIFont(name: customName, size: pointSize) else {
-                print("Custom font '\(customName)' not found — is it added to the app bundle?")
-                return nil
-            }
-            return font
-        }
-
-        // Priority 2: font loaded from a require() asset URI
-        if let uri = image.customFontUri?.trimmingCharacters(in: .whitespacesAndNewlines),
-            !uri.isEmpty
-        {
-            if let cachedName = uriFontNames[uri] {
-                return UIFont(name: cachedName, size: pointSize)
-            }
-            guard let fontName = registerFont(from: uri) else {
-                print("Failed to load font from URI: \(uri)")
-                return nil
-            }
-            uriFontNames[uri] = fontName
-            return UIFont(name: fontName, size: pointSize)
-        }
-
-        // Default: bundled Material Symbols
-        if !SymbolFont.isMaterialRegistered {
-            SymbolFont.loadMaterialFont()
-        }
-
-        guard let fontName = SymbolFont.materialFontName else {
+        guard let psName = loadFont(named: image.fontName) else {
             return nil
         }
 
-        return UIFont(name: fontName, size: pointSize)
-    }
-
-    private static func registerFont(from uri: String) -> String? {
-        var fontData: Data?
-
-        // Try loading as a URL (file:// or http:// in dev)
-        if let url = URL(string: uri) {
-            fontData = try? Data(contentsOf: url)
-        }
-
-        // Fallback: look up by file name in the main bundle
-        if fontData == nil {
-            let fileName = (uri as NSString).lastPathComponent
-            let name = (fileName as NSString).deletingPathExtension
-            let ext = (fileName as NSString).pathExtension
-            if let bundleURL = Bundle.main.url(forResource: name, withExtension: ext) {
-                fontData = try? Data(contentsOf: bundleURL)
-            }
-        }
-
-        guard let data = fontData as? NSData as CFData?,
-            let provider = CGDataProvider(data: data),
-            let font = CGFont(provider)
-        else {
-            return nil
-        }
-
-        let fontName = font.fullName as? String
-
-        var error: Unmanaged<CFError>?
-        CTFontManagerRegisterGraphicsFont(font, &error)
-        // Ignore error — font may already be registered from a previous load
-
-        return fontName
+        return UIFont(name: psName, size: pointSize)
     }
 
     // creates a single color UIImage

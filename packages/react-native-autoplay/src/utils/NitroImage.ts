@@ -1,40 +1,36 @@
 import { Image, type ImageResolvedAssetSource } from 'react-native';
-import { glyphMap } from '../types/Glyphmap';
-import type { AutoImage, GlyphFontSource } from '../types/Image';
+import type { AutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
-function glyphFontToBridge(font?: GlyphFontSource): {
-  customFontName?: string;
-  customFontUri?: string;
-} {
-  if (font == null) {
-    return {};
-  }
-  if (typeof font === 'number') {
-    const resolved = Image.resolveAssetSource(font);
-    if (!resolved?.uri) {
-      return {};
-    }
-    return { customFontUri: resolved.uri };
-  }
-  const n = font.trim();
-  if (n.length === 0) {
-    return {};
-  }
-  return { customFontName: n };
+let _iconFont: string | undefined;
+
+/**
+ * Set the icon font name used for all glyph images. Must be called before
+ * creating any templates.
+ *
+ * The name maps directly to a native font asset:
+ * - **Android** — `res/font/<name>.ttf` (must be lowercase)
+ * - **iOS** — `<name>.ttf` in the app bundle (registered via CoreText automatically)
+ *
+ * For cross-platform compatibility use lowercase with underscores only.
+ *
+ * @example
+ * ```ts
+ * setIconFont('material_symbols');
+ * ```
+ */
+export function setIconFont(name: string): void {
+  _iconFont = name;
 }
 
-function resolveGlyphScalar(image: AutoGlyphForConvert): number {
-  if ('name' in image && image.name !== undefined) {
-    return image.codepoint ?? glyphMap[image.name];
+function getIconFont(): string {
+  if (_iconFont == null) {
+    throw new Error(
+      'No icon font configured. Call setIconFont("your_font_name") before using glyph images.'
+    );
   }
-  if (image.codepoint !== undefined) {
-    return image.codepoint;
-  }
-  throw new Error('Glyph image must set `name` or `codepoint`');
+  return _iconFont;
 }
-
-type AutoGlyphForConvert = Extract<AutoImage, { type: 'glyph' }>;
 
 interface AssetImage extends ImageResolvedAssetSource {
   color?: NitroColor;
@@ -43,13 +39,10 @@ interface AssetImage extends ImageResolvedAssetSource {
 
 interface GlyphImage {
   glyph: number;
+  fontName: string;
   color: NitroColor;
   backgroundColor: NitroColor;
   fontScale?: number;
-  /** Font registered natively by name: Android `res/font/<name>.ttf`, iOS `UIFont(name:size:)`. */
-  customFontName?: string;
-  /** Resolved URI from a `require('./font.ttf')` asset — loaded and registered at runtime by native. */
-  customFontUri?: string;
 }
 
 interface RemoteImage {
@@ -59,8 +52,7 @@ interface RemoteImage {
 }
 
 /**
- * we need to map the ButtonImage.name from GlyphName to
- * the actual numeric value so we need a nitro specific type
+ * NitroModules-compatible image types passed to native.
  */
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
@@ -76,15 +68,14 @@ function convert(image?: AutoImage): NitroImage | undefined {
       color = { darkColor: 'white', lightColor: 'black' },
       fontScale,
       backgroundColor = 'transparent',
-      font,
     } = image;
 
     return {
-      glyph: resolveGlyphScalar(image),
+      glyph: image.codepoint,
+      fontName: getIconFont(),
       color: NitroColorUtil.convert(color),
       backgroundColor: NitroColorUtil.convert(backgroundColor),
       fontScale,
-      ...glyphFontToBridge(font),
     };
   }
 

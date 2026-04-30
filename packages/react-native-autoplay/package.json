@@ -34,9 +34,8 @@
     "lint": "biome check src",
     "lint-ci": "biome ci src --reporter=summary",
     "typescript": "tsc",
-    "generate:fonts": "node ./assets/symbolFont/bundleAsset.js",
     "specs": "nitrogen --logLevel=\"debug\"",
-    "prepare": "yarn circular && tsc && nitrogen && npm run generate:fonts",
+    "prepare": "yarn circular && tsc && nitrogen",
     "swift:format": "swift-format format ./ios --in-place --recursive",
     "circular": "dpdm ./src/* --circular --exit-code circular:1 --no-tree --warning=false --transform"
   },

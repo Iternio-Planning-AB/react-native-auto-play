@@ -70,9 +70,5 @@ fun AssetImage.cacheKey(context: CarContext): String =
 fun RemoteImage.cacheKey(context: CarContext): String =
     this.color?.let { "${this.uri}/${it.get(context)}" } ?: run { this.uri }
 
-fun GlyphImage.cacheKey(context: CarContext): String {
-    val fontKey = customFontUri?.trim().orEmpty().ifEmpty {
-        customFontName?.trim().orEmpty().lowercase()
-    }
-    return "$glyph/${color.get(context)}/${backgroundColor.get(context)}/$fontScale/$fontKey"
-}
+fun GlyphImage.cacheKey(context: CarContext): String =
+    "$fontName/$glyph/${color.get(context)}/${backgroundColor.get(context)}/$fontScale"

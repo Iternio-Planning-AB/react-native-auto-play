@@ -304,14 +304,29 @@ When using build variants, Android Studio may not be aware of the selected varia
 To work around this and allow for debugging or enhancing the Android Automotive-specific implementation, you can temporarily set the automotive flags in your `gradle.properties` file or your default `.env` file before running a Gradle sync.
 
 ## Icons
-The library is using [Material Symbols](https://fonts.google.com/icons) for iconography. The font is bundled with the library, so no extra setup is required. You can use these icons on both Android Auto and CarPlay.
+The library does **not** bundle any icon font — the consuming app must provide one. Add a `.ttf` file to your native projects and register it once at startup:
 
-Glyph images (`type: 'glyph'`) can also use **your own font** via the optional `font` field. Two approaches are supported:
+```ts
+import { setIconFont } from '@iternio/react-native-auto-play';
 
-- **`font: require('./MyFont.ttf')`** — the font is resolved from the Metro bundle and loaded at runtime on native. iOS registers it via CoreText and extracts the PostScript name automatically; Android loads it from the bundled asset path.
-- **`font: 'FontName'`** — references a font already added to native projects. iOS uses the string for `UIFont(name:size:)`. Android resolves `res/font/fontname.ttf` by lowercasing the name for the `res/font` lookup (resource names must be lowercase).
+setIconFont('material_symbols');
+```
 
-Use `{ type: 'glyph', name: '<MaterialName>', ... }` for bundled symbols, or `{ type: 'glyph', codepoint: 0xe900, font: ..., ... }` when the glyph is not in the Material map. You can still pass `name` plus `codepoint` to override the mapped code point for a Material name.
+Then use glyph images with code points:
+
+```ts
+{ type: 'glyph', codepoint: 0xe531 }
+```
+
+**Native setup:**
+- **iOS** — add `<name>.ttf` to your app bundle (no `UIAppFonts` entry needed — the library registers it via CoreText automatically).
+- **Android** — place `<name>.ttf` in `res/font/`.
+
+For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
+
+If `setIconFont` is not called before the first glyph is used, the library throws an error.
+
+The example app uses [Material Symbols](https://fonts.google.com/icons). See `apps/example/assets/symbolFont/` for the glyph map generation script.
 
 It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawables). Make sure to add them to your native projects.
 - iOS: Add to your `Images.xcassets`

@@ -36,23 +36,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldGlyph = clazz->getField<double>("glyph");
       double glyph = this->getFieldValue(fieldGlyph);
+      static const auto fieldFontName = clazz->getField<jni::JString>("fontName");
+      jni::local_ref<jni::JString> fontName = this->getFieldValue(fieldFontName);
       static const auto fieldColor = clazz->getField<JNitroColor>("color");
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldBackgroundColor = clazz->getField<JNitroColor>("backgroundColor");
       jni::local_ref<JNitroColor> backgroundColor = this->getFieldValue(fieldBackgroundColor);
       static const auto fieldFontScale = clazz->getField<jni::JDouble>("fontScale");
       jni::local_ref<jni::JDouble> fontScale = this->getFieldValue(fieldFontScale);
-      static const auto fieldCustomFontName = clazz->getField<jni::JString>("customFontName");
-      jni::local_ref<jni::JString> customFontName = this->getFieldValue(fieldCustomFontName);
-      static const auto fieldCustomFontUri = clazz->getField<jni::JString>("customFontUri");
-      jni::local_ref<jni::JString> customFontUri = this->getFieldValue(fieldCustomFontUri);
       return GlyphImage(
         glyph,
+        fontName->toStdString(),
         color->toCpp(),
         backgroundColor->toCpp(),
-        fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt,
-        customFontName != nullptr ? std::make_optional(customFontName->toStdString()) : std::nullopt,
-        customFontUri != nullptr ? std::make_optional(customFontUri->toStdString()) : std::nullopt
+        fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt
       );
     }
 
@@ -62,17 +59,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JGlyphImage::javaobject> fromCpp(const GlyphImage& value) {
-      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
+      using JSignature = JGlyphImage(double, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.glyph,
+        jni::make_jstring(value.fontName),
         JNitroColor::fromCpp(value.color),
         JNitroColor::fromCpp(value.backgroundColor),
-        value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr,
-        value.customFontName.has_value() ? jni::make_jstring(value.customFontName.value()) : nullptr,
-        value.customFontUri.has_value() ? jni::make_jstring(value.customFontUri.value()) : nullptr
+        value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr
       );
     }
   };

@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from 'react-native';
 import type { ThemedColor } from '../utils/NitroColor';
-import type { AutoGlyphByCodepoint, AutoGlyphByName } from './Image';
+import type { AutoGlyph } from './Image';
 import type { TravelEstimates } from './Trip';
 
 export enum ManeuverType {
@@ -174,8 +174,7 @@ export interface PreferredLane extends Lane {
 }
 
 export type ManeuverImage =
-  | Pick<AutoGlyphByName, 'type' | 'name' | 'codepoint' | 'font' | 'color'>
-  | Pick<AutoGlyphByCodepoint, 'type' | 'codepoint' | 'font' | 'color'>
+  | Pick<AutoGlyph, 'type' | 'codepoint' | 'color'>
   | {
       image: ImageSourcePropType;
       /**

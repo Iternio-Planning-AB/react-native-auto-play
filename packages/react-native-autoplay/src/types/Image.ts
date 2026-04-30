@@ -1,17 +1,5 @@
 import type { ImageSourcePropType } from 'react-native';
 import type { ThemedColor } from '../utils/NitroColor';
-import type { GlyphName } from './Glyphmap';
-
-/**
- * Custom font for `type: 'glyph'` images. When omitted, the bundled Material Symbols font is used.
- *
- * Two forms are supported:
- * - **`'FontName'`** — font already registered natively. Android resolves `res/font/<name>.ttf`
- *   (lowercased); iOS uses the string as-is with `UIFont(name:size:)`.
- * - **`require('./MyFont.ttf')`** — Metro-bundled font asset. The library resolves the asset URI and loads
- *   the font on the native side (registered via CoreText on iOS, loaded as a Typeface on Android).
- */
-export type GlyphFontSource = string | number;
 
 type GlyphStyleFields = {
   /**
@@ -27,25 +15,16 @@ type GlyphStyleFields = {
    */
   backgroundColor?: ThemedColor | string;
   fontScale?: number;
-  font?: GlyphFontSource;
 };
 
-/** Material symbol by name from the bundled map; optional `codepoint` overrides the mapped value. */
-export type AutoGlyphByName = GlyphStyleFields & {
-  type: 'glyph';
-  name: GlyphName;
-  codepoint?: number;
-};
-
-/** Raw Unicode scalar for icon fonts not covered by the Material map (e.g. custom TTF). */
-export type AutoGlyphByCodepoint = GlyphStyleFields & {
+/** Glyph image rendered from an icon font using a Unicode code point. */
+export type AutoGlyph = GlyphStyleFields & {
   type: 'glyph';
   codepoint: number;
 };
 
 export type AutoImage =
-  | AutoGlyphByName
-  | AutoGlyphByCodepoint
+  | AutoGlyph
   | {
       image: ImageSourcePropType;
       /**

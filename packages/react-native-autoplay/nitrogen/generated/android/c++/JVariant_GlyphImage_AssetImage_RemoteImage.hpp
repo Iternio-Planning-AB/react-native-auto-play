@@ -15,10 +15,10 @@
 #include "RemoteImage.hpp"
 #include <variant>
 #include "JGlyphImage.hpp"
+#include <string>
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
-#include <string>
 #include "JAssetImage.hpp"
 #include "JRemoteImage.hpp"
 
