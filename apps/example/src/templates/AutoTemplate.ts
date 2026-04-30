@@ -14,6 +14,7 @@ import {
 import { Buffer } from 'buffer';
 import { Platform } from 'react-native';
 import icoMoon from '../../assets/fonts/IcoMoon-Free.json';
+import typicons from '../../assets/fonts/typicons.json';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { getCarPlayDashboardButtons } from '../config/CarPlayDashboardButtons';
@@ -266,7 +267,8 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
     {
       type: 'image',
       image: {
-        name: 'flag_check',
+        font: 'typicons',
+        codepoint: typicons.flag,
         type: 'glyph',
       },
       onPress: mapButtonHandler,
@@ -274,8 +276,10 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
     {
       type: 'image',
       image: {
-        name: 'list_alt',
+        codepoint: icoMoon['list-numbered'],
         type: 'glyph',
+        font: require('../../assets/fonts/IcoMoon-Free.ttf'),
+        fontScale: 0.6,
       },
       onPress: () => AutoInformationTemplate.getTemplate().push(),
     },
@@ -314,8 +318,9 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       {
         type: 'image',
         image: {
-          name: 'flag_check',
           type: 'glyph',
+          font: 'typicons',
+          codepoint: typicons.flag,
         },
         onPress: mapButtonHandler,
       },
