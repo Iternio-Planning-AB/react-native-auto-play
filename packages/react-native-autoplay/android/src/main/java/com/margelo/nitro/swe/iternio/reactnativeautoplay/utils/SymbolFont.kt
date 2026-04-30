@@ -29,13 +29,13 @@ object SymbolFont {
 
     private fun imageFromGlyph(
         context: Context,
-        image: GlyphImage,
+        glyphImage: GlyphImage,
         color: Int,
         backgroundColor: Int,
         cornerRadius: Float = 8f, //TODO: make accessible and add it to GlyphImage.cacheKey
     ): Bitmap? {
         val font =
-            loadTypeface(context, image.fontName) ?: run {
+            loadTypeface(context, glyphImage.fontName) ?: run {
                 return null
             }
 
@@ -54,7 +54,7 @@ object SymbolFont {
         }
         canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
 
-        val fontScale = (image.fontScale ?: 1.0).toFloat()
+        val fontScale = (glyphImage.fontScale ?: 1.0).toFloat()
 
         // Setup text paint
         paint.reset()
@@ -67,7 +67,7 @@ object SymbolFont {
         }
 
         // Get the character from codepoint
-        val codepoint = image.glyph.toInt()
+        val codepoint = glyphImage.glyph.toInt()
         val text = String(Character.toChars(codepoint))
 
         // Measure text
@@ -94,7 +94,7 @@ object SymbolFont {
         bitmap =
             imageFromGlyph(
                 context = context,
-                image = image,
+                glyphImage = image,
                 color = image.color.get(context),
                 backgroundColor = image.backgroundColor.get(context),
             )

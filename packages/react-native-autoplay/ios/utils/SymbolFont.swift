@@ -41,10 +41,10 @@ class SymbolFont {
         return psName
     }
 
-    private static func uiFont(for image: GlyphImage, size: CGFloat, fontScale: CGFloat) -> UIFont? {
+    private static func uiFont(for glyphImage: GlyphImage, size: CGFloat, fontScale: CGFloat) -> UIFont? {
         let pointSize = size * fontScale
 
-        guard let psName = loadFont(named: image.fontName) else {
+        guard let psName = loadFont(named: glyphImage.fontName) else {
             return nil
         }
 
@@ -53,17 +53,17 @@ class SymbolFont {
 
     // creates a single color UIImage
     static func imageFromGlyph(
-        image: GlyphImage,
+        glyphImage: GlyphImage,
         foregroundColor: UIColor,
         backgroundColor: UIColor,
         size: CGFloat,
         fontScale: CGFloat
     ) -> UIImage? {
-        guard let font = uiFont(for: image, size: size, fontScale: fontScale) else {
+        guard let font = uiFont(for: glyphImage, size: size, fontScale: fontScale) else {
             return nil
         }
 
-        guard let scalar = UnicodeScalar(UInt32(image.glyph)) else {
+        guard let scalar = UnicodeScalar(UInt32(glyphImage.glyph)) else {
             return nil
         }
         let codepoint = String(Character(scalar))
@@ -103,7 +103,7 @@ class SymbolFont {
     }
 
     static func imageFromGlyph(
-        image: GlyphImage,
+        glyphImage: GlyphImage,
         size: CGFloat,
         foregroundColor: NitroColor,
         backgroundColor: NitroColor,
@@ -112,7 +112,7 @@ class SymbolFont {
     ) -> UIImage? {
         guard
             let lightImage = imageFromGlyph(
-                image: image,
+                glyphImage: glyphImage,
                 foregroundColor: Parser.doubleToColor(
                     value: foregroundColor.lightColor
                 ),
@@ -123,7 +123,7 @@ class SymbolFont {
                 fontScale: fontScale
             ),
             let darkImage = imageFromGlyph(
-                image: image,
+                glyphImage: glyphImage,
                 foregroundColor: Parser.doubleToColor(
                     value: foregroundColor.darkColor
                 ),
@@ -179,7 +179,7 @@ class SymbolFont {
             )
 
             return SymbolFont.imageFromGlyph(
-                image: image,
+                glyphImage: image,
                 foregroundColor: foregroundColor,
                 backgroundColor: backgroundColor,
                 size: size,
@@ -188,7 +188,7 @@ class SymbolFont {
         }
 
         return SymbolFont.imageFromGlyph(
-            image: image,
+            glyphImage: image,
             size: size,
             foregroundColor: image.color,
             backgroundColor: image.backgroundColor,
