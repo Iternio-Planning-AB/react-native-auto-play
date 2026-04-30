@@ -17,7 +17,7 @@ function glyphFontToBridge(font?: GlyphFontSource): {
     }
     return { customFontUri: resolved.uri };
   }
-  const n = font.name.trim();
+  const n = font.trim();
   if (n.length === 0) {
     return {};
   }

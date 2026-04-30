@@ -6,17 +6,12 @@ import type { GlyphName } from './Glyphmap';
  * Custom font for `type: 'glyph'` images. When omitted, the bundled Material Symbols font is used.
  *
  * Two forms are supported:
- * - **`{ name: 'FontName' }`** — font already registered natively. Android resolves `res/font/<name>.ttf`
+ * - **`'FontName'`** — font already registered natively. Android resolves `res/font/<name>.ttf`
  *   (lowercased); iOS uses the string as-is with `UIFont(name:size:)`.
  * - **`require('./MyFont.ttf')`** — Metro-bundled font asset. The library resolves the asset URI and loads
  *   the font on the native side (registered via CoreText on iOS, loaded as a Typeface on Android).
  */
-export type GlyphFontSource =
-  | {
-      /** Font id: Android lowercases for `res/font/<name>.ttf`; iOS uses this string as-is for `UIFont(name:size:)`. */
-      name: string;
-    }
-  | number;
+export type GlyphFontSource = string | number;
 
 type GlyphStyleFields = {
   /**
