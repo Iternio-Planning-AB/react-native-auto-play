@@ -11,6 +11,7 @@ import UIKit
 class SymbolFont {
     private static var isMaterialRegistered = false
     private static var materialFontName: String?
+    private static var uriFontNames = [String: String]()
 
     static func loadMaterialFont() {
         let podBundle = Bundle(for: SymbolFont.self)
@@ -51,12 +52,33 @@ class SymbolFont {
     private static func uiFont(for image: GlyphImage, size: CGFloat, fontScale: CGFloat) -> UIFont? {
         let pointSize = size * fontScale
 
+        // Priority 1: font registered natively by name
         if let customName = image.customFontName?.trimmingCharacters(in: .whitespacesAndNewlines),
             !customName.isEmpty
         {
-            return UIFont(name: customName, size: pointSize)
+            guard let font = UIFont(name: customName, size: pointSize) else {
+                print("Custom font '\(customName)' not found — is it added to the app bundle?")
+                return nil
+            }
+            return font
         }
 
+        // Priority 2: font loaded from a require() asset URI
+        if let uri = image.customFontUri?.trimmingCharacters(in: .whitespacesAndNewlines),
+            !uri.isEmpty
+        {
+            if let cachedName = uriFontNames[uri] {
+                return UIFont(name: cachedName, size: pointSize)
+            }
+            guard let fontName = registerFont(from: uri) else {
+                print("Failed to load font from URI: \(uri)")
+                return nil
+            }
+            uriFontNames[uri] = fontName
+            return UIFont(name: fontName, size: pointSize)
+        }
+
+        // Default: bundled Material Symbols
         if !SymbolFont.isMaterialRegistered {
             SymbolFont.loadMaterialFont()
         }
@@ -66,6 +88,40 @@ class SymbolFont {
         }
 
         return UIFont(name: fontName, size: pointSize)
+    }
+
+    private static func registerFont(from uri: String) -> String? {
+        var fontData: Data?
+
+        // Try loading as a URL (file:// or http:// in dev)
+        if let url = URL(string: uri) {
+            fontData = try? Data(contentsOf: url)
+        }
+
+        // Fallback: look up by file name in the main bundle
+        if fontData == nil {
+            let fileName = (uri as NSString).lastPathComponent
+            let name = (fileName as NSString).deletingPathExtension
+            let ext = (fileName as NSString).pathExtension
+            if let bundleURL = Bundle.main.url(forResource: name, withExtension: ext) {
+                fontData = try? Data(contentsOf: bundleURL)
+            }
+        }
+
+        guard let data = fontData as? NSData as CFData?,
+            let provider = CGDataProvider(data: data),
+            let font = CGFont(provider)
+        else {
+            return nil
+        }
+
+        let fontName = font.fullName as? String
+
+        var error: Unmanaged<CFError>?
+        CTFontManagerRegisterGraphicsFont(font, &error)
+        // Ignore error — font may already be registered from a previous load
+
+        return fontName
     }
 
     // creates a single color UIImage

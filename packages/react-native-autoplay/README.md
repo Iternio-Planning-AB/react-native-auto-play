@@ -306,9 +306,10 @@ To work around this and allow for debugging or enhancing the Android Automotive-
 ## Icons
 The library is using [Material Symbols](https://fonts.google.com/icons) for iconography. The font is bundled with the library, so no extra setup is required. You can use these icons on both Android Auto and CarPlay.
 
-Glyph images (`type: 'glyph'`) can also use **your own font** via the optional `font` field — add the font file to native projects, then pass:
+Glyph images (`type: 'glyph'`) can also use **your own font** via the optional `font` field. Two approaches are supported:
 
-- **`font: { name: 'FontName' }`** — iOS uses that string for `UIFont(name:size:)`. Android resolves `res/font/fontname.ttf` by lowercasing the id for the `res/font` lookup only (resource names must be lowercase).
+- **`font: require('./MyFont.ttf')`** — the font is resolved from the Metro bundle and loaded at runtime on native. iOS registers it via CoreText and extracts the PostScript name automatically; Android loads it from the bundled asset path.
+- **`font: { name: 'FontName' }`** — references a font already added to native projects. iOS uses the string for `UIFont(name:size:)`. Android resolves `res/font/fontname.ttf` by lowercasing the name for the `res/font` lookup (resource names must be lowercase).
 
 Use `{ type: 'glyph', name: '<MaterialName>', ... }` for bundled symbols, or `{ type: 'glyph', codepoint: 0xe900, font: ..., ... }` when the glyph is not in the Material map. You can still pass `name` plus `codepoint` to override the mapped code point for a Material name.
 

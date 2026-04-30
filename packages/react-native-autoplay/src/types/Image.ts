@@ -3,15 +3,20 @@ import type { ThemedColor } from '../utils/NitroColor';
 import type { GlyphName } from './Glyphmap';
 
 /**
- * Optional custom font for `type: 'glyph'` images. When omitted, the bundled Material Symbols font is used.
+ * Custom font for `type: 'glyph'` images. When omitted, the bundled Material Symbols font is used.
  *
- * The value is passed to native as **`customFontName`**: Android resolves `res/font/<name>.ttf` using the id
- * lowercased (Android font resource names must be lowercase); iOS uses the original string with `UIFont(name:size:)`.
+ * Two forms are supported:
+ * - **`{ name: 'FontName' }`** — font already registered natively. Android resolves `res/font/<name>.ttf`
+ *   (lowercased); iOS uses the string as-is with `UIFont(name:size:)`.
+ * - **`require('./MyFont.ttf')`** — Metro-bundled font asset. The library resolves the asset URI and loads
+ *   the font on the native side (registered via CoreText on iOS, loaded as a Typeface on Android).
  */
-export type GlyphFontSource = {
-  /** Font id: Android lowercases for `res/font/<name>.ttf`; iOS uses this string as-is for `UIFont(name:size:)`. */
-  name: string;
-};
+export type GlyphFontSource =
+  | {
+      /** Font id: Android lowercases for `res/font/<name>.ttf`; iOS uses this string as-is for `UIFont(name:size:)`. */
+      name: string;
+    }
+  | number;
 
 type GlyphStyleFields = {
   /**

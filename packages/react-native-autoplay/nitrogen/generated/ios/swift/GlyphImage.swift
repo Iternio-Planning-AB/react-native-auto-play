@@ -18,7 +18,7 @@ public extension GlyphImage {
   /**
    * Create a new instance of `GlyphImage`.
    */
-  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?, customFontName: String?) {
+  init(glyph: Double, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?, customFontName: String?, customFontUri: String?) {
     self.init(glyph, color, backgroundColor, { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = fontScale {
         return bridge.create_std__optional_double_(__unwrappedValue)
@@ -27,6 +27,12 @@ public extension GlyphImage {
       }
     }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = customFontName {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = customFontUri {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
@@ -66,6 +72,18 @@ public extension GlyphImage {
     return { () -> String? in
       if bridge.has_value_std__optional_std__string_(self.__customFontName) {
         let __unwrapped = bridge.get_std__optional_std__string_(self.__customFontName)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var customFontUri: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__customFontUri) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__customFontUri)
         return String(__unwrapped)
       } else {
         return nil

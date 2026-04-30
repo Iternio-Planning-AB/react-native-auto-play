@@ -13,6 +13,7 @@ import {
 } from '@iternio/react-native-auto-play';
 import { Buffer } from 'buffer';
 import { Platform } from 'react-native';
+import icoMoon from '../../assets/fonts/IcoMoon-Free.json';
 import { AutoManeuverUtil } from '../config/AutoManeuver';
 import { AutoTrip, TextConfig } from '../config/AutoTrip';
 import { getCarPlayDashboardButtons } from '../config/CarPlayDashboardButtons';
@@ -321,8 +322,10 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       {
         type: 'image',
         image: {
-          name: 'list_alt',
+          codepoint: icoMoon['list-numbered'],
           type: 'glyph',
+          font: require('../../assets/fonts/IcoMoon-Free.ttf'),
+          fontScale: 0.6,
         },
         onPress: () => AutoInformationTemplate.getTemplate().push(),
       },

@@ -47,10 +47,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     NitroColor backgroundColor     SWIFT_PRIVATE;
     std::optional<double> fontScale     SWIFT_PRIVATE;
     std::optional<std::string> customFontName     SWIFT_PRIVATE;
+    std::optional<std::string> customFontUri     SWIFT_PRIVATE;
 
   public:
     GlyphImage() = default;
-    explicit GlyphImage(double glyph, NitroColor color, NitroColor backgroundColor, std::optional<double> fontScale, std::optional<std::string> customFontName): glyph(glyph), color(color), backgroundColor(backgroundColor), fontScale(fontScale), customFontName(customFontName) {}
+    explicit GlyphImage(double glyph, NitroColor color, NitroColor backgroundColor, std::optional<double> fontScale, std::optional<std::string> customFontName, std::optional<std::string> customFontUri): glyph(glyph), color(color), backgroundColor(backgroundColor), fontScale(fontScale), customFontName(customFontName), customFontUri(customFontUri) {}
 
   public:
     friend bool operator==(const GlyphImage& lhs, const GlyphImage& rhs) = default;
@@ -70,7 +71,8 @@ namespace margelo::nitro {
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontScale"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customFontName")))
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customFontName"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customFontUri")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage& arg) {
@@ -80,6 +82,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.backgroundColor));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fontScale"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.fontScale));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "customFontName"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.customFontName));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "customFontUri"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.customFontUri));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -95,6 +98,7 @@ namespace margelo::nitro {
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontScale")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customFontName")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customFontUri")))) return false;
       return true;
     }
   };

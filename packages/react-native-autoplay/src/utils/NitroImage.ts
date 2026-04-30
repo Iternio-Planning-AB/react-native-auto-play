@@ -3,9 +3,19 @@ import { glyphMap } from '../types/Glyphmap';
 import type { AutoImage, GlyphFontSource } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
-function glyphFontToBridge(font?: GlyphFontSource): { customFontName?: string } {
+function glyphFontToBridge(font?: GlyphFontSource): {
+  customFontName?: string;
+  customFontUri?: string;
+} {
   if (font == null) {
     return {};
+  }
+  if (typeof font === 'number') {
+    const resolved = Image.resolveAssetSource(font);
+    if (!resolved?.uri) {
+      return {};
+    }
+    return { customFontUri: resolved.uri };
   }
   const n = font.name.trim();
   if (n.length === 0) {
@@ -36,8 +46,10 @@ interface GlyphImage {
   color: NitroColor;
   backgroundColor: NitroColor;
   fontScale?: number;
-  /** Same id for Android `res/font/<name>.ttf` and iOS `UIFont(name:size:)`. */
+  /** Font registered natively by name: Android `res/font/<name>.ttf`, iOS `UIFont(name:size:)`. */
   customFontName?: string;
+  /** Resolved URI from a `require('./font.ttf')` asset — loaded and registered at runtime by native. */
+  customFontUri?: string;
 }
 
 interface RemoteImage {

@@ -44,12 +44,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JDouble> fontScale = this->getFieldValue(fieldFontScale);
       static const auto fieldCustomFontName = clazz->getField<jni::JString>("customFontName");
       jni::local_ref<jni::JString> customFontName = this->getFieldValue(fieldCustomFontName);
+      static const auto fieldCustomFontUri = clazz->getField<jni::JString>("customFontUri");
+      jni::local_ref<jni::JString> customFontUri = this->getFieldValue(fieldCustomFontUri);
       return GlyphImage(
         glyph,
         color->toCpp(),
         backgroundColor->toCpp(),
         fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt,
-        customFontName != nullptr ? std::make_optional(customFontName->toStdString()) : std::nullopt
+        customFontName != nullptr ? std::make_optional(customFontName->toStdString()) : std::nullopt,
+        customFontUri != nullptr ? std::make_optional(customFontUri->toStdString()) : std::nullopt
       );
     }
 
@@ -59,7 +62,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JGlyphImage::javaobject> fromCpp(const GlyphImage& value) {
-      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>);
+      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -68,7 +71,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         JNitroColor::fromCpp(value.color),
         JNitroColor::fromCpp(value.backgroundColor),
         value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr,
-        value.customFontName.has_value() ? jni::make_jstring(value.customFontName.value()) : nullptr
+        value.customFontName.has_value() ? jni::make_jstring(value.customFontName.value()) : nullptr,
+        value.customFontUri.has_value() ? jni::make_jstring(value.customFontUri.value()) : nullptr
       );
     }
   };

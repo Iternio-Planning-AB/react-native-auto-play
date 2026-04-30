@@ -7,18 +7,22 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.util.Log
 import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
+import java.io.File
+import java.net.URL
 
 object SymbolFont {
     const val TAG = "SymbolFont"
 
     private var defaultMaterialTypeface: Typeface? = null
     private val androidResTypefaces = mutableMapOf<String, Typeface>()
+    private val uriTypefaces = mutableMapOf<String, Typeface>()
 
     private fun materialTypeface(context: Context): Typeface? {
         if (defaultMaterialTypeface == null) {
@@ -29,6 +33,7 @@ object SymbolFont {
     }
 
     private fun typefaceForGlyph(context: Context, image: GlyphImage): Typeface? {
+        // Priority 1: font registered natively by name (res/font/)
         val rawName = image.customFontName?.trim().orEmpty()
         if (rawName.isNotEmpty()) {
             val resName = rawName.lowercase()
@@ -37,6 +42,7 @@ object SymbolFont {
             }
             val id = context.resources.getIdentifier(resName, "font", context.packageName)
             if (id == 0) {
+                Log.w(TAG, "Custom font resource '$resName' not found in res/font/")
                 return null
             }
             val fromRes = ResourcesCompat.getFont(context, id) ?: return null
@@ -44,7 +50,57 @@ object SymbolFont {
             return fromRes
         }
 
+        // Priority 2: font loaded from a require() asset URI
+        val uri = image.customFontUri?.trim().orEmpty()
+        if (uri.isNotEmpty()) {
+            uriTypefaces[uri]?.let { return it }
+            val typeface = loadTypefaceFromUri(context, uri)
+            if (typeface == null) {
+                Log.w(TAG, "Failed to load font from URI: $uri")
+                return null
+            }
+            uriTypefaces[uri] = typeface
+            return typeface
+        }
+
         return materialTypeface(context)
+    }
+
+    @Suppress("SwallowedException")
+    private fun loadTypefaceFromUri(context: Context, uri: String): Typeface? {
+        return try {
+            when {
+                uri.startsWith("file:///android_asset/") -> {
+                    val assetPath = uri.removePrefix("file:///android_asset/")
+                    Typeface.createFromAsset(context.assets, assetPath)
+                }
+                uri.startsWith("file://") -> {
+                    Typeface.createFromFile(uri.removePrefix("file://"))
+                }
+                uri.startsWith("/") -> {
+                    Typeface.createFromFile(uri)
+                }
+                uri.startsWith("http://") || uri.startsWith("https://") -> {
+                    // Dev mode: font served by Metro bundler
+                    val cacheFile = File(context.cacheDir, "font_${uri.hashCode()}.ttf")
+                    if (!cacheFile.exists()) {
+                        URL(uri).openStream().use { input ->
+                            cacheFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                    }
+                    Typeface.createFromFile(cacheFile)
+                }
+                else -> {
+                    // Try as an asset path
+                    Typeface.createFromAsset(context.assets, uri)
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to load font from URI '$uri': ${e.message}")
+            null
+        }
     }
 
     private fun imageFromGlyph(
