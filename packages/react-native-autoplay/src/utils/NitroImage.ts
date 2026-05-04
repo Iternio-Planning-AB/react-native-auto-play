@@ -1,7 +1,68 @@
 import { Image, type ImageResolvedAssetSource } from 'react-native';
-import { glyphMap } from '../types/Glyphmap';
 import type { AutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
+
+let _iconFont: string | undefined;
+let _glyphMap: Record<string, number> | undefined;
+
+/**
+ * Register the icon font and (optionally) a glyph map for name-based lookups.
+ * Must be called **once** before creating any templates. Subsequent calls are ignored.
+ *
+ * The font name maps directly to a native font asset:
+ * - **Android** — `res/font/<name>.ttf` (must be lowercase)
+ * - **iOS** — `<name>.ttf` in the app bundle (registered via CoreText automatically)
+ *
+ * For cross-platform compatibility use lowercase with underscores only.
+ *
+ * @param name  Native font asset name (without extension).
+ * @param glyphMap  Optional map of glyph names to Unicode code points.
+ *                  When provided, glyphs can use `{ type: 'glyph', name: 'icon_name' }`.
+ *
+ * @example
+ * ```ts
+ * import { glyphMap } from './assets/Glyphmap';
+ * setIconFont('material_symbols', glyphMap);
+ * ```
+ */
+export function setIconFont(name: string, glyphMap?: Record<string, number>): void {
+  if (_iconFont != null) {
+    return;
+  }
+  _iconFont = name;
+  _glyphMap = glyphMap;
+}
+
+function getIconFont(): string {
+  if (_iconFont == null) {
+    throw new Error(
+      'No icon font configured. Call setIconFont("your_font_name") before using glyph images.'
+    );
+  }
+  return _iconFont;
+}
+
+function resolveGlyph(image: Extract<AutoImage, { type: 'glyph' }>): number {
+  if ('name' in image && image.name !== undefined) {
+    if (image.codepoint !== undefined) {
+      return image.codepoint;
+    }
+    if (_glyphMap == null) {
+      throw new Error(
+        `Glyph name "${image.name}" used but no glyph map was provided to setIconFont().`
+      );
+    }
+    const cp = _glyphMap[image.name];
+    if (cp === undefined) {
+      throw new Error(`Glyph name "${image.name}" not found in the glyph map.`);
+    }
+    return cp;
+  }
+  if (image.codepoint !== undefined) {
+    return image.codepoint;
+  }
+  throw new Error('Glyph image must provide either `name` or `codepoint`.');
+}
 
 interface AssetImage extends ImageResolvedAssetSource {
   color?: NitroColor;
@@ -10,6 +71,7 @@ interface AssetImage extends ImageResolvedAssetSource {
 
 interface GlyphImage {
   glyph: number;
+  fontName: string;
   color: NitroColor;
   backgroundColor: NitroColor;
   fontScale?: number;
@@ -22,8 +84,7 @@ interface RemoteImage {
 }
 
 /**
- * we need to map the ButtonImage.name from GlyphName to
- * the actual numeric value so we need a nitro specific type
+ * NitroModules-compatible image types passed to native.
  */
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
@@ -38,12 +99,12 @@ function convert(image?: AutoImage): NitroImage | undefined {
     const {
       color = { darkColor: 'white', lightColor: 'black' },
       fontScale,
-      name,
       backgroundColor = 'transparent',
     } = image;
 
     return {
-      glyph: glyphMap[name],
+      glyph: resolveGlyph(image),
+      fontName: getIconFont(),
       color: NitroColorUtil.convert(color),
       backgroundColor: NitroColorUtil.convert(backgroundColor),
       fontScale,

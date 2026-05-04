@@ -304,7 +304,49 @@ When using build variants, Android Studio may not be aware of the selected varia
 To work around this and allow for debugging or enhancing the Android Automotive-specific implementation, you can temporarily set the automotive flags in your `gradle.properties` file or your default `.env` file before running a Gradle sync.
 
 ## Icons
-The library is using [Material Symbols](https://fonts.google.com/icons) for iconography. The font is bundled with the library, so no extra setup is required. You can use these icons on both Android Auto and CarPlay.
+The library does **not** bundle any icon font — the consuming app must provide one.
+
+### Setup
+
+1. Add a `.ttf` font file to your native projects:
+   - **iOS** — add `<name>.ttf` to your app bundle (no `UIAppFonts` entry needed — the library registers it via CoreText automatically).
+   - **Android** — place `<name>.ttf` in `res/font/`.
+
+   For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
+
+2. Register the font and an optional glyph map at startup:
+
+   ```ts
+   import { setIconFont } from '@iternio/react-native-auto-play';
+   import { glyphMap } from './assets/Glyphmap';
+
+   setIconFont('material_symbols', glyphMap);
+   ```
+
+3. Use glyph images by name or code point:
+
+   ```ts
+   { type: 'glyph', name: 'directions_car' }
+   { type: 'glyph', codepoint: 0xe531 }
+   ```
+
+`setIconFont` must be called once before the first glyph is used (subsequent calls are ignored). If no font is registered, the library throws an error when a glyph image is rendered.
+
+### Type-safe glyph names
+
+To get autocompletion and type checking for glyph names, create a declaration file in your app (e.g. `autoplay-glyphs.d.ts`):
+
+```ts
+import type { GlyphName } from './assets/Glyphmap';
+
+declare module '@iternio/react-native-auto-play' {
+  interface AutoPlayGlyphMap extends Record<GlyphName, number> {}
+}
+```
+
+Without this augmentation, `name` accepts any `string`. With it, only keys from your glyph map are allowed and you get full autocompletion.
+
+The example app uses [Material Symbols](https://fonts.google.com/icons). See `apps/example/assets/symbolFont/` for the glyph map generation script.
 
 It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawables). Make sure to add them to your native projects.
 - iOS: Add to your `Images.xcassets`

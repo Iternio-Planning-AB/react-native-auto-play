@@ -9,67 +9,65 @@ import CoreText
 import UIKit
 
 class SymbolFont {
-    private static let defaultCanvasSize = 32
+    private static var cachedFontName: String?
+    private static var cachedPSName: String?
 
-    private static var isRegistered = false
-    private static var fontName: String?
-
-    static func loadFont() {
-        let podBundle = Bundle(for: SymbolFont.self)
-
-        guard
-            let bundleURL = podBundle.url(
-                forResource: "ReactNativeAutoPlay",
-                withExtension: "bundle"
-            ),
-            let resourceBundle = Bundle(url: bundleURL),
-            let fontURL = resourceBundle.url(
-                forResource: "MaterialSymbolsOutlined-Regular",
-                withExtension: "ttf"
-            )
-        else {
-            return
+    private static func loadFont(named fontName: String) -> String? {
+        if fontName == cachedFontName {
+            return cachedPSName
         }
 
-        guard let fontData = try? Data(contentsOf: fontURL) as CFData,
+        guard let url = Bundle.main.url(forResource: fontName, withExtension: "ttf") else {
+            print("[AutoPlay] \(fontName).ttf not found in the app bundle — glyph images will not render.")
+            return nil
+        }
+
+        guard let fontData = try? Data(contentsOf: url) as CFData,
             let provider = CGDataProvider(data: fontData),
             let font = CGFont(provider)
         else {
-            return
+            return nil
         }
 
         var error: Unmanaged<CFError>?
         CTFontManagerRegisterGraphicsFont(font, &error)
-        if let error = error?.takeUnretainedValue() {
-            print("Failed to register font: \(error)")
-        }
-        else {
-            print("Font \(font.fullName as String? ?? "unknown") registered")
+        // Ignore already-registered errors (e.g. hot reload)
+
+        guard let psName = font.fullName as? String else {
+            return nil
         }
 
-        SymbolFont.fontName = font.fullName as? String
-        SymbolFont.isRegistered = true
+        cachedFontName = fontName
+        cachedPSName = psName
+        return psName
+    }
+
+    private static func uiFont(for glyphImage: GlyphImage, size: CGFloat, fontScale: CGFloat) -> UIFont? {
+        let pointSize = size * fontScale
+
+        guard let psName = loadFont(named: glyphImage.fontName) else {
+            return nil
+        }
+
+        return UIFont(name: psName, size: pointSize)
     }
 
     // creates a single color UIImage
     static func imageFromGlyph(
-        glyph: Double,
+        glyphImage: GlyphImage,
         foregroundColor: UIColor,
         backgroundColor: UIColor,
         size: CGFloat,
         fontScale: CGFloat
     ) -> UIImage? {
-        if !SymbolFont.isRegistered {
-            SymbolFont.loadFont()
-        }
-
-        guard let fontName = SymbolFont.fontName,
-            let font = UIFont(name: fontName, size: size * fontScale)
-        else {
+        guard let font = uiFont(for: glyphImage, size: size, fontScale: fontScale) else {
             return nil
         }
 
-        let codepoint = String(UnicodeScalar(UInt32(glyph))!)
+        guard let scalar = UnicodeScalar(UInt32(glyphImage.glyph)) else {
+            return nil
+        }
+        let codepoint = String(Character(scalar))
         let canvasSize = CGSize(width: size, height: size)
         let rect = CGRect(origin: .zero, size: canvasSize)
 
@@ -99,14 +97,14 @@ class SymbolFont {
         let y = (canvasSize.height - textSize.height) / 2
         attrString.draw(at: CGPoint(x: x, y: y))
 
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        let uiImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        return image
+        return uiImage
     }
 
     static func imageFromGlyph(
-        glyph: Double,
+        glyphImage: GlyphImage,
         size: CGFloat,
         foregroundColor: NitroColor,
         backgroundColor: NitroColor,
@@ -115,7 +113,7 @@ class SymbolFont {
     ) -> UIImage? {
         guard
             let lightImage = imageFromGlyph(
-                glyph: glyph,
+                glyphImage: glyphImage,
                 foregroundColor: Parser.doubleToColor(
                     value: foregroundColor.lightColor
                 ),
@@ -126,7 +124,7 @@ class SymbolFont {
                 fontScale: fontScale
             ),
             let darkImage = imageFromGlyph(
-                glyph: glyph,
+                glyphImage: glyphImage,
                 foregroundColor: Parser.doubleToColor(
                     value: foregroundColor.darkColor
                 ),
@@ -167,6 +165,8 @@ class SymbolFont {
     ) -> UIImage? {
         guard let image else { return nil }
 
+        let fontScale = image.fontScale ?? 1.0
+
         if noImageAsset {
             let foregroundColor = Parser.doubleToColor(
                 value: traitCollection.userInterfaceStyle == .light
@@ -180,21 +180,21 @@ class SymbolFont {
             )
 
             return SymbolFont.imageFromGlyph(
-                glyph: image.glyph,
+                glyphImage: image,
                 foregroundColor: foregroundColor,
                 backgroundColor: backgroundColor,
                 size: size,
-                fontScale: image.fontScale ?? 1.0
+                fontScale: fontScale
             )
         }
 
         return SymbolFont.imageFromGlyph(
-            glyph: image.glyph,
+            glyphImage: image,
             size: size,
             foregroundColor: image.color,
             backgroundColor: image.backgroundColor,
-            fontScale: image.fontScale ?? 1.0,
+            fontScale: fontScale,
             traitCollection: traitCollection
-        )!
+        )
     }
 }

@@ -25,10 +25,6 @@ Pod::Spec.new do |s|
   # react helpers like RCTConvert
   s.public_header_files = Array(s.attributes_hash['public_header_files']) + ["ios/ReactHelpers/*.h"]
 
-  s.resource_bundles = {
-    "ReactNativeAutoPlay" => ['ios/Assets/**/*.ttf']
-  }
-  
   s.pod_target_xcconfig = {
     # C++ compiler flags, mainly for folly.
     "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) FOLLY_NO_CONFIG FOLLY_CFG_NO_COROUTINES"
