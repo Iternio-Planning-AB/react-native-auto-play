@@ -10,10 +10,10 @@ import {
   type TextButton,
   useMapTemplate,
 } from '@iternio/react-native-auto-play';
-import { glyphMap } from '../assets/symbolFont/Glyphmap';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
+import { glyphMap } from '../assets/symbolFont/Glyphmap';
 import AutomotiveView from './AutomotiveView';
 import { Cluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
@@ -183,14 +183,14 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
                     },
                   });
                 });
-                HybridAutoPlay.popTemplate();
+                void HybridAutoPlay.popTemplate();
               },
             },
             {
               type: 'text',
               title: 'No',
               onPress: () => {
-                HybridAutoPlay.popTemplate();
+                void HybridAutoPlay.popTemplate();
               },
             },
           ];
