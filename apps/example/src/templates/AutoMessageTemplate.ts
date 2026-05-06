@@ -26,7 +26,7 @@ const getTemplate = ({
           image: { name: 'thumb_up', type: 'glyph', color: DefaultTemplateImageColor },
           onPress: () => {
             console.log('yeah');
-            HybridAutoPlay.popTemplate();
+            void HybridAutoPlay.popTemplate();
           },
         },
         {
@@ -39,7 +39,7 @@ const getTemplate = ({
           title: 'thumb down',
           onPress: () => {
             console.log('better luck next time');
-            HybridAutoPlay.popToRootTemplate();
+            void HybridAutoPlay.popToRootTemplate();
           },
         },
       ],
@@ -49,7 +49,7 @@ const getTemplate = ({
           title: 'thumb up',
           onPress: () => {
             console.log('yeah');
-            HybridAutoPlay.popTemplate();
+            void HybridAutoPlay.popTemplate();
           },
         },
         {
@@ -57,7 +57,7 @@ const getTemplate = ({
           title: 'thumb down',
           onPress: () => {
             console.log('yeah');
-            HybridAutoPlay.popToRootTemplate();
+            void HybridAutoPlay.popToRootTemplate();
           },
         },
       ],

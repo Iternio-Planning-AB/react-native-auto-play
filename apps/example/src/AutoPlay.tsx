@@ -10,10 +10,10 @@ import {
   type TextButton,
   useMapTemplate,
 } from '@iternio/react-native-auto-play';
-import { glyphMap } from '../assets/symbolFont/Glyphmap';
 import type { UnsubscribeListener } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
+import { glyphMap } from '../assets/symbolFont/Glyphmap';
 import AutomotiveView from './AutomotiveView';
 import { Cluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
@@ -41,8 +41,7 @@ import { VoiceInputView } from './VoiceInputView';
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
   const mapTemplate = useMapTemplate();
 
-  const [i, setI] = useState(0);
-
+  const [counter, setCounter] = useState(0);
   const [signedIn, setSignedIn] = useState(Platform.OS !== 'android');
 
   useEffect(() => {
@@ -77,7 +76,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       priority: 'medium',
     });
 
-    const timer = setInterval(() => setI((p) => p + 1), 1000);
+    const timer = setInterval(() => setCounter((p) => p + 1), 1000);
 
     return () => clearInterval(timer);
   }, [signedIn, mapTemplate]);
@@ -183,14 +182,14 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
                     },
                   });
                 });
-                HybridAutoPlay.popTemplate();
+                void HybridAutoPlay.popTemplate();
               },
             },
             {
               type: 'text',
               title: 'No',
               onPress: () => {
-                HybridAutoPlay.popTemplate();
+                void HybridAutoPlay.popTemplate();
               },
             },
           ];
@@ -218,7 +217,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
     >
       <View style={{ flex: 1, backgroundColor: 'green' }}>
         <Text>
-          Hello Nitro {Platform.OS} {i}
+          Hello Nitro {Platform.OS} {counter}
         </Text>
         <Text>{JSON.stringify(props.window)}</Text>
         <Text>Running as {props.id}</Text>

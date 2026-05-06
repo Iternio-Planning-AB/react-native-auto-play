@@ -52,7 +52,7 @@ const headerActions: HeaderActions<unknown> = {
         type: 'image',
         image: { name: 'close', type: 'glyph' },
         onPress: () => {
-          HybridAutoPlay.popToRootTemplate();
+          void HybridAutoPlay.popToRootTemplate();
         },
       },
     ],
@@ -77,7 +77,7 @@ const headerActions: HeaderActions<unknown> = {
         type: 'image',
         image: { name: 'close', type: 'glyph' },
         onPress: () => {
-          HybridAutoPlay.popToRootTemplate();
+          void HybridAutoPlay.popToRootTemplate();
         },
       },
     ],
@@ -242,12 +242,12 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       type: 'image',
       image: { name: 'mic', type: 'glyph' },
       onPress: () => {
-        HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+        void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
           if (!isGranted) {
             return;
           }
 
-          HybridAutoPlay.startVoiceInput().then((audio) => {
+          void HybridAutoPlay.startVoiceInput().then((audio) => {
             console.log(`received ${audio.byteLength} bytes`);
             dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
           });
@@ -288,12 +288,12 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           type: 'glyph',
         },
         onPress: () => {
-          HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+          void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
             if (!isGranted) {
               return;
             }
 
-            HybridAutoPlay.startVoiceInput().then((audio) => {
+            void HybridAutoPlay.startVoiceInput().then((audio) => {
               console.log(`received ${audio.byteLength} bytes`);
               dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
             });
@@ -529,7 +529,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                       type: 'default',
                       onPress: () => {
                         console.log('*** onPress', searchText);
-                        HybridAutoPlay.popToRootTemplate(true);
+                        void HybridAutoPlay.popToRootTemplate(true);
                       },
                       image: {
                         name: 'ev_charger',
