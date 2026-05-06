@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 class HybridCluster : HybridClusterSpec() {
     init {
         listeners.clear()
-        eventQueue.clear()
         colorSchemeListeners.clear()
     }
 
