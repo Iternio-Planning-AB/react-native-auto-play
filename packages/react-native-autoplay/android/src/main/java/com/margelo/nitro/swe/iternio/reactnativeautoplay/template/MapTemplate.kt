@@ -66,10 +66,6 @@ class MapTemplate(
                 navigationManager.setNavigationManagerCallback(navigationManagerCallback)
             }
         }
-
-        config.defaultGuidanceBackgroundColor?.let { nitroColor ->
-            MapTemplate.cardBackgroundColor = Parser.parseColor(nitroColor)
-        }
     }
 
     override fun parse(): Template {

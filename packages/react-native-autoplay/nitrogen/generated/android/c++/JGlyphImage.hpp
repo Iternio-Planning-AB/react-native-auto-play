@@ -13,6 +13,7 @@
 #include "JNitroColor.hpp"
 #include "NitroColor.hpp"
 #include <optional>
+#include <string>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -35,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto clazz = javaClassStatic();
       static const auto fieldGlyph = clazz->getField<double>("glyph");
       double glyph = this->getFieldValue(fieldGlyph);
+      static const auto fieldFontName = clazz->getField<jni::JString>("fontName");
+      jni::local_ref<jni::JString> fontName = this->getFieldValue(fieldFontName);
       static const auto fieldColor = clazz->getField<JNitroColor>("color");
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldBackgroundColor = clazz->getField<JNitroColor>("backgroundColor");
@@ -43,6 +46,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JDouble> fontScale = this->getFieldValue(fieldFontScale);
       return GlyphImage(
         glyph,
+        fontName->toStdString(),
         color->toCpp(),
         backgroundColor->toCpp(),
         fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt
@@ -55,12 +59,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JGlyphImage::javaobject> fromCpp(const GlyphImage& value) {
-      using JSignature = JGlyphImage(double, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JGlyphImage(double, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.glyph,
+        jni::make_jstring(value.fontName),
         JNitroColor::fromCpp(value.color),
         JNitroColor::fromCpp(value.backgroundColor),
         value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr

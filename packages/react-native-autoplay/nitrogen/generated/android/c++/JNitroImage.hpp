@@ -15,11 +15,11 @@
 #include "RemoteImage.hpp"
 #include <variant>
 #include "JGlyphImage.hpp"
+#include <string>
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
 #include "JAssetImage.hpp"
-#include <string>
 #include "JRemoteImage.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {

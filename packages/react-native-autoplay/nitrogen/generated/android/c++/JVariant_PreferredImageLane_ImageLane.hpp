@@ -19,11 +19,11 @@
 #include "RemoteImage.hpp"
 #include "JNitroImage.hpp"
 #include "JGlyphImage.hpp"
+#include <string>
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
 #include "JAssetImage.hpp"
-#include <string>
 #include "JRemoteImage.hpp"
 #include <vector>
 #include "JImageLane.hpp"

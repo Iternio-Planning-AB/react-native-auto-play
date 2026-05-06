@@ -159,7 +159,10 @@ export type MapTemplateConfig = Omit<
     onAutoDriveEnabled?: (template: MapTemplate) => void;
 
     /**
-     * Initial navigation maneuver background color. Mainly useful, when in CarPlay the default loading maneuver does not have the right color.
+     * Use this to set the default maneuver background color on iOS.
+     * Only used when starting navigation and not providing any maneuvers yet,
+     * visible on the system provided loading maneuver then.
+     * @namespace iOS
      */
     defaultGuidanceBackgroundColor?: ThemedColor | string;
   };
