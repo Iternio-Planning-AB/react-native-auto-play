@@ -15,10 +15,7 @@ class HybridVoice : HybridVoiceSpec() {
     private var voiceInputManager: VoiceInputManager? = null
 
     override fun hasVoiceInputPermission(): Boolean {
-        val context = NitroModules.applicationContext ?: return false
-        return ContextCompat.checkSelfPermission(
-            context, android.Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
+        return VoiceInputManager.hasVoiceInputPermission()
     }
 
     override fun requestVoiceInputPermission(): Promise<Boolean> {

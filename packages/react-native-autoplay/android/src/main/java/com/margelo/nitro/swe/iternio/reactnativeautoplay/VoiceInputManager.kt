@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -10,6 +11,7 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -24,6 +26,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -71,6 +74,13 @@ class VoiceInputManager(
         if (preferSpeechToText) {
             val context = NitroModules.applicationContext ?: throw IllegalArgumentException()
             if (SpeechRecognizer.isRecognitionAvailable(context)) {
+                if (carContext != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        return startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk)
+                    }
+                    // Car connected but API < 33: EXTRA_AUDIO_SOURCE unavailable, fall back to PCM
+                    return startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                }
                 return ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk) }.getOrThrow()
             }
         }
@@ -134,6 +144,127 @@ class VoiceInputManager(
         }
     }
 
+    // MARK: - STT path fed from CarAudioRecord via a pipe (API 33+)
+    @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private suspend fun startSTTFromCarAudio(
+        silenceThresholdMs: Long,
+        maxDurationMs: Long,
+        onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+    ): VoiceInputResult {
+        if (!hasVoiceInputPermission()) {
+            throw SecurityException("RECORD_AUDIO permission not granted")
+        }
+
+        val appContext = NitroModules.applicationContext ?: throw IllegalArgumentException()
+        val pipes = ParcelFileDescriptor.createPipe()
+        val readFd = pipes[0]
+        val pipeOut = ParcelFileDescriptor.AutoCloseOutputStream(pipes[1])
+
+        val sttDeferred = scope.async {
+            ThreadUtil.postOnUiAndAwait {
+                startSTTWithSource(appContext, readFd, silenceThresholdMs, onChunk)
+            }.getOrThrow()
+        }
+
+        try {
+            recordPCM(silenceThresholdMs, maxDurationMs) { chunk ->
+                chunk.audio?.let { ab ->
+                    try {
+                        pipeOut.write(ab.toByteArray())
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        } finally {
+            try {
+                pipeOut.close()
+            } catch (_: Exception) {
+            }
+            try {
+                readFd.close()
+            } catch (_: Exception) {
+            }
+        }
+
+        return sttDeferred.await()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private suspend fun startSTTWithSource(
+        context: android.content.Context,
+        audioSource: ParcelFileDescriptor,
+        silenceThresholdMs: Long,
+        onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+    ): VoiceInputResult = suspendCancellableCoroutine { cont ->
+        val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
+        activeSpeechRecognizer = recognizer
+        // When EXTRA_AUDIO_SOURCE is used, onResults always returns an empty list — the actual
+        // transcription only arrives via onPartialResults. Track the last partial here.
+        var lastPartial: String? = null
+
+        recognizer.setRecognitionListener(object : RecognitionListener {
+            override fun onResults(results: Bundle?) {
+                activeSpeechRecognizer = null
+                recognizer.destroy()
+                val text =
+                    results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()
+                        ?: lastPartial
+                cont.resume(VoiceInputResult(transcription = text, audio = null))
+            }
+
+            override fun onError(error: Int) {
+                activeSpeechRecognizer = null
+                recognizer.destroy()
+                cont.resume(VoiceInputResult(transcription = lastPartial, audio = null))
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {
+                val text = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    ?.firstOrNull()
+                if (!text.isNullOrEmpty()) {
+                    lastPartial = text
+                    onChunk?.invoke(VoiceInputChunk(partial = text, audio = null))
+                }
+            }
+
+            override fun onReadyForSpeech(params: Bundle?) {}
+            override fun onBeginningOfSpeech() {}
+            override fun onRmsChanged(rmsdB: Float) {}
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onEndOfSpeech() {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+        })
+
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+            putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE, audioSource)
+            putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_CHANNEL_COUNT, 1)
+            putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_ENCODING, AudioFormat.ENCODING_PCM_16BIT)
+            putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_SAMPLING_RATE, SAMPLE_RATE)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, WARMUP_MS)
+            putExtra(
+                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+                silenceThresholdMs
+            )
+            putExtra(
+                RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
+                silenceThresholdMs / 2,
+            )
+        }
+
+        recognizer.startListening(intent)
+
+        cont.invokeOnCancellation {
+            activeSpeechRecognizer = null
+            recognizer.destroy()
+        }
+    }
+
     // MARK: - PCM path
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -148,19 +279,20 @@ class VoiceInputManager(
         return VoiceInputResult(transcription = null, audio = ArrayBuffer.wrap(directBuffer))
     }
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun recordPCM(
         silenceThresholdMs: Long,
         maxDurationMs: Long,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
     ): ByteArray = suspendCancellableCoroutine { cont ->
-        val appContext = NitroModules.applicationContext
-        if (appContext == null || ContextCompat.checkSelfPermission(
-                appContext,
-                android.Manifest.permission.RECORD_AUDIO,
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (!hasVoiceInputPermission()) {
             cont.resumeWithException(SecurityException("RECORD_AUDIO permission not granted"))
+            return@suspendCancellableCoroutine
+        }
+
+        val appContext = NitroModules.applicationContext ?: run {
+            cont.resumeWithException(SecurityException("Missing application context"))
             return@suspendCancellableCoroutine
         }
 
@@ -294,7 +426,7 @@ class VoiceInputManager(
                 recognizer.stopListening()
             }
         }
-        // PCM path
+        // PCM path and car-audio STT pump
         isRecording = false
         carAudioRecord?.stopRecording()
         audioRecord?.stop()
@@ -327,5 +459,12 @@ class VoiceInputManager(
         private const val WARMUP_MS = 500L
         private const val SAMPLE_RATE = 16_000
         private const val PHONE_BUFFER_SIZE = 3_200 // ~100ms at 16kHz/16-bit/mono
+
+        fun hasVoiceInputPermission(): Boolean {
+            val context = NitroModules.applicationContext ?: return false
+            return ContextCompat.checkSelfPermission(
+                context, android.Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 }
