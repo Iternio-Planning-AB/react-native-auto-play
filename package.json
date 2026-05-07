@@ -20,7 +20,7 @@
     "typecheck:example": "yarn workspace example typecheck"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.14"
+    "@biomejs/biome": "^2.4.14"
   },
   "dependencies": {
     "patch-package": "^8.0.1"

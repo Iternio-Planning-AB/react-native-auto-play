@@ -16,7 +16,7 @@ const getDefaultConfig = (signInFinished: () => void): Partial<SignInTemplateCon
           type: 'image',
           image: { name: 'cancel', type: 'glyph' },
           onPress: () => {
-            HybridAutoPlay.popTemplate();
+            void HybridAutoPlay.popTemplate();
             signInFinished();
           },
         },
@@ -25,7 +25,7 @@ const getDefaultConfig = (signInFinished: () => void): Partial<SignInTemplateCon
           title: 'Ok',
           image: { name: 'check', type: 'glyph' },
           onPress: () => {
-            HybridAutoPlay.popTemplate();
+            void HybridAutoPlay.popTemplate();
             signInFinished();
           },
         },
@@ -141,7 +141,7 @@ const getInputSignInConfig = (signInFinished: () => void, mail?: string): SignIn
       callback: (inputText: string) => {
         if (mail) {
           console.log(`*** mail: ${mail}, password: ${inputText}`);
-          HybridAutoPlay.popToRootTemplate();
+          void HybridAutoPlay.popToRootTemplate();
           signInFinished();
           return;
         }

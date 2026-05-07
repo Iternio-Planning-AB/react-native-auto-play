@@ -137,7 +137,7 @@ function AppContent() {
               if (recording == null) {
                 return;
               }
-              playPCM(recording);
+              void playPCM(recording);
             }}
           />
           <Button

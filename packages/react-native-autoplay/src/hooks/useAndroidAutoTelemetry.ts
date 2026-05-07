@@ -131,14 +131,19 @@ export const useAndroidAutoTelemetry = ({
         automotivePermissionRequest.message,
         automotivePermissionRequest.grantButtonText,
         automotivePermissionRequest.cancelButtonText
-      ).then(({ granted, denied }) => {
-        const isGranted = granted.length === requiredPermissions.length;
-        setPermissionsGranted(isGranted);
+      )
+        .then(({ granted, denied }) => {
+          const isGranted = granted.length === requiredPermissions.length;
+          setPermissionsGranted(isGranted);
 
-        if (!isGranted) {
-          setError(`Android Automotive permissions denied: [${denied.join(',')}]`);
-        }
-      });
+          if (!isGranted) {
+            setError(`Android Automotive permissions denied: [${denied.join(',')}]`);
+          }
+        })
+        .catch((e) => {
+          const message = e instanceof Error ? e.message : String(e);
+          setError(message);
+        });
       return;
     }
 
