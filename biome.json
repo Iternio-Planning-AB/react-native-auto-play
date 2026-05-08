@@ -5,6 +5,7 @@
     "clientKind": "git",
     "useIgnoreFile": false
   },
+  
   "files": {
     "ignoreUnknown": false,
     "includes": ["**", "!packages/react-native-autoplay/src/types/Glyphmap.ts"]
