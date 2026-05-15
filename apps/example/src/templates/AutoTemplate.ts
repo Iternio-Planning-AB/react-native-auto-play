@@ -53,7 +53,7 @@ const headerActions: HeaderActions<unknown> = {
         type: 'image',
         image: { name: 'close', type: 'glyph' },
         onPress: () => {
-          HybridAutoPlay.popToRootTemplate();
+          void HybridAutoPlay.popToRootTemplate();
         },
       },
     ],
@@ -78,7 +78,7 @@ const headerActions: HeaderActions<unknown> = {
         type: 'image',
         image: { name: 'close', type: 'glyph' },
         onPress: () => {
-          HybridAutoPlay.popToRootTemplate();
+          void HybridAutoPlay.popToRootTemplate();
         },
       },
     ],
@@ -243,12 +243,12 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       type: 'image',
       image: { name: 'mic', type: 'glyph' },
       onPress: () => {
-        HybridVoice.requestVoiceInputPermission().then((isGranted) => {
+        void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
           if (!isGranted) {
             return;
           }
 
-          HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+          void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
             if (result.audio) {
               console.log(`received ${result.audio.byteLength} bytes`);
               dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
@@ -293,12 +293,12 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           type: 'glyph',
         },
         onPress: () => {
-          HybridVoice.requestVoiceInputPermission().then((isGranted) => {
+          void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
             if (!isGranted) {
               return;
             }
 
-            HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+            void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
               if (result.audio) {
                 console.log(`received ${result.audio.byteLength} bytes`);
                 dispatch(
@@ -540,7 +540,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                       type: 'default',
                       onPress: () => {
                         console.log('*** onPress', searchText);
-                        HybridAutoPlay.popToRootTemplate(true);
+                        void HybridAutoPlay.popToRootTemplate(true);
                       },
                       image: {
                         name: 'ev_charger',

@@ -29,7 +29,7 @@ const getTemplate = ({
           type: 'default',
           onPress: () => {
             console.log('*** initial #1');
-            HybridAutoPlay.popTemplate();
+            void HybridAutoPlay.popTemplate();
           },
         },
       ],

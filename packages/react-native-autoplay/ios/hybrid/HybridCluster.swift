@@ -33,7 +33,6 @@ class HybridCluster: HybridClusterSpec {
 
     override init() {
         HybridCluster.listeners.removeAll()
-        HybridCluster.eventQueue.removeAll()
         HybridCluster.colorSchemeListeners.removeAll()
         HybridCluster.zoomListeners.removeAll()
         HybridCluster.compassListeners.removeAll()
