@@ -126,7 +126,7 @@ function AppContent() {
                 return;
               }
 
-              HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+              void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
                 if (result.audio) {
                   console.log(`received ${result.audio.byteLength} bytes`);
                   dispatch(

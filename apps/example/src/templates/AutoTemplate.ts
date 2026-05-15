@@ -243,7 +243,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       type: 'image',
       image: { name: 'mic', type: 'glyph' },
       onPress: () => {
-        void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+        void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
           if (!isGranted) {
             return;
           }
@@ -293,7 +293,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           type: 'glyph',
         },
         onPress: () => {
-          void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+          void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
             if (!isGranted) {
               return;
             }
