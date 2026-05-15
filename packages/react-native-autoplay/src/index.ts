@@ -8,9 +8,7 @@ import type { AndroidAutomotive } from './specs/AndroidAutomotive.nitro';
 
 AutoPlayHeadlessJsTask.registerHeadlessTask(HybridAutoPlay);
 
-export { HybridAutoPlay };
-export { HybridVoice };
-export { HybridAndroidAutoTelemetry };
+export { HybridAndroidAutoTelemetry, HybridAutoPlay, HybridVoice };
 
 export const HybridAndroidAutomotive =
   Platform.OS === 'android'
