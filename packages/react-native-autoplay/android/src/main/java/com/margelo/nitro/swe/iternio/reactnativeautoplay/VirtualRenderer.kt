@@ -79,6 +79,7 @@ class VirtualRenderer(
                 }
 
                 val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+                virtualDisplay?.release()
                 virtualDisplay = manager.createVirtualDisplay(
                     moduleName,
                     surfaceContainer.width,
