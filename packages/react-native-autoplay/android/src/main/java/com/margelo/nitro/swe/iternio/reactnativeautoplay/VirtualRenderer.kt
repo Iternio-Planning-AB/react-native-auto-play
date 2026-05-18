@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
@@ -283,8 +284,14 @@ class VirtualRenderer(
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
+            // Wrap applicationContext with the app theme so AppCompat widgets (e.g. ReactTextView)
+            // can resolve their required text-appearance attrs on OEM themes that don't define them
+            // (notably Polestar/Volvo Android Automotive: Theme.DeviceDefault.Light.DarkActionBar).
+            val appTheme = context.applicationContext.applicationInfo.theme
+            val themedContext = ContextThemeWrapper(context.applicationContext, appTheme)
+
             if (!this@VirtualRenderer::reactSurfaceImpl.isInitialized) {
-                reactSurfaceImpl = ReactSurfaceImpl(context, moduleName, initialProperties)
+                reactSurfaceImpl = ReactSurfaceImpl(themedContext, moduleName, initialProperties)
             }
 
             var splashScreenView: View? = null
@@ -293,9 +300,9 @@ class VirtualRenderer(
                 (it.parent as ViewGroup).removeView(it)
             } ?: run {
                 splashScreenView =
-                    if (isCluster) getClusterSplashScreen(context, height, width) else null
+                    if (isCluster) getClusterSplashScreen(themedContext, height, width) else null
 
-                val surfaceView = ReactSurfaceView(context, reactSurfaceImpl).apply {
+                val surfaceView = ReactSurfaceView(themedContext, reactSurfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
                     )
@@ -331,7 +338,7 @@ class VirtualRenderer(
             }
 
 
-            val rootContainer = FrameLayout(context).apply {
+            val rootContainer = FrameLayout(themedContext).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
