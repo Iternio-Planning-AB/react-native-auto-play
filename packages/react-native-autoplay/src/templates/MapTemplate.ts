@@ -3,7 +3,6 @@ import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { AutoText } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
-import OnAppearedChildRenderer from '../components/OnAppearedChildRenderer';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
@@ -197,11 +196,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
           children: React.createElement(SafeAreaInsetsProvider, {
             moduleName: this.id,
             // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-            children: React.createElement(OnAppearedChildRenderer, {
-              // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-              children: React.createElement(component, props),
-              moduleName: this.id,
-            }),
+            children: React.createElement(component, props),
           }),
         })
     );
