@@ -37,12 +37,12 @@ abstract class HybridVoiceSpec: HybridObject() {
   @Keep
   abstract fun requestVoiceInputPermission(): Promise<Boolean>
   
-  abstract fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Boolean?, onChunk: ((chunk: VoiceInputChunk) -> Unit)?): Promise<VoiceInputResult>
+  abstract fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Boolean?, onChunk: ((chunk: VoiceInputChunk) -> Unit)?, language: String?): Promise<VoiceInputResult>
   
   @DoNotStrip
   @Keep
-  private fun startVoiceInput_cxx(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Boolean?, onChunk: Func_void_VoiceInputChunk?): Promise<VoiceInputResult> {
-    val __result = startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, preferSpeechToText, onChunk?.let { it })
+  private fun startVoiceInput_cxx(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Boolean?, onChunk: Func_void_VoiceInputChunk?, language: String?): Promise<VoiceInputResult> {
+    val __result = startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, preferSpeechToText, onChunk?.let { it }, language)
     return __result
   }
   

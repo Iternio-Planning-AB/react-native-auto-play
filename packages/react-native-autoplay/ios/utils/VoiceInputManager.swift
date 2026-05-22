@@ -66,7 +66,8 @@ class VoiceInputManager {
         maxDurationMs: Double,
         listeningText: String,
         preferSpeechToText: Bool,
-        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?
+        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
+        language: String?
     ) async throws -> VoiceInputResult {
         return try await withCheckedThrowingContinuation { cont in
             let box = ResultBox(cont)
@@ -83,7 +84,8 @@ class VoiceInputManager {
                     listeningText: listeningText,
                     preferSpeechToText: preferSpeechToText,
                     onChunk: onChunk,
-                    box: box
+                    box: box,
+                    language: language
                 )
             }
             catch {
@@ -127,7 +129,8 @@ class VoiceInputManager {
         listeningText: String,
         preferSpeechToText: Bool,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
-        box: ResultBox
+        box: ResultBox,
+        language: String?
     ) throws {
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
             throw VoiceInputError.microphonePermissionDenied
@@ -144,7 +147,7 @@ class VoiceInputManager {
         var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
 
         if preferSpeechToText, SFSpeechRecognizer.authorizationStatus() == .authorized,
-            let recognizer = SFSpeechRecognizer(locale: Locale.current),
+            let recognizer = language != nil ? SFSpeechRecognizer(locale: Locale(identifier: language!)) : SFSpeechRecognizer(locale: Locale.current),
             recognizer.isAvailable
         {
             let request = SFSpeechAudioBufferRecognitionRequest()

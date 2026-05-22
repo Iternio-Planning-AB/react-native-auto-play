@@ -15,7 +15,7 @@ public protocol HybridVoiceSpec_protocol: HybridObject {
   // Methods
   func hasVoiceInputPermission() throws -> Bool
   func requestVoiceInputPermission() throws -> Promise<Bool>
-  func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Bool?, onChunk: ((_ chunk: VoiceInputChunk) -> Void)?) throws -> Promise<VoiceInputResult>
+  func startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, preferSpeechToText: Bool?, onChunk: ((_ chunk: VoiceInputChunk) -> Void)?, language: String?) throws -> Promise<VoiceInputResult>
   func stopVoiceInput() throws -> Void
 }
 

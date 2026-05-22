@@ -66,6 +66,7 @@ class HybridVoice : HybridVoiceSpec() {
         listeningText: String?,
         preferSpeechToText: Boolean?,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+        language: String?
     ): Promise<VoiceInputResult> {
         return Promise.async {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -81,6 +82,7 @@ class HybridVoice : HybridVoiceSpec() {
                     maxDurationMs = maxDurationMs?.toLong() ?: 10_000L,
                     preferSpeechToText = preferSpeechToText ?: false,
                     onChunk = onChunk,
+                    language = language
                 )
             } finally {
                 voiceInputManager = null

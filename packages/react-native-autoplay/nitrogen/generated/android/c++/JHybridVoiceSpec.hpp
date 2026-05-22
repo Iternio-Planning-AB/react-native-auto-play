@@ -56,7 +56,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     // Methods
     bool hasVoiceInputPermission() override;
     std::shared_ptr<Promise<bool>> requestVoiceInputPermission() override;
-    std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk) override;
+    std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language) override;
     void stopVoiceInput() override;
 
   private:

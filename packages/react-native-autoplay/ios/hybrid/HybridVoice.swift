@@ -33,7 +33,8 @@ class HybridVoice: HybridVoiceSpec {
         maxDurationMs: Double?,
         listeningText: String?,
         preferSpeechToText: Bool?,
-        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?
+        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
+        language: String?
     ) throws -> Promise<VoiceInputResult> {
         return Promise.async {
             let interfaceController = try? await RootModule.withInterfaceController { $0 }
@@ -49,7 +50,8 @@ class HybridVoice: HybridVoiceSpec {
                 maxDurationMs: maxDurationMs ?? 10_000,
                 listeningText: listeningText ?? "Listening...",
                 preferSpeechToText: preferSpeechToText ?? false,
-                onChunk: onChunk
+                onChunk: onChunk,
+                language: language
             )
         }
     }

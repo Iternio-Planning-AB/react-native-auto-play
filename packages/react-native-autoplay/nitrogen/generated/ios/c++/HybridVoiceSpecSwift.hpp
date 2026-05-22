@@ -94,8 +94,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk) override {
-      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, preferSpeechToText, onChunk);
+    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language) override {
+      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, preferSpeechToText, onChunk, language);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

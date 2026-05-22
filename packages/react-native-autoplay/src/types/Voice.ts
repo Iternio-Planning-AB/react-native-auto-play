@@ -14,4 +14,5 @@ export interface VoiceInputOptions {
   listeningText?: string;
   preferSpeechToText?: boolean;
   onChunk?: (chunk: VoiceInputChunk) => void;
+  language?: string;
 }

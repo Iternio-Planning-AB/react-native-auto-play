@@ -70,18 +70,19 @@ class VoiceInputManager(
         maxDurationMs: Long = 10_000,
         preferSpeechToText: Boolean = false,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)? = null,
+        language: String? = null
     ): VoiceInputResult {
         if (preferSpeechToText) {
             val context = NitroModules.applicationContext ?: throw IllegalArgumentException()
             if (SpeechRecognizer.isRecognitionAvailable(context)) {
                 if (carContext != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        return startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk)
+                        return startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk, language)
                     }
                     // Car connected but API < 33: EXTRA_AUDIO_SOURCE unavailable, fall back to PCM
                     return startPCM(silenceThresholdMs, maxDurationMs, onChunk)
                 }
-                return ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk) }.getOrThrow()
+                return ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk, language) }.getOrThrow()
             }
         }
         return startPCM(silenceThresholdMs, maxDurationMs, onChunk)
@@ -92,6 +93,7 @@ class VoiceInputManager(
     private suspend fun startSTT(
         context: android.content.Context,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+        language: String?
     ): VoiceInputResult = suspendCancellableCoroutine { cont ->
         val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
         activeSpeechRecognizer = recognizer
@@ -134,6 +136,9 @@ class VoiceInputManager(
             )
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+            language?.let {
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE, it)
+            }
         }
 
         recognizer.startListening(intent)
@@ -151,6 +156,7 @@ class VoiceInputManager(
         silenceThresholdMs: Long,
         maxDurationMs: Long,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+        language: String?
     ): VoiceInputResult {
         if (!hasVoiceInputPermission()) {
             throw SecurityException("RECORD_AUDIO permission not granted")
@@ -163,7 +169,7 @@ class VoiceInputManager(
 
         val sttDeferred = scope.async {
             ThreadUtil.postOnUiAndAwait {
-                startSTTWithSource(appContext, readFd, silenceThresholdMs, onChunk)
+                startSTTWithSource(appContext, readFd, silenceThresholdMs, onChunk, language)
             }.getOrThrow()
         }
 
@@ -196,6 +202,7 @@ class VoiceInputManager(
         audioSource: ParcelFileDescriptor,
         silenceThresholdMs: Long,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
+        language: String?
     ): VoiceInputResult = suspendCancellableCoroutine { cont ->
         val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
         activeSpeechRecognizer = recognizer
@@ -242,6 +249,9 @@ class VoiceInputManager(
             )
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+            language?.let {
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE, it)
+            }
             putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE, audioSource)
             putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_CHANNEL_COUNT, 1)
             putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_ENCODING, AudioFormat.ENCODING_PCM_16BIT)
