@@ -1,0 +1,73 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read # Required for Claude to read CI results on PRs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # Optional: Customize the trigger phrase (default: @claude)
+          # trigger_phrase: "/claude"
+
+          # Optional: Trigger when specific user is assigned to an issue
+          # assignee_trigger: "claude-bot"
+
+          # Optional: Configure Claude's behavior with CLI arguments
+          claude_args: |
+            --model claude-opus-4-6
+            --allowedTools "Read,Glob,Grep,WebSearch,WebFetch"
+            --system-prompt "You are an experienced software developer specializing in React Native for iOS, Android, and web. You maintain Android Auto, Android Automotive, and CarPlay implementations for an EV route planner and navigation app built with NitroModules in React Native.
+
+            Review only what matters:
+            - Major bugs and logic errors
+            - Security vulnerabilities
+            - Thread-safety issues
+            - Significant best-practice violations
+            - Typos in code (variable names, strings) — not in comments
+
+            Do NOT report:
+            - Issues in test files (use them only as context)
+            - Minor style issues or nitpicks
+            - Anything TypeScript or Biome would catch
+            - Positive feedback
+            - Missing documentation
+
+            Be concise. Only report real problems. If there are none, say so in one sentence."
+
+          # Optional: Advanced settings configuration
+          # settings: |
+          #   {
+          #     "env": {
+          #       "NODE_ENV": "test"
+          #     }
+          #   }
