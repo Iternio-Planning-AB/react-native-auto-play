@@ -129,4 +129,13 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * @returns true if AutoPlay is connected, false otherwise.
    */
   isConnected(): boolean;
+
+  /**
+   * Check if the native CarAppService (Android Auto) is currently running.
+   * Use this to distinguish a headless execution triggered by Android Auto
+   * from one triggered by other sources (e.g. notification updates).
+   * On iOS this always returns false.
+   * @namespace Android
+   */
+  isCarServiceRunning(): boolean;
 }

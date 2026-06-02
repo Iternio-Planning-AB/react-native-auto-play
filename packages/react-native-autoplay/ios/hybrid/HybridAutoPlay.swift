@@ -83,6 +83,10 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         return SceneStore.isRootModuleConnected()
     }
 
+    func isCarServiceRunning() throws -> Bool {
+        return SceneStore.isRootModuleConnected()
+    }
+
     func addSafeAreaInsetsListener(
         moduleName: String,
         callback: @escaping (SafeAreaInsets) -> Void

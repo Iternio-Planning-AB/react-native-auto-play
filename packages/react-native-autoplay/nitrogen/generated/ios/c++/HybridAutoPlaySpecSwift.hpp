@@ -228,6 +228,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline bool isCarServiceRunning() override {
+      auto __result = _swiftPart.isCarServiceRunning();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
 
   private:
     ReactNativeAutoPlay::HybridAutoPlaySpec_cxx _swiftPart;

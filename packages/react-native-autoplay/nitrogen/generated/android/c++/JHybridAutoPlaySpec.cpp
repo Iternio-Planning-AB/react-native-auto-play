@@ -303,5 +303,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     auto __result = method(_javaPart);
     return static_cast<bool>(__result);
   }
+  bool JHybridAutoPlaySpec::isCarServiceRunning() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jboolean()>("isCarServiceRunning");
+    auto __result = method(_javaPart);
+    return static_cast<bool>(__result);
+  }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

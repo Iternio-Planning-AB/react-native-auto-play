@@ -29,6 +29,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       prototype.registerHybridMethod("addSafeAreaInsetsListener", &HybridAutoPlaySpec::addSafeAreaInsetsListener);
       prototype.registerHybridMethod("setTemplateHeaderActions", &HybridAutoPlaySpec::setTemplateHeaderActions);
       prototype.registerHybridMethod("isConnected", &HybridAutoPlaySpec::isConnected);
+      prototype.registerHybridMethod("isCarServiceRunning", &HybridAutoPlaySpec::isCarServiceRunning);
     });
   }
 

@@ -28,6 +28,7 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func addSafeAreaInsetsListener(moduleName: String, callback: @escaping (_ insets: SafeAreaInsets) -> Void) throws -> () -> Void
   func setTemplateHeaderActions(templateId: String, headerActions: [NitroAction]?) throws -> Promise<Void>
   func isConnected() throws -> Bool
+  func isCarServiceRunning() throws -> Bool
 }
 
 public extension HybridAutoPlaySpec_protocol {
