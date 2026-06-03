@@ -45,6 +45,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         return AndroidAutoSession.getIsConnected()
     }
 
+    override fun isCarServiceRunning(): Boolean {
+        return AndroidAutoService.instance != null
+    }
+
     override fun addListenerRenderState(
         moduleName: String, callback: (VisibilityState) -> Unit
     ): () -> Unit {
