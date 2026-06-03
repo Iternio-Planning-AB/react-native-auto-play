@@ -92,6 +92,10 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun isConnected(): Boolean
+  
+  @DoNotStrip
+  @Keep
+  abstract fun isCarServiceRunning(): Boolean
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

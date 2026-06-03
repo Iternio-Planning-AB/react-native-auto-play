@@ -25,6 +25,7 @@ export type CarPlayDashboardEvent = EventName | VisibilityState;
 
 class Dashboard {
   private component: React.ComponentType<RootComponentInitialProps> | null = null;
+  private componentRegistered = false;
   public isConnected = false;
   public readonly id = 'CarPlayDashboard';
 
@@ -47,20 +48,26 @@ class Dashboard {
     }
 
     const { component, isConnected } = this;
-    if (!isConnected || component == null) {
+    if (component == null) {
       return;
     }
 
-    AppRegistry.registerComponent(
-      this.id,
-      () => (props) =>
-        React.createElement(SafeAreaInsetsProvider, {
-          moduleName: this.id,
-          // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-          children: React.createElement(component, props),
-        })
-    );
-    HybridCarPlayDashboard.initRootView();
+    if (!this.componentRegistered) {
+      AppRegistry.registerComponent(
+        this.id,
+        () => (props) =>
+          React.createElement(SafeAreaInsetsProvider, {
+            moduleName: this.id,
+            // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
+            children: React.createElement(component, props),
+          })
+      );
+      this.componentRegistered = true;
+    }
+
+    if (isConnected) {
+      HybridCarPlayDashboard.initRootView();
+    }
   }
 
   public setComponent(component: React.ComponentType<RootComponentInitialProps>) {
