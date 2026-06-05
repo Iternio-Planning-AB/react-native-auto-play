@@ -233,7 +233,11 @@ class VoiceInputManager {
 
             let frameCount = Int(outputBuffer.frameLength)
             let newSamples = Array(UnsafeBufferPointer(start: int16Data[0], count: frameCount))
-            self.samples.append(contentsOf: newSamples)
+            self.stopLock.lock()
+            if !self.isStopping {
+                self.samples.append(contentsOf: newSamples)
+            }
+            self.stopLock.unlock()
 
             // PCM chunk callback
             if activeRecognitionRequest == nil, let onChunk {
