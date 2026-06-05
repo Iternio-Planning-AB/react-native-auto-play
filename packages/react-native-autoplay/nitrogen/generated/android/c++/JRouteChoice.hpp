@@ -60,46 +60,46 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JTripPoint>> steps = this->getFieldValue(fieldSteps);
       return RouteChoice(
         id->toStdString(),
-        [&]() {
-          size_t __size = summaryVariants->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = summaryVariants->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }(),
-        [&]() {
-          size_t __size = additionalInformationVariants->size();
+        }(summaryVariants),
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = additionalInformationVariants->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }(),
-        [&]() {
-          size_t __size = selectionSummaryVariants->size();
+        }(additionalInformationVariants),
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = selectionSummaryVariants->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }(),
-        [&]() {
-          size_t __size = steps->size();
+        }(selectionSummaryVariants),
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<TripPoint> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = steps->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()
+        }(steps)
       );
     }
 
@@ -115,46 +115,46 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return create(
         clazz,
         jni::make_jstring(value.id),
-        [&]() {
-          size_t __size = value.summaryVariants.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.summaryVariants[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        [&]() {
-          size_t __size = value.additionalInformationVariants.size();
+        }(value.summaryVariants),
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.additionalInformationVariants[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        [&]() {
-          size_t __size = value.selectionSummaryVariants.size();
+        }(value.additionalInformationVariants),
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.selectionSummaryVariants[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
-        [&]() {
-          size_t __size = value.steps.size();
+        }(value.selectionSummaryVariants),
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JTripPoint>> __array = jni::JArrayClass<JTripPoint>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.steps[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JTripPoint::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }()
+        }(value.steps)
       );
     }
   };

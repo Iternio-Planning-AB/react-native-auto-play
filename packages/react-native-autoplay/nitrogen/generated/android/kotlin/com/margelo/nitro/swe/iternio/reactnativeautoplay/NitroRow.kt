@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -47,6 +48,32 @@ data class NitroRow(
    */
   constructor(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Boolean?, onPress: ((checked: Boolean?) -> Unit)?, selected: Boolean?):
          this(title, detailedText, browsable, enabled, image, checked, onPress?.let { Func_void_std__optional_bool__java(it) }, selected)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroRow) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.detailedText, other.detailedText)
+      && Objects.deepEquals(this.browsable, other.browsable)
+      && Objects.deepEquals(this.enabled, other.enabled)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.checked, other.checked)
+      && Objects.deepEquals(this.onPress, other.onPress)
+      && Objects.deepEquals(this.selected, other.selected)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      detailedText,
+      browsable,
+      enabled,
+      image,
+      checked,
+      onPress,
+      selected
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -32,6 +33,22 @@ data class NavigationAlertAction(
    */
   constructor(title: String, style: AlertActionStyle?, onPress: () -> Unit):
          this(title, style, Func_void_java(onPress))
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NavigationAlertAction) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.style, other.style)
+      && Objects.deepEquals(this.onPress, other.onPress)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      style,
+      onPress
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

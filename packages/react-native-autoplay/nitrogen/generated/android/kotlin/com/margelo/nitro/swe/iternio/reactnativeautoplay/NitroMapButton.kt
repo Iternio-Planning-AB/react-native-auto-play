@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -32,6 +33,22 @@ data class NitroMapButton(
    */
   constructor(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Unit)?):
          this(type, image, onPress?.let { Func_void_java(it) })
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroMapButton) return false
+    return Objects.deepEquals(this.type, other.type)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.onPress, other.onPress)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      type,
+      image,
+      onPress
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

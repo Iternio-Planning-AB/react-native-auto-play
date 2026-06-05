@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class AppFocusState(
   val isFocusActive: Boolean?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is AppFocusState) return false
+    return Objects.deepEquals(this.isFocusOwned, other.isFocusOwned)
+      && Objects.deepEquals(this.isFocusActive, other.isFocusActive)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      isFocusOwned,
+      isFocusActive
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class TripConfig(
   val routeChoice: RouteChoice
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TripConfig) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.routeChoice, other.routeChoice)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      routeChoice
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

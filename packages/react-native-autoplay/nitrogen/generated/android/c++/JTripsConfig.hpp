@@ -56,16 +56,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JRouteChoice>> routeChoices = this->getFieldValue(fieldRouteChoices);
       return TripsConfig(
         id->toStdString(),
-        [&]() {
-          size_t __size = routeChoices->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<RouteChoice> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = routeChoices->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()
+        }(routeChoices)
       );
     }
 
@@ -81,16 +81,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return create(
         clazz,
         jni::make_jstring(value.id),
-        [&]() {
-          size_t __size = value.routeChoices.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JRouteChoice>> __array = jni::JArrayClass<JRouteChoice>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.routeChoices[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JRouteChoice::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }()
+        }(value.routeChoices)
       );
     }
   };

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -37,6 +38,28 @@ data class AssetImage(
   val uri: String
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is AssetImage) return false
+    return Objects.deepEquals(this.color, other.color)
+      && Objects.deepEquals(this.packager_asset, other.packager_asset)
+      && Objects.deepEquals(this.height, other.height)
+      && Objects.deepEquals(this.width, other.width)
+      && Objects.deepEquals(this.scale, other.scale)
+      && Objects.deepEquals(this.uri, other.uri)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      color,
+      packager_asset,
+      height,
+      width,
+      scale,
+      uri
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -64,16 +64,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroSectionType> type = this->getFieldValue(fieldType);
       return NitroSection(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
-        [&]() {
-          size_t __size = items->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroRow> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = items->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
+        }(items),
         type->toCpp()
       );
     }
@@ -90,16 +90,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return create(
         clazz,
         value.title.has_value() ? jni::make_jstring(value.title.value()) : nullptr,
-        [&]() {
-          size_t __size = value.items.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroRow>> __array = jni::JArrayClass<JNitroRow>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.items[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroRow::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
+        }(value.items),
         JNitroSectionType::fromCpp(value.type)
       );
     }

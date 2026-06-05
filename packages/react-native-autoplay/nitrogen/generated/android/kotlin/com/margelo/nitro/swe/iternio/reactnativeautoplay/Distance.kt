@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class Distance(
   val unit: DistanceUnits
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Distance) return false
+    return Objects.deepEquals(this.value, other.value)
+      && Objects.deepEquals(this.unit, other.unit)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      value,
+      unit
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

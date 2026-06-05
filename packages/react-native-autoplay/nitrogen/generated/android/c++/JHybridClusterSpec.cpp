@@ -123,16 +123,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   void JHybridClusterSpec::setAttributedInactiveDescriptionVariants(const std::string& clusterId, const std::vector<NitroAttributedString>& attributedInactiveDescriptionVariants) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* clusterId */, jni::alias_ref<jni::JArrayClass<JNitroAttributedString>> /* attributedInactiveDescriptionVariants */)>("setAttributedInactiveDescriptionVariants");
-    method(_javaPart, jni::make_jstring(clusterId), [&]() {
-      size_t __size = attributedInactiveDescriptionVariants.size();
+    method(_javaPart, jni::make_jstring(clusterId), [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JNitroAttributedString>> __array = jni::JArrayClass<JNitroAttributedString>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = attributedInactiveDescriptionVariants[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JNitroAttributedString::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }());
+    }(attributedInactiveDescriptionVariants));
   }
   std::function<void()> JHybridClusterSpec::addListenerColorScheme(const std::function<void(const std::string& /* clusterId */, ColorScheme /* payload */)>& callback) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__string_ColorScheme::javaobject> /* callback */)>("addListenerColorScheme_cxx");

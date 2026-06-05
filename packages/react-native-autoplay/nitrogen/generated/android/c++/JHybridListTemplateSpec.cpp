@@ -134,16 +134,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   std::shared_ptr<Promise<void>> JHybridListTemplateSpec::updateListTemplateSections(const std::string& templateId, const std::optional<std::vector<NitroSection>>& sections) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroSection>> /* sections */)>("updateListTemplateSections");
-    auto __result = method(_javaPart, jni::make_jstring(templateId), sections.has_value() ? [&]() {
-      size_t __size = sections.value().size();
+    auto __result = method(_javaPart, jni::make_jstring(templateId), sections.has_value() ? [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JNitroSection>> __array = jni::JArrayClass<JNitroSection>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = sections.value()[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JNitroSection::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }() : nullptr);
+    }(sections.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {

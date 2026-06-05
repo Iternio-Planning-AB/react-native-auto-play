@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -35,6 +36,24 @@ data class GoogleSignIn(
    */
   constructor(method: SignInMethods, serverClientId: String, callback: (error: String?, signInAccount: GoogleSignInAccount?) -> Unit, signInButtonText: String):
          this(method, serverClientId, Func_void_std__optional_std__string__std__optional_GoogleSignInAccount__java(callback), signInButtonText)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is GoogleSignIn) return false
+    return Objects.deepEquals(this.method, other.method)
+      && Objects.deepEquals(this.serverClientId, other.serverClientId)
+      && Objects.deepEquals(this.callback, other.callback)
+      && Objects.deepEquals(this.signInButtonText, other.signInButtonText)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      method,
+      serverClientId,
+      callback,
+      signInButtonText
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -47,6 +48,32 @@ data class InputSignIn(
    */
   constructor(method: SignInMethods, keyboardType: KeyboardType?, hint: String?, defaultValue: String?, errorMessage: String?, callback: (text: String) -> Unit, showKeyboardByDefault: Boolean?, inputType: TextInputType):
          this(method, keyboardType, hint, defaultValue, errorMessage, Func_void_std__string_java(callback), showKeyboardByDefault, inputType)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is InputSignIn) return false
+    return Objects.deepEquals(this.method, other.method)
+      && Objects.deepEquals(this.keyboardType, other.keyboardType)
+      && Objects.deepEquals(this.hint, other.hint)
+      && Objects.deepEquals(this.defaultValue, other.defaultValue)
+      && Objects.deepEquals(this.errorMessage, other.errorMessage)
+      && Objects.deepEquals(this.callback, other.callback)
+      && Objects.deepEquals(this.showKeyboardByDefault, other.showKeyboardByDefault)
+      && Objects.deepEquals(this.inputType, other.inputType)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      method,
+      keyboardType,
+      hint,
+      defaultValue,
+      errorMessage,
+      callback,
+      showKeyboardByDefault,
+      inputType
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

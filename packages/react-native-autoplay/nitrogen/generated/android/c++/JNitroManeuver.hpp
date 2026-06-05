@@ -95,16 +95,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
     static jni::local_ref<JNitroManeuver> fromCpp(const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& variant) {
       switch (variant.index()) {
-        case 0: return create_0([&]() {
-          size_t __size = std::get<0>(variant).size();
+        case 0: return create_0([&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroRoutingManeuver>> __array = jni::JArrayClass<JNitroRoutingManeuver>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = std::get<0>(variant)[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroRoutingManeuver::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }());
+        }(std::get<0>(variant)));
         case 1: return create_1(JNitroMessageManeuver::fromCpp(std::get<1>(variant)));
         case 2: return create_2(JNitroLoadingManeuver::fromCpp(std::get<2>(variant)));
         default: throw std::invalid_argument("Variant holds unknown index! (" + std::to_string(variant.index()) + ")");

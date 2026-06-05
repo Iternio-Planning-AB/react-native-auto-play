@@ -121,16 +121,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto fieldHighwayExitLabel = clazz->getField<jni::JString>("highwayExitLabel");
       jni::local_ref<jni::JString> highwayExitLabel = this->getFieldValue(fieldHighwayExitLabel);
       return NitroRoutingManeuver(
-        [&]() {
-          size_t __size = attributedInstructionVariants->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroAttributedString> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = attributedInstructionVariants->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(),
+        }(attributedInstructionVariants),
         symbolImage->toCpp(),
         junctionImage != nullptr ? std::make_optional(junctionImage->toCpp()) : std::nullopt,
         turnType != nullptr ? std::make_optional(turnType->toCpp()) : std::nullopt,
@@ -152,16 +152,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         travelEstimates->toCpp(),
         trafficSide->toCpp(),
         maneuverType->toCpp(),
-        roadName != nullptr ? std::make_optional([&]() {
-          size_t __size = roadName->size();
+        roadName != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<std::string> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = roadName->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toStdString());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(roadName)) : std::nullopt,
         highwayExitLabel != nullptr ? std::make_optional(highwayExitLabel->toStdString()) : std::nullopt
       );
     }
@@ -177,16 +177,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        [&]() {
-          size_t __size = value.attributedInstructionVariants.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroAttributedString>> __array = jni::JArrayClass<JNitroAttributedString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.attributedInstructionVariants[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroAttributedString::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(),
+        }(value.attributedInstructionVariants),
         JNitroImage::fromCpp(value.symbolImage),
         value.junctionImage.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.junctionImage.value()) : nullptr,
         value.turnType.has_value() ? JTurnType::fromCpp(value.turnType.value()) : nullptr,
@@ -208,16 +208,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         JTravelEstimates::fromCpp(value.travelEstimates),
         JTrafficSide::fromCpp(value.trafficSide),
         JManeuverType::fromCpp(value.maneuverType),
-        value.roadName.has_value() ? [&]() {
-          size_t __size = value.roadName.value().size();
+        value.roadName.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.roadName.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = jni::make_jstring(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.roadName.value()) : nullptr,
         value.highwayExitLabel.has_value() ? jni::make_jstring(value.highwayExitLabel.value()) : nullptr
       );
     }

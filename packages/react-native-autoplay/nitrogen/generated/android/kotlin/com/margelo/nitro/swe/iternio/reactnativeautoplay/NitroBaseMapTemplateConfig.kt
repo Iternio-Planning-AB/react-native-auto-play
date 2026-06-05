@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -50,6 +51,34 @@ data class NitroBaseMapTemplateConfig(
    */
   constructor(mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, onDidChangePanningInterface: ((isPanningInterfaceVisible: Boolean) -> Unit)?, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?):
          this(mapButtons, headerActions, onDidChangePanningInterface?.let { Func_void_bool_java(it) }, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroBaseMapTemplateConfig) return false
+    return Objects.deepEquals(this.mapButtons, other.mapButtons)
+      && Objects.deepEquals(this.headerActions, other.headerActions)
+      && Objects.deepEquals(this.onDidChangePanningInterface, other.onDidChangePanningInterface)
+      && Objects.deepEquals(this.onWillAppear, other.onWillAppear)
+      && Objects.deepEquals(this.onWillDisappear, other.onWillDisappear)
+      && Objects.deepEquals(this.onDidAppear, other.onDidAppear)
+      && Objects.deepEquals(this.onDidDisappear, other.onDidDisappear)
+      && Objects.deepEquals(this.onPopped, other.onPopped)
+      && Objects.deepEquals(this.autoDismissMs, other.autoDismissMs)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      mapButtons,
+      headerActions,
+      onDidChangePanningInterface,
+      onWillAppear,
+      onWillDisappear,
+      onDidAppear,
+      onDidDisappear,
+      onPopped,
+      autoDismissMs
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

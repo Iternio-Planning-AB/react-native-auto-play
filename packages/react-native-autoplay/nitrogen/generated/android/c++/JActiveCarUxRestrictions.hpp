@@ -45,16 +45,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         maxContentDepth,
         maxCumulativeContentItems,
         maxRestrictedStringLength,
-        [&]() {
-          size_t __size = activeRestrictions->size();
+        [&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<CarUxRestrictions> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = activeRestrictions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()
+        }(activeRestrictions)
       );
     }
 
@@ -72,16 +72,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.maxContentDepth,
         value.maxCumulativeContentItems,
         value.maxRestrictedStringLength,
-        [&]() {
-          size_t __size = value.activeRestrictions.size();
+        [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JCarUxRestrictions>> __array = jni::JArrayClass<JCarUxRestrictions>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.activeRestrictions[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JCarUxRestrictions::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }()
+        }(value.activeRestrictions)
       );
     }
   };

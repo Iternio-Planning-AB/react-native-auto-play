@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class TripPreviewTextConfiguration(
   val travelEstimatesTitle: String
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TripPreviewTextConfiguration) return false
+    return Objects.deepEquals(this.startButtonTitle, other.startButtonTitle)
+      && Objects.deepEquals(this.additionalRoutesButtonTitle, other.additionalRoutesButtonTitle)
+      && Objects.deepEquals(this.overviewButtonTitle, other.overviewButtonTitle)
+      && Objects.deepEquals(this.travelEstimatesTitle, other.travelEstimatesTitle)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      startButtonTitle,
+      additionalRoutesButtonTitle,
+      overviewButtonTitle,
+      travelEstimatesTitle
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

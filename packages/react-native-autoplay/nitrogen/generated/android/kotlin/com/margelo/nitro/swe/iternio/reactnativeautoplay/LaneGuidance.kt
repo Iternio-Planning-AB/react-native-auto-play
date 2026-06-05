@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class LaneGuidance(
   val lanes: Array<Variant_PreferredImageLane_ImageLane>
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is LaneGuidance) return false
+    return Objects.deepEquals(this.instructionVariants, other.instructionVariants)
+      && Objects.deepEquals(this.lanes, other.lanes)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      instructionVariants,
+      lanes
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

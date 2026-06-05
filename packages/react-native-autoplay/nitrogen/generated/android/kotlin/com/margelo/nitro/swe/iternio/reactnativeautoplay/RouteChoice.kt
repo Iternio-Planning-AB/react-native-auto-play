@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -34,6 +35,26 @@ data class RouteChoice(
   val steps: Array<TripPoint>
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is RouteChoice) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.summaryVariants, other.summaryVariants)
+      && Objects.deepEquals(this.additionalInformationVariants, other.additionalInformationVariants)
+      && Objects.deepEquals(this.selectionSummaryVariants, other.selectionSummaryVariants)
+      && Objects.deepEquals(this.steps, other.steps)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      summaryVariants,
+      additionalInformationVariants,
+      selectionSummaryVariants,
+      steps
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

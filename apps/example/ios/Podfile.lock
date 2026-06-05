@@ -8,7 +8,7 @@ PODS:
   - hermes-engine (0.14.1):
     - hermes-engine/Pre-built (= 0.14.1)
   - hermes-engine/Pre-built (0.14.1)
-  - NitroModules (0.35.3):
+  - NitroModules (0.35.9):
     - boost
     - DoubleConversion
     - fast_float
@@ -2624,7 +2624,7 @@ PODS:
     - React-perflogger (= 0.83.5)
     - React-utils (= 0.83.5)
     - SocketRocket
-  - ReactNativeAutoPlay (0.3.12):
+  - ReactNativeAutoPlay (0.4.7):
     - boost
     - DoubleConversion
     - fast_float
@@ -2922,7 +2922,7 @@ SPEC CHECKSUMS:
   fmt: 530618a01105dae0fa3a2f27c81ae11fa8f67eac
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 9d3f0c47eb6a1ab29848ec3919b5fe036e11183a
-  NitroModules: bbb23eb8f98f7ec57db714829b06a678419b8a02
+  NitroModules: d7c4d6ca3743ae69010aa63b67d3bf0f9f5e7b63
   RCT-Folly: 121436bcc4611f6bde5c09bf35f0a7a82cef1969
   RCTDeprecation: 66da7829306a6741edb3f866687c13a4938ca5f4
   RCTRequired: c6853c7a563306968f833210c476741e09fc5f61
@@ -2995,9 +2995,9 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 105856c6da6fe71c545dec3c2466ae04f25f9a73
   ReactCodegen: 507d02fe6f19c44a3274adbefd38a1a252843d24
   ReactCommon: 506ceb24983c6b80e0075968be21aac74a367739
-  ReactNativeAutoPlay: c1190bcdf8bc160d3b9a1adc9f21055e015255dc
+  ReactNativeAutoPlay: 8451b7306f94785877308f12ba104d7ada33db25
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  Yoga: b33db4d2a1e30232ac13939bb2e09daeb4ffd09c
+  Yoga: 897e8c1fb1fd80c3c01231ed4ec8c1ffa652c29f
 
 PODFILE CHECKSUM: a5de45e2350a9515567a6e18ca8ceea718b48523
 

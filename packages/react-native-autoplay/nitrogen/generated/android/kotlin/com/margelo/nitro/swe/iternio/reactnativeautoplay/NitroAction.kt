@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -47,6 +48,32 @@ data class NitroAction(
    */
   constructor(title: String?, image: Variant_GlyphImage_AssetImage_RemoteImage?, enabled: Boolean?, onPress: () -> Unit, type: NitroActionType, alignment: NitroAlignment?, flags: Double?, style: NitroButtonStyle?):
          this(title, image, enabled, Func_void_java(onPress), type, alignment, flags, style)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroAction) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.enabled, other.enabled)
+      && Objects.deepEquals(this.onPress, other.onPress)
+      && Objects.deepEquals(this.type, other.type)
+      && Objects.deepEquals(this.alignment, other.alignment)
+      && Objects.deepEquals(this.flags, other.flags)
+      && Objects.deepEquals(this.style, other.style)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      image,
+      enabled,
+      onPress,
+      type,
+      alignment,
+      flags,
+      style
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

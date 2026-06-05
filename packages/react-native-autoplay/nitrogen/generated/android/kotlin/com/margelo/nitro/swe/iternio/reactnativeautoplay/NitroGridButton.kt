@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -32,6 +33,22 @@ data class NitroGridButton(
    */
   constructor(title: AutoText, image: NitroImage, onPress: () -> Unit):
          this(title, image, Func_void_java(onPress))
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroGridButton) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.onPress, other.onPress)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      image,
+      onPress
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -35,6 +36,24 @@ data class TravelEstimates(
    */
   constructor(distanceRemaining: Distance, timeRemaining: DurationWithTimeZone, tripText: AutoText?, _doNotUse: (() -> Unit)?):
          this(distanceRemaining, timeRemaining, tripText, _doNotUse?.let { Func_void_java(it) })
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TravelEstimates) return false
+    return Objects.deepEquals(this.distanceRemaining, other.distanceRemaining)
+      && Objects.deepEquals(this.timeRemaining, other.timeRemaining)
+      && Objects.deepEquals(this.tripText, other.tripText)
+      && Objects.deepEquals(this._doNotUse, other._doNotUse)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      distanceRemaining,
+      timeRemaining,
+      tripText,
+      _doNotUse
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

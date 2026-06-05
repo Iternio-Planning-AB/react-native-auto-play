@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class NitroAttributedString(
   val images: Array<NitroAttributedStringImage>?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroAttributedString) return false
+    return Objects.deepEquals(this.text, other.text)
+      && Objects.deepEquals(this.images, other.images)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      text,
+      images
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
