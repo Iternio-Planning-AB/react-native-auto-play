@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 import com.margelo.nitro.core.ArrayBuffer
 
 /**
@@ -25,6 +26,20 @@ data class VoiceInputResult(
   val audio: ArrayBuffer?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is VoiceInputResult) return false
+    return Objects.deepEquals(this.transcription, other.transcription)
+      && Objects.deepEquals(this.audio, other.audio)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      transcription,
+      audio
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
