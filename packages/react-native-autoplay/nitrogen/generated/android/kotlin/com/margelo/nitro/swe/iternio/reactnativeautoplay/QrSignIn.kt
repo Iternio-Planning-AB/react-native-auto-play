@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class QrSignIn(
   val url: String
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is QrSignIn) return false
+    return Objects.deepEquals(this.method, other.method)
+      && Objects.deepEquals(this.url, other.url)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      method,
+      url
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -26,6 +27,18 @@ data class TripSelectorCallback(
    */
   constructor(setSelectedTrip: (id: String) -> Unit):
          this(Func_void_std__string_java(setSelectedTrip))
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TripSelectorCallback) return false
+    return Objects.deepEquals(this.setSelectedTrip, other.setSelectedTrip)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      setSelectedTrip
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

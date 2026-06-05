@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -55,6 +56,40 @@ data class Telemetry(
   val soe: NumericTelemetryItem?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Telemetry) return false
+    return Objects.deepEquals(this.speed, other.speed)
+      && Objects.deepEquals(this.fuelLevel, other.fuelLevel)
+      && Objects.deepEquals(this.batteryLevel, other.batteryLevel)
+      && Objects.deepEquals(this.range, other.range)
+      && Objects.deepEquals(this.odometer, other.odometer)
+      && Objects.deepEquals(this.vehicle, other.vehicle)
+      && Objects.deepEquals(this.selectedGear, other.selectedGear)
+      && Objects.deepEquals(this.envOutsideTemperature, other.envOutsideTemperature)
+      && Objects.deepEquals(this.evChargePortConnected, other.evChargePortConnected)
+      && Objects.deepEquals(this.evBatteryInstantaneousChargeRate, other.evBatteryInstantaneousChargeRate)
+      && Objects.deepEquals(this.parkingBrakeOn, other.parkingBrakeOn)
+      && Objects.deepEquals(this.soe, other.soe)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      speed,
+      fuelLevel,
+      batteryLevel,
+      range,
+      odometer,
+      vehicle,
+      selectedGear,
+      envOutsideTemperature,
+      evChargePortConnected,
+      evBatteryInstantaneousChargeRate,
+      parkingBrakeOn,
+      soe
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

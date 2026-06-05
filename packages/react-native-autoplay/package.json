@@ -1,6 +1,6 @@
 {
   "name": "@iternio/react-native-auto-play",
-  "version": "0.4.8",
+  "version": "0.4.11",
   "description": "Android Auto and Apple CarPlay for react-native",
   "main": "lib/index",
   "module": "lib/index",
@@ -61,7 +61,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "~19.2.0",
     "dpdm": "^4.0.1",
-    "nitrogen": "^0.35.3",
+    "nitrogen": "^0.35.9",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {

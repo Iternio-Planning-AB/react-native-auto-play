@@ -25,6 +25,26 @@ sealed class Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn {
   @DoNotStrip
   data class Fourth(@DoNotStrip val value: GoogleSignIn): Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn()
 
+  inline fun <reified T> asType(): T? {
+    return when (this) {
+      is First -> (value) as? T
+      is Second -> (value) as? T
+      is Third -> (value) as? T
+      is Fourth -> (value) as? T
+    }
+  }
+  inline fun <reified T> isType(): Boolean {
+    return asType<T>() != null
+  }
+  inline fun <R> match(first: (QrSignIn) -> R, second: (PinSignIn) -> R, third: (InputSignIn) -> R, fourth: (GoogleSignIn) -> R): R {
+    return when (this) {
+      is First -> first(value)
+      is Second -> second(value)
+      is Third -> third(value)
+      is Fourth -> fourth(value)
+    }
+  }
+
   val isFirst: Boolean
     get() = this is First
   val isSecond: Boolean
@@ -49,15 +69,6 @@ sealed class Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn {
   fun asFourthOrNull(): GoogleSignIn? {
     val value = (this as? Fourth)?.value ?: return null
     return value
-  }
-
-  inline fun <R> match(first: (QrSignIn) -> R, second: (PinSignIn) -> R, third: (InputSignIn) -> R, fourth: (GoogleSignIn) -> R): R {
-    return when (this) {
-      is First -> first(value)
-      is Second -> second(value)
-      is Third -> third(value)
-      is Fourth -> fourth(value)
-    }
   }
 
   companion object {

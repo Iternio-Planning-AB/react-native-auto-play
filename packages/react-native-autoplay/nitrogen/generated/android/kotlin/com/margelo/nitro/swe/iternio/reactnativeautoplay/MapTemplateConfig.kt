@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -83,6 +84,56 @@ data class MapTemplateConfig(
    */
   constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, onStopNavigation: () -> Unit, onAutoDriveEnabled: (() -> Unit)?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((isPanningInterfaceVisible: Boolean) -> Unit)?):
          this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, visibleTravelEstimate, onDidPan?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, Func_void_java(onStopNavigation), onAutoDriveEnabled?.let { Func_void_java(it) }, mapButtons, headerActions, defaultGuidanceBackgroundColor, panButtonScrollPercentage, onDidChangePanningInterface?.let { Func_void_bool_java(it) })
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is MapTemplateConfig) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.onWillAppear, other.onWillAppear)
+      && Objects.deepEquals(this.onWillDisappear, other.onWillDisappear)
+      && Objects.deepEquals(this.onDidAppear, other.onDidAppear)
+      && Objects.deepEquals(this.onDidDisappear, other.onDidDisappear)
+      && Objects.deepEquals(this.onPopped, other.onPopped)
+      && Objects.deepEquals(this.autoDismissMs, other.autoDismissMs)
+      && Objects.deepEquals(this.visibleTravelEstimate, other.visibleTravelEstimate)
+      && Objects.deepEquals(this.onDidPan, other.onDidPan)
+      && Objects.deepEquals(this.onDidUpdateZoomGestureWithCenter, other.onDidUpdateZoomGestureWithCenter)
+      && Objects.deepEquals(this.onClick, other.onClick)
+      && Objects.deepEquals(this.onDoubleClick, other.onDoubleClick)
+      && Objects.deepEquals(this.onAppearanceDidChange, other.onAppearanceDidChange)
+      && Objects.deepEquals(this.onStopNavigation, other.onStopNavigation)
+      && Objects.deepEquals(this.onAutoDriveEnabled, other.onAutoDriveEnabled)
+      && Objects.deepEquals(this.mapButtons, other.mapButtons)
+      && Objects.deepEquals(this.headerActions, other.headerActions)
+      && Objects.deepEquals(this.defaultGuidanceBackgroundColor, other.defaultGuidanceBackgroundColor)
+      && Objects.deepEquals(this.panButtonScrollPercentage, other.panButtonScrollPercentage)
+      && Objects.deepEquals(this.onDidChangePanningInterface, other.onDidChangePanningInterface)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      onWillAppear,
+      onWillDisappear,
+      onDidAppear,
+      onDidDisappear,
+      onPopped,
+      autoDismissMs,
+      visibleTravelEstimate,
+      onDidPan,
+      onDidUpdateZoomGestureWithCenter,
+      onClick,
+      onDoubleClick,
+      onAppearanceDidChange,
+      onStopNavigation,
+      onAutoDriveEnabled,
+      mapButtons,
+      headerActions,
+      defaultGuidanceBackgroundColor,
+      panButtonScrollPercentage,
+      onDidChangePanningInterface
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

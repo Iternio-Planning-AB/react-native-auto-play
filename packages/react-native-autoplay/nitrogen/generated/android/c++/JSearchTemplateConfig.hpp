@@ -144,16 +144,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
         }()) : std::nullopt,
         autoDismissMs != nullptr ? std::make_optional(autoDismissMs->value()) : std::nullopt,
-        headerActions != nullptr ? std::make_optional([&]() {
-          size_t __size = headerActions->size();
+        headerActions != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroAction> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = headerActions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(headerActions)) : std::nullopt,
         title->toCpp(),
         results->toCpp(),
         initialSearchText != nullptr ? std::make_optional(initialSearchText->toStdString()) : std::nullopt,
@@ -197,16 +197,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.onDidDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
         value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr,
         value.autoDismissMs.has_value() ? jni::JDouble::valueOf(value.autoDismissMs.value()) : nullptr,
-        value.headerActions.has_value() ? [&]() {
-          size_t __size = value.headerActions.value().size();
+        value.headerActions.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.headerActions.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroAction::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.headerActions.value()) : nullptr,
         JAutoText::fromCpp(value.title),
         JNitroSection::fromCpp(value.results),
         value.initialSearchText.has_value() ? jni::make_jstring(value.initialSearchText.value()) : nullptr,

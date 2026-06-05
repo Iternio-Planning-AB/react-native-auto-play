@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -76,6 +77,54 @@ data class NitroRoutingManeuver(
   val highwayExitLabel: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroRoutingManeuver) return false
+    return Objects.deepEquals(this.attributedInstructionVariants, other.attributedInstructionVariants)
+      && Objects.deepEquals(this.symbolImage, other.symbolImage)
+      && Objects.deepEquals(this.junctionImage, other.junctionImage)
+      && Objects.deepEquals(this.turnType, other.turnType)
+      && Objects.deepEquals(this.angle, other.angle)
+      && Objects.deepEquals(this.elementAngles, other.elementAngles)
+      && Objects.deepEquals(this.exitNumber, other.exitNumber)
+      && Objects.deepEquals(this.offRampType, other.offRampType)
+      && Objects.deepEquals(this.onRampType, other.onRampType)
+      && Objects.deepEquals(this.forkType, other.forkType)
+      && Objects.deepEquals(this.keepType, other.keepType)
+      && Objects.deepEquals(this.linkedLaneGuidance, other.linkedLaneGuidance)
+      && Objects.deepEquals(this.cardBackgroundColor, other.cardBackgroundColor)
+      && Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.travelEstimates, other.travelEstimates)
+      && Objects.deepEquals(this.trafficSide, other.trafficSide)
+      && Objects.deepEquals(this.maneuverType, other.maneuverType)
+      && Objects.deepEquals(this.roadName, other.roadName)
+      && Objects.deepEquals(this.highwayExitLabel, other.highwayExitLabel)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      attributedInstructionVariants,
+      symbolImage,
+      junctionImage,
+      turnType,
+      angle,
+      elementAngles,
+      exitNumber,
+      offRampType,
+      onRampType,
+      forkType,
+      keepType,
+      linkedLaneGuidance,
+      cardBackgroundColor,
+      id,
+      travelEstimates,
+      trafficSide,
+      maneuverType,
+      roadName,
+      highwayExitLabel
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

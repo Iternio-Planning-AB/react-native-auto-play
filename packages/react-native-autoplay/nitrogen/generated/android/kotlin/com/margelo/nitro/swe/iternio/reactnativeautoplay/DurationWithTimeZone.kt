@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class DurationWithTimeZone(
   val seconds: Double
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is DurationWithTimeZone) return false
+    return Objects.deepEquals(this.timezone, other.timezone)
+      && Objects.deepEquals(this.seconds, other.seconds)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      timezone,
+      seconds
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

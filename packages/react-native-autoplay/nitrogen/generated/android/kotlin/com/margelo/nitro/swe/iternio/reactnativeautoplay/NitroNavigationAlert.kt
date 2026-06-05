@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -53,6 +54,36 @@ data class NitroNavigationAlert(
    */
   constructor(id: Double, title: AutoText, subtitle: AutoText?, image: Variant_GlyphImage_AssetImage_RemoteImage?, primaryAction: NavigationAlertAction, secondaryAction: NavigationAlertAction?, durationMs: Double, onWillShow: (() -> Unit)?, onDidDismiss: ((reason: AlertDismissalReason) -> Unit)?, priority: Double):
          this(id, title, subtitle, image, primaryAction, secondaryAction, durationMs, onWillShow?.let { Func_void_java(it) }, onDidDismiss?.let { Func_void_AlertDismissalReason_java(it) }, priority)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroNavigationAlert) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.subtitle, other.subtitle)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.primaryAction, other.primaryAction)
+      && Objects.deepEquals(this.secondaryAction, other.secondaryAction)
+      && Objects.deepEquals(this.durationMs, other.durationMs)
+      && Objects.deepEquals(this.onWillShow, other.onWillShow)
+      && Objects.deepEquals(this.onDidDismiss, other.onDidDismiss)
+      && Objects.deepEquals(this.priority, other.priority)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      title,
+      subtitle,
+      image,
+      primaryAction,
+      secondaryAction,
+      durationMs,
+      onWillShow,
+      onDidDismiss,
+      priority
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

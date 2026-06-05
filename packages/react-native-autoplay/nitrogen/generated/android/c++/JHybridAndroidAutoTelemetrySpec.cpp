@@ -90,16 +90,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   std::shared_ptr<Promise<PermissionRequestResult>> JHybridAndroidAutoTelemetrySpec::requestAutomotivePermissions(const std::vector<std::string>& permissions, const std::string& message, const std::string& grantButtonText, const std::optional<std::string>& cancelButtonText) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JArrayClass<jni::JString>> /* permissions */, jni::alias_ref<jni::JString> /* message */, jni::alias_ref<jni::JString> /* grantButtonText */, jni::alias_ref<jni::JString> /* cancelButtonText */)>("requestAutomotivePermissions");
-    auto __result = method(_javaPart, [&]() {
-      size_t __size = permissions.size();
+    auto __result = method(_javaPart, [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = permissions[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = jni::make_jstring(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }(), jni::make_jstring(message), jni::make_jstring(grantButtonText), cancelButtonText.has_value() ? jni::make_jstring(cancelButtonText.value()) : nullptr);
+    }(permissions), jni::make_jstring(message), jni::make_jstring(grantButtonText), cancelButtonText.has_value() ? jni::make_jstring(cancelButtonText.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<PermissionRequestResult>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

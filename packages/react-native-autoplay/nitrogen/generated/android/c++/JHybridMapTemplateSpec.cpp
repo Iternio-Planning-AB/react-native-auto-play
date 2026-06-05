@@ -263,25 +263,25 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   TripSelectorCallback JHybridMapTemplateSpec::showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted, const std::function<void()>& onBackPressed, const std::vector<NitroMapButton>& mapButtons) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JTripSelectorCallback>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripsConfig>> /* trips */, jni::alias_ref<jni::JString> /* selectedTripId */, jni::alias_ref<JTripPreviewTextConfiguration> /* textConfig */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripSelected */, jni::alias_ref<JFunc_void_std__string_std__string::javaobject> /* onTripStarted */, jni::alias_ref<JFunc_void::javaobject> /* onBackPressed */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* mapButtons */)>("showTripSelector_cxx");
-    auto __result = method(_javaPart, jni::make_jstring(templateId), [&]() {
-      size_t __size = trips.size();
+    auto __result = method(_javaPart, jni::make_jstring(templateId), [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JTripsConfig>> __array = jni::JArrayClass<JTripsConfig>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = trips[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JTripsConfig::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }(), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__string_cxx::fromCpp(onTripSelected), JFunc_void_std__string_std__string_cxx::fromCpp(onTripStarted), JFunc_void_cxx::fromCpp(onBackPressed), [&]() {
-      size_t __size = mapButtons.size();
+    }(trips), selectedTripId.has_value() ? jni::make_jstring(selectedTripId.value()) : nullptr, JTripPreviewTextConfiguration::fromCpp(textConfig), JFunc_void_std__string_std__string_cxx::fromCpp(onTripSelected), JFunc_void_std__string_std__string_cxx::fromCpp(onTripStarted), JFunc_void_cxx::fromCpp(onBackPressed), [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = mapButtons[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JNitroMapButton::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }());
+    }(mapButtons));
     return __result->toCpp();
   }
   void JHybridMapTemplateSpec::hideTripSelector(const std::string& templateId) {
@@ -290,16 +290,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JNitroMapButton>> /* buttons */)>("setTemplateMapButtons");
-    auto __result = method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&]() {
-      size_t __size = buttons.value().size();
+    auto __result = method(_javaPart, jni::make_jstring(templateId), buttons.has_value() ? [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = buttons.value()[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JNitroMapButton::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }() : nullptr);
+    }(buttons.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
@@ -318,16 +318,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   }
   void JHybridMapTemplateSpec::updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<jni::JArrayClass<JTripPoint>> /* steps */)>("updateTravelEstimates");
-    method(_javaPart, jni::make_jstring(templateId), [&]() {
-      size_t __size = steps.size();
+    method(_javaPart, jni::make_jstring(templateId), [&](auto&& __input) {
+      size_t __size = __input.size();
       jni::local_ref<jni::JArrayClass<JTripPoint>> __array = jni::JArrayClass<JTripPoint>::newArray(__size);
       for (size_t __i = 0; __i < __size; __i++) {
-        const auto& __element = steps[__i];
+        const auto& __element = __input[__i];
         auto __elementJni = JTripPoint::fromCpp(__element);
         __array->setElement(__i, *__elementJni);
       }
       return __array;
-    }());
+    }(steps));
   }
   void JHybridMapTemplateSpec::updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");

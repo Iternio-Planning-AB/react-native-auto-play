@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class NitroMessageManeuver(
   val cardBackgroundColor: NitroColor
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroMessageManeuver) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.text, other.text)
+      && Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.cardBackgroundColor, other.cardBackgroundColor)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      text,
+      image,
+      cardBackgroundColor
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

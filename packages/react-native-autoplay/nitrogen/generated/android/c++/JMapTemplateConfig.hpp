@@ -223,26 +223,26 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return JNICallable<JFunc_void, void()>(std::move(onAutoDriveEnabledRef));
           }
         }()) : std::nullopt,
-        mapButtons != nullptr ? std::make_optional([&]() {
-          size_t __size = mapButtons->size();
+        mapButtons != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroMapButton> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = mapButtons->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        headerActions != nullptr ? std::make_optional([&]() {
-          size_t __size = headerActions->size();
+        }(mapButtons)) : std::nullopt,
+        headerActions != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroAction> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = headerActions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(headerActions)) : std::nullopt,
         defaultGuidanceBackgroundColor != nullptr ? std::make_optional(defaultGuidanceBackgroundColor->toCpp()) : std::nullopt,
         panButtonScrollPercentage != nullptr ? std::make_optional(panButtonScrollPercentage->value()) : std::nullopt,
         onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
@@ -283,26 +283,26 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.onAppearanceDidChange.has_value() ? JFunc_void_ColorScheme_cxx::fromCpp(value.onAppearanceDidChange.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onStopNavigation),
         value.onAutoDriveEnabled.has_value() ? JFunc_void_cxx::fromCpp(value.onAutoDriveEnabled.value()) : nullptr,
-        value.mapButtons.has_value() ? [&]() {
-          size_t __size = value.mapButtons.value().size();
+        value.mapButtons.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.mapButtons.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroMapButton::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.headerActions.has_value() ? [&]() {
-          size_t __size = value.headerActions.value().size();
+        }(value.mapButtons.value()) : nullptr,
+        value.headerActions.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.headerActions.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroAction::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.headerActions.value()) : nullptr,
         value.defaultGuidanceBackgroundColor.has_value() ? JNitroColor::fromCpp(value.defaultGuidanceBackgroundColor.value()) : nullptr,
         value.panButtonScrollPercentage.has_value() ? jni::JDouble::valueOf(value.panButtonScrollPercentage.value()) : nullptr,
         value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr

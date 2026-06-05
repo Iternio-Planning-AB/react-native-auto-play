@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class ActiveCarUxRestrictions(
   val activeRestrictions: Array<CarUxRestrictions>
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is ActiveCarUxRestrictions) return false
+    return Objects.deepEquals(this.maxContentDepth, other.maxContentDepth)
+      && Objects.deepEquals(this.maxCumulativeContentItems, other.maxCumulativeContentItems)
+      && Objects.deepEquals(this.maxRestrictedStringLength, other.maxRestrictedStringLength)
+      && Objects.deepEquals(this.activeRestrictions, other.activeRestrictions)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      maxContentDepth,
+      maxCumulativeContentItems,
+      maxRestrictedStringLength,
+      activeRestrictions
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

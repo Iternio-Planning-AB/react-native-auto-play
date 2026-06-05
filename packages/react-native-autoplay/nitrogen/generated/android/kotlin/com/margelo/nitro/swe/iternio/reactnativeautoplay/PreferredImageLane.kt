@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class PreferredImageLane(
   val angles: DoubleArray
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is PreferredImageLane) return false
+    return Objects.deepEquals(this.image, other.image)
+      && Objects.deepEquals(this.highlightedAngle, other.highlightedAngle)
+      && Objects.deepEquals(this.isPreferred, other.isPreferred)
+      && Objects.deepEquals(this.angles, other.angles)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      image,
+      highlightedAngle,
+      isPreferred,
+      angles
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
