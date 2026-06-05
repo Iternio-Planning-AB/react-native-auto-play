@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -28,6 +29,22 @@ data class RemoteImage(
   val timeoutMs: Double?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is RemoteImage) return false
+    return Objects.deepEquals(this.uri, other.uri)
+      && Objects.deepEquals(this.color, other.color)
+      && Objects.deepEquals(this.timeoutMs, other.timeoutMs)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      uri,
+      color,
+      timeoutMs
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -19,7 +19,7 @@
     "react-native": "0.83.5",
     "react-native-blob-util": "^0.24.7",
     "react-native-config": "^1.6.1",
-    "react-native-nitro-modules": "^0.35.3",
+    "react-native-nitro-modules": "^0.35.9",
     "react-native-safe-area-context": "^5.6.2",
     "react-redux": "^9.2.0"
   },

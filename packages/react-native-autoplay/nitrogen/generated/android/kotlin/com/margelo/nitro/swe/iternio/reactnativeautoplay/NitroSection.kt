@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -28,6 +29,22 @@ data class NitroSection(
   val type: NitroSectionType
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NitroSection) return false
+    return Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.items, other.items)
+      && Objects.deepEquals(this.type, other.type)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      title,
+      items,
+      type
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

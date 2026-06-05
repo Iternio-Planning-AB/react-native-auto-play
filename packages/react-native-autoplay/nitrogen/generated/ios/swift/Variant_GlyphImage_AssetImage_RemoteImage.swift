@@ -17,3 +17,16 @@ public indirect enum Variant_GlyphImage_AssetImage_RemoteImage {
   case second(AssetImage)
   case third(RemoteImage)
 }
+
+public extension Variant_GlyphImage_AssetImage_RemoteImage {
+  func asType<T>(_ type: T.Type = T.self) -> T? {
+    switch self {
+      case .first(let value): return value as? T
+      case .second(let value): return value as? T
+      case .third(let value): return value as? T
+    }
+  }
+  func isType<T>(_ type: T.Type = T.self) -> Bool {
+    return self.asType(type) != nil
+  }
+}

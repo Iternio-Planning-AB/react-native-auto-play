@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -43,6 +44,32 @@ data class GoogleSignInAccount(
   val familyName: String?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is GoogleSignInAccount) return false
+    return Objects.deepEquals(this.serverAuthCode, other.serverAuthCode)
+      && Objects.deepEquals(this.email, other.email)
+      && Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.displayName, other.displayName)
+      && Objects.deepEquals(this.photoUrl, other.photoUrl)
+      && Objects.deepEquals(this.idToken, other.idToken)
+      && Objects.deepEquals(this.givenName, other.givenName)
+      && Objects.deepEquals(this.familyName, other.familyName)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      serverAuthCode,
+      email,
+      id,
+      displayName,
+      photoUrl,
+      idToken,
+      givenName,
+      familyName
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

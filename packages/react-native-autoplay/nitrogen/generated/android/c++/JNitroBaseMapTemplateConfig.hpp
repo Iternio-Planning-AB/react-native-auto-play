@@ -80,26 +80,26 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto fieldAutoDismissMs = clazz->getField<jni::JDouble>("autoDismissMs");
       jni::local_ref<jni::JDouble> autoDismissMs = this->getFieldValue(fieldAutoDismissMs);
       return NitroBaseMapTemplateConfig(
-        mapButtons != nullptr ? std::make_optional([&]() {
-          size_t __size = mapButtons->size();
+        mapButtons != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroMapButton> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = mapButtons->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
-        headerActions != nullptr ? std::make_optional([&]() {
-          size_t __size = headerActions->size();
+        }(mapButtons)) : std::nullopt,
+        headerActions != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroAction> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = headerActions->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt,
+        }(headerActions)) : std::nullopt,
         onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
           if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
             auto downcast = jni::static_ref_cast<JFunc_void_bool_cxx::javaobject>(onDidChangePanningInterface);
@@ -169,26 +169,26 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.mapButtons.has_value() ? [&]() {
-          size_t __size = value.mapButtons.value().size();
+        value.mapButtons.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroMapButton>> __array = jni::JArrayClass<JNitroMapButton>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.mapButtons.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroMapButton::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
-        value.headerActions.has_value() ? [&]() {
-          size_t __size = value.headerActions.value().size();
+        }(value.mapButtons.value()) : nullptr,
+        value.headerActions.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroAction>> __array = jni::JArrayClass<JNitroAction>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.headerActions.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroAction::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr,
+        }(value.headerActions.value()) : nullptr,
         value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr,
         value.onWillAppear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillAppear.value()) : nullptr,
         value.onWillDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onWillDisappear.value()) : nullptr,

@@ -51,16 +51,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroAttributedStringImage>> images = this->getFieldValue(fieldImages);
       return NitroAttributedString(
         text->toStdString(),
-        images != nullptr ? std::make_optional([&]() {
-          size_t __size = images->size();
+        images != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
           std::vector<NitroAttributedStringImage> __vector;
           __vector.reserve(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = images->getElement(__i);
+            auto __element = __input->getElement(__i);
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }()) : std::nullopt
+        }(images)) : std::nullopt
       );
     }
 
@@ -76,16 +76,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return create(
         clazz,
         jni::make_jstring(value.text),
-        value.images.has_value() ? [&]() {
-          size_t __size = value.images.value().size();
+        value.images.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
           jni::local_ref<jni::JArrayClass<JNitroAttributedStringImage>> __array = jni::JArrayClass<JNitroAttributedStringImage>::newArray(__size);
           for (size_t __i = 0; __i < __size; __i++) {
-            const auto& __element = value.images.value()[__i];
+            const auto& __element = __input[__i];
             auto __elementJni = JNitroAttributedStringImage::fromCpp(__element);
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }() : nullptr
+        }(value.images.value()) : nullptr
       );
     }
   };

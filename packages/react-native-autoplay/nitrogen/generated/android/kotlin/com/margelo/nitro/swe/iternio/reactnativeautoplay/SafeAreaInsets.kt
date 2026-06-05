@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -34,6 +35,26 @@ data class SafeAreaInsets(
   val isLegacyLayout: Boolean?
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SafeAreaInsets) return false
+    return Objects.deepEquals(this.top, other.top)
+      && Objects.deepEquals(this.left, other.left)
+      && Objects.deepEquals(this.bottom, other.bottom)
+      && Objects.deepEquals(this.right, other.right)
+      && Objects.deepEquals(this.isLegacyLayout, other.isLegacyLayout)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      top,
+      left,
+      bottom,
+      right,
+      isLegacyLayout
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -62,6 +63,42 @@ data class SignInTemplateConfig(
    */
   constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, title: String?, additionalText: String?, signInMethod: Variant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn?, headerActions: Array<NitroAction>?, actions: Array<NitroAction>?, instructions: String?):
          this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, title, additionalText, signInMethod, headerActions, actions, instructions)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SignInTemplateConfig) return false
+    return Objects.deepEquals(this.id, other.id)
+      && Objects.deepEquals(this.onWillAppear, other.onWillAppear)
+      && Objects.deepEquals(this.onWillDisappear, other.onWillDisappear)
+      && Objects.deepEquals(this.onDidAppear, other.onDidAppear)
+      && Objects.deepEquals(this.onDidDisappear, other.onDidDisappear)
+      && Objects.deepEquals(this.onPopped, other.onPopped)
+      && Objects.deepEquals(this.autoDismissMs, other.autoDismissMs)
+      && Objects.deepEquals(this.title, other.title)
+      && Objects.deepEquals(this.additionalText, other.additionalText)
+      && Objects.deepEquals(this.signInMethod, other.signInMethod)
+      && Objects.deepEquals(this.headerActions, other.headerActions)
+      && Objects.deepEquals(this.actions, other.actions)
+      && Objects.deepEquals(this.instructions, other.instructions)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      id,
+      onWillAppear,
+      onWillDisappear,
+      onDidAppear,
+      onDidDisappear,
+      onPopped,
+      autoDismissMs,
+      title,
+      additionalText,
+      signInMethod,
+      headerActions,
+      actions,
+      instructions
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

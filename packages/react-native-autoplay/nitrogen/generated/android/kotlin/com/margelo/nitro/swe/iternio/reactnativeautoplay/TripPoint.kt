@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -31,6 +32,24 @@ data class TripPoint(
   val travelEstimates: TravelEstimates
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TripPoint) return false
+    return Objects.deepEquals(this.latitude, other.latitude)
+      && Objects.deepEquals(this.longitude, other.longitude)
+      && Objects.deepEquals(this.name, other.name)
+      && Objects.deepEquals(this.travelEstimates, other.travelEstimates)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      latitude,
+      longitude,
+      name,
+      travelEstimates
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**

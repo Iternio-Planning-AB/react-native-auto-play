@@ -9,6 +9,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import java.util.Objects
 
 
 /**
@@ -25,6 +26,20 @@ data class NumericTelemetryItem(
   val value: Double
 ) {
   /* primary constructor */
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is NumericTelemetryItem) return false
+    return Objects.deepEquals(this.timestamp, other.timestamp)
+      && Objects.deepEquals(this.value, other.value)
+  }
+
+  override fun hashCode(): Int {
+    return arrayOf<Any?>(
+      timestamp,
+      value
+    ).contentDeepHashCode()
+  }
 
   companion object {
     /**
