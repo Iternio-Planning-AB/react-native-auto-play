@@ -179,6 +179,7 @@ class VoiceInputManager(
                     try {
                         pipeOut.write(ab.toByteArray())
                     } catch (_: Exception) {
+                        isRecording = false
                     }
                 }
             }
