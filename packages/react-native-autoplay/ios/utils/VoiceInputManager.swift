@@ -103,6 +103,7 @@ class VoiceInputManager {
         }
         isStopping = true
         let wasSTTMode = isSTTMode
+        let capturedRequest = recognitionRequest
         let box = resultBox
         let capturedSamples = samples
         resultBox = nil
@@ -112,7 +113,7 @@ class VoiceInputManager {
         if wasSTTMode {
             // endAudio() causes the recognition task to fire its final result,
             // which resumes the box. Engine teardown happens there too.
-            recognitionRequest?.endAudio()
+            capturedRequest?.endAudio()
         }
         else {
             cleanup(interfaceController: interfaceController)
@@ -161,6 +162,7 @@ class VoiceInputManager {
                 if error != nil {
                     // STT failed — fall back to whatever PCM was accumulated
                     self.stopLock.lock()
+                    self.isStopping = true
                     let capturedSamples = self.samples
                     self.samples = []
                     self.stopLock.unlock()
