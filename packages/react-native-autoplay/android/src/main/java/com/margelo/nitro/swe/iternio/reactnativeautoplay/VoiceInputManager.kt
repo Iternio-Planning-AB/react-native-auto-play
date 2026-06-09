@@ -1,6 +1,8 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -91,7 +93,7 @@ class VoiceInputManager(
     // MARK: - STT path (SpeechRecognizer owns the mic)
 
     private suspend fun startSTT(
-        context: android.content.Context,
+        context: Context,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
         language: String?
     ): VoiceInputResult = suspendCancellableCoroutine { cont ->
@@ -110,8 +112,7 @@ class VoiceInputManager(
             override fun onError(error: Int) {
                 activeSpeechRecognizer = null
                 recognizer.destroy()
-                // Return empty transcription — caller sees null audio and null transcription
-                cont.resume(VoiceInputResult(transcription = null, audio = null))
+                cont.resumeWithException(RuntimeException("SpeechRecognizer error $error"))
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
@@ -173,8 +174,9 @@ class VoiceInputManager(
             }.getOrThrow()
         }
 
+        var pcmBytes: ByteArray
         try {
-            recordPCM(silenceThresholdMs, maxDurationMs) { chunk ->
+            pcmBytes = recordPCM(silenceThresholdMs, maxDurationMs) { chunk ->
                 chunk.audio?.let { ab ->
                     try {
                         pipeOut.write(ab.toByteArray())
@@ -194,12 +196,17 @@ class VoiceInputManager(
             }
         }
 
-        return sttDeferred.await()
+        return try {
+            sttDeferred.await()
+        } catch (_: Exception) {
+            val directBuffer = ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
+            VoiceInputResult(transcription = null, audio = ArrayBuffer.wrap(directBuffer))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private suspend fun startSTTWithSource(
-        context: android.content.Context,
+        context: Context,
         audioSource: ParcelFileDescriptor,
         silenceThresholdMs: Long,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
@@ -224,7 +231,7 @@ class VoiceInputManager(
             override fun onError(error: Int) {
                 activeSpeechRecognizer = null
                 recognizer.destroy()
-                cont.resume(VoiceInputResult(transcription = lastPartial, audio = null))
+                cont.resumeWithException(RuntimeException("SpeechRecognizer error $error"))
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
@@ -474,7 +481,7 @@ class VoiceInputManager(
         fun hasVoiceInputPermission(): Boolean {
             val context = NitroModules.applicationContext ?: return false
             return ContextCompat.checkSelfPermission(
-                context, android.Manifest.permission.RECORD_AUDIO
+                context, Manifest.permission.RECORD_AUDIO
             ) == PackageManager.PERMISSION_GRANTED
         }
     }
