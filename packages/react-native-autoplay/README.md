@@ -197,7 +197,7 @@ In case you wanna open up your CarPlay app from one of the CarPlay dashboard but
 No platform specific setup required - we got you covered with all the required stuff.
 
 #### ProGuard
-In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in `android/app/build.gradle`), add the following rule to `packages/mobile-app/android/app/proguard-rules.pro`:
+In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in `android/app/build.gradle`), add the following rule to `android/app/proguard-rules.pro`:
 
 ```
 -keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }`
