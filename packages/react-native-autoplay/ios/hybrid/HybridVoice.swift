@@ -1,0 +1,65 @@
+import AVFoundation
+import NitroModules
+import Speech
+
+class HybridVoice: HybridVoiceSpec {
+    private var voiceInputManager: VoiceInputManager?
+
+    func hasVoiceInputPermission() throws -> Bool {
+        let micGranted = AVAudioSession.sharedInstance().recordPermission == .granted
+        let speechGranted = SFSpeechRecognizer.authorizationStatus() == .authorized
+        return micGranted && speechGranted
+    }
+
+    func requestVoiceInputPermission() throws -> Promise<Bool> {
+        return Promise.async {
+            let micGranted = await withCheckedContinuation { cont in
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    cont.resume(returning: granted)
+                }
+            }
+            guard micGranted else { return false }
+
+            return await withCheckedContinuation { cont in
+                SFSpeechRecognizer.requestAuthorization { status in
+                    cont.resume(returning: status == .authorized)
+                }
+            }
+        }
+    }
+
+    func startVoiceInput(
+        silenceThresholdMs: Double?,
+        maxDurationMs: Double?,
+        listeningText: String?,
+        preferSpeechToText: Bool?,
+        onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
+        language: String?
+    ) throws -> Promise<VoiceInputResult> {
+        return Promise.async {
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
+
+            let manager = VoiceInputManager()
+            self.voiceInputManager = manager
+
+            defer { self.voiceInputManager = nil }
+
+            return try await manager.start(
+                interfaceController: interfaceController,
+                silenceThresholdMs: silenceThresholdMs ?? 1_500,
+                maxDurationMs: maxDurationMs ?? 10_000,
+                listeningText: listeningText ?? "Listening...",
+                preferSpeechToText: preferSpeechToText ?? false,
+                onChunk: onChunk,
+                language: language
+            )
+        }
+    }
+
+    func stopVoiceInput() throws {
+        Task { @MainActor in
+            let interfaceController = try? await RootModule.withInterfaceController { $0 }
+            self.voiceInputManager?.stop(interfaceController: interfaceController)
+        }
+    }
+}

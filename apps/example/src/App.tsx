@@ -2,6 +2,7 @@ import {
   AutoPlayModules,
   type CleanupCallback,
   HybridAutoPlay,
+  HybridVoice,
 } from '@iternio/react-native-auto-play';
 import { Buffer } from 'buffer';
 import { useEffect, useState } from 'react';
@@ -120,14 +121,22 @@ function AppContent() {
           <Button
             title="record audio"
             onPress={async () => {
-              const granted = await HybridAutoPlay.requestVoiceInputPermission();
+              const granted = await HybridVoice.requestVoiceInputPermission();
               if (!granted) {
                 return;
               }
 
-              const audio = await HybridAutoPlay.startVoiceInput();
-              console.log(`received ${audio.byteLength} bytes`);
-              dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+              void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+                if (result.audio) {
+                  console.log(`received ${result.audio.byteLength} bytes`);
+                  dispatch(
+                    setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64'))
+                  );
+                } else if (result.transcription) {
+                  console.log(`received ${result.transcription}`);
+                  setSavedVoiceRecording(result.transcription);
+                }
+              });
             }}
           />
           <Button

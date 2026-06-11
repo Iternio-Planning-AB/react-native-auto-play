@@ -52,6 +52,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMapTem
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMessageTemplateSpec; }
 // Forward declaration of `HybridSearchTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSearchTemplateSpec; }
+// Forward declaration of `HybridVoiceSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridVoiceSpec; }
 // Forward declaration of `ImageLane` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ImageLane; }
 // Forward declaration of `InformationTemplateConfig` to properly resolve imports.
@@ -148,6 +150,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `VoiceInputChunk` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
+// Forward declaration of `VoiceInputResult` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputResult; }
 // Forward declaration of `ZoomEvent` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEvent; }
 
@@ -174,6 +180,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "HybridMapTemplateSpec.hpp"
 #include "HybridMessageTemplateSpec.hpp"
 #include "HybridSearchTemplateSpec.hpp"
+#include "HybridVoiceSpec.hpp"
 #include "ImageLane.hpp"
 #include "InformationTemplateConfig.hpp"
 #include "KeepType.hpp"
@@ -222,6 +229,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
+#include "VoiceInputChunk.hpp"
+#include "VoiceInputResult.hpp"
 #include "ZoomEvent.hpp"
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/Promise.hpp>
@@ -262,6 +271,8 @@ namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 namespace ReactNativeAutoPlay { class HybridMessageTemplateSpec_cxx; }
 // Forward declaration of `HybridSearchTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
+// Forward declaration of `HybridVoiceSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 
 // Include Swift defined types
 #if __has_include("ReactNativeAutoPlay-Swift.h")

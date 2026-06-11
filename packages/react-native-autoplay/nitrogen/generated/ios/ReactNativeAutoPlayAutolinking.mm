@@ -10,6 +10,7 @@
 #import "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 #import <type_traits>
 
+#include "HybridVoiceSpecSwift.hpp"
 #include "HybridAutoPlaySpecSwift.hpp"
 #include "HybridListTemplateSpecSwift.hpp"
 #include "HybridInformationTemplateSpecSwift.hpp"
@@ -29,6 +30,13 @@
   using namespace margelo::nitro;
   using namespace margelo::nitro::swe::iternio::reactnativeautoplay;
 
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "Voice",
+    []() -> std::shared_ptr<HybridObject> {
+      std::shared_ptr<HybridVoiceSpec> hybridObject = ReactNativeAutoPlay::ReactNativeAutoPlayAutolinking::createVoice();
+      return hybridObject;
+    }
+  );
   HybridObjectRegistry::registerHybridObjectConstructor(
     "AutoPlay",
     []() -> std::shared_ptr<HybridObject> {

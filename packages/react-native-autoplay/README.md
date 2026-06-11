@@ -314,6 +314,32 @@ The library does **not** bundle any icon font — the consuming app must provide
 
    For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
 
+**or**
+
+1. use expo-font
+    ```js
+    [
+      'expo-font',
+      {
+        android: {
+          fonts: [
+            {
+              fontFamily: 'MaterialSymbols',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/material_symbols.ttf',
+                  weight: 800,
+                },
+              ],
+            },
+          ],
+        },
+        ios: ['./assets/fonts/material_symbols.ttf'],
+      },
+    ],
+    ```
+    For cross-platform compatibility use **lowercase names with underscores only** (e.g. `material_symbols`).
+
 2. Register the font and an optional glyph map at startup:
 
    ```ts

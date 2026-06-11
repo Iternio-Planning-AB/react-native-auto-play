@@ -137,3 +137,4 @@ Conversion utilities in `src/utils/` translate TypeScript types to the NitroModu
 - **TypeScript:** Strict mode with `noUnusedLocals`, `noUnusedParameters`
 - Named imports enforced; no floating promises; optional chaining preferred
 - `src/types/Glyphmap.ts` is excluded from linting (generated file)
+- **Any language:** Always use braces for `if` statements — no single-line braceless ifs

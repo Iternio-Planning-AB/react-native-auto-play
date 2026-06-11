@@ -48,6 +48,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMapTem
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMessageTemplateSpec; }
 // Forward declaration of `HybridSearchTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSearchTemplateSpec; }
+// Forward declaration of `HybridVoiceSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridVoiceSpec; }
 // Forward declaration of `ImageLane` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ImageLane; }
 // Forward declaration of `KeepType` to properly resolve imports.
@@ -126,6 +128,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `VoiceInputChunk` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
+// Forward declaration of `VoiceInputResult` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputResult; }
 // Forward declaration of `ZoomEvent` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEvent; }
 
@@ -148,6 +154,8 @@ namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 namespace ReactNativeAutoPlay { class HybridMessageTemplateSpec_cxx; }
 // Forward declaration of `HybridSearchTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
+// Forward declaration of `HybridVoiceSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 
 // Include C++ defined types
 #include "AlertActionStyle.hpp"
@@ -169,6 +177,7 @@ namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
 #include "HybridMapTemplateSpec.hpp"
 #include "HybridMessageTemplateSpec.hpp"
 #include "HybridSearchTemplateSpec.hpp"
+#include "HybridVoiceSpec.hpp"
 #include "ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
@@ -208,6 +217,8 @@ namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
+#include "VoiceInputChunk.hpp"
+#include "VoiceInputResult.hpp"
 #include "ZoomEvent.hpp"
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/ArrayBufferHolder.hpp>
@@ -324,38 +335,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Func_void_std__optional_Location__std__optional_std__string__Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::shared_ptr<Promise<bool>>
+  // pragma MARK: std::shared_ptr<Promise<void>>
   /**
-   * Specialized version of `std::shared_ptr<Promise<bool>>`.
+   * Specialized version of `std::shared_ptr<Promise<void>>`.
    */
-  using std__shared_ptr_Promise_bool__ = std::shared_ptr<Promise<bool>>;
-  inline std::shared_ptr<Promise<bool>> create_std__shared_ptr_Promise_bool__() noexcept {
-    return Promise<bool>::create();
+  using std__shared_ptr_Promise_void__ = std::shared_ptr<Promise<void>>;
+  inline std::shared_ptr<Promise<void>> create_std__shared_ptr_Promise_void__() noexcept {
+    return Promise<void>::create();
   }
-  inline PromiseHolder<bool> wrap_std__shared_ptr_Promise_bool__(std::shared_ptr<Promise<bool>> promise) noexcept {
-    return PromiseHolder<bool>(std::move(promise));
-  }
-  
-  // pragma MARK: std::function<void(bool /* result */)>
-  /**
-   * Specialized version of `std::function<void(bool)>`.
-   */
-  using Func_void_bool = std::function<void(bool /* result */)>;
-  /**
-   * Wrapper class for a `std::function<void(bool / * result * /)>`, this can be used from Swift.
-   */
-  class Func_void_bool_Wrapper final {
-  public:
-    explicit Func_void_bool_Wrapper(std::function<void(bool /* result */)>&& func): _function(std::make_unique<std::function<void(bool /* result */)>>(std::move(func))) {}
-    inline void call(bool result) const noexcept {
-      _function->operator()(result);
-    }
-  private:
-    std::unique_ptr<std::function<void(bool /* result */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_bool_Wrapper wrap_Func_void_bool(Func_void_bool value) noexcept {
-    return Func_void_bool_Wrapper(std::move(value));
+  inline PromiseHolder<void> wrap_std__shared_ptr_Promise_void__(std::shared_ptr<Promise<void>> promise) noexcept {
+    return PromiseHolder<void>(std::move(promise));
   }
   
   // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
@@ -378,67 +367,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>
-  /**
-   * Specialized version of `std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>`.
-   */
-  using std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___ = std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>;
-  inline std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> create_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___() noexcept {
-    return Promise<std::shared_ptr<ArrayBuffer>>::create();
-  }
-  inline PromiseHolder<std::shared_ptr<ArrayBuffer>> wrap_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer___(std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> promise) noexcept {
-    return PromiseHolder<std::shared_ptr<ArrayBuffer>>(std::move(promise));
-  }
-  
-  // pragma MARK: std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>
-  /**
-   * Specialized version of `std::function<void(const std::shared_ptr<ArrayBuffer>&)>`.
-   */
-  using Func_void_std__shared_ptr_ArrayBuffer_ = std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>;
-  /**
-   * Wrapper class for a `std::function<void(const std::shared_ptr<ArrayBuffer>& / * result * /)>`, this can be used from Swift.
-   */
-  class Func_void_std__shared_ptr_ArrayBuffer__Wrapper final {
-  public:
-    explicit Func_void_std__shared_ptr_ArrayBuffer__Wrapper(std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>>(std::move(func))) {}
-    inline void call(ArrayBufferHolder result) const noexcept {
-      _function->operator()(result.getArrayBuffer());
-    }
-  private:
-    std::unique_ptr<std::function<void(const std::shared_ptr<ArrayBuffer>& /* result */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_std__shared_ptr_ArrayBuffer_ create_Func_void_std__shared_ptr_ArrayBuffer_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__shared_ptr_ArrayBuffer__Wrapper wrap_Func_void_std__shared_ptr_ArrayBuffer_(Func_void_std__shared_ptr_ArrayBuffer_ value) noexcept {
-    return Func_void_std__shared_ptr_ArrayBuffer__Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::optional<double>
-  /**
-   * Specialized version of `std::optional<double>`.
-   */
-  using std__optional_double_ = std::optional<double>;
-  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
-    return std::optional<double>(value);
-  }
-  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return optional.value();
-  }
-  
-  // pragma MARK: std::shared_ptr<Promise<void>>
-  /**
-   * Specialized version of `std::shared_ptr<Promise<void>>`.
-   */
-  using std__shared_ptr_Promise_void__ = std::shared_ptr<Promise<void>>;
-  inline std::shared_ptr<Promise<void>> create_std__shared_ptr_Promise_void__() noexcept {
-    return Promise<void>::create();
-  }
-  inline PromiseHolder<void> wrap_std__shared_ptr_Promise_void__(std::shared_ptr<Promise<void>> promise) noexcept {
-    return PromiseHolder<void>(std::move(promise));
   }
   
   // pragma MARK: std::optional<bool>
@@ -476,6 +404,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_SafeAreaInsets create_Func_void_SafeAreaInsets(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_SafeAreaInsets_Wrapper wrap_Func_void_SafeAreaInsets(Func_void_SafeAreaInsets value) noexcept {
     return Func_void_SafeAreaInsets_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<double>
+  /**
+   * Specialized version of `std::optional<double>`.
+   */
+  using std__optional_double_ = std::optional<double>;
+  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
+    return std::optional<double>(value);
+  }
+  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroColor>
@@ -620,42 +563,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Result<std::function<void()>>::withError(error);
   }
   
-  // pragma MARK: Result<bool>
-  using Result_bool_ = Result<bool>;
-  inline Result_bool_ create_Result_bool_(bool value) noexcept {
-    return Result<bool>::withValue(std::move(value));
-  }
-  inline Result_bool_ create_Result_bool_(const std::exception_ptr& error) noexcept {
-    return Result<bool>::withError(error);
-  }
-  
-  // pragma MARK: Result<std::shared_ptr<Promise<bool>>>
-  using Result_std__shared_ptr_Promise_bool___ = Result<std::shared_ptr<Promise<bool>>>;
-  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::shared_ptr<Promise<bool>>& value) noexcept {
-    return Result<std::shared_ptr<Promise<bool>>>::withValue(value);
-  }
-  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::exception_ptr& error) noexcept {
-    return Result<std::shared_ptr<Promise<bool>>>::withError(error);
-  }
-  
-  // pragma MARK: Result<std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>>
-  using Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____ = Result<std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>>;
-  inline Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____ create_Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____(const std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>& value) noexcept {
-    return Result<std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>>::withValue(value);
-  }
-  inline Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____ create_Result_std__shared_ptr_Promise_std__shared_ptr_ArrayBuffer____(const std::exception_ptr& error) noexcept {
-    return Result<std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>>>::withError(error);
-  }
-  
-  // pragma MARK: Result<void>
-  using Result_void_ = Result<void>;
-  inline Result_void_ create_Result_void_() noexcept {
-    return Result<void>::withValue();
-  }
-  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
-    return Result<void>::withError(error);
-  }
-  
   // pragma MARK: Result<std::shared_ptr<Promise<void>>>
   using Result_std__shared_ptr_Promise_void___ = Result<std::shared_ptr<Promise<void>>>;
   inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::shared_ptr<Promise<void>>& value) noexcept {
@@ -663,6 +570,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<void>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<bool>
+  using Result_bool_ = Result<bool>;
+  inline Result_bool_ create_Result_bool_(bool value) noexcept {
+    return Result<bool>::withValue(std::move(value));
+  }
+  inline Result_bool_ create_Result_bool_(const std::exception_ptr& error) noexcept {
+    return Result<bool>::withError(error);
   }
   
   // pragma MARK: std::vector<std::string>
@@ -858,6 +774,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   using std__weak_ptr_HybridClusterSpec_ = std::weak_ptr<HybridClusterSpec>;
   inline std__weak_ptr_HybridClusterSpec_ weakify_std__shared_ptr_HybridClusterSpec_(const std::shared_ptr<HybridClusterSpec>& strong) noexcept { return strong; }
   
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
+  }
+  
   // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
   /**
    * Specialized version of `std::function<void(std::optional<bool>)>`.
@@ -960,6 +885,28 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   }
   inline std::vector<NitroMapButton> get_std__optional_std__vector_NitroMapButton__(const std::optional<std::vector<NitroMapButton>>& optional) noexcept {
     return optional.value();
+  }
+  
+  // pragma MARK: std::function<void(bool /* isPanningInterfaceVisible */)>
+  /**
+   * Specialized version of `std::function<void(bool)>`.
+   */
+  using Func_void_bool = std::function<void(bool /* isPanningInterfaceVisible */)>;
+  /**
+   * Wrapper class for a `std::function<void(bool / * isPanningInterfaceVisible * /)>`, this can be used from Swift.
+   */
+  class Func_void_bool_Wrapper final {
+  public:
+    explicit Func_void_bool_Wrapper(std::function<void(bool /* isPanningInterfaceVisible */)>&& func): _function(std::make_unique<std::function<void(bool /* isPanningInterfaceVisible */)>>(std::move(func))) {}
+    inline void call(bool isPanningInterfaceVisible) const noexcept {
+      _function->operator()(isPanningInterfaceVisible);
+    }
+  private:
+    std::unique_ptr<std::function<void(bool /* isPanningInterfaceVisible */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_bool_Wrapper wrap_Func_void_bool(Func_void_bool value) noexcept {
+    return Func_void_bool_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>>
@@ -1634,5 +1581,133 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridSearchTemplateSpec>
   using std__weak_ptr_HybridSearchTemplateSpec_ = std::weak_ptr<HybridSearchTemplateSpec>;
   inline std__weak_ptr_HybridSearchTemplateSpec_ weakify_std__shared_ptr_HybridSearchTemplateSpec_(const std::shared_ptr<HybridSearchTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::shared_ptr<Promise<bool>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<bool>>`.
+   */
+  using std__shared_ptr_Promise_bool__ = std::shared_ptr<Promise<bool>>;
+  inline std::shared_ptr<Promise<bool>> create_std__shared_ptr_Promise_bool__() noexcept {
+    return Promise<bool>::create();
+  }
+  inline PromiseHolder<bool> wrap_std__shared_ptr_Promise_bool__(std::shared_ptr<Promise<bool>> promise) noexcept {
+    return PromiseHolder<bool>(std::move(promise));
+  }
+  
+  // pragma MARK: std::optional<std::shared_ptr<ArrayBuffer>>
+  /**
+   * Specialized version of `std::optional<std::shared_ptr<ArrayBuffer>>`.
+   */
+  using std__optional_std__shared_ptr_ArrayBuffer__ = std::optional<std::shared_ptr<ArrayBuffer>>;
+  inline std::optional<std::shared_ptr<ArrayBuffer>> create_std__optional_std__shared_ptr_ArrayBuffer__(const std::shared_ptr<ArrayBuffer>& value) noexcept {
+    return std::optional<std::shared_ptr<ArrayBuffer>>(value);
+  }
+  inline bool has_value_std__optional_std__shared_ptr_ArrayBuffer__(const std::optional<std::shared_ptr<ArrayBuffer>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::shared_ptr<ArrayBuffer> get_std__optional_std__shared_ptr_ArrayBuffer__(const std::optional<std::shared_ptr<ArrayBuffer>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<VoiceInputResult>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<VoiceInputResult>>`.
+   */
+  using std__shared_ptr_Promise_VoiceInputResult__ = std::shared_ptr<Promise<VoiceInputResult>>;
+  inline std::shared_ptr<Promise<VoiceInputResult>> create_std__shared_ptr_Promise_VoiceInputResult__() noexcept {
+    return Promise<VoiceInputResult>::create();
+  }
+  inline PromiseHolder<VoiceInputResult> wrap_std__shared_ptr_Promise_VoiceInputResult__(std::shared_ptr<Promise<VoiceInputResult>> promise) noexcept {
+    return PromiseHolder<VoiceInputResult>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const VoiceInputResult& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const VoiceInputResult&)>`.
+   */
+  using Func_void_VoiceInputResult = std::function<void(const VoiceInputResult& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const VoiceInputResult& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_VoiceInputResult_Wrapper final {
+  public:
+    explicit Func_void_VoiceInputResult_Wrapper(std::function<void(const VoiceInputResult& /* result */)>&& func): _function(std::make_unique<std::function<void(const VoiceInputResult& /* result */)>>(std::move(func))) {}
+    inline void call(VoiceInputResult result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const VoiceInputResult& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_VoiceInputResult create_Func_void_VoiceInputResult(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_VoiceInputResult_Wrapper wrap_Func_void_VoiceInputResult(Func_void_VoiceInputResult value) noexcept {
+    return Func_void_VoiceInputResult_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const VoiceInputChunk& /* chunk */)>
+  /**
+   * Specialized version of `std::function<void(const VoiceInputChunk&)>`.
+   */
+  using Func_void_VoiceInputChunk = std::function<void(const VoiceInputChunk& /* chunk */)>;
+  /**
+   * Wrapper class for a `std::function<void(const VoiceInputChunk& / * chunk * /)>`, this can be used from Swift.
+   */
+  class Func_void_VoiceInputChunk_Wrapper final {
+  public:
+    explicit Func_void_VoiceInputChunk_Wrapper(std::function<void(const VoiceInputChunk& /* chunk */)>&& func): _function(std::make_unique<std::function<void(const VoiceInputChunk& /* chunk */)>>(std::move(func))) {}
+    inline void call(VoiceInputChunk chunk) const noexcept {
+      _function->operator()(chunk);
+    }
+  private:
+    std::unique_ptr<std::function<void(const VoiceInputChunk& /* chunk */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_VoiceInputChunk create_Func_void_VoiceInputChunk(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_VoiceInputChunk_Wrapper wrap_Func_void_VoiceInputChunk(Func_void_VoiceInputChunk value) noexcept {
+    return Func_void_VoiceInputChunk_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const VoiceInputChunk& / * chunk * /)>>`.
+   */
+  using std__optional_std__function_void_const_VoiceInputChunk_____chunk______ = std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>;
+  inline std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>> create_std__optional_std__function_void_const_VoiceInputChunk_____chunk______(const std::function<void(const VoiceInputChunk& /* chunk */)>& value) noexcept {
+    return std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_VoiceInputChunk_____chunk______(const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const VoiceInputChunk& /* chunk */)> get_std__optional_std__function_void_const_VoiceInputChunk_____chunk______(const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridVoiceSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridVoiceSpec>`.
+   */
+  using std__shared_ptr_HybridVoiceSpec_ = std::shared_ptr<HybridVoiceSpec>;
+  std::shared_ptr<HybridVoiceSpec> create_std__shared_ptr_HybridVoiceSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridVoiceSpec_(std__shared_ptr_HybridVoiceSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridVoiceSpec>
+  using std__weak_ptr_HybridVoiceSpec_ = std::weak_ptr<HybridVoiceSpec>;
+  inline std__weak_ptr_HybridVoiceSpec_ weakify_std__shared_ptr_HybridVoiceSpec_(const std::shared_ptr<HybridVoiceSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<bool>>>
+  using Result_std__shared_ptr_Promise_bool___ = Result<std::shared_ptr<Promise<bool>>>;
+  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::shared_ptr<Promise<bool>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<bool>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<bool>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<VoiceInputResult>>>
+  using Result_std__shared_ptr_Promise_VoiceInputResult___ = Result<std::shared_ptr<Promise<VoiceInputResult>>>;
+  inline Result_std__shared_ptr_Promise_VoiceInputResult___ create_Result_std__shared_ptr_Promise_VoiceInputResult___(const std::shared_ptr<Promise<VoiceInputResult>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<VoiceInputResult>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_VoiceInputResult___ create_Result_std__shared_ptr_Promise_VoiceInputResult___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<VoiceInputResult>>>::withError(error);
+  }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift

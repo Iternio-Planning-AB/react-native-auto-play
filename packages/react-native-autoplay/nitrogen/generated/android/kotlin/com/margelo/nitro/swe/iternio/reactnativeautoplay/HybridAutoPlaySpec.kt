@@ -11,7 +11,6 @@ import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.core.ArrayBuffer
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -56,22 +55,6 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     val __result = addListenerVoiceInput(callback)
     return Func_void_java(__result)
   }
-  
-  @DoNotStrip
-  @Keep
-  abstract fun hasVoiceInputPermission(): Boolean
-  
-  @DoNotStrip
-  @Keep
-  abstract fun requestVoiceInputPermission(): Promise<Boolean>
-  
-  @DoNotStrip
-  @Keep
-  abstract fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?): Promise<ArrayBuffer>
-  
-  @DoNotStrip
-  @Keep
-  abstract fun stopVoiceInput(): Unit
   
   @DoNotStrip
   @Keep

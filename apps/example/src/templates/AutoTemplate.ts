@@ -4,6 +4,7 @@ import {
   CarPlayDashboard,
   type HeaderActions,
   HybridAutoPlay,
+  HybridVoice,
   type ImageButton,
   type MapTemplate,
   type MapTemplateConfig,
@@ -242,14 +243,18 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       type: 'image',
       image: { name: 'mic', type: 'glyph' },
       onPress: () => {
-        void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+        void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
           if (!isGranted) {
             return;
           }
 
-          void HybridAutoPlay.startVoiceInput().then((audio) => {
-            console.log(`received ${audio.byteLength} bytes`);
-            dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+          void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+            if (result.audio) {
+              console.log(`received ${result.audio.byteLength} bytes`);
+              dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
+            } else {
+              console.log(`received ${result.transcription}`);
+            }
           });
         });
       },
@@ -288,14 +293,20 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           type: 'glyph',
         },
         onPress: () => {
-          void HybridAutoPlay.requestVoiceInputPermission().then((isGranted) => {
+          void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
             if (!isGranted) {
               return;
             }
 
-            void HybridAutoPlay.startVoiceInput().then((audio) => {
-              console.log(`received ${audio.byteLength} bytes`);
-              dispatch(setRecording(Buffer.from(new Uint8Array(audio)).toString('base64')));
+            void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
+              if (result.audio) {
+                console.log(`received ${result.audio.byteLength} bytes`);
+                dispatch(
+                  setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64'))
+                );
+              } else {
+                console.log(`received ${result.transcription}`);
+              }
             });
           });
         },
