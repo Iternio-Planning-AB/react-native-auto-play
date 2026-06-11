@@ -200,7 +200,7 @@ No platform specific setup required - we got you covered with all the required s
 In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in `android/app/build.gradle`), add the following rule to `android/app/proguard-rules.pro`:
 
 ```
--keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }`
+-keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }
 ```
 
 ### Android Auto Customization
