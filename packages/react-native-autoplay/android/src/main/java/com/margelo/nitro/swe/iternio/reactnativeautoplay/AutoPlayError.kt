@@ -1,5 +1,5 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
-class TemplateNotFoundException(templateId: String): Exception(templateId) {
-    override fun toString(): String = "templateNotFound($message)"
+class TemplateNotFoundException(private val templateId: String): Exception("templateNotFound(\"$templateId\")") {
+    override fun toString(): String = "templateNotFound(\"$templateId\")"
 }
