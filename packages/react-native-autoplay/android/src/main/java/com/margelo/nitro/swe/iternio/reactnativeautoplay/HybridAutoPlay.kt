@@ -100,7 +100,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun setRootTemplate(templateId: String): Promise<Unit> {
         return Promise.async {
             val template = AndroidAutoTemplate.getTemplate(templateId)
-                ?: throw IllegalArgumentException("setRootTemplate failed, $templateId template not found")
+                ?: throw TemplateNotFoundException(templateId)
 
             if (template.isRenderTemplate) {
                 val screen = AndroidAutoScreen.getScreen(templateId)
@@ -148,7 +148,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             val context = AndroidAutoSession.getRootContext()
                 ?: throw IllegalArgumentException("pushTemplate failed, carContext not found")
             val template = AndroidAutoTemplate.getTemplate(templateId)
-                ?: throw IllegalArgumentException("pushTemplate failed, template $templateId not found")
+                ?: throw TemplateNotFoundException(templateId)
             val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")
 

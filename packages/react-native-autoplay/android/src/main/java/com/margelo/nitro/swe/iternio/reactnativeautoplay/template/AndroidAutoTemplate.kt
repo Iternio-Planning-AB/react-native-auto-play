@@ -5,6 +5,7 @@ import androidx.car.app.Screen
 import androidx.car.app.model.Template
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.TemplateNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
@@ -31,7 +32,7 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
         val templates = ConcurrentHashMap<String, AndroidAutoTemplate<*>>()
 
         fun <T> setTemplate(id: String, template: AndroidAutoTemplate<T>) {
-            templates.put(id, template)
+            templates[id] = template
         }
 
         fun getTemplate(id: String): AndroidAutoTemplate<*>? {
@@ -40,7 +41,7 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
 
         inline fun <reified T> getTemplate(id: String): T {
             val template = templates[id] as? T
-            return template ?: throw IllegalArgumentException()
+            return template ?: throw TemplateNotFoundException(id)
         }
 
         inline fun <reified T> hasTemplate(id: String): Boolean {
