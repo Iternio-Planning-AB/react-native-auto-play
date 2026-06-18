@@ -38,54 +38,8 @@ class GridTemplate: AutoPlayHeaderProviding {
     }
 
     static func parseButtons(buttons: [NitroGridButton]) -> [CPGridButton] {
-        let gridButtonHeight: CGFloat
-
-        if #available(iOS 26.0, *) {
-            gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
-        }
-        else {
-            gridButtonHeight = 44
-        }
-
-        guard let traitCollection = SceneStore.getRootTraitCollection() else {
-            return []
-        }
-
-        return buttons.compactMap { button in
-            var image: UIImage?
-
-            if let glyphImage = button.image.glyphImage {
-                image = SymbolFont.imageFromNitroImage(
-                    image: glyphImage,
-                    size: gridButtonHeight,
-                    traitCollection: traitCollection
-                )
-            }
-
-            if let assetImage = button.image.assetImage {
-                image = Parser.parseAssetImage(
-                    assetImage: assetImage,
-                    traitCollection: traitCollection
-                )
-            }
-
-            if let remoteImage = button.image.remoteImage {
-                image = Parser.parseRemoteImage(
-                    remoteImage: remoteImage,
-                    traitCollection: traitCollection
-                )
-            }
-
-            guard let image = image else { return nil }
-            guard let title = Parser.parseText(text: button.title) else { return nil }
-
-            return CPGridButton(
-                titleVariants: [title],
-                image: image
-            ) { _ in
-                button.onPress()
-            }
-        }
+        guard let traitCollection = SceneStore.getRootTraitCollection() else { return [] }
+        return Parser.parseGridButtons(buttons: buttons, traitCollection: traitCollection)
     }
 
     @MainActor

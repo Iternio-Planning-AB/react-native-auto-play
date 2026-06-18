@@ -271,6 +271,83 @@ class Parser {
         }
     }
 
+    static func parseListItems(
+        section: NitroSection,
+        sectionIndex: Int,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPListItem] {
+        let selectedIndex = section.items.firstIndex { item in
+            item.selected == true
+        }
+
+        return section.items.enumerated().map { (itemIndex, item) in
+            let isSelected =
+                section.type == .radio
+                && Int(selectedIndex ?? -1) == itemIndex
+
+            let toggleImage = item.checked.map { checked in
+                UIImage.makeToggleImage(
+                    enabled: checked,
+                    maximumImageSize: CPListItem.maximumImageSize
+                )
+            }
+
+            let listItem = CPListItem(
+                text: parseText(text: item.title),
+                detailText: parseText(text: item.detailedText),
+                image: Parser.parseNitroImage(
+                    image: item.image,
+                    traitCollection: traitCollection
+                ),
+                accessoryImage: isSelected
+                    ? UIImage.checkmark : toggleImage,
+                accessoryType: item.browsable == true
+                    ? .disclosureIndicator : .none
+            )
+
+            listItem.isEnabled = item.enabled
+
+            listItem.handler = { _item, completion in
+                let updatedItems = section.items.enumerated().map { (rowIndex, row) in
+                    let checked: Bool? =
+                        if rowIndex == itemIndex, let checked = row.checked {
+                            !checked
+                        }
+                        else { row.checked }
+
+                    let selected: Bool? =
+                        if section.type == .radio {
+                            rowIndex == itemIndex
+                        }
+                        else {
+                            nil
+                        }
+
+                    return NitroRow(
+                        title: row.title,
+                        detailedText: row.detailedText,
+                        browsable: row.browsable,
+                        enabled: row.enabled,
+                        image: row.image,
+                        checked: checked,
+                        onPress: row.onPress,
+                        selected: selected
+                    )
+                }
+
+                let updatedSection = NitroSection(title: section.title, items: updatedItems, type: section.type)
+
+                updateSection(updatedSection, sectionIndex)
+
+                item.onPress?(item.checked.map { checked in !checked })
+                completion()
+            }
+
+            return listItem
+        }
+    }
+
     static func parseSections(
         sections: [NitroSection]?,
         updateSection: @escaping (NitroSection, Int) -> Void,
@@ -279,81 +356,68 @@ class Parser {
         guard let sections else { return [] }
 
         return sections.enumerated().map { (sectionIndex, section) in
-            let selectedIndex = section.items.firstIndex { item in
-                item.selected == true
-            }
-            let items = section.items.enumerated().map { (itemIndex, item) in
-                let isSelected =
-                    section.type == .radio
-                    && Int(selectedIndex ?? -1) == itemIndex
-
-                let toggleImage = item.checked.map { checked in
-                    UIImage.makeToggleImage(
-                        enabled: checked,
-                        maximumImageSize: CPListItem.maximumImageSize
-                    )
-                }
-
-                let listItem = CPListItem(
-                    text: parseText(text: item.title),
-                    detailText: parseText(text: item.detailedText),
-                    image: Parser.parseNitroImage(
-                        image: item.image,
-                        traitCollection: traitCollection
-                    ),
-                    accessoryImage: isSelected
-                        ? UIImage.checkmark : toggleImage,
-                    accessoryType: item.browsable == true
-                        ? .disclosureIndicator : .none
-                )
-
-                listItem.isEnabled = item.enabled
-
-                listItem.handler = { _item, completion in
-
-                    let updatedItems = section.items.enumerated().map { (rowIndex, row) in
-                        let checked: Bool? =
-                            if rowIndex == itemIndex, let checked = row.checked {
-                                !checked
-                            }
-                            else { row.checked }
-
-                        let selected: Bool? =
-                            if section.type == .radio {
-                                rowIndex == itemIndex
-                            }
-                            else {
-                                nil
-                            }
-
-                        return NitroRow(
-                            title: row.title,
-                            detailedText: row.detailedText,
-                            browsable: row.browsable,
-                            enabled: row.enabled,
-                            image: row.image,
-                            checked: checked,
-                            onPress: row.onPress,
-                            selected: selected
-                        )
-                    }
-
-                    let updatedSection = NitroSection(title: section.title, items: updatedItems, type: section.type)
-
-                    updateSection(updatedSection, sectionIndex)
-
-                    item.onPress?(item.checked.map { checked in !checked })
-                    completion()
-                }
-
-                return listItem
-            }
+            let items = parseListItems(
+                section: section,
+                sectionIndex: sectionIndex,
+                updateSection: updateSection,
+                traitCollection: traitCollection
+            )
 
             return CPListSection(
                 items: items,
                 header: section.title,
                 sectionIndexTitle: nil
             )
+        }
+    }
+
+    static func parseGridButtons(
+        buttons: [NitroGridButton],
+        traitCollection: UITraitCollection
+    ) -> [CPGridButton] {
+        let gridButtonHeight: CGFloat
+
+        if #available(iOS 26.0, *) {
+            gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
+        }
+        else {
+            gridButtonHeight = 44
+        }
+
+        return buttons.compactMap { button in
+            var image: UIImage?
+
+            if let glyphImage = button.image.glyphImage {
+                image = SymbolFont.imageFromNitroImage(
+                    image: glyphImage,
+                    size: gridButtonHeight,
+                    traitCollection: traitCollection
+                )
+            }
+
+            if let assetImage = button.image.assetImage {
+                image = Parser.parseAssetImage(
+                    assetImage: assetImage,
+                    traitCollection: traitCollection
+                )
+            }
+
+            if let remoteImage = button.image.remoteImage {
+                image = Parser.parseRemoteImage(
+                    remoteImage: remoteImage,
+                    traitCollection: traitCollection
+                )
+            }
+
+            guard let image = image else { return nil }
+            guard let title = Parser.parseText(text: button.title) else { return nil }
+
+            return CPGridButton(
+                titleVariants: [title],
+                image: image
+            ) { _ in
+                button.onPress()
+            }
         }
     }
 
