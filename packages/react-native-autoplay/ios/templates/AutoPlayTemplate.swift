@@ -10,8 +10,16 @@ import CarPlay
 class AutoPlayTemplate: NSObject {
     public private(set) var autoDismissMs: Double?
 
-    func getTemplate() -> CPTemplate {
+    func getTemplate() throws -> CPTemplate {
         fatalError("getTemplate not implemented")
+    }
+
+    /// Templates that render as an overlay panel on an existing root `CPMapTemplate`
+    /// (iOS 27+, e.g. `ListTemplate` with `mapConfig` set) override this to return their
+    /// `CPMapPanel` instead of providing a `CPTemplate` via `getTemplate()`. Returned as `Any`
+    /// since `CPMapPanel` is only available on iOS 27+ while this class supports iOS 15.1+.
+    func getPanel() -> Any? {
+        return nil
     }
 
     @MainActor final func invalidate() {

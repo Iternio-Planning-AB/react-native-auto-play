@@ -265,7 +265,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
         name: 'list',
         type: 'glyph',
       },
-      onPress: () => AutoListTemplate.getTemplate().push(),
+      onPress: () => AutoListTemplate.getTemplate({ mapConfig: {} }).push(),
     },
     {
       type: 'image',
@@ -317,7 +317,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           name: 'list',
           type: 'glyph',
         },
-        onPress: () => AutoListTemplate.getTemplate().push(),
+        onPress: () => AutoListTemplate.getTemplate({ mapConfig: {} }).push(),
       },
     ],
     trailingNavigationBarButtons: [

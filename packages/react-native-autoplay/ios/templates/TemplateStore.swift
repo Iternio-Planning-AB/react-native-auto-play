@@ -10,7 +10,7 @@ class TemplateStore {
     private var store: [String: AutoPlayTemplate] = [:]
 
     func getCPTemplate(templateId key: String) -> CPTemplate? {
-        return store[key]?.getTemplate()
+        return try? store[key]?.getTemplate()
     }
 
     func getTemplate(templateId: String) throws -> AutoPlayTemplate {
@@ -37,11 +37,7 @@ class TemplateStore {
 
         store = store.filter { !templateIds.contains($0.key) }
     }
-
-    func purge() {
-        store = store.filter { !($0.value.getTemplate() is CPSearchTemplate) }
-    }
-
+    
     @MainActor
     func traitCollectionDidChange() {
         store.values.forEach { template in template.traitCollectionDidChange() }

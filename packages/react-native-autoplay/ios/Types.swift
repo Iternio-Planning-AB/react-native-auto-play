@@ -19,4 +19,6 @@ enum AutoPlayError: Error {
     case invalidTemplateType(String)
     case noUiWindow(String)
     case initReactRootViewFailed(String)
+    case rootTemplateNotMapTemplate(String)
+    case templateIsMapPanel(String)
 }

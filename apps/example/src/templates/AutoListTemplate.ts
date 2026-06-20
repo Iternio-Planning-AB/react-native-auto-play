@@ -1,5 +1,6 @@
 import {
   type DefaultRow,
+  HybridAutoPlay,
   ListTemplate,
   type ListTemplateConfig,
   type Section,
@@ -12,9 +13,10 @@ import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
-  return new ListTemplate({
+  const template = new ListTemplate({
     title: { text: 'radios' },
     headerActions: AutoTemplate.headerActions,
+    mapConfig: {},
     sections: {
       type: 'radio',
       items: [
@@ -40,10 +42,38 @@ const getRadioTemplate = (): ListTemplate => {
             console.log('*** radio #3');
           },
         },
+        {
+          type: 'radio',
+          onPress: () => {
+            HybridAutoPlay.popTemplate();
+          },
+          title: { text: 'pop template' },
+        },
+        {
+          type: 'radio',
+          onPress: () => {
+            HybridAutoPlay.popToRootTemplate();
+          },
+          title: { text: 'pop to root' },
+        },
       ],
     },
-    onPopped: () => console.log('RadioTemplate onPopped'),
+    onPopped: () => console.log('RadioTemplate onPopped', template.id),
+    onDidAppear: () => {
+      console.log('RadioTemplate onDidAppear', template.id);
+    },
+    onDidDisappear: () => {
+      console.log('RadioTemplate onDidDisappear', template.id);
+    },
+    onWillAppear: () => {
+      console.log('RadioTemplate onWillAppear', template.id);
+    },
+    onWillDisappear: () => {
+      console.log('RadioTemplate onWillDisappear', template.id);
+    },
   });
+
+  return template;
 };
 
 const checked: [boolean, boolean] = [true, false];
@@ -98,6 +128,22 @@ const getMainSection = (): Section<ListTemplate> => {
       },
       browsable: true,
     },
+    {
+      type: 'default',
+      onPress: () => {
+        HybridAutoPlay.popTemplate();
+      },
+      title: { text: 'pop template' },
+      image: { type: 'glyph', name: 'arrow_back' },
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        HybridAutoPlay.popToRootTemplate();
+      },
+      title: { text: 'pop to root' },
+      image: { type: 'glyph', name: 'map' },
+    },
   ];
 
   if (checked[0]) {
@@ -128,7 +174,7 @@ const getMainSection = (): Section<ListTemplate> => {
 };
 
 const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): ListTemplate => {
-  return new ListTemplate({
+  const template = new ListTemplate({
     title: {
       text: `${TextPlaceholders.Distance} - ${TextPlaceholders.Duration}`,
       distance: { unit: 'meters', value: 1234 },
@@ -137,8 +183,22 @@ const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): L
     mapConfig: props?.mapConfig,
     headerActions: AutoTemplate.headerActions,
     sections: getMainSection(),
-    onPopped: () => console.log('ListTemplate onPopped'),
+    onPopped: () => console.log('ListTemplate onPopped', template.id),
+    onDidAppear: () => {
+      console.log('ListTemplate onDidAppear', template.id);
+    },
+    onDidDisappear: () => {
+      console.log('ListTemplate onDidDisappear', template.id);
+    },
+    onWillAppear: () => {
+      console.log('ListTemplate onWillAppear', template.id);
+    },
+    onWillDisappear: () => {
+      console.log('ListTemplate onWillDisappear', template.id);
+    },
   });
+
+  return template;
 };
 
 export const AutoListTemplate = { getTemplate };

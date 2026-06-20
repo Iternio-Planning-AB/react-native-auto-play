@@ -371,6 +371,33 @@ class Parser {
         }
     }
 
+    @available(iOS 27.0, *)
+    static func parseMapPanelSections(
+        sections: [NitroSection]?,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPMapPanelSection] {
+        guard let sections else { return [] }
+
+        return sections.enumerated().map { (sectionIndex, section) in
+            let items = parseListItems(
+                section: section,
+                sectionIndex: sectionIndex,
+                updateSection: updateSection,
+                traitCollection: traitCollection
+            )
+
+            let panelItems = items.map { listItem in
+                CPMapPanelItem(listItem: listItem)
+            }
+
+            return CPMapPanelSection(
+                title: section.title,
+                items: panelItems
+            )
+        }
+    }
+
     static func parseGridButtons(
         buttons: [NitroGridButton],
         traitCollection: UITraitCollection

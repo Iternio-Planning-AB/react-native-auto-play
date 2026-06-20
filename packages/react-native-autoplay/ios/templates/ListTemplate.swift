@@ -8,43 +8,94 @@
 import CarPlay
 
 class ListTemplate: AutoPlayHeaderProviding {
-    let template: CPListTemplate
+    /// `nil` when this template renders as a map panel instead (see `mapPanel`).
+    private(set) var template: CPListTemplate?
     var config: ListTemplateConfig
 
     var sections: [NitroSection]?
+
+    /// Boxed as `Any` since `CPMapPanel` itself is only available on
+    /// iOS 27+ while this class supports a much lower deployment target.
+    private var mapPanel: Any?
+
+    /// `CPMapPanel.delegate` is `weak`, so this keeps the shared delegate alive for as long as
+    /// the panel exists. Boxed as `Any` for the same reason as `mapPanel`.
+    private var mapPanelDelegate: Any?
 
     override var autoDismissMs: Double? {
         return config.autoDismissMs
     }
 
-    override func getTemplate() -> CPTemplate {
+    override func getTemplate() throws -> CPTemplate {
+        guard let template else {
+            throw AutoPlayError.templateIsMapPanel(config.id)
+        }
         return template
+    }
+
+    override func getPanel() -> Any? {
+        return mapPanel
     }
 
     init(config: ListTemplateConfig) {
         self.config = config
 
         sections = config.sections
+        let title = Parser.parseText(text: config.title)
 
-        template = CPListTemplate(
-            title: Parser.parseText(text: config.title),
-            sections: [],
-            assistantCellConfiguration: nil,
-            id: config.id
-        )
+        if #available(iOS 27.0, *), config.mapConfig != nil {
+            mapPanel = CPMapPanel(
+                title: title,
+                sections: (config.sections ?? []).map { section in
+                    CPMapPanelSection(title: section.title, items: [])
+                },
+                buttonConfiguration: nil
+            )
+        }
+        else {
+            template = CPListTemplate(
+                title: title,
+                sections: [],
+                assistantCellConfiguration: nil,
+                id: config.id
+            )
+        }
 
         super.init()
 
         barButtons = config.headerActions
+
+        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
+            let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
+            mapPanelDelegate = delegate
+            mapPanel.delegate = delegate
+        }
     }
 
     @MainActor
     override func _invalidate() {
-        setBarButtons(template: template, barButtons: barButtons)
-
         guard let traitCollection = SceneStore.getRootTraitCollection() else {
             return
         }
+
+        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
+            let panelSections = Parser.parseMapPanelSections(
+                sections: sections,
+                updateSection: self.updateSection(section:sectionIndex:),
+                traitCollection: traitCollection
+            )
+
+            zip(mapPanel.sections, panelSections).forEach { existingSection, updatedSection in
+                existingSection.title = updatedSection.title
+                existingSection.updateItems(updatedSection.items)
+            }
+
+            return
+        }
+
+        guard let template else { return }
+
+        setBarButtons(template: template, barButtons: barButtons)
 
         template.updateSections(
             Parser.parseSections(
