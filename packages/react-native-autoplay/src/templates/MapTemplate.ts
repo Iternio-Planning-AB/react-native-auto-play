@@ -6,7 +6,13 @@ import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
-import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
+import type {
+  ActionButtonAndroid,
+  ImageButton,
+  MapButton,
+  MapPanButton,
+  TextButton,
+} from '../types/Button';
 import type { AutoManeuver, ManeuverState } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
@@ -120,6 +126,13 @@ export type MapHeaderActions<T> = {
 export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'> & {
   ios?: Omit<HeaderActionsIos<T>, 'backButton'>;
 };
+
+/**
+ * @platform iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
+ * optional icon-only button (any title is dropped natively), so a second action must be an
+ * ImageButton rather than a TextButton, and a third action isn't supported at all.
+ */
+export type PanelActionsIos<T> = [TextButton<T>] | [TextButton<T>, ImageButton<T>];
 
 export type BaseMapTemplateConfig<T> = {
   /**

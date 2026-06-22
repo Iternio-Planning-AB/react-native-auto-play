@@ -93,7 +93,7 @@ class InformationTemplate: AutoPlayHeaderProviding {
                             items: Parser.parseInformationPanelItems(section: section)
                         )
                     ],
-                    buttonConfiguration: Parser.parseInformationPanelButtonConfiguration(
+                    buttonConfiguration: Parser.parsePanelButtonConfiguration(
                         actions: config.actions,
                         traitCollection: traitCollection
                     )

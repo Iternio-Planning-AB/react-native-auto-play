@@ -258,7 +258,7 @@ class Parser {
 
     /// `actions[0]` becomes the primary text button; `actions[1]`, if present, becomes the icon-only symbol button — `CPMapPanelButtonConfiguration` supports nothing beyond that.
     @available(iOS 27.0, *)
-    static func parseInformationPanelButtonConfiguration(
+    static func parsePanelButtonConfiguration(
         actions: [NitroAction]?,
         traitCollection: UITraitCollection
     ) -> CPMapPanelButtonConfiguration? {

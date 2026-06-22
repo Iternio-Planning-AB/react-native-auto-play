@@ -1,13 +1,13 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { InformationTemplate as NitroInformationTemplate } from '../specs/InformationTemplate.nitro';
-import type { CustomActionButtonAndroid, ImageButton, TextButton } from '../types/Button';
+import type { CustomActionButtonAndroid, TextButton } from '../types/Button';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
 import type { SingleSection, TextRow } from './ListTemplate';
-import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
+import type { BaseMapTemplateConfig, PanelActionsIos, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -19,13 +19,6 @@ import {
 type InformationActionsAndroid<T> =
   | [CustomActionButtonAndroid<T>]
   | [CustomActionButtonAndroid<T>, CustomActionButtonAndroid<T>];
-
-/**
- * @platform iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
- * optional icon-only button (any title is dropped natively), so a second action must be an
- * ImageButton rather than a TextButton, and a third action isn't supported at all.
- */
-type InformationActionsIosPanel<T> = [TextButton<T>] | [TextButton<T>, ImageButton<T>];
 
 const HybridInformationTemplate =
   NitroModules.createHybridObject<NitroInformationTemplate>('InformationTemplate');
@@ -96,11 +89,11 @@ export type InformationTemplateConfig = InformationTemplateBaseConfig &
         /**
          * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
          * @namespace iOS - the panel can only show one TextButton plus one optional icon-only
-         * ImageButton, see InformationActionsIosPanel
+         * ImageButton, see PanelActionsIos
          */
         actions?: {
           android?: InformationActionsAndroid<InformationTemplate>;
-          ios?: InformationActionsIosPanel<InformationTemplate>;
+          ios?: PanelActionsIos<InformationTemplate>;
         };
       }
   );
