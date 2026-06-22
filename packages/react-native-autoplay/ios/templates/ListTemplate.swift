@@ -37,6 +37,10 @@ class ListTemplate: AutoPlayHeaderProviding {
         return mapPanel
     }
 
+    override func getPanelHeaderActions() -> [NitroAction]? {
+        return config.mapConfig?.headerActions
+    }
+
     init(config: ListTemplateConfig) {
         self.config = config
 

@@ -117,6 +117,10 @@ export type MapHeaderActions<T> = {
   ios?: HeaderActionsIos<T>;
 };
 
+export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'> & {
+  ios?: Omit<HeaderActionsIos<T>, 'backButton'>;
+};
+
 export type BaseMapTemplateConfig<T> = {
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner

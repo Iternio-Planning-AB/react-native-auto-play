@@ -140,6 +140,12 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         }
     }
 
+    /// Whether any panel exists in the stack, even if currently covered by a regular template.
+    @available(iOS 27.0, *)
+    var hasPanel: Bool {
+        !panelTemplateIds.isEmpty
+    }
+
     func popTemplate(
         animated: Bool
     ) async throws -> String? {

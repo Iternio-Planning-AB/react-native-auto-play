@@ -181,7 +181,17 @@ class MapTemplate: AutoPlayHeaderProviding,
             return
         }
 
-        setBarButtons(template: template, barButtons: barButtons)
+        // A panel owns the bar buttons while it exists; keep barButtons up to date but don't apply it.
+        let hasPanel: Bool = {
+            if #available(iOS 27.0, *) {
+                return SceneStore.getRootScene()?.interfaceController?.hasPanel ?? false
+            }
+            return false
+        }()
+
+        if !hasPanel {
+            setBarButtons(template: template, barButtons: barButtons)
+        }
 
         if let mapButtons = mapButtons {
             template.mapButtons = parseMapButtons(mapButtons: mapButtons)

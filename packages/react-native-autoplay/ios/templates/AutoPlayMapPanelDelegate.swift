@@ -31,11 +31,18 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
 
         Task { @MainActor in
             var previousPanelId: String?
+            var mapTemplate: CPMapTemplate?
 
             try? await RootModule.withInterfaceController { interfaceController in
+                mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
                 previousPanelId = interfaceController.panelTemplateIds
                     .filter { $0 != templateId }
                     .last
+            }
+
+            // This panel owns the map template's bar buttons while it's on top.
+            if let mapTemplate {
+                applyPanelHeaderActions(self.template?.getPanelHeaderActions(), to: mapTemplate)
             }
 
             guard let previousPanelId else { return }
@@ -53,17 +60,15 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
     /// top after this one is removed, since CPMapPanelDelegate never notifies a revealed panel
     /// itself — `panelDidHide` only tells us about the panel that just disappeared.
     ///
-    /// KNOWN ISSUE (iOS 27 beta): `panelDidHide` is verified to fire for the back-button case
-    /// above, but is *not* called when the panel is dismissed via CarPlay's built-in close (X)
-    /// button — confirmed on device. `panelDidShow` fires correctly on push, so the delegate
-    /// itself is wired correctly; this looks like a CarPlay bug specific to the close button on
-    /// this beta SDK, not something fixable from here.  Re-test against newer iOS 27 betas.
+    /// KNOWN ISSUE (iOS 27 beta): The panel delegate method `panelDidHide(_ panel: CPMapPanel)` might not be called. (177590525)
+    /// https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-27-release-notes#CarPlay
     func panelDidHide(_ panel: CPMapPanel) {
         let templateId = self.templateId
         let template = self.template
 
         Task { @MainActor in
             var revealedPanelId: String?
+            var mapTemplate: CPMapTemplate?
 
             // Read panelTemplateIds after removing this entry, in the same MainActor-isolated
             // closure, so there's no race between the removal and the check for what's now on
@@ -71,6 +76,7 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
             try? await RootModule.withInterfaceController { interfaceController in
                 interfaceController.removeNavigationEntryIfPresent(templateId: templateId)
                 revealedPanelId = interfaceController.panelTemplateIds.last
+                mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
             }
 
             template?.onWillDisappear(animated: true)
@@ -82,13 +88,39 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
 
             HybridAutoPlay.removeListeners(templateId: templateId)
 
-            guard let revealedPanelId else { return }
-
-            try? RootModule.withAutoPlayTemplate(templateId: revealedPanelId) {
-                (template: AutoPlayTemplate) in
-                template.onWillAppear(animated: true)
-                template.onDidAppear(animated: true)
+            if let revealedPanelId {
+                // Another panel is now on top: it reclaims the bar buttons and its own
+                // appear pair, same as a fresh push.
+                try? RootModule.withAutoPlayTemplate(templateId: revealedPanelId) {
+                    (revealed: AutoPlayTemplate) in
+                    if let mapTemplate {
+                        applyPanelHeaderActions(revealed.getPanelHeaderActions(), to: mapTemplate)
+                    }
+                    revealed.onWillAppear(animated: true)
+                    revealed.onDidAppear(animated: true)
+                }
+            }
+            else if let mapTemplate {
+                // No panel remains: let the map template reclaim its own bar buttons.
+                try? RootModule.withAutoPlayTemplate(templateId: mapTemplate.id) {
+                    (root: AutoPlayTemplate) in
+                    root.invalidate()
+                }
             }
         }
     }
+}
+
+/// apply header buttons according to mapConfig.headerActions or remove the map provided buttons in case none are specified for the panel
+@available(iOS 27.0, *)
+@MainActor
+private func applyPanelHeaderActions(_ headerActions: [NitroAction]?, to mapTemplate: CPMapTemplate) {
+    guard let headerActions else {
+        mapTemplate.backButton = nil
+        mapTemplate.leadingNavigationBarButtons = []
+        mapTemplate.trailingNavigationBarButtons = []
+        return
+    }
+
+    setBarButtons(template: mapTemplate, barButtons: headerActions)
 }

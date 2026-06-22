@@ -265,7 +265,22 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
         name: 'list',
         type: 'glyph',
       },
-      onPress: () => AutoListTemplate.getTemplate({ mapConfig: {} }).push(),
+      onPress: () =>
+        AutoListTemplate.getTemplate({
+          mapConfig: {
+            headerActions: {
+              android: [
+                {
+                  type: 'image',
+                  image: { type: 'glyph', name: 'list' },
+                  onPress: () => {
+                    AutoListTemplate.getTemplate({ mapConfig: {} }).push();
+                  },
+                },
+              ],
+            },
+          },
+        }).push(),
     },
     {
       type: 'image',
@@ -317,7 +332,24 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           name: 'list',
           type: 'glyph',
         },
-        onPress: () => AutoListTemplate.getTemplate({ mapConfig: {} }).push(),
+        onPress: () =>
+          AutoListTemplate.getTemplate({
+            mapConfig: {
+              headerActions: {
+                ios: {
+                  leadingNavigationBarButtons: [
+                    {
+                      type: 'image',
+                      image: { type: 'glyph', name: 'list' },
+                      onPress: () => {
+                        AutoListTemplate.getTemplate({ mapConfig: {} }).push();
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          }).push(),
       },
     ],
     trailingNavigationBarButtons: [

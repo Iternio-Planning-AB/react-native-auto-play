@@ -22,6 +22,13 @@ class AutoPlayTemplate: NSObject {
         return nil
     }
 
+    /// Header actions to apply to the root map template's bar while this template renders as
+    /// a map panel (see `getPanel()`) — distinct from any `barButtons` used for a plain
+    /// `CPTemplate`, since the panel itself has no nav bar of its own.
+    func getPanelHeaderActions() -> [NitroAction]? {
+        return nil
+    }
+
     @MainActor final func invalidate() {
         if SceneStore.getRootScene() == nil {
             return
