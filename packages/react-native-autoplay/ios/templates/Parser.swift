@@ -243,6 +243,48 @@ class Parser {
         }
     }
 
+    /// Read-only equivalent of `parseInformationItems` for the map-panel case, since `CPMapPanelItem` only wraps a `CPListItem`, not a `CPInformationItem`.
+    @available(iOS 27.0, *)
+    static func parseInformationPanelItems(section: NitroSection) -> [CPMapPanelItem] {
+        return section.items.map { item in
+            CPMapPanelItem(
+                listItem: CPListItem(
+                    text: parseText(text: item.title),
+                    detailText: parseText(text: item.detailedText)
+                )
+            )
+        }
+    }
+
+    /// `actions[0]` becomes the primary text button; `actions[1]`, if present, becomes the icon-only symbol button — `CPMapPanelButtonConfiguration` supports nothing beyond that.
+    @available(iOS 27.0, *)
+    static func parseInformationPanelButtonConfiguration(
+        actions: [NitroAction]?,
+        traitCollection: UITraitCollection
+    ) -> CPMapPanelButtonConfiguration? {
+        guard let actions, let primaryAction = actions.first else { return nil }
+
+        let primaryButton = CPTextButton(
+            title: primaryAction.title ?? "",
+            textStyle: parseTextButtonStyle(style: primaryAction.style),
+            handler: { _ in primaryAction.onPress() }
+        )
+
+        var symbolButton: CPButton?
+        if actions.count > 1,
+            let image = parseNitroImage(image: actions[1].image, traitCollection: traitCollection)
+        {
+            let secondaryAction = actions[1]
+            symbolButton = CPButton(image: image) { _ in secondaryAction.onPress() }
+        }
+
+        return CPMapPanelButtonConfiguration(
+            primaryAction: primaryButton,
+            symbolButton: symbolButton,
+            travelEstimates: nil
+        )
+    }
+
     static func parseSearchResults(
         section: NitroSection?,
         traitCollection: UITraitCollection
