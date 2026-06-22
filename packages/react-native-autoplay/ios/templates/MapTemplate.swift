@@ -92,67 +92,6 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
     }
 
-    func parseMapButtons(mapButtons: [NitroMapButton]) -> [CPMapButton] {
-        guard let traitCollection = SceneStore.getRootTraitCollection() else {
-            return []
-        }
-
-        return mapButtons.map { button in
-            if let glyphImage = button.image.glyphImage,
-                let icon = SymbolFont.imageFromNitroImage(
-                    image: glyphImage,
-                    size: CPButtonMaximumImageSize.height,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-            if let assetImage = button.image.assetImage,
-                let icon = Parser.parseAssetImage(
-                    assetImage: assetImage,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-            if let remoteImage = button.image.remoteImage,
-                let icon = Parser.parseRemoteImage(
-                    remoteImage: remoteImage,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-
-            return CPMapButton { _ in
-                if button.type == .pan {
-                    self.onPanButtonPress()
-                    return
-                }
-                button.onPress?()
-            }
-        }
-
-    }
-
     @MainActor
     override func _invalidate() {
         if tripSelectorVisible {
@@ -176,7 +115,10 @@ class MapTemplate: AutoPlayHeaderProviding,
                     button.type != .pan
                 } ?? []
 
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+            template.mapButtons = Parser.parseMapButtons(
+                mapButtons: mapButtons,
+                onPanButtonPress: onPanButtonPress
+            )
 
             return
         }
@@ -191,10 +133,13 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         if !hasPanel {
             setBarButtons(template: template, barButtons: barButtons)
-        }
 
-        if let mapButtons = mapButtons {
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+            if let mapButtons = mapButtons {
+                template.mapButtons = Parser.parseMapButtons(
+                    mapButtons: mapButtons,
+                    onPanButtonPress: onPanButtonPress
+                )
+            }
         }
     }
 
@@ -506,8 +451,9 @@ class MapTemplate: AutoPlayHeaderProviding,
 
             self.template.leadingNavigationBarButtons = []
             self.template.trailingNavigationBarButtons = []
-            self.template.mapButtons = self.parseMapButtons(
-                mapButtons: mapButtons
+            self.template.mapButtons = Parser.parseMapButtons(
+                mapButtons: mapButtons,
+                onPanButtonPress: self.onPanButtonPress
             )
         }
 

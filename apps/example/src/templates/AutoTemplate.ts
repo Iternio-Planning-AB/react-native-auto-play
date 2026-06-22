@@ -348,6 +348,9 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
                   ],
                 },
               },
+              mapButtons: [
+                { type: 'custom', image: { type: 'glyph', name: 'bolt' }, onPress: () => {} },
+              ],
             },
           }).push(),
       },

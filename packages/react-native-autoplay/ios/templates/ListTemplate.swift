@@ -41,6 +41,10 @@ class ListTemplate: AutoPlayHeaderProviding {
         return config.mapConfig?.headerActions
     }
 
+    override func getPanelMapButtons() -> [NitroMapButton]? {
+        return config.mapConfig?.mapButtons
+    }
+
     init(config: ListTemplateConfig) {
         self.config = config
 

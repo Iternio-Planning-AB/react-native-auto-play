@@ -398,6 +398,70 @@ class Parser {
         }
     }
 
+    /// `onPanButtonPress` is called instead of `button.onPress` for `.pan`-typed buttons, since panning belongs to the `CPMapTemplate`, not the button.
+    static func parseMapButtons(
+        mapButtons: [NitroMapButton],
+        onPanButtonPress: @escaping () -> Void
+    ) -> [CPMapButton] {
+        guard let traitCollection = SceneStore.getRootTraitCollection() else {
+            return []
+        }
+
+        return mapButtons.map { button in
+            if let glyphImage = button.image.glyphImage,
+                let icon = SymbolFont.imageFromNitroImage(
+                    image: glyphImage,
+                    size: CPButtonMaximumImageSize.height,
+                    traitCollection: traitCollection
+                )
+            {
+                return CPMapButton(image: icon) { _ in
+                    if button.type == .pan {
+                        onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
+                }
+            }
+            if let assetImage = button.image.assetImage,
+                let icon = Parser.parseAssetImage(
+                    assetImage: assetImage,
+                    traitCollection: traitCollection
+                )
+            {
+                return CPMapButton(image: icon) { _ in
+                    if button.type == .pan {
+                        onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
+                }
+            }
+            if let remoteImage = button.image.remoteImage,
+                let icon = Parser.parseRemoteImage(
+                    remoteImage: remoteImage,
+                    traitCollection: traitCollection
+                )
+            {
+                return CPMapButton(image: icon) { _ in
+                    if button.type == .pan {
+                        onPanButtonPress()
+                        return
+                    }
+                    button.onPress?()
+                }
+            }
+
+            return CPMapButton { _ in
+                if button.type == .pan {
+                    onPanButtonPress()
+                    return
+                }
+                button.onPress?()
+            }
+        }
+    }
+
     static func parseGridButtons(
         buttons: [NitroGridButton],
         traitCollection: UITraitCollection

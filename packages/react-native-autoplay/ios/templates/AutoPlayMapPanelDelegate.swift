@@ -40,9 +40,10 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
                     .last
             }
 
-            // This panel owns the map template's bar buttons while it's on top.
+            // This panel owns the map template's bar buttons and map buttons while it's on top.
             if let mapTemplate {
                 applyPanelHeaderActions(self.template?.getPanelHeaderActions(), to: mapTemplate)
+                applyPanelMapButtons(self.template?.getPanelMapButtons(), to: mapTemplate)
             }
 
             guard let previousPanelId else { return }
@@ -89,19 +90,19 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
             HybridAutoPlay.removeListeners(templateId: templateId)
 
             if let revealedPanelId {
-                // Another panel is now on top: it reclaims the bar buttons and its own
-                // appear pair, same as a fresh push.
+                // Another panel is now on top: it reclaims the bar/map buttons and its own appear pair, same as a fresh push.
                 try? RootModule.withAutoPlayTemplate(templateId: revealedPanelId) {
                     (revealed: AutoPlayTemplate) in
                     if let mapTemplate {
                         applyPanelHeaderActions(revealed.getPanelHeaderActions(), to: mapTemplate)
+                        applyPanelMapButtons(revealed.getPanelMapButtons(), to: mapTemplate)
                     }
                     revealed.onWillAppear(animated: true)
                     revealed.onDidAppear(animated: true)
                 }
             }
             else if let mapTemplate {
-                // No panel remains: let the map template reclaim its own bar buttons.
+                // No panel remains: let the map template reclaim its own bar/map buttons.
                 try? RootModule.withAutoPlayTemplate(templateId: mapTemplate.id) {
                     (root: AutoPlayTemplate) in
                     root.invalidate()
@@ -123,4 +124,17 @@ private func applyPanelHeaderActions(_ headerActions: [NitroAction]?, to mapTemp
     }
 
     setBarButtons(template: mapTemplate, barButtons: headerActions)
+}
+
+/// Applies mapConfig.mapButtons to the map template, or clears them if the panel specifies none.
+@available(iOS 27.0, *)
+@MainActor
+private func applyPanelMapButtons(_ mapButtons: [NitroMapButton]?, to mapTemplate: CPMapTemplate) {
+    // Only need the root MapTemplate for its onPanButtonPress callback, since a .pan button still controls the same underlying map.
+    try? RootModule.withAutoPlayTemplate(templateId: mapTemplate.id) { (root: MapTemplate) in
+        mapTemplate.mapButtons = Parser.parseMapButtons(
+            mapButtons: mapButtons ?? [],
+            onPanButtonPress: root.onPanButtonPress
+        )
+    }
 }

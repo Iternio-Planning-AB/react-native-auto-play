@@ -29,6 +29,11 @@ class AutoPlayTemplate: NSObject {
         return nil
     }
 
+    /// Map buttons to apply to the root map template while this renders as a map panel (see `getPanel()`).
+    func getPanelMapButtons() -> [NitroMapButton]? {
+        return nil
+    }
+
     @MainActor final func invalidate() {
         if SceneStore.getRootScene() == nil {
             return
