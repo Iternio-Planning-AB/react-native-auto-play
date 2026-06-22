@@ -4,7 +4,7 @@ import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import type { BaseMapTemplateConfig } from './MapTemplate';
+import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -35,9 +35,14 @@ export type GridTemplateConfig = Omit<
 
   /**
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a GridTemplate with a map in background. No actions need to be specified, can be empty object.
-   * @namespace Android
+   * @namespace Android - uses MapWithContentTemplate
+   * @platform iOS - renders as a CPMapPanel on the current root map template (iOS 27+); a
+   * back button can't be specified in headerActions.ios since the panel always provides its
+   * own non-customizable back/close button.
    */
-  mapConfig?: BaseMapTemplateConfig<GridTemplate>;
+  mapConfig?: Omit<BaseMapTemplateConfig<GridTemplate>, 'headerActions'> & {
+    headerActions?: PanelHeaderActions<GridTemplate>;
+  };
 };
 
 export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<GridTemplate>> {
