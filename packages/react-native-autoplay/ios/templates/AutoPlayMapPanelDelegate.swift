@@ -35,7 +35,8 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
 
             try? await RootModule.withInterfaceController { interfaceController in
                 mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
-                previousPanelId = interfaceController.panelTemplateIds
+                previousPanelId =
+                    interfaceController.panelTemplateIds
                     .filter { $0 != templateId }
                     .last
             }

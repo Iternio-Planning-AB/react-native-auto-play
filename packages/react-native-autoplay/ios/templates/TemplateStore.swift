@@ -37,7 +37,7 @@ class TemplateStore {
 
         store = store.filter { !templateIds.contains($0.key) }
     }
-    
+
     @MainActor
     func traitCollectionDidChange() {
         store.values.forEach { template in template.traitCollectionDidChange() }

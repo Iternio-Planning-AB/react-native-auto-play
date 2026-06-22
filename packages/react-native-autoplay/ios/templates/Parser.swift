@@ -267,7 +267,9 @@ class Parser {
         let primaryButton = CPTextButton(
             title: primaryAction.title ?? "",
             textStyle: parseTextButtonStyle(style: primaryAction.style),
-            handler: { _ in primaryAction.onPress() }
+            handler: { _ in
+                primaryAction.onPress()
+            }
         )
 
         var symbolButton: CPButton?
@@ -275,7 +277,12 @@ class Parser {
             let image = parseNitroImage(image: actions[1].image, traitCollection: traitCollection)
         {
             let secondaryAction = actions[1]
-            symbolButton = CPButton(image: image) { _ in secondaryAction.onPress() }
+            symbolButton = CPButton(
+                image: image,
+                handler: { _ in
+                    secondaryAction.onPress()
+                }
+            )
         }
 
         return CPMapPanelButtonConfiguration(

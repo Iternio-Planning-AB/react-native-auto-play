@@ -172,9 +172,9 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
         case .panel(let templateId, let mapTemplate):
             guard #available(iOS 27.0, *) else { return nil }
-            
+
             try await mapTemplate.popPanel()
-            
+
             return templateId
         }
     }

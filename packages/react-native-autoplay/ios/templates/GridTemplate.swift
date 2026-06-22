@@ -46,7 +46,7 @@ class GridTemplate: AutoPlayHeaderProviding {
     init(config: GridTemplateConfig) {
         self.config = config
         buttons = config.buttons
-        
+
         let title = Parser.parseText(text: config.title)
 
         if #available(iOS 27.0, *), config.mapConfig != nil {

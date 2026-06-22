@@ -148,7 +148,9 @@ class VoiceInputManager {
         var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
 
         if preferSpeechToText, SFSpeechRecognizer.authorizationStatus() == .authorized,
-            let recognizer = language != nil ? SFSpeechRecognizer(locale: Locale(identifier: language!)) : SFSpeechRecognizer(locale: Locale.current),
+            let recognizer = language != nil
+                ? SFSpeechRecognizer(locale: Locale(identifier: language!))
+                : SFSpeechRecognizer(locale: Locale.current),
             recognizer.isAvailable
         {
             let request = SFSpeechAudioBufferRecognitionRequest()
