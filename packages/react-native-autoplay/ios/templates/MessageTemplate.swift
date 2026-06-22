@@ -37,7 +37,7 @@ class MessageTemplate: AutoPlayTemplate {
     }
 
     override func getPanelHeaderActions() -> [NitroAction]? {
-        return config.mapConfig?.headerActions
+        return config.headerActions
     }
 
     override func getPanelMapButtons() -> [NitroMapButton]? {

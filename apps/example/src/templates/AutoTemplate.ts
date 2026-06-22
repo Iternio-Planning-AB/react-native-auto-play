@@ -335,19 +335,6 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
         onPress: () =>
           AutoListTemplate.getTemplate({
             mapConfig: {
-              headerActions: {
-                ios: {
-                  leadingNavigationBarButtons: [
-                    {
-                      type: 'image',
-                      image: { type: 'glyph', name: 'list' },
-                      onPress: () => {
-                        AutoListTemplate.getTemplate({ mapConfig: {} }).push();
-                      },
-                    },
-                  ],
-                },
-              },
               mapButtons: [
                 { type: 'custom', image: { type: 'glyph', name: 'bolt' }, onPress: () => {} },
               ],
@@ -514,32 +501,6 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
                 onPress: () => {},
               },
             ],
-            ios: {
-              leadingNavigationBarButtons: [
-                {
-                  type: 'image',
-                  image: { name: 'battery_vert_050', type: 'glyph' },
-                  onPress: () => {},
-                },
-                {
-                  type: 'image',
-                  image: { name: 'barcode_reader', type: 'glyph' },
-                  onPress: () => {},
-                },
-              ],
-              trailingNavigationBarButtons: [
-                {
-                  type: 'image',
-                  image: { name: 'article_shortcut', type: 'glyph' },
-                  onPress: () => {},
-                },
-                {
-                  type: 'image',
-                  image: { name: 'directions_run', type: 'glyph' },
-                  onPress: () => {},
-                },
-              ],
-            },
           },
         },
       }).push();

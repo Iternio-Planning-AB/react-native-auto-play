@@ -123,12 +123,14 @@ export type MapHeaderActions<T> = {
   ios?: HeaderActionsIos<T>;
 };
 
-export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'> & {
-  ios?: Omit<HeaderActionsIos<T>, 'backButton'>;
-};
+/**
+ * @namespace iOS - not supported; CarPlay has no separate header for the map behind a panel, so
+ * the panel template's own `headerActions` are applied to the root map template's nav bar instead.
+ */
+export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'>;
 
 /**
- * @platform iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
+ * @namespace iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
  * optional icon-only button (any title is dropped natively), so a second action must be an
  * ImageButton rather than a TextButton, and a third action isn't supported at all.
  */

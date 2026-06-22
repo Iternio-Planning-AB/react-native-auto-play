@@ -93,9 +93,10 @@ export type ListTemplateConfig = Omit<
   /**
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a ListTemplate with a map in background. No actions need to be specified, can be empty object.
    * @namespace Android - uses MapWithContentTemplate
-   * @platform iOS - renders as a CPMapPanel on the current root map template (iOS 27+); a
-   * back button can't be specified in headerActions.ios since the panel always provides its
-   * own non-customizable back/close button.
+   * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
+   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
+   * applied to the root map template's nav bar instead, since CarPlay has no separate header
+   * for the map behind a panel.
    */
   mapConfig?: Omit<BaseMapTemplateConfig<ListTemplate>, 'headerActions'> & {
     headerActions?: PanelHeaderActions<ListTemplate>;

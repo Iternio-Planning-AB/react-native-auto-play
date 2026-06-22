@@ -38,7 +38,7 @@ class ListTemplate: AutoPlayHeaderProviding {
     }
 
     override func getPanelHeaderActions() -> [NitroAction]? {
-        return config.mapConfig?.headerActions
+        return barButtons
     }
 
     override func getPanelMapButtons() -> [NitroMapButton]? {
