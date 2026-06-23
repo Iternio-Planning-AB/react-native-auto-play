@@ -9,7 +9,6 @@ import androidx.car.app.hardware.info.Mileage
 import androidx.car.app.hardware.info.Model
 import androidx.car.app.hardware.info.Speed
 import androidx.car.app.versioning.CarAppApiLevels
-import androidx.core.content.ContextCompat
 
 object AndroidTelemetryObserver : TelemetryObserver() {
     private var carContext: CarContext? = null
@@ -81,8 +80,6 @@ object AndroidTelemetryObserver : TelemetryObserver() {
             throw UnsupportedOperationException("Telemetry not supported for this API level ${carContext.carAppApiLevel}")
         }
 
-        val carHardwareExecutor = ContextCompat.getMainExecutor(carContext)
-
         val carHardwareManager = carContext.getCarService(
             CarHardwareManager::class.java
         )
@@ -90,7 +87,7 @@ object AndroidTelemetryObserver : TelemetryObserver() {
 
         // Request any single shot values.
         try {
-            carInfo.fetchModel(carHardwareExecutor, mModelListener)
+            carInfo.fetchModel(telemetryExecutor, mModelListener)
         } catch (_: SecurityException) {
         } catch (_: NullPointerException) {
         }
@@ -102,19 +99,19 @@ object AndroidTelemetryObserver : TelemetryObserver() {
         }
 
         try {
-            carInfo.addEnergyLevelListener(carHardwareExecutor, mEnergyLevelListener)
+            carInfo.addEnergyLevelListener(telemetryExecutor, mEnergyLevelListener)
         } catch (_: SecurityException) {
         } catch (_: NullPointerException) {
         }
 
         try {
-            carInfo.addSpeedListener(carHardwareExecutor, mSpeedListener)
+            carInfo.addSpeedListener(telemetryExecutor, mSpeedListener)
         } catch (_: SecurityException) {
         } catch (_: NullPointerException) {
         }
 
         try {
-            carInfo.addMileageListener(carHardwareExecutor, mMileageListener)
+            carInfo.addMileageListener(telemetryExecutor, mMileageListener)
         } catch (_: SecurityException) {
         } catch (_: NullPointerException) {
         }
