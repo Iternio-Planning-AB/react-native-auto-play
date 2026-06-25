@@ -160,7 +160,7 @@ object AndroidTelemetryObserver : TelemetryObserver() {
         // create new instance so we can access all props after permissions were granted
         mCar?.disconnect()
 
-        val car = Car.createCar(NitroModules.applicationContext)
+        val car = Car.createCar(NitroModules.applicationContext, handler)
         mCar = car
 
         fetchStaticData(car)
