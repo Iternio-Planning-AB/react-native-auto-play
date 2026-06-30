@@ -79,3 +79,22 @@ export type AutoImage =
       timeoutMs?: number;
       type: 'remote';
     };
+
+/**
+ * Image for the CarPlay voice control overlay. Animated GIF, APNG, and WebP all animate.
+ * `color` is ignored for animated assets — frames cannot be tinted individually. Static
+ * assets and glyphs are resized/capped to fit within 150×150pt (`fontScale` controls a
+ * glyph's relative size). CarPlay enforces a 0.3s–5s animation cycle duration: shorter
+ * source animations are stretched to 0.3s by the system, longer ones are capped to 5s.
+ * @platform ios
+ */
+export type VoiceInputImage =
+  | AutoGlyph
+  | {
+      type: 'asset';
+      image: ImageSourcePropType;
+      /** Tints the image. Ignored for animated assets — frames cannot be tinted individually. */
+      color?: ThemedColor | string;
+      /** Whether the animation loops. Defaults to `true` for animated images, `false` for static. */
+      repeats?: boolean;
+    };

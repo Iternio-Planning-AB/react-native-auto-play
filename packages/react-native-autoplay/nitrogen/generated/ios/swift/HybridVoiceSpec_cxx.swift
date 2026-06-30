@@ -156,7 +156,7 @@ open class HybridVoiceSpec_cxx {
   }
   
   @inline(__always)
-  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
+  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, listeningImage: bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__, listeningImageRepeats: bridge.std__optional_bool_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
     do {
       let __result = try self.__implementation.startVoiceInput(silenceThresholdMs: { () -> Double? in
         if bridge.has_value_std__optional_double_(silenceThresholdMs) {
@@ -176,6 +176,35 @@ open class HybridVoiceSpec_cxx {
         if bridge.has_value_std__optional_std__string_(listeningText) {
           let __unwrapped = bridge.get_std__optional_std__string_(listeningText)
           return String(__unwrapped)
+        } else {
+          return nil
+        }
+      }(), listeningImage: { () -> Variant_GlyphImage_AssetImage_RemoteImage? in
+        if bridge.has_value_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(listeningImage) {
+          let __unwrapped = bridge.get_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__(listeningImage)
+          return { () -> Variant_GlyphImage_AssetImage_RemoteImage in
+            let __variant = bridge.std__variant_GlyphImage__AssetImage__RemoteImage_(__unwrapped)
+            switch __variant.index() {
+              case 0:
+                let __actual = __variant.get_0()
+                return .first(__actual)
+              case 1:
+                let __actual = __variant.get_1()
+                return .second(__actual)
+              case 2:
+                let __actual = __variant.get_2()
+                return .third(__actual)
+              default:
+                fatalError("Variant can never have index \(__variant.index())!")
+            }
+          }()
+        } else {
+          return nil
+        }
+      }(), listeningImageRepeats: { () -> Bool? in
+        if bridge.has_value_std__optional_bool_(listeningImageRepeats) {
+          let __unwrapped = bridge.get_std__optional_bool_(listeningImageRepeats)
+          return __unwrapped
         } else {
           return nil
         }

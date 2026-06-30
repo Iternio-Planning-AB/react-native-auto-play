@@ -65,6 +65,8 @@ class VoiceInputManager {
         silenceThresholdMs: Double,
         maxDurationMs: Double,
         listeningText: String,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Bool?,
         preferSpeechToText: Bool,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         language: String?
@@ -82,6 +84,8 @@ class VoiceInputManager {
                     silenceThresholdMs: silenceThresholdMs,
                     maxDurationMs: maxDurationMs,
                     listeningText: listeningText,
+                    listeningImage: listeningImage,
+                    listeningImageRepeats: listeningImageRepeats,
                     preferSpeechToText: preferSpeechToText,
                     onChunk: onChunk,
                     box: box,
@@ -128,6 +132,8 @@ class VoiceInputManager {
         silenceThresholdMs: Double,
         maxDurationMs: Double,
         listeningText: String,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Bool?,
         preferSpeechToText: Bool,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         box: ResultBox,
@@ -142,13 +148,20 @@ class VoiceInputManager {
         try session.setActive(true)
 
         if let interfaceController {
-            presentVoiceTemplate(interfaceController: interfaceController, listeningText: listeningText)
+            presentVoiceTemplate(
+                interfaceController: interfaceController,
+                listeningText: listeningText,
+                listeningImage: listeningImage,
+                listeningImageRepeats: listeningImageRepeats
+            )
         }
 
         var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
 
         if preferSpeechToText, SFSpeechRecognizer.authorizationStatus() == .authorized,
-            let recognizer = language != nil ? SFSpeechRecognizer(locale: Locale(identifier: language!)) : SFSpeechRecognizer(locale: Locale.current),
+            let recognizer = language != nil
+                ? SFSpeechRecognizer(locale: Locale(identifier: language!))
+                : SFSpeechRecognizer(locale: Locale.current),
             recognizer.isAvailable
         {
             let request = SFSpeechAudioBufferRecognitionRequest()
@@ -311,12 +324,81 @@ class VoiceInputManager {
         return VoiceInputResult(transcription: nil, audio: buffer)
     }
 
-    private func presentVoiceTemplate(interfaceController: AutoPlayInterfaceController, listeningText: String) {
+    // CPVoiceControlState enforces a maximum image size of 150x150 points.
+    private static let voiceImageMaxSize = CGSize(width: 150, height: 150)
+
+    // CPVoiceControlState also enforces a 0.3s–5s animation cycle; the 0.3s floor is applied
+    // by the system regardless of what we pass, so we only need to clamp our own ceiling.
+    private static let maxVoiceImageCycleDuration: TimeInterval = 5.0
+
+    // Bypasses RCTConvert for asset images: it collapses animated UIImages to a single frame
+    // via CGImage during scale adjustment. Parser.decodeImage preserves animation frames by
+    // walking every frame in the source via ImageIO — UIImage(data:) never builds a multi-frame
+    // .images array itself, for GIF, APNG, or WebP. Tinting is skipped for animated images since
+    // frames cannot be tinted individually.
+    private func loadVoiceImage(image: Variant_GlyphImage_AssetImage_RemoteImage?, traitCollection: UITraitCollection)
+        -> UIImage?
+    {
+        guard let image else { return nil }
+
+        if let assetImage = image.assetImage {
+            guard let url = URL(string: assetImage.uri),
+                let data = try? Data(contentsOf: url),
+                let uiImage = Parser.decodeImage(
+                    data: data,
+                    scale: CGFloat(assetImage.scale),
+                    maxDuration: VoiceInputManager.maxVoiceImageCycleDuration
+                )
+            else { return nil }
+
+            if uiImage.images != nil {
+                return Parser.resizeAnimated(uiImage, max: VoiceInputManager.voiceImageMaxSize)
+            }
+
+            if assetImage.color == nil {
+                return Parser.resize(uiImage, max: VoiceInputManager.voiceImageMaxSize)
+            }
+
+            guard let tinted = Parser.parseAssetImage(assetImage: assetImage, traitCollection: traitCollection) else {
+                return nil
+            }
+            return Parser.resize(tinted, max: VoiceInputManager.voiceImageMaxSize)
+        }
+
+        if let glyphImage = image.glyphImage {
+            return
+                SymbolFont
+                .imageFromGlyph(
+                    glyphImage: glyphImage,
+                    size: 150,  // according to docs on CPVoiceControlState.image
+                    foregroundColor: glyphImage.color,
+                    backgroundColor: glyphImage.backgroundColor,
+                    fontScale: glyphImage.fontScale ?? 1.0,
+                    traitCollection: traitCollection
+                )
+        }
+
+        return nil
+    }
+
+    private func presentVoiceTemplate(
+        interfaceController: AutoPlayInterfaceController,
+        listeningText: String,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Bool?
+    ) {
+        let traitCollection = SceneStore.getRootTraitCollection() ?? UITraitCollection.current
+        let image = loadVoiceImage(
+            image: listeningImage,
+            traitCollection: traitCollection
+        )
+
+        let repeats = listeningImageRepeats ?? (image?.images != nil)
         let listeningState = CPVoiceControlState(
             identifier: "listening",
             titleVariants: [listeningText],
-            image: nil,
-            repeats: true
+            image: image,
+            repeats: repeats
         )
         let template = CPVoiceControlTemplate(voiceControlStates: [listeningState])
         initTemplate(template: template, id: "voice-input")

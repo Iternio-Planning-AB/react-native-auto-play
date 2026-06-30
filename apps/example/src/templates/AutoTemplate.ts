@@ -237,28 +237,36 @@ const mapButtonHandler: (template: MapTemplate) => void = (template) => {
   });
 };
 
+const voiceInputButton: ImageButton = {
+  type: 'image',
+  image: { name: 'mic', type: 'glyph' },
+  onPress: () => {
+    void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
+      if (!isGranted) {
+        return;
+      }
+
+      void HybridVoice.startVoiceInput({
+        preferSpeechToText: true,
+        listeningImage: {
+          type: 'asset',
+          image: require('../../assets/Microphone.webp'),
+        },
+      }).then((result) => {
+        if (result.audio) {
+          console.log(`received ${result.audio.byteLength} bytes`);
+          dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
+        } else {
+          console.log(`received ${result.transcription}`);
+        }
+      });
+    });
+  },
+};
+
 const mapHeaderActions: MapTemplateConfig['headerActions'] = {
   android: [
-    {
-      type: 'image',
-      image: { name: 'mic', type: 'glyph' },
-      onPress: () => {
-        void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
-          if (!isGranted) {
-            return;
-          }
-
-          void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
-            if (result.audio) {
-              console.log(`received ${result.audio.byteLength} bytes`);
-              dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
-            } else {
-              console.log(`received ${result.transcription}`);
-            }
-          });
-        });
-      },
-    },
+    voiceInputButton,
     {
       type: 'image',
       image: {
@@ -286,31 +294,7 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
   ],
   ios: {
     leadingNavigationBarButtons: [
-      {
-        type: 'image',
-        image: {
-          name: 'mic',
-          type: 'glyph',
-        },
-        onPress: () => {
-          void HybridVoice.requestVoiceInputPermission().then((isGranted) => {
-            if (!isGranted) {
-              return;
-            }
-
-            void HybridVoice.startVoiceInput({ preferSpeechToText: true }).then((result) => {
-              if (result.audio) {
-                console.log(`received ${result.audio.byteLength} bytes`);
-                dispatch(
-                  setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64'))
-                );
-              } else {
-                console.log(`received ${result.transcription}`);
-              }
-            });
-          });
-        },
-      },
+      voiceInputButton,
       {
         type: 'image',
         image: {

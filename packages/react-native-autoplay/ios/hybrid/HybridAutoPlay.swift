@@ -22,7 +22,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
-
     override init() {
         HybridAutoPlay.listeners.removeAll()
         HybridAutoPlay.renderStateListeners.removeAll()

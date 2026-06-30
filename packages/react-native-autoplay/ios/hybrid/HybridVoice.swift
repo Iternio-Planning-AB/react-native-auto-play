@@ -32,6 +32,8 @@ class HybridVoice: HybridVoiceSpec {
         silenceThresholdMs: Double?,
         maxDurationMs: Double?,
         listeningText: String?,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Bool?,
         preferSpeechToText: Bool?,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         language: String?
@@ -49,6 +51,8 @@ class HybridVoice: HybridVoiceSpec {
                 silenceThresholdMs: silenceThresholdMs ?? 1_500,
                 maxDurationMs: maxDurationMs ?? 10_000,
                 listeningText: listeningText ?? "Listening...",
+                listeningImage: listeningImage,
+                listeningImageRepeats: listeningImageRepeats,
                 preferSpeechToText: preferSpeechToText ?? false,
                 onChunk: onChunk,
                 language: language
