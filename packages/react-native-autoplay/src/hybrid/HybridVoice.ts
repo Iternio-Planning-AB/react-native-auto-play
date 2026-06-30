@@ -1,6 +1,7 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { Voice } from '../specs/Voice.nitro';
 import type { VoiceInputOptions, VoiceInputResult } from '../types/Voice';
+import { NitroImageUtil } from '../utils/NitroImage';
 
 const _native = NitroModules.createHybridObject<Voice>('Voice');
 
@@ -17,14 +18,20 @@ const startVoiceInput: StartVoiceInput = async (options?: VoiceInputOptions) => 
     silenceThresholdMs,
     maxDurationMs,
     listeningText,
+    listeningImage,
     preferSpeechToText,
     language,
   } = options ?? {};
+
+  const listeningImageRepeats =
+    listeningImage?.type === 'asset' ? listeningImage.repeats : undefined;
 
   return await _native.startVoiceInput(
     silenceThresholdMs,
     maxDurationMs,
     listeningText,
+    NitroImageUtil.convert(listeningImage),
+    listeningImageRepeats,
     preferSpeechToText,
     onChunk,
     language
