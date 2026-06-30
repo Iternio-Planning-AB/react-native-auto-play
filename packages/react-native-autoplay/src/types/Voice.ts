@@ -15,7 +15,7 @@ export interface VoiceInputOptions {
   maxDurationMs?: number;
   listeningText?: string;
   /** Image displayed in the CarPlay voice control overlay. See {@link VoiceInputImage}.
-   * @platform ios
+   * @namespace ios
    */
   listeningImage?: VoiceInputImage;
   preferSpeechToText?: boolean;

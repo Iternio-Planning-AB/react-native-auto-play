@@ -86,7 +86,7 @@ export type AutoImage =
  * assets and glyphs are resized/capped to fit within 150×150pt (`fontScale` controls a
  * glyph's relative size). CarPlay enforces a 0.3s–5s animation cycle duration: shorter
  * source animations are stretched to 0.3s by the system, longer ones are capped to 5s.
- * @platform ios
+ * @namespace ios
  */
 export type VoiceInputImage =
   | AutoGlyph
