@@ -378,7 +378,8 @@ class VoiceInputManager(
                     ) ?: -1
 
                     if (read < 0) {
-                        cancelledByUser = true
+                        // Whenever the user dismisses the microphone on the car screen, the next call to read will return -1
+                        cancelledByUser = carAudioRecord != null && read == -1
                         break
                     }
 

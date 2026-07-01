@@ -131,7 +131,7 @@ class VoiceInputManager {
             // Mic is open — present template then play start sound.
             // isIgnoringSamples discards tap buffers during the sound so it isn't recorded.
             // recordingStart is set after the sound so silence/max-duration timers are accurate.
-            self.isIgnoringSamples = startSoundUri != nil
+            self.stopLock.withLock { self.isIgnoringSamples = startSoundUri != nil }
             Task {
                 if let interfaceController = interfaceController {
                     await self.presentVoiceTemplate(
@@ -143,9 +143,11 @@ class VoiceInputManager {
                 }
                 if let uri = startSoundUri {
                     await self.playSound(uri: uri, setupSession: false)
-                    self.isIgnoringSamples = false
                 }
-                self.recordingStart = Date()
+                self.stopLock.withLock {
+                    self.isIgnoringSamples = false
+                    self.recordingStart = Date()
+                }
             }
         }
 
@@ -318,7 +320,15 @@ class VoiceInputManager {
             bufferSize: VoiceInputManager.tapBufferSize,
             format: nativeFormat
         ) { [weak self] buffer, _ in
-            guard let self, !self.isStopping, !self.isIgnoringSamples else { return }
+            guard let self else { return }
+
+            self.stopLock.lock()
+            let stopping = self.isStopping
+            let ignoringSamples = self.isIgnoringSamples
+            let recordingStartSnapshot = self.recordingStart
+            self.stopLock.unlock()
+
+            guard !stopping, !ignoringSamples else { return }
 
             // Feed STT if active
             activeRecognitionRequest?.append(buffer)
@@ -361,7 +371,7 @@ class VoiceInputManager {
             let now = Date()
 
             // Max duration — applies in both modes
-            if let start = self.recordingStart,
+            if let start = recordingStartSnapshot,
                 now.timeIntervalSince(start) * 1000 >= maxDurationMs
             {
                 self.triggerAutoStop(interfaceController: interfaceController)
@@ -370,7 +380,7 @@ class VoiceInputManager {
 
             // Silence detection — skip during warm-up so the pipeline has time
             // to stabilise before we start measuring amplitude
-            if let start = self.recordingStart,
+            if let start = recordingStartSnapshot,
                 now.timeIntervalSince(start) * 1000 >= VoiceInputManager.warmupMs
             {
                 let peak = newSamples.reduce(0) { max($0, abs(Int($1))) }
