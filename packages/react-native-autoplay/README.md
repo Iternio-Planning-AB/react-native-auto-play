@@ -837,36 +837,95 @@ new ListTemplate({
 
 ### Voice Input
 
-The library provides a cross-platform in-app voice recording API built on top of the car microphone (when connected) or the device microphone (when no car is connected).
+The library provides a cross-platform in-app voice recording API built on top of the car microphone (when connected) or the device microphone (when no car is connected). The voice API lives in `HybridVoice`.
 
 #### Permission
 
 ```ts
-// Check whether permission is already granted
-const granted = HybridAutoPlay.hasVoiceInputPermission();
+import { HybridVoice } from '@iternio/react-native-auto-play';
+
+// Check whether permission is already granted (synchronous)
+const granted = HybridVoice.hasVoiceInputPermission();
 
 // Request permission if not yet granted
-const granted = await HybridAutoPlay.requestVoiceInputPermission();
+const granted = await HybridVoice.requestVoiceInputPermission();
 ```
+
+On **iOS**: checks/requests both microphone and speech recognition authorization.
+On **Android**: checks/requests `RECORD_AUDIO` via the car context when connected, otherwise via the RN application context.
 
 #### Recording
 
 ```ts
-// Start recording — resolves with a raw PCM ArrayBuffer (16 kHz, 16-bit, mono)
-// Recording stops automatically on silence or when maxDurationMs is reached
-const pcmBuffer = await HybridAutoPlay.startVoiceInput(
-  1500,       // silenceThresholdMs (default 1500)
-  10_000,     // maxDurationMs (default 10 000)
-  'Listening...' // text shown on the car screen while recording (iOS CarPlay)
-);
+import { HybridVoice, ErrorUtil } from '@iternio/react-native-auto-play';
 
-// Stop recording early — resolves startVoiceInput with the audio captured so far
-HybridAutoPlay.stopVoiceInput();
+try {
+  const result = await HybridVoice.startVoiceInput({
+    silenceThresholdMs: 1500,      // ms of silence before auto-stop (default 1500)
+    maxDurationMs: 10_000,         // hard cap on recording duration (default 10 000)
+    listeningText: 'Listening…',   // iOS CarPlay: text shown on CPVoiceControlTemplate
+    preferSpeechToText: false,     // true → STT transcription; false → raw PCM (default)
+    startSound: require('./beep_start.mp3'), // played just before recording starts
+    endSound: require('./beep_end.mp3'),     // played just after recording stops
+    onChunk: (chunk) => {
+      // chunk.audio — raw PCM ArrayBuffer chunk (PCM mode)
+      // chunk.partial — partial transcription string (STT mode)
+    },
+  });
+
+  if (result.transcription) {
+    console.log('Transcription:', result.transcription);
+  } else if (result.audio) {
+    console.log(`PCM audio: ${result.audio.byteLength} bytes`);
+  }
+} catch (e) {
+  if (ErrorUtil.isVoiceInputCanceledError(e)) {
+    // User pressed the cancel button on the car screen
+    console.log('Voice input cancelled');
+  } else {
+    console.error(e);
+  }
+}
+
+// Stop recording early — resolves startVoiceInput with audio captured so far
+HybridVoice.stopVoiceInput();
 ```
 
-On **Android**: uses `CarAudioRecord` when Android Auto is connected, otherwise falls back to standard `AudioRecord`.
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `silenceThresholdMs` | `number` | `1500` | Auto-stop after this many ms of silence |
+| `maxDurationMs` | `number` | `10000` | Hard recording time limit |
+| `listeningText` | `string` | — | iOS only — text shown on `CPVoiceControlTemplate` |
+| `listeningImage` | `VoiceInputImage` | — | iOS only — animated image in the CarPlay overlay |
+| `preferSpeechToText` | `boolean` | `false` | `true` → resolve with `{ transcription }`; `false` → resolve with `{ audio }` |
+| `startSound` | `number` | — | Metro asset (`require('./beep.mp3')`) played before recording. Takes audio focus so other apps pause. |
+| `endSound` | `number` | — | Metro asset played after recording stops |
+| `onChunk` | `(chunk) => void` | — | Streaming callback: `chunk.audio` (PCM) or `chunk.partial` (STT) |
+| `language` | `string` | system | BCP-47 language tag for the STT recognizer |
 
-On **iOS**: presents `CPVoiceControlTemplate` on the car screen when CarPlay is connected, and captures audio via `AVAudioEngine`.
+**PCM result** (`preferSpeechToText: false`, default): resolves with `{ audio: ArrayBuffer }` — raw 16 kHz, 16-bit, mono PCM.
+
+**STT result** (`preferSpeechToText: true`): resolves with `{ transcription: string }` on success, or falls back to `{ audio }` if recognition is unavailable.
+
+On **Android**: uses `CarAudioRecord` when Android Auto is connected, otherwise falls back to standard `AudioRecord`. STT uses `SpeechRecognizer`.
+
+On **iOS**: presents `CPVoiceControlTemplate` on the car screen when CarPlay is connected, and captures audio via `AVAudioEngine`. STT uses `SFSpeechRecognizer`.
+
+#### Cancel detection
+
+When the user presses the cancel button on the car screen, `startVoiceInput` rejects with a `voiceInputCancelled` error on both platforms. Use `ErrorUtil.isVoiceInputCanceledError` to distinguish it from other errors:
+
+```ts
+import { ErrorUtil } from '@iternio/react-native-auto-play';
+
+HybridVoice.startVoiceInput().catch((e) => {
+  if (ErrorUtil.isVoiceInputCanceledError(e)) {
+    // user dismissed — no action needed
+  } else {
+    throw e;
+  }
+});
+```
 
 #### OS-triggered voice input (Android only)
 
