@@ -14,7 +14,7 @@
 ## Features
 
 -   **Cross-Platform:** Write once, run on both Apple CarPlay and Android Auto.
--  **Both Architectures:** Supports both the legacy and the new React Native architecture.
+-   **New Architectures:** Supports React Native new architecture only.
 -   **Template-Based UI:** Utilize a rich set of templates like `MapTemplate`, `ListTemplate`, `GridTemplate`, and more to build UIs that comply with automotive design guidelines.
 -   **Navigation APIs:** Build full-featured navigation experiences with APIs for trip management, maneuvers, and route guidance.
 -   **Dashboard & Cluster Support:** Extend your app's presence to the CarPlay Dashboard (CarPlay only) and instrument cluster displays (CarPlay & Android Auto).
