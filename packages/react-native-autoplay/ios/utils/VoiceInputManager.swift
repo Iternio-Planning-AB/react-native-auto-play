@@ -456,13 +456,20 @@ class VoiceInputManager {
             image: image,
             repeats: repeats
         )
-        let template = CPVoiceControlTemplate(voiceControlStates: [listeningState])
-        initTemplate(template: template, id: "voice-input")
-        voiceControlTemplate = template
+
+        let voiceTemplate = VoiceInputTemplate(
+            voiceControlStates: [listeningState],
+            id: "voice-input"
+        ) { [weak self] in
+            self?.stop()
+        }
+
+
+        voiceControlTemplate = voiceTemplate.template
 
         Task { @MainActor in
-            try? await interfaceController.presentTemplate(template, animated: true)
-            template.activateVoiceControlState(withIdentifier: "listening")
+            try? await interfaceController.presentTemplate(voiceTemplate.template, animated: true)
+            voiceTemplate.template.activateVoiceControlState(withIdentifier: "listening")
         }
     }
 
