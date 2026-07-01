@@ -1,4 +1,4 @@
-const isTemplateNotFoundError = (error: unknown): error is Error => {
+const isError = (error: unknown): error is { message: string } => {
   if (error == null) {
     return false;
   }
@@ -19,7 +19,23 @@ const isTemplateNotFoundError = (error: unknown): error is Error => {
     return false;
   }
 
-  return error.message.startsWith('templateNotFound');
+  return true;
 };
 
-export const ErrorUtil = { isTemplateNotFoundError };
+const isTemplateNotFoundError = (error: unknown): error is Error => {
+  if (isError(error)) {
+    return error.message.startsWith('templateNotFound');
+  }
+
+  return false;
+};
+
+const isVoiceInputCanceledError = (error: unknown): error is Error => {
+  if (isError(error)) {
+    return error.message.startsWith('voiceInputCancelled');
+  }
+
+  return false;
+};
+
+export const ErrorUtil = { isTemplateNotFoundError, isVoiceInputCanceledError };

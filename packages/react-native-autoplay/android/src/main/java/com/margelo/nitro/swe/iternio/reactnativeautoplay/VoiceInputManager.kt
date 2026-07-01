@@ -64,6 +64,9 @@ class VoiceInputManager(
     @Volatile
     private var isRecording = false
 
+    @Volatile
+    private var cancelledByUser = false
+
     // STT state — only set when SpeechRecognizer owns the mic
     @Volatile
     private var activeSpeechRecognizer: SpeechRecognizer? = null
@@ -78,6 +81,7 @@ class VoiceInputManager(
         startSoundUri: String? = null,
         endSoundUri: String? = null,
     ): VoiceInputResult {
+        cancelledByUser = false
         if (!requestAudioFocus()) {
             throw IllegalStateException("Audio focus request denied")
         }
@@ -102,6 +106,7 @@ class VoiceInputManager(
             } else {
                 startPCM(silenceThresholdMs, maxDurationMs, onChunk)
             }
+            if (cancelledByUser) throw VoiceInputCancelledException()
             endSoundUri?.let { playSound(it) }
             return result
         } finally {
@@ -373,6 +378,7 @@ class VoiceInputManager(
                     ) ?: -1
 
                     if (read < 0) {
+                        cancelledByUser = true
                         break
                     }
 
