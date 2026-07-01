@@ -13,7 +13,9 @@ export interface Voice extends HybridObject<{ android: 'kotlin'; ios: 'swift' }>
     listeningImageRepeats?: boolean,
     preferSpeechToText?: boolean,
     onChunk?: (chunk: VoiceInputChunk) => void,
-    language?: string
+    language?: string,
+    startSoundUri?: string,
+    endSoundUri?: string
   ): Promise<VoiceInputResult>;
   stopVoiceInput(): void;
 }

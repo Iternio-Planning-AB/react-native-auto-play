@@ -252,6 +252,8 @@ const voiceInputButton: ImageButton = {
           type: 'asset',
           image: require('../../assets/Microphone.webp'),
         },
+        startSound: require('../../assets/voice-input/start.mp3'),
+        endSound: require('../../assets/voice-input/end.mp3'),
       }).then((result) => {
         if (result.audio) {
           console.log(`received ${result.audio.byteLength} bytes`);

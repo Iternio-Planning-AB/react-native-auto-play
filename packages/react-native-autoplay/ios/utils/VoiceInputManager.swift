@@ -3,6 +3,31 @@ import CarPlay
 import NitroModules
 import Speech
 
+/// Keeps itself and the player alive until playback finishes.
+/// Needed because AVAudioPlayer.delegate is weak, so without an external strong
+/// reference the delegate (and player) would be released immediately after play().
+private final class AudioPlayerDelegate: NSObject, AVAudioPlayerDelegate, @unchecked Sendable {
+    private let onFinish: () -> Void
+    private var keepAlive: AudioPlayerDelegate?
+    private var player: AVAudioPlayer?
+
+    init(player: AVAudioPlayer, _ onFinish: @escaping () -> Void) {
+        self.onFinish = onFinish
+        self.player = player
+        super.init()
+        keepAlive = self
+    }
+
+    private func finish() {
+        player = nil
+        keepAlive = nil
+        onFinish()
+    }
+
+    func audioPlayerDidFinishPlaying(_: AVAudioPlayer, successfully _: Bool) { finish() }
+    func audioPlayerDecodeErrorDidOccur(_: AVAudioPlayer, error _: Error?) { finish() }
+}
+
 /// Wraps CheckedContinuation so it can only be resumed once even when
 /// shared between a stop() call and an async recognition task callback.
 private final class ResultBox: @unchecked Sendable {
@@ -69,9 +94,22 @@ class VoiceInputManager {
         listeningImageRepeats: Bool?,
         preferSpeechToText: Bool,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
-        language: String?
+        language: String?,
+        startSoundUri: String?,
+        endSoundUri: String?
     ) async throws -> VoiceInputResult {
-        return try await withCheckedThrowingContinuation { cont in
+        if let interfaceController = interfaceController {
+            presentVoiceTemplate(
+                interfaceController: interfaceController,
+                listeningText: listeningText,
+                listeningImage: listeningImage,
+                listeningImageRepeats: listeningImageRepeats
+            )
+        }
+
+        if let uri = startSoundUri { await playSound(uri: uri) }
+
+        let result = try await withCheckedThrowingContinuation { cont in
             let box = ResultBox(cont)
             self.resultBox = box
             self.samples = []
@@ -83,9 +121,6 @@ class VoiceInputManager {
                     interfaceController: interfaceController,
                     silenceThresholdMs: silenceThresholdMs,
                     maxDurationMs: maxDurationMs,
-                    listeningText: listeningText,
-                    listeningImage: listeningImage,
-                    listeningImageRepeats: listeningImageRepeats,
                     preferSpeechToText: preferSpeechToText,
                     onChunk: onChunk,
                     box: box,
@@ -96,6 +131,39 @@ class VoiceInputManager {
                 self.cleanup(interfaceController: interfaceController)
                 box.resume(throwing: error)
             }
+        }
+
+        if let uri = endSoundUri { await playSound(uri: uri) }
+
+        return result
+    }
+
+    private func playSound(uri: String) async {
+        guard let url = URL(string: uri) else { return }
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true)
+            // URLSession handles both http:// (Metro dev server) and file:// (release bundle)
+            let (data, _) = try await URLSession.shared.data(from: url)
+            await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+                DispatchQueue.main.async {
+                    do {
+                        let player = try AVAudioPlayer(data: data)
+                        let delegate = AudioPlayerDelegate(player: player) { cont.resume() }
+                        player.delegate = delegate
+                        player.prepareToPlay()
+                        player.play()
+                    }
+                    catch {
+                        cont.resume()
+                    }
+                }
+            }
+        }
+        catch {
+            print(error)
+            // fail silently — a broken sound file must not block voice input
         }
     }
 
@@ -131,9 +199,6 @@ class VoiceInputManager {
         interfaceController: AutoPlayInterfaceController?,
         silenceThresholdMs: Double,
         maxDurationMs: Double,
-        listeningText: String,
-        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
-        listeningImageRepeats: Bool?,
         preferSpeechToText: Bool,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         box: ResultBox,
@@ -146,15 +211,6 @@ class VoiceInputManager {
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playAndRecord, mode: .measurement, options: [])
         try session.setActive(true)
-
-        if let interfaceController {
-            presentVoiceTemplate(
-                interfaceController: interfaceController,
-                listeningText: listeningText,
-                listeningImage: listeningImage,
-                listeningImageRepeats: listeningImageRepeats
-            )
-        }
 
         var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
 

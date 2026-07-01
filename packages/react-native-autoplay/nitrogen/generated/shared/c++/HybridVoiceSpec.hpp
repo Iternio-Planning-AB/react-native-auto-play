@@ -68,7 +68,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       // Methods
       virtual bool hasVoiceInputPermission() = 0;
       virtual std::shared_ptr<Promise<bool>> requestVoiceInputPermission() = 0;
-      virtual std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language) = 0;
+      virtual std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri) = 0;
       virtual void stopVoiceInput() = 0;
 
     protected:

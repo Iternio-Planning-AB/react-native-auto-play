@@ -36,7 +36,9 @@ class HybridVoice: HybridVoiceSpec {
         listeningImageRepeats: Bool?,
         preferSpeechToText: Bool?,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
-        language: String?
+        language: String?,
+        startSoundUri: String?,
+        endSoundUri: String?
     ) throws -> Promise<VoiceInputResult> {
         return Promise.async {
             let interfaceController = try? await RootModule.withInterfaceController { $0 }
@@ -55,7 +57,9 @@ class HybridVoice: HybridVoiceSpec {
                 listeningImageRepeats: listeningImageRepeats,
                 preferSpeechToText: preferSpeechToText ?? false,
                 onChunk: onChunk,
-                language: language
+                language: language,
+                startSoundUri: startSoundUri,
+                endSoundUri: endSoundUri
             )
         }
     }

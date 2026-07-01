@@ -156,7 +156,7 @@ open class HybridVoiceSpec_cxx {
   }
   
   @inline(__always)
-  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, listeningImage: bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__, listeningImageRepeats: bridge.std__optional_bool_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
+  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, listeningImage: bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__, listeningImageRepeats: bridge.std__optional_bool_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_, startSoundUri: bridge.std__optional_std__string_, endSoundUri: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
     do {
       let __result = try self.__implementation.startVoiceInput(silenceThresholdMs: { () -> Double? in
         if bridge.has_value_std__optional_double_(silenceThresholdMs) {
@@ -230,6 +230,20 @@ open class HybridVoiceSpec_cxx {
       }(), language: { () -> String? in
         if bridge.has_value_std__optional_std__string_(language) {
           let __unwrapped = bridge.get_std__optional_std__string_(language)
+          return String(__unwrapped)
+        } else {
+          return nil
+        }
+      }(), startSoundUri: { () -> String? in
+        if bridge.has_value_std__optional_std__string_(startSoundUri) {
+          let __unwrapped = bridge.get_std__optional_std__string_(startSoundUri)
+          return String(__unwrapped)
+        } else {
+          return nil
+        }
+      }(), endSoundUri: { () -> String? in
+        if bridge.has_value_std__optional_std__string_(endSoundUri) {
+          let __unwrapped = bridge.get_std__optional_std__string_(endSoundUri)
           return String(__unwrapped)
         } else {
           return nil
