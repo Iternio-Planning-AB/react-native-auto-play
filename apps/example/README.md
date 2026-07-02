@@ -56,4 +56,4 @@ This example app demonstrates how to:
 *   **Display content on the instrument cluster** using `AutoPlayCluster`.
 *   **Display content on the CarPlay dashboard** using `CarPlayDashboard`.
 *   **Access telemetry data** on Android Auto.
-*   **Use voice input** on Android Auto.
+*   **Use voice input** on Android Auto and CarPlay.
