@@ -107,8 +107,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language) override {
-      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk, language);
+    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri) override {
+      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk, language, startSoundUri, endSoundUri);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

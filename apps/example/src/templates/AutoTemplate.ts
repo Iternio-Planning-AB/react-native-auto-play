@@ -2,6 +2,7 @@ import {
   type Alert,
   type BackButton,
   CarPlayDashboard,
+  ErrorUtil,
   type HeaderActions,
   HybridAutoPlay,
   HybridVoice,
@@ -252,14 +253,24 @@ const voiceInputButton: ImageButton = {
           type: 'asset',
           image: require('../../assets/Microphone.webp'),
         },
-      }).then((result) => {
-        if (result.audio) {
-          console.log(`received ${result.audio.byteLength} bytes`);
-          dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
-        } else {
-          console.log(`received ${result.transcription}`);
-        }
-      });
+        startSound: require('../../assets/voice-input/start.mp3'),
+        endSound: require('../../assets/voice-input/end.mp3'),
+      })
+        .then((result) => {
+          if (result.audio) {
+            console.log(`received ${result.audio.byteLength} bytes`);
+            dispatch(setRecording(Buffer.from(new Uint8Array(result.audio)).toString('base64')));
+          } else {
+            console.log(`received ${result.transcription}`);
+          }
+        })
+        .catch((e) => {
+          if (ErrorUtil.isVoiceInputCanceledError(e)) {
+            console.log('user canceled');
+          } else {
+            console.error(e);
+          }
+        });
     });
   },
 };

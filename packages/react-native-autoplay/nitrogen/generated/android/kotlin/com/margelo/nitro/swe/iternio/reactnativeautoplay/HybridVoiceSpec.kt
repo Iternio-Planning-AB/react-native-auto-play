@@ -37,12 +37,12 @@ abstract class HybridVoiceSpec: HybridObject() {
   @Keep
   abstract fun requestVoiceInputPermission(): Promise<Boolean>
   
-  abstract fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?, listeningImageRepeats: Boolean?, preferSpeechToText: Boolean?, onChunk: ((chunk: VoiceInputChunk) -> Unit)?, language: String?): Promise<VoiceInputResult>
+  abstract fun startVoiceInput(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?, listeningImageRepeats: Boolean?, preferSpeechToText: Boolean?, onChunk: ((chunk: VoiceInputChunk) -> Unit)?, language: String?, startSoundUri: String?, endSoundUri: String?): Promise<VoiceInputResult>
   
   @DoNotStrip
   @Keep
-  private fun startVoiceInput_cxx(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?, listeningImageRepeats: Boolean?, preferSpeechToText: Boolean?, onChunk: Func_void_VoiceInputChunk?, language: String?): Promise<VoiceInputResult> {
-    val __result = startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk?.let { it }, language)
+  private fun startVoiceInput_cxx(silenceThresholdMs: Double?, maxDurationMs: Double?, listeningText: String?, listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?, listeningImageRepeats: Boolean?, preferSpeechToText: Boolean?, onChunk: Func_void_VoiceInputChunk?, language: String?, startSoundUri: String?, endSoundUri: String?): Promise<VoiceInputResult> {
+    val __result = startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk?.let { it }, language, startSoundUri, endSoundUri)
     return __result
   }
   
