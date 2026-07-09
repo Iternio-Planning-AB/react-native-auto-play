@@ -62,7 +62,6 @@ class VoiceInputManager {
     private var samples: [Int16] = []
     private var isStopping = false
     private var cancelledByUser = false
-    private var isIgnoringSamples = false
     private let stopLock = NSLock()
 
     // STT
@@ -128,25 +127,20 @@ class VoiceInputManager {
                 return
             }
 
-            // Mic is open — present template then play start sound.
-            // isIgnoringSamples discards tap buffers during the sound so it isn't recorded.
-            // recordingStart is set after the sound so silence/max-duration timers are accurate.
-            self.stopLock.withLock { self.isIgnoringSamples = startSoundUri != nil }
-            Task {
-                if let interfaceController = interfaceController {
+            // Mic is open — fire the start sound immediately so it plays while the template
+            // animates in. Both happen concurrently; the chime ends and the user speaks
+            // knowing the mic has been running since before either started.
+            if let uri = startSoundUri {
+                Task { await self.playSound(uri: uri, setupSession: false) }
+            }
+            if let interfaceController = interfaceController {
+                Task {
                     await self.presentVoiceTemplate(
                         interfaceController: interfaceController,
                         listeningText: listeningText,
                         listeningImage: listeningImage,
                         listeningImageRepeats: listeningImageRepeats
                     )
-                }
-                if let uri = startSoundUri {
-                    await self.playSound(uri: uri, setupSession: false)
-                }
-                self.stopLock.withLock {
-                    self.isIgnoringSamples = false
-                    self.recordingStart = Date()
                 }
             }
         }
@@ -311,9 +305,8 @@ class VoiceInputManager {
             throw VoiceInputError.converterUnavailable
         }
 
-        recordingStart = nil
+        recordingStart = Date()
         silenceStart = nil
-        isIgnoringSamples = false
 
         inputNode.installTap(
             onBus: 0,
@@ -324,11 +317,10 @@ class VoiceInputManager {
 
             self.stopLock.lock()
             let stopping = self.isStopping
-            let ignoringSamples = self.isIgnoringSamples
             let recordingStartSnapshot = self.recordingStart
             self.stopLock.unlock()
 
-            guard !stopping, !ignoringSamples else { return }
+            guard !stopping else { return }
 
             // Feed STT if active
             activeRecognitionRequest?.append(buffer)
