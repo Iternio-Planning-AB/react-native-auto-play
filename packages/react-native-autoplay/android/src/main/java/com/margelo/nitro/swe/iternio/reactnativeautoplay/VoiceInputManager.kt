@@ -86,7 +86,7 @@ class VoiceInputManager(
             throw IllegalStateException("Audio focus request denied")
         }
         try {
-            startSoundUri?.let { playSound(it) }
+            val startSoundJob = startSoundUri?.let { uri -> scope.launch { playSound(uri) } }
             val result = if (preferSpeechToText) {
                 val context = NitroModules.applicationContext ?: throw IllegalArgumentException()
                 if (SpeechRecognizer.isRecognitionAvailable(context)) {
@@ -106,6 +106,7 @@ class VoiceInputManager(
             } else {
                 startPCM(silenceThresholdMs, maxDurationMs, onChunk)
             }
+            startSoundJob?.join()
             if (cancelledByUser) throw VoiceInputCancelledException()
             endSoundUri?.let { playSound(it) }
             return result

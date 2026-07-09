@@ -3,9 +3,7 @@ import CarPlay
 import NitroModules
 import Speech
 
-/// Keeps itself and the player alive until playback finishes.
-/// Needed because AVAudioPlayer.delegate is weak, so without an external strong
-/// reference the delegate (and player) would be released immediately after play().
+/// Retains the player and itself until playback finishes — AVAudioPlayer.delegate is weak.
 private final class AudioPlayerDelegate: NSObject, AVAudioPlayerDelegate, @unchecked Sendable {
     private let onFinish: () -> Void
     private var keepAlive: AudioPlayerDelegate?
@@ -28,8 +26,7 @@ private final class AudioPlayerDelegate: NSObject, AVAudioPlayerDelegate, @unche
     func audioPlayerDecodeErrorDidOccur(_: AVAudioPlayer, error _: Error?) { finish() }
 }
 
-/// Wraps CheckedContinuation so it can only be resumed once even when
-/// shared between a stop() call and an async recognition task callback.
+/// CheckedContinuation wrapper that can only be resumed once, safe across concurrent stop() and recognition callbacks.
 private final class ResultBox: @unchecked Sendable {
     private var continuation: CheckedContinuation<VoiceInputResult, Error>?
     private let lock = NSLock()
@@ -53,8 +50,7 @@ private final class ResultBox: @unchecked Sendable {
     }
 }
 
-/// Captures audio from the car microphone and buffers raw 16 kHz / 16-bit / mono PCM,
-/// or transcribes it via SFSpeechRecognizer when preferSpeechToText is true.
+/// Records 16 kHz / 16-bit mono PCM from the car mic, or transcribes via SFSpeechRecognizer.
 class VoiceInputManager {
     private var audioEngine: AVAudioEngine?
     private var voiceControlTemplate: CPVoiceControlTemplate?
@@ -62,7 +58,6 @@ class VoiceInputManager {
     private var samples: [Int16] = []
     private var isStopping = false
     private var cancelledByUser = false
-    private var isIgnoringSamples = false
     private let stopLock = NSLock()
 
     // STT
@@ -72,6 +67,7 @@ class VoiceInputManager {
     // Timing
     private var recordingStart: Date?
     private var silenceStart: Date?
+    private var firstBufferContinuation: CheckedContinuation<Void, Never>?
 
     private static let sampleRate: Double = 16_000
     private static let tapBufferSize: AVAudioFrameCount = 4_096
@@ -103,6 +99,13 @@ class VoiceInputManager {
         stopLock.withLock {
             cancelledByUser = false
         }
+        // Single session for the full flow (start sound + recording + end sound); defer deactivates once at the end.
+        let session = AVAudioSession.sharedInstance()
+        try session.setCategory(.playAndRecord, mode: .measurement, options: [])
+        try session.setActive(true)
+        defer {
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        }
 
         let result = try await withCheckedThrowingContinuation { cont in
             let box = ResultBox(cont)
@@ -128,25 +131,23 @@ class VoiceInputManager {
                 return
             }
 
-            // Mic is open — present template then play start sound.
-            // isIgnoringSamples discards tap buffers during the sound so it isn't recorded.
-            // recordingStart is set after the sound so silence/max-duration timers are accurate.
-            self.stopLock.withLock { self.isIgnoringSamples = startSoundUri != nil }
-            Task {
-                if let interfaceController = interfaceController {
+            // Start sound fires immediately; template is deferred until the first tap buffer so the mic indicator is already on.
+            if let uri = startSoundUri {
+                Task { await self.playSound(uri: uri) }
+            }
+            if let interfaceController = interfaceController {
+                Task {
+                    await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+                        self.stopLock.withLock { self.firstBufferContinuation = cont }
+                    }
+                    // Skip if stop() fired before the first buffer — cleanup already dismissed.
+                    guard !self.stopLock.withLock({ self.isStopping }) else { return }
                     await self.presentVoiceTemplate(
                         interfaceController: interfaceController,
                         listeningText: listeningText,
                         listeningImage: listeningImage,
                         listeningImageRepeats: listeningImageRepeats
                     )
-                }
-                if let uri = startSoundUri {
-                    await self.playSound(uri: uri, setupSession: false)
-                }
-                self.stopLock.withLock {
-                    self.isIgnoringSamples = false
-                    self.recordingStart = Date()
                 }
             }
         }
@@ -158,14 +159,9 @@ class VoiceInputManager {
         return result
     }
 
-    private func playSound(uri: String, setupSession: Bool = true) async {
+    private func playSound(uri: String) async {
         guard let url = URL(string: uri) else { return }
         do {
-            let session = AVAudioSession.sharedInstance()
-            if setupSession {
-                try session.setCategory(.playback, mode: .default)
-                try session.setActive(true)
-            }
             // URLSession handles both http:// (Metro dev server) and file:// (release bundle)
             let (data, _) = try await URLSession.shared.data(from: url)
             await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
@@ -206,8 +202,7 @@ class VoiceInputManager {
         stopLock.unlock()
 
         if wasSTTMode {
-            // endAudio() causes the recognition task to fire its final result,
-            // which resumes the box. Engine teardown happens there too.
+            // endAudio() triggers the final recognition result, which resumes the box and tears down the engine.
             capturedRequest?.endAudio()
         }
         else {
@@ -235,10 +230,6 @@ class VoiceInputManager {
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
             throw VoiceInputError.microphonePermissionDenied
         }
-
-        let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playAndRecord, mode: .measurement, options: [])
-        try session.setActive(true)
 
         var activeRecognitionRequest: SFSpeechAudioBufferRecognitionRequest? = nil
 
@@ -311,9 +302,9 @@ class VoiceInputManager {
             throw VoiceInputError.converterUnavailable
         }
 
-        recordingStart = nil
+        recordingStart = Date()
         silenceStart = nil
-        isIgnoringSamples = false
+        firstBufferContinuation = nil
 
         inputNode.installTap(
             onBus: 0,
@@ -324,11 +315,14 @@ class VoiceInputManager {
 
             self.stopLock.lock()
             let stopping = self.isStopping
-            let ignoringSamples = self.isIgnoringSamples
             let recordingStartSnapshot = self.recordingStart
+            let firstBufferCont = self.firstBufferContinuation
+            self.firstBufferContinuation = nil
             self.stopLock.unlock()
 
-            guard !stopping, !ignoringSamples else { return }
+            firstBufferCont?.resume()
+
+            guard !stopping else { return }
 
             // Feed STT if active
             activeRecognitionRequest?.append(buffer)
@@ -378,8 +372,7 @@ class VoiceInputManager {
                 return
             }
 
-            // Silence detection — skip during warm-up so the pipeline has time
-            // to stabilise before we start measuring amplitude
+            // Silence detection — skip during warm-up to let the pipeline stabilise.
             if let start = recordingStartSnapshot,
                 now.timeIntervalSince(start) * 1000 >= VoiceInputManager.warmupMs
             {
@@ -417,7 +410,13 @@ class VoiceInputManager {
         recognitionRequest = nil
         recordingStart = nil
         silenceStart = nil
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        // Drain firstBufferContinuation so the template Task doesn't hang if stop() fired before the first buffer.
+        let pendingCont = stopLock.withLock { () -> CheckedContinuation<Void, Never>? in
+            let c = firstBufferContinuation
+            firstBufferContinuation = nil
+            return c
+        }
+        pendingCont?.resume()
         if let interfaceController {
             dismissVoiceTemplate(interfaceController: interfaceController)
         }
@@ -432,15 +431,10 @@ class VoiceInputManager {
     // CPVoiceControlState enforces a maximum image size of 150x150 points.
     private static let voiceImageMaxSize = CGSize(width: 150, height: 150)
 
-    // CPVoiceControlState also enforces a 0.3s–5s animation cycle; the 0.3s floor is applied
-    // by the system regardless of what we pass, so we only need to clamp our own ceiling.
+    // CPVoiceControlState enforces a 0.3s–5s animation cycle; the 0.3s floor is system-applied, clamp only the ceiling.
     private static let maxVoiceImageCycleDuration: TimeInterval = 5.0
 
-    // Bypasses RCTConvert for asset images: it collapses animated UIImages to a single frame
-    // via CGImage during scale adjustment. Parser.decodeImage preserves animation frames by
-    // walking every frame in the source via ImageIO — UIImage(data:) never builds a multi-frame
-    // .images array itself, for GIF, APNG, or WebP. Tinting is skipped for animated images since
-    // frames cannot be tinted individually.
+    // Uses Parser.decodeImage instead of RCTConvert to preserve animation frames for GIF/APNG/WebP.
     private func loadVoiceImage(image: Variant_GlyphImage_AssetImage_RemoteImage?, traitCollection: UITraitCollection)
         -> UIImage?
     {
