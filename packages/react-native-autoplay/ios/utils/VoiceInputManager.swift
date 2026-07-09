@@ -71,6 +71,7 @@ class VoiceInputManager {
     // Timing
     private var recordingStart: Date?
     private var silenceStart: Date?
+    private var firstBufferContinuation: CheckedContinuation<Void, Never>?
 
     private static let sampleRate: Double = 16_000
     private static let tapBufferSize: AVAudioFrameCount = 4_096
@@ -127,14 +128,21 @@ class VoiceInputManager {
                 return
             }
 
-            // Mic is open — fire the start sound immediately so it plays while the template
-            // animates in. Both happen concurrently; the chime ends and the user speaks
-            // knowing the mic has been running since before either started.
+            // Fire the start sound immediately (mic is already capturing).
+            // Present the template only once the first tap buffer arrives so the
+            // microphone indicator turns on at the same moment the template appears.
             if let uri = startSoundUri {
                 Task { await self.playSound(uri: uri, setupSession: false) }
             }
             if let interfaceController = interfaceController {
                 Task {
+                    await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+                        self.stopLock.withLock { self.firstBufferContinuation = cont }
+                    }
+                    // Guard: cleanup() may have drained firstBufferContinuation because stop()
+                    // was called before the first buffer arrived. Don't present in that case —
+                    // cleanup already dismissed and there's no way to dismiss again.
+                    guard !self.stopLock.withLock({ self.isStopping }) else { return }
                     await self.presentVoiceTemplate(
                         interfaceController: interfaceController,
                         listeningText: listeningText,
@@ -307,6 +315,7 @@ class VoiceInputManager {
 
         recordingStart = Date()
         silenceStart = nil
+        firstBufferContinuation = nil
 
         inputNode.installTap(
             onBus: 0,
@@ -318,7 +327,11 @@ class VoiceInputManager {
             self.stopLock.lock()
             let stopping = self.isStopping
             let recordingStartSnapshot = self.recordingStart
+            let firstBufferCont = self.firstBufferContinuation
+            self.firstBufferContinuation = nil
             self.stopLock.unlock()
+
+            firstBufferCont?.resume()
 
             guard !stopping else { return }
 
@@ -409,6 +422,14 @@ class VoiceInputManager {
         recognitionRequest = nil
         recordingStart = nil
         silenceStart = nil
+        // Unblock the template task if it's waiting for the first buffer and recording
+        // stopped (e.g. error or immediate cancel) before any buffer arrived.
+        let pendingCont = stopLock.withLock { () -> CheckedContinuation<Void, Never>? in
+            let c = firstBufferContinuation
+            firstBufferContinuation = nil
+            return c
+        }
+        pendingCont?.resume()
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         if let interfaceController {
             dismissVoiceTemplate(interfaceController: interfaceController)
