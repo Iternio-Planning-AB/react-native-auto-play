@@ -23,6 +23,12 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
     override init() {
+        /// init the calendar to make Parser.parseText not crash on iOS 27 beta 3
+        /// TODO: recheck on RC/final release
+        DispatchQueue.main.async {
+            _ = DateComponentsFormatter().string(from: 0)
+        }
+        
         HybridAutoPlay.listeners.removeAll()
         HybridAutoPlay.renderStateListeners.removeAll()
         HybridAutoPlay.safeAreaInsetsListeners.removeAll()

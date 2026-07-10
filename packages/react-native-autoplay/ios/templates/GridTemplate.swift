@@ -84,7 +84,7 @@ class GridTemplate: AutoPlayHeaderProviding {
     override func _invalidate() {
         if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
             let parsedButtons = GridTemplate.parseButtons(buttons: buttons)
-            mapPanel.sections.first?.updateItems([CPMapPanelItem(gridButtons: parsedButtons)])
+            mapPanel.sections.first?.items = [CPMapPanelItem(gridButtons: parsedButtons)]
             return
         }
 

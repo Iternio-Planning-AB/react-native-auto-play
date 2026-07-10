@@ -95,7 +95,7 @@ class ListTemplate: AutoPlayHeaderProviding {
 
             zip(mapPanel.sections, panelSections).forEach { existingSection, updatedSection in
                 existingSection.title = updatedSection.title
-                existingSection.updateItems(updatedSection.items)
+                existingSection.items = updatedSection.items
             }
 
             return

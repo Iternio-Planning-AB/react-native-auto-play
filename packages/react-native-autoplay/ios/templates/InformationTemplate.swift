@@ -108,7 +108,7 @@ class InformationTemplate: AutoPlayHeaderProviding {
                 return
             }
 
-            mapPanel.sections.first?.updateItems(Parser.parseInformationPanelItems(section: section))
+            mapPanel.sections.first?.items = Parser.parseInformationPanelItems(section: section)
             return
         }
 

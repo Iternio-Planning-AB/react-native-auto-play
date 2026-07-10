@@ -286,11 +286,21 @@ class Parser {
             )
         }
 
-        return CPMapPanelButtonConfiguration(
+        /// iOS 27 beta 3 does not accept nil for the optional travelEstimates any longer...
+        /// set it and call setValue to nil it again oO
+        /// TODO: recheck on RC/final release
+        let buttonConfiguration = CPMapPanelButtonConfiguration(
             primaryAction: primaryButton,
-            symbolButton: symbolButton,
-            travelEstimates: nil
+            secondaryButton: symbolButton,
+            travelEstimates: CPTravelEstimates(
+                distanceRemaining: Measurement(value: 0, unit: .astronomicalUnits),
+                timeRemaining: 0
+            )
         )
+        
+        buttonConfiguration.setValue(nil, forKey: "travelEstimates")
+        
+        return buttonConfiguration
     }
 
     static func parseSearchResults(
