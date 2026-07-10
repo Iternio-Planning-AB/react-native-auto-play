@@ -85,3 +85,10 @@ extension CPAlertTemplate {
         initTemplate(template: self, id: id)
     }
 }
+
+extension CPVoiceControlTemplate {
+    convenience init(voiceControlStates: [CPVoiceControlState], id: String) {
+        self.init(voiceControlStates: voiceControlStates)
+        initTemplate(template: self, id: id)
+    }
+}

@@ -6,6 +6,7 @@
 //
 
 import CarPlay
+import ImageIO
 import UIKit
 
 struct HeaderActions {
@@ -1141,6 +1142,100 @@ class Parser {
             scale: uiImage.scale,
             orientation: uiImage.imageOrientation
         )
+    }
+
+    // MARK: - Animated image decoding
+
+    /// Decodes raw image data via ImageIO, walking every frame so animated GIF/APNG/WebP all
+    /// animate. UIImage(data:) only ever decodes the first frame for any of these formats.
+    /// `maxDuration` caps the assembled cycle length; pass `.greatestFiniteMagnitude` to skip capping.
+    static func decodeImage(data: Data, scale: CGFloat, maxDuration: TimeInterval = .greatestFiniteMagnitude)
+        -> UIImage?
+    {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+        let frameCount = CGImageSourceGetCount(source)
+        guard frameCount > 0 else { return nil }
+
+        guard frameCount > 1 else {
+            guard let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return nil }
+            return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
+        }
+
+        var frames: [UIImage] = []
+        var totalDuration: TimeInterval = 0
+        for index in 0..<frameCount {
+            guard let cgImage = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
+            totalDuration += frameDuration(source: source, index: index)
+            frames.append(UIImage(cgImage: cgImage, scale: scale, orientation: .up))
+        }
+        guard !frames.isEmpty else { return nil }
+        return UIImage.animatedImage(with: frames, duration: min(totalDuration, maxDuration))
+    }
+
+    /// Reads the per-frame delay from whichever format dictionary ImageIO populated
+    /// (GIF, APNG, or WebP), falling back to a sane default if none is present.
+    private static func frameDuration(source: CGImageSource, index: Int) -> TimeInterval {
+        let defaultDuration: TimeInterval = 0.1
+        guard
+            let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any]
+        else { return defaultDuration }
+
+        if let gif = properties[kCGImagePropertyGIFDictionary] as? [CFString: Any] {
+            if let unclamped = gif[kCGImagePropertyGIFUnclampedDelayTime] as? Double, unclamped > 0 {
+                return unclamped
+            }
+            if let delay = gif[kCGImagePropertyGIFDelayTime] as? Double, delay > 0 {
+                return delay
+            }
+        }
+
+        if let png = properties[kCGImagePropertyPNGDictionary] as? [CFString: Any] {
+            if let unclamped = png[kCGImagePropertyAPNGUnclampedDelayTime] as? Double, unclamped > 0 {
+                return unclamped
+            }
+            if let delay = png[kCGImagePropertyAPNGDelayTime] as? Double, delay > 0 {
+                return delay
+            }
+        }
+
+        if let webp = properties[kCGImagePropertyWebPDictionary] as? [CFString: Any],
+            let delay = webp[kCGImagePropertyWebPDelayTime] as? Double, delay > 0
+        {
+            return delay
+        }
+
+        return defaultDuration
+    }
+
+    private static func targetSize(for size: CGSize, max maxSize: CGSize) -> CGSize {
+        guard size.width > maxSize.width || size.height > maxSize.height else { return size }
+        let scale = min(maxSize.width / size.width, maxSize.height / size.height)
+        return CGSize(width: (size.width * scale).rounded(), height: (size.height * scale).rounded())
+    }
+
+    static func resize(_ image: UIImage, max maxSize: CGSize) -> UIImage {
+        let target = targetSize(for: image.size, max: maxSize)
+        guard target != image.size else { return image }
+        return UIGraphicsImageRenderer(size: target).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: target))
+        }
+    }
+
+    /// Resizes every frame of an animated UIImage while preserving the per-frame timing.
+    /// UIImage.draw(in:) only renders the current frame, so resize() alone would collapse
+    /// the animation to a still image.
+    static func resizeAnimated(_ image: UIImage, max maxSize: CGSize) -> UIImage {
+        guard let frames = image.images, !frames.isEmpty else {
+            return resize(image, max: maxSize)
+        }
+        let target = targetSize(for: image.size, max: maxSize)
+        guard target != image.size else { return image }
+        let resizedFrames = frames.map { frame in
+            UIGraphicsImageRenderer(size: target).image { _ in
+                frame.draw(in: CGRect(origin: .zero, size: target))
+            }
+        }
+        return UIImage.animatedImage(with: resizedFrames, duration: image.duration) ?? image
     }
 
     static func imageFromLanes(

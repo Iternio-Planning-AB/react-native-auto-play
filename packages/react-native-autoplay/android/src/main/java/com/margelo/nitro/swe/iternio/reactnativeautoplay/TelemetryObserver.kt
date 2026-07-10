@@ -3,6 +3,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import android.os.Handler
 import android.os.HandlerThread
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executor
 
 abstract class TelemetryObserver {
     abstract fun startTelemetryObserver(): Boolean
@@ -12,11 +13,16 @@ abstract class TelemetryObserver {
     val telemetryHolder = AndroidAutoTelemetryHolder()
     var isObserverRunning = false
     val handler: Handler
+    val telemetryExecutor: Executor
 
     init {
         val thread = HandlerThread("AndroidTelemetryThread")
         thread.start()
         handler = Handler(thread.looper)
+
+        telemetryExecutor = Executor { command ->
+            handler.post(command)
+        }
     }
 
     fun addListener(callback: (Telemetry?) -> Unit): () -> Unit {

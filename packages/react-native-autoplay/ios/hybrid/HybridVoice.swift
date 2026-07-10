@@ -32,9 +32,13 @@ class HybridVoice: HybridVoiceSpec {
         silenceThresholdMs: Double?,
         maxDurationMs: Double?,
         listeningText: String?,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Bool?,
         preferSpeechToText: Bool?,
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
-        language: String?
+        language: String?,
+        startSoundUri: String?,
+        endSoundUri: String?
     ) throws -> Promise<VoiceInputResult> {
         return Promise.async {
             let interfaceController = try? await RootModule.withInterfaceController { $0 }
@@ -49,9 +53,13 @@ class HybridVoice: HybridVoiceSpec {
                 silenceThresholdMs: silenceThresholdMs ?? 1_500,
                 maxDurationMs: maxDurationMs ?? 10_000,
                 listeningText: listeningText ?? "Listening...",
+                listeningImage: listeningImage,
+                listeningImageRepeats: listeningImageRepeats,
                 preferSpeechToText: preferSpeechToText ?? false,
                 onChunk: onChunk,
-                language: language
+                language: language,
+                startSoundUri: startSoundUri,
+                endSoundUri: endSoundUri
             )
         }
     }

@@ -10,7 +10,7 @@ struct TemplateEventPayload {
     let state: VisibilityState
 }
 
-enum AutoPlayError: Error {
+enum AutoPlayError: LocalizedError {
     case templateNotFound(String)
     case interfaceControllerNotFound(String)
     case invalidTemplateError(String)
@@ -19,6 +19,7 @@ enum AutoPlayError: Error {
     case invalidTemplateType(String)
     case noUiWindow(String)
     case initReactRootViewFailed(String)
+    case voiceInputCancelled
     case rootTemplateNotMapTemplate(String)
     case templateIsMapPanel(String)
 }

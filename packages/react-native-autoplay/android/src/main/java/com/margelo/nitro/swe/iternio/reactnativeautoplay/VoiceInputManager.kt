@@ -10,7 +10,9 @@ import android.media.AudioFocusRequest
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
+import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -62,6 +64,9 @@ class VoiceInputManager(
     @Volatile
     private var isRecording = false
 
+    @Volatile
+    private var cancelledByUser = false
+
     // STT state — only set when SpeechRecognizer owns the mic
     @Volatile
     private var activeSpeechRecognizer: SpeechRecognizer? = null
@@ -72,22 +77,42 @@ class VoiceInputManager(
         maxDurationMs: Long = 10_000,
         preferSpeechToText: Boolean = false,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)? = null,
-        language: String? = null
+        language: String? = null,
+        startSoundUri: String? = null,
+        endSoundUri: String? = null,
     ): VoiceInputResult {
-        if (preferSpeechToText) {
-            val context = NitroModules.applicationContext ?: throw IllegalArgumentException()
-            if (SpeechRecognizer.isRecognitionAvailable(context)) {
-                if (carContext != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        return startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk, language)
-                    }
-                    // Car connected but API < 33: EXTRA_AUDIO_SOURCE unavailable, fall back to PCM
-                    return startPCM(silenceThresholdMs, maxDurationMs, onChunk)
-                }
-                return ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk, language) }.getOrThrow()
-            }
+        cancelledByUser = false
+        if (!requestAudioFocus()) {
+            throw IllegalStateException("Audio focus request denied")
         }
-        return startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+        try {
+            val startSoundJob = startSoundUri?.let { uri -> scope.launch { playSound(uri) } }
+            val result = if (preferSpeechToText) {
+                val context = NitroModules.applicationContext ?: throw IllegalArgumentException()
+                if (SpeechRecognizer.isRecognitionAvailable(context)) {
+                    if (carContext != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk, language)
+                        } else {
+                            // Car connected but API < 33: EXTRA_AUDIO_SOURCE unavailable, fall back to PCM
+                            startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                        }
+                    } else {
+                        ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk, language) }.getOrThrow()
+                    }
+                } else {
+                    startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                }
+            } else {
+                startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+            }
+            startSoundJob?.join()
+            if (cancelledByUser) throw VoiceInputCancelledException()
+            endSoundUri?.let { playSound(it) }
+            return result
+        } finally {
+            abandonAudioFocus()
+        }
     }
 
     // MARK: - STT path (SpeechRecognizer owns the mic)
@@ -309,34 +334,7 @@ class VoiceInputManager(
             return@suspendCancellableCoroutine
         }
 
-        val appContext = NitroModules.applicationContext ?: run {
-            cont.resumeWithException(SecurityException("Missing application context"))
-            return@suspendCancellableCoroutine
-        }
-
         pcmContinuation = cont
-
-        val audioManager = appContext.getSystemService(AudioManager::class.java)
-
-        val audioAttributes =
-            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE).build()
-
-        val focusRequest =
-            AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
-                .setAudioAttributes(audioAttributes).setOnAudioFocusChangeListener { state ->
-                    if (state == AudioManager.AUDIOFOCUS_LOSS) {
-                        stop()
-                    }
-                }.build()
-
-        if (audioManager.requestAudioFocus(focusRequest) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            pcmContinuation = null
-            cont.resumeWithException(IllegalStateException("Audio focus request denied"))
-            return@suspendCancellableCoroutine
-        }
-
-        audioFocusRequest = focusRequest
 
         val bufferSize: Int
 
@@ -381,6 +379,8 @@ class VoiceInputManager(
                     ) ?: -1
 
                     if (read < 0) {
+                        // Whenever the user dismisses the microphone on the car screen, the next call to read will return -1
+                        cancelledByUser = carAudioRecord != null && read == -1
                         break
                     }
 
@@ -451,6 +451,72 @@ class VoiceInputManager(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    private fun requestAudioFocus(): Boolean {
+        val appContext = NitroModules.applicationContext ?: return false
+        val audioManager = appContext.getSystemService(AudioManager::class.java)
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+            .build()
+        val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+            .setAudioAttributes(audioAttributes)
+            .setOnAudioFocusChangeListener { state ->
+                if (state == AudioManager.AUDIOFOCUS_LOSS) { stop() }
+            }
+            .build()
+        return if (audioManager.requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            audioFocusRequest = focusRequest
+            true
+        } else {
+            false
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun abandonAudioFocus() {
+        audioFocusRequest?.let {
+            val audioManager = (NitroModules.applicationContext ?: carContext)
+                ?.getSystemService(AudioManager::class.java)
+            audioManager?.abandonAudioFocusRequest(it)
+        }
+        audioFocusRequest = null
+    }
+
+    private suspend fun playSound(uri: String) = suspendCancellableCoroutine<Unit> { cont ->
+        val context = NitroModules.applicationContext ?: run {
+            cont.resume(Unit)
+            return@suspendCancellableCoroutine
+        }
+        val player = MediaPlayer()
+        try {
+            player.setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                    .build()
+            )
+            player.setDataSource(context, Uri.parse(uri))
+            player.setOnCompletionListener {
+                it.release()
+                if (cont.isActive) { cont.resume(Unit) }
+            }
+            player.setOnErrorListener { mp, _, _ ->
+                mp.release()
+                if (cont.isActive) { cont.resume(Unit) }
+                true
+            }
+            player.prepare()
+            player.start()
+        } catch (_: Exception) {
+            try { player.release() } catch (_: Exception) {}
+            if (cont.isActive) { cont.resume(Unit) }
+        }
+        cont.invokeOnCancellation {
+            try { player.release() } catch (_: Exception) {}
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun releaseResources() {
         carAudioRecord?.stopRecording()
         carAudioRecord = null
@@ -458,13 +524,6 @@ class VoiceInputManager(
         audioRecord?.release()
         audioRecord = null
         recordingJob = null
-        audioFocusRequest?.let {
-            val audioManager = (NitroModules.applicationContext ?: carContext)?.getSystemService(
-                AudioManager::class.java,
-            )
-            audioManager?.abandonAudioFocusRequest(it)
-        }
-        audioFocusRequest = null
     }
 
     fun dispose() {

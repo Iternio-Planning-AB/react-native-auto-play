@@ -50,7 +50,7 @@ class HybridVoice : HybridVoiceSpec() {
                             }
                             cont.resume(
                                 grantResults.isNotEmpty() &&
-                                    grantResults.first() == PackageManager.PERMISSION_GRANTED
+                                        grantResults.first() == PackageManager.PERMISSION_GRANTED
                             )
                             true
                         }
@@ -64,9 +64,13 @@ class HybridVoice : HybridVoiceSpec() {
         silenceThresholdMs: Double?,
         maxDurationMs: Double?,
         listeningText: String?,
+        listeningImage: Variant_GlyphImage_AssetImage_RemoteImage?,
+        listeningImageRepeats: Boolean?,
         preferSpeechToText: Boolean?,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
-        language: String?
+        language: String?,
+        startSoundUri: String?,
+        endSoundUri: String?
     ): Promise<VoiceInputResult> {
         return Promise.async {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -82,7 +86,9 @@ class HybridVoice : HybridVoiceSpec() {
                     maxDurationMs = maxDurationMs?.toLong() ?: 10_000L,
                     preferSpeechToText = preferSpeechToText ?: false,
                     onChunk = onChunk,
-                    language = language
+                    language = language,
+                    startSoundUri = startSoundUri,
+                    endSoundUri = endSoundUri,
                 )
             } finally {
                 voiceInputManager = null

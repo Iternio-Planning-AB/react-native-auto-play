@@ -14,7 +14,7 @@
 ## Features
 
 -   **Cross-Platform:** Write once, run on both Apple CarPlay and Android Auto.
--  **Both Architectures:** Supports both the legacy and the new React Native architecture.
+-   **New Architecture:** Supports React Native new architecture only.
 -   **Template-Based UI:** Utilize a rich set of templates like `MapTemplate`, `ListTemplate`, `GridTemplate`, and more to build UIs that comply with automotive design guidelines.
 -   **Navigation APIs:** Build full-featured navigation experiences with APIs for trip management, maneuvers, and route guidance.
 -   **Dashboard & Cluster Support:** Extend your app's presence to the CarPlay Dashboard (CarPlay only) and instrument cluster displays (CarPlay & Android Auto).
@@ -883,36 +883,95 @@ new ListTemplate({
 
 ### Voice Input
 
-The library provides a cross-platform in-app voice recording API built on top of the car microphone (when connected) or the device microphone (when no car is connected).
+The library provides a cross-platform in-app voice recording API built on top of the car microphone (when connected) or the device microphone (when no car is connected). The voice API lives in `HybridVoice`.
 
 #### Permission
 
 ```ts
-// Check whether permission is already granted
-const granted = HybridAutoPlay.hasVoiceInputPermission();
+import { HybridVoice } from '@iternio/react-native-auto-play';
+
+// Check whether permission is already granted (synchronous)
+const granted = HybridVoice.hasVoiceInputPermission();
 
 // Request permission if not yet granted
-const granted = await HybridAutoPlay.requestVoiceInputPermission();
+const granted = await HybridVoice.requestVoiceInputPermission();
 ```
+
+On **iOS**: checks/requests both microphone and speech recognition authorization.
+On **Android**: checks/requests `RECORD_AUDIO` via the car context when connected, otherwise via the RN application context.
 
 #### Recording
 
 ```ts
-// Start recording — resolves with a raw PCM ArrayBuffer (16 kHz, 16-bit, mono)
-// Recording stops automatically on silence or when maxDurationMs is reached
-const pcmBuffer = await HybridAutoPlay.startVoiceInput(
-  1500,       // silenceThresholdMs (default 1500)
-  10_000,     // maxDurationMs (default 10 000)
-  'Listening...' // text shown on the car screen while recording (iOS CarPlay)
-);
+import { HybridVoice, ErrorUtil } from '@iternio/react-native-auto-play';
 
-// Stop recording early — resolves startVoiceInput with the audio captured so far
-HybridAutoPlay.stopVoiceInput();
+try {
+  const result = await HybridVoice.startVoiceInput({
+    silenceThresholdMs: 1500,      // ms of silence before auto-stop (default 1500)
+    maxDurationMs: 10_000,         // hard cap on recording duration (default 10 000)
+    listeningText: 'Listening…',   // iOS CarPlay: text shown on CPVoiceControlTemplate
+    preferSpeechToText: false,     // true → STT transcription; false → raw PCM (default)
+    startSound: require('./beep_start.mp3'), // played just before recording starts
+    endSound: require('./beep_end.mp3'),     // played just after recording stops
+    onChunk: (chunk) => {
+      // chunk.audio — raw PCM ArrayBuffer chunk (PCM mode)
+      // chunk.partial — partial transcription string (STT mode)
+    },
+  });
+
+  if (result.transcription) {
+    console.log('Transcription:', result.transcription);
+  } else if (result.audio) {
+    console.log(`PCM audio: ${result.audio.byteLength} bytes`);
+  }
+} catch (e) {
+  if (ErrorUtil.isVoiceInputCanceledError(e)) {
+    // User pressed the cancel button on the car screen
+    console.log('Voice input cancelled');
+  } else {
+    console.error(e);
+  }
+}
+
+// Stop recording early — resolves startVoiceInput with audio captured so far
+HybridVoice.stopVoiceInput();
 ```
 
-On **Android**: uses `CarAudioRecord` when Android Auto is connected, otherwise falls back to standard `AudioRecord`.
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `silenceThresholdMs` | `number` | `1500` | Auto-stop after this many ms of silence |
+| `maxDurationMs` | `number` | `10000` | Hard recording time limit |
+| `listeningText` | `string` | — | iOS only — text shown on `CPVoiceControlTemplate` |
+| `listeningImage` | `VoiceInputImage` | — | iOS only — animated image in the CarPlay overlay |
+| `preferSpeechToText` | `boolean` | `false` | `true` → resolve with `{ transcription }`; `false` → resolve with `{ audio }` |
+| `startSound` | `number` | — | Metro asset (`require('./beep.mp3')`) played before recording. Takes audio focus so other apps pause. |
+| `endSound` | `number` | — | Metro asset played after recording stops |
+| `onChunk` | `(chunk) => void` | — | Streaming callback: `chunk.audio` (PCM) or `chunk.partial` (STT) |
+| `language` | `string` | system | BCP-47 language tag for the STT recognizer |
 
-On **iOS**: presents `CPVoiceControlTemplate` on the car screen when CarPlay is connected, and captures audio via `AVAudioEngine`.
+**PCM result** (`preferSpeechToText: false`, default): resolves with `{ audio: ArrayBuffer }` — raw 16 kHz, 16-bit, mono PCM.
+
+**STT result** (`preferSpeechToText: true`): resolves with `{ transcription: string }` on success, or falls back to `{ audio }` if recognition is unavailable.
+
+On **Android**: uses `CarAudioRecord` when Android Auto is connected, otherwise falls back to standard `AudioRecord`. STT uses `SpeechRecognizer`.
+
+On **iOS**: presents `CPVoiceControlTemplate` on the car screen when CarPlay is connected, and captures audio via `AVAudioEngine`. STT uses `SFSpeechRecognizer`.
+
+#### Cancel detection
+
+When the user presses the cancel button on the car screen, `startVoiceInput` rejects with a `voiceInputCancelled` error on both platforms. Use `ErrorUtil.isVoiceInputCanceledError` to distinguish it from other errors:
+
+```ts
+import { ErrorUtil } from '@iternio/react-native-auto-play';
+
+HybridVoice.startVoiceInput().catch((e) => {
+  if (ErrorUtil.isVoiceInputCanceledError(e)) {
+    // user dismissed — no action needed
+  } else {
+    throw e;
+  }
+});
+```
 
 #### OS-triggered voice input (Android only)
 
@@ -1061,7 +1120,8 @@ CarPlayDashboard.setButtons([
 
 -   **Broken exceptions with `react-native-skia`**: When using `react-native-skia` exceptions on iOS are not reported correctly. This is fixed since version `2.4.19` of `react-native-skia`. For more details, see this [pull request](https://github.com/Shopify/react-native-skia/pull/3595) and [issue](https://github.com/Shopify/react-native-skia/issues/3635).
 -   **AppState on iOS**: The `AppState` module from React Native does not work correctly on iOS because this library uses scenes, which are not supported by the stock `AppState` module. This library provides a custom state listener that works for both Android and iOS. Use `HybridAutoPlay.addListenerRenderState` instead of `AppState`.
--   **Timers stop on screen lock**: iOS stops all timers when the device's main screen is turned off. To ensure timers continue to run (which is often necessary for background tasks related to autoplay), a patch for `react-native` is required. A patch is included in the root `patches/` directory and can be applied using `patch-package`.
+-   **Timers stop on screen lock**: iOS stops all timers when the device main screen is turned off. To ensure timers continue to run (which is often necessary for background tasks related to autoplay), a patch for `react-native` is required. A patch is included in the root `patches/` directory and can be applied using `patch-package`.
+In case you are using Expo SDK >= 56 make sure to set `buildReactNativeFromSource` to `true` in your app config for [expo-build-properties](https://docs.expo.dev/versions/latest/sdk/build-properties/#sharedbuildconfigfields), otherwise the patch can't be applied.
 -   **expo-splash-screen stuck on iOS**: The `expo-splash-screen` module is broken on iOS because it does not support scenes, which are used by this library. This can cause the splash screen to be stuck on either the mobile device or on CarPlay. To fix this, a patch for `expo-splash-screen` is included in the root `patches/` directory and can be applied using `patch-package`. After applying the patch, you can hide the splash screen for a specific scene by passing the module name to the `hide` or `hideAsync` function. The module name can be one of the values from the `AutoPlayModules` enum or the UUID of a cluster screen.
     ```tsx
     import { hideAsync } from 'expo-splash-screen';
