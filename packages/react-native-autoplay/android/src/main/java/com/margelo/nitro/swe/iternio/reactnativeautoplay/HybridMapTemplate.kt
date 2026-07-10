@@ -158,4 +158,8 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun setManeuverState(templateId: String, state: ManeuverState) {
         // Android Auto does not have an equivalent to CPManeuverState
     }
+
+    override fun updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) {
+        // Android Auto has no equivalent to CarPlay's navigation session options panel
+    }
 }

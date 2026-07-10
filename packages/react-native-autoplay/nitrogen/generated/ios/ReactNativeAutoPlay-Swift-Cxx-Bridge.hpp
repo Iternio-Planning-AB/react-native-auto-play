@@ -18,6 +18,8 @@ namespace NitroModules { class ArrayBufferHolder; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
+// Forward declaration of `ChargingConnector` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ColorScheme; }
 // Forward declaration of `DistanceUnits` to properly resolve imports.
@@ -78,6 +80,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroButtonStyle; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCarPlayDashboardButton; }
+// Forward declaration of `NitroChargerOutlet` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
@@ -90,6 +94,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMapButton; }
 // Forward declaration of `NitroMessageManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMessageManeuver; }
+// Forward declaration of `NitroOptionsPanelChargerSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
+// Forward declaration of `NitroOptionsPanelConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
+// Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
 // Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroRow` to properly resolve imports.
@@ -162,6 +172,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "AlertDismissalReason.hpp"
 #include "AssetImage.hpp"
 #include "AutoText.hpp"
+#include "ChargingConnector.hpp"
 #include "ColorScheme.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
@@ -192,12 +203,16 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroButtonStyle.hpp"
 #include "NitroCarPlayDashboardButton.hpp"
+#include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
 #include "NitroLoadingManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
 #include "NitroMessageManeuver.hpp"
+#include "NitroOptionsPanelChargerSection.hpp"
+#include "NitroOptionsPanelConfig.hpp"
+#include "NitroOptionsPanelGridSection.hpp"
 #include "NitroRoutingManeuver.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
@@ -1535,6 +1550,78 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   }
   inline std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_ create_std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(const NitroLoadingManeuver& value) noexcept {
     return std__variant_std__vector_NitroRoutingManeuver___NitroMessageManeuver__NitroLoadingManeuver_(value);
+  }
+  
+  // pragma MARK: std::vector<NitroChargerOutlet>
+  /**
+   * Specialized version of `std::vector<NitroChargerOutlet>`.
+   */
+  using std__vector_NitroChargerOutlet_ = std::vector<NitroChargerOutlet>;
+  inline std::vector<NitroChargerOutlet> create_std__vector_NitroChargerOutlet_(size_t size) noexcept {
+    std::vector<NitroChargerOutlet> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>
+  /**
+   * Wrapper struct for `std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>`.
+   * std::variant cannot be used in Swift because of a Swift bug.
+   * Not even specializing it works. So we create a wrapper struct.
+   */
+  struct std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_ final {
+    std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection> variant;
+    std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection> variant): variant(variant) { }
+    operator std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>() const noexcept {
+      return variant;
+    }
+    inline size_t index() const noexcept {
+      return variant.index();
+    }
+    inline NitroSection get_0() const noexcept {
+      return std::get<0>(variant);
+    }
+    inline NitroOptionsPanelGridSection get_1() const noexcept {
+      return std::get<1>(variant);
+    }
+    inline NitroOptionsPanelChargerSection get_2() const noexcept {
+      return std::get<2>(variant);
+    }
+  };
+  inline std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_ create_std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(const NitroSection& value) noexcept {
+    return std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(value);
+  }
+  inline std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_ create_std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(const NitroOptionsPanelGridSection& value) noexcept {
+    return std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(value);
+  }
+  inline std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_ create_std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(const NitroOptionsPanelChargerSection& value) noexcept {
+    return std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection_(value);
+  }
+  
+  // pragma MARK: std::vector<std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>>
+  /**
+   * Specialized version of `std::vector<std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>>`.
+   */
+  using std__vector_std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection__ = std::vector<std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>>;
+  inline std::vector<std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>> create_std__vector_std__variant_NitroSection__NitroOptionsPanelGridSection__NitroOptionsPanelChargerSection__(size_t size) noexcept {
+    std::vector<std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::optional<NitroOptionsPanelConfig>
+  /**
+   * Specialized version of `std::optional<NitroOptionsPanelConfig>`.
+   */
+  using std__optional_NitroOptionsPanelConfig_ = std::optional<NitroOptionsPanelConfig>;
+  inline std::optional<NitroOptionsPanelConfig> create_std__optional_NitroOptionsPanelConfig_(const NitroOptionsPanelConfig& value) noexcept {
+    return std::optional<NitroOptionsPanelConfig>(value);
+  }
+  inline bool has_value_std__optional_NitroOptionsPanelConfig_(const std::optional<NitroOptionsPanelConfig>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroOptionsPanelConfig get_std__optional_NitroOptionsPanelConfig_(const std::optional<NitroOptionsPanelConfig>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::shared_ptr<HybridMapTemplateSpec>

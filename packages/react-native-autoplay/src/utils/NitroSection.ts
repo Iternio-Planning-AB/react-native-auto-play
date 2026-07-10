@@ -1,6 +1,57 @@
-import type { DefaultRow, RadioRow, Section, TextRow, ToggleRow } from '../templates/ListTemplate';
+import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
+
+type BaseRow = {
+  title: AutoText;
+  enabled?: boolean;
+  image?: AutoImage;
+};
+
+export type DefaultRow<T> = BaseRow & {
+  type: 'default';
+  /**
+   * adds a chevron at the end of the row
+   */
+  browsable?: boolean;
+  onPress: (template: T) => void;
+  detailedText?: AutoText;
+};
+
+export type ToggleRow<T> = BaseRow & {
+  type: 'toggle';
+  checked: boolean;
+  onPress: (template: T, checked: boolean) => void;
+};
+
+export type RadioRow<T> = BaseRow & {
+  type: 'radio';
+  onPress: (template: T) => void;
+  selected?: boolean;
+};
+
+export type TextRow = BaseRow & {
+  type: 'text';
+  detailedText?: AutoText;
+};
+
+export type MultiSection<T> =
+  | {
+      type: 'default';
+      title: string;
+      items: Array<DefaultRow<T> | ToggleRow<T> | TextRow>;
+    }
+  | {
+      type: 'radio';
+      title: string;
+      items: Array<RadioRow<T>>;
+    };
+
+export type SingleSection<T> = {
+  [K in MultiSection<T> as K['type']]: Omit<K, 'title' | 'detailedText'>;
+}[MultiSection<T>['type']];
+
+export type Section<T> = Array<MultiSection<T>> | SingleSection<T>;
 
 type NitroSectionType = 'default' | 'radio';
 

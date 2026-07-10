@@ -22,6 +22,8 @@ class MapTemplate: AutoPlayHeaderProviding,
     var mapButtons: [NitroMapButton]?
     var visibleTravelEstimate: VisibleTravelEstimate?
 
+    private var optionsPanel: NitroOptionsPanelConfig?
+
     override var autoDismissMs: Double? {
         return config.autoDismissMs
     }
@@ -789,11 +791,55 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
 
         self.navigationSession = template.startNavigationSession(for: trip)
+        applyOptionsPanel()
     }
 
     func stopNavigation() {
         navigationSession?.finishTrip()
         navigationSession = nil
+    }
+
+    func updateOptionsPanel(config: NitroOptionsPanelConfig?) {
+        optionsPanel = config
+        applyOptionsPanel()
+    }
+
+    @available(iOS 27.0, *)
+    private func updateOptionsPanelSection(section: NitroSection, sectionIndex: Int) {
+        guard var sections = optionsPanel?.sections, sectionIndex < sections.count else { return }
+
+        sections[sectionIndex] = .first(section)
+        optionsPanel = NitroOptionsPanelConfig(
+            title: optionsPanel?.title,
+            sections: sections,
+            actions: optionsPanel?.actions
+        )
+        applyOptionsPanel()
+    }
+
+    private func applyOptionsPanel() {
+        guard #available(iOS 27.0, *) else { return }
+        guard let navigationSession else { return }
+        guard let optionsPanel else {
+            navigationSession.optionsPanel = nil
+            return
+        }
+        guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
+
+        let sections = Parser.parseOptionsPanelSections(
+            sections: optionsPanel.sections,
+            updateSection: updateOptionsPanelSection(section:sectionIndex:),
+            traitCollection: traitCollection
+        )
+
+        navigationSession.optionsPanel = CPMapPanel(
+            title: Parser.parseText(text: optionsPanel.title),
+            sections: sections,
+            buttonConfiguration: Parser.parsePanelButtonConfiguration(
+                actions: optionsPanel.actions,
+                traitCollection: traitCollection
+            )
+        )
     }
 
     func setManeuverState(state: ManeuverState) {

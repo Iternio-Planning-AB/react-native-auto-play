@@ -1,10 +1,9 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { ListTemplate as NitroListTemplate } from '../specs/ListTemplate.nitro';
-import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
+import { type NitroSection, NitroSectionUtil, type Section } from '../utils/NitroSection';
 import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
@@ -16,56 +15,15 @@ import {
 
 const HybridListTemplate = NitroModules.createHybridObject<NitroListTemplate>('ListTemplate');
 
-type BaseRow = {
-  title: AutoText;
-  enabled?: boolean;
-  image?: AutoImage;
-};
-
-export type DefaultRow<T> = BaseRow & {
-  type: 'default';
-  /**
-   * adds a chevron at the end of the row
-   */
-  browsable?: boolean;
-  onPress: (template: T) => void;
-  detailedText?: AutoText;
-};
-
-export type ToggleRow<T> = BaseRow & {
-  type: 'toggle';
-  checked: boolean;
-  onPress: (template: T, checked: boolean) => void;
-};
-
-export type RadioRow<T> = BaseRow & {
-  type: 'radio';
-  onPress: (template: T) => void;
-  selected?: boolean;
-};
-
-export type TextRow = BaseRow & {
-  type: 'text';
-  detailedText?: AutoText;
-};
-
-export type MultiSection<T> =
-  | {
-      type: 'default';
-      title: string;
-      items: Array<DefaultRow<T> | ToggleRow<T> | TextRow>;
-    }
-  | {
-      type: 'radio';
-      title: string;
-      items: Array<RadioRow<T>>;
-    };
-
-export type SingleSection<T> = {
-  [K in MultiSection<T> as K['type']]: Omit<K, 'title' | 'detailedText'>;
-}[MultiSection<T>['type']];
-
-export type Section<T> = Array<MultiSection<T>> | SingleSection<T>;
+export type {
+  DefaultRow,
+  MultiSection,
+  RadioRow,
+  Section,
+  SingleSection,
+  TextRow,
+  ToggleRow,
+} from '../utils/NitroSection';
 
 export interface NitroListTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;

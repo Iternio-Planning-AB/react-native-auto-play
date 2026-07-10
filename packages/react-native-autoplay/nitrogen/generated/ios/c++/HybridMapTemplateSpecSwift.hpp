@@ -102,6 +102,24 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
 // Forward declaration of `ManeuverState` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
+// Forward declaration of `NitroOptionsPanelConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
+// Forward declaration of `NitroSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
+// Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroOptionsPanelChargerSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
+// Forward declaration of `NitroRow` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
+// Forward declaration of `NitroSectionType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
+// Forward declaration of `NitroGridButton` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroChargerOutlet` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
+// Forward declaration of `ChargingConnector` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -154,6 +172,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 #include "ManeuverType.hpp"
 #include "TripConfig.hpp"
 #include "ManeuverState.hpp"
+#include "NitroOptionsPanelConfig.hpp"
+#include "NitroSection.hpp"
+#include "NitroOptionsPanelGridSection.hpp"
+#include "NitroOptionsPanelChargerSection.hpp"
+#include "NitroRow.hpp"
+#include "NitroSectionType.hpp"
+#include "NitroGridButton.hpp"
+#include "NitroChargerOutlet.hpp"
+#include "ChargingConnector.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -283,6 +310,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
     inline void setManeuverState(const std::string& templateId, ManeuverState state) override {
       auto __result = _swiftPart.setManeuverState(templateId, static_cast<int>(state));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) override {
+      auto __result = _swiftPart.updateOptionsPanel(templateId, config);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

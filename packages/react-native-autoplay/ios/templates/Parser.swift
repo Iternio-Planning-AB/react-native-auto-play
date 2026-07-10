@@ -458,6 +458,89 @@ class Parser {
         }
     }
 
+    /// Builds sections for `CPNavigationSession.optionsPanel`. Each section is independently a full list (via `parseListItems`, radio
+    /// included), a full grid, or a charging station's outlets — `sectionIndex` addresses this array; only list sections call `updateSection`.
+    @available(iOS 27.0, *)
+    static func parseOptionsPanelSections(
+        sections: [NitroOptionsPanelSection]?,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPMapPanelSection] {
+        guard let sections else { return [] }
+
+        return sections.enumerated().map { (sectionIndex, section) in
+            switch section {
+            case .first(let listSection):
+                let items = parseListItems(
+                    section: listSection,
+                    sectionIndex: sectionIndex,
+                    updateSection: updateSection,
+                    traitCollection: traitCollection
+                )
+
+                return CPMapPanelSection(
+                    title: listSection.title,
+                    items: items.map { CPMapPanelItem(listItem: $0) }
+                )
+
+            case .second(let gridSection):
+                let buttons = parseGridButtons(
+                    buttons: gridSection.buttons,
+                    traitCollection: traitCollection
+                )
+
+                return CPMapPanelSection(
+                    title: gridSection.title,
+                    items: [CPMapPanelItem(gridButtons: buttons)]
+                )
+
+            case .third(let chargerSection):
+                let items = chargerSection.outlets.map { outlet -> CPMapPanelItem in
+                    let connection = CPChargingStationConnection(
+                        connector: parseChargingConnector(outlet.connector),
+                        voltage: Measurement(value: outlet.voltage, unit: .volts),
+                        power: parsePower(kilowatts: outlet.powerKw)
+                    )
+
+                    let onPress = outlet.onPress
+                    return CPMapPanelItem(chargingStationConnection: connection) { _, completion in
+                        onPress?()
+                        completion()
+                    }
+                }
+
+                return CPMapPanelSection(
+                    title: chargerSection.title,
+                    items: items
+                )
+            }
+        }
+    }
+
+    @available(iOS 27.0, *)
+    private static func parseChargingConnector(
+        _ connector: ChargingConnector
+    ) -> CPChargingStationConnection.Connector {
+        switch connector {
+        case .ccs1: return .ccs1
+        case .ccs2: return .ccs2
+        case .j1772: return .j1772
+        case .chademo: return .chaDeMo
+        case .mennekes: return .mennekes
+        case .gbtdc: return .gbtDC
+        case .gbtac: return .gbtAC
+        case .nacsdc: return .nacsDC
+        case .nacsac: return .nacsAC
+        default: return .ccs2
+        }
+    }
+
+    /// values above 1000 kW are shown in megawatts instead, since nobody wants to read "1500 kW" on a charger card.
+    private static func parsePower(kilowatts: Double) -> Measurement<UnitPower> {
+        let measurement = Measurement(value: kilowatts, unit: UnitPower.kilowatts)
+        return kilowatts > 1000 ? measurement.converted(to: .megawatts) : measurement
+    }
+
     /// `onPanButtonPress` is called instead of `button.onPress` for `.pan`-typed buttons, since panning belongs to the `CPMapTemplate`, not the button.
     static func parseMapButtons(
         mapButtons: [NitroMapButton],

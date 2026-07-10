@@ -26,6 +26,7 @@ import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
 import { NitroManeuverUtil, type NitroRoutingManeuver } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
+import { NitroOptionsPanelUtil, type OptionsPanelConfig } from '../utils/NitroOptionsPanel';
 import {
   type HeaderActionsIos,
   type NitroBaseMapTemplateConfig,
@@ -165,6 +166,13 @@ export type MapTemplateConfig = Omit<
     component: React.ComponentType<RootComponentInitialProps>;
 
     /**
+     * the panel shown when tapping the ellipsis button next to the travel estimates during active navigation (iOS 27+).
+     * No-op on Android
+     * @namespace iOS
+     */
+    optionsPanel?: OptionsPanelConfig<MapTemplate>;
+
+    /**
      * Notification that navigation was stopped. May occur when another source such as the car head unit starts navigating.
      * The navigation session on Android Auto/CarPlay is stopped already when this callback is triggered, make sure to stop other things like TTS too.
      */
@@ -203,6 +211,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       onStopNavigation,
       onAutoDriveEnabled,
       defaultGuidanceBackgroundColor,
+      optionsPanel,
       ...baseConfig
     } = config;
 
@@ -234,6 +243,25 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     };
 
     HybridMapTemplate.createMapTemplate(nitroConfig);
+
+    // routed through updateOptionsPanel, not embedded in nitroConfig above — nitrogen can't generate
+    // a spec for a variant type nested that deep inside NitroMapTemplateConfig.
+    this.updateOptionsPanel(optionsPanel);
+  }
+
+  /**
+   * @namespace iOS updates the panel shown when tapping the ellipsis button
+   * next to the travel estimates during navigation (iOS 27+).
+   */
+  public updateOptionsPanel(optionsPanel?: OptionsPanelConfig<MapTemplate>) {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
+
+    return HybridMapTemplate.updateOptionsPanel(
+      this.id,
+      NitroOptionsPanelUtil.convert(this.template, optionsPanel)
+    );
   }
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
