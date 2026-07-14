@@ -2,6 +2,7 @@ import React from 'react';
 import { AppRegistry, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
+import { WindowInformationWrapper } from '../components/WindowInformationWrapper';
 import type { Cluster as NitroCluster, ZoomEvent } from '../specs/Cluster.nitro';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type { AutoAttributedString } from '../utils/NitroAttributedString';
@@ -62,7 +63,11 @@ class Cluster {
           React.createElement(SafeAreaInsetsProvider, {
             moduleName: clusterId,
             // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-            children: React.createElement(component, props),
+            children: React.createElement(WindowInformationWrapper, {
+              moduleName: clusterId,
+              component,
+              componentProps: props,
+            }),
           })
       );
 
