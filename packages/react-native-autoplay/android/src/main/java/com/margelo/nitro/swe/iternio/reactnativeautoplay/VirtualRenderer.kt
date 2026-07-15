@@ -22,6 +22,7 @@ import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
+import com.facebook.react.common.LifecycleState
 import com.facebook.react.fabric.FabricUIManager
 import com.facebook.react.runtime.ReactSurfaceImpl
 import com.facebook.react.runtime.ReactSurfaceView
@@ -420,6 +421,22 @@ class VirtualRenderer(
             // Fabric already invalidated
         } finally {
             reactSurfaceId = null
+
+            // once the last active renderer (main map, dashboard, cluster) is stopped, restore the
+            // ui-manager's lifecycle listener that was removed in FabricMapPresentation.onCreate so
+            // the app's own frame callback pauses/resumes with the phone app's foreground state again
+            if (virtualRenderer.size <= 1) {
+                val reactContext = NitroModules.applicationContext
+                if (reactContext != null && uiManager != null) {
+                    reactContext.removeLifecycleEventListener(uiManager)
+                    reactContext.addLifecycleEventListener(uiManager)
+
+                    if (reactContext.lifecycleState != LifecycleState.RESUMED) {
+                        uiManager.onHostPause()
+                    }
+                }
+            }
+
             virtualRenderer.remove(moduleName)
         }
     }

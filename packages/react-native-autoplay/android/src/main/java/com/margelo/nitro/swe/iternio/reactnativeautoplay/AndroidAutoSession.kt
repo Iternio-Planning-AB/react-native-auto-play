@@ -208,6 +208,8 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
+            NitroModules.applicationContext?.removeLifecycleEventListener(reactLifecycleObserver)
+
             sessions.remove(moduleName)
             VirtualRenderer.removeRenderer(moduleName)
             clusterId?.let {
