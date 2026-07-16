@@ -28,6 +28,10 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ReactNativeAutoPlay_" + name]).toInteger()
 }
 
+// Non-navigation categories select the lean manifest (AndroidManifest-nonnav.xml).
+def androidAutoAppCategory = getExtOrDefault("androidAutoAppCategory").toString().trim()
+def isNavigationApp = androidAutoAppCategory.equalsIgnoreCase("navigation")
+
 android {
   namespace "com.margelo.nitro.swe.iternio.reactnativeautoplay"
 
@@ -54,6 +58,8 @@ android {
         }
       }
     }
+
+    manifestPlaceholders.autoPlayAppCategory = "androidx.car.app.category." + androidAutoAppCategory.toUpperCase()
 
     buildConfigField "float", "SCALE_FACTOR", getExtOrDefault("androidAutoScaleFactor")
     buildConfigField "long", "TELEMETRY_UPDATE_INTERVAL", getExtOrDefault("androidTelemetryUpdateInterval")
@@ -117,10 +123,10 @@ android {
 
       if (getExtOrDefault("isAutomotiveApp") == "true") {
         java.srcDirs += 'src/automotive/java'
-        manifest.srcFile 'src/automotive/AndroidManifest.xml'
+        manifest.srcFile isNavigationApp ? 'src/automotive/AndroidManifest.xml' : 'src/automotive/AndroidManifest-nonnav.xml'
       } else {
         java.srcDirs += 'src/auto/java'
-        manifest.srcFile 'src/main/AndroidManifest.xml'
+        manifest.srcFile isNavigationApp ? 'src/main/AndroidManifest.xml' : 'src/main/AndroidManifest-nonnav.xml'
       }
     }
   }

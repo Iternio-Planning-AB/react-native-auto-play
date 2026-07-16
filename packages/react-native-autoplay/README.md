@@ -206,6 +206,12 @@ In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in
 ### Android Auto Customization
 You can customize certain behaviors of the library on Android Auto by setting properties in your app's `android/gradle.properties` file.
 
+-   **App Category**: Declare which Android Auto / Automotive app type the `CarAppService` advertises — the Android counterpart to choosing your CarPlay scene type in `Info.plist`.
+    ```properties
+    ReactNativeAutoPlay_androidAutoAppCategory=navigation
+    ```
+    The value maps to `androidx.car.app.category.<UPPERCASE>` (e.g. `navigation`, `poi`, `parking`, `charging`) — see the [supported app categories](https://developer.android.com/training/cars). The default `navigation` keeps the existing behavior. Any other value selects a lean manifest that declares the chosen category and omits the navigation-only permissions (`NAVIGATION_TEMPLATES`, `MAP_TEMPLATES`, `ACCESS_SURFACE`), the `FEATURE_CLUSTER` category, and the `NAVIGATE`/`geo` intent filters — a non-navigation, no-map template app needs none of these, and declaring them gets the app reviewed against the navigation-app bar on the Play Store.
+
 -   **Telemetry Update Interval**: Control how often telemetry data is updated.
     ```properties
     ReactNativeAutoPlay_androidTelemetryUpdateInterval=4000
