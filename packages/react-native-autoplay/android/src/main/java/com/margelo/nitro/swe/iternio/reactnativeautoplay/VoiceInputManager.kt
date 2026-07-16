@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.car.app.CarContext
 import androidx.car.app.media.CarAudioRecord
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.core.ArrayBuffer
@@ -495,7 +496,7 @@ class VoiceInputManager(
                     .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
                     .build()
             )
-            player.setDataSource(context, Uri.parse(uri))
+            player.setDataSource(context, resolveUri(context, uri))
             player.setOnCompletionListener {
                 it.release()
                 if (cont.isActive) { cont.resume(Unit) }
@@ -513,6 +514,21 @@ class VoiceInputManager(
         }
         cont.invokeOnCancellation {
             try { player.release() } catch (_: Exception) {}
+        }
+    }
+
+    private fun resolveUri(context: Context, uri: String): Uri {
+        val parsed = uri.toUri()
+        return if (parsed.scheme != null) {
+            // Real URI already (dev/Metro http://, file://, content://, etc.)
+            parsed
+        } else {
+            // Release build: bare raw-resource name from RN's Android asset packager
+            val resId = context.resources.getIdentifier(uri, "raw", context.packageName)
+            if (resId == 0) {
+                throw IllegalArgumentException("Raw resource not found for: $uri")
+            }
+            "android.resource://${context.packageName}/$resId".toUri()
         }
     }
 
