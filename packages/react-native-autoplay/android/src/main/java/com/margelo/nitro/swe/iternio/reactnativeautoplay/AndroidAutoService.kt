@@ -136,9 +136,14 @@ class AndroidAutoService : CarAppService() {
     private fun createNotification(
         title: String?, text: String?, largeIcon: Bitmap?
     ): Notification {
+        val notificationCategory = if (BuildConfig.IS_NAVIGATION_APP) {
+            NotificationCompat.CATEGORY_NAVIGATION
+        } else {
+            NotificationCompat.CATEGORY_SERVICE
+        }
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification).setOngoing(true)
-            .setCategory(NotificationCompat.CATEGORY_NAVIGATION).setOnlyAlertOnce(true)
+            .setCategory(notificationCategory).setOnlyAlertOnce(true)
             .setWhen(System.currentTimeMillis()).setPriority(NotificationManager.IMPORTANCE_LOW)
             .extend(
                 CarAppExtender.Builder().setImportance(NotificationManagerCompat.IMPORTANCE_LOW)
