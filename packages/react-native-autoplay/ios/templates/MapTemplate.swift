@@ -733,7 +733,7 @@ class MapTemplate: AutoPlayHeaderProviding,
                     Parser.parseTravelEstimates(
                         travelEstimates: nitroManeuver.travelEstimates
                     ),
-                    for: navigationSession.upcomingManeuvers[maneuverIndex]
+                    for: sessionManeuvers[maneuverIndex]
                 )
 
                 if index != maneuverIndex {
@@ -805,6 +805,19 @@ class MapTemplate: AutoPlayHeaderProviding,
             }
 
             navigationSession.upcomingManeuvers = upcomingManeuvers
+
+            // CarPlay only applies an estimate update if the maneuver is already active,
+            // since we set new upcomingManeuvers we need to apply the latest travelEstimates on the active maneuver here
+            if let currentManeuver = navigationSession.upcomingManeuvers.first,
+                let currentNitroManeuver = maneuvers.first
+            {
+                navigationSession.updateEstimates(
+                    Parser.parseTravelEstimates(
+                        travelEstimates: currentNitroManeuver.travelEstimates
+                    ),
+                    for: currentManeuver
+                )
+            }
         }
     }
 
