@@ -729,11 +729,6 @@ class MapTemplate: AutoPlayHeaderProviding,
                 sessionManeuvers
                 .firstIndex(where: { $0.id == nitroManeuver.id })
             {
-                // `maneuverIndex` indexes `sessionManeuvers` (the filtered,
-                // non-secondary list), so update that same maneuver. Indexing the
-                // unfiltered `navigationSession.upcomingManeuvers` here misrouted
-                // the estimate onto a `-lanes` secondary when lane guidance was
-                // present, leaving the real maneuver stuck on its stale value.
                 navigationSession.updateEstimates(
                     Parser.parseTravelEstimates(
                         travelEstimates: nitroManeuver.travelEstimates
@@ -811,12 +806,8 @@ class MapTemplate: AutoPlayHeaderProviding,
 
             navigationSession.upcomingManeuvers = upcomingManeuvers
 
-            // When a maneuver is promoted to current (e.g. the previous turn just
-            // completed and the next one moves to the front) it is reused, so it
-            // keeps the `initialTravelEstimates` baked in at creation until the
-            // next periodic update arrives. Push the freshest estimate onto the
-            // current maneuver right away so its distance isn't briefly stuck on
-            // the previous turn's value.
+            // CarPlay only applies an estimate update if the maneuver is already active,
+            // since we set new upcomingManeuvers we need to apply the latest travelEstimates on the active maneuver here
             if let currentManeuver = navigationSession.upcomingManeuvers.first,
                 let currentNitroManeuver = maneuvers.first
             {
