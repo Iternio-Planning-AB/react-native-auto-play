@@ -1,0 +1,35 @@
+<!-- Non-navigation Android Auto manifest; see AndroidManifest.xml for the navigation variant. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Android Auto specific permissions -->
+    <uses-permission android:name="com.google.android.gms.permission.CAR_FUEL" />
+    <uses-permission android:name="com.google.android.gms.permission.CAR_MILEAGE" />
+    <uses-permission android:name="com.google.android.gms.permission.CAR_SPEED" />
+
+    <application>
+        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoService" android:exported="true" android:foregroundServiceType="location">
+            <intent-filter>
+                <action android:name="androidx.car.app.CarAppService" />
+
+                <category android:name="${autoPlayAppCategory}" />
+            </intent-filter>
+        </service>
+
+        <meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc" tools:ignore="MetadataTagInsideApplicationTag" />
+        <meta-data android:name="androidx.car.app.minCarApiLevel" android:value="1" />
+
+        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.HeadlessTaskService" />
+
+        <provider android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.ActivityRenderStateProvider" android:authorities="${applicationId}.ActivityRenderStateProvider" android:exported="false" />
+    </application>
+</manifest>
