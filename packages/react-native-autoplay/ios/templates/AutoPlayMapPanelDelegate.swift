@@ -13,6 +13,9 @@ import CarPlay
 class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
     private weak var template: AutoPlayTemplate?
     private let templateId: String
+    // As of iOS 27 beta 4, CarPlay invokes panelDidShow twice for a single push. Guard against
+    // firing the JS appear callbacks more than once per panel.
+    private var hasFiredPanelDidShow = false
 
     init(template: AutoPlayTemplate, templateId: String) {
         self.template = template
@@ -24,6 +27,11 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
     /// before this one, since CPMapPanelDelegate never notifies a covered panel itself —
     /// `panelDidShow` only tells us about the panel that just appeared.
     func panelDidShow(_ panel: CPMapPanel) {
+        if hasFiredPanelDidShow {
+            return
+        }
+        hasFiredPanelDidShow = true
+
         template?.onWillAppear(animated: true)
         template?.onDidAppear(animated: true)
 
@@ -51,6 +59,7 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
 
             try? RootModule.withAutoPlayTemplate(templateId: previousPanelId) {
                 (template: AutoPlayTemplate) in
+                // let the now covered panel know it disappeared
                 template.onWillDisappear(animated: true)
                 template.onDidDisappear(animated: true)
             }
@@ -61,8 +70,6 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
     /// fire together here. Also fires `onWillAppear` and `onDidAppear` on whichever panel is now on
     /// top after this one is removed, since CPMapPanelDelegate never notifies a revealed panel
     /// itself — `panelDidHide` only tells us about the panel that just disappeared.
-    ///
-    /// KNOWN ISSUE (iOS 27 beta): The panel delegate method `panelDidHide(_ panel: CPMapPanel)` might not be called. (177590525)
     /// https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-27-release-notes#CarPlay
     func panelDidHide(_ panel: CPMapPanel) {
         let templateId = self.templateId
@@ -98,6 +105,7 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
                         applyPanelHeaderActions(revealed.getPanelHeaderActions(), to: mapTemplate)
                         applyPanelMapButtons(revealed.getPanelMapButtons(), to: mapTemplate)
                     }
+                    // let the now uncovered panel know it appeared again
                     revealed.onWillAppear(animated: true)
                     revealed.onDidAppear(animated: true)
                 }
