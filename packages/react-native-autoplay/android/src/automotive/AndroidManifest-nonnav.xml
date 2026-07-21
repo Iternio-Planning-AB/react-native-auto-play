@@ -1,0 +1,78 @@
+<!-- Non-navigation Android Automotive manifest; see AndroidManifest.xml for the navigation variant. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.software.car.templates_host"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+
+    <!-- Android Automotive specific permissions -->
+    <uses-permission android:name="android.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="android.car.permission.CAR_ENERGY_PORTS" />
+    <uses-permission android:name="android.car.permission.CAR_EXTERIOR_ENVIRONMENT" />
+    <uses-permission android:name="android.car.permission.CAR_IDENTIFICATION" />
+    <uses-permission android:name="android.car.permission.CAR_INFO" />
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+
+    <application>
+        <activity
+            android:name="androidx.car.app.activity.CarAppActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+
+        </activity>
+
+        <service
+            android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoService"
+            android:exported="true"
+            android:foregroundServiceType="location">
+            <intent-filter>
+                <action android:name="androidx.car.app.CarAppService" />
+
+                <category android:name="${autoPlayAppCategory}" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.HeadlessTaskService" />
+
+        <activity android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.SignInWithGoogleActivity" />
+
+        <provider
+            android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.ActivityRenderStateProvider"
+            android:authorities="${applicationId}.ActivityRenderStateProvider"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.android.automotive"
+            android:resource="@xml/automotive_app_desc" />
+        <meta-data
+            android:name="androidx.car.app.minCarApiLevel"
+            android:value="1" />
+    </application>
+
+</manifest>
