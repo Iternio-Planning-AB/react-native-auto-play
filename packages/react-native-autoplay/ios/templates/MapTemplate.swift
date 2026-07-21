@@ -384,7 +384,12 @@ class MapTemplate: AutoPlayHeaderProviding,
             secondaryAction: secondaryAction,
             duration: alertConfig.durationMs / 1000
         )
-
+        
+        if #available(iOS 27.0, *) {
+            // as of iOS 27 beta 4 this does not work when setting an image on the alert
+            alert.showsCloseButton = false
+        }
+        
         func setNavigationAlert() {
             self.navigationAlert = .init(alert: alert, config: alertConfig)
             template.present(navigationAlert: alert, animated: true)

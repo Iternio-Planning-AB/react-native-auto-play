@@ -286,7 +286,9 @@ class Parser {
             )
         }
 
-        /// iOS 27 beta 3 does not accept nil for the optional travelEstimates any longer...
+        /// iOS 27 beta 3 & 4  do not accept nil for the optional travelEstimates any longer while the function comment still claims it is optional
+        /// Initializes a map panel button configuration with a primary action, optional travel estimates, and an optional secondary button.
+        /// 
         /// set it and call setValue to nil it again oO
         /// TODO: recheck on RC/final release
         let buttonConfiguration = CPMapPanelButtonConfiguration(
