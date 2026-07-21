@@ -18,7 +18,7 @@ public extension NitroRow {
   /**
    * Create a new instance of `NitroRow`.
    */
-  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?) {
+  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?, coordinate: WaypointCoordinate?, distanceMeters: Double?, durationSeconds: Double?, address: String?) {
     self.init(title, { () -> bridge.std__optional_AutoText_ in
       if let __unwrappedValue = detailedText {
         return bridge.create_std__optional_AutoText_(__unwrappedValue)
@@ -64,6 +64,30 @@ public extension NitroRow {
     }(), { () -> bridge.std__optional_bool_ in
       if let __unwrappedValue = selected {
         return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_WaypointCoordinate_ in
+      if let __unwrappedValue = coordinate {
+        return bridge.create_std__optional_WaypointCoordinate_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = distanceMeters {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = durationSeconds {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = address {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
@@ -165,6 +189,47 @@ public extension NitroRow {
       if bridge.has_value_std__optional_bool_(self.__selected) {
         let __unwrapped = bridge.get_std__optional_bool_(self.__selected)
         return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var coordinate: WaypointCoordinate? {
+    return self.__coordinate.value
+  }
+  
+  @inline(__always)
+  var distanceMeters: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__distanceMeters) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__distanceMeters)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var durationSeconds: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__durationSeconds) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__durationSeconds)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var address: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__address) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__address)
+        return String(__unwrapped)
       } else {
         return nil
       }

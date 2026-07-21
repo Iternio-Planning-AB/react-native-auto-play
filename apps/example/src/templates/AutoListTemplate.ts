@@ -8,6 +8,7 @@ import {
   type TextRow,
   type ToggleRow,
 } from '@iternio/react-native-auto-play';
+import type { WaypointRow } from '@iternio/react-native-auto-play/lib/utils/NitroSection';
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoTemplate } from './AutoTemplate';
@@ -79,7 +80,9 @@ const getRadioTemplate = (): ListTemplate => {
 const checked: [boolean, boolean] = [true, false];
 
 const getMainSection = (): Section<ListTemplate> => {
-  const items: Array<DefaultRow<ListTemplate> | ToggleRow<ListTemplate> | TextRow> = [
+  const items: Array<
+    DefaultRow<ListTemplate> | ToggleRow<ListTemplate> | TextRow | WaypointRow<ListTemplate>
+  > = [
     {
       type: 'toggle',
       title: { text: 'toggle radio list' },
@@ -143,6 +146,23 @@ const getMainSection = (): Section<ListTemplate> => {
       },
       title: { text: 'pop to root' },
       image: { type: 'glyph', name: 'map' },
+    },
+    {
+      type: 'waypoint',
+      coordinate: {
+        latitude: 0,
+        longitude: 0,
+      },
+      distanceMeters: 123,
+      durationSeconds: 4,
+      title: {
+        text: 'some waypoint',
+      },
+      address: 'charger ave.',
+      image: {
+        type: 'glyph',
+        name: 'pin_drop',
+      },
     },
   ];
 

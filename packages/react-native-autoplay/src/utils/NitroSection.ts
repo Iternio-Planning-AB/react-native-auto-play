@@ -35,11 +35,33 @@ export type TextRow = BaseRow & {
   detailedText?: AutoText;
 };
 
+export type WaypointCoordinate = {
+  latitude: number;
+  longitude: number;
+  altitude?: number;
+};
+
+/**
+ * a point of interest, e.g. a charger's location. Renders as a `CPMapTemplateWaypoint` item
+ * (showing `title` as the name, `address` as the address, and the travel estimate for reaching
+ * it) when part of a `CPMapPanel` (iOS 27+); falls back to a plain row using `title`/`address`
+ * as the detail line everywhere else (including Android, which has no equivalent concept).
+ */
+export type WaypointRow<T> = BaseRow & {
+  type: 'waypoint';
+  /** newline-separated address lines, most-preferred first */
+  address?: string;
+  coordinate: WaypointCoordinate;
+  distanceMeters: number;
+  durationSeconds: number;
+  onPress?: (template: T) => void;
+};
+
 export type MultiSection<T> =
   | {
       type: 'default';
       title: string;
-      items: Array<DefaultRow<T> | ToggleRow<T> | TextRow>;
+      items: Array<DefaultRow<T> | ToggleRow<T> | TextRow | WaypointRow<T>>;
     }
   | {
       type: 'radio';
@@ -64,6 +86,10 @@ export type NitroRow = {
   checked?: boolean;
   onPress?: (checked?: boolean) => void;
   selected?: boolean;
+  coordinate?: WaypointCoordinate;
+  distanceMeters?: number;
+  durationSeconds?: number;
+  address?: string;
 };
 
 export type NitroSection = {
@@ -116,7 +142,7 @@ const convert = <T>(template: T, sections?: Section<T>): Array<NitroSection> | u
 
 const convertRow = <T>(
   template: T,
-  item: DefaultRow<T> | RadioRow<T> | ToggleRow<T> | TextRow
+  item: DefaultRow<T> | RadioRow<T> | ToggleRow<T> | TextRow | WaypointRow<T>
 ): NitroRow => {
   const { title, type, enabled = true, image } = item;
 
@@ -148,6 +174,10 @@ const convertRow = <T>(
     checked: type === 'toggle' ? item.checked : undefined,
     onPress,
     selected,
+    coordinate: item.type === 'waypoint' ? item.coordinate : undefined,
+    distanceMeters: item.type === 'waypoint' ? item.distanceMeters : undefined,
+    durationSeconds: item.type === 'waypoint' ? item.durationSeconds : undefined,
+    address: item.type === 'waypoint' ? item.address : undefined,
   };
 };
 

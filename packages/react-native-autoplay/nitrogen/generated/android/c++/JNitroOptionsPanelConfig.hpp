@@ -28,6 +28,7 @@
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"
 #include "JNitroButtonStyle.hpp"
+#include "JNitroChargerLocation.hpp"
 #include "JNitroChargerOutlet.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroGridButton.hpp"
@@ -40,10 +41,12 @@
 #include "JNitroSectionType.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroButtonStyle.hpp"
+#include "NitroChargerLocation.hpp"
 #include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
@@ -53,6 +56,7 @@
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
 #include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

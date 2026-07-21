@@ -28,7 +28,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         DispatchQueue.main.async {
             _ = DateComponentsFormatter().string(from: 0)
         }
-        
+
         HybridAutoPlay.listeners.removeAll()
         HybridAutoPlay.renderStateListeners.removeAll()
         HybridAutoPlay.safeAreaInsetsListeners.removeAll()

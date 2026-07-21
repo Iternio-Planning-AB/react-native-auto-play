@@ -30,11 +30,14 @@
 
 // Forward declaration of `NitroChargerOutlet` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 
 #include <string>
 #include <optional>
 #include "NitroChargerOutlet.hpp"
 #include <vector>
+#include "NitroChargerLocation.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -45,13 +48,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     std::optional<std::string> title     SWIFT_PRIVATE;
     std::vector<NitroChargerOutlet> outlets     SWIFT_PRIVATE;
+    std::optional<NitroChargerLocation> location     SWIFT_PRIVATE;
 
   public:
     NitroOptionsPanelChargerSection() = default;
-    explicit NitroOptionsPanelChargerSection(std::optional<std::string> title, std::vector<NitroChargerOutlet> outlets): title(title), outlets(outlets) {}
+    explicit NitroOptionsPanelChargerSection(std::optional<std::string> title, std::vector<NitroChargerOutlet> outlets, std::optional<NitroChargerLocation> location): title(title), outlets(outlets), location(location) {}
 
   public:
-    // NitroOptionsPanelChargerSection is not equatable because these properties are not equatable: outlets
+    // NitroOptionsPanelChargerSection is not equatable because these properties are not equatable: outlets, location
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
@@ -65,13 +69,15 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroOptionsPanelChargerSection(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
-        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerOutlet>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "outlets")))
+        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerOutlet>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "outlets"))),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerLocation>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "location")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroOptionsPanelChargerSection& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "outlets"), JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerOutlet>>::toJSI(runtime, arg.outlets));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "location"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerLocation>>::toJSI(runtime, arg.location));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -84,6 +90,7 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerOutlet>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "outlets")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroChargerLocation>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "location")))) return false;
       return true;
     }
   };

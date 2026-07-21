@@ -26,10 +26,12 @@
 #include "JNitroSectionType.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroColor.hpp"
 #include "NitroRow.hpp"
 #include "NitroSectionType.hpp"
 #include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

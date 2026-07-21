@@ -399,14 +399,22 @@ const AutoAlert = (remaining: number): Alert => ({
   priority: 'medium',
 });
 
+const isIos27OrGreater = Platform.OS === 'ios' && Math.floor(Number(Platform.Version)) === 27;
+
+const mapButtonConfig = {
+  backgroundColor: isIos27OrGreater
+    ? undefined
+    : { darkColor: 'rgba(0, 0, 0, 0.5)', lightColor: 'rgba(255, 255, 255, 0.7)' },
+  color: { darkColor: 'white', lightColor: 'black' },
+  type: 'glyph' as const,
+};
+
 const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'ev_charger',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: (template) => {
       var remaining = 10000;
@@ -434,10 +442,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'map',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: () => {
       AutoGridTemplate.getTemplate({
@@ -504,10 +510,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'search',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: () => {
       let timeout: number;
@@ -578,7 +582,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'pan',
     image: {
-      type: 'glyph',
+      ...mapButtonConfig,
       name: 'open_with',
     },
   },

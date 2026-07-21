@@ -24,8 +24,10 @@
 #include "JNitroColor.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroColor.hpp"
 #include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
@@ -67,6 +69,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onPress = this->getFieldValue(fieldOnPress);
       static const auto fieldSelected = clazz->getField<jni::JBoolean>("selected");
       jni::local_ref<jni::JBoolean> selected = this->getFieldValue(fieldSelected);
+      static const auto fieldCoordinate = clazz->getField<JWaypointCoordinate>("coordinate");
+      jni::local_ref<JWaypointCoordinate> coordinate = this->getFieldValue(fieldCoordinate);
+      static const auto fieldDistanceMeters = clazz->getField<jni::JDouble>("distanceMeters");
+      jni::local_ref<jni::JDouble> distanceMeters = this->getFieldValue(fieldDistanceMeters);
+      static const auto fieldDurationSeconds = clazz->getField<jni::JDouble>("durationSeconds");
+      jni::local_ref<jni::JDouble> durationSeconds = this->getFieldValue(fieldDurationSeconds);
+      static const auto fieldAddress = clazz->getField<jni::JString>("address");
+      jni::local_ref<jni::JString> address = this->getFieldValue(fieldAddress);
       return NitroRow(
         title->toCpp(),
         detailedText != nullptr ? std::make_optional(detailedText->toCpp()) : std::nullopt,
@@ -83,7 +93,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onPressRef));
           }
         }()) : std::nullopt,
-        selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt
+        selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt,
+        coordinate != nullptr ? std::make_optional(coordinate->toCpp()) : std::nullopt,
+        distanceMeters != nullptr ? std::make_optional(distanceMeters->value()) : std::nullopt,
+        durationSeconds != nullptr ? std::make_optional(durationSeconds->value()) : std::nullopt,
+        address != nullptr ? std::make_optional(address->toStdString()) : std::nullopt
       );
     }
 
@@ -93,7 +107,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JWaypointCoordinate>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -105,7 +119,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.image.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.image.value()) : nullptr,
         value.checked.has_value() ? jni::JBoolean::valueOf(value.checked.value()) : nullptr,
         value.onPress.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress.value()) : nullptr,
-        value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr
+        value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr,
+        value.coordinate.has_value() ? JWaypointCoordinate::fromCpp(value.coordinate.value()) : nullptr,
+        value.distanceMeters.has_value() ? jni::JDouble::valueOf(value.distanceMeters.value()) : nullptr,
+        value.durationSeconds.has_value() ? jni::JDouble::valueOf(value.durationSeconds.value()) : nullptr,
+        value.address.has_value() ? jni::make_jstring(value.address.value()) : nullptr
       );
     }
   };

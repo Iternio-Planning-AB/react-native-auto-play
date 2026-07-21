@@ -107,6 +107,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
 // Forward declaration of `NitroRow` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
@@ -115,6 +117,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridBu
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
 // Forward declaration of `ChargingConnector` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 
 #include "TripSelectorCallback.hpp"
 #include "JTripSelectorCallback.hpp"
@@ -238,6 +242,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Chargin
 #include "JNitroSection.hpp"
 #include "NitroRow.hpp"
 #include "JNitroRow.hpp"
+#include "WaypointCoordinate.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroSectionType.hpp"
 #include "JNitroSectionType.hpp"
 #include "JNitroOptionsPanelGridSection.hpp"
@@ -248,6 +254,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Chargin
 #include "JNitroChargerOutlet.hpp"
 #include "ChargingConnector.hpp"
 #include "JChargingConnector.hpp"
+#include "NitroChargerLocation.hpp"
+#include "JNitroChargerLocation.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 

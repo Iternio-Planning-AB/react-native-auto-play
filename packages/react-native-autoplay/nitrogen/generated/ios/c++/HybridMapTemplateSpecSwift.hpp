@@ -112,6 +112,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
 // Forward declaration of `NitroRow` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
@@ -120,6 +122,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridBu
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
 // Forward declaration of `ChargingConnector` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -177,10 +181,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Chargin
 #include "NitroOptionsPanelGridSection.hpp"
 #include "NitroOptionsPanelChargerSection.hpp"
 #include "NitroRow.hpp"
+#include "WaypointCoordinate.hpp"
 #include "NitroSectionType.hpp"
 #include "NitroGridButton.hpp"
 #include "NitroChargerOutlet.hpp"
 #include "ChargingConnector.hpp"
+#include "NitroChargerLocation.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 

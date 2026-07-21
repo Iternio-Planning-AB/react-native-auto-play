@@ -1,7 +1,9 @@
 import type { ImageButton, TextButton } from '../types/Button';
+import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from './NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from './NitroGrid';
+import { type NitroImage, NitroImageUtil } from './NitroImage';
 import {
   type DefaultRow,
   type MultiSection,
@@ -10,6 +12,8 @@ import {
   type RadioRow,
   type TextRow,
   type ToggleRow,
+  type WaypointCoordinate,
+  type WaypointRow,
 } from './NitroSection';
 
 export type OptionsPanelGridSection<T> = {
@@ -41,18 +45,38 @@ export type ChargerOutlet<T> = {
 };
 
 /**
+ * the charging station's own location, shown as an additional `CPMapTemplateWaypoint` item in
+ * the charger section, alongside its outlets.
+ */
+export type ChargerLocation<T> = {
+  /**
+   * the item's own label — distinct from the section's `title`, which is already shown as the
+   * section header, so this defaults to blank rather than repeating it.
+   */
+  name?: string;
+  /** newline-separated address lines, most-preferred first */
+  address?: string;
+  coordinate: WaypointCoordinate;
+  distanceMeters: number;
+  durationSeconds: number;
+  image?: AutoImage;
+  onPress?: (template: T) => void;
+};
+
+/**
  * charger section having n-ChargerOutlet
  */
 export type OptionsPanelChargerSection<T> = {
   type: 'charger';
   title?: string;
   outlets: Array<ChargerOutlet<T>>;
+  location?: ChargerLocation<T>;
 };
 
 export type OptionsPanelListSection<T> = {
   type: 'list';
   title?: string;
-  items: Array<DefaultRow<T> | ToggleRow<T> | TextRow> | Array<RadioRow<T>>;
+  items: Array<DefaultRow<T> | ToggleRow<T> | TextRow | WaypointRow<T>> | Array<RadioRow<T>>;
 };
 
 export type OptionsPanelSection<T> =
@@ -78,9 +102,20 @@ export type NitroChargerOutlet = {
   onPress?: () => void;
 };
 
+export type NitroChargerLocation = {
+  name?: string;
+  address?: string;
+  coordinate: WaypointCoordinate;
+  distanceMeters: number;
+  durationSeconds: number;
+  image?: NitroImage;
+  onPress?: () => void;
+};
+
 export type NitroOptionsPanelChargerSection = {
   title?: string;
   outlets: Array<NitroChargerOutlet>;
+  location?: NitroChargerLocation;
 };
 
 export type NitroOptionsPanelSection =
@@ -112,6 +147,8 @@ const convertSection = <T>(
   }
 
   if (section.type === 'charger') {
+    const { location } = section;
+
     return {
       title: section.title,
       outlets: section.outlets.map((outlet) => ({
@@ -120,6 +157,17 @@ const convertSection = <T>(
         powerKw: outlet.powerKw,
         onPress: outlet.onPress ? () => outlet.onPress?.(template) : undefined,
       })),
+      location: location
+        ? {
+            name: location.name,
+            address: location.address,
+            coordinate: location.coordinate,
+            distanceMeters: location.distanceMeters,
+            durationSeconds: location.durationSeconds,
+            image: NitroImageUtil.convert(location.image),
+            onPress: location.onPress ? () => location.onPress?.(template) : undefined,
+          }
+        : undefined,
     };
   }
 

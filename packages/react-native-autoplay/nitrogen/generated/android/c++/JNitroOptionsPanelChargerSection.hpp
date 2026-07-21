@@ -10,15 +10,29 @@
 #include <fbjni/fbjni.h>
 #include "NitroOptionsPanelChargerSection.hpp"
 
+#include "AssetImage.hpp"
 #include "ChargingConnector.hpp"
+#include "GlyphImage.hpp"
+#include "JAssetImage.hpp"
 #include "JChargingConnector.hpp"
 #include "JFunc_void.hpp"
+#include "JGlyphImage.hpp"
+#include "JNitroChargerLocation.hpp"
 #include "JNitroChargerOutlet.hpp"
+#include "JNitroColor.hpp"
+#include "JRemoteImage.hpp"
+#include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
+#include "NitroChargerLocation.hpp"
 #include "NitroChargerOutlet.hpp"
+#include "NitroColor.hpp"
+#include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -44,6 +58,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
       static const auto fieldOutlets = clazz->getField<jni::JArrayClass<JNitroChargerOutlet>>("outlets");
       jni::local_ref<jni::JArrayClass<JNitroChargerOutlet>> outlets = this->getFieldValue(fieldOutlets);
+      static const auto fieldLocation = clazz->getField<JNitroChargerLocation>("location");
+      jni::local_ref<JNitroChargerLocation> location = this->getFieldValue(fieldLocation);
       return NitroOptionsPanelChargerSection(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
         [&](auto&& __input) {
@@ -55,7 +71,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(outlets)
+        }(outlets),
+        location != nullptr ? std::make_optional(location->toCpp()) : std::nullopt
       );
     }
 
@@ -65,7 +82,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroOptionsPanelChargerSection::javaobject> fromCpp(const NitroOptionsPanelChargerSection& value) {
-      using JSignature = JNitroOptionsPanelChargerSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroChargerOutlet>>);
+      using JSignature = JNitroOptionsPanelChargerSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroChargerOutlet>>, jni::alias_ref<JNitroChargerLocation>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -80,7 +97,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(value.outlets)
+        }(value.outlets),
+        value.location.has_value() ? JNitroChargerLocation::fromCpp(value.location.value()) : nullptr
       );
     }
   };

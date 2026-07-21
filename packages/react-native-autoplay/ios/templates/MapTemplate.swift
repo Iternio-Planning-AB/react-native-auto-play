@@ -384,12 +384,12 @@ class MapTemplate: AutoPlayHeaderProviding,
             secondaryAction: secondaryAction,
             duration: alertConfig.durationMs / 1000
         )
-        
+
         if #available(iOS 27.0, *) {
             // as of iOS 27 beta 4 this does not work when setting an image on the alert
             alert.showsCloseButton = false
         }
-        
+
         func setNavigationAlert() {
             self.navigationAlert = .init(alert: alert, config: alertConfig)
             template.present(navigationAlert: alert, animated: true)
@@ -826,6 +826,9 @@ class MapTemplate: AutoPlayHeaderProviding,
     private func updateOptionsPanelSection(section: NitroSection, sectionIndex: Int) {
         guard var sections = optionsPanel?.sections, sectionIndex < sections.count else { return }
 
+        // `.first` is the `NitroSection` (list) case of `NitroOptionsPanelSection` — matches
+        // whatever nitrogen assigned the last time `yarn specs` ran, see the ordering note on
+        // `Parser.parseOptionsPanelSections`.
         sections[sectionIndex] = .first(section)
         optionsPanel = NitroOptionsPanelConfig(
             title: optionsPanel?.title,

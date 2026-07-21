@@ -41,13 +41,25 @@ data class NitroRow(
   val onPress: Func_void_std__optional_bool_?,
   @DoNotStrip
   @Keep
-  val selected: Boolean?
+  val selected: Boolean?,
+  @DoNotStrip
+  @Keep
+  val coordinate: WaypointCoordinate?,
+  @DoNotStrip
+  @Keep
+  val distanceMeters: Double?,
+  @DoNotStrip
+  @Keep
+  val durationSeconds: Double?,
+  @DoNotStrip
+  @Keep
+  val address: String?
 ) {
   /**
    * Create a new instance of NitroRow from Kotlin
    */
-  constructor(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Boolean?, onPress: ((checked: Boolean?) -> Unit)?, selected: Boolean?):
-         this(title, detailedText, browsable, enabled, image, checked, onPress?.let { Func_void_std__optional_bool__java(it) }, selected)
+  constructor(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Boolean?, onPress: ((checked: Boolean?) -> Unit)?, selected: Boolean?, coordinate: WaypointCoordinate?, distanceMeters: Double?, durationSeconds: Double?, address: String?):
+         this(title, detailedText, browsable, enabled, image, checked, onPress?.let { Func_void_std__optional_bool__java(it) }, selected, coordinate, distanceMeters, durationSeconds, address)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -60,6 +72,10 @@ data class NitroRow(
       && Objects.deepEquals(this.checked, other.checked)
       && Objects.deepEquals(this.onPress, other.onPress)
       && Objects.deepEquals(this.selected, other.selected)
+      && Objects.deepEquals(this.coordinate, other.coordinate)
+      && Objects.deepEquals(this.distanceMeters, other.distanceMeters)
+      && Objects.deepEquals(this.durationSeconds, other.durationSeconds)
+      && Objects.deepEquals(this.address, other.address)
   }
 
   override fun hashCode(): Int {
@@ -71,7 +87,11 @@ data class NitroRow(
       image,
       checked,
       onPress,
-      selected
+      selected,
+      coordinate,
+      distanceMeters,
+      durationSeconds,
+      address
     ).contentDeepHashCode()
   }
 
@@ -83,8 +103,8 @@ data class NitroRow(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Boolean?, onPress: Func_void_std__optional_bool_?, selected: Boolean?): NitroRow {
-      return NitroRow(title, detailedText, browsable, enabled, image, checked, onPress, selected)
+    private fun fromCpp(title: AutoText, detailedText: AutoText?, browsable: Boolean?, enabled: Boolean, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Boolean?, onPress: Func_void_std__optional_bool_?, selected: Boolean?, coordinate: WaypointCoordinate?, distanceMeters: Double?, durationSeconds: Double?, address: String?): NitroRow {
+      return NitroRow(title, detailedText, browsable, enabled, image, checked, onPress, selected, coordinate, distanceMeters, durationSeconds, address)
     }
   }
 }

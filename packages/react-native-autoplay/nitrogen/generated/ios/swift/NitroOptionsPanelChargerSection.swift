@@ -18,7 +18,7 @@ public extension NitroOptionsPanelChargerSection {
   /**
    * Create a new instance of `NitroOptionsPanelChargerSection`.
    */
-  init(title: String?, outlets: [NitroChargerOutlet]) {
+  init(title: String?, outlets: [NitroChargerOutlet], location: NitroChargerLocation?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = title {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -31,6 +31,12 @@ public extension NitroOptionsPanelChargerSection {
         __vector.push_back(__item)
       }
       return __vector
+    }(), { () -> bridge.std__optional_NitroChargerLocation_ in
+      if let __unwrappedValue = location {
+        return bridge.create_std__optional_NitroChargerLocation_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }())
   }
 
@@ -49,5 +55,10 @@ public extension NitroOptionsPanelChargerSection {
   @inline(__always)
   var outlets: [NitroChargerOutlet] {
     return self.__outlets.map({ __item in __item })
+  }
+  
+  @inline(__always)
+  var location: NitroChargerLocation? {
+    return self.__location.value
   }
 }

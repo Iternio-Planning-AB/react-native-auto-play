@@ -6,6 +6,7 @@
 //
 
 import CarPlay
+import CoreLocation
 import ImageIO
 import UIKit
 
@@ -288,7 +289,7 @@ class Parser {
 
         /// iOS 27 beta 3 & 4  do not accept nil for the optional travelEstimates any longer while the function comment still claims it is optional
         /// Initializes a map panel button configuration with a primary action, optional travel estimates, and an optional secondary button.
-        /// 
+        ///
         /// set it and call setValue to nil it again oO
         /// TODO: recheck on RC/final release
         let buttonConfiguration = CPMapPanelButtonConfiguration(
@@ -299,9 +300,9 @@ class Parser {
                 timeRemaining: 0
             )
         )
-        
+
         buttonConfiguration.setValue(nil, forKey: "travelEstimates")
-        
+
         return buttonConfiguration
     }
 
@@ -344,70 +345,96 @@ class Parser {
         }
 
         return section.items.enumerated().map { (itemIndex, item) in
-            let isSelected =
-                section.type == .radio
-                && Int(selectedIndex ?? -1) == itemIndex
+            parseListItem(
+                item: item,
+                itemIndex: itemIndex,
+                selectedIndex: selectedIndex,
+                section: section,
+                sectionIndex: sectionIndex,
+                updateSection: updateSection,
+                traitCollection: traitCollection
+            )
+        }
+    }
 
-            let toggleImage = item.checked.map { checked in
-                UIImage.makeToggleImage(
-                    enabled: checked,
-                    maximumImageSize: CPListItem.maximumImageSize
+    private static func parseListItem(
+        item: NitroRow,
+        itemIndex: Int,
+        selectedIndex: Int?,
+        section: NitroSection,
+        sectionIndex: Int,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> CPListItem {
+        let isSelected =
+            section.type == .radio
+            && Int(selectedIndex ?? -1) == itemIndex
+
+        let toggleImage = item.checked.map { checked in
+            UIImage.makeToggleImage(
+                enabled: checked,
+                maximumImageSize: CPListItem.maximumImageSize
+            )
+        }
+
+        // A waypoint row has no `detailedText` of its own — `address` doubles as the detail
+        // line whenever it falls back to a plain `CPListItem` (non-panel context, Android).
+        let listItem = CPListItem(
+            text: parseText(text: item.title),
+            detailText: item.address ?? parseText(text: item.detailedText),
+            image: Parser.parseNitroImage(
+                image: item.image,
+                traitCollection: traitCollection
+            ),
+            accessoryImage: isSelected
+                ? UIImage.checkmark : toggleImage,
+            accessoryType: item.browsable == true
+                ? .disclosureIndicator : .none
+        )
+
+        listItem.isEnabled = item.enabled
+
+        listItem.handler = { _item, completion in
+            let updatedItems = section.items.enumerated().map { (rowIndex, row) in
+                let checked: Bool? =
+                    if rowIndex == itemIndex, let checked = row.checked {
+                        !checked
+                    }
+                    else { row.checked }
+
+                let selected: Bool? =
+                    if section.type == .radio {
+                        rowIndex == itemIndex
+                    }
+                    else {
+                        nil
+                    }
+
+                return NitroRow(
+                    title: row.title,
+                    detailedText: row.detailedText,
+                    browsable: row.browsable,
+                    enabled: row.enabled,
+                    image: row.image,
+                    checked: checked,
+                    onPress: row.onPress,
+                    selected: selected,
+                    coordinate: row.coordinate,
+                    distanceMeters: row.distanceMeters,
+                    durationSeconds: row.durationSeconds,
+                    address: row.address
                 )
             }
 
-            let listItem = CPListItem(
-                text: parseText(text: item.title),
-                detailText: parseText(text: item.detailedText),
-                image: Parser.parseNitroImage(
-                    image: item.image,
-                    traitCollection: traitCollection
-                ),
-                accessoryImage: isSelected
-                    ? UIImage.checkmark : toggleImage,
-                accessoryType: item.browsable == true
-                    ? .disclosureIndicator : .none
-            )
+            let updatedSection = NitroSection(title: section.title, items: updatedItems, type: section.type)
 
-            listItem.isEnabled = item.enabled
+            updateSection(updatedSection, sectionIndex)
 
-            listItem.handler = { _item, completion in
-                let updatedItems = section.items.enumerated().map { (rowIndex, row) in
-                    let checked: Bool? =
-                        if rowIndex == itemIndex, let checked = row.checked {
-                            !checked
-                        }
-                        else { row.checked }
-
-                    let selected: Bool? =
-                        if section.type == .radio {
-                            rowIndex == itemIndex
-                        }
-                        else {
-                            nil
-                        }
-
-                    return NitroRow(
-                        title: row.title,
-                        detailedText: row.detailedText,
-                        browsable: row.browsable,
-                        enabled: row.enabled,
-                        image: row.image,
-                        checked: checked,
-                        onPress: row.onPress,
-                        selected: selected
-                    )
-                }
-
-                let updatedSection = NitroSection(title: section.title, items: updatedItems, type: section.type)
-
-                updateSection(updatedSection, sectionIndex)
-
-                item.onPress?(item.checked.map { checked in !checked })
-                completion()
-            }
-
-            return listItem
+            item.onPress?(item.checked.map { checked in !checked })
+            completion()
         }
+
+        return listItem
     }
 
     static func parseSections(
@@ -433,6 +460,49 @@ class Parser {
         }
     }
 
+    /// Builds the `CPMapPanelItem`s for a list-type section in panel context. Mirrors `parseListItems`, except a row carrying
+    /// waypoint data (`coordinate`) becomes a `CPMapTemplateWaypoint`-backed item instead of a `CPListItem`-backed one — used
+    /// both by `ListTemplate` panels and the options panel's list sections.
+    @available(iOS 27.0, *)
+    static func parsePanelItems(
+        section: NitroSection,
+        sectionIndex: Int,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPMapPanelItem] {
+        let selectedIndex = section.items.firstIndex { item in
+            item.selected == true
+        }
+
+        return section.items.enumerated().map { (itemIndex, item) in
+            if let coordinate = item.coordinate {
+                let image = parseWaypointImage(item.image, traitCollection: traitCollection)
+                let onPress = item.onPress
+                return parseWaypointPanelItem(
+                    name: parseText(text: item.title),
+                    address: item.address,
+                    coordinate: coordinate,
+                    distanceMeters: item.distanceMeters ?? 0,
+                    durationSeconds: item.durationSeconds ?? 0,
+                    image: image,
+                    onPress: { onPress?(nil) }
+                )
+            }
+
+            let listItem = parseListItem(
+                item: item,
+                itemIndex: itemIndex,
+                selectedIndex: selectedIndex,
+                section: section,
+                sectionIndex: sectionIndex,
+                updateSection: updateSection,
+                traitCollection: traitCollection
+            )
+
+            return CPMapPanelItem(listItem: listItem)
+        }
+    }
+
     @available(iOS 27.0, *)
     static func parseMapPanelSections(
         sections: [NitroSection]?,
@@ -442,26 +512,27 @@ class Parser {
         guard let sections else { return [] }
 
         return sections.enumerated().map { (sectionIndex, section) in
-            let items = parseListItems(
+            let items = parsePanelItems(
                 section: section,
                 sectionIndex: sectionIndex,
                 updateSection: updateSection,
                 traitCollection: traitCollection
             )
 
-            let panelItems = items.map { listItem in
-                CPMapPanelItem(listItem: listItem)
-            }
-
             return CPMapPanelSection(
                 title: section.title,
-                items: panelItems
+                items: items
             )
         }
     }
 
-    /// Builds sections for `CPNavigationSession.optionsPanel`. Each section is independently a full list (via `parseListItems`, radio
-    /// included), a full grid, or a charging station's outlets — `sectionIndex` addresses this array; only list sections call `updateSection`.
+    /// Builds sections for `CPNavigationSession.optionsPanel`. Each section is independently a full list (via `parsePanelItems`,
+    /// radio included — a list row carrying waypoint data becomes a `CPMapTemplateWaypoint` item), a full grid, or a charging
+    /// station's outlets — `sectionIndex` addresses this array; only list sections call `updateSection`.
+    ///
+    /// The case order below (`.first` = list, `.second` = grid, `.third` = charger) matches whatever nitrogen assigned the last
+    /// time `yarn specs` ran, not necessarily the declaration order of `NitroOptionsPanelSection` in TS — check
+    /// `NitroOptionsPanelSection.swift` after regenerating.
     @available(iOS 27.0, *)
     static func parseOptionsPanelSections(
         sections: [NitroOptionsPanelSection]?,
@@ -473,7 +544,7 @@ class Parser {
         return sections.enumerated().map { (sectionIndex, section) in
             switch section {
             case .first(let listSection):
-                let items = parseListItems(
+                let items = parsePanelItems(
                     section: listSection,
                     sectionIndex: sectionIndex,
                     updateSection: updateSection,
@@ -482,7 +553,7 @@ class Parser {
 
                 return CPMapPanelSection(
                     title: listSection.title,
-                    items: items.map { CPMapPanelItem(listItem: $0) }
+                    items: items
                 )
 
             case .second(let gridSection):
@@ -497,7 +568,7 @@ class Parser {
                 )
 
             case .third(let chargerSection):
-                let items = chargerSection.outlets.map { outlet -> CPMapPanelItem in
+                var items = chargerSection.outlets.map { outlet -> CPMapPanelItem in
                     let connection = CPChargingStationConnection(
                         connector: parseChargingConnector(outlet.connector),
                         voltage: Measurement(value: outlet.voltage, unit: .volts),
@@ -511,11 +582,93 @@ class Parser {
                     }
                 }
 
+                if let location = chargerSection.location {
+                    let onPress = location.onPress
+                    let image = parseWaypointImage(location.image, traitCollection: traitCollection)
+                    items.insert(
+                        parseWaypointPanelItem(
+                            name: location.name,
+                            address: location.address,
+                            coordinate: location.coordinate,
+                            distanceMeters: location.distanceMeters,
+                            durationSeconds: location.durationSeconds,
+                            image: image,
+                            onPress: { onPress?() }
+                        ),
+                        at: 0
+                    )
+                }
+
                 return CPMapPanelSection(
                     title: chargerSection.title,
                     items: items
                 )
             }
+        }
+    }
+
+    /// Shared image handling for a waypoint panel item (`WaypointRow`, `ChargerLocation`) — a glyph image is rendered
+    /// directly at `CPNavigationAlert.maximumAvatarImageSize`, since `CPMapPanelItem`'s waypoint image has no documented
+    /// size of its own; anything else falls back to the regular image conversion.
+    @available(iOS 27.0, *)
+    private static func parseWaypointImage(
+        _ image: ImageProtocol?,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        if let glyphImage = image?.glyphImage {
+            return SymbolFont.imageFromNitroImage(
+                image: glyphImage,
+                // iOS 27 beta 4 makes the image overflow
+                // adjusting it with displayScale gives it the proper size but causes some blur
+                // TODO: check again on next release
+                size: CPNavigationAlert.maximumAvatarImageSize.width / traitCollection.displayScale,
+                traitCollection: traitCollection
+            )
+        }
+
+        return parseNitroImage(image: image, traitCollection: traitCollection)
+    }
+
+    /// Builds a `CPMapPanelItem` wrapping a `CPMapTemplateWaypoint` — used both for a list row carrying waypoint data
+    /// (`WaypointRow`) and for a charging station's own location (`ChargerLocation`).
+    @available(iOS 27.0, *)
+    private static func parseWaypointPanelItem(
+        name: String?,
+        address: String?,
+        coordinate: WaypointCoordinate,
+        distanceMeters: Double,
+        durationSeconds: Double,
+        image: UIImage?,
+        onPress: @escaping () -> Void
+    ) -> CPMapPanelItem {
+        let nameVariants = name.map { [$0] } ?? []
+
+        let navigationWaypoint = CPNavigationWaypoint(
+            centerPoint: CPLocationCoordinate3D(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                altitude: coordinate.altitude ?? CLLocationDistanceMax
+            ),
+            locationThreshold: nil,
+            nameVariants: nameVariants,
+            addressVariants: address.map { [$0] } ?? [],
+            entryPoints: [],
+            timeZone: nil
+        )
+
+        let travelEstimates = CPTravelEstimates(
+            distanceRemaining: Measurement(value: distanceMeters, unit: .meters),
+            timeRemaining: durationSeconds
+        )
+
+        let mapTemplateWaypoint = CPMapTemplateWaypoint(
+            waypoint: navigationWaypoint,
+            travelEstimates: travelEstimates
+        )
+
+        return CPMapPanelItem(mapTemplateWaypoint: mapTemplateWaypoint, image: image) { _, completion in
+            onPress()
+            completion()
         }
     }
 
@@ -557,6 +710,7 @@ class Parser {
                 let icon = SymbolFont.imageFromNitroImage(
                     image: glyphImage,
                     size: CPButtonMaximumImageSize.height,
+                    noImageAsset: true,
                     traitCollection: traitCollection
                 )
             {

@@ -80,6 +80,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroButtonStyle; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCarPlayDashboardButton; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 // Forward declaration of `NitroChargerOutlet` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
 // Forward declaration of `NitroColor` to properly resolve imports.
@@ -142,6 +144,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Visible
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
 // Forward declaration of `VoiceInputResult` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputResult; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
 // Forward declaration of `ZoomEvent` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEvent; }
 
@@ -203,6 +207,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroButtonStyle.hpp"
 #include "NitroCarPlayDashboardButton.hpp"
+#include "NitroChargerLocation.hpp"
 #include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
@@ -234,6 +239,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "VisibleTravelEstimate.hpp"
 #include "VoiceInputChunk.hpp"
 #include "VoiceInputResult.hpp"
+#include "WaypointCoordinate.hpp"
 #include "ZoomEvent.hpp"
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/ArrayBufferHolder.hpp>
@@ -996,6 +1002,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::optional<WaypointCoordinate>
+  /**
+   * Specialized version of `std::optional<WaypointCoordinate>`.
+   */
+  using std__optional_WaypointCoordinate_ = std::optional<WaypointCoordinate>;
+  inline std::optional<WaypointCoordinate> create_std__optional_WaypointCoordinate_(const WaypointCoordinate& value) noexcept {
+    return std::optional<WaypointCoordinate>(value);
+  }
+  inline bool has_value_std__optional_WaypointCoordinate_(const std::optional<WaypointCoordinate>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline WaypointCoordinate get_std__optional_WaypointCoordinate_(const std::optional<WaypointCoordinate>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::vector<NitroRow>
   /**
    * Specialized version of `std::vector<NitroRow>`.
@@ -1561,6 +1582,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     std::vector<NitroChargerOutlet> vector;
     vector.reserve(size);
     return vector;
+  }
+  
+  // pragma MARK: std::optional<NitroChargerLocation>
+  /**
+   * Specialized version of `std::optional<NitroChargerLocation>`.
+   */
+  using std__optional_NitroChargerLocation_ = std::optional<NitroChargerLocation>;
+  inline std::optional<NitroChargerLocation> create_std__optional_NitroChargerLocation_(const NitroChargerLocation& value) noexcept {
+    return std::optional<NitroChargerLocation>(value);
+  }
+  inline bool has_value_std__optional_NitroChargerLocation_(const std::optional<NitroChargerLocation>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroChargerLocation get_std__optional_NitroChargerLocation_(const std::optional<NitroChargerLocation>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::variant<NitroSection, NitroOptionsPanelGridSection, NitroOptionsPanelChargerSection>

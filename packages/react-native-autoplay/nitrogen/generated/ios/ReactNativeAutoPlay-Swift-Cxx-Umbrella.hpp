@@ -94,6 +94,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroButtonStyle; }
 // Forward declaration of `NitroCarPlayDashboardButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCarPlayDashboardButton; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 // Forward declaration of `NitroChargerOutlet` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
 // Forward declaration of `NitroColor` to properly resolve imports.
@@ -164,6 +166,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Visible
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
 // Forward declaration of `VoiceInputResult` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputResult; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
 // Forward declaration of `ZoomEvent` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEvent; }
 
@@ -211,6 +215,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroButtonStyle.hpp"
 #include "NitroCarPlayDashboardButton.hpp"
+#include "NitroChargerLocation.hpp"
 #include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
@@ -246,6 +251,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "VisibleTravelEstimate.hpp"
 #include "VoiceInputChunk.hpp"
 #include "VoiceInputResult.hpp"
+#include "WaypointCoordinate.hpp"
 #include "ZoomEvent.hpp"
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/Promise.hpp>

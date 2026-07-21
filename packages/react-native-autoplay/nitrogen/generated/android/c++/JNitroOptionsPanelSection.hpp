@@ -38,6 +38,8 @@
 #include <functional>
 #include "JFunc_void_std__optional_bool_.hpp"
 #include <NitroModules/JNICallable.hpp>
+#include "WaypointCoordinate.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroSectionType.hpp"
 #include "JNitroSectionType.hpp"
 #include "JNitroOptionsPanelGridSection.hpp"
@@ -50,6 +52,8 @@
 #include "JNitroChargerOutlet.hpp"
 #include "ChargingConnector.hpp"
 #include "JChargingConnector.hpp"
+#include "NitroChargerLocation.hpp"
+#include "JNitroChargerLocation.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
