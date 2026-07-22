@@ -1,6 +1,7 @@
 import type { ImageButton, TextButton } from '../types/Button';
 import type { AutoImage } from '../types/Image';
-import type { AutoText } from '../types/Text';
+import type { AutoText, Distance } from '../types/Text';
+import type { DurationWithTimeZone } from '../types/Trip';
 import { type NitroAction, NitroActionUtil } from './NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from './NitroGrid';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
@@ -57,8 +58,15 @@ export type ChargerLocation<T> = {
   /** newline-separated address lines, most-preferred first */
   address?: string;
   coordinate: WaypointCoordinate;
-  distanceMeters: number;
-  durationSeconds: number;
+  travelEstimates: {
+    distance: Distance;
+    duration: DurationWithTimeZone;
+    /**
+     * by default travel estimates are not shown
+     * setting this to true add another row showing CPTravelEstimates
+     */
+    visible?: boolean;
+  };
   image?: AutoImage;
   onPress?: (template: T) => void;
 };
@@ -106,8 +114,9 @@ export type NitroChargerLocation = {
   name?: string;
   address?: string;
   coordinate: WaypointCoordinate;
-  distanceMeters: number;
-  durationSeconds: number;
+  distance: Distance;
+  duration: DurationWithTimeZone;
+  visible?: boolean;
   image?: NitroImage;
   onPress?: () => void;
 };
@@ -162,8 +171,9 @@ const convertSection = <T>(
             name: location.name,
             address: location.address,
             coordinate: location.coordinate,
-            distanceMeters: location.distanceMeters,
-            durationSeconds: location.durationSeconds,
+            distance: location.travelEstimates.distance,
+            duration: location.travelEstimates.duration,
+            visible: location.travelEstimates.visible,
             image: NitroImageUtil.convert(location.image),
             onPress: location.onPress ? () => location.onPress?.(template) : undefined,
           }

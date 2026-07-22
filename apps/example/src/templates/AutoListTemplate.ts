@@ -1,4 +1,5 @@
 import {
+  Constants,
   type DefaultRow,
   HybridAutoPlay,
   ListTemplate,
@@ -153,12 +154,15 @@ const getMainSection = (): Section<ListTemplate> => {
         latitude: 0,
         longitude: 0,
       },
-      distanceMeters: 123,
-      durationSeconds: 4,
-      title: {
-        text: 'some waypoint',
+      travelEstimates: {
+        distance: { unit: 'kilometers', value: 12 },
+        duration: { timezone: 'Europe/Vienna', seconds: 600 },
+        visible: true,
       },
-      address: 'charger ave.',
+      title: {
+        text: Constants.isIos27OrGreater ? 'some waypoint' : `some waypoint (${TextPlaceholders.Duration})`,
+      },
+      address: Constants.isIos27OrGreater ? 'charger ave.' :`charger ave. (${TextPlaceholders.Distance})`,
       image: {
         type: 'glyph',
         name: 'pin_drop',

@@ -40,6 +40,8 @@
 #include <NitroModules/JNICallable.hpp>
 #include "WaypointCoordinate.hpp"
 #include "JWaypointCoordinate.hpp"
+#include "DurationWithTimeZone.hpp"
+#include "JDurationWithTimeZone.hpp"
 #include "NitroSectionType.hpp"
 #include "JNitroSectionType.hpp"
 #include "JNitroOptionsPanelGridSection.hpp"

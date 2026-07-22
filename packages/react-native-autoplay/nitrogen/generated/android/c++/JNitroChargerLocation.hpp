@@ -11,8 +11,14 @@
 #include "NitroChargerLocation.hpp"
 
 #include "AssetImage.hpp"
+#include "Distance.hpp"
+#include "DistanceUnits.hpp"
+#include "DurationWithTimeZone.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
+#include "JDistance.hpp"
+#include "JDistanceUnits.hpp"
+#include "JDurationWithTimeZone.hpp"
 #include "JFunc_void.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
@@ -53,10 +59,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JString> address = this->getFieldValue(fieldAddress);
       static const auto fieldCoordinate = clazz->getField<JWaypointCoordinate>("coordinate");
       jni::local_ref<JWaypointCoordinate> coordinate = this->getFieldValue(fieldCoordinate);
-      static const auto fieldDistanceMeters = clazz->getField<double>("distanceMeters");
-      double distanceMeters = this->getFieldValue(fieldDistanceMeters);
-      static const auto fieldDurationSeconds = clazz->getField<double>("durationSeconds");
-      double durationSeconds = this->getFieldValue(fieldDurationSeconds);
+      static const auto fieldDistance = clazz->getField<JDistance>("distance");
+      jni::local_ref<JDistance> distance = this->getFieldValue(fieldDistance);
+      static const auto fieldDuration = clazz->getField<JDurationWithTimeZone>("duration");
+      jni::local_ref<JDurationWithTimeZone> duration = this->getFieldValue(fieldDuration);
+      static const auto fieldVisible = clazz->getField<jni::JBoolean>("visible");
+      jni::local_ref<jni::JBoolean> visible = this->getFieldValue(fieldVisible);
       static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage_RemoteImage>("image");
       jni::local_ref<JVariant_GlyphImage_AssetImage_RemoteImage> image = this->getFieldValue(fieldImage);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
@@ -65,8 +73,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         name != nullptr ? std::make_optional(name->toStdString()) : std::nullopt,
         address != nullptr ? std::make_optional(address->toStdString()) : std::nullopt,
         coordinate->toCpp(),
-        distanceMeters,
-        durationSeconds,
+        distance->toCpp(),
+        duration->toCpp(),
+        visible != nullptr ? std::make_optional(static_cast<bool>(visible->value())) : std::nullopt,
         image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
         onPress != nullptr ? std::make_optional([&]() -> std::function<void()> {
           if (onPress->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
@@ -86,7 +95,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroChargerLocation::javaobject> fromCpp(const NitroChargerLocation& value) {
-      using JSignature = JNitroChargerLocation(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JWaypointCoordinate>, double, double, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNitroChargerLocation(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JWaypointCoordinate>, jni::alias_ref<JDistance>, jni::alias_ref<JDurationWithTimeZone>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JFunc_void::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -94,8 +103,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.name.has_value() ? jni::make_jstring(value.name.value()) : nullptr,
         value.address.has_value() ? jni::make_jstring(value.address.value()) : nullptr,
         JWaypointCoordinate::fromCpp(value.coordinate),
-        value.distanceMeters,
-        value.durationSeconds,
+        JDistance::fromCpp(value.distance),
+        JDurationWithTimeZone::fromCpp(value.duration),
+        value.visible.has_value() ? jni::JBoolean::valueOf(value.visible.value()) : nullptr,
         value.image.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.image.value()) : nullptr,
         value.onPress.has_value() ? JFunc_void_cxx::fromCpp(value.onPress.value()) : nullptr
       );

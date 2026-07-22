@@ -2,6 +2,7 @@ import {
   type Alert,
   type BackButton,
   CarPlayDashboard,
+  Constants,
   ErrorUtil,
   type HeaderActions,
   HybridAutoPlay,
@@ -399,10 +400,8 @@ const AutoAlert = (remaining: number): Alert => ({
   priority: 'medium',
 });
 
-const isIos27OrGreater = Platform.OS === 'ios' && Math.floor(Number(Platform.Version)) === 27;
-
 const mapButtonConfig = {
-  backgroundColor: isIos27OrGreater
+  backgroundColor: Constants.isIos27OrGreater
     ? undefined
     : { darkColor: 'rgba(0, 0, 0, 0.5)', lightColor: 'rgba(255, 255, 255, 0.7)' },
   color: { darkColor: 'white', lightColor: 'black' },

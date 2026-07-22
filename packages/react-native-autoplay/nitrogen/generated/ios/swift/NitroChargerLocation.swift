@@ -18,7 +18,7 @@ public extension NitroChargerLocation {
   /**
    * Create a new instance of `NitroChargerLocation`.
    */
-  init(name: String?, address: String?, coordinate: WaypointCoordinate, distanceMeters: Double, durationSeconds: Double, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: (() -> Void)?) {
+  init(name: String?, address: String?, coordinate: WaypointCoordinate, distance: Distance, duration: DurationWithTimeZone, visible: Bool?, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: (() -> Void)?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = name {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -31,7 +31,13 @@ public extension NitroChargerLocation {
       } else {
         return .init()
       }
-    }(), coordinate, distanceMeters, durationSeconds, { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__ in
+    }(), coordinate, distance, duration, { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = visible {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__ in
       if let __unwrappedValue = image {
         return bridge.create_std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__({ () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
           switch __unwrappedValue {
@@ -88,13 +94,25 @@ public extension NitroChargerLocation {
   }
   
   @inline(__always)
-  var distanceMeters: Double {
-    return self.__distanceMeters
+  var distance: Distance {
+    return self.__distance
   }
   
   @inline(__always)
-  var durationSeconds: Double {
-    return self.__durationSeconds
+  var duration: DurationWithTimeZone {
+    return self.__duration
+  }
+  
+  @inline(__always)
+  var visible: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__visible) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__visible)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

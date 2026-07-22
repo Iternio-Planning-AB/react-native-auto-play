@@ -37,6 +37,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSectio
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
 // Forward declaration of `WaypointCoordinate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
+// Forward declaration of `DurationWithTimeZone` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWithTimeZone; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 
@@ -82,6 +84,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSe
 #include "JNitroRow.hpp"
 #include "WaypointCoordinate.hpp"
 #include "JWaypointCoordinate.hpp"
+#include "DurationWithTimeZone.hpp"
+#include "JDurationWithTimeZone.hpp"
 #include "NitroSectionType.hpp"
 #include "JNitroSectionType.hpp"
 #include "JFunc_void_std__string.hpp"

@@ -29,10 +29,13 @@ data class NitroChargerLocation(
   val coordinate: WaypointCoordinate,
   @DoNotStrip
   @Keep
-  val distanceMeters: Double,
+  val distance: Distance,
   @DoNotStrip
   @Keep
-  val durationSeconds: Double,
+  val duration: DurationWithTimeZone,
+  @DoNotStrip
+  @Keep
+  val visible: Boolean?,
   @DoNotStrip
   @Keep
   val image: Variant_GlyphImage_AssetImage_RemoteImage?,
@@ -43,8 +46,8 @@ data class NitroChargerLocation(
   /**
    * Create a new instance of NitroChargerLocation from Kotlin
    */
-  constructor(name: String?, address: String?, coordinate: WaypointCoordinate, distanceMeters: Double, durationSeconds: Double, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: (() -> Unit)?):
-         this(name, address, coordinate, distanceMeters, durationSeconds, image, onPress?.let { Func_void_java(it) })
+  constructor(name: String?, address: String?, coordinate: WaypointCoordinate, distance: Distance, duration: DurationWithTimeZone, visible: Boolean?, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: (() -> Unit)?):
+         this(name, address, coordinate, distance, duration, visible, image, onPress?.let { Func_void_java(it) })
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -52,8 +55,9 @@ data class NitroChargerLocation(
     return Objects.deepEquals(this.name, other.name)
       && Objects.deepEquals(this.address, other.address)
       && Objects.deepEquals(this.coordinate, other.coordinate)
-      && Objects.deepEquals(this.distanceMeters, other.distanceMeters)
-      && Objects.deepEquals(this.durationSeconds, other.durationSeconds)
+      && Objects.deepEquals(this.distance, other.distance)
+      && Objects.deepEquals(this.duration, other.duration)
+      && Objects.deepEquals(this.visible, other.visible)
       && Objects.deepEquals(this.image, other.image)
       && Objects.deepEquals(this.onPress, other.onPress)
   }
@@ -63,8 +67,9 @@ data class NitroChargerLocation(
       name,
       address,
       coordinate,
-      distanceMeters,
-      durationSeconds,
+      distance,
+      duration,
+      visible,
       image,
       onPress
     ).contentDeepHashCode()
@@ -78,8 +83,8 @@ data class NitroChargerLocation(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(name: String?, address: String?, coordinate: WaypointCoordinate, distanceMeters: Double, durationSeconds: Double, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: Func_void?): NitroChargerLocation {
-      return NitroChargerLocation(name, address, coordinate, distanceMeters, durationSeconds, image, onPress)
+    private fun fromCpp(name: String?, address: String?, coordinate: WaypointCoordinate, distance: Distance, duration: DurationWithTimeZone, visible: Boolean?, image: Variant_GlyphImage_AssetImage_RemoteImage?, onPress: Func_void?): NitroChargerLocation {
+      return NitroChargerLocation(name, address, coordinate, distance, duration, visible, image, onPress)
     }
   }
 }

@@ -418,8 +418,9 @@ class Parser {
                     onPress: row.onPress,
                     selected: selected,
                     coordinate: row.coordinate,
-                    distanceMeters: row.distanceMeters,
-                    durationSeconds: row.durationSeconds,
+                    distance: row.distance,
+                    duration: row.duration,
+                    travelEstimatesVisible: row.travelEstimatesVisible,
                     address: row.address
                 )
             }
@@ -472,19 +473,37 @@ class Parser {
             item.selected == true
         }
 
-        return section.items.enumerated().map { (itemIndex, item) in
+        return section.items.enumerated().flatMap { (itemIndex, item) -> [CPMapPanelItem] in
             if let coordinate = item.coordinate {
                 let image = parseWaypointImage(item.image, traitCollection: traitCollection)
                 let onPress = item.onPress
-                return parseWaypointPanelItem(
+                let waypointItem = parseWaypointPanelItem(
                     name: parseText(text: item.title),
                     address: item.address,
                     coordinate: coordinate,
-                    distanceMeters: item.distanceMeters ?? 0,
-                    durationSeconds: item.durationSeconds ?? 0,
+                    distance: item.distance,
+                    duration: item.duration,
                     image: image,
                     onPress: { onPress?(nil) }
                 )
+
+                guard item.travelEstimatesVisible == true, let distance = item.distance,
+                    let duration = item.duration
+                else {
+                    return [waypointItem]
+                }
+
+                let travelEstimates = CPTravelEstimates(
+                    distanceRemaining: parseDistance(distance: distance),
+                    timeRemaining: duration.seconds
+                )
+                let travelEstimatesItem = CPMapPanelItem(travelEstimates: travelEstimates) {
+                    _,
+                    completion in
+                    completion()
+                }
+
+                return [waypointItem, travelEstimatesItem]
             }
 
             let listItem = parseListItem(
@@ -497,7 +516,7 @@ class Parser {
                 traitCollection: traitCollection
             )
 
-            return CPMapPanelItem(listItem: listItem)
+            return [CPMapPanelItem(listItem: listItem)]
         }
     }
 
@@ -588,13 +607,26 @@ class Parser {
                             name: location.name,
                             address: location.address,
                             coordinate: location.coordinate,
-                            distanceMeters: location.distanceMeters,
-                            durationSeconds: location.durationSeconds,
+                            distance: location.distance,
+                            duration: location.duration,
                             image: image,
                             onPress: { onPress?() }
                         ),
                         at: 0
                     )
+
+                    if location.visible == true {
+                        let travelEstimates = CPTravelEstimates(
+                            distanceRemaining: parseDistance(distance: location.distance),
+                            timeRemaining: location.duration.seconds
+                        )
+                        items.insert(
+                            CPMapPanelItem(travelEstimates: travelEstimates) { _, completion in
+                                completion()
+                            },
+                            at: 1
+                        )
+                    }
                 }
 
                 return CPMapPanelSection(
@@ -634,8 +666,8 @@ class Parser {
         name: String?,
         address: String?,
         coordinate: WaypointCoordinate,
-        distanceMeters: Double,
-        durationSeconds: Double,
+        distance: Distance?,
+        duration: DurationWithTimeZone?,
         image: UIImage?,
         onPress: @escaping () -> Void
     ) -> CPMapPanelItem {
@@ -651,13 +683,26 @@ class Parser {
             nameVariants: nameVariants,
             addressVariants: address.map { [$0] } ?? [],
             entryPoints: [],
-            timeZone: nil
+            timeZone: duration.flatMap { TimeZone(identifier: $0.timezone) }
         )
 
-        let travelEstimates = CPTravelEstimates(
-            distanceRemaining: Measurement(value: distanceMeters, unit: .meters),
-            timeRemaining: durationSeconds
-        )
+        // `CPMapTemplateWaypoint.travelEstimates` isn't optional and isn't displayed by the
+        // waypoint item itself (the visible estimate is the separate sibling `CPMapPanelItem`
+        // above, added only when the caller opts in) — a negative value is Apple's documented
+        // way to say "unavailable" (renders as "--") for whenever this happens to be read.
+        let travelEstimates =
+            if let distance, let duration {
+                CPTravelEstimates(
+                    distanceRemaining: parseDistance(distance: distance),
+                    timeRemaining: duration.seconds
+                )
+            }
+            else {
+                CPTravelEstimates(
+                    distanceRemaining: Measurement(value: -1, unit: .meters),
+                    timeRemaining: -1
+                )
+            }
 
         let mapTemplateWaypoint = CPMapTemplateWaypoint(
             waypoint: navigationWaypoint,

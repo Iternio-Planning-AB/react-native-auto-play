@@ -30,6 +30,10 @@
 
 // Forward declaration of `WaypointCoordinate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
+// Forward declaration of `Distance` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Distance; }
+// Forward declaration of `DurationWithTimeZone` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWithTimeZone; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `AssetImage` to properly resolve imports.
@@ -40,6 +44,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage
 #include <string>
 #include <optional>
 #include "WaypointCoordinate.hpp"
+#include "Distance.hpp"
+#include "DurationWithTimeZone.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
 #include "RemoteImage.hpp"
@@ -56,14 +62,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::string> name     SWIFT_PRIVATE;
     std::optional<std::string> address     SWIFT_PRIVATE;
     WaypointCoordinate coordinate     SWIFT_PRIVATE;
-    double distanceMeters     SWIFT_PRIVATE;
-    double durationSeconds     SWIFT_PRIVATE;
+    Distance distance     SWIFT_PRIVATE;
+    DurationWithTimeZone duration     SWIFT_PRIVATE;
+    std::optional<bool> visible     SWIFT_PRIVATE;
     std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image     SWIFT_PRIVATE;
     std::optional<std::function<void()>> onPress     SWIFT_PRIVATE;
 
   public:
     NitroChargerLocation() = default;
-    explicit NitroChargerLocation(std::optional<std::string> name, std::optional<std::string> address, WaypointCoordinate coordinate, double distanceMeters, double durationSeconds, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, std::optional<std::function<void()>> onPress): name(name), address(address), coordinate(coordinate), distanceMeters(distanceMeters), durationSeconds(durationSeconds), image(image), onPress(onPress) {}
+    explicit NitroChargerLocation(std::optional<std::string> name, std::optional<std::string> address, WaypointCoordinate coordinate, Distance distance, DurationWithTimeZone duration, std::optional<bool> visible, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, std::optional<std::function<void()>> onPress): name(name), address(address), coordinate(coordinate), distance(distance), duration(duration), visible(visible), image(image), onPress(onPress) {}
 
   public:
     // NitroChargerLocation is not equatable because these properties are not equatable: onPress
@@ -82,8 +89,9 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "name"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "address"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::WaypointCoordinate>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "coordinate"))),
-        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "distanceMeters"))),
-        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "durationSeconds"))),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "distance"))),
+        JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration"))),
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visible"))),
         JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image"))),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))
       );
@@ -93,8 +101,9 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "name"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.name));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "address"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.address));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "coordinate"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::WaypointCoordinate>::toJSI(runtime, arg.coordinate));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "distanceMeters"), JSIConverter<double>::toJSI(runtime, arg.distanceMeters));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "durationSeconds"), JSIConverter<double>::toJSI(runtime, arg.durationSeconds));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "distance"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::toJSI(runtime, arg.distance));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "duration"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::toJSI(runtime, arg.duration));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "visible"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.visible));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "image"), JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::toJSI(runtime, arg.image));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onPress"), JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPress));
       return obj;
@@ -110,8 +119,9 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "name")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "address")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::WaypointCoordinate>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "coordinate")))) return false;
-      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "distanceMeters")))) return false;
-      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "durationSeconds")))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::Distance>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "distance")))) return false;
+      if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::DurationWithTimeZone>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration")))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visible")))) return false;
       if (!JSIConverter<std::optional<std::variant<margelo::nitro::swe::iternio::reactnativeautoplay::GlyphImage, margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage, margelo::nitro::swe::iternio::reactnativeautoplay::RemoteImage>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "image")))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))) return false;
       return true;

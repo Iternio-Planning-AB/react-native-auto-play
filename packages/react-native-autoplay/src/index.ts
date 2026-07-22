@@ -25,6 +25,7 @@ export enum AutoPlayModules {
   CarPlayDashboard = 'CarPlayDashboard',
 }
 
+export * from './Constants';
 export * from './components/SafeAreaView';
 export * from './hooks/useAndroidAutoTelemetry';
 export * from './hooks/useFocusedEffect';

@@ -18,7 +18,7 @@ public extension NitroRow {
   /**
    * Create a new instance of `NitroRow`.
    */
-  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?, coordinate: WaypointCoordinate?, distanceMeters: Double?, durationSeconds: Double?, address: String?) {
+  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?, coordinate: WaypointCoordinate?, distance: Distance?, duration: DurationWithTimeZone?, travelEstimatesVisible: Bool?, address: String?) {
     self.init(title, { () -> bridge.std__optional_AutoText_ in
       if let __unwrappedValue = detailedText {
         return bridge.create_std__optional_AutoText_(__unwrappedValue)
@@ -73,15 +73,21 @@ public extension NitroRow {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = distanceMeters {
-        return bridge.create_std__optional_double_(__unwrappedValue)
+    }(), { () -> bridge.std__optional_Distance_ in
+      if let __unwrappedValue = distance {
+        return bridge.create_std__optional_Distance_(__unwrappedValue)
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_double_ in
-      if let __unwrappedValue = durationSeconds {
-        return bridge.create_std__optional_double_(__unwrappedValue)
+    }(), { () -> bridge.std__optional_DurationWithTimeZone_ in
+      if let __unwrappedValue = duration {
+        return bridge.create_std__optional_DurationWithTimeZone_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = travelEstimatesVisible {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -201,22 +207,20 @@ public extension NitroRow {
   }
   
   @inline(__always)
-  var distanceMeters: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__distanceMeters) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__distanceMeters)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
+  var distance: Distance? {
+    return self.__distance.value
   }
   
   @inline(__always)
-  var durationSeconds: Double? {
-    return { () -> Double? in
-      if bridge.has_value_std__optional_double_(self.__durationSeconds) {
-        let __unwrapped = bridge.get_std__optional_double_(self.__durationSeconds)
+  var duration: DurationWithTimeZone? {
+    return self.__duration.value
+  }
+  
+  @inline(__always)
+  var travelEstimatesVisible: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__travelEstimatesVisible) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__travelEstimatesVisible)
         return __unwrapped
       } else {
         return nil

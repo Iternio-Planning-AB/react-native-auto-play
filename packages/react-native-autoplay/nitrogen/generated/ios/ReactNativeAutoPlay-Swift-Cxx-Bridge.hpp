@@ -1017,6 +1017,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::optional<DurationWithTimeZone>
+  /**
+   * Specialized version of `std::optional<DurationWithTimeZone>`.
+   */
+  using std__optional_DurationWithTimeZone_ = std::optional<DurationWithTimeZone>;
+  inline std::optional<DurationWithTimeZone> create_std__optional_DurationWithTimeZone_(const DurationWithTimeZone& value) noexcept {
+    return std::optional<DurationWithTimeZone>(value);
+  }
+  inline bool has_value_std__optional_DurationWithTimeZone_(const std::optional<DurationWithTimeZone>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline DurationWithTimeZone get_std__optional_DurationWithTimeZone_(const std::optional<DurationWithTimeZone>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::vector<NitroRow>
   /**
    * Specialized version of `std::vector<NitroRow>`.

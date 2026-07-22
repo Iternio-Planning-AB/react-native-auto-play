@@ -304,21 +304,19 @@ const registerRunnable = () => {
             ],
           },
           {
-            title: 'charger',
             type: 'charger',
             location: {
               coordinate: {
                 latitude: 0,
                 longitude: 0,
               },
-              distanceMeters: 123,
-              durationSeconds: 4,
+              travelEstimates: {
+                distance: { unit: 'kilometers', value: 12 },
+                duration: { timezone: 'Europe/Vienna', seconds: 600 },
+                visible: true,
+              },
               address: 'charger ave.',
               name: 'Fast Network Inc.',
-              image: {
-                type: 'glyph',
-                name: 'ev_charger',
-              },
             },
             outlets: [
               { connector: 'ccs2', powerKw: 300, voltage: 400, onPress: () => {} },
