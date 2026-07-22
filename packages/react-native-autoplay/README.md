@@ -542,6 +542,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
 | `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton` |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |
+| `optionsPanel` | `OptionsPanelConfig<MapTemplate>` | ❌ | **iOS 27+ only, no-op on Android.** Panel shown when tapping the ellipsis button next to the travel estimates during active navigation. See **Options Panel** below. |
 | `onDidPan` / `onDidUpdateZoomGestureWithCenter` | callbacks | ❌ | Map gesture events. |
 | `onAppearanceDidChange` | `(colorScheme) => void` | ❌ | Listen for light/dark mode changes. |
 | `onAutoDriveEnabled` | `(template) => void` | ⚠️ | Android-only auto drive callback. Make sure to take action when receiving this and simulate a drive to the set destination. [Check Android docs for details](https://developer.android.com/reference/androidx/car/app/navigation/NavigationManagerCallback#onAutoDriveEnabled()) |
@@ -880,14 +881,94 @@ new ListTemplate({
 **Things that behave differently in panel mode:**
 
 -   **`headerActions`/`mapButtons` ownership**: while a panel is shown, it takes over the root map template's bar buttons and floating map buttons — using the panel template's **own** `headerActions`/`mapConfig.mapButtons`, not `mapConfig.headerActions` (which is Android-only; on iOS it's ignored, since there's no separate header for the map behind a panel). The map template's own buttons are restored automatically once the panel is popped.
--   **`backButton` is applied but likely redundant**: the panel itself always shows its own non-customizable close/back control, separate from anything you set. If you also specify `headerActions.ios.backButton`, this library applies it as-is to the root map template's nav bar, so you can end up with two back-like controls on screen at once (the panel's own, plus yours). Whether to include `backButton` is therefore a runtime decision: check the OS version (e.g. `parseInt(Platform.Version, 10) >= 27` on iOS) and omit `backButton` only when the device will actually render this as a panel.
+-   **`backButton` is applied but likely redundant**: the panel itself always shows its own non-customizable close/back control, separate from anything you set. If you also specify `headerActions.ios.backButton`, this library applies it as-is to the root map template's nav bar, so you can end up with two back-like controls on screen at once (the panel's own, plus yours). Whether to include `backButton` is therefore a runtime decision: check the OS version (e.g. `Constants.isIos27OrGreater`) and omit `backButton` only when the device will actually render this as a panel.
 -   **`InformationTemplate`/`MessageTemplate` `actions`**: a `CPMapPanel`'s button configuration only supports one `TextButton` (with a title) plus one optional icon-only `ImageButton` (any title on it is dropped natively) — far fewer than the up-to-3-`TextButton` shape available without `mapConfig`. The type system enforces this: `actions.ios` is restricted to `[TextButton]` or `[TextButton, ImageButton]` whenever `mapConfig` is set.
 -   **`MessageTemplate` stops being a true modal**: normally `MessageTemplate` is a full-screen, blocking alert (`CPAlertTemplate`) that covers everything regardless of OS version. With `mapConfig` set, it instead becomes dismissible panel content in the regular push/pop stack — a deliberate trade-off, not a partial implementation.
 
 **Known iOS 27 beta limitations** (not something fixable in this library — re-test against newer betas):
 
--   `CPMapPanelDelegate.panelDidHide` is not reliably called by CarPlay for every dismissal path (confirmed via Apple Feedback report [FB#177590525](https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-27-release-notes#CarPlay): *"The panel delegate method panelDidHide(_ panel: CPMapPanel) might not be called."*). It's confirmed working for the panel's own back button and for popping a panel from JS, but **not** for CarPlay's built-in close (X) button. Until Apple fixes this, dismissing a panel via the close button can leave internal bookkeeping stale until the next explicit push/pop.
 -   The optional icon-only `symbolButton` in a panel's button configuration does not appear to respond to taps at all on this beta — the button renders correctly, but its press handler is never invoked by CarPlay.
+
+### Waypoint Rows (`type: 'waypoint'`)
+
+Any list section (`ListTemplate.sections`, or an `OptionsPanel` list section — see below) can include a `waypoint` row alongside the usual `default`/`toggle`/`radio`/`text` rows:
+
+```ts
+{
+  type: 'waypoint',
+  title: { text: 'Supercharger' },
+  address: 'Main St 1\n1234 Springfield',
+  coordinate: { latitude: 48.2, longitude: 16.37 },
+  travelEstimates: {
+    distance: { unit: 'kilometers', value: 12 },
+    duration: { timezone: 'Europe/Vienna', seconds: 600 },
+    visible: true,
+  },
+  image: { type: 'glyph', name: 'pin_drop' },
+  onPress: () => {},
+}
+```
+
+**iOS 27+ inside a `CPMapPanel`** (i.e. the enclosing `ListTemplate`/`GridTemplate` has `mapConfig` set, or this row is part of an `OptionsPanel` list section): renders as a real [`CPMapTemplateWaypoint`](https://developer.apple.com/documentation/carplay/cpmaptemplatewaypoint) item — `title` becomes the name, `address` the address, `image` the leading image (see the known-issue note below on image sizing). `travelEstimates.distance`/`.duration` are always sent to the native waypoint object (CarPlay requires them structurally), but they're **not shown by the waypoint item itself** — set `travelEstimates.visible: true` to additionally insert a sibling native [`CPTravelEstimates`](https://developer.apple.com/documentation/carplay/cptravelestimates) row right after it. This is a static snapshot, not live-updating — re-set `distance`/`duration` yourself (e.g. via `updateSections`/`updateOptionsPanel`) if it needs to track a changing location; there's no lighter-weight update path for just this value today.
+
+**Everywhere else** (non-panel `ListTemplate`, Android, iOS < 27): falls back to a plain row, using `title` as the row title and `address` as the detail text — `travelEstimates.visible` has no effect here. Instead, reference `TextPlaceholders.Distance`/`TextPlaceholders.Duration` inside `title.text`/`address` yourself and this library fills them in automatically (the same substitution mechanism `AutoText.distance`/`.duration` already do everywhere):
+
+```ts
+{
+  type: 'waypoint',
+  title: { text: `Supercharger (${TextPlaceholders.Distance})` },
+  address: `Main St 1 · ${TextPlaceholders.Duration} away`,
+  travelEstimates: { distance: { unit: 'kilometers', value: 12 }, duration: { timezone: 'Europe/Vienna', seconds: 600 } },
+  coordinate: { latitude: 48.2, longitude: 16.37 },
+  onPress: () => {},
+}
+```
+
+### Options Panel (`optionsPanel`, iOS 27+)
+
+`MapTemplate`'s `optionsPanel` prop configures the panel CarPlay shows when the user taps the ellipsis button next to the travel estimates during active navigation. It's a no-op on Android and on iOS below 27.
+
+```ts
+mapTemplate.updateOptionsPanel({
+  title: { text: 'Trip options' },
+  sections: [
+    {
+      type: 'list',
+      title: 'Route',
+      items: [{ type: 'default', title: { text: 'Avoid tolls' }, onPress: () => {} }],
+    },
+    {
+      type: 'charger',
+      title: 'Charger',
+      location: {
+        name: 'Fast Network Inc.',
+        address: 'Main St 1',
+        coordinate: { latitude: 48.2, longitude: 16.37 },
+        travelEstimates: {
+          distance: { unit: 'kilometers', value: 12 },
+          duration: { timezone: 'Europe/Vienna', seconds: 600 },
+          visible: true,
+        },
+        onPress: () => {},
+      },
+      outlets: [{ connector: 'ccs2', voltage: 400, powerKw: 300, onPress: () => {} }],
+    },
+  ],
+});
+```
+
+A section is one of:
+
+| `type` | Renders as | Notes |
+| --- | --- | --- |
+| `'list'` | Rows (`default`/`toggle`/`radio`/`text`/`waypoint`) | Same row types and behavior as a regular `ListTemplate` section. |
+| `'grid'` | A row of `GridButton`s | Same shape as `GridTemplate.buttons`. |
+| `'charger'` | One `CPChargingStationConnection` item per outlet | `outlets[].connector` is one of `ccs1`/`ccs2`/`j1772`/`chaDeMo`/`mennekes`/`gbtDC`/`gbtAC`/`nacsDC`/`nacsAC`; `powerKw` above 1000 is shown in MW natively. `location` is optional and behaves exactly like a `waypoint` row's panel behavior above (own `CPMapTemplateWaypoint` item, `travelEstimates.visible` for the sibling estimate row) — except it uses `location.name` instead of a `title`, since the section's own `title` is already shown as the header (repeating it on the item would look redundant). |
+
+**Known iOS 27 beta issues affecting waypoint/options-panel content** (not fixable in this library — re-test against newer betas; each was confirmed by direct testing, several already have Apple Feedback reports filed):
+
+-   **Custom (non-system) images are unreliable across several of these newer panel APIs.** A `CPMapButton`/header-action image needed a workaround (`noImageAsset: true` — the normal `UIImageAsset`-wrapped light/dark variant path scales incorrectly there) that's already applied internally, so map buttons/header actions are unaffected. A `waypoint` row's/`ChargerLocation`'s `image`, however, has no known-good size — everything from explicit point sizes to real custom `UIImage.isSymbolImage` assets was tried without a reliable, correctly-sized result; only genuine **system** symbols (`UIImage(systemName:)`) size correctly there. Expect `image` on a waypoint/charger row to render, but not necessarily at a sensible size.
+-   **`CPListItem.accessoryImage` (used for `toggle` rows) renders at some fixed, undersized footprint on iOS 27, regardless of the image's content, size, scale, or whether it's a real symbol image** — confirmed via extensive testing (content proportions, render scale, post-hoc scale metadata, genuine `UIImage.isSymbolImage` assets from both the app's own bundle and a library-owned resource bundle). Reproduces on a plain (non-panel) `ListTemplate` too, so it isn't specific to panels or to this library's usage of the API. No workaround found; filed as Apple Feedback.
 
 ### Voice Input
 
@@ -1141,7 +1222,8 @@ In case you are using Expo SDK >= 56 make sure to set `buildReactNativeFromSourc
     // Hide the splash screen for the CarPlay screen
     hideAsync(AutoPlayModules.AutoPlayRoot);
     ```
--   **CarPlay map panels (iOS 27 beta)**: `CPMapPanelDelegate.panelDidHide` is not reliably called for every dismissal path (confirmed via Apple Feedback report FB#177590525), and a panel's optional icon-only `symbolButton` does not respond to taps. See **Map + Content** above for details. These are beta platform limitations, not bugs in this library — re-test against newer iOS 27 betas.
+-   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only `symbolButton` does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
+-   **Waypoint/options-panel images and toggle-row sizing (iOS 27 beta)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Beta platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
 ### Android
 -   **Broken exceptions with `react-native`** up to version 0.79
 When using react-native before 0.80.0 exceptions are broken and are reported as `Unknown runtime_error` or similar.
