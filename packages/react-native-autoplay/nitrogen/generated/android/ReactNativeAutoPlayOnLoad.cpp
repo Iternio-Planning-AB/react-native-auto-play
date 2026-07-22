@@ -21,6 +21,8 @@
 #include "JFunc_void_AppFocusState.hpp"
 #include "JHybridAndroidAutoTelemetrySpec.hpp"
 #include "JFunc_void_std__optional_Telemetry_.hpp"
+#include "JHybridAndroidWindowInformationSpec.hpp"
+#include "JFunc_void_WindowInformation.hpp"
 #include "JHybridAutoPlaySpec.hpp"
 #include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_std__optional_Location__std__optional_std__string_.hpp"
@@ -72,6 +74,14 @@ struct JHybridAutoPlaySpecImpl: public jni::JavaClass<JHybridAutoPlaySpecImpl, J
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAutoPlaySpecImpl::javaobject()>();
     jni::local_ref<JHybridAutoPlaySpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridAutoPlaySpec();
+  }
+};
+struct JHybridAndroidWindowInformationSpecImpl: public jni::JavaClass<JHybridAndroidWindowInformationSpecImpl, JHybridAndroidWindowInformationSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidWindowInformation;";
+  static std::shared_ptr<JHybridAndroidWindowInformationSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAndroidWindowInformationSpecImpl::javaobject()>();
+    jni::local_ref<JHybridAndroidWindowInformationSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAndroidWindowInformationSpec();
   }
 };
 struct JHybridAndroidAutoTelemetrySpecImpl: public jni::JavaClass<JHybridAndroidAutoTelemetrySpecImpl, JHybridAndroidAutoTelemetrySpec::JavaPart> {
@@ -166,6 +176,8 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AppFocusState_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutoTelemetrySpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Telemetry__cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidWindowInformationSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_WindowInformation_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlaySpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VisibilityState_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Location__std__optional_std__string__cxx::registerNatives();
@@ -205,6 +217,12 @@ void registerAllNatives() {
     "AutoPlay",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridAutoPlaySpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AndroidWindowInformation",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAndroidWindowInformationSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(
