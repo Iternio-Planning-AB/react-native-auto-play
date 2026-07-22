@@ -377,11 +377,9 @@ class Parser {
             )
         }
 
-        // A waypoint row has no `detailedText` of its own — `address` doubles as the detail
-        // line whenever it falls back to a plain `CPListItem` (non-panel context, Android).
         let listItem = CPListItem(
             text: parseText(text: item.title),
-            detailText: item.address ?? parseText(text: item.detailedText),
+            detailText: parseText(text: item.detailedText),
             image: Parser.parseNitroImage(
                 image: item.image,
                 traitCollection: traitCollection

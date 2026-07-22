@@ -146,7 +146,16 @@ const convertRow = <T>(
 ): NitroRow => {
   const { title, type, enabled = true, image } = item;
 
-  const detailedText = 'detailedText' in item ? item.detailedText : undefined;
+  // `WaypointRow` has no `detailedText` of its own — `address` doubles as the detail line
+  // whenever this falls back to a plain row (non-panel context, Android).
+  const detailedText =
+    item.type === 'waypoint'
+      ? item.address != null
+        ? { text: item.address }
+        : undefined
+      : 'detailedText' in item
+        ? item.detailedText
+        : undefined;
   const selected = type === 'radio' ? (item.selected ?? false) : undefined;
 
   const onTogglePress = item.type === 'toggle' ? item.onPress : undefined;
