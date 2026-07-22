@@ -160,9 +160,13 @@ const getMainSection = (): Section<ListTemplate> => {
         visible: true,
       },
       title: {
-        text: Constants.isIos27OrGreater ? 'some waypoint' : `some waypoint (${TextPlaceholders.Duration})`,
+        text: Constants.isIos27OrGreater
+          ? 'some waypoint'
+          : `some waypoint (${TextPlaceholders.Duration})`,
       },
-      address: Constants.isIos27OrGreater ? 'charger ave.' :`charger ave. (${TextPlaceholders.Distance})`,
+      address: Constants.isIos27OrGreater
+        ? 'charger ave.'
+        : `charger ave. (${TextPlaceholders.Distance})`,
       image: {
         type: 'glyph',
         name: 'pin_drop',
