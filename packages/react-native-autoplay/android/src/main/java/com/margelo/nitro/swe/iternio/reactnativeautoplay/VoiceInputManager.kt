@@ -380,8 +380,11 @@ class VoiceInputManager(
                     ) ?: -1
 
                     if (read < 0) {
-                        // Whenever the user dismisses the microphone on the car screen, the next call to read will return -1
-                        cancelledByUser = carAudioRecord != null && read == -1
+                        // Whenever the user dismisses the microphone on the car screen, the next call to read will return -1.
+                        // But calling stop() ourselves also races CarAudioRecord's internal stream close against an
+                        // in-flight read(), which can likewise surface as -1 — isRecording is already false by then
+                        // (set before stopRecording() is called), so it distinguishes the two cases.
+                        cancelledByUser = carAudioRecord != null && read == -1 && isRecording
                         break
                     }
 
@@ -439,6 +442,10 @@ class VoiceInputManager(
     }
 
     fun stop() {
+        // Mark as no longer recording before triggering any teardown side effects, so anything
+        // racing against a concurrent read() sees this is an app-initiated stop.
+        isRecording = false
+
         // STT path: stopListening() triggers onResults/onError which resolves the continuation
         activeSpeechRecognizer?.let { recognizer ->
             UiThreadUtil.runOnUiThread {
@@ -446,7 +453,6 @@ class VoiceInputManager(
             }
         }
         // PCM path and car-audio STT pump
-        isRecording = false
         carAudioRecord?.stopRecording()
         audioRecord?.stop()
     }
