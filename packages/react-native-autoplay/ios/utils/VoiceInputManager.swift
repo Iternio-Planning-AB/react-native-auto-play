@@ -69,6 +69,9 @@ class VoiceInputManager {
     private var silenceStart: Date?
     private var firstBufferContinuation: CheckedContinuation<Void, Never>?
 
+    // PCM result/onChunk audio encoding — STT transcription itself is unaffected
+    private var encoding: VoiceAudioEncoding = .linear16
+
     private static let sampleRate: Double = 16_000
     private static let tapBufferSize: AVAudioFrameCount = 4_096
     private static let silenceAmplitudeThreshold = 500
@@ -94,8 +97,10 @@ class VoiceInputManager {
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         language: String?,
         startSoundUri: String?,
-        endSoundUri: String?
+        endSoundUri: String?,
+        encoding: VoiceAudioEncoding
     ) async throws -> VoiceInputResult {
+        self.encoding = encoding
         stopLock.withLock {
             cancelledByUser = false
         }
@@ -355,9 +360,8 @@ class VoiceInputManager {
 
             // PCM chunk callback
             if activeRecognitionRequest == nil, let onChunk {
-                if let chunkBuffer = try? ArrayBuffer.copy(
-                    data: newSamples.withUnsafeBufferPointer { Data(buffer: $0) }
-                ) {
+                let pcmData = newSamples.withUnsafeBufferPointer { Data(buffer: $0) }
+                if let chunkBuffer = try? ArrayBuffer.copy(data: self.encodeAudio(pcmData)) {
                     onChunk(VoiceInputChunk(partial: nil, audio: chunkBuffer))
                 }
             }
@@ -424,8 +428,16 @@ class VoiceInputManager {
 
     private func makePCMResult(from samples: [Int16]) -> VoiceInputResult {
         let data = samples.withUnsafeBufferPointer { Data(buffer: $0) }
-        let buffer = try? ArrayBuffer.copy(data: data)
+        let buffer = try? ArrayBuffer.copy(data: encodeAudio(data))
         return VoiceInputResult(transcription: nil, audio: buffer)
+    }
+
+    private func encodeAudio(_ pcm16le: Data) -> Data {
+        switch encoding {
+        case .linear16: return pcm16le
+        case .mulaw: return G711.encodeUlaw(pcm16le)
+        case .alaw: return G711.encodeAlaw(pcm16le)
+        }
     }
 
     // CPVoiceControlState enforces a maximum image size of 150x150 points.

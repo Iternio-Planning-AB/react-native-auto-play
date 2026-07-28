@@ -26,6 +26,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `VoiceInputChunk` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
+// Forward declaration of `VoiceAudioEncoding` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VoiceAudioEncoding; }
 
 #include <NitroModules/Promise.hpp>
 #include "VoiceInputResult.hpp"
@@ -40,6 +42,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputC
 #include "NitroColor.hpp"
 #include "VoiceInputChunk.hpp"
 #include <functional>
+#include "VoiceAudioEncoding.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -107,8 +110,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri) override {
-      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk, language, startSoundUri, endSoundUri);
+    inline std::shared_ptr<Promise<VoiceInputResult>> startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri, std::optional<VoiceAudioEncoding> encoding) override {
+      auto __result = _swiftPart.startVoiceInput(silenceThresholdMs, maxDurationMs, listeningText, listeningImage, listeningImageRepeats, preferSpeechToText, onChunk, language, startSoundUri, endSoundUri, encoding);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

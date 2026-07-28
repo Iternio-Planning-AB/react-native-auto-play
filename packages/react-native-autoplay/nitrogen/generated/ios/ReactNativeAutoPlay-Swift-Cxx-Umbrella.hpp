@@ -150,6 +150,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `VoiceAudioEncoding` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VoiceAudioEncoding; }
 // Forward declaration of `VoiceInputChunk` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
 // Forward declaration of `VoiceInputResult` to properly resolve imports.
@@ -229,6 +231,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
+#include "VoiceAudioEncoding.hpp"
 #include "VoiceInputChunk.hpp"
 #include "VoiceInputResult.hpp"
 #include "ZoomEvent.hpp"

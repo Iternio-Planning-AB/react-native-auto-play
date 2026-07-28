@@ -156,7 +156,7 @@ open class HybridVoiceSpec_cxx {
   }
   
   @inline(__always)
-  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, listeningImage: bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__, listeningImageRepeats: bridge.std__optional_bool_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_, startSoundUri: bridge.std__optional_std__string_, endSoundUri: bridge.std__optional_std__string_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
+  public final func startVoiceInput(silenceThresholdMs: bridge.std__optional_double_, maxDurationMs: bridge.std__optional_double_, listeningText: bridge.std__optional_std__string_, listeningImage: bridge.std__optional_std__variant_GlyphImage__AssetImage__RemoteImage__, listeningImageRepeats: bridge.std__optional_bool_, preferSpeechToText: bridge.std__optional_bool_, onChunk: bridge.std__optional_std__function_void_const_VoiceInputChunk_____chunk______, language: bridge.std__optional_std__string_, startSoundUri: bridge.std__optional_std__string_, endSoundUri: bridge.std__optional_std__string_, encoding: bridge.std__optional_VoiceAudioEncoding_) -> bridge.Result_std__shared_ptr_Promise_VoiceInputResult___ {
     do {
       let __result = try self.__implementation.startVoiceInput(silenceThresholdMs: { () -> Double? in
         if bridge.has_value_std__optional_double_(silenceThresholdMs) {
@@ -248,7 +248,7 @@ open class HybridVoiceSpec_cxx {
         } else {
           return nil
         }
-      }())
+      }(), encoding: encoding.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_VoiceInputResult__ in
         let __promise = bridge.create_std__shared_ptr_Promise_VoiceInputResult__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_VoiceInputResult__(__promise)
