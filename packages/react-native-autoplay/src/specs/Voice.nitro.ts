@@ -1,5 +1,5 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { VoiceInputChunk, VoiceInputResult } from '../types/Voice';
+import type { VoiceAudioEncoding, VoiceInputChunk, VoiceInputResult } from '../types/Voice';
 import type { NitroImage } from '../utils/NitroImage';
 
 export interface Voice extends HybridObject<{ android: 'kotlin'; ios: 'swift' }> {
@@ -15,7 +15,8 @@ export interface Voice extends HybridObject<{ android: 'kotlin'; ios: 'swift' }>
     onChunk?: (chunk: VoiceInputChunk) => void,
     language?: string,
     startSoundUri?: string,
-    endSoundUri?: string
+    endSoundUri?: string,
+    encoding?: VoiceAudioEncoding
   ): Promise<VoiceInputResult>;
   stopVoiceInput(): void;
 }

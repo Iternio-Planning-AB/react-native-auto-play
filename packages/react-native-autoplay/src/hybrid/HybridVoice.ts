@@ -24,6 +24,7 @@ const startVoiceInput: StartVoiceInput = async (options?: VoiceInputOptions) => 
     language,
     startSound,
     endSound,
+    encoding,
   } = options ?? {};
 
   const listeningImageRepeats =
@@ -42,7 +43,8 @@ const startVoiceInput: StartVoiceInput = async (options?: VoiceInputOptions) => 
     onChunk,
     language,
     startSoundUri,
-    endSoundUri
+    endSoundUri,
+    encoding
   );
 };
 
@@ -82,6 +84,7 @@ export const HybridVoice = {
    * @param preferSpeechToText  request STT transcription instead of raw PCM
    * @param onChunk             optional streaming callback
    * @param language            specify the language for the SpeechRecognizer, falls back to system language if not set
+   * @param encoding            PCM encoding for onChunk audio and the final result (default LINEAR16)
    */
   startVoiceInput,
   /**

@@ -70,7 +70,8 @@ class HybridVoice : HybridVoiceSpec() {
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
         language: String?,
         startSoundUri: String?,
-        endSoundUri: String?
+        endSoundUri: String?,
+        encoding: VoiceAudioEncoding?
     ): Promise<VoiceInputResult> {
         return Promise.async {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -89,6 +90,7 @@ class HybridVoice : HybridVoiceSpec() {
                     language = language,
                     startSoundUri = startSoundUri,
                     endSoundUri = endSoundUri,
+                    encoding = encoding ?: VoiceAudioEncoding.LINEAR16,
                 )
             } finally {
                 voiceInputManager = null

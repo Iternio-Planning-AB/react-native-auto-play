@@ -27,6 +27,7 @@ import androidx.core.net.toUri
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.core.ArrayBuffer
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.G711
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -81,6 +82,7 @@ class VoiceInputManager(
         language: String? = null,
         startSoundUri: String? = null,
         endSoundUri: String? = null,
+        encoding: VoiceAudioEncoding = VoiceAudioEncoding.LINEAR16,
     ): VoiceInputResult {
         cancelledByUser = false
         if (!requestAudioFocus()) {
@@ -93,19 +95,19 @@ class VoiceInputManager(
                 if (SpeechRecognizer.isRecognitionAvailable(context)) {
                     if (carContext != null) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, onChunk, language)
+                            startSTTFromCarAudio(silenceThresholdMs, maxDurationMs, encoding, onChunk, language)
                         } else {
                             // Car connected but API < 33: EXTRA_AUDIO_SOURCE unavailable, fall back to PCM
-                            startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                            startPCM(silenceThresholdMs, maxDurationMs, encoding, onChunk)
                         }
                     } else {
                         ThreadUtil.postOnUiAndAwait { startSTT(context, onChunk, language) }.getOrThrow()
                     }
                 } else {
-                    startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                    startPCM(silenceThresholdMs, maxDurationMs, encoding, onChunk)
                 }
             } else {
-                startPCM(silenceThresholdMs, maxDurationMs, onChunk)
+                startPCM(silenceThresholdMs, maxDurationMs, encoding, onChunk)
             }
             startSoundJob?.join()
             if (cancelledByUser) throw VoiceInputCancelledException()
@@ -182,6 +184,7 @@ class VoiceInputManager(
     private suspend fun startSTTFromCarAudio(
         silenceThresholdMs: Long,
         maxDurationMs: Long,
+        encoding: VoiceAudioEncoding,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
         language: String?
     ): VoiceInputResult {
@@ -225,7 +228,9 @@ class VoiceInputManager(
         return try {
             sttDeferred.await()
         } catch (_: Exception) {
-            val directBuffer = ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
+            val encodedBytes = encodeBytes(pcmBytes, encoding)
+            val directBuffer =
+                ByteBuffer.allocateDirect(encodedBytes.size).put(encodedBytes).rewind() as ByteBuffer
             VoiceInputResult(transcription = null, audio = ArrayBuffer.wrap(directBuffer))
         }
     }
@@ -315,12 +320,34 @@ class VoiceInputManager(
     private suspend fun startPCM(
         silenceThresholdMs: Long,
         maxDurationMs: Long,
+        encoding: VoiceAudioEncoding,
         onChunk: ((chunk: VoiceInputChunk) -> Unit)?,
     ): VoiceInputResult {
-        val pcmBytes = recordPCM(silenceThresholdMs, maxDurationMs, onChunk)
+        // Only the plain-PCM result/onChunk are re-encoded — STT paths (startSTT,
+        // startSTTFromCarAudio) always stay LINEAR16 since they feed the recognizer directly.
+        val wrappedOnChunk: ((VoiceInputChunk) -> Unit)? = onChunk?.let { cb ->
+            { chunk -> cb(encodeChunk(chunk, encoding)) }
+        }
+        val pcmBytes = recordPCM(silenceThresholdMs, maxDurationMs, wrappedOnChunk)
+        val encodedBytes = encodeBytes(pcmBytes, encoding)
         val directBuffer =
-            ByteBuffer.allocateDirect(pcmBytes.size).put(pcmBytes).rewind() as ByteBuffer
+            ByteBuffer.allocateDirect(encodedBytes.size).put(encodedBytes).rewind() as ByteBuffer
         return VoiceInputResult(transcription = null, audio = ArrayBuffer.wrap(directBuffer))
+    }
+
+    private fun encodeBytes(pcm16le: ByteArray, encoding: VoiceAudioEncoding): ByteArray =
+        when (encoding) {
+            VoiceAudioEncoding.LINEAR16 -> pcm16le
+            VoiceAudioEncoding.MULAW -> G711.encodeUlaw(pcm16le)
+            VoiceAudioEncoding.ALAW -> G711.encodeAlaw(pcm16le)
+        }
+
+    private fun encodeChunk(chunk: VoiceInputChunk, encoding: VoiceAudioEncoding): VoiceInputChunk {
+        val audio = chunk.audio
+        if (audio == null || encoding == VoiceAudioEncoding.LINEAR16) return chunk
+        val encoded = encodeBytes(audio.toByteArray(), encoding)
+        val direct = ByteBuffer.allocateDirect(encoded.size).put(encoded).rewind() as ByteBuffer
+        return VoiceInputChunk(partial = chunk.partial, audio = ArrayBuffer.wrap(direct))
     }
 
     @SuppressLint("MissingPermission")
