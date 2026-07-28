@@ -365,6 +365,16 @@ class VoiceInputManager(
         }
 
         val outputStream = ByteArrayOutputStream()
+        val pendingChunk = onChunk?.let { ByteArrayOutputStream() }
+
+        fun flushPendingChunk() {
+            val pending = pendingChunk ?: return
+            if (pending.size() == 0) return
+            val bytes = pending.toByteArray()
+            pending.reset()
+            val direct = ByteBuffer.allocateDirect(bytes.size).put(bytes).rewind() as ByteBuffer
+            onChunk?.invoke(VoiceInputChunk(partial = null, audio = ArrayBuffer.wrap(direct)))
+        }
 
         recordingJob = scope.launch {
             val buffer = ByteArray(bufferSize)
@@ -391,11 +401,11 @@ class VoiceInputManager(
                     if (read > 0) {
                         outputStream.write(buffer, 0, read)
 
-                        onChunk?.let { cb ->
-                            val chunk = ByteArray(read) { buffer[it] }
-                            val direct =
-                                ByteBuffer.allocateDirect(read).put(chunk).rewind() as ByteBuffer
-                            cb(VoiceInputChunk(partial = null, audio = ArrayBuffer.wrap(direct)))
+                        pendingChunk?.let { pending ->
+                            pending.write(buffer, 0, read)
+                            if (pending.size() >= CHUNK_EMIT_BYTES) {
+                                flushPendingChunk()
+                            }
                         }
 
                         val now = System.currentTimeMillis()
@@ -433,6 +443,7 @@ class VoiceInputManager(
                     }
                 }
             } finally {
+                flushPendingChunk()
                 releaseResources()
                 val captured = pcmContinuation
                 pcmContinuation = null
@@ -558,6 +569,7 @@ class VoiceInputManager(
         private const val WARMUP_MS = 500L
         private const val SAMPLE_RATE = 16_000
         private const val PHONE_BUFFER_SIZE = 3_200 // ~100ms at 16kHz/16-bit/mono
+        private const val CHUNK_EMIT_BYTES = 3_200 // ~100ms at 16kHz/16-bit/mono, batches onChunk callbacks
 
         fun hasVoiceInputPermission(): Boolean {
             val context = NitroModules.applicationContext ?: return false
