@@ -41,6 +41,7 @@ class VirtualRenderer(
     private val isCluster: Boolean = false
 ) {
     private var virtualDisplay: VirtualDisplay? = null
+    private val pendingDisplays = mutableListOf<VirtualDisplay>()
 
     private var reactSurfaceImpl: ReactSurfaceImpl? = null
     private var reactSurfaceView: ReactSurfaceView? = null
@@ -92,8 +93,8 @@ class VirtualRenderer(
                 stableArea = Rect(0, 0, 0, 0)
                 visibleArea = Rect(0, 0, 0, 0)
 
-                virtualDisplay?.release()
-                virtualDisplay = null
+                // Not releasing virtualDisplay here, and not relying on this firing at all (unreliable on
+                // some Automotive devices) -- see applySurface/onDraw sweep for where the old display actually gets freed.
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
@@ -236,10 +237,15 @@ class VirtualRenderer(
         // surface itself is kept alive so JS state survives the resize; the JS side is informed
         // via the windowInformation listener since the window initial prop stays stale.
         val isResize = reactSurfaceView != null && (width != surfaceWidth
-            || height != surfaceHeight || dpi != surfaceContainer.dpi)
+                || height != surfaceHeight || dpi != surfaceContainer.dpi)
 
         val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        virtualDisplay?.release()
+
+        virtualDisplay?.let {
+            // released once its replacement (created below) has drawn
+            pendingDisplays.add(it)
+        }
+
         virtualDisplay = manager.createVirtualDisplay(
             moduleName,
             surfaceWidth,
@@ -415,6 +421,23 @@ class VirtualRenderer(
                 rootContainer.addView(it)
             }
 
+            rootContainer.viewTreeObserver.addOnDrawListener(object :
+                ViewTreeObserver.OnDrawListener {
+                override fun onDraw() {
+                    rootContainer.post {
+                        rootContainer.viewTreeObserver.removeOnDrawListener(this)
+                        // Releasing here, only once a new display has drawn, avoids the window-absent gap that
+                        // stops Choreographer. Releasing old displays any earlier reintroduces that suspension. It
+                        // freezes the map (Mapbox ValueAnimator) and RN (setInterval/setTimeout) until the phone
+                        // screen is woken.
+                        pendingDisplays.forEach {
+                            it.release()
+                        }
+                        pendingDisplays.clear()
+                    }
+                }
+            })
+
             setContentView(rootContainer)
         }
     }
@@ -490,6 +513,13 @@ class VirtualRenderer(
     private fun stop() {
         virtualDisplay?.release()
         virtualDisplay = null
+
+        pendingDisplays.forEach {
+            // make sure to release any pending displays in case
+            // the new one did not draw yet but stop is called
+            it.release()
+        }
+        pendingDisplays.clear()
 
         try {
             stopReactSurface()
