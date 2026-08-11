@@ -140,6 +140,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TurnTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `VoiceAudioEncoding` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VoiceAudioEncoding; }
 // Forward declaration of `VoiceInputChunk` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
 // Forward declaration of `VoiceInputResult` to properly resolve imports.
@@ -237,6 +239,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "TurnType.hpp"
 #include "VisibilityState.hpp"
 #include "VisibleTravelEstimate.hpp"
+#include "VoiceAudioEncoding.hpp"
 #include "VoiceInputChunk.hpp"
 #include "VoiceInputResult.hpp"
 #include "WaypointCoordinate.hpp"
@@ -1815,6 +1818,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline std::function<void(const VoiceInputChunk& /* chunk */)> get_std__optional_std__function_void_const_VoiceInputChunk_____chunk______(const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<VoiceAudioEncoding>
+  /**
+   * Specialized version of `std::optional<VoiceAudioEncoding>`.
+   */
+  using std__optional_VoiceAudioEncoding_ = std::optional<VoiceAudioEncoding>;
+  inline std::optional<VoiceAudioEncoding> create_std__optional_VoiceAudioEncoding_(const VoiceAudioEncoding& value) noexcept {
+    return std::optional<VoiceAudioEncoding>(value);
+  }
+  inline bool has_value_std__optional_VoiceAudioEncoding_(const std::optional<VoiceAudioEncoding>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline VoiceAudioEncoding get_std__optional_VoiceAudioEncoding_(const std::optional<VoiceAudioEncoding>& optional) noexcept {
     return optional.value();
   }
   

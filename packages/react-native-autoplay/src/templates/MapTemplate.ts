@@ -4,6 +4,7 @@ import { NitroModules } from 'react-native-nitro-modules';
 import type { AutoText } from '..';
 import { MapTemplateProvider } from '../components/MapTemplateContext';
 import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
+import { WindowInformationWrapper } from '../components/WindowInformationWrapper';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
 import type {
@@ -224,7 +225,11 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
           children: React.createElement(SafeAreaInsetsProvider, {
             moduleName: this.id,
             // biome-ignore lint/correctness/noChildrenProp: there is no other way in a ts file
-            children: React.createElement(component, props),
+            children: React.createElement(WindowInformationWrapper, {
+              moduleName: this.id,
+              component,
+              componentProps: props,
+            }),
           }),
         })
     );

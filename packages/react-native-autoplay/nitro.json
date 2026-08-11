@@ -29,6 +29,12 @@
         "language": "swift"
       }
     },
+    "AndroidWindowInformation": {
+      "android": {
+        "implementationClassName": "HybridAndroidWindowInformation",
+        "language": "kotlin"
+      }
+    },
     "AndroidAutoTelemetry": {
       "android": {
         "implementationClassName": "HybridAndroidAutoTelemetry",

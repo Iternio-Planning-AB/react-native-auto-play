@@ -38,7 +38,8 @@ class HybridVoice: HybridVoiceSpec {
         onChunk: ((_ chunk: VoiceInputChunk) -> Void)?,
         language: String?,
         startSoundUri: String?,
-        endSoundUri: String?
+        endSoundUri: String?,
+        encoding: VoiceAudioEncoding?
     ) throws -> Promise<VoiceInputResult> {
         return Promise.async {
             let interfaceController = try? await RootModule.withInterfaceController { $0 }
@@ -59,7 +60,8 @@ class HybridVoice: HybridVoiceSpec {
                 onChunk: onChunk,
                 language: language,
                 startSoundUri: startSoundUri,
-                endSoundUri: endSoundUri
+                endSoundUri: endSoundUri,
+                encoding: encoding ?? .linear16
             )
         }
     }

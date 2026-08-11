@@ -41,21 +41,26 @@ class VirtualRenderer(
     private val isCluster: Boolean = false
 ) {
     private var virtualDisplay: VirtualDisplay? = null
+    private val pendingDisplays = mutableListOf<VirtualDisplay>()
 
-    private lateinit var reactSurfaceImpl: ReactSurfaceImpl
+    private var reactSurfaceImpl: ReactSurfaceImpl? = null
     private var reactSurfaceView: ReactSurfaceView? = null
     private var reactSurfaceId: Int? = null
 
     private var height: Int = 0
     private var width: Int = 0
+    private var dpi: Int = 0
 
     private var splashWillDisappear = false
 
     /**
-     * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side
+     * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side.
+     * The density is derived from the surface container's dpi so it always matches the VirtualDisplay,
+     * and is recomputed on every onSurfaceAvailable since the host may recreate the surface with new metrics.
      */
-    private val virtualScreenDensity = context.resources.displayMetrics.density
-    val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
+    private var virtualScreenDensity = context.resources.displayMetrics.density
+    var scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
+        private set
 
     private fun isSurfaceReady(surfaceContainer: SurfaceContainer): Boolean {
         return surfaceContainer.surface != null && surfaceContainer.dpi != 0 && surfaceContainer.height != 0 && surfaceContainer.width != 0
@@ -68,7 +73,7 @@ class VirtualRenderer(
             val areaDebouncer = Debouncer(200)
 
             // 12dp seems to be the default margin on AA for the ETA widget and the maneuver so use it as fallback
-            val defaultMargin = (12.0 * context.resources.displayMetrics.density).toInt()
+            val defaultMargin get() = (12.0 * virtualScreenDensity).toInt()
             var minMargin = Int.MAX_VALUE
             var stableArea = Rect(0, 0, 0, 0)
             var visibleArea = Rect(0, 0, 0, 0)
@@ -78,27 +83,18 @@ class VirtualRenderer(
                     return
                 }
 
-                val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-                virtualDisplay?.release()
-                virtualDisplay = manager.createVirtualDisplay(
-                    moduleName,
-                    surfaceContainer.width,
-                    surfaceContainer.height,
-                    surfaceContainer.dpi,
-                    surfaceContainer.surface,
-                    DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION,
-                )
-
-                val display = virtualDisplay?.display ?: return
-                height = surfaceContainer.height
-                width = surfaceContainer.width
-
-                initRenderer(display)
+                applySurface(surfaceContainer)
             }
 
             override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
-                virtualDisplay?.release()
-                virtualDisplay = null
+                // the host re-emits visible/stable areas for the next surface, so drop state derived
+                // from the old surface instead of combining it with the new dimensions
+                minMargin = Int.MAX_VALUE
+                stableArea = Rect(0, 0, 0, 0)
+                visibleArea = Rect(0, 0, 0, 0)
+
+                // Not releasing virtualDisplay here, and not relying on this firing at all (unreliable on
+                // some Automotive devices) -- see applySurface/onDraw sweep for where the old display actually gets freed.
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
@@ -230,6 +226,51 @@ class VirtualRenderer(
         })
     }
 
+    @MainThread
+    private fun applySurface(surfaceContainer: SurfaceContainer) {
+        val surfaceWidth = surfaceContainer.width
+        val surfaceHeight = surfaceContainer.height
+
+        // The host signals surface size changes only via onSurfaceDestroyed -> onSurfaceAvailable
+        // with new dimensions, so all size-derived state (layout params, scale, Fabric measure
+        // specs) must be recomputed when the metrics differ from the current ones. The react
+        // surface itself is kept alive so JS state survives the resize; the JS side is informed
+        // via the windowInformation listener since the window initial prop stays stale.
+        val isResize = reactSurfaceView != null && (width != surfaceWidth
+                || height != surfaceHeight || dpi != surfaceContainer.dpi)
+
+        val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+
+        virtualDisplay?.let {
+            // released once its replacement (created below) has drawn
+            pendingDisplays.add(it)
+        }
+
+        virtualDisplay = manager.createVirtualDisplay(
+            moduleName,
+            surfaceWidth,
+            surfaceHeight,
+            surfaceContainer.dpi,
+            surfaceContainer.surface,
+            DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION,
+        )
+
+        val display = virtualDisplay?.display ?: return
+        height = surfaceHeight
+        width = surfaceWidth
+        dpi = surfaceContainer.dpi
+        virtualScreenDensity = surfaceContainer.dpi / 160f
+        scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
+
+        initRenderer(display)
+
+        if (isResize) {
+            getWindowInformation(moduleName)?.let {
+                HybridAndroidWindowInformation.emitWindowInformation(moduleName, it)
+            }
+        }
+    }
+
     private fun getMapTemplateConfig(): MapTemplateConfig? {
         val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
         val marker = screenManager.top.marker ?: return null
@@ -290,19 +331,48 @@ class VirtualRenderer(
             val appTheme = context.applicationContext.applicationInfo.theme
             val themedContext = ContextThemeWrapper(context.applicationContext, appTheme)
 
-            if (!this@VirtualRenderer::reactSurfaceImpl.isInitialized) {
-                reactSurfaceImpl = ReactSurfaceImpl(themedContext, moduleName, initialProperties)
+            val surfaceImpl = reactSurfaceImpl ?: ReactSurfaceImpl(
+                themedContext, moduleName, initialProperties
+            ).also {
+                reactSurfaceImpl = it
             }
 
             var splashScreenView: View? = null
 
             reactSurfaceView?.let {
                 (it.parent as ViewGroup).removeView(it)
-            } ?: run {
-                splashScreenView =
-                    if (isCluster) getClusterSplashScreen(themedContext, height, width) else null
 
-                val surfaceView = ReactSurfaceView(themedContext, reactSurfaceImpl).apply {
+                // the surface may have been recreated with new dimensions, so reapply all
+                // size-derived values and push the new layout specs into the running Fabric surface
+                it.layoutParams = FrameLayout.LayoutParams(
+                    (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
+                )
+                it.scaleX = reactNativeScale
+                it.scaleY = reactNativeScale
+
+                reactSurfaceId?.let { surfaceId ->
+                    fabricUiManager.updateRootLayoutSpecs(
+                        surfaceId,
+                        View.MeasureSpec.makeMeasureSpec(
+                            (width / reactNativeScale).toInt(), View.MeasureSpec.EXACTLY
+                        ),
+                        View.MeasureSpec.makeMeasureSpec(
+                            (height / reactNativeScale).toInt(), View.MeasureSpec.EXACTLY
+                        ),
+                        0,
+                        0
+                    )
+                }
+            } ?: run {
+                // skip the splash when the surface is rebuilt after a resize, content is already loaded
+                splashScreenView =
+                    if (isCluster && !splashWillDisappear) {
+                        getClusterSplashScreen(themedContext, height, width)
+                    } else {
+                        null
+                    }
+
+                val surfaceView = ReactSurfaceView(themedContext, surfaceImpl).apply {
                     layoutParams = FrameLayout.LayoutParams(
                         (width / reactNativeScale).toInt(), (height / reactNativeScale).toInt()
                     )
@@ -350,6 +420,23 @@ class VirtualRenderer(
             splashScreenView?.let {
                 rootContainer.addView(it)
             }
+
+            rootContainer.viewTreeObserver.addOnDrawListener(object :
+                ViewTreeObserver.OnDrawListener {
+                override fun onDraw() {
+                    rootContainer.post {
+                        rootContainer.viewTreeObserver.removeOnDrawListener(this)
+                        // Releasing here, only once a new display has drawn, avoids the window-absent gap that
+                        // stops Choreographer. Releasing old displays any earlier reintroduces that suspension. It
+                        // freezes the map (Mapbox ValueAnimator) and RN (setInterval/setTimeout) until the phone
+                        // screen is woken.
+                        pendingDisplays.forEach {
+                            it.release()
+                        }
+                        pendingDisplays.clear()
+                    }
+                }
+            })
 
             setContentView(rootContainer)
         }
@@ -402,10 +489,7 @@ class VirtualRenderer(
     }
 
     @MainThread
-    private fun stop() {
-        virtualDisplay?.release()
-        virtualDisplay = null
-
+    private fun stopReactSurface() {
         val uiManager = NitroModules.applicationContext?.let {
             UIManagerHelper.getUIManager(
                 it, UIManagerType.FABRIC
@@ -420,6 +504,26 @@ class VirtualRenderer(
             // Fabric already invalidated
         } finally {
             reactSurfaceId = null
+            reactSurfaceView = null
+            reactSurfaceImpl = null
+        }
+    }
+
+    @MainThread
+    private fun stop() {
+        virtualDisplay?.release()
+        virtualDisplay = null
+
+        pendingDisplays.forEach {
+            // make sure to release any pending displays in case
+            // the new one did not draw yet but stop is called
+            it.release()
+        }
+        pendingDisplays.clear()
+
+        try {
+            stopReactSurface()
+        } finally {
             virtualRenderer.remove(moduleName)
         }
     }
@@ -431,6 +535,19 @@ class VirtualRenderer(
 
         fun hasRenderer(moduleId: String): Boolean {
             return virtualRenderer.contains(moduleId)
+        }
+
+        fun getWindowInformation(moduleId: String): WindowInformation? {
+            val renderer = virtualRenderer[moduleId] ?: return null
+            if (renderer.width == 0 || renderer.height == 0) {
+                return null
+            }
+
+            return WindowInformation(
+                width = (renderer.width / renderer.scale).toInt().toDouble(),
+                height = (renderer.height / renderer.scale).toInt().toDouble(),
+                scale = renderer.scale.toDouble()
+            )
         }
 
         fun removeRenderer(moduleId: String) {

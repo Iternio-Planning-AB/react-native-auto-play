@@ -264,6 +264,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         fun removeListeners(templateId: String) {
             renderStateListeners.remove(templateId)
             safeAreaInsetsListeners.remove(templateId)
+            HybridAndroidWindowInformation.removeListeners(templateId)
         }
 
         fun emit(event: EventName) {

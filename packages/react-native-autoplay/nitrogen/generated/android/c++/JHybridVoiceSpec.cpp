@@ -19,6 +19,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `VoiceInputChunk` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
+// Forward declaration of `VoiceAudioEncoding` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VoiceAudioEncoding; }
 
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
@@ -43,6 +45,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputC
 #include "JFunc_void_VoiceInputChunk.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include "JVoiceInputChunk.hpp"
+#include "VoiceAudioEncoding.hpp"
+#include "JVoiceAudioEncoding.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -98,9 +102,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<VoiceInputResult>> JHybridVoiceSpec::startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JDouble> /* silenceThresholdMs */, jni::alias_ref<jni::JDouble> /* maxDurationMs */, jni::alias_ref<jni::JString> /* listeningText */, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage> /* listeningImage */, jni::alias_ref<jni::JBoolean> /* listeningImageRepeats */, jni::alias_ref<jni::JBoolean> /* preferSpeechToText */, jni::alias_ref<JFunc_void_VoiceInputChunk::javaobject> /* onChunk */, jni::alias_ref<jni::JString> /* language */, jni::alias_ref<jni::JString> /* startSoundUri */, jni::alias_ref<jni::JString> /* endSoundUri */)>("startVoiceInput_cxx");
-    auto __result = method(_javaPart, silenceThresholdMs.has_value() ? jni::JDouble::valueOf(silenceThresholdMs.value()) : nullptr, maxDurationMs.has_value() ? jni::JDouble::valueOf(maxDurationMs.value()) : nullptr, listeningText.has_value() ? jni::make_jstring(listeningText.value()) : nullptr, listeningImage.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(listeningImage.value()) : nullptr, listeningImageRepeats.has_value() ? jni::JBoolean::valueOf(listeningImageRepeats.value()) : nullptr, preferSpeechToText.has_value() ? jni::JBoolean::valueOf(preferSpeechToText.value()) : nullptr, onChunk.has_value() ? JFunc_void_VoiceInputChunk_cxx::fromCpp(onChunk.value()) : nullptr, language.has_value() ? jni::make_jstring(language.value()) : nullptr, startSoundUri.has_value() ? jni::make_jstring(startSoundUri.value()) : nullptr, endSoundUri.has_value() ? jni::make_jstring(endSoundUri.value()) : nullptr);
+  std::shared_ptr<Promise<VoiceInputResult>> JHybridVoiceSpec::startVoiceInput(std::optional<double> silenceThresholdMs, std::optional<double> maxDurationMs, const std::optional<std::string>& listeningText, const std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>>& listeningImage, std::optional<bool> listeningImageRepeats, std::optional<bool> preferSpeechToText, const std::optional<std::function<void(const VoiceInputChunk& /* chunk */)>>& onChunk, const std::optional<std::string>& language, const std::optional<std::string>& startSoundUri, const std::optional<std::string>& endSoundUri, std::optional<VoiceAudioEncoding> encoding) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JDouble> /* silenceThresholdMs */, jni::alias_ref<jni::JDouble> /* maxDurationMs */, jni::alias_ref<jni::JString> /* listeningText */, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage> /* listeningImage */, jni::alias_ref<jni::JBoolean> /* listeningImageRepeats */, jni::alias_ref<jni::JBoolean> /* preferSpeechToText */, jni::alias_ref<JFunc_void_VoiceInputChunk::javaobject> /* onChunk */, jni::alias_ref<jni::JString> /* language */, jni::alias_ref<jni::JString> /* startSoundUri */, jni::alias_ref<jni::JString> /* endSoundUri */, jni::alias_ref<JVoiceAudioEncoding> /* encoding */)>("startVoiceInput_cxx");
+    auto __result = method(_javaPart, silenceThresholdMs.has_value() ? jni::JDouble::valueOf(silenceThresholdMs.value()) : nullptr, maxDurationMs.has_value() ? jni::JDouble::valueOf(maxDurationMs.value()) : nullptr, listeningText.has_value() ? jni::make_jstring(listeningText.value()) : nullptr, listeningImage.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(listeningImage.value()) : nullptr, listeningImageRepeats.has_value() ? jni::JBoolean::valueOf(listeningImageRepeats.value()) : nullptr, preferSpeechToText.has_value() ? jni::JBoolean::valueOf(preferSpeechToText.value()) : nullptr, onChunk.has_value() ? JFunc_void_VoiceInputChunk_cxx::fromCpp(onChunk.value()) : nullptr, language.has_value() ? jni::make_jstring(language.value()) : nullptr, startSoundUri.has_value() ? jni::make_jstring(startSoundUri.value()) : nullptr, endSoundUri.has_value() ? jni::make_jstring(endSoundUri.value()) : nullptr, encoding.has_value() ? JVoiceAudioEncoding::fromCpp(encoding.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<VoiceInputResult>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

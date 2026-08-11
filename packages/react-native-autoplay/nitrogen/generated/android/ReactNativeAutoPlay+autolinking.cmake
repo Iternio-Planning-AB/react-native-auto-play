@@ -35,6 +35,7 @@ target_sources(
   # Shared Nitrogen C++ sources
   ../nitrogen/generated/shared/c++/HybridAndroidAutomotiveSpec.cpp
   ../nitrogen/generated/shared/c++/HybridAndroidAutoTelemetrySpec.cpp
+  ../nitrogen/generated/shared/c++/HybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/shared/c++/HybridAutoPlaySpec.cpp
   ../nitrogen/generated/shared/c++/HybridCarPlayDashboardSpec.cpp
   ../nitrogen/generated/shared/c++/HybridClusterSpec.cpp
@@ -49,6 +50,7 @@ target_sources(
   # Android-specific Nitrogen C++ sources
   ../nitrogen/generated/android/c++/JHybridAndroidAutomotiveSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAndroidAutoTelemetrySpec.cpp
+  ../nitrogen/generated/android/c++/JHybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAutoPlaySpec.cpp
   ../nitrogen/generated/android/c++/JVariant_GlyphImage_AssetImage_RemoteImage.cpp
   ../nitrogen/generated/android/c++/JHybridClusterSpec.cpp

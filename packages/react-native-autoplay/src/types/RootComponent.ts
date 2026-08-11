@@ -21,6 +21,10 @@ export type RootComponentInitialProps = {
    * this is the initial color scheme, add onAppearanceDidChange on MapTemplate to get updates
    */
   colorScheme: ColorScheme;
+  /**
+   * the dimensions of the render surface, kept up to date when the host resizes the surface
+   * (e.g. head units running Android Auto windowed)
+   */
   window: WindowInformation;
 };
 
