@@ -7,9 +7,12 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Display
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -20,8 +23,10 @@ import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
+import com.facebook.react.ReactHost
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.fabric.FabricUIManager
 import com.facebook.react.runtime.ReactSurfaceImpl
 import com.facebook.react.runtime.ReactSurfaceView
@@ -61,6 +66,9 @@ class VirtualRenderer(
     private var virtualScreenDensity = context.resources.displayMetrics.density
     var scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
         private set
+
+    // For converting surface coordinates to ReactSurfaceView-local coordinates in onClick below.
+    private var reactNativeScale: Float = 1.0f
 
     private fun isSurfaceReady(surfaceContainer: SurfaceContainer): Boolean {
         return surfaceContainer.surface != null && surfaceContainer.dpi != 0 && surfaceContainer.height != 0 && surfaceContainer.width != 0
@@ -125,6 +133,28 @@ class VirtualRenderer(
             }
 
             override fun onClick(x: Float, y: Float) {
+                // The host's SurfaceCallback.onClick only carries coordinates — it doesn't
+                // dispatch an actual touch event into the Fabric surface. Without forwarding
+                // it, RN Pressable/TouchableOpacity components never see a real touch and
+                // never fire their own handlers; only the config-level onClick below (already
+                // present) worked. Dispatch a synthetic DOWN+UP into the ReactSurfaceView so
+                // JS-side touch handling gets the same events a real touch would produce.
+                reactSurfaceView?.let { view ->
+                    val lx = x / reactNativeScale
+                    val ly = y / reactNativeScale
+                    UiThreadUtil.runOnUiThread {
+                        val t = SystemClock.uptimeMillis()
+                        val down = MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, lx, ly, 0)
+                        val up = MotionEvent.obtain(t, t + 100L, MotionEvent.ACTION_UP, lx, ly, 0)
+                        val handled = view.dispatchTouchEvent(down) or view.dispatchTouchEvent(up)
+                        if (!handled) {
+                            Log.w(TAG, "onClick: touch dispatch unhandled — view has no size or its ReactHost isn't attached yet")
+                        }
+                        down.recycle()
+                        up.recycle()
+                    }
+                }
+
                 getMapTemplateConfig()?.onClick?.let {
                     it(Point((x / scale).toDouble(), (y / scale).toDouble()))
                 }
@@ -301,6 +331,7 @@ class VirtualRenderer(
         DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext)
         val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
         val reactNativeScale = virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
+        this.reactNativeScale = reactNativeScale
 
         FabricMapPresentation(
             reactContext,
@@ -335,6 +366,37 @@ class VirtualRenderer(
                 themedContext, moduleName, initialProperties
             ).also {
                 reactSurfaceImpl = it
+            }
+
+            // ReactSurfaceImpl only dispatches touch events to JS once attach(ReactHost) has
+            // been called — otherwise dispatchTouchEvent (see onClick above) is a no-op. The
+            // bridgeless ReactContext holds its ReactHostImpl as a private field with no public
+            // accessor, so it's fetched via reflection and attached explicitly here. Calling
+            // attach() again on an already-attached surface throws IllegalStateException,
+            // which is expected on every onCreate after the first (e.g. on resize) and safely
+            // ignored.
+            try {
+                var clazz: Class<*>? = context.javaClass
+                var hostObj: Any? = null
+                while (clazz != null && hostObj == null) {
+                    try {
+                        val f = clazz.getDeclaredField("reactHost")
+                        f.isAccessible = true
+                        hostObj = f.get(context)
+                    } catch (_: NoSuchFieldException) {
+                        clazz = clazz.superclass
+                    }
+                }
+                val reactHostRef = hostObj as? ReactHost
+                if (reactHostRef != null) {
+                    surfaceImpl.attach(reactHostRef)
+                } else {
+                    Log.w(TAG, "FabricMapPresentation: no ReactHost found on ${context.javaClass.name} — touches won't reach JS")
+                }
+            } catch (_: IllegalStateException) {
+                // already attached from a previous onCreate — expected, not an error
+            } catch (e: Exception) {
+                Log.w(TAG, "FabricMapPresentation: attach(ReactHost) failed: $e")
             }
 
             var splashScreenView: View? = null
