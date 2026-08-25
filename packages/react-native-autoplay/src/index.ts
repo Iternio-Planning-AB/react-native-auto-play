@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import AutoPlayHeadlessJsTask from './AutoPlayHeadlessJsTask';
 import { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
@@ -15,6 +15,15 @@ export const HybridAndroidAutomotive =
   Platform.OS === 'android'
     ? NitroModules.createHybridObject<AndroidAutomotive>('AndroidAutomotive')
     : null;
+
+/**
+ * Starts turn-by-turn navigation to a destination on the currently connected head unit
+ * (Android Auto `CarContext.ACTION_NAVIGATE`, or CarPlay via `MKMapItem`). `null` if neither
+ * platform's navigation bridge module is available (e.g. running in the plain phone app).
+ */
+export const AutoPlayNavigation = (NativeModules.AutoPlayNavigation ?? null) as {
+  navigate(lat: number, long: number, label: string): Promise<void>;
+} | null;
 
 /**
  * These are the static module names for the app running on the mobile device, head unit screen and the CarPlay dashboard.

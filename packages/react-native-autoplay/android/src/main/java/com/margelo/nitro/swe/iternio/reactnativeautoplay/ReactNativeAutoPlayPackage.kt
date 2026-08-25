@@ -3,13 +3,25 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 
 class ReactNativeAutoPlayPackage : TurboReactPackage() {
-    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? = null
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? =
+        when (name) {
+            AutoPlayNavigationModule.NAME -> AutoPlayNavigationModule(reactContext)
+            else -> null
+        }
 
     override fun getReactModuleInfoProvider(): ReactModuleInfoProvider =
-        ReactModuleInfoProvider { HashMap() }
+        ReactModuleInfoProvider {
+            hashMapOf(
+                AutoPlayNavigationModule.NAME to ReactModuleInfo(
+                    AutoPlayNavigationModule.NAME, AutoPlayNavigationModule.NAME,
+                    false, false, false, false
+                ),
+            )
+        }
 
     companion object {
         init {
