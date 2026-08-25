@@ -812,11 +812,15 @@ class Parser {
             "__packager_asset": assetImage.packager_asset,
         ])
 
-        return applyTint(
-            uiImage: uiImage,
-            color: assetImage.color,
-            traitCollection: traitCollection
-        )
+        // Tint at the image's original pixel size (scale=1) so getTintedImage renders into a
+        // full-resolution context, then reassign scale=4.0 so the tinted image displays at the
+        // same point size the untinted asset would have. Tinting through the asset's own
+        // (often much lower) scale factor produced visibly blurry/resampled glyph buttons.
+        let tinted = applyTint(uiImage: uiImage, color: assetImage.color, traitCollection: traitCollection)
+        guard let tintedImage = tinted, let cgImage = tintedImage.cgImage else {
+            return tinted
+        }
+        return UIImage(cgImage: cgImage, scale: 4.0, orientation: tintedImage.imageOrientation)
     }
 
     static func parseRemoteImage(

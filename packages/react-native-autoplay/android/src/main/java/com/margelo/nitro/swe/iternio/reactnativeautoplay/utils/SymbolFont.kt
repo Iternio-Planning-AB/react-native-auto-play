@@ -22,8 +22,12 @@ object SymbolFont {
         val id = context.resources.getIdentifier(
             fontName.lowercase(), "font", context.packageName
         )
-        if (id == 0) return null
-        val tf = ResourcesCompat.getFont(context, id) ?: return null
+        // Fall back to assets/fonts/<name>.ttf for apps that load fonts at runtime (e.g. Expo's
+        // expo-font, which copies font files into assets rather than res/font/) instead of
+        // bundling them as a res/font/ resource.
+        val tf = (if (id != 0) ResourcesCompat.getFont(context, id) else null)
+            ?: try { Typeface.createFromAsset(context.assets, "fonts/$fontName.ttf") } catch (_: Exception) { null }
+            ?: return null
         cachedFontName = fontName
         cachedTypeface = tf
         return tf
