@@ -823,14 +823,55 @@ class Parser {
         remoteImage: RemoteImage,
         traitCollection: UITraitCollection
     ) -> UIImage? {
+        let bgHex = parseBackgroundHex(uri: remoteImage.uri)
+        let cleanUri = bgHex != nil
+            ? String(remoteImage.uri.prefix(upTo: remoteImage.uri.firstIndex(of: "#") ?? remoteImage.uri.endIndex))
+            : remoteImage.uri
         let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 } ?? defaultRemoteTimeoutSeconds
-        let uiImage = loadRemoteImage(uri: remoteImage.uri, timeoutSeconds: timeoutSeconds)
+        var uiImage = loadRemoteImage(uri: cleanUri, timeoutSeconds: timeoutSeconds)
+
+        if let image = uiImage, let hex = bgHex {
+            uiImage = addBackground(image: image, hexColor: hex)
+        }
 
         return applyTint(
             uiImage: uiImage,
             color: remoteImage.color,
             traitCollection: traitCollection
         )
+    }
+
+    /// Parses an optional `#bg=RRGGBB` fragment from a remote image URI, letting callers
+    /// request a rounded background behind images designed for a different background
+    /// (e.g. a light-mode logo shown on a dark host surface).
+    private static func parseBackgroundHex(uri: String) -> UInt64? {
+        guard let hashIdx = uri.firstIndex(of: "#") else { return nil }
+        let fragment = String(uri[uri.index(after: hashIdx)...])
+        guard fragment.hasPrefix("bg=") else { return nil }
+        let hex = String(fragment.dropFirst(3))
+        guard hex.count == 6 else { return nil }
+        return UInt64(hex, radix: 16)
+    }
+
+    /// Centers `image` on a square, rounded `hexColor` background.
+    private static func addBackground(image: UIImage, hexColor: UInt64) -> UIImage {
+        let r = CGFloat((hexColor >> 16) & 0xFF) / 255.0
+        let g = CGFloat((hexColor >> 8) & 0xFF) / 255.0
+        let b = CGFloat(hexColor & 0xFF) / 255.0
+        let bgColor = UIColor(red: r, green: g, blue: b, alpha: 1.0)
+        let size = CGSize(width: 256, height: 256)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            let rect = CGRect(origin: .zero, size: size)
+            bgColor.setFill()
+            UIBezierPath(roundedRect: rect, cornerRadius: 20).fill()
+            let margin = size.width * 0.06
+            let available = size.width - 2 * margin
+            let scale = min(available / image.size.width, available / image.size.height)
+            let scaledSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+            let origin = CGPoint(x: (size.width - scaledSize.width) / 2, y: (size.height - scaledSize.height) / 2)
+            image.draw(in: CGRect(origin: origin, size: scaledSize))
+        }
     }
 
     private static func applyTint(

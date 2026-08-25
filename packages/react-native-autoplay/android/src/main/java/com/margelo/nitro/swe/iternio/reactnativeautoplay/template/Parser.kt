@@ -546,16 +546,53 @@ object Parser {
     fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
         BitmapCache.get(context, remoteImage)?.let { return it }
 
-        val imageRequest = buildImageRequest(remoteImage.uri.toUri())
+        val bgColor = parseBackgroundHex(remoteImage.uri)
+        val cleanUri = remoteImage.uri.substringBefore("#")
+        val imageRequest = buildImageRequest(cleanUri.toUri())
         val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
         val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs) ?: return null
+        val finalBitmap = if (bgColor != null) addBackground(bitmap, bgColor) else bitmap
 
         return applyTintAndCache(
             context = context,
             color = remoteImage.color,
-            bitmap = bitmap,
+            bitmap = finalBitmap,
             cache = { result -> BitmapCache.put(context, remoteImage, result) }
         )
+    }
+
+    /**
+     * Parses an optional `#bg=RRGGBB` fragment from a remote image URI, letting callers
+     * request a rounded background behind images designed for a different background
+     * (e.g. a light-mode logo shown on a dark host surface).
+     */
+    private fun parseBackgroundHex(uri: String): Int? {
+        val fragment = uri.substringAfter("#", "")
+        if (!fragment.startsWith("bg=")) return null
+        val hex = fragment.substring(3)
+        if (hex.length != 6) return null
+        return try { ("FF$hex").toLong(16).toInt() } catch (_: NumberFormatException) { null }
+    }
+
+    /** Centers [source] on a square, rounded [color] background. */
+    private fun addBackground(source: Bitmap, color: Int): Bitmap {
+        val size = 256
+        val result = createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color }
+        val radius = size * 0.125f
+        canvas.drawRoundRect(android.graphics.RectF(0f, 0f, size.toFloat(), size.toFloat()), radius, radius, bgPaint)
+        val margin = size * 0.06f
+        val available = size - 2 * margin
+        val scale = minOf(available / source.width, available / source.height)
+        val scaledW = source.width * scale
+        val scaledH = source.height * scale
+        val left = (size - scaledW) / 2f
+        val top = (size - scaledH) / 2f
+        val imgPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+        canvas.drawBitmap(source, android.graphics.Rect(0, 0, source.width, source.height),
+            android.graphics.RectF(left, top, left + scaledW, top + scaledH), imgPaint)
+        return result
     }
 
     // Disable Fresco's own caching — BitmapCache handles all caching uniformly
