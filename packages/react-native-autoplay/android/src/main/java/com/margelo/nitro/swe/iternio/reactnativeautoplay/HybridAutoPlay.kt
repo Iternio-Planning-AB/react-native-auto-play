@@ -242,6 +242,16 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListenerVoiceInput(callback: (Location?, String?) -> Unit): () -> Unit {
         voiceInputListeners.add(callback)
 
+        // Replay a voice event the OS delivered before this listener was ready (the startup
+        // timing race described on pendingVoiceInput below). Consume-once; drop if older than
+        // the TTL.
+        pendingVoiceInput?.let { (location, query, ts) ->
+            pendingVoiceInput = null
+            if (System.currentTimeMillis() - ts <= VOICE_INPUT_BUFFER_TTL_MS) {
+                callback(location, query)
+            }
+        }
+
         return {
             voiceInputListeners.remove(callback)
         }
@@ -256,6 +266,16 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
         private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
+
+        // emitVoiceInput is fire-and-forget. If the OS delivers a voice-navigation intent
+        // before JS has registered addListenerVoiceInput (cold start, slow onConnect/
+        // trySetRoot), the event was previously lost — with otherwise-identical app code this
+        // turned voice into a startup race, working in one build and not another. Buffer the
+        // most recent emit and replay it to the first listener that registers within the TTL,
+        // making delivery independent of how fast the app happens to start.
+        @Volatile
+        private var pendingVoiceInput: Triple<Location?, String?, Long>? = null
+        private const val VOICE_INPUT_BUFFER_TTL_MS = 30_000L
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()
@@ -278,6 +298,11 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
 
         fun emitVoiceInput(location: Location?, query: String?) {
+            if (voiceInputListeners.isEmpty()) {
+                // No listener yet — buffer so the next subscriber still gets it.
+                pendingVoiceInput = Triple(location, query, System.currentTimeMillis())
+                return
+            }
             voiceInputListeners.forEach {
                 it(location, query)
             }
