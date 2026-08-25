@@ -96,6 +96,10 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun isCarServiceRunning(): Boolean
+  
+  @DoNotStrip
+  @Keep
+  abstract fun navigate(latitude: Double, longitude: Double, label: String): Promise<Unit>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {
