@@ -74,6 +74,9 @@ data class MapTemplateConfig(
   val defaultGuidanceBackgroundColor: NitroColor?,
   @DoNotStrip
   @Keep
+  val keepPanButtonWhilePanning: Boolean?,
+  @DoNotStrip
+  @Keep
   val panButtonScrollPercentage: Double?,
   @DoNotStrip
   @Keep
@@ -82,8 +85,8 @@ data class MapTemplateConfig(
   /**
    * Create a new instance of MapTemplateConfig from Kotlin
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, onStopNavigation: () -> Unit, onAutoDriveEnabled: (() -> Unit)?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((isPanningInterfaceVisible: Boolean) -> Unit)?):
-         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, visibleTravelEstimate, onDidPan?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, Func_void_java(onStopNavigation), onAutoDriveEnabled?.let { Func_void_java(it) }, mapButtons, headerActions, defaultGuidanceBackgroundColor, panButtonScrollPercentage, onDidChangePanningInterface?.let { Func_void_bool_java(it) })
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((translation: Point, velocity: Point?) -> Unit)?, onDidUpdateZoomGestureWithCenter: ((center: Point, scale: Double) -> Unit)?, onClick: ((center: Point) -> Unit)?, onDoubleClick: ((center: Point) -> Unit)?, onAppearanceDidChange: ((colorScheme: ColorScheme) -> Unit)?, onStopNavigation: () -> Unit, onAutoDriveEnabled: (() -> Unit)?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, defaultGuidanceBackgroundColor: NitroColor?, keepPanButtonWhilePanning: Boolean?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((isPanningInterfaceVisible: Boolean) -> Unit)?):
+         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, visibleTravelEstimate, onDidPan?.let { Func_void_Point_std__optional_Point__java(it) }, onDidUpdateZoomGestureWithCenter?.let { Func_void_Point_double_java(it) }, onClick?.let { Func_void_Point_java(it) }, onDoubleClick?.let { Func_void_Point_java(it) }, onAppearanceDidChange?.let { Func_void_ColorScheme_java(it) }, Func_void_java(onStopNavigation), onAutoDriveEnabled?.let { Func_void_java(it) }, mapButtons, headerActions, defaultGuidanceBackgroundColor, keepPanButtonWhilePanning, panButtonScrollPercentage, onDidChangePanningInterface?.let { Func_void_bool_java(it) })
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -106,6 +109,7 @@ data class MapTemplateConfig(
       && Objects.deepEquals(this.mapButtons, other.mapButtons)
       && Objects.deepEquals(this.headerActions, other.headerActions)
       && Objects.deepEquals(this.defaultGuidanceBackgroundColor, other.defaultGuidanceBackgroundColor)
+      && Objects.deepEquals(this.keepPanButtonWhilePanning, other.keepPanButtonWhilePanning)
       && Objects.deepEquals(this.panButtonScrollPercentage, other.panButtonScrollPercentage)
       && Objects.deepEquals(this.onDidChangePanningInterface, other.onDidChangePanningInterface)
   }
@@ -130,6 +134,7 @@ data class MapTemplateConfig(
       mapButtons,
       headerActions,
       defaultGuidanceBackgroundColor,
+      keepPanButtonWhilePanning,
       panButtonScrollPercentage,
       onDidChangePanningInterface
     ).contentDeepHashCode()
@@ -143,8 +148,8 @@ data class MapTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: Func_void_Point_std__optional_Point_?, onDidUpdateZoomGestureWithCenter: Func_void_Point_double?, onClick: Func_void_Point?, onDoubleClick: Func_void_Point?, onAppearanceDidChange: Func_void_ColorScheme?, onStopNavigation: Func_void, onAutoDriveEnabled: Func_void?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: Func_void_bool?): MapTemplateConfig {
-      return MapTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, visibleTravelEstimate, onDidPan, onDidUpdateZoomGestureWithCenter, onClick, onDoubleClick, onAppearanceDidChange, onStopNavigation, onAutoDriveEnabled, mapButtons, headerActions, defaultGuidanceBackgroundColor, panButtonScrollPercentage, onDidChangePanningInterface)
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: Func_void_Point_std__optional_Point_?, onDidUpdateZoomGestureWithCenter: Func_void_Point_double?, onClick: Func_void_Point?, onDoubleClick: Func_void_Point?, onAppearanceDidChange: Func_void_ColorScheme?, onStopNavigation: Func_void, onAutoDriveEnabled: Func_void?, mapButtons: Array<NitroMapButton>?, headerActions: Array<NitroAction>?, defaultGuidanceBackgroundColor: NitroColor?, keepPanButtonWhilePanning: Boolean?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: Func_void_bool?): MapTemplateConfig {
+      return MapTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, visibleTravelEstimate, onDidPan, onDidUpdateZoomGestureWithCenter, onClick, onDoubleClick, onAppearanceDidChange, onStopNavigation, onAutoDriveEnabled, mapButtons, headerActions, defaultGuidanceBackgroundColor, keepPanButtonWhilePanning, panButtonScrollPercentage, onDidChangePanningInterface)
     }
   }
 }

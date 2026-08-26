@@ -171,12 +171,20 @@ class MapTemplate: AutoPlayHeaderProviding,
                 self.template.dismissPanningInterface(animated: true)
             }
 
-            let mapButtons =
-                mapButtons?.filter { button in
-                    button.type != .pan
-                } ?? []
+            let panningMapButtons: [NitroMapButton]
+            if config.keepPanButtonWhilePanning == true {
+                let panButtons = mapButtons?.filter { $0.type == .pan } ?? []
+                let otherButtons = mapButtons?.filter { $0.type != .pan } ?? []
 
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+                panningMapButtons = Array((panButtons + otherButtons).prefix(2))
+            } else {
+                panningMapButtons =
+                    mapButtons?.filter { button in
+                        button.type != .pan
+                    } ?? []
+            }
+
+            template.mapButtons = parseMapButtons(mapButtons: panningMapButtons)
 
             return
         }

@@ -84,6 +84,13 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
   defaultGuidanceBackgroundColor?: NitroColor;
 
   /**
+   * keep the pan button while the panning interface is shown so it can be used to exit pan mode
+   * only 2 map buttons fit, the pan button is kept first and the rest are truncated
+   * @namespace iOS
+   */
+  keepPanButtonWhilePanning?: boolean;
+
+  /**
    * specify the percentage of screen height/width the pan button should scroll
    * @namespace iOS
    */

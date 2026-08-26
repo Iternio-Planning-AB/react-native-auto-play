@@ -107,6 +107,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroAction>> headerActions = this->getFieldValue(fieldHeaderActions);
       static const auto fieldDefaultGuidanceBackgroundColor = clazz->getField<JNitroColor>("defaultGuidanceBackgroundColor");
       jni::local_ref<JNitroColor> defaultGuidanceBackgroundColor = this->getFieldValue(fieldDefaultGuidanceBackgroundColor);
+      static const auto fieldKeepPanButtonWhilePanning = clazz->getField<jni::JBoolean>("keepPanButtonWhilePanning");
+      jni::local_ref<jni::JBoolean> keepPanButtonWhilePanning = this->getFieldValue(fieldKeepPanButtonWhilePanning);
       static const auto fieldPanButtonScrollPercentage = clazz->getField<jni::JDouble>("panButtonScrollPercentage");
       jni::local_ref<jni::JDouble> panButtonScrollPercentage = this->getFieldValue(fieldPanButtonScrollPercentage);
       static const auto fieldOnDidChangePanningInterface = clazz->getField<JFunc_void_bool::javaobject>("onDidChangePanningInterface");
@@ -244,6 +246,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __vector;
         }(headerActions)) : std::nullopt,
         defaultGuidanceBackgroundColor != nullptr ? std::make_optional(defaultGuidanceBackgroundColor->toCpp()) : std::nullopt,
+        keepPanButtonWhilePanning != nullptr ? std::make_optional(static_cast<bool>(keepPanButtonWhilePanning->value())) : std::nullopt,
         panButtonScrollPercentage != nullptr ? std::make_optional(panButtonScrollPercentage->value()) : std::nullopt,
         onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
           if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
@@ -263,7 +266,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -304,6 +307,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __array;
         }(value.headerActions.value()) : nullptr,
         value.defaultGuidanceBackgroundColor.has_value() ? JNitroColor::fromCpp(value.defaultGuidanceBackgroundColor.value()) : nullptr,
+        value.keepPanButtonWhilePanning.has_value() ? jni::JBoolean::valueOf(value.keepPanButtonWhilePanning.value()) : nullptr,
         value.panButtonScrollPercentage.has_value() ? jni::JDouble::valueOf(value.panButtonScrollPercentage.value()) : nullptr,
         value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr
       );
