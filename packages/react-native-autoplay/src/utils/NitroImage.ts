@@ -119,6 +119,26 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
+  // Local file (file://) and data URIs bypass resolveAssetSource. resolveAssetSource
+  // only resolves bundled `require(...)` assets — passing it a { uri: 'file://...' } or
+  // { uri: 'data:...' } object returns it unchanged with width/height undefined, which
+  // silently fails NitroModules' typing further down. Handle those sources directly.
+  if (
+    typeof image.image === 'object' &&
+    'uri' in image.image &&
+    typeof image.image.uri === 'string' &&
+    (image.image.uri.startsWith('file://') || image.image.uri.startsWith('data:'))
+  ) {
+    return {
+      height: 0,
+      scale: 1,
+      uri: image.image.uri,
+      width: 0,
+      packager_asset: false,
+      color: NitroColorUtil.convert(image.color),
+    };
+  }
+
   // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
   // so the input allows all optional parameters which are returned as is even though
   // the return type claims to not have any optional parameters...
