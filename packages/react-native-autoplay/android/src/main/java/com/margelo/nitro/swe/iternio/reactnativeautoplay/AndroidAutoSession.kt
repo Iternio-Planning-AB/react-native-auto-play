@@ -7,8 +7,11 @@ import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
+import androidx.car.app.model.Action
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.MessageTemplate
+import androidx.car.app.model.Pane
+import androidx.car.app.model.PaneTemplate
 import androidx.car.app.model.Template
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -66,10 +69,22 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         val appName = AppInfo.getApplicationLabel(carContext)
+        val loadingText = AppInfo.getLoadingLabel(carContext, appName)
 
-        return MessageTemplate.Builder(appName).apply {
-            setIcon(CarIcon.APP_ICON)
-        }.build()
+        // PaneTemplate with setLoading(true) gets a host-drawn spinner instead of the plain
+        // white-circle app icon MessageTemplate shows while waiting for JS to render the
+        // first real screen. Falls back to the old MessageTemplate if the host rejects it.
+        return try {
+            val pane = Pane.Builder().setLoading(true).build()
+            PaneTemplate.Builder(pane)
+                .setTitle(loadingText)
+                .setHeaderAction(Action.APP_ICON)
+                .build()
+        } catch (_: Exception) {
+            MessageTemplate.Builder(appName.toString()).apply {
+                setIcon(CarIcon.APP_ICON)
+            }.build()
+        }
     }
 
     override fun onCreateScreen(intent: Intent): Screen {
