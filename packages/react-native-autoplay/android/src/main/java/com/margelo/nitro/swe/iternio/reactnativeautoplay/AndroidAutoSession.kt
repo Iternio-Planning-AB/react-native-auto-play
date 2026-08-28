@@ -28,6 +28,11 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     private val clusterId = if (isCluster) UUID.randomUUID().toString() else null
     private val moduleName = clusterId ?: ROOT_SESSION
 
+    // Launch intent captured in onCreateScreen for cold-start voice commands. onCreateScreen
+    // runs before JS has a chance to register its voice listener, so the intent is replayed
+    // on the first DIDAPPEAR instead (see sessionLifecycleObserver.onResume).
+    private var pendingVoiceIntent: Intent? = null
+
     private fun getInitialTemplate(): Template {
         if (isCluster) {
 
@@ -73,6 +78,14 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     }
 
     override fun onCreateScreen(intent: Intent): Screen {
+        // Cold start: the OS may launch us directly with a voice-navigation intent. Capture
+        // it here (root session only) and replay it on the first DIDAPPEAR, once JS has
+        // registered addListenerVoiceInput — handleVoiceIntent no-ops on non-voice intents,
+        // so this is harmless for normal launches.
+        if (clusterId == null) {
+            pendingVoiceIntent = intent
+        }
+
         val initialTemplate = getInitialTemplate()
         val screen = AndroidAutoScreen(carContext, moduleName, initialTemplate)
 
@@ -130,40 +143,50 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     }
 
     override fun onNewIntent(intent: Intent) {
-        val action = intent.action ?: return
+        handleVoiceIntent(intent)
+    }
 
-        if (action == CarContext.ACTION_NAVIGATE) {
-            intent.data?.schemeSpecificPart?.let { schemeSpecificPart ->
-                try {
-                    // Parse the geo URI format: lat,lon?q=query&mode=x&intent=y
-                    val queryIndex = schemeSpecificPart.indexOf("?q=")
+    /**
+     * Parses an OS voice-navigation intent (`CarContext.ACTION_NAVIGATE`, geo: URI) and
+     * forwards it to JS via [HybridAutoPlay.emitVoiceInput]. Returns `true` if a voice event
+     * was emitted, `false` for any other intent (safe to call unconditionally, e.g. from a
+     * buffered cold-start replay).
+     */
+    private fun handleVoiceIntent(intent: Intent): Boolean {
+        val action = intent.action ?: return false
+        if (action != CarContext.ACTION_NAVIGATE) return false
 
-                    val location = if (queryIndex > 0) {
-                        val coordinatesPart = schemeSpecificPart.substring(0, queryIndex)
-                        parseCoordinates(coordinatesPart)
-                    } else {
-                        null
-                    }
+        val schemeSpecificPart = intent.data?.schemeSpecificPart ?: return false
+        return try {
+            // Parse the geo URI format: lat,lon?q=query&mode=x&intent=y
+            val queryIndex = schemeSpecificPart.indexOf("?q=")
 
-                    val query = if (queryIndex >= 0) {
-                        val queryPart = schemeSpecificPart.substring(queryIndex + 3) // Skip "?q="
-                        val additionalParamsIndex = queryPart.indexOf('&')
-
-                        if (additionalParamsIndex >= 0) {
-                            val rawQuery = queryPart.substring(0, additionalParamsIndex)
-                            java.net.URLDecoder.decode(rawQuery, "UTF-8")
-                        } else {
-                            java.net.URLDecoder.decode(queryPart, "UTF-8")
-                        }
-                    } else {
-                        java.net.URLDecoder.decode(schemeSpecificPart, "UTF-8")
-                    }
-
-                    HybridAutoPlay.emitVoiceInput(location, query)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
-                }
+            val location = if (queryIndex > 0) {
+                val coordinatesPart = schemeSpecificPart.substring(0, queryIndex)
+                parseCoordinates(coordinatesPart)
+            } else {
+                null
             }
+
+            val query = if (queryIndex >= 0) {
+                val queryPart = schemeSpecificPart.substring(queryIndex + 3) // Skip "?q="
+                val additionalParamsIndex = queryPart.indexOf('&')
+
+                if (additionalParamsIndex >= 0) {
+                    val rawQuery = queryPart.substring(0, additionalParamsIndex)
+                    java.net.URLDecoder.decode(rawQuery, "UTF-8")
+                } else {
+                    java.net.URLDecoder.decode(queryPart, "UTF-8")
+                }
+            } else {
+                java.net.URLDecoder.decode(schemeSpecificPart, "UTF-8")
+            }
+
+            HybridAutoPlay.emitVoiceInput(location, query)
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
+            false
         }
     }
 
@@ -195,6 +218,17 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         override fun onResume(owner: LifecycleOwner) {
             sessions[moduleName]?.state = VisibilityState.DIDAPPEAR
             HybridAutoPlay.emitRenderState(moduleName, VisibilityState.DIDAPPEAR)
+
+            // Replay a cold-start voice intent now that the screen is visible and JS has had
+            // a chance to call addListenerVoiceInput. The short delay covers the bridge
+            // round-trip for listener registration.
+            val pending = pendingVoiceIntent
+            if (pending != null) {
+                pendingVoiceIntent = null
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    handleVoiceIntent(pending)
+                }, 800)
+            }
         }
 
         override fun onPause(owner: LifecycleOwner) {
