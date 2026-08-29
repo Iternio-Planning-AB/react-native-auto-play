@@ -84,6 +84,14 @@ class AutoPlayScene: UIResponder {
             )
         }
 
+        // Without isOpaque = false, the compositor still treats the window as opaque even
+        // with backgroundColor = .clear, so CarPlay's native template chrome (action bars,
+        // buttons) gets obscured by the window's default black background instead of showing
+        // through to whatever the host draws behind the RN surface.
+        rootView.backgroundColor = .clear
+        window.backgroundColor = .clear
+        window.isOpaque = false
+
         window.rootViewController = AutoPlaySceneViewController(
             view: rootView,
             moduleName: moduleName

@@ -1,6 +1,7 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.template
 
 import android.app.Service
+import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.car.app.AppManager
 import androidx.car.app.CarContext
@@ -9,6 +10,7 @@ import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.Alert
 import androidx.car.app.model.AlertCallback
 import androidx.car.app.model.CarColor
+import androidx.car.app.model.CarIcon
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.NavigationManager
 import androidx.car.app.navigation.NavigationManagerCallback
@@ -18,6 +20,7 @@ import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
+import androidx.core.graphics.drawable.IconCompat
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertActionStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
@@ -69,6 +72,13 @@ class MapTemplate(
     }
 
     override fun parse(): Template {
+        // NavigationTemplate requires setActionStrip() with >=1 action even when the caller
+        // configures no headerActions. A 1x1 transparent icon (instead of Action.APP_ICON)
+        // satisfies that requirement without visibly showing the app icon in the header.
+        val transparentIcon = CarIcon.Builder(
+            IconCompat.createWithBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
+        ).build()
+
         return NavigationTemplate.Builder().apply {
             setBackgroundColor(cardBackgroundColor)
             config.mapButtons?.let { buttons ->
@@ -79,7 +89,12 @@ class MapTemplate(
             } ?: run {
                 setActionStrip(
                     ActionStrip.Builder()
-                        .addAction(Action.APP_ICON)
+                        .addAction(
+                            Action.Builder()
+                                .setIcon(transparentIcon)
+                                .setOnClickListener {}
+                                .build()
+                        )
                         .build()
                 )
             }

@@ -19,7 +19,10 @@ extension CPTemplate {
         initTemplate(template: self, id: id)
     }
     @objc var id: String {
-        return (self.userInfo as? [String: Any])?["id"] as! String
+        // Force-unwrapping here crashed for any CPTemplate created without going through the
+        // convenience init above (e.g. a raw CPTemplate subclass), which had no "id" key set
+        // at all. Fall back to an empty string instead of crashing.
+        return (self.userInfo as? [String: Any])?["id"] as? String ?? ""
     }
 }
 
