@@ -267,6 +267,94 @@ const registerRunnable = () => {
       onDidChangePanningInterface: (isPanningInterfaceVisible) => {
         console.log('onDidChangePanningInterface', isPanningInterfaceVisible);
       },
+      optionsPanel: {
+        title: { text: 'options' },
+        sections: [
+          {
+            type: 'grid',
+            buttons: [
+              { title: { text: '#1' }, image: { type: 'glyph', name: '123' }, onPress: () => {} },
+              { title: { text: '#2' }, image: { type: 'glyph', name: '123' }, onPress: () => {} },
+            ],
+            title: 'grid',
+          },
+          {
+            title: 'radio',
+            type: 'list',
+            items: [
+              { type: 'radio', selected: true, title: { text: '#1' }, onPress: () => {} },
+              { type: 'radio', title: { text: '#2' }, onPress: () => {} },
+            ],
+          },
+          {
+            title: 'mixed list',
+            type: 'list',
+            items: [
+              { type: 'default', title: { text: '#1' }, onPress: () => {} },
+              { type: 'default', title: { text: '#2' }, onPress: () => {} },
+              { type: 'text', title: { text: 'text only' } },
+              {
+                type: 'toggle',
+                title: { text: 'toggle' },
+                checked: false,
+                onPress: (_, checked) => {
+                  console.log('*** toggle checked', checked);
+                },
+              },
+            ],
+          },
+          {
+            type: 'charger',
+            location: {
+              coordinate: {
+                latitude: 0,
+                longitude: 0,
+              },
+              travelEstimates: {
+                distance: { unit: 'kilometers', value: 12 },
+                duration: { timezone: 'Europe/Vienna', seconds: 600 },
+                visible: true,
+              },
+              address: 'charger ave.',
+              name: 'Fast Network Inc.',
+            },
+            outlets: [
+              { connector: 'ccs2', powerKw: 300, voltage: 400, onPress: () => {} },
+              { connector: 'chaDeMo', powerKw: 50, voltage: 400, onPress: () => {} },
+              { connector: 'mennekes', powerKw: 3.7, voltage: 230, onPress: () => {} },
+            ],
+          },
+        ],
+        actions: [
+          {
+            type: 'text',
+            title: 'rm panel',
+            onPress: (t) => {
+              t.updateOptionsPanel();
+            },
+          },
+          {
+            type: 'image',
+            image: { type: 'glyph', name: 'rocket' },
+            onPress: (t) => {
+              t.updateOptionsPanel({
+                title: { text: 'options' },
+                sections: [
+                  {
+                    type: 'charger',
+                    outlets: [
+                      { connector: 'ccs2', powerKw: 1500, voltage: 800 },
+                      { connector: 'ccs2', powerKw: 1500, voltage: 800 },
+                      { connector: 'ccs2', powerKw: 1500, voltage: 800 },
+                    ],
+                    title: 'blazing fast charger',
+                  },
+                ],
+              });
+            },
+          },
+        ],
+      },
     });
     rootTemplate.setRootTemplate();
   };

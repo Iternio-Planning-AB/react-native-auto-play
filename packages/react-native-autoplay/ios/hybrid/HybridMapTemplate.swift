@@ -168,4 +168,11 @@ class HybridMapTemplate: HybridMapTemplateSpec {
             template.setManeuverState(state: state)
         }
     }
+
+    func updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) throws {
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
+            template.updateOptionsPanel(config: config)
+        }
+    }
 }

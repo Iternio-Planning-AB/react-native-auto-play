@@ -15,6 +15,7 @@ import type {
 import type { NitroNavigationAlert } from '../utils/NitroAlert';
 import type { NitroManeuver } from '../utils/NitroManeuver';
 import type { NitroMapButton } from '../utils/NitroMapButton';
+import type { NitroOptionsPanelConfig } from '../utils/NitroOptionsPanel';
 import type { NitroTemplateConfig } from './AutoPlay.nitro';
 
 interface MapTemplateConfig extends NitroTemplateConfig, NitroMapTemplateConfig {}
@@ -50,4 +51,5 @@ export interface MapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swi
   startNavigation(templateId: string, trip: TripConfig): void;
   stopNavigation(templateId: string): void;
   setManeuverState(templateId: string, state: ManeuverState): void;
+  updateOptionsPanel(templateId: string, config?: NitroOptionsPanelConfig): void;
 }

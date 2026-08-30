@@ -1,11 +1,10 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { ListTemplate as NitroListTemplate } from '../specs/ListTemplate.nitro';
-import type { AutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
-import type { BaseMapTemplateConfig } from './MapTemplate';
+import { type NitroSection, NitroSectionUtil, type Section } from '../utils/NitroSection';
+import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -16,56 +15,15 @@ import {
 
 const HybridListTemplate = NitroModules.createHybridObject<NitroListTemplate>('ListTemplate');
 
-type BaseRow = {
-  title: AutoText;
-  enabled?: boolean;
-  image?: AutoImage;
-};
-
-export type DefaultRow<T> = BaseRow & {
-  type: 'default';
-  /**
-   * adds a chevron at the end of the row
-   */
-  browsable?: boolean;
-  onPress: (template: T) => void;
-  detailedText?: AutoText;
-};
-
-export type ToggleRow<T> = BaseRow & {
-  type: 'toggle';
-  checked: boolean;
-  onPress: (template: T, checked: boolean) => void;
-};
-
-export type RadioRow<T> = BaseRow & {
-  type: 'radio';
-  onPress: (template: T) => void;
-  selected?: boolean;
-};
-
-export type TextRow = BaseRow & {
-  type: 'text';
-  detailedText?: AutoText;
-};
-
-export type MultiSection<T> =
-  | {
-      type: 'default';
-      title: string;
-      items: Array<DefaultRow<T> | ToggleRow<T> | TextRow>;
-    }
-  | {
-      type: 'radio';
-      title: string;
-      items: Array<RadioRow<T>>;
-    };
-
-export type SingleSection<T> = {
-  [K in MultiSection<T> as K['type']]: Omit<K, 'title' | 'detailedText'>;
-}[MultiSection<T>['type']];
-
-export type Section<T> = Array<MultiSection<T>> | SingleSection<T>;
+export type {
+  DefaultRow,
+  MultiSection,
+  RadioRow,
+  Section,
+  SingleSection,
+  TextRow,
+  ToggleRow,
+} from '../utils/NitroSection';
 
 export interface NitroListTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;
@@ -92,9 +50,15 @@ export type ListTemplateConfig = Omit<
   sections?: Section<ListTemplate>;
   /**
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a ListTemplate with a map in background. No actions need to be specified, can be empty object.
-   * @namespace Android
+   * @namespace Android - uses MapWithContentTemplate
+   * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
+   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
+   * applied to the root map template's nav bar instead, since CarPlay has no separate header
+   * for the map behind a panel.
    */
-  mapConfig?: BaseMapTemplateConfig<ListTemplate>;
+  mapConfig?: Omit<BaseMapTemplateConfig<ListTemplate>, 'headerActions'> & {
+    headerActions?: PanelHeaderActions<ListTemplate>;
+  };
 };
 
 export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<ListTemplate>> {

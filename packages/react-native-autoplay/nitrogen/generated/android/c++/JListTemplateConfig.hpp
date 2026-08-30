@@ -14,11 +14,13 @@
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "DurationWithTimeZone.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
+#include "JDurationWithTimeZone.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
@@ -37,6 +39,7 @@
 #include "JNitroSectionType.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
@@ -49,6 +52,7 @@
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
 #include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>

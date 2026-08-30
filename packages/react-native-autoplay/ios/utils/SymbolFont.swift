@@ -58,7 +58,8 @@ class SymbolFont {
         foregroundColor: UIColor,
         backgroundColor: UIColor,
         size: CGFloat,
-        fontScale: CGFloat
+        fontScale: CGFloat,
+        displayScale: CGFloat
     ) -> UIImage? {
         guard let font = uiFont(for: glyphImage, size: size, fontScale: fontScale) else {
             return nil
@@ -82,7 +83,7 @@ class SymbolFont {
         )
 
         // Start drawing
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, 0)
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, displayScale)
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil
         }
@@ -121,7 +122,8 @@ class SymbolFont {
                     value: backgroundColor.lightColor
                 ),
                 size: size,
-                fontScale: fontScale
+                fontScale: fontScale,
+                displayScale: traitCollection.displayScale
             ),
             let darkImage = imageFromGlyph(
                 glyphImage: glyphImage,
@@ -132,7 +134,8 @@ class SymbolFont {
                     value: backgroundColor.darkColor
                 ),
                 size: size,
-                fontScale: fontScale
+                fontScale: fontScale,
+                displayScale: traitCollection.displayScale
             )
         else {
             return nil
@@ -184,7 +187,8 @@ class SymbolFont {
                 foregroundColor: foregroundColor,
                 backgroundColor: backgroundColor,
                 size: size,
-                fontScale: fontScale
+                fontScale: fontScale,
+                displayScale: traitCollection.displayScale
             )
         }
 

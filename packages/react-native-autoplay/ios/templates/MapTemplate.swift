@@ -22,6 +22,8 @@ class MapTemplate: AutoPlayHeaderProviding,
     var mapButtons: [NitroMapButton]?
     var visibleTravelEstimate: VisibleTravelEstimate?
 
+    private var optionsPanel: NitroOptionsPanelConfig?
+
     override var autoDismissMs: Double? {
         return config.autoDismissMs
     }
@@ -92,67 +94,6 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
     }
 
-    func parseMapButtons(mapButtons: [NitroMapButton]) -> [CPMapButton] {
-        guard let traitCollection = SceneStore.getRootTraitCollection() else {
-            return []
-        }
-
-        return mapButtons.map { button in
-            if let glyphImage = button.image.glyphImage,
-                let icon = SymbolFont.imageFromNitroImage(
-                    image: glyphImage,
-                    size: CPButtonMaximumImageSize.height,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-            if let assetImage = button.image.assetImage,
-                let icon = Parser.parseAssetImage(
-                    assetImage: assetImage,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-            if let remoteImage = button.image.remoteImage,
-                let icon = Parser.parseRemoteImage(
-                    remoteImage: remoteImage,
-                    traitCollection: traitCollection
-                )
-            {
-                return CPMapButton(image: icon) { _ in
-                    if button.type == .pan {
-                        self.onPanButtonPress()
-                        return
-                    }
-                    button.onPress?()
-                }
-            }
-
-            return CPMapButton { _ in
-                if button.type == .pan {
-                    self.onPanButtonPress()
-                    return
-                }
-                button.onPress?()
-            }
-        }
-
-    }
-
     @MainActor
     override func _invalidate() {
         if tripSelectorVisible {
@@ -176,15 +117,31 @@ class MapTemplate: AutoPlayHeaderProviding,
                     button.type != .pan
                 } ?? []
 
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+            template.mapButtons = Parser.parseMapButtons(
+                mapButtons: mapButtons,
+                onPanButtonPress: onPanButtonPress
+            )
 
             return
         }
 
-        setBarButtons(template: template, barButtons: barButtons)
+        // A panel owns the bar buttons while it exists; keep barButtons up to date but don't apply it.
+        let hasPanel: Bool = {
+            if #available(iOS 27.0, *) {
+                return SceneStore.getRootScene()?.interfaceController?.hasPanel ?? false
+            }
+            return false
+        }()
 
-        if let mapButtons = mapButtons {
-            template.mapButtons = parseMapButtons(mapButtons: mapButtons)
+        if !hasPanel {
+            setBarButtons(template: template, barButtons: barButtons)
+
+            if let mapButtons = mapButtons {
+                template.mapButtons = Parser.parseMapButtons(
+                    mapButtons: mapButtons,
+                    onPanButtonPress: onPanButtonPress
+                )
+            }
         }
     }
 
@@ -428,6 +385,11 @@ class MapTemplate: AutoPlayHeaderProviding,
             duration: alertConfig.durationMs / 1000
         )
 
+        if #available(iOS 27.0, *) {
+            // as of iOS 27 beta 4 this does not work when setting an image on the alert
+            alert.showsCloseButton = false
+        }
+
         func setNavigationAlert() {
             self.navigationAlert = .init(alert: alert, config: alertConfig)
             template.present(navigationAlert: alert, animated: true)
@@ -496,8 +458,9 @@ class MapTemplate: AutoPlayHeaderProviding,
 
             self.template.leadingNavigationBarButtons = []
             self.template.trailingNavigationBarButtons = []
-            self.template.mapButtons = self.parseMapButtons(
-                mapButtons: mapButtons
+            self.template.mapButtons = Parser.parseMapButtons(
+                mapButtons: mapButtons,
+                onPanButtonPress: self.onPanButtonPress
             )
         }
 
@@ -846,11 +809,58 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
 
         self.navigationSession = template.startNavigationSession(for: trip)
+        applyOptionsPanel()
     }
 
     func stopNavigation() {
         navigationSession?.finishTrip()
         navigationSession = nil
+    }
+
+    func updateOptionsPanel(config: NitroOptionsPanelConfig?) {
+        optionsPanel = config
+        applyOptionsPanel()
+    }
+
+    @available(iOS 27.0, *)
+    private func updateOptionsPanelSection(section: NitroSection, sectionIndex: Int) {
+        guard var sections = optionsPanel?.sections, sectionIndex < sections.count else { return }
+
+        // `.first` is the `NitroSection` (list) case of `NitroOptionsPanelSection` — matches
+        // whatever nitrogen assigned the last time `yarn specs` ran, see the ordering note on
+        // `Parser.parseOptionsPanelSections`.
+        sections[sectionIndex] = .first(section)
+        optionsPanel = NitroOptionsPanelConfig(
+            title: optionsPanel?.title,
+            sections: sections,
+            actions: optionsPanel?.actions
+        )
+        applyOptionsPanel()
+    }
+
+    private func applyOptionsPanel() {
+        guard #available(iOS 27.0, *) else { return }
+        guard let navigationSession else { return }
+        guard let optionsPanel else {
+            navigationSession.optionsPanel = nil
+            return
+        }
+        guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
+
+        let sections = Parser.parseOptionsPanelSections(
+            sections: optionsPanel.sections,
+            updateSection: updateOptionsPanelSection(section:sectionIndex:),
+            traitCollection: traitCollection
+        )
+
+        navigationSession.optionsPanel = CPMapPanel(
+            title: Parser.parseText(text: optionsPanel.title),
+            sections: sections,
+            buttonConfiguration: Parser.parsePanelButtonConfiguration(
+                actions: optionsPanel.actions,
+                traitCollection: traitCollection
+            )
+        )
     }
 
     func setManeuverState(state: ManeuverState) {

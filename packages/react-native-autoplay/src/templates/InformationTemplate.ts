@@ -7,7 +7,7 @@ import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
 import type { SingleSection, TextRow } from './ListTemplate';
-import type { BaseMapTemplateConfig } from './MapTemplate';
+import type { BaseMapTemplateConfig, PanelActionsIos, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -15,6 +15,10 @@ import {
   Template,
   type TemplateConfig,
 } from './Template';
+
+type InformationActionsAndroid<T> =
+  | [CustomActionButtonAndroid<T>]
+  | [CustomActionButtonAndroid<T>, CustomActionButtonAndroid<T>];
 
 const HybridInformationTemplate =
   NitroModules.createHybridObject<NitroInformationTemplate>('InformationTemplate');
@@ -33,7 +37,7 @@ export type InformationItems =
   | [TextRow, TextRow, TextRow]
   | [TextRow, TextRow, TextRow, TextRow];
 
-export type InformationTemplateConfig = Omit<
+type InformationTemplateBaseConfig = Omit<
   NitroInformationTemplateConfig,
   'headerActions' | 'section' | 'mapConfig' | 'actions'
 > & {
@@ -47,34 +51,53 @@ export type InformationTemplateConfig = Omit<
    * @namespace iOS this is an InformationTemplate, ⚠️ the row image is NOT supported
    */
   items?: InformationItems;
-
-  /**
-   * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a PaneTemplate with a map in background. No actions need to be specified, can be empty object.
-   * @namespace Android
-   */
-  mapConfig?: BaseMapTemplateConfig<InformationTemplate>;
-
-  /**
-   * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
-   * @namespace iOS - up to 3 buttons of type TextButton
-   */
-  actions?: {
-    android?:
-      | [CustomActionButtonAndroid<InformationTemplate>]
-      | [
-          CustomActionButtonAndroid<InformationTemplate>,
-          CustomActionButtonAndroid<InformationTemplate>,
-        ];
-    ios?:
-      | [
-          TextButton<InformationTemplate>,
-          TextButton<InformationTemplate>,
-          TextButton<InformationTemplate>,
-        ]
-      | [TextButton<InformationTemplate>, TextButton<InformationTemplate>]
-      | [TextButton<InformationTemplate>];
-  };
 };
+
+export type InformationTemplateConfig = InformationTemplateBaseConfig &
+  (
+    | {
+        mapConfig?: undefined;
+
+        /**
+         * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
+         * @namespace iOS - up to 3 buttons of type TextButton
+         */
+        actions?: {
+          android?: InformationActionsAndroid<InformationTemplate>;
+          ios?:
+            | [
+                TextButton<InformationTemplate>,
+                TextButton<InformationTemplate>,
+                TextButton<InformationTemplate>,
+              ]
+            | [TextButton<InformationTemplate>, TextButton<InformationTemplate>]
+            | [TextButton<InformationTemplate>];
+        };
+      }
+    | {
+        /**
+         * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a PaneTemplate with a map in background. No actions need to be specified, can be empty object.
+         * @namespace Android - uses MapWithContentTemplate
+         * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
+         * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
+         * applied to the root map template's nav bar instead, since CarPlay has no separate
+         * header for the map behind a panel.
+         */
+        mapConfig: Omit<BaseMapTemplateConfig<InformationTemplate>, 'headerActions'> & {
+          headerActions?: PanelHeaderActions<InformationTemplate>;
+        };
+
+        /**
+         * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
+         * @namespace iOS - the panel can only show one TextButton plus one optional icon-only
+         * ImageButton, see PanelActionsIos
+         */
+        actions?: {
+          android?: InformationActionsAndroid<InformationTemplate>;
+          ios?: PanelActionsIos<InformationTemplate>;
+        };
+      }
+  );
 
 export class InformationTemplate extends Template<
   InformationTemplateConfig,

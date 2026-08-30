@@ -23,6 +23,12 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
     override init() {
+        /// init the calendar to make Parser.parseText not crash on iOS 27 beta 3
+        /// TODO: recheck on RC/final release
+        DispatchQueue.main.async {
+            _ = DateComponentsFormatter().string(from: 0)
+        }
+
         HybridAutoPlay.listeners.removeAll()
         HybridAutoPlay.renderStateListeners.removeAll()
         HybridAutoPlay.safeAreaInsetsListeners.removeAll()
@@ -137,7 +143,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                     templateId: templateId
                 )
 
-                let carPlayTemplate = template.getTemplate()
+                let carPlayTemplate = try template.getTemplate()
 
                 if carPlayTemplate is CPMapTemplate {
                     try await MainActor.run {
@@ -169,23 +175,31 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
                 await template.invalidate()
 
-                let carPlayTemplate = template.getTemplate()
-
-                if carPlayTemplate is CPAlertTemplate {
-                    let animated = try await !interfaceController.dismissTemplate(
-                        animated: false
-                    )
-
-                    let _ = try await interfaceController.presentTemplate(
-                        carPlayTemplate,
-                        animated: animated
+                if #available(iOS 27.0, *), let panel = template.getPanel() as? CPMapPanel {
+                    try await interfaceController.pushPanel(
+                        panel,
+                        templateId: templateId
                     )
                 }
                 else {
-                    let _ = try await interfaceController.pushTemplate(
-                        carPlayTemplate,
-                        animated: true
-                    )
+                    let carPlayTemplate = try template.getTemplate()
+
+                    if carPlayTemplate is CPAlertTemplate {
+                        let animated = try await !interfaceController.dismissTemplate(
+                            animated: false
+                        )
+
+                        let _ = try await interfaceController.presentTemplate(
+                            carPlayTemplate,
+                            animated: animated
+                        )
+                    }
+                    else {
+                        let _ = try await interfaceController.pushTemplate(
+                            carPlayTemplate,
+                            animated: true
+                        )
+                    }
                 }
 
                 if let autoDismissMs = template.autoDismissMs {
@@ -194,7 +208,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                             nanoseconds: UInt64(autoDismissMs) * 1_000_000
                         )
 
-                        if interfaceController.topTemplateId == templateId
+                        if interfaceController.isTopEntry(templateId: templateId)
                             || interfaceController.interfaceController
                                 .presentedTemplate?.id == templateId
                         {

@@ -26,6 +26,7 @@ public protocol HybridMapTemplateSpec_protocol: HybridObject {
   func startNavigation(templateId: String, trip: TripConfig) throws -> Void
   func stopNavigation(templateId: String) throws -> Void
   func setManeuverState(templateId: String, state: ManeuverState) throws -> Void
+  func updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) throws -> Void
 }
 
 public extension HybridMapTemplateSpec_protocol {
