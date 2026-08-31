@@ -113,6 +113,13 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     override fun onCarConfigurationChanged(configuration: Configuration) {
         val colorScheme = if (carContext.isDarkMode) ColorScheme.DARK else ColorScheme.LIGHT
 
+        // The root display's native backdrop must follow the car's day/night (car-app quality
+        // MR-1). Forwarded before the early returns below — the root template may not be a
+        // MapTemplate yet (e.g. a pre-trip MessageTemplate) and must still switch.
+        if (clusterId == null) {
+            VirtualRenderer.onColorSchemeChanged(ROOT_SESSION, carContext.isDarkMode)
+        }
+
         if (clusterId != null) {
             HybridCluster.emitColorScheme(clusterId, colorScheme)
             AndroidAutoScreen.getScreen(clusterId)?.applyConfigUpdate(invalidate = true)
