@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Display
 import android.view.LayoutInflater
@@ -42,6 +43,10 @@ class VirtualRenderer(
 ) {
     private var virtualDisplay: VirtualDisplay? = null
     private val pendingDisplays = mutableListOf<VirtualDisplay>()
+    // Optional host view under the React surface (see NativeBackdrop), one per presentation;
+    // parked ones are destroyed in the same sweep as pendingDisplays
+    private var currentBackdrop: NativeBackdrop? = null
+    private val pendingBackdrops = mutableListOf<NativeBackdrop>()
 
     private var reactSurfaceImpl: ReactSurfaceImpl? = null
     private var reactSurfaceView: ReactSurfaceView? = null
@@ -408,14 +413,41 @@ class VirtualRenderer(
             }
 
 
+            // Ask the host for a native backdrop for the root display (clusters never get one).
+            // `this@VirtualRenderer.context` is the CarContext — the presentation's own `context`
+            // parameter is the ReactContext and shadows it. A throwing factory is logged and
+            // ignored so the React surface still renders.
+            val backdrop: NativeBackdrop? = if (!isCluster) {
+                NativeBackdropRegistry.factory?.let { factory ->
+                    runCatching { factory(this@VirtualRenderer.context) }
+                        .onFailure { Log.w(TAG, "native backdrop factory failed; rendering without it", it) }
+                        .getOrNull()
+                }
+            } else {
+                null
+            }
+            currentBackdrop?.let { pendingBackdrops.add(it) }
+            currentBackdrop = backdrop
+
             val rootContainer = FrameLayout(themedContext).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
                 clipChildren = false
 
+                backdrop?.let {
+                    // A view the host hands out more than once must not crash Presentation.onCreate
+                    (it.view.parent as? ViewGroup)?.removeView(it.view)
+                    addView(it.view, FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+                    ))
+                }
                 addView(reactSurfaceView)
             }
+            // The surface view is painted opaque DKGRAY at construction and survives resizes by
+            // re-parenting, so (re)apply per presentation: see-through only while a backdrop is
+            // actually attached.
+            reactSurfaceView?.setBackgroundColor(if (backdrop != null) Color.TRANSPARENT else Color.DKGRAY)
 
             splashScreenView?.let {
                 rootContainer.addView(it)
@@ -434,6 +466,9 @@ class VirtualRenderer(
                             it.release()
                         }
                         pendingDisplays.clear()
+                        // Backdrops share the lifetime of the displays they drew on
+                        pendingBackdrops.forEach { it.destroy() }
+                        pendingBackdrops.clear()
                     }
                 }
             })
@@ -511,6 +546,13 @@ class VirtualRenderer(
 
     @MainThread
     private fun stop() {
+        // Current and parked — a stop during a resize must not leak the backdrop whose
+        // replacement never drew
+        currentBackdrop?.destroy()
+        currentBackdrop = null
+        pendingBackdrops.forEach { it.destroy() }
+        pendingBackdrops.clear()
+
         virtualDisplay?.release()
         virtualDisplay = null
 
@@ -553,6 +595,11 @@ class VirtualRenderer(
         fun removeRenderer(moduleId: String) {
             virtualRenderer[moduleId]?.stop()
             virtualRenderer.remove(moduleId)
+        }
+
+        // Forwarded by AndroidAutoSession.onCarConfigurationChanged
+        fun onColorSchemeChanged(moduleId: String, dark: Boolean) {
+            virtualRenderer[moduleId]?.currentBackdrop?.onColorSchemeChanged(dark)
         }
     }
 }

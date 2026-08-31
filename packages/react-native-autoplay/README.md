@@ -203,6 +203,40 @@ In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in
 -keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }
 ```
 
+#### Native backdrop under the MapTemplate surface
+On Android the React content of a `MapTemplate` is rendered onto the car screen through a virtual display. Some native views cannot be hosted there as React Native views — Fragment-based map SDK wrappers, for example, are bound to the phone `Activity`. For those the library can place a host-provided native `View` **under** the React surface of the root display: the Android counterpart of the iOS `getRootViewForAutoplay` hook above. Your React tree then draws on top of it as an overlay. This applies to the root display only, not to cluster displays.
+
+```kotlin
+interface NativeBackdrop {
+    /** Added as the presentation root's FIRST child, match-parent. */
+    val view: View
+
+    /** The car's day/night changed (CarContext.isDarkMode) — redraw accordingly. */
+    fun onColorSchemeChanged(dark: Boolean)
+
+    /** Release everything; must be idempotent. */
+    fun destroy()
+}
+
+object NativeBackdropRegistry {
+    @Volatile
+    var factory: ((CarContext) -> NativeBackdrop)? = null
+}
+```
+
+Register the factory in your `Application.onCreate`, before the `CarAppService` can start:
+
+```kotlin
+NativeBackdropRegistry.factory = { carContext -> MyMapBackdrop(carContext) }
+```
+
+Lifecycle contract:
+
+-   The factory is consulted once per presentation — i.e. again after every surface resize — and each backdrop is destroyed when its presentation is replaced or the renderer stops.
+-   A factory that throws is logged and ignored; the React surface still renders.
+-   The React surface view is transparent only while a backdrop is attached. Without a registered factory nothing changes: the surface stays opaque as before.
+-   `onColorSchemeChanged(dark)` is forwarded from `Session.onCarConfigurationChanged`, so the backdrop can follow the car's day/night setting (car app quality guideline MR-1). It fires regardless of which template is currently on screen.
+
 ### Android Auto Customization
 You can customize certain behaviors of the library on Android Auto by setting properties in your app's `android/gradle.properties` file.
 
