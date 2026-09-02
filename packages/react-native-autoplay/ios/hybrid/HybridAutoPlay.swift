@@ -18,14 +18,26 @@ struct SafeAreaListener {
 }
 
 class HybridAutoPlay: HybridAutoPlaySpec {
+    /// Guards the three listener dictionaries below. They are mutated from the
+    /// JS thread (add/remove) and read from the main thread (UIKit layout
+    /// driving `emitSafeAreaInsets`), so every access must be serialised.
+    private static let listenersLock = NSLock()
     private static var listeners = [EventName: [StateListener]]()
     private static var renderStateListeners = [String: [RenderStateListener]]()
     private static var safeAreaInsetsListeners = [String: [SafeAreaListener]]()
 
+    private static func withListenersLock<T>(_ body: () -> T) -> T {
+        listenersLock.lock()
+        defer { listenersLock.unlock() }
+        return body()
+    }
+
     override init() {
-        HybridAutoPlay.listeners.removeAll()
-        HybridAutoPlay.renderStateListeners.removeAll()
-        HybridAutoPlay.safeAreaInsetsListeners.removeAll()
+        HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.listeners.removeAll()
+            HybridAutoPlay.renderStateListeners.removeAll()
+            HybridAutoPlay.safeAreaInsetsListeners.removeAll()
+        }
         super.init()
     }
 
@@ -34,18 +46,22 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     {
         let listener = StateListener(id: UUID(), callback: callback)
 
-        HybridAutoPlay.listeners[eventType, default: []].append(listener)
+        HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.listeners[eventType, default: []].append(listener)
+        }
 
         if eventType == .didconnect && SceneStore.isRootModuleConnected() {
             callback()
         }
 
         return {
-            HybridAutoPlay.listeners[eventType]?.removeAll {
-                $0.id == listener.id
-            }
-            if HybridAutoPlay.listeners[eventType]?.isEmpty ?? false {
-                HybridAutoPlay.listeners.removeValue(forKey: eventType)
+            HybridAutoPlay.withListenersLock {
+                HybridAutoPlay.listeners[eventType]?.removeAll {
+                    $0.id == listener.id
+                }
+                if HybridAutoPlay.listeners[eventType]?.isEmpty ?? false {
+                    HybridAutoPlay.listeners.removeValue(forKey: eventType)
+                }
             }
         }
     }
@@ -56,24 +72,28 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     ) throws -> () -> Void {
         let listener = RenderStateListener(id: UUID(), callback: callback)
 
-        HybridAutoPlay.renderStateListeners[moduleName, default: []].append(
-            listener
-        )
+        HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.renderStateListeners[moduleName, default: []].append(
+                listener
+            )
+        }
 
         if let state = SceneStore.getState(moduleName: moduleName) {
             callback(state)
         }
 
         return {
-            HybridAutoPlay.renderStateListeners[moduleName]?.removeAll {
-                $0.id == listener.id
-            }
-            if HybridAutoPlay.renderStateListeners[moduleName]?.isEmpty
-                ?? false
-            {
-                HybridAutoPlay.renderStateListeners.removeValue(
-                    forKey: moduleName
-                )
+            HybridAutoPlay.withListenersLock {
+                HybridAutoPlay.renderStateListeners[moduleName]?.removeAll {
+                    $0.id == listener.id
+                }
+                if HybridAutoPlay.renderStateListeners[moduleName]?.isEmpty
+                    ?? false
+                {
+                    HybridAutoPlay.renderStateListeners.removeValue(
+                        forKey: moduleName
+                    )
+                }
             }
         }
     }
@@ -92,9 +112,10 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     ) throws -> () -> Void {
         let listener = SafeAreaListener(id: UUID(), callback: callback)
 
-        HybridAutoPlay.safeAreaInsetsListeners[moduleName, default: []].append(
-            listener
-        )
+        HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.safeAreaInsetsListeners[moduleName, default: []]
+                .append(listener)
+        }
 
         if let safeAreaInsets = SceneStore.getScene(moduleName: moduleName)?
             .safeAreaInsets
@@ -106,15 +127,17 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
 
         return {
-            HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.removeAll {
-                $0.id == listener.id
-            }
-            if HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.isEmpty
-                ?? false
-            {
-                HybridAutoPlay.safeAreaInsetsListeners.removeValue(
-                    forKey: moduleName
-                )
+            HybridAutoPlay.withListenersLock {
+                HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.removeAll {
+                    $0.id == listener.id
+                }
+                if HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.isEmpty
+                    ?? false
+                {
+                    HybridAutoPlay.safeAreaInsetsListeners.removeValue(
+                        forKey: moduleName
+                    )
+                }
             }
         }
     }
@@ -298,14 +321,21 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     // MARK: events
     static func emit(event: EventName) {
-        HybridAutoPlay.listeners[event]?.forEach { listener in
+        // Snapshot under the lock, then call out without holding it so a
+        // callback that adds or removes a listener cannot deadlock.
+        let listeners = HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.listeners[event] ?? []
+        }
+        listeners.forEach { listener in
             listener.callback()
         }
     }
 
     static func emitRenderState(moduleName: String, state: VisibilityState) {
-        HybridAutoPlay.renderStateListeners[moduleName]?.forEach {
-            listener in
+        let listeners = HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.renderStateListeners[moduleName] ?? []
+        }
+        listeners.forEach { listener in
             listener.callback(state)
         }
     }
@@ -317,14 +347,19 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         let insets = HybridAutoPlay.getSafeAreaInsets(
             safeAreaInsets: safeAreaInsets
         )
-        HybridAutoPlay.safeAreaInsetsListeners[moduleName]?.forEach {
-            listener in listener.callback(insets)
+        let listeners = HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.safeAreaInsetsListeners[moduleName] ?? []
         }
+        listeners.forEach { listener in listener.callback(insets) }
     }
 
     static func removeListeners(templateId: String) {
-        HybridAutoPlay.renderStateListeners.removeValue(forKey: templateId)
-        HybridAutoPlay.safeAreaInsetsListeners.removeValue(forKey: templateId)
+        HybridAutoPlay.withListenersLock {
+            HybridAutoPlay.renderStateListeners.removeValue(forKey: templateId)
+            HybridAutoPlay.safeAreaInsetsListeners.removeValue(
+                forKey: templateId
+            )
+        }
     }
 
     static func getSafeAreaInsets(safeAreaInsets: UIEdgeInsets)

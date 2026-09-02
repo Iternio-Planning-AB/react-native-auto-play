@@ -12,36 +12,49 @@ class SceneStore {
     static let dashboardModuleName = "CarPlayDashboard"
     static let windowSceneModuleName = "main"
 
+    /// Guards `renderState` and `store`. Scenes are added/removed on the main
+    /// thread while the dictionaries are read from the JS thread, and Swift
+    /// dictionaries are not thread-safe.
+    private static let lock = NSLock()
+
     private static var renderState = [String: VisibilityState]()
 
     private static var store: [String: AutoPlayScene] = [:]
 
+    private static func withLock<T>(_ body: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return body()
+    }
+
     static func addScene(moduleName: String, scene: AutoPlayScene) {
-        store[moduleName] = scene
+        withLock { store[moduleName] = scene }
     }
 
     static func removeScene(moduleName: String) {
-        store.removeValue(forKey: moduleName)
+        let _ = withLock { store.removeValue(forKey: moduleName) }
     }
 
     static func getScene(moduleName: String) -> AutoPlayScene? {
-        return store[moduleName]
+        return withLock { store[moduleName] }
     }
 
     static func isRootModuleConnected() -> Bool {
-        return store[SceneStore.rootModuleName]?.isConnected ?? false
+        return getScene(moduleName: SceneStore.rootModuleName)?.isConnected
+            ?? false
     }
 
     static func isDashboardModuleConnected() -> Bool {
-        return store[SceneStore.dashboardModuleName]?.isConnected ?? false
+        return getScene(moduleName: SceneStore.dashboardModuleName)?.isConnected
+            ?? false
     }
 
     static func getState(moduleName: String) -> VisibilityState? {
-        return renderState[moduleName]
+        return withLock { renderState[moduleName] }
     }
 
     static func setState(moduleName: String, state: VisibilityState) {
-        renderState[moduleName] = state
+        withLock { renderState[moduleName] = state }
 
         HybridAutoPlay.emitRenderState(
             moduleName: moduleName,
@@ -77,10 +90,10 @@ class SceneStore {
     }
 
     static func getRootScene() -> AutoPlayScene? {
-        return store[SceneStore.rootModuleName]
+        return getScene(moduleName: SceneStore.rootModuleName)
     }
 
     static func getRootTraitCollection() -> UITraitCollection? {
-        return store[SceneStore.rootModuleName]?.traitCollection
+        return getRootScene()?.traitCollection
     }
 }

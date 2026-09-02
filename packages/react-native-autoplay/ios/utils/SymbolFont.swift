@@ -9,10 +9,17 @@ import CoreText
 import UIKit
 
 class SymbolFont {
+    /// Guards the font cache below. Glyphs are rendered both during template
+    /// construction on the JS thread and from `@MainActor` template
+    /// invalidation, so the cache is touched from more than one thread.
+    private static let cacheLock = NSLock()
     private static var cachedFontName: String?
     private static var cachedPSName: String?
 
     private static func loadFont(named fontName: String) -> String? {
+        cacheLock.lock()
+        defer { cacheLock.unlock() }
+
         if fontName == cachedFontName {
             return cachedPSName
         }
