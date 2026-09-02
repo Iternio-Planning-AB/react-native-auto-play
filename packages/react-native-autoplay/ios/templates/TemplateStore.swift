@@ -53,11 +53,18 @@ class TemplateStore {
     }
 
     func purge() {
-        withLock {
-            store = store.filter {
-                !($0.value.getTemplate() is CPSearchTemplate)
+        // These templates were popped by a native CarPlay button we cannot
+        // intercept, so they need an `onPopped()` just like an explicit pop.
+        let removed = withLock {
+            let searchTemplates = store.filter {
+                $0.value.getTemplate() is CPSearchTemplate
             }
+            searchTemplates.keys.forEach { store.removeValue(forKey: $0) }
+
+            return Array(searchTemplates.values)
         }
+
+        removed.forEach { template in template.onPopped() }
     }
 
     @MainActor
@@ -68,6 +75,19 @@ class TemplateStore {
     }
 
     func disconnect() {
-        withLock { store = [:] }
+        // The session is gone, so these templates will never be popped
+        // individually. Without an `onPopped()` here anything the app tied to a
+        // template's lifetime (event listeners, timers, cached render state)
+        // leaks for the rest of the app lifetime, and the host app keeps
+        // running after a disconnect. Android does the same on
+        // `Lifecycle.Event.ON_DESTROY` (AndroidAutoScreen.kt).
+        let removed = withLock {
+            let templates = Array(store.values)
+            store = [:]
+
+            return templates
+        }
+
+        removed.forEach { template in template.onPopped() }
     }
 }
