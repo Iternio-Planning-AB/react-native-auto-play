@@ -15,10 +15,17 @@ import {
 
 const HybridGridTemplate = NitroModules.createHybridObject<NitroGridTemplate>('GridTemplate');
 
+/**
+ * Controls the size of Android grid items. A selected size requires Android Car API 8.
+ * @namespace Android
+ */
+export type GridImageSize = 'unset' | 'large' | 'medium' | 'small';
+
 export interface NitroGridTemplateConfig extends TemplateConfig {
   headerActions?: Array<NitroAction>;
   title: AutoText;
   buttons: Array<NitroGridButton>;
+  imageSize?: GridImageSize;
   mapConfig?: NitroBaseMapTemplateConfig;
 }
 
@@ -32,6 +39,14 @@ export type GridTemplateConfig = Omit<
   headerActions?: HeaderActions<GridTemplate>;
 
   buttons: Array<GridButton<GridTemplate>>;
+
+  /**
+   * Controls the size of all images in the Android grid. Defaults to `unset`, which preserves
+   * the platform's standard grid layout. `large`, `medium`, and `small` require Android Car API
+   * 8.
+   * @namespace Android
+   */
+  imageSize?: GridImageSize;
 
   /**
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a GridTemplate with a map in background. No actions need to be specified, can be empty object.

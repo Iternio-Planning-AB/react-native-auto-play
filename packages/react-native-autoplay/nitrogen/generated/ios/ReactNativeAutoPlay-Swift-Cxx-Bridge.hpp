@@ -30,6 +30,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWit
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkType; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
+// Forward declaration of `GridImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlaySpec; }
 // Forward declaration of `HybridCarPlayDashboardSpec` to properly resolve imports.
@@ -170,6 +172,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
 #include "GlyphImage.hpp"
+#include "GridImageSize.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "HybridCarPlayDashboardSpec.hpp"
 #include "HybridClusterSpec.hpp"
@@ -862,6 +865,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     std::vector<NitroGridButton> vector;
     vector.reserve(size);
     return vector;
+  }
+  
+  // pragma MARK: std::optional<GridImageSize>
+  /**
+   * Specialized version of `std::optional<GridImageSize>`.
+   */
+  using std__optional_GridImageSize_ = std::optional<GridImageSize>;
+  inline std::optional<GridImageSize> create_std__optional_GridImageSize_(const GridImageSize& value) noexcept {
+    return std::optional<GridImageSize>(value);
+  }
+  inline bool has_value_std__optional_GridImageSize_(const std::optional<GridImageSize>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline GridImageSize get_std__optional_GridImageSize_(const std::optional<GridImageSize>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::vector<NitroMapButton>
