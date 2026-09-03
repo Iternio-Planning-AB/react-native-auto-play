@@ -58,6 +58,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ImageLane; 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct LaneGuidance; }
+// Forward declaration of `ListImageType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
 // Forward declaration of `Location` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
@@ -186,6 +188,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "ImageLane.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
+#include "ListImageType.hpp"
 #include "Location.hpp"
 #include "ManeuverType.hpp"
 #include "NavigationAlertAction.hpp"
@@ -984,6 +987,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline AutoText get_std__optional_AutoText_(const std::optional<AutoText>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<ListImageType>
+  /**
+   * Specialized version of `std::optional<ListImageType>`.
+   */
+  using std__optional_ListImageType_ = std::optional<ListImageType>;
+  inline std::optional<ListImageType> create_std__optional_ListImageType_(const ListImageType& value) noexcept {
+    return std::optional<ListImageType>(value);
+  }
+  inline bool has_value_std__optional_ListImageType_(const std::optional<ListImageType>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline ListImageType get_std__optional_ListImageType_(const std::optional<ListImageType>& optional) noexcept {
     return optional.value();
   }
   

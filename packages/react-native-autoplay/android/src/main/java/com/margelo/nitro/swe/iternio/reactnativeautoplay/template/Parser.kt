@@ -52,6 +52,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.ForkType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.KeepType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListTemplateConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListImageType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ManeuverType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroActionType
@@ -84,6 +85,10 @@ import kotlin.math.abs
 import androidx.core.net.toUri
 
 object Parser {
+    // IMAGE_TYPE_MEDIUM was added to androidx.car.app in 1.8.0. Keep the protocol value here
+    // while this library continues to depend on 1.7.0.
+    private const val ROW_IMAGE_TYPE_MEDIUM = 16
+
     const val TAG = "Parser"
 
     fun parseHeader(
@@ -397,7 +402,13 @@ object Parser {
                         addText(parseText(detailedText))
                     }
                     row.image?.let { image ->
-                        setImage(parseImage(context, image))
+                        val parsedImage = parseImage(context, image)
+                        val imageType = row.imageType
+                        if (imageType == null) {
+                            setImage(parsedImage)
+                        } else {
+                            setImage(parsedImage, imageType.toRowImageType())
+                        }
                     }
                     row.browsable?.let { browsable ->
                         setBrowsable(browsable)
@@ -424,6 +435,14 @@ object Parser {
                 }.build())
             }
         }.build()
+    }
+
+    private fun ListImageType.toRowImageType(): Int = when (this) {
+        ListImageType.LARGE -> Row.IMAGE_TYPE_LARGE
+        ListImageType.MEDIUM -> ROW_IMAGE_TYPE_MEDIUM
+        ListImageType.SMALL -> Row.IMAGE_TYPE_SMALL
+        ListImageType.EXTRA_SMALL -> Row.IMAGE_TYPE_EXTRA_SMALL
+        ListImageType.ICON -> Row.IMAGE_TYPE_ICON
     }
 
     fun formatToTimestamp(time: DurationWithTimeZone): String {

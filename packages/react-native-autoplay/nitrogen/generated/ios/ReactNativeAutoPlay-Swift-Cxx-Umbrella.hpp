@@ -64,6 +64,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Information
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class KeepType; }
 // Forward declaration of `LaneGuidance` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct LaneGuidance; }
+// Forward declaration of `ListImageType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
 // Forward declaration of `ListTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct ListTemplateConfig; }
 // Forward declaration of `Location` to properly resolve imports.
@@ -190,6 +192,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "InformationTemplateConfig.hpp"
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
+#include "ListImageType.hpp"
 #include "ListTemplateConfig.hpp"
 #include "Location.hpp"
 #include "ManeuverState.hpp"
