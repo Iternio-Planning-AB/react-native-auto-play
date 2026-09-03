@@ -69,6 +69,7 @@ const getMainSection = (): Section<ListTemplate> => {
       type: 'toggle',
       title: { text: 'row #2' },
       checked: checked[1],
+      imageType: 'large',
       image: {
         name: 'bomb',
         type: 'glyph',

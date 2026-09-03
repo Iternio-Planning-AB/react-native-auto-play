@@ -33,6 +33,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Distance; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class DistanceUnits; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `GridImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -79,6 +81,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include "NitroGridButton.hpp"
 #include "JNitroGridButton.hpp"
 #include "JNitroImage.hpp"
+#include "GridImageSize.hpp"
+#include "JGridImageSize.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "JNitroBaseMapTemplateConfig.hpp"
 #include "NitroMapButton.hpp"

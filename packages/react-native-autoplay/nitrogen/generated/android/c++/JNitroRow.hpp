@@ -21,9 +21,11 @@
 #include "JDistanceUnits.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
+#include "JListImageType.hpp"
 #include "JNitroColor.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "ListImageType.hpp"
 #include "NitroColor.hpp"
 #include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
@@ -61,6 +63,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jboolean enabled = this->getFieldValue(fieldEnabled);
       static const auto fieldImage = clazz->getField<JVariant_GlyphImage_AssetImage_RemoteImage>("image");
       jni::local_ref<JVariant_GlyphImage_AssetImage_RemoteImage> image = this->getFieldValue(fieldImage);
+      static const auto fieldImageType = clazz->getField<JListImageType>("imageType");
+      jni::local_ref<JListImageType> imageType = this->getFieldValue(fieldImageType);
       static const auto fieldChecked = clazz->getField<jni::JBoolean>("checked");
       jni::local_ref<jni::JBoolean> checked = this->getFieldValue(fieldChecked);
       static const auto fieldOnPress = clazz->getField<JFunc_void_std__optional_bool_::javaobject>("onPress");
@@ -73,6 +77,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         browsable != nullptr ? std::make_optional(static_cast<bool>(browsable->value())) : std::nullopt,
         static_cast<bool>(enabled),
         image != nullptr ? std::make_optional(image->toCpp()) : std::nullopt,
+        imageType != nullptr ? std::make_optional(imageType->toCpp()) : std::nullopt,
         checked != nullptr ? std::make_optional(static_cast<bool>(checked->value())) : std::nullopt,
         onPress != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* checked */)> {
           if (onPress->isInstanceOf(JFunc_void_std__optional_bool__cxx::javaClassStatic())) [[likely]] {
@@ -93,7 +98,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JListImageType>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -103,6 +108,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.browsable.has_value() ? jni::JBoolean::valueOf(value.browsable.value()) : nullptr,
         value.enabled,
         value.image.has_value() ? JVariant_GlyphImage_AssetImage_RemoteImage::fromCpp(value.image.value()) : nullptr,
+        value.imageType.has_value() ? JListImageType::fromCpp(value.imageType.value()) : nullptr,
         value.checked.has_value() ? jni::JBoolean::valueOf(value.checked.value()) : nullptr,
         value.onPress.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress.value()) : nullptr,
         value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr

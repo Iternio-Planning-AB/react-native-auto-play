@@ -16,10 +16,18 @@ import {
 
 const HybridListTemplate = NitroModules.createHybridObject<NitroListTemplate>('ListTemplate');
 
+/**
+ * Controls the Android image size for a list item.
+ * @namespace Android
+ */
+export type ListImageType = 'large' | 'medium' | 'small' | 'extra_small' | 'icon';
+
 type BaseRow = {
   title: AutoText;
   enabled?: boolean;
   image?: AutoImage;
+  /** @namespace Android */
+  imageType?: ListImageType;
 };
 
 export type DefaultRow<T> = BaseRow & {

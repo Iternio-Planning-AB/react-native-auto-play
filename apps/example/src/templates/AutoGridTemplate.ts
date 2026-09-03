@@ -87,6 +87,7 @@ const getButtons = (
 const getTemplate = (props?: { mapConfig?: GridTemplateConfig['mapConfig'] }): GridTemplate => {
   return new GridTemplate({
     title: { text: 'grid' },
+    imageSize: 'medium',
     mapConfig: props?.mapConfig,
     headerActions: AutoTemplate.headerActions,
     buttons: getButtons('green', 'red', 0),
