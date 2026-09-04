@@ -44,6 +44,7 @@
 #include "JFunc_void_ColorScheme.hpp"
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
+#include "JHybridMediaPlaybackTemplateSpec.hpp"
 #include "JHybridMessageTemplateSpec.hpp"
 #include "JHybridSearchTemplateSpec.hpp"
 #include "JHybridSignInTemplateSpec.hpp"
@@ -106,6 +107,14 @@ struct JHybridSignInTemplateSpecImpl: public jni::JavaClass<JHybridSignInTemplat
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridSignInTemplateSpecImpl::javaobject()>();
     jni::local_ref<JHybridSignInTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridSignInTemplateSpec();
+  }
+};
+struct JHybridMediaPlaybackTemplateSpecImpl: public jni::JavaClass<JHybridMediaPlaybackTemplateSpecImpl, JHybridMediaPlaybackTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridMediaPlaybackTemplate;";
+  static std::shared_ptr<JHybridMediaPlaybackTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridMediaPlaybackTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridMediaPlaybackTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridMediaPlaybackTemplateSpec();
   }
 };
 struct JHybridListTemplateSpecImpl: public jni::JavaClass<JHybridListTemplateSpecImpl, JHybridListTemplateSpec::JavaPart> {
@@ -199,6 +208,7 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ColorScheme_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AlertDismissalReason_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_std__string_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMediaPlaybackTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMessageTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::CxxPart::registerNatives();
@@ -241,6 +251,12 @@ void registerAllNatives() {
     "SignInTemplate",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridSignInTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "MediaPlaybackTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridMediaPlaybackTemplateSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(

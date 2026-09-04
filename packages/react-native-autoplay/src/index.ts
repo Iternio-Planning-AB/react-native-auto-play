@@ -43,6 +43,7 @@ export * from './templates/GridTemplate';
 export * from './templates/InformationTemplate';
 export * from './templates/ListTemplate';
 export * from './templates/MapTemplate';
+export * from './templates/MediaPlaybackTemplate';
 export * from './templates/MessageTemplate';
 export * from './templates/SearchTemplate';
 export * from './templates/SignInTemplate';

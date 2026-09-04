@@ -92,10 +92,12 @@ object Parser {
     const val TAG = "Parser"
 
     fun parseHeader(
-        context: CarContext, title: AutoText, headerActions: Array<NitroAction>?
+        context: CarContext, title: AutoText?, headerActions: Array<NitroAction>?
     ): Header {
         return Header.Builder().apply {
-            setTitle(parseText(title))
+            title?.let {
+                setTitle(parseText(it))
+            }
             headerActions?.forEach { action ->
                 when (action.alignment) {
                     NitroAlignment.LEADING -> {

@@ -1,6 +1,8 @@
 <!-- Non-navigation Android Automotive manifest; see AndroidManifest.xml for the navigation variant. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="androidx.car.app.MEDIA_TEMPLATES" />
+
     <uses-feature
         android:name="android.hardware.type.automotive"
         android:required="true" />
@@ -72,7 +74,7 @@
             android:resource="@xml/automotive_app_desc" />
         <meta-data
             android:name="androidx.car.app.minCarApiLevel"
-            android:value="1" />
+            android:value="${autoPlayMinCarApiLevel}" />
     </application>
 
 </manifest>

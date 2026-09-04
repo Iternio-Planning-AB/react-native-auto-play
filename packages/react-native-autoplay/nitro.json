@@ -53,6 +53,12 @@
         "language": "kotlin"
       }
     },
+    "MediaPlaybackTemplate": {
+      "android": {
+        "implementationClassName": "HybridMediaPlaybackTemplate",
+        "language": "kotlin"
+      }
+    },
     "ListTemplate": {
       "android": {
         "implementationClassName": "HybridListTemplate",

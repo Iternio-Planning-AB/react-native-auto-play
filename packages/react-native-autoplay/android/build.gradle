@@ -30,8 +30,9 @@ def getExtOrIntegerDefault(name) {
 
 // Non-navigation categories select the lean manifest (AndroidManifest-nonnav.xml).
 def androidAutoAppCategory = getExtOrDefault("androidAutoAppCategory").toString().trim().toLowerCase(java.util.Locale.ROOT)
-def validAndroidAutoCategories = ['navigation', 'poi', 'parking', 'charging', 'iot', 'messaging', 'calling', 'weather']
+def validAndroidAutoCategories = ['navigation', 'poi', 'parking', 'charging', 'iot', 'messaging', 'calling', 'weather', 'media']
 def isNavigationApp = androidAutoAppCategory == "navigation"
+def isMediaApp = androidAutoAppCategory == "media"
 
 android {
   namespace "com.margelo.nitro.swe.iternio.reactnativeautoplay"
@@ -65,6 +66,7 @@ android {
     }
 
     manifestPlaceholders.autoPlayAppCategory = "androidx.car.app.category." + androidAutoAppCategory.toUpperCase(java.util.Locale.ROOT)
+    manifestPlaceholders.autoPlayMinCarApiLevel = isMediaApp ? "8" : "1"
 
     buildConfigField "boolean", "IS_NAVIGATION_APP", isNavigationApp.toString()
     buildConfigField "float", "SCALE_FACTOR", getExtOrDefault("androidAutoScaleFactor")
@@ -157,6 +159,7 @@ dependencies {
   implementation project(":react-native-nitro-modules")
 
   implementation "androidx.car.app:app:1.7.0"
+  implementation "androidx.media:media:1.7.0"
   if (getExtOrDefault("isAutomotiveApp") == "true") {
     println("🚗 Enjoy your nitro powered Android Automotive app!")
     implementation "androidx.car.app:app-automotive:1.7.0"
@@ -168,4 +171,3 @@ dependencies {
   implementation 'com.google.android.gms:play-services-base:18.10.0'
   implementation 'com.google.android.gms:play-services-auth:21.5.1'
 }
-

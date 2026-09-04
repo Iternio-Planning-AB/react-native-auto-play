@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --mode autoDebug",
     "ios": "react-native run-ios --device",
     "lint": "biome check src",
     "lint-ci": "biome ci src --reporter=summary",
