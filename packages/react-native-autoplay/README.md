@@ -22,6 +22,10 @@
 -   **Headless Operation:** Runs in the background to keep the automotive experience alive even when the main app is not in the foreground.
 -   **Powered by [NitroModules](https://nitro.margelo.com/)**
 
+## Requirements
+
+-   **iOS builds require Xcode 27+** (the iOS 27 SDK), even for apps that don't use any `mapConfig`/panel features — the library references `CPMapPanel`/`CPPanel` types internally behind `@available(iOS 27.0, *)` checks, but `@available` only defers *runtime* execution, not compile-time symbol resolution, so the SDK must be present to build at all.
+
 ## Installation
 
 1.  **Install the package and its peer dependencies:**
@@ -605,6 +609,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `title` | `AutoText` | ✅ | Header title. |
 | `buttons` | `GridButton<GridTemplate>[]` | ✅ | Grid items. Providing an empty array will result in a loading indicator on Android and an empty template on iOS. |
 | `headerActions` | `HeaderActions<GridTemplate>` | ❌ | Header actions. See **Header Actions** below. |
+| `imageSize` | `'unset'` `'large'` `'medium'` `'small'` | ❌ | **Android only**, requires Android Car API 8. Controls grid item image size; defaults to `unset` (platform default layout). Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate` doesn't support the sized grid content type. |
 | `mapConfig` | `BaseMapTemplateConfig<GridTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
 
 #### SearchTemplateConfig
