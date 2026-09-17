@@ -97,6 +97,17 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             )
         }
 
+        // CarPlay rejects pushPanel outright while a navigation alert is showing
+        // (CPMapTemplatePanelErrorDomain code 4) — dismiss it first, same as showAlert already
+        // does when replacing one alert with another.
+        if mapTemplate.currentNavigationAlert != nil {
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                mapTemplate.dismissNavigationAlert(animated: true) { _ in
+                    continuation.resume()
+                }
+            }
+        }
+
         try await withCheckedThrowingContinuation {
             (continuation: CheckedContinuation<Void, Error>) in
             mapTemplate.pushPanel(panel) { _, error in
