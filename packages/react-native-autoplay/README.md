@@ -637,7 +637,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `title` | `AutoText` | ❌ | Android header title. |
 | `image` | `AutoImage` | ❌ | Android-only image above the message. |
 | `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. **iOS 27+ with `mapConfig` set**: at most 1 `TextButton` plus 1 icon-only `ImageButton`, enforced at the type level. |
-| `headerActions` | `HeaderActionsAndroid<MessageTemplate>` | ❌ | Android-only header actions. |
+| `headerActions` | `HeaderActions<MessageTemplate>` | ❌ | Header actions. See **Header Actions** below. **iOS**: `ios` only takes effect once this renders as a `CPMapPanel` (`mapConfig` set, iOS 27+) — without `mapConfig` (or below iOS 27) this is a full-screen `CPAlertTemplate` with no nav bar, so `ios` is silently unused. |
 | `mapConfig` | `BaseMapTemplateConfig<MessageTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead, trading the usual full-screen modal alert for panel content. See **Map + Content** below. |
 
 #### SignInTemplateConfig (Android-only)
@@ -910,10 +910,14 @@ new ListTemplate({
 // Root map template must already be set for the panel to have somewhere to attach to
 new MapTemplate({ component: MapScreen, onStopNavigation: () => {} }).setRootTemplate();
 
-// Pushing this on top now shows it as an overlay panel on the map, instead of a full-screen list
+// Pushing this on top now shows it as an overlay panel on the map, instead of a full-screen list.
+// headerActions.ios.backButton is required here — as the first (and only) panel in the stack it
+// gets no native close/back control (see "Things that behave differently in panel mode" below),
+// so without it the driver has no way to leave the panel.
 new ListTemplate({
   title: { text: 'Nearby' },
   sections: [{ type: 'default', title: 'Stops', items: [{ type: 'default', title: { text: 'Charger' }, onPress: () => {} }] }],
+  headerActions: { ios: { backButton: { type: 'back', onPress: () => HybridAutoPlay.popTemplate() } } },
   mapConfig: {},
 }).push();
 ```
@@ -923,7 +927,7 @@ new ListTemplate({
 **Things that behave differently in panel mode:**
 
 -   **`headerActions`/`mapButtons` ownership**: while a panel is shown, it takes over the root map template's bar buttons and floating map buttons — using the panel template's **own** `headerActions`/`mapConfig.mapButtons`, not `mapConfig.headerActions` (which is Android-only; on iOS it's ignored, since there's no separate header for the map behind a panel). The map template's own buttons are restored automatically once the panel is popped.
--   **`backButton` is applied but likely redundant**: the panel itself always shows its own non-customizable close/back control, separate from anything you set. If you also specify `headerActions.ios.backButton`, this library applies it as-is to the root map template's nav bar, so you can end up with two back-like controls on screen at once (the panel's own, plus yours). Whether to include `backButton` is therefore a runtime decision: check the OS version (e.g. `Constants.isIos27OrGreater`) and omit `backButton` only when the device will actually render this as a panel.
+-   **The first panel must provide its own way to be closed**: CarPlay's native close button (✕) is always disabled on every panel — this library turns it off globally, and this is required for correct lifecycle tracking, not a style choice. Tapping ✕ on the topmost panel doesn't just pop that one panel — it discards the *entire* panel stack down to the map, covered panels included — but `CPMapPanelDelegate.panelDidHide` only ever fires once, for the topmost panel. This library would have no callback at all for the covered panels CarPlay silently destroyed underneath it: they'd stay tracked forever, `onPopped` would never fire for them, and their listeners/native templates would leak. The back chevron doesn't have this problem — it only ever pops one level, always the topmost panel — so it's left enabled: once a second panel is pushed, CarPlay shows it automatically to return to the first, and it isn't customizable. The first panel in the stack gets no such control, though, so it needs its own way out: `headerActions.ios.backButton` (supported by all four panel-capable templates, including `MessageTemplate` once `mapConfig` is set) or something inside the panel's own content (a list item, or `MessageTemplate`'s required `actions.ios[0]` `TextButton`) that calls `popTemplate()`/`popToRootTemplate()`. Without one, the driver has no way to leave that first panel short of `autoDismissMs`.
 -   **`InformationTemplate`/`MessageTemplate` `actions`**: a `CPMapPanel`'s button configuration only supports one `TextButton` (with a title) plus one optional icon-only `ImageButton` (any title on it is dropped natively) — far fewer than the up-to-3-`TextButton` shape available without `mapConfig`. The type system enforces this: `actions.ios` is restricted to `[TextButton]` or `[TextButton, ImageButton]` whenever `mapConfig` is set.
 -   **`MessageTemplate` stops being a true modal**: normally `MessageTemplate` is a full-screen, blocking alert (`CPAlertTemplate`) that covers everything regardless of OS version. With `mapConfig` set, it instead becomes dismissible panel content in the regular push/pop stack — a deliberate trade-off, not a partial implementation.
 
@@ -1009,7 +1013,7 @@ A section is one of:
 
 **Known iOS 27 beta issues affecting waypoint/options-panel content** (not fixable in this library — re-test against newer betas; each was confirmed by direct testing, several already have Apple Feedback reports filed):
 
--   **Custom (non-system) images are unreliable across several of these newer panel APIs.** A `CPMapButton`/header-action image needed a workaround (`noImageAsset: true` — the normal `UIImageAsset`-wrapped light/dark variant path scales incorrectly there) that's already applied internally, so map buttons/header actions are unaffected. A `waypoint` row's/`ChargerLocation`'s `image`, however, has no known-good size — everything from explicit point sizes to real custom `UIImage.isSymbolImage` assets was tried without a reliable, correctly-sized result; only genuine **system** symbols (`UIImage(systemName:)`) size correctly there. Expect `image` on a waypoint/charger row to render, but not necessarily at a sensible size.
+-   **Custom (non-system) images are unreliable across several of these newer panel APIs.** A `waypoint` row's/`ChargerLocation`'s glyph `image` overflows at `CPNavigationAlert.maximumAvatarImageSize` on iOS 27 — worked around by dividing the requested size by `traitCollection.displayScale`, which fixes the overflow but introduces some blur (a real tradeoff, not a full fix). Non-glyph custom images have no known-good size at all — everything from explicit point sizes to real custom `UIImage.isSymbolImage` assets was tried without a reliable, correctly-sized result; only genuine **system** symbols (`UIImage(systemName:)`) size correctly there. Expect `image` on a waypoint/charger row to render, but not necessarily at a sensible or crisp size.
 -   **`CPListItem.accessoryImage` (used for `toggle` rows) renders at some fixed, undersized footprint on iOS 27, regardless of the image's content, size, scale, or whether it's a real symbol image** — confirmed via extensive testing (content proportions, render scale, post-hoc scale metadata, genuine `UIImage.isSymbolImage` assets from both the app's own bundle and a library-owned resource bundle). Reproduces on a plain (non-panel) `ListTemplate` too, so it isn't specific to panels or to this library's usage of the API. No workaround found; filed as Apple Feedback.
 
 ### Voice Input

@@ -460,7 +460,24 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               image: { name: 'message', type: 'glyph' },
               onPress: () => {
                 AutoMessageTemplate.getTemplate({
-                  mapConfig: {},
+                  mapConfig: {
+                    headerActions: {
+                      android: [
+                        {
+                          type: 'text',
+                          title: 'button #1',
+                          onPress: () => console.log('button #1 pressed'),
+                        },
+                      ],
+                    },
+                    mapButtons: [
+                      {
+                        type: 'custom',
+                        image: { type: 'glyph', name: '10k' },
+                        onPress: () => console.log('10k'),
+                      },
+                    ],
+                  },
                   message: { text: 'message' },
                 }).push();
               },

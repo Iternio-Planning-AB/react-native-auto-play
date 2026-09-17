@@ -38,6 +38,17 @@ import {
 
 const HybridMapTemplate = NitroModules.createHybridObject<NitroMapTemplate>('MapTemplate');
 
+export type {
+  ChargerLocation,
+  ChargerOutlet,
+  ChargingConnector,
+  OptionsPanelChargerSection,
+  OptionsPanelConfig,
+  OptionsPanelGridSection,
+  OptionsPanelListSection,
+  OptionsPanelSection,
+} from '../utils/NitroOptionsPanel';
+
 export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
 

@@ -20,11 +20,11 @@ const getTemplate = ({
     color: DefaultTemplateImageColor,
   };
 
-  const commonConfig = {
+  const commonConfig: MessageTemplateConfig = {
     title: { text: 'header title' },
     message,
     image,
-    headerActions: AutoTemplate.headerActions.android,
+    headerActions: AutoTemplate.headerActions,
     onWillAppear: () => console.log('MessageTemplate onWillAppear'),
     onDidAppear: () => console.log('MessageTemplate onDidAppear'),
     onWillDisappear: () => console.log('MessageTemplate onWillDisappear'),

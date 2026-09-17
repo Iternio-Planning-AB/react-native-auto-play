@@ -5,7 +5,7 @@ import type {
   AutoImage,
   BaseMapTemplateConfig,
   CustomActionButtonAndroid,
-  HeaderActionsAndroid,
+  HeaderActions,
   TextButton,
 } from '..';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
@@ -43,9 +43,12 @@ type MessageTemplateBaseConfig = Omit<
 > & {
   /**
    * action buttons, usually at the top right on Android
-   * @namespace Android
+   * @namespace iOS `ios` only takes effect once this renders as a CPMapPanel (`mapConfig` set,
+   * iOS 27+) and is applied to the root map template's nav bar — without `mapConfig` (or below
+   * iOS 27, where `mapConfig` is a no-op) this template is a full-screen `CPAlertTemplate`, which
+   * has no nav bar at all, so `ios` is silently unused there.
    */
-  headerActions?: HeaderActionsAndroid<MessageTemplate>;
+  headerActions?: HeaderActions<MessageTemplate>;
   /**
    * image shown at the top of the message on Android
    * @namespace Android
@@ -53,6 +56,14 @@ type MessageTemplateBaseConfig = Omit<
   image?: AutoImage;
 };
 
+/**
+ * `actions`/`mapConfig` are a discriminated union — `mapConfig` restricts `actions.ios` to at
+ * most one `TextButton` plus one icon-only `ImageButton` (a `CPMapPanel` can't show more), vs. up
+ * to three `TextButton`s otherwise. If your `mapConfig` value comes from a variable/prop rather
+ * than an inline literal, TS can't narrow which branch applies — assign it to a local `const` and
+ * branch with `if (mapConfig) { ... } else { ... }` into two separate constructor calls instead
+ * of passing it straight through to one.
+ */
 export type MessageTemplateConfig = MessageTemplateBaseConfig &
   (
     | {
@@ -122,7 +133,7 @@ export class MessageTemplate {
     const nitroConfig: NitroMessageTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
-      headerActions: NitroActionUtil.convert(this.template, { android: headerActions }),
+      headerActions: NitroActionUtil.convert(this.template, headerActions),
       image: NitroImageUtil.convert(image),
       actions: platformActions,
       mapConfig: mapConfig

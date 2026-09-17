@@ -105,10 +105,12 @@ class InformationTemplate: AutoPlayHeaderProviding {
                 mapPanelDelegate = delegate
                 panel.delegate = delegate
 
+                reapplyPanelBarIfVisible(self, templateId: config.id)
                 return
             }
 
             mapPanel.sections.first?.items = Parser.parseInformationPanelItems(section: section)
+            reapplyPanelBarIfVisible(self, templateId: config.id)
             return
         }
 

@@ -85,6 +85,7 @@ class GridTemplate: AutoPlayHeaderProviding {
         if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
             let parsedButtons = GridTemplate.parseButtons(buttons: buttons)
             mapPanel.sections.first?.items = [CPMapPanelItem(gridButtons: parsedButtons)]
+            reapplyPanelBarIfVisible(self, templateId: config.id)
             return
         }
 

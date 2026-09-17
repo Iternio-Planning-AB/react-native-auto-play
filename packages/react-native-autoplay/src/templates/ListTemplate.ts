@@ -29,6 +29,8 @@ export type {
   SingleSection,
   TextRow,
   ToggleRow,
+  WaypointCoordinate,
+  WaypointRow,
 } from '../utils/NitroSection';
 
 export interface NitroListTemplateConfig extends TemplateConfig {

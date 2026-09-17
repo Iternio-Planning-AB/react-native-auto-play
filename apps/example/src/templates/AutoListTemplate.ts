@@ -8,8 +8,8 @@ import {
   TextPlaceholders,
   type TextRow,
   type ToggleRow,
+  type WaypointRow,
 } from '@iternio/react-native-auto-play';
-import type { WaypointRow } from '@iternio/react-native-auto-play/lib/utils/NitroSection';
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoTemplate } from './AutoTemplate';

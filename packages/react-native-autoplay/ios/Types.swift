@@ -22,4 +22,5 @@ enum AutoPlayError: LocalizedError {
     case voiceInputCancelled
     case rootTemplateNotMapTemplate(String)
     case templateIsMapPanel(String)
+    case mapTemplateNotVisible(String)
 }

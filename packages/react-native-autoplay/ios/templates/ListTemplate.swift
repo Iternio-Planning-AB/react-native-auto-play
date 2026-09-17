@@ -93,6 +93,7 @@ class ListTemplate: AutoPlayHeaderProviding {
                 traitCollection: traitCollection
             )
 
+            reapplyPanelBarIfVisible(self, templateId: config.id)
             return
         }
 

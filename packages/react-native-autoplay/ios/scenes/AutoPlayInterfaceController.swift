@@ -82,6 +82,21 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             )
         }
 
+        // A regular pushed template covers the map (and everything on it, panels included) on
+        // screen, but pushPanel only operates on the map's own, separate panel stack — pushing
+        // onto it here would silently attach to a hidden surface with no visible effect and no
+        // lifecycle callbacks, so this must be rejected rather than desyncing navigationStack.
+        guard
+            !navigationStack.contains(where: {
+                if case .template(let id) = $0 { return id != rootTemplate.id }
+                return false
+            })
+        else {
+            throw AutoPlayError.mapTemplateNotVisible(
+                "\(templateId) has mapConfig set, but the map template is currently covered by another pushed template"
+            )
+        }
+
         try await withCheckedThrowingContinuation {
             (continuation: CheckedContinuation<Void, Error>) in
             mapTemplate.pushPanel(panel) { _, error in
@@ -105,7 +120,32 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             animated: animated
         )
 
+        let previousEntries = navigationStack
         navigationStack = [.template(id: rootTemplate.id)]
+
+        // No CarPlay callback tears down a panel when its root is replaced, unlike templateDidDisappear for regular templates.
+        if #available(iOS 27.0, *) {
+            let panelIds = previousEntries.compactMap { entry -> String? in
+                if case .panel(let id, _) = entry { return id }
+                return nil
+            }
+
+            if !panelIds.isEmpty {
+                // Only the topmost entry could still be visible; others already got their disappear pair when covered.
+                if let last = previousEntries.last, case .panel(let visiblePanelId, _) = last {
+                    try? RootModule.withAutoPlayTemplate(templateId: visiblePanelId) {
+                        (template: AutoPlayTemplate) in
+                        template.onWillDisappear(animated: animated)
+                        template.onDidDisappear(animated: animated)
+                    }
+                }
+
+                try RootModule.withTemplateStore { templateStore in
+                    templateStore.removeTemplates(templateIds: panelIds)
+                }
+                panelIds.forEach { HybridAutoPlay.removeListeners(templateId: $0) }
+            }
+        }
 
         return result
     }

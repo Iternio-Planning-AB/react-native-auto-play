@@ -53,6 +53,14 @@ type InformationTemplateBaseConfig = Omit<
   items?: InformationItems;
 };
 
+/**
+ * `actions`/`mapConfig` are a discriminated union — `mapConfig` restricts `actions.ios` to at
+ * most one `TextButton` plus one icon-only `ImageButton` (a `CPMapPanel` can't show more), vs. up
+ * to three `TextButton`s otherwise. If your `mapConfig` value comes from a variable/prop rather
+ * than an inline literal, TS can't narrow which branch applies — assign it to a local `const` and
+ * branch with `if (mapConfig) { ... } else { ... }` into two separate constructor calls instead
+ * of passing it straight through to one.
+ */
 export type InformationTemplateConfig = InformationTemplateBaseConfig &
   (
     | {

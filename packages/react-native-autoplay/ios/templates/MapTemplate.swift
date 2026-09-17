@@ -852,7 +852,9 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         let sections = Parser.parseOptionsPanelSections(
             sections: optionsPanel.sections,
-            updateSection: updateOptionsPanelSection(section:sectionIndex:),
+            updateSection: { [weak self] section, sectionIndex in
+                self?.updateOptionsPanelSection(section: section, sectionIndex: sectionIndex)
+            },
             traitCollection: traitCollection
         )
 

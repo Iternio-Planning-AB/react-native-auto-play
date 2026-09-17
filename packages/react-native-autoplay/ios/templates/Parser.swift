@@ -26,9 +26,13 @@ class Parser {
         var actions: [CPAlertAction] = []
 
         if let alertActions = alertActions {
+            // Image-only actions (from the panel-only PanelActionsIos shape) have no title and
+            // can't be represented as a CPAlertAction below iOS 27 where panels aren't used.
             alertActions.forEach { alertAction in
+                guard let title = alertAction.title else { return }
+
                 let action = CPAlertAction(
-                    title: alertAction.title!,
+                    title: title,
                     style: parseActionAlertStyle(style: alertAction.style),
                     handler: { actionHandler in
                         alertAction.onPress()
@@ -65,8 +69,6 @@ class Parser {
                 if let glypImage = action.image?.glyphImage {
                     image = SymbolFont.imageFromNitroImage(
                         image: glypImage,
-                        // this icon is not scaled properly when used as image asset, so we use the plain image, as CP does the correct coloring anyways
-                        noImageAsset: true,
                         traitCollection: traitCollection
                     )!
                 }
@@ -221,16 +223,18 @@ class Parser {
     {
         guard let actions else { return [] }
 
-        return actions.map { action in
-            let button = CPTextButton(
-                title: action.title!,
+        // Image-only actions (from the panel-only PanelActionsIos shape) have no title and
+        // can't be represented as a CPTextButton below iOS 27 where panels aren't used.
+        return actions.compactMap { action in
+            guard let title = action.title else { return nil }
+
+            return CPTextButton(
+                title: title,
                 textStyle: parseTextButtonStyle(style: action.style),
                 handler: { void in
                     action.onPress()
                 }
             )
-
-            return button
         }
     }
 
@@ -748,8 +752,6 @@ class Parser {
             if let glyphImage = button.image.glyphImage,
                 let icon = SymbolFont.imageFromNitroImage(
                     image: glyphImage,
-                    size: CPButtonMaximumImageSize.height,
-                    noImageAsset: true,
                     traitCollection: traitCollection
                 )
             {

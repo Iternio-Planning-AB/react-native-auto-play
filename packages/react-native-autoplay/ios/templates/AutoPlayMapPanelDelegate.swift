@@ -143,6 +143,25 @@ func handlePanelPopped(templateId: String, animated: Bool) async {
     }
 }
 
+/// Re-applies `templateId`'s header/map buttons to the root map template's nav bar, but only if
+/// it's currently the topmost (visible) panel. `_invalidate()` (e.g. from `setHeaderActions()`)
+/// runs for covered panels too, and only the topmost panel owns the nav bar — applying
+/// unconditionally would clobber whichever panel is actually on top. A covered panel's own
+/// buttons get reapplied later, when it's revealed again (see `handlePanelPopped`).
+@available(iOS 27.0, *)
+@MainActor
+func reapplyPanelBarIfVisible(_ template: AutoPlayTemplate, templateId: String) {
+    guard
+        let scene = SceneStore.getRootScene(),
+        let interfaceController = scene.interfaceController,
+        interfaceController.panelTemplateIds.last == templateId,
+        let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
+    else { return }
+
+    applyPanelHeaderActions(template.getPanelHeaderActions(), to: mapTemplate)
+    applyPanelMapButtons(template.getPanelMapButtons(), to: mapTemplate)
+}
+
 /// apply header buttons according to mapConfig.headerActions or remove the map provided buttons in case none are specified for the panel
 @available(iOS 27.0, *)
 @MainActor

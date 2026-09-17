@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { GridTemplate as NitroGridTemplate } from '../specs/GridTemplate.nitro';
 import type { AutoText } from '../types/Text';
@@ -43,7 +44,8 @@ export type GridTemplateConfig = Omit<
   /**
    * Controls the size of all images in the Android grid. Defaults to `unset`, which preserves
    * the platform's standard grid layout. `large`, `medium`, and `small` require Android Car API
-   * 8.
+   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate`
+   * does not support the sized grid content type.
    * @namespace Android
    */
   imageSize?: GridImageSize;
@@ -68,6 +70,18 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
     super(config);
 
     const { headerActions, buttons, mapConfig, ...rest } = config;
+
+    if (
+      __DEV__ &&
+      Platform.OS === 'android' &&
+      mapConfig != null &&
+      rest.imageSize != null &&
+      rest.imageSize !== 'unset'
+    ) {
+      console.warn(
+        'GridTemplate: imageSize is ignored on Android when mapConfig is set — MapWithContentTemplate does not support the sized grid content type'
+      );
+    }
 
     const nitroConfig: NitroGridTemplateConfig & NitroTemplateConfig = {
       ...rest,
