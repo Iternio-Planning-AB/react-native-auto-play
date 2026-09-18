@@ -102,6 +102,30 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
 // Forward declaration of `ManeuverState` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
+// Forward declaration of `NitroOptionsPanelConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
+// Forward declaration of `NitroSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
+// Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroOptionsPanelChargerSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
+// Forward declaration of `NitroRow` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
+// Forward declaration of `ListImageType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
+// Forward declaration of `NitroSectionType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
+// Forward declaration of `NitroGridButton` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroChargerOutlet` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
+// Forward declaration of `ChargingConnector` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 
 #include "MapTemplateConfig.hpp"
 #include <string>
@@ -154,6 +178,18 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 #include "ManeuverType.hpp"
 #include "TripConfig.hpp"
 #include "ManeuverState.hpp"
+#include "NitroOptionsPanelConfig.hpp"
+#include "NitroSection.hpp"
+#include "NitroOptionsPanelGridSection.hpp"
+#include "NitroOptionsPanelChargerSection.hpp"
+#include "NitroRow.hpp"
+#include "ListImageType.hpp"
+#include "WaypointCoordinate.hpp"
+#include "NitroSectionType.hpp"
+#include "NitroGridButton.hpp"
+#include "NitroChargerOutlet.hpp"
+#include "ChargingConnector.hpp"
+#include "NitroChargerLocation.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 
@@ -269,11 +305,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void startNavigation(const std::string& templateId, const TripConfig& trip) override {
+    inline std::shared_ptr<Promise<void>> startNavigation(const std::string& templateId, const TripConfig& trip) override {
       auto __result = _swiftPart.startNavigation(templateId, std::forward<decltype(trip)>(trip));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void stopNavigation(const std::string& templateId) override {
       auto __result = _swiftPart.stopNavigation(templateId);
@@ -286,6 +324,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+    }
+    inline std::shared_ptr<Promise<void>> updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) override {
+      auto __result = _swiftPart.updateOptionsPanel(templateId, config);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:

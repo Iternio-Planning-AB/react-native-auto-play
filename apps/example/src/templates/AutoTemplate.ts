@@ -2,6 +2,7 @@ import {
   type Alert,
   type BackButton,
   CarPlayDashboard,
+  Constants,
   ErrorUtil,
   type HeaderActions,
   HybridAutoPlay,
@@ -284,7 +285,22 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
         name: 'list',
         type: 'glyph',
       },
-      onPress: () => AutoListTemplate.getTemplate().push(),
+      onPress: () =>
+        AutoListTemplate.getTemplate({
+          mapConfig: {
+            headerActions: {
+              android: [
+                {
+                  type: 'image',
+                  image: { type: 'glyph', name: 'list' },
+                  onPress: () => {
+                    AutoListTemplate.getTemplate({ mapConfig: {} }).push();
+                  },
+                },
+              ],
+            },
+          },
+        }).push(),
     },
     {
       type: 'image',
@@ -312,7 +328,14 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
           name: 'list',
           type: 'glyph',
         },
-        onPress: () => AutoListTemplate.getTemplate().push(),
+        onPress: () =>
+          AutoListTemplate.getTemplate({
+            mapConfig: {
+              mapButtons: [
+                { type: 'custom', image: { type: 'glyph', name: 'bolt' }, onPress: () => {} },
+              ],
+            },
+          }).push(),
       },
     ],
     trailingNavigationBarButtons: [
@@ -377,14 +400,20 @@ const AutoAlert = (remaining: number): Alert => ({
   priority: 'medium',
 });
 
+const mapButtonConfig = {
+  backgroundColor: Constants.isIos27OrGreater
+    ? undefined
+    : { darkColor: 'rgba(0, 0, 0, 0.5)', lightColor: 'rgba(255, 255, 255, 0.7)' },
+  color: { darkColor: 'white', lightColor: 'black' },
+  type: 'glyph' as const,
+};
+
 const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'ev_charger',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: (template) => {
       var remaining = 10000;
@@ -412,10 +441,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'map',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: () => {
       AutoGridTemplate.getTemplate({
@@ -433,7 +460,24 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               image: { name: 'message', type: 'glyph' },
               onPress: () => {
                 AutoMessageTemplate.getTemplate({
-                  mapConfig: {},
+                  mapConfig: {
+                    headerActions: {
+                      android: [
+                        {
+                          type: 'text',
+                          title: 'button #1',
+                          onPress: () => console.log('button #1 pressed'),
+                        },
+                      ],
+                    },
+                    mapButtons: [
+                      {
+                        type: 'custom',
+                        image: { type: 'glyph', name: '10k' },
+                        onPress: () => console.log('10k'),
+                      },
+                    ],
+                  },
                   message: { text: 'message' },
                 }).push();
               },
@@ -452,7 +496,6 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
             },
           ],
           headerActions: {
-            // ios does not support map with template, so no need to specify headers for ios here
             android: [
               {
                 type: 'image',
@@ -483,10 +526,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'custom',
     image: {
+      ...mapButtonConfig,
       name: 'search',
-      color: { darkColor: 'rgba(255, 0, 0, 1)', lightColor: 'rgba(0, 255, 0, 1)' },
-      backgroundColor: 'rgba(66, 66, 66, 0.5)',
-      type: 'glyph',
     },
     onPress: () => {
       let timeout: number;
@@ -496,31 +537,39 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
           // simple debouncing to not send too many requests to backend
           clearTimeout(timeout);
           timeout = setTimeout(() => {
-            template.updateSearchResults(
-              searchText
-                ? {
-                    items: [
-                      {
-                        title: { text: searchText },
-                        detailedText: { text: 'onSearchTextChanged' },
-                        type: 'default',
-                        onPress: () => {
-                          console.log('*** onPress', searchText);
-                          HybridAutoPlay.popToRootTemplate(true).catch((error) => {
-                            console.error('*** error', error);
-                          });
+            template
+              .updateSearchResults(
+                searchText
+                  ? {
+                      items: [
+                        {
+                          title: { text: searchText },
+                          detailedText: { text: 'onSearchTextChanged' },
+                          type: 'default',
+                          onPress: () => {
+                            console.log('*** onPress', searchText);
+                            HybridAutoPlay.popToRootTemplate(true).catch((error) => {
+                              console.error('*** error', error);
+                            });
+                          },
+                          image: {
+                            name: 'ev_charger',
+                            color: { lightColor: 'red', darkColor: 'orange' },
+                            type: 'glyph',
+                          },
                         },
-                        image: {
-                          name: 'ev_charger',
-                          color: { lightColor: 'red', darkColor: 'orange' },
-                          type: 'glyph',
-                        },
-                      },
-                    ],
-                    type: 'default',
-                  }
-                : undefined
-            );
+                      ],
+                      type: 'default',
+                    }
+                  : undefined
+              )
+              .catch((e) => {
+                if (ErrorUtil.isTemplateNotFoundError(e)) {
+                  // template not found errors can be ignored since it might be popped by the user before the updateSearchResults is invoked
+                  return;
+                }
+                console.error(e);
+              });
           }, 1000);
         },
         onSearchTextSubmitted: (searchText) => {
@@ -557,7 +606,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
     type: 'pan',
     image: {
-      type: 'glyph',
+      ...mapButtonConfig,
       name: 'open_with',
     },
   },

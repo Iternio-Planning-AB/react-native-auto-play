@@ -65,7 +65,8 @@ class SymbolFont {
         foregroundColor: UIColor,
         backgroundColor: UIColor,
         size: CGFloat,
-        fontScale: CGFloat
+        fontScale: CGFloat,
+        displayScale: CGFloat
     ) -> UIImage? {
         guard let font = uiFont(for: glyphImage, size: size, fontScale: fontScale) else {
             return nil
@@ -89,7 +90,7 @@ class SymbolFont {
         )
 
         // Start drawing
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, 0)
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, displayScale)
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil
         }
@@ -128,7 +129,8 @@ class SymbolFont {
                     value: backgroundColor.lightColor
                 ),
                 size: size,
-                fontScale: fontScale
+                fontScale: fontScale,
+                displayScale: traitCollection.displayScale
             ),
             let darkImage = imageFromGlyph(
                 glyphImage: glyphImage,
@@ -139,7 +141,8 @@ class SymbolFont {
                     value: backgroundColor.darkColor
                 ),
                 size: size,
-                fontScale: fontScale
+                fontScale: fontScale,
+                displayScale: traitCollection.displayScale
             )
         else {
             return nil
@@ -148,15 +151,19 @@ class SymbolFont {
         // Create a UIImageAsset that contains both light and dark variants
         let imageAsset = UIImageAsset()
 
+        let displayScaleTrait = UITraitCollection(displayScale: traitCollection.displayScale)
+
         // Register the light image for light trait collection
         let lightTraits = UITraitCollection(traitsFrom: [
-            UITraitCollection(userInterfaceStyle: .light)
+            UITraitCollection(userInterfaceStyle: .light),
+            displayScaleTrait,
         ])
         imageAsset.register(lightImage, with: lightTraits)
 
         // Register the dark image for dark trait collection
         let darkTraits = UITraitCollection(traitsFrom: [
-            UITraitCollection(userInterfaceStyle: .dark)
+            UITraitCollection(userInterfaceStyle: .dark),
+            displayScaleTrait,
         ])
         imageAsset.register(darkImage, with: darkTraits)
 
@@ -167,33 +174,11 @@ class SymbolFont {
     static func imageFromNitroImage(
         image: GlyphImage?,
         size: CGFloat = 32,
-        noImageAsset: Bool = false,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         guard let image else { return nil }
 
         let fontScale = image.fontScale ?? 1.0
-
-        if noImageAsset {
-            let foregroundColor = Parser.doubleToColor(
-                value: traitCollection.userInterfaceStyle == .light
-                    ? image.color.lightColor : image.color.darkColor
-            )
-
-            let backgroundColor = Parser.doubleToColor(
-                value: traitCollection.userInterfaceStyle == .light
-                    ? image.backgroundColor.lightColor
-                    : image.backgroundColor.darkColor
-            )
-
-            return SymbolFont.imageFromGlyph(
-                glyphImage: image,
-                foregroundColor: foregroundColor,
-                backgroundColor: backgroundColor,
-                size: size,
-                fontScale: fontScale
-            )
-        }
 
         return SymbolFont.imageFromGlyph(
             glyphImage: image,

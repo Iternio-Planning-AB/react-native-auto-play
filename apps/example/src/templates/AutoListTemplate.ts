@@ -1,20 +1,25 @@
 import {
+  Constants,
   type DefaultRow,
+  HybridAutoPlay,
   ListTemplate,
   type ListTemplateConfig,
   type Section,
   TextPlaceholders,
   type TextRow,
   type ToggleRow,
+  type WaypointRow,
 } from '@iternio/react-native-auto-play';
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
+import { AutoMessageTemplate } from './AutoMessageTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
-  return new ListTemplate({
+  const template = new ListTemplate({
     title: { text: 'radios' },
     headerActions: AutoTemplate.headerActions,
+    mapConfig: {},
     sections: {
       type: 'radio',
       items: [
@@ -40,16 +45,46 @@ const getRadioTemplate = (): ListTemplate => {
             console.log('*** radio #3');
           },
         },
+        {
+          type: 'radio',
+          onPress: () => {
+            HybridAutoPlay.popTemplate();
+          },
+          title: { text: 'pop template' },
+        },
+        {
+          type: 'radio',
+          onPress: () => {
+            HybridAutoPlay.popToRootTemplate();
+          },
+          title: { text: 'pop to root' },
+        },
       ],
     },
-    onPopped: () => console.log('RadioTemplate onPopped'),
+    onPopped: () => console.log('RadioTemplate onPopped', template.id),
+    onDidAppear: () => {
+      console.log('RadioTemplate onDidAppear', template.id);
+    },
+    onDidDisappear: () => {
+      console.log('RadioTemplate onDidDisappear', template.id);
+    },
+    onWillAppear: () => {
+      console.log('RadioTemplate onWillAppear', template.id);
+    },
+    onWillDisappear: () => {
+      console.log('RadioTemplate onWillDisappear', template.id);
+    },
   });
+
+  return template;
 };
 
 const checked: [boolean, boolean] = [true, false];
 
 const getMainSection = (): Section<ListTemplate> => {
-  const items: Array<DefaultRow<ListTemplate> | ToggleRow<ListTemplate> | TextRow> = [
+  const items: Array<
+    DefaultRow<ListTemplate> | ToggleRow<ListTemplate> | TextRow | WaypointRow<ListTemplate>
+  > = [
     {
       type: 'toggle',
       title: { text: 'toggle radio list' },
@@ -99,6 +134,53 @@ const getMainSection = (): Section<ListTemplate> => {
       },
       browsable: true,
     },
+    {
+      type: 'default',
+      onPress: () => {
+        HybridAutoPlay.popTemplate();
+      },
+      title: { text: 'pop template' },
+      image: { type: 'glyph', name: 'arrow_back' },
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        HybridAutoPlay.popToRootTemplate();
+      },
+      title: { text: 'pop to root' },
+      image: { type: 'glyph', name: 'map' },
+    },
+    {
+      type: 'waypoint',
+      coordinate: {
+        latitude: 0,
+        longitude: 0,
+      },
+      travelEstimates: {
+        distance: { unit: 'kilometers', value: 12 },
+        duration: { timezone: 'Europe/Vienna', seconds: 600 },
+        visible: true,
+      },
+      title: {
+        text: Constants.isIos27OrGreater
+          ? 'some waypoint'
+          : `some waypoint (${TextPlaceholders.Duration})`,
+      },
+      address: Constants.isIos27OrGreater
+        ? 'charger ave.'
+        : `charger ave. (${TextPlaceholders.Distance})`,
+      image: {
+        type: 'glyph',
+        name: 'pin_drop',
+      },
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        AutoMessageTemplate.getTemplate({ message: { text: 'Message' } }).push();
+      },
+      title: { text: 'message template' },
+    },
   ];
 
   if (checked[0]) {
@@ -129,7 +211,7 @@ const getMainSection = (): Section<ListTemplate> => {
 };
 
 const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): ListTemplate => {
-  return new ListTemplate({
+  const template = new ListTemplate({
     title: {
       text: `${TextPlaceholders.Distance} - ${TextPlaceholders.Duration}`,
       distance: { unit: 'meters', value: 1234 },
@@ -138,12 +220,14 @@ const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): L
     mapConfig: props?.mapConfig,
     headerActions: AutoTemplate.headerActions,
     sections: getMainSection(),
-    onDidAppear: () => console.log('ListTemplate onDidAppear'),
-    onDidDisappear: () => console.log('ListTemplate onDidDisappear'),
-    onWillAppear: () => console.log('ListTemplate onWillAppear'),
-    onWillDisappear: () => console.log('ListTemplate onWillDisappear'),
-    onPopped: () => console.log('ListTemplate onPopped'),
+    onDidAppear: () => console.log('ListTemplate onDidAppear', template.id),
+    onDidDisappear: () => console.log('ListTemplate onDidDisappear', template.id),
+    onWillAppear: () => console.log('ListTemplate onWillAppear', template.id),
+    onWillDisappear: () => console.log('ListTemplate onWillDisappear', template.id),
+    onPopped: () => console.log('ListTemplate onPopped', template.id),
   });
+
+  return template;
 };
 
 export const AutoListTemplate = { getTemplate };

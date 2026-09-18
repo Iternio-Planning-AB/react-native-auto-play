@@ -24,10 +24,12 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
 
     override fun parse(): Template {
         val imageSize = config.imageSize
-        val template = when (imageSize) {
-            null, GridImageSize.UNSET -> createGridTemplate()
-            GridImageSize.LARGE, GridImageSize.MEDIUM, GridImageSize.SMALL ->
-                createSizedGridTemplate(imageSize)
+        val template = when {
+            // SectionedItemTemplate (needed for per-item imageSize) is not a valid content
+            // template for MapWithContentTemplate, so imageSize is ignored while mapConfig is set.
+            config.mapConfig != null -> createGridTemplate()
+            imageSize == null || imageSize == GridImageSize.UNSET -> createGridTemplate()
+            else -> createSizedGridTemplate(imageSize)
         }
 
         return Parser.parseMapWithContentConfig(context, config.mapConfig, template)

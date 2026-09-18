@@ -42,6 +42,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSectio
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
 // Forward declaration of `ListImageType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
+// Forward declaration of `DurationWithTimeZone` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWithTimeZone; }
 // Forward declaration of `NitroSectionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
@@ -71,6 +75,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include "NitroSection.hpp"
 #include "NitroRow.hpp"
 #include "ListImageType.hpp"
+#include "WaypointCoordinate.hpp"
+#include "DurationWithTimeZone.hpp"
 #include "NitroSectionType.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "NitroMapButton.hpp"

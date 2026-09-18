@@ -1,10 +1,11 @@
+import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { GridTemplate as NitroGridTemplate } from '../specs/GridTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
 import { NitroMapButton } from '../utils/NitroMapButton';
-import type { BaseMapTemplateConfig } from './MapTemplate';
+import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
@@ -43,16 +44,23 @@ export type GridTemplateConfig = Omit<
   /**
    * Controls the size of all images in the Android grid. Defaults to `unset`, which preserves
    * the platform's standard grid layout. `large`, `medium`, and `small` require Android Car API
-   * 8.
+   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate`
+   * does not support the sized grid content type.
    * @namespace Android
    */
   imageSize?: GridImageSize;
 
   /**
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a GridTemplate with a map in background. No actions need to be specified, can be empty object.
-   * @namespace Android
+   * @namespace Android - uses MapWithContentTemplate
+   * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
+   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
+   * applied to the root map template's nav bar instead, since CarPlay has no separate header
+   * for the map behind a panel.
    */
-  mapConfig?: BaseMapTemplateConfig<GridTemplate>;
+  mapConfig?: Omit<BaseMapTemplateConfig<GridTemplate>, 'headerActions'> & {
+    headerActions?: PanelHeaderActions<GridTemplate>;
+  };
 };
 
 export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<GridTemplate>> {
@@ -62,6 +70,18 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
     super(config);
 
     const { headerActions, buttons, mapConfig, ...rest } = config;
+
+    if (
+      __DEV__ &&
+      Platform.OS === 'android' &&
+      mapConfig != null &&
+      rest.imageSize != null &&
+      rest.imageSize !== 'unset'
+    ) {
+      console.warn(
+        'GridTemplate: imageSize is ignored on Android when mapConfig is set — MapWithContentTemplate does not support the sized grid content type'
+      );
+    }
 
     const nitroConfig: NitroGridTemplateConfig & NitroTemplateConfig = {
       ...rest,

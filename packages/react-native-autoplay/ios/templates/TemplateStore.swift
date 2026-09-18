@@ -20,7 +20,7 @@ class TemplateStore {
     }
 
     func getCPTemplate(templateId key: String) -> CPTemplate? {
-        return withLock { store[key] }?.getTemplate()
+        return try? withLock { store[key] }?.getTemplate()
     }
 
     func getTemplate(templateId: String) throws -> AutoPlayTemplate {
@@ -52,7 +52,7 @@ class TemplateStore {
         /// These templates were popped by a native CarPlay button we cannot intercept, so they need an `onPopped()`
         let removed = withLock {
             let searchTemplates = store.filter {
-                $0.value.getTemplate() is CPSearchTemplate
+                (try? $0.value.getTemplate() is CPSearchTemplate) ?? false
             }
             searchTemplates.keys.forEach { store.removeValue(forKey: $0) }
 

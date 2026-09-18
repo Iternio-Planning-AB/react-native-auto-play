@@ -160,7 +160,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                     templateId: templateId
                 )
 
-                let carPlayTemplate = template.getTemplate()
+                let carPlayTemplate = try template.getTemplate()
 
                 if carPlayTemplate is CPMapTemplate {
                     try await MainActor.run {
@@ -192,23 +192,35 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
                 await template.invalidate()
 
-                let carPlayTemplate = template.getTemplate()
-
-                if carPlayTemplate is CPAlertTemplate {
-                    let animated = try await !interfaceController.dismissTemplate(
-                        animated: false
-                    )
-
-                    let _ = try await interfaceController.presentTemplate(
-                        carPlayTemplate,
-                        animated: animated
+                if #available(iOS 27.0, *), let panel = template.getPanel() as? CPMapPanel {
+                    /// since only the top most panel gets a panelDidHide call when pressing the close button
+                    /// we hide it globaly to avoid orphaned panels on the navigation stack
+                    panel.showsCloseButton = false
+                    
+                    try await interfaceController.pushPanel(
+                        panel,
+                        templateId: templateId
                     )
                 }
                 else {
-                    let _ = try await interfaceController.pushTemplate(
-                        carPlayTemplate,
-                        animated: true
-                    )
+                    let carPlayTemplate = try template.getTemplate()
+
+                    if carPlayTemplate is CPAlertTemplate {
+                        let animated = try await !interfaceController.dismissTemplate(
+                            animated: false
+                        )
+
+                        let _ = try await interfaceController.presentTemplate(
+                            carPlayTemplate,
+                            animated: animated
+                        )
+                    }
+                    else {
+                        let _ = try await interfaceController.pushTemplate(
+                            carPlayTemplate,
+                            animated: true
+                        )
+                    }
                 }
 
                 if let autoDismissMs = template.autoDismissMs {
@@ -217,7 +229,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                             nanoseconds: UInt64(autoDismissMs) * 1_000_000
                         )
 
-                        if interfaceController.topTemplateId == templateId
+                        if interfaceController.isTopEntry(templateId: templateId)
                             || interfaceController.interfaceController
                                 .presentedTemplate?.id == templateId
                         {

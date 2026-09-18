@@ -14,20 +14,24 @@
 #include "AutoText.hpp"
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
+#include "DurationWithTimeZone.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
+#include "JDurationWithTimeZone.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
 #include "JListImageType.hpp"
 #include "JNitroColor.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
+#include "JWaypointCoordinate.hpp"
 #include "ListImageType.hpp"
 #include "NitroColor.hpp"
 #include "RemoteImage.hpp"
+#include "WaypointCoordinate.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
 #include <optional>
@@ -71,6 +75,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JFunc_void_std__optional_bool_::javaobject> onPress = this->getFieldValue(fieldOnPress);
       static const auto fieldSelected = clazz->getField<jni::JBoolean>("selected");
       jni::local_ref<jni::JBoolean> selected = this->getFieldValue(fieldSelected);
+      static const auto fieldCoordinate = clazz->getField<JWaypointCoordinate>("coordinate");
+      jni::local_ref<JWaypointCoordinate> coordinate = this->getFieldValue(fieldCoordinate);
+      static const auto fieldDistance = clazz->getField<JDistance>("distance");
+      jni::local_ref<JDistance> distance = this->getFieldValue(fieldDistance);
+      static const auto fieldDuration = clazz->getField<JDurationWithTimeZone>("duration");
+      jni::local_ref<JDurationWithTimeZone> duration = this->getFieldValue(fieldDuration);
+      static const auto fieldTravelEstimatesVisible = clazz->getField<jni::JBoolean>("travelEstimatesVisible");
+      jni::local_ref<jni::JBoolean> travelEstimatesVisible = this->getFieldValue(fieldTravelEstimatesVisible);
+      static const auto fieldAddress = clazz->getField<jni::JString>("address");
+      jni::local_ref<jni::JString> address = this->getFieldValue(fieldAddress);
       return NitroRow(
         title->toCpp(),
         detailedText != nullptr ? std::make_optional(detailedText->toCpp()) : std::nullopt,
@@ -88,7 +102,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             return JNICallable<JFunc_void_std__optional_bool_, void(std::optional<bool>)>(std::move(onPressRef));
           }
         }()) : std::nullopt,
-        selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt
+        selected != nullptr ? std::make_optional(static_cast<bool>(selected->value())) : std::nullopt,
+        coordinate != nullptr ? std::make_optional(coordinate->toCpp()) : std::nullopt,
+        distance != nullptr ? std::make_optional(distance->toCpp()) : std::nullopt,
+        duration != nullptr ? std::make_optional(duration->toCpp()) : std::nullopt,
+        travelEstimatesVisible != nullptr ? std::make_optional(static_cast<bool>(travelEstimatesVisible->value())) : std::nullopt,
+        address != nullptr ? std::make_optional(address->toStdString()) : std::nullopt
       );
     }
 
@@ -98,7 +117,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroRow::javaobject> fromCpp(const NitroRow& value) {
-      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JListImageType>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JNitroRow(jni::alias_ref<JAutoText>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JVariant_GlyphImage_AssetImage_RemoteImage>, jni::alias_ref<JListImageType>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JWaypointCoordinate>, jni::alias_ref<JDistance>, jni::alias_ref<JDurationWithTimeZone>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -111,7 +130,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.imageType.has_value() ? JListImageType::fromCpp(value.imageType.value()) : nullptr,
         value.checked.has_value() ? jni::JBoolean::valueOf(value.checked.value()) : nullptr,
         value.onPress.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onPress.value()) : nullptr,
-        value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr
+        value.selected.has_value() ? jni::JBoolean::valueOf(value.selected.value()) : nullptr,
+        value.coordinate.has_value() ? JWaypointCoordinate::fromCpp(value.coordinate.value()) : nullptr,
+        value.distance.has_value() ? JDistance::fromCpp(value.distance.value()) : nullptr,
+        value.duration.has_value() ? JDurationWithTimeZone::fromCpp(value.duration.value()) : nullptr,
+        value.travelEstimatesVisible.has_value() ? jni::JBoolean::valueOf(value.travelEstimatesVisible.value()) : nullptr,
+        value.address.has_value() ? jni::make_jstring(value.address.value()) : nullptr
       );
     }
   };
