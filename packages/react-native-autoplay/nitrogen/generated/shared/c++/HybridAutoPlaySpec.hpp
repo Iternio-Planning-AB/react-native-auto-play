@@ -78,6 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       virtual std::shared_ptr<Promise<void>> setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) = 0;
       virtual bool isConnected() = 0;
       virtual bool isCarServiceRunning() = 0;
+      virtual std::shared_ptr<Promise<void>> navigate(double latitude, double longitude, const std::string& label) = 0;
 
     protected:
       // Hybrid Setup
