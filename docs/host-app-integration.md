@@ -1,7 +1,7 @@
 # Host-app integration
 
 **The setup instructions themselves live in the package README** —
-[`packages/react-native-autoplay/README.md`](../../packages/react-native-autoplay/README.md),
+[`packages/react-native-autoplay/README.md`](../packages/react-native-autoplay/README.md),
 sections *Installation*, *Platform Setup*, *Android Auto Customization* and
 *Android Automotive*. It has the actual `Info.plist`, `Entitlements.plist`, `AppDelegate`
 and Gradle snippets, and it is what consumers read. Do not copy them here, and when you

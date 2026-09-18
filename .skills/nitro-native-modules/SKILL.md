@@ -6,7 +6,7 @@ description: Adding or changing native code in this library — a native module,
 # Native modules (NitroModules)
 
 The full reference lives in
-**[`docs/agents/nitro-native-modules.md`](../../docs/agents/nitro-native-modules.md)**.
+**[`docs/native-modules.md`](../../docs/native-modules.md)**.
 
 **Read that file now, in full, before writing any native code.** It is the single source of
 truth; this skill deliberately does not restate it, so acting on the summary below alone

@@ -12,7 +12,7 @@
 
 ## Running it
 
-Instructions are in [`apps/example/README.md`](../../apps/example/README.md) — Desktop Head
+Instructions are in [`apps/example/README.md`](../apps/example/README.md) — Desktop Head
 Unit setup for Android Auto, the CarPlay Simulator for iOS. Two things that file assumes you
 already know:
 

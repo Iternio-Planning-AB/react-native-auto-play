@@ -93,17 +93,28 @@ line, saying which file needs updating and why.
    of an action config) and its "Common tasks" section has step lists for adding a native
    method and adding a template. If the diff changes any of those, the rule or step list is
    now wrong.
-3. A rule changed in one place but not its mirrors. The hard rules are duplicated, by
-   necessity, into .github/copilot-instructions.md and .cursor/rules/project.mdc (neither
-   tool reads AGENTS.md), and each docs/agents/<topic>.md is summarised by
-   .skills/<name>/SKILL.md. If a PR edits one of these, flag any sibling left behind.
-4. Behaviour described in docs/agents/*.md changed but the doc did not. Those files document
+3. Rule mirrors drifted apart. The hard rules in the "Agent etiquette" section of
+   AGENTS.md are duplicated, by necessity, into .github/copilot-instructions.md and
+   .cursor/rules/project.mdc, because neither tool reads AGENTS.md and neither supports an
+   include. Each docs/<topic>.md is likewise summarised by a .skills/<name>/SKILL.md.
+   These sets must be changed together. Check this whenever the diff touches any of them:
+     - AGENTS.md "Agent etiquette" <-> .github/copilot-instructions.md
+     - AGENTS.md "Agent etiquette" <-> .cursor/rules/project.mdc
+     - docs/native-modules.md      <-> .skills/nitro-native-modules/SKILL.md
+     - docs/templates.md           <-> .skills/autoplay-templates/SKILL.md
+     - docs/host-app-integration.md<-> .skills/host-app-integration/SKILL.md
+   Report each file left behind by name, with the rule text that diverges. Drift counts in
+   either direction: a rule removed from AGENTS.md but still present in a mirror is as
+   wrong as a new rule missing from one. Wording need not match word for word, but the
+   rules must agree - if one file forbids what another permits, or names a path or command
+   another contradicts, that is drift.
+4. Behaviour described in docs/*.md changed but the doc did not. Those files document
    non-obvious behaviour and silent failure modes; a diff that changes one makes the doc
    actively misleading.
 5. A new template was added without both when-branches in AndroidAutoScreen.kt, or without
    an export from src/index.ts. This compiles and fails at runtime.
 6. AGENTS.md grew past ~16 KB. Tools truncate it there, so anything past the limit is
-   invisible. New task-specific content belongs in docs/agents/.
+   invisible. New task-specific content belongs in docs/.
 
 ## PR Description
 Report it as an issue if the PR description is long prose, a walkthrough of the diff, or a

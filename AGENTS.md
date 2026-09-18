@@ -14,7 +14,7 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   `RCT_EXPORT_MODULE` module, or a `NativeModules.Foo` lookup.** Adding native surface means
   editing a `src/specs/*.nitro.ts` spec, running `yarn specs`, and committing the
   regenerated `nitrogen/generated/` output — read
-  [`docs/agents/nitro-native-modules.md`](docs/agents/nitro-native-modules.md) in full
+  [`docs/native-modules.md`](docs/native-modules.md) in full
   before you write any native code.
 - **`nitrogen/generated/` is committed (~500 files) and must never be hand-edited.** After
   `yarn specs` / `yarn prepare`, commit the regenerated output in the same commit. The
@@ -59,7 +59,7 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   tools truncate it, appended text silently pushes existing rules out of context rather than
   just making the file longer. Anything task-specific — a procedure for one subsystem,
   reference tables, anything phrased "if you're doing X…" — goes in its own
-  `docs/agents/<topic>.md` with a trigger-phrased pointer in the table below. Hard
+  `docs/<topic>.md` with a trigger-phrased pointer in the table below. Hard
   prohibitions stay inline; only the explanation moves.
 - **A change to the public API, installation steps or host-app setup must update
   [`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md) in
@@ -70,25 +70,27 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   consumer whose setup still follows the old README.
 - **Changing a rule means changing it everywhere, in the same PR.** The hard rules above are
   mirrored into `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` because
-  neither tool reads `AGENTS.md`, and each `docs/agents/<topic>.md` is summarised by its
+  neither tool reads `AGENTS.md`, and each `docs/<topic>.md` is summarised by its
   `.skills/<name>/SKILL.md`. Neither tool supports an include, so the duplication is
   deliberate — and it is only correct if you update all copies together.
 
 ## On-demand docs
 
-Read the relevant one **before** starting that kind of work; they are not in your context by
-default. Each is also a skill (`.skills/<name>/`, symlinked into `.claude/skills/`,
-`.agents/skills/` and `.cursor/skills/`), so any agent that supports skills can invoke it by
-name.
+`docs/` holds the contributor documentation for this repo — the non-obvious behaviour,
+silent failure modes and workarounds that the source does not make apparent. It is written
+for humans and agents alike; read the relevant one **before** starting that kind of work.
+Three of them are also skills (`.skills/<name>/`, symlinked into `.claude/skills/`,
+`.agents/skills/` and `.cursor/skills/`), so any agent that supports skills can invoke them
+by name.
 
 | Read before… | File |
 | --- | --- |
-| Adding or changing any native module, spec or generated code | [`docs/agents/nitro-native-modules.md`](docs/agents/nitro-native-modules.md) |
-| Working with templates, scenes, hooks or car-surface React | [`docs/agents/templates.md`](docs/agents/templates.md) |
-| Touching `src/types/`, `src/utils/Nitro*`, glyphs or voice options | [`docs/agents/types-and-conversions.md`](docs/agents/types-and-conversions.md) |
-| Changing anything a consuming app has to wire up (iOS/Android) | [`docs/agents/host-app-integration.md`](docs/agents/host-app-integration.md) |
-| Touching `patches/` or upgrading RN / expo-splash-screen | [`docs/agents/patches.md`](docs/agents/patches.md) |
-| Running or changing the example app | [`docs/agents/example-app.md`](docs/agents/example-app.md) |
+| Adding or changing any native module, spec or generated code | [`docs/native-modules.md`](docs/native-modules.md) |
+| Working with templates, scenes, hooks or car-surface React | [`docs/templates.md`](docs/templates.md) |
+| Touching `src/types/`, `src/utils/Nitro*`, glyphs or voice options | [`docs/types-and-conversions.md`](docs/types-and-conversions.md) |
+| Changing anything a consuming app has to wire up (iOS/Android) | [`docs/host-app-integration.md`](docs/host-app-integration.md) |
+| Touching `patches/` or upgrading RN / expo-splash-screen | [`docs/patches.md`](docs/patches.md) |
+| Running or changing the example app | [`docs/example-app.md`](docs/example-app.md) |
 | Changing installation, setup or the public API (update it!) | [`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md) |
 | Running the example app on a head unit or simulator | [`apps/example/README.md`](apps/example/README.md) |
 
@@ -106,7 +108,7 @@ than at build time.
 4. Wrap it in `src/hybrid/` if the raw signature is awkward; export from `src/index.ts`.
 5. Commit the regenerated `nitrogen/generated/` output **in the same commit**.
 
-Full detail and the reasoning: [`docs/agents/nitro-native-modules.md`](docs/agents/nitro-native-modules.md).
+Full detail and the reasoning: [`docs/native-modules.md`](docs/native-modules.md).
 
 ### Adding a new template
 
@@ -130,7 +132,7 @@ that get missed. Using `InformationTemplate` as the worked example:
    if the CarPlay type needs one.
 9. `src/index.ts` — `export * from './templates/<Name>'`.
 
-Template semantics and the traps in step 4: [`docs/agents/templates.md`](docs/agents/templates.md).
+Template semantics and the traps in step 4: [`docs/templates.md`](docs/templates.md).
 
 ## Repository structure
 

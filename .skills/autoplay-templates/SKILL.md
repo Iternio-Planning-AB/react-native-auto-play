@@ -5,7 +5,7 @@ description: Working with CarPlay / Android Auto templates in this library — M
 
 # Templates and car surfaces
 
-The full reference lives in **[`docs/agents/templates.md`](../../docs/agents/templates.md)**.
+The full reference lives in **[`docs/templates.md`](../../docs/templates.md)**.
 
 **Read that file now, in full, before adding or changing a template.** This skill
 deliberately does not restate it.

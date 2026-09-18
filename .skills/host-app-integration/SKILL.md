@@ -6,7 +6,7 @@ description: Changing what a consuming app must wire up to use this library — 
 # Host-app integration
 
 The full reference lives in
-**[`docs/agents/host-app-integration.md`](../../docs/agents/host-app-integration.md)**.
+**[`docs/host-app-integration.md`](../../docs/host-app-integration.md)**.
 
 **Read that file now, in full.** Almost every failure mode in it is silent — no compile
 error, no runtime exception, just a surface that never appears — so guessing from the
