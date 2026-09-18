@@ -16,6 +16,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.InformationTem
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.ListTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.PointOfInterestTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SearchTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SignInTemplate
 
@@ -95,6 +96,7 @@ class AndroidAutoScreen(
             is MessageTemplateConfig -> MessageTemplate(carContext, config)
             is SearchTemplateConfig -> SearchTemplate(carContext, config)
             is InformationTemplateConfig -> InformationTemplate(carContext, config)
+            is PointOfInterestTemplateConfig -> PointOfInterestTemplate(carContext, config)
             is SignInTemplateConfig -> SignInTemplate(carContext, config)
             else -> null
         }?.let {

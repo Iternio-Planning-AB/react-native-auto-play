@@ -92,3 +92,19 @@ extension CPVoiceControlTemplate {
         initTemplate(template: self, id: id)
     }
 }
+
+extension CPPointOfInterestTemplate {
+    convenience init(
+        title: String,
+        pointsOfInterest: [CPPointOfInterest],
+        selectedIndex: Int,
+        id: String
+    ) {
+        self.init(
+            title: title,
+            pointsOfInterest: pointsOfInterest,
+            selectedIndex: selectedIndex
+        )
+        initTemplate(template: self, id: id)
+    }
+}

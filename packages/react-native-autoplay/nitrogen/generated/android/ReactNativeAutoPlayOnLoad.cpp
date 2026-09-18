@@ -45,6 +45,7 @@
 #include "JFunc_void_AlertDismissalReason.hpp"
 #include "JFunc_void_std__string_std__string.hpp"
 #include "JHybridMessageTemplateSpec.hpp"
+#include "JHybridPointOfInterestTemplateSpec.hpp"
 #include "JHybridSearchTemplateSpec.hpp"
 #include "JHybridSignInTemplateSpec.hpp"
 #include "JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount_.hpp"
@@ -148,6 +149,14 @@ struct JHybridMessageTemplateSpecImpl: public jni::JavaClass<JHybridMessageTempl
     return javaPart->getJHybridMessageTemplateSpec();
   }
 };
+struct JHybridPointOfInterestTemplateSpecImpl: public jni::JavaClass<JHybridPointOfInterestTemplateSpecImpl, JHybridPointOfInterestTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridPointOfInterestTemplate;";
+  static std::shared_ptr<JHybridPointOfInterestTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridPointOfInterestTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridPointOfInterestTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridPointOfInterestTemplateSpec();
+  }
+};
 struct JHybridSearchTemplateSpecImpl: public jni::JavaClass<JHybridSearchTemplateSpecImpl, JHybridSearchTemplateSpec::JavaPart> {
   static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSearchTemplate;";
   static std::shared_ptr<JHybridSearchTemplateSpec> create() {
@@ -200,6 +209,7 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AlertDismissalReason_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_std__string_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMessageTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridPointOfInterestTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount__cxx::registerNatives();
@@ -271,6 +281,12 @@ void registerAllNatives() {
     "MessageTemplate",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridMessageTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "PointOfInterestTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridPointOfInterestTemplateSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(
