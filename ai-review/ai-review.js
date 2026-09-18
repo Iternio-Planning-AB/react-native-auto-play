@@ -93,23 +93,14 @@ line, saying which file needs updating and why.
    of an action config) and its "Common tasks" section has step lists for adding a native
    method and adding a template. If the diff changes any of those, the rule or step list is
    now wrong.
-3. Rule mirrors drifted apart. The hard rules in the "Rules" section of
-   AGENTS.md are duplicated, by necessity, into .github/copilot-instructions.md and
-   .cursor/rules/project.mdc, because neither tool reads AGENTS.md and neither supports an
-   include. Each docs/<topic>.md is likewise summarised by a .skills/<name>/SKILL.md.
-   These sets must be changed together. Check this whenever the diff touches any of them:
-     - AGENTS.md "Rules" <-> .github/copilot-instructions.md
-     - AGENTS.md "Rules" <-> .cursor/rules/project.mdc
-     - docs/native-modules.md      <-> .skills/nitro-native-modules/SKILL.md
-     - docs/templates.md           <-> .skills/autoplay-templates/SKILL.md
-     - docs/host-app-integration.md<-> .skills/host-app-integration/SKILL.md
-   The mirrors deliberately carry only a SUBSET of the AGENTS.md rules - the ones that
-   apply while editing code or opening a PR - and each SKILL.md summarises rather than
-   reproduces its doc. So absence is NOT drift: do not report a rule for being missing
-   from a mirror. Report only a CONTRADICTION - one file forbidding what another permits,
-   or naming a path, command or default that another contradicts - and a rule the mirror
-   does carry being changed on one side only. Name the file left behind and quote both
-   versions of the text that disagree.
+3. A docs file changed but the skill that summarises it did not. These pairs must agree:
+     - docs/native-modules.md       <-> .skills/nitro-native-modules/SKILL.md
+     - docs/templates.md            <-> .skills/autoplay-templates/SKILL.md
+     - docs/host-app-integration.md <-> .skills/host-app-integration/SKILL.md
+   Each SKILL.md summarises rather than reproduces its doc, so absence is NOT a problem:
+   do not report a detail for being missing from a summary. Report only a CONTRADICTION -
+   the summary forbidding what the doc permits, or naming a path, command or default the
+   doc contradicts. Quote both versions that disagree.
 4. Behaviour described in docs/*.md changed but the doc did not. Those files document
    non-obvious behaviour and silent failure modes; a diff that changes one makes the doc
    actively misleading.

@@ -64,8 +64,7 @@ from the Desktop Head Unit / CarPlay Simulator are the norm here.
       lookup and construction) and is exported from `src/index.ts`
 - [ ] Action / `HeaderActions` configs fill in **both** the `ios` and `android` branches
 - [ ] `package.json` version is **not** hand-edited (the release workflow sets it from the tag)
-- [ ] Contributor docs updated if behaviour changed: `AGENTS.md`, `docs/*`,
-      `.skills/*`, `.cursor/rules/*`, `.github/copilot-instructions.md`
+- [ ] Contributor docs updated if behaviour changed: `AGENTS.md`, `docs/*`, `.skills/*`
 
 <!--
 If a tool opened this PR, sign off on the last line with the tool and the model it ran as,

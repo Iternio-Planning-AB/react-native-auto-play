@@ -1,7 +1,8 @@
 # AGENTS.md
 
-Guidance for AI coding agents (Claude Code, Cursor, Devin, Copilot, …) working in this repo.
-This is the single source of truth — `CLAUDE.md` is a symlink to this file.
+Guidance for AI coding agents working in this repo, and the rules for changing it.
+This is the single source of truth. `CLAUDE.md` is a symlink to this file, and Cursor,
+Devin and Copilot read `AGENTS.md` directly.
 
 ## Rules
 
@@ -71,15 +72,11 @@ in chat. Keep that in your own global agent config, not here.
   `ReactNativeAutoPlay_*` Gradle properties, icon fonts and the API reference. Renaming a
   scene delegate, a Gradle property or the `AppDelegate` method silently breaks every
   consumer whose setup still follows the old README.
-- **Changing a rule means changing it everywhere, in the same PR.**
-  `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` carry a deliberate
-  **subset** of the rules above — the ones that apply while editing code or opening a PR —
-  because neither tool reads `AGENTS.md` and neither supports an include. Repo-wide
-  meta-rules like this one stay here only. Likewise each `docs/<topic>.md` is summarised,
-  not reproduced, by its
-  `.skills/<name>/SKILL.md`. So a rule being absent from a mirror is fine; a rule that
-  **contradicts** its mirror is not. If you change a rule that a mirror does carry, change
-  it there too.
+- **This file is the only place the rules live.** Claude Code, Cursor, Devin and Copilot
+  (coding agent, code review, CLI, and VS Code chat) all read `AGENTS.md`, so don't add
+  tool-specific rule files — they only drift. The one deliberate duplication is that each
+  `docs/<topic>.md` is *summarised* by its `.skills/<name>/SKILL.md`; if you change
+  behaviour a skill summarises, update the summary too.
 
 ## On-demand docs
 
