@@ -939,6 +939,7 @@ new ListTemplate({
 **Known iOS 27 beta limitations** (not something fixable in this library — re-test against newer betas):
 
 -   The optional icon-only `symbolButton` in a panel's button configuration does not appear to respond to taps at all on this beta — the button renders correctly, but its press handler is never invoked by CarPlay.
+-   `toggle` row accessory images render noticeably smaller inside a panel than in a regular (non-panel) `ListTemplate` — this is how Apple sizes `CPListItem.accessoryImage` on panels specifically, not something this library controls (see the `CPListItem.accessoryImage` known issue under **Options Panel** for the same underlying sizing bug's non-panel form).
 
 ### Waypoint Rows (`type: 'waypoint'`)
 

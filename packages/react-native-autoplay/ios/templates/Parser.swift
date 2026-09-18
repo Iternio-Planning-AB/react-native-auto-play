@@ -373,7 +373,8 @@ class Parser {
         let toggleImage = item.checked.map { checked in
             UIImage.makeToggleImage(
                 enabled: checked,
-                maximumImageSize: CPListItem.maximumImageSize
+                maximumImageSize: CPListItem.maximumImageSize,
+                traitCollection: traitCollection
             )
         }
 
