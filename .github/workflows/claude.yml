@@ -60,7 +60,36 @@ jobs:
             - Minor style issues or nitpicks
             - Anything TypeScript or Biome would catch
             - Positive feedback
-            - Missing documentation
+            - Missing documentation, EXCEPT the stale-documentation cases below
+
+            Always report stale documentation (the one documentation exception):
+            - Public API, installation or host-app setup changed without updating
+              packages/react-native-autoplay/README.md. It is the only documentation
+              consumers get. Watch for renames or changes to the getRootViewForAutoplay
+              AppDelegate method, any *SceneDelegate class name (referenced by string from
+              the consumer's Info.plist), any ReactNativeAutoPlay_* Gradle property or its
+              default, entitlements, URL schemes, the ProGuard rule, setIconFont, or any
+              exported symbol in src/index.ts.
+            - An architectural rule or invariant changed without updating AGENTS.md — the
+              agent instruction file. Its 'Agent etiquette' section holds the hard rules
+              (NitroModules only, committed nitrogen/generated output, tag-derived version,
+              both platform branches of an action config) and its 'Common tasks' section
+              has step lists for adding a native method and adding a template.
+            - A rule changed in one place but not its mirrors. The hard rules are
+              duplicated into .github/copilot-instructions.md and .cursor/rules/project.mdc
+              because neither tool reads AGENTS.md, and each docs/agents/<topic>.md is
+              summarised by .skills/<name>/SKILL.md. Flag any sibling left behind.
+            - Behaviour documented in docs/agents/*.md changed without updating the doc.
+            - A new template without both when-branches in AndroidAutoScreen.kt or without
+              an export from src/index.ts — this compiles and fails at runtime.
+            - AGENTS.md grew past ~16 KB, where tools truncate it. New task-specific
+              content belongs in docs/agents/.
+
+            Also flag a PR description that is long prose, a walkthrough of the diff, or a
+            per-file account. Descriptions should be short and high level: a few bullets on
+            what changed and why, one bullet per feature or fix. This applies to AI-written
+            PRs too. Skip this if the description is already brief, or if the author says
+            they were asked for more detail.
 
             Be concise. Only report real problems. If there are none, say so in one sentence."
 

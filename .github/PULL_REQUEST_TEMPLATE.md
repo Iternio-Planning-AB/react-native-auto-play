@@ -1,11 +1,18 @@
 <!--
 Keep the sections that fit and delete the rest — a one-line PR does not need all of them.
 Titles follow `fix:` / `feat:` / `chore:` / `docs:` with an optional scope.
+
+Keep the whole description short and high level. Bullets, not prose. If the PR carries
+several features or fixes, give each one its own bullet rather than a paragraph. This
+applies to PRs written with AI too — write at length only if explicitly asked to.
 -->
 
 ## Summary
 
-<!-- High-level bullets: what changed and why. Not a walkthrough of the diff. -->
+<!--
+A few high-level bullets: what changed and why. One bullet per feature or fix.
+Not a walkthrough of the diff, not a per-file account.
+-->
 
 ## Problem
 

@@ -35,6 +35,12 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   documented as such in the on-demand docs below. Check before deleting anything that looks
   like dead code.
 - Don't commit, push, or open PRs unless explicitly asked. The default branch is `master`.
+- **Keep PR descriptions short and high level.** Default to a few bullets covering what
+  changed and why — not prose, not a walkthrough of the diff, not a per-file account. When
+  a PR carries several features or fixes, list them as **one bullet each** rather than
+  describing them in paragraphs. Detail belongs in the code and the commit message; the
+  description is for a reviewer deciding what to look at. Write more only if the person
+  opening the PR explicitly asks for it.
   When you do open one, fill in [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)
   honestly — delete rows that don't apply rather than ticking them, and never tick a
   "tested on a head unit" box you did not do. Anything visible on a car surface needs a
@@ -51,6 +57,13 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   reference tables, anything phrased "if you're doing X…" — goes in its own
   `docs/agents/<topic>.md` with a trigger-phrased pointer in the table below. Hard
   prohibitions stay inline; only the explanation moves.
+- **A change to the public API, installation steps or host-app setup must update
+  [`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md) in
+  the same PR.** It is the only documentation consumers get — there is no docs site — and
+  it already covers entitlements, scene delegates, the `AppDelegate` hook, the
+  `ReactNativeAutoPlay_*` Gradle properties, icon fonts and the API reference. Renaming a
+  scene delegate, a Gradle property or the `AppDelegate` method silently breaks every
+  consumer whose setup still follows the old README.
 - **Changing a rule means changing it everywhere, in the same PR.** The hard rules above are
   mirrored into `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` because
   neither tool reads `AGENTS.md`, and each `docs/agents/<topic>.md` is summarised by its
@@ -72,6 +85,8 @@ name.
 | Changing anything a consuming app has to wire up (iOS/Android) | [`docs/agents/host-app-integration.md`](docs/agents/host-app-integration.md) |
 | Touching `patches/` or upgrading RN / expo-splash-screen | [`docs/agents/patches.md`](docs/agents/patches.md) |
 | Running or changing the example app | [`docs/agents/example-app.md`](docs/agents/example-app.md) |
+| Changing installation, setup or the public API (update it!) | [`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md) |
+| Running the example app on a head unit or simulator | [`apps/example/README.md`](apps/example/README.md) |
 
 ## Common tasks
 
@@ -157,9 +172,15 @@ lint + typecheck for the example app on PRs. `.github/workflows/npm-publish.yml`
 ## What this library does
 
 `@iternio/react-native-auto-play` provides Apple CarPlay and Android Auto/Automotive
-integration for React Native apps. It exposes a **template-based UI system** — the car
-platform dictates which templates are allowed, and this library provides typed TypeScript
-wrappers that bridge to the native implementations via NitroModules.
+integration for React Native apps, as a **template-based UI system** bridged to native via
+NitroModules.
+
+**The public API, installation and host-app setup are documented in
+[`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md)** —
+features, entitlements, `Info.plist`, `AppDelegate`, Gradle properties, icon fonts and the
+full API reference. That is the consumer-facing source of truth; it is not duplicated here,
+and a change to any of it belongs in the README. What follows is only the repo-internal
+layout an agent needs to navigate the source.
 
 The three layers, roughly:
 

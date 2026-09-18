@@ -12,10 +12,14 @@
 
 ## Running it
 
-- **Android** needs the Desktop Head Unit plus `yarn android:adb` (`adb_port_setup.sh`)
-  **before** `yarn android`.
-- **iOS** uses the Xcode "CarPlay Simulator" additional tool, downloaded separately from
-  Xcode itself.
+Instructions are in [`apps/example/README.md`](../../apps/example/README.md) — Desktop Head
+Unit setup for Android Auto, the CarPlay Simulator for iOS. Two things that file assumes you
+already know:
+
+- Run `yarn android:adb` (`adb_port_setup.sh`) to forward the DHU port **before**
+  `yarn android`, or the head unit never connects.
+- The CarPlay Simulator is not part of Xcode — it ships in "Additional Tools for Xcode",
+  downloaded separately.
 
 ## Known stale
 

@@ -44,8 +44,8 @@
 
 #### Bundle identifier
 To get the CarPlay app showing up you need to set a proper Bundle Identifier:
--   Open   `example.xcodeproj`
--   Select the example target, go to the  **Signing & Capabilities**  tab.
+-   Open your app's `.xcodeproj` in Xcode.
+-   Select your app target, go to the  **Signing & Capabilities**  tab.
 -   Under  **Signing > Bundle Identifier**, enter your unique bundle ID (e.g.,  `at.g4rb4g3.autoplay.example`).
 
 #### Entitlements
@@ -243,12 +243,20 @@ This library also supports Android Automotive. To enable Android Automotive supp
 
 -   **`isAutomotiveApp` flag**: You need to inform the library if this is an Automotive app by setting the `isAutomotiveApp` property to `true`. For Android Auto, it should be `false`.
 
-You can set these properties directly in your `android/gradle.properties` file:
+You can set these properties directly in your `android/gradle.properties` file. **Note the
+`ReactNativeAutoPlay_` prefix** — the library reads `rootProject.ext.<name>` first and falls
+back to the prefixed project property, so an unprefixed `isAutomotiveApp=true` in
+`gradle.properties` is silently ignored and you get an Android Auto build instead:
+
 ```properties
 # For Android Automotive
-minSdkVersion=29
-isAutomotiveApp=true
+ReactNativeAutoPlay_minSdkVersion=29
+ReactNativeAutoPlay_isAutomotiveApp=true
 ```
+
+If your app's `android/build.gradle` already defines `ext.minSdkVersion` (the React Native
+template does), that `rootProject.ext` value wins over the property above — raise it there
+instead.
 
 Alternatively, if you need to support different build variants (e.g., for both Android Auto and Android Automotive from the same codebase), using `react-native-config` is the recommended approach.
 

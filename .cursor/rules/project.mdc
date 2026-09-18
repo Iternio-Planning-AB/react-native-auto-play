@@ -23,5 +23,8 @@ The rules that most often get broken:
 - **Don't delete odd-looking code before checking `docs/agents/`.** `TravelEstimates._doNotUse`,
   the `biome-ignore noChildrenProp` comments, `fix-prefab.gradle` and everything in `patches/`
   are deliberate workarounds.
+- **PR descriptions stay short and high level** — a few bullets on what changed and why,
+  one bullet per feature or fix, never prose or a walkthrough of the diff. Write more only
+  if the person opening the PR explicitly asks.
 - Formatting is Biome (`biome.json` at the root): single quotes, 100-char lines, ES5 trailing
   commas.
