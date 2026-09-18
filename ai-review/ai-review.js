@@ -103,11 +103,13 @@ line, saying which file needs updating and why.
      - docs/native-modules.md      <-> .skills/nitro-native-modules/SKILL.md
      - docs/templates.md           <-> .skills/autoplay-templates/SKILL.md
      - docs/host-app-integration.md<-> .skills/host-app-integration/SKILL.md
-   Report each file left behind by name, with the rule text that diverges. Drift counts in
-   either direction: a rule removed from AGENTS.md but still present in a mirror is as
-   wrong as a new rule missing from one. Wording need not match word for word, but the
-   rules must agree - if one file forbids what another permits, or names a path or command
-   another contradicts, that is drift.
+   The mirrors deliberately carry only a SUBSET of the AGENTS.md rules - the ones that
+   apply while editing code or opening a PR - and each SKILL.md summarises rather than
+   reproduces its doc. So absence is NOT drift: do not report a rule for being missing
+   from a mirror. Report only a CONTRADICTION - one file forbidding what another permits,
+   or naming a path, command or default that another contradicts - and a rule the mirror
+   does carry being changed on one side only. Name the file left behind and quote both
+   versions of the text that disagree.
 4. Behaviour described in docs/*.md changed but the doc did not. Those files document
    non-obvious behaviour and silent failure modes; a diff that changes one makes the doc
    actively misleading.

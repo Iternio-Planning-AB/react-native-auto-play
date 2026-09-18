@@ -88,14 +88,14 @@ jobs:
               docs/<topic>.md is likewise summarised by a .skills/<name>/SKILL.md.
               If the PR touches ANY of these files, use Read to open all four rule files
               (AGENTS.md, .github/copilot-instructions.md, .cursor/rules/project.mdc, and
-              the relevant .skills/*/SKILL.md) and compare them. Report every rule that is
-              added, changed or removed in one but not the others, naming the specific
-              file left behind and the exact rule text that diverges. Drift in either
-              direction counts: a rule in a mirror that no longer exists in AGENTS.md is
-              as wrong as a new AGENTS.md rule missing from the mirrors. Wording need not
-              match word for word, but the rules themselves must agree - if one file
-              forbids something the other permits, or one names a path or command the
-              other contradicts, that is drift.
+              the relevant .skills/*/SKILL.md) and compare them. The mirrors deliberately
+              carry only a SUBSET of the AGENTS.md rules - the ones that apply while
+              editing code or opening a PR - and each SKILL.md summarises rather than
+              reproduces its doc. So absence is NOT drift: never report a rule for being
+              missing from a mirror. Report only a CONTRADICTION - one file forbidding
+              what another permits, or naming a path, command or default that another
+              contradicts - and a rule the mirror does carry being changed on one side
+              only. Name the file left behind and quote both versions that disagree.
             - Behaviour documented in docs/*.md changed without updating the doc.
             - A new template without both when-branches in AndroidAutoScreen.kt or without
               an export from src/index.ts — this compiles and fails at runtime.

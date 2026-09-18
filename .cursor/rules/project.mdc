@@ -23,6 +23,12 @@ The rules that most often get broken:
 - **Don't delete odd-looking code before checking `docs/`.** `TravelEstimates._doNotUse`,
   the `biome-ignore noChildrenProp` comments, `fix-prefab.gradle` and everything in `patches/`
   are deliberate workarounds.
+- **A change to the public API, installation steps or host-app setup must update
+  `packages/react-native-autoplay/README.md` in the same PR.** It is the only documentation
+  consumers get; renaming a scene delegate, a Gradle property or the `AppDelegate` hook
+  silently breaks every app still following the old README.
+- **Run `yarn lint:auto-play` and `yarn typecheck:auto-play` before opening a PR** (plus the
+  `:example` equivalents if the example app changed) and fix everything.
 - **PR descriptions stay short and high level** — a few bullets on what changed and why,
   one bullet per feature or fix, never prose or a walkthrough of the diff. Write more only
   if the person opening the PR explicitly asks.

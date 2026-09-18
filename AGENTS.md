@@ -6,8 +6,9 @@ This is the single source of truth — `CLAUDE.md` is a symlink to this file.
 ## Agent etiquette
 
 Deliberately the first section: tools inject this file into every agent's context and
-truncate it — the Devin CLI at 16 KB, which this file must stay under (it is currently
-~10 KB). The rules that must never be missed live here, where nothing can cut them off.
+truncate it — the Devin CLI at 16 KB, which this file must stay under. The rules that must
+never be missed live here, where nothing can cut them off. Check with `wc -c AGENTS.md`
+before adding to it.
 
 - **This library uses [NitroModules](https://nitro.margelo.com) for every native call.
   Never add a TurboModule, a `TurboReactPackage`, a `ReactContextBaseJavaModule`, an ObjC
@@ -68,11 +69,15 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   `ReactNativeAutoPlay_*` Gradle properties, icon fonts and the API reference. Renaming a
   scene delegate, a Gradle property or the `AppDelegate` method silently breaks every
   consumer whose setup still follows the old README.
-- **Changing a rule means changing it everywhere, in the same PR.** The hard rules above are
-  mirrored into `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` because
-  neither tool reads `AGENTS.md`, and each `docs/<topic>.md` is summarised by its
-  `.skills/<name>/SKILL.md`. Neither tool supports an include, so the duplication is
-  deliberate — and it is only correct if you update all copies together.
+- **Changing a rule means changing it everywhere, in the same PR.**
+  `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` carry a deliberate
+  **subset** of the rules above — the ones that apply while editing code or opening a PR —
+  because neither tool reads `AGENTS.md` and neither supports an include. Session etiquette
+  (don't commit unless asked, don't write summary files, this rule) stays here only.
+  Likewise each `docs/<topic>.md` is summarised, not reproduced, by its
+  `.skills/<name>/SKILL.md`. So a rule being absent from a mirror is fine; a rule that
+  **contradicts** its mirror is not. If you change a rule that a mirror does carry, change
+  it there too.
 
 ## On-demand docs
 

@@ -14,7 +14,8 @@ this library provides typed TS wrappers over the native CarPlay / Android Auto t
 | `SignInTemplate` | Android-only authentication (QR/PIN/input) |
 
 All except `MessageTemplate` extend `Template<TemplateConfigType, ActionsType>`
-(`src/templates/Template.ts`), which provides an `id`, lifecycle callbacks via
+(`src/templates/Template.ts`), which provides an `id` — templates that render a surface
+supply their own, everything else gets a generated uuid — lifecycle callbacks via
 `TemplateConfig` (`onWillAppear`, `onDidAppear`, `onWillDisappear`, `onDidDisappear`,
 `onPopped`, plus `autoDismissMs`), the navigation stack (`setRootTemplate()`, `push()`,
 `popTo()`), and `setHeaderActions()`.
@@ -79,9 +80,10 @@ receives `RootComponentInitialProps` (`id`, `rootTag`, `colorScheme`, `window`);
 components receive `AutoPlayClusterInitialProps` (adds iOS `compass`, `speedLimit`).
 
 Providers are wired automatically and cannot be opted out of:
-`MapTemplateProvider` (`useMapTemplate()`), `SafeAreaInsetsProvider` (`useSafeAreaInsets()`;
-`SafeAreaView` applies them), and `WindowInformationWrapper` (keeps `window` current —
-a passthrough on iOS, since CarPlay windows never resize).
+`MapTemplateProvider` (`src/components/MapTemplateContext.tsx`, exposes `useMapTemplate()`),
+`SafeAreaInsetsProvider` (`src/components/SafeAreaInsetsContext.tsx`, exposes
+`useSafeAreaInsets()`; `SafeAreaView` applies them), and `WindowInformationWrapper` (keeps
+`window` current — a passthrough on iOS, since CarPlay windows never resize).
 
 Only three places render arbitrary React: a `MapTemplate`'s `component`, a cluster, and the
 dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` work nowhere else.
@@ -112,6 +114,15 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
   timed update) — consumers must merge, not replace.
 - `useVoiceInput` resets itself to `undefined` when native emits an event with neither
   coordinates nor query.
+
+## Surface ids (`AutoPlayModules`)
+
+Per-surface APIs are keyed by a module name, not by template instance. `AutoPlayModules`
+(`src/index.ts`) is the enum of the fixed ones — `App = 'main'`, `AutoPlayRoot`, and
+`CarPlayDashboard`. Pass one of these to `HybridAutoPlay.addListenerRenderState(moduleName,
+cb)` and `addSafeAreaInsetsListener(moduleName, cb)`. Cluster ids are **not** in the enum:
+they are generated natively and arrive on the component's `RootComponentInitialProps.id`,
+so a cluster must read its own id from props rather than assume a constant.
 
 ## Initialization flow
 

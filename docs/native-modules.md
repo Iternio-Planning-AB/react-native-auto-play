@@ -37,10 +37,16 @@ templates.
    workflow fails if `yarn install` leaves the tree dirty, and stale or missing nitrogen
    output makes `pod install` fail in a way that gives no useful error.
 
-Platform-exclusive modules are `null` on the other platform rather than absent —
-`HybridSignInTemplate`, `HybridAndroidAutomotive` and `HybridCarPlayDashboard` are all
-`null` off-platform and every call site uses `?.`, so they silently no-op. Follow that
-pattern rather than throwing.
+There are **two** patterns for platform-exclusive modules; pick the one the neighbours use.
+
+- **`null` hybrid object.** `HybridSignInTemplate`, `HybridAndroidAutomotive` and
+  `HybridCarPlayDashboard` are `null` off-platform, and every call site uses `?.`, so they
+  silently no-op. Follow that rather than throwing.
+- **Platform-split file with a no-op fallback.** `src/hybrid/HybridAndroidAutoTelemetry.ts`
+  and `HybridAndroidWindowInformation.ts` each have a `.android.ts` variant holding the
+  real implementation, while the **plain `.ts` file is the fallback** and exports
+  `null` typed as the spec interface. Metro picks the `.android.ts` on Android and the
+  plain file everywhere else. This is the pattern to copy for the next Android-only module.
 
 Flag platform-exclusive APIs with a `@namespace iOS` / `@namespace Android` JSDoc tag
 (casing is inconsistent in places; match the neighbours).
