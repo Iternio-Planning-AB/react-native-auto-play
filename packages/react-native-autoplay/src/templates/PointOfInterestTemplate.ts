@@ -1,118 +1,113 @@
-import { DeviceEventEmitter, NativeModules } from 'react-native';
-import type { EmitterSubscription } from 'react-native';
+import { NitroModules } from 'react-native-nitro-modules';
+import type { PointOfInterestTemplate as NitroPointOfInterestTemplate } from '../specs/PointOfInterestTemplate.nitro';
 import type { PointOfInterest } from '../types/PointOfInterest';
+import type { AutoText } from '../types/Text';
+import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
+import { type NitroTemplateConfig, Template, type TemplateConfig } from './Template';
 
-const POIModule = (NativeModules.PointOfInterestModule ?? null) as {
-  push(params: object): Promise<string>;
-  update(params: object): Promise<void>;
-  pop(params: object): Promise<void>;
-  addListener(eventName: string): void;
-  removeListeners(count: number): void;
-} | null;
+const HybridPointOfInterestTemplate =
+  NitroModules.createHybridObject<NitroPointOfInterestTemplate>('PointOfInterestTemplate');
 
-let idCounter = 0;
-
-function serializeItems(items: PointOfInterest[]) {
-  return items.map((item) => ({
-    id: item.id,
-    title: item.title,
-    line1: item.line1 ?? item.subtitle ?? '',
-    line2: item.line2 ?? '',
-    subtitle: item.subtitle ?? '',
-    lat: item.lat,
-    lng: item.lng,
-    imageUri: item.imageUri ?? null,
-    primaryButtonTitle: item.primaryButtonTitle ?? null,
-    distanceMeters: item.distanceMeters ?? 0,
-    status: item.status ?? 'Inactive',
-    available: item.available ?? 0,
-    total: item.total ?? 1,
-    hasBadge: item.hasBadge ?? false,
-    isHighlighted: item.isHighlighted ?? false,
-  }));
-}
-
-export type ActionStripConfig = {
+export type NitroActionStrip = {
   label: string;
-  toastMessage: string;
-};
-
-export type PointOfInterestTemplateConfig = {
-  title: string;
-  items: PointOfInterest[];
-  actionStrip?: ActionStripConfig;
-  onSelectItem?: (id: string) => void;
-  onPopped?: () => void;
+  onPress: () => void;
 };
 
 /**
- * A `PlaceListMapTemplate` (Android Auto) / `CPPointOfInterestTemplate` (CarPlay) list of
- * pinned places, e.g. for "find nearby X" flows. Requires the native `PointOfInterestModule`
- * to be linked (autolinked by this package).
+ * An action shown in the action strip of the `PlaceListMapTemplate`.
+ * @namespace Android
  */
-export class PointOfInterestTemplate {
-  private readonly templateId: string;
-  private subscriptions: EmitterSubscription[] = [];
+export type ActionStripConfig = {
+  label: string;
+  onPress: (template: PointOfInterestTemplate) => void;
+};
 
-  constructor(private readonly config: PointOfInterestTemplateConfig) {
-    this.templateId = `poi_${Date.now()}_${idCounter++}`;
-  }
+/**
+ * Colors of the default pin renderer, each falling back to a status-specific default.
+ */
+export type PointOfInterestColors = {
+  available?: ThemedColor | string;
+  busy?: ThemedColor | string;
+  inactive?: ThemedColor | string;
+  highlight?: ThemedColor | string;
+};
 
-  push(): void {
-    if (!POIModule) return;
+export type NitroPointOfInterestColors = {
+  available?: NitroColor;
+  busy?: NitroColor;
+  inactive?: NitroColor;
+  highlight?: NitroColor;
+};
 
-    if (this.config.onSelectItem) {
-      this.subscriptions.push(
-        DeviceEventEmitter.addListener('PoiSelectItem', (event: { templateId: string; itemId: string }) => {
-          if (event.templateId === this.templateId) {
-            this.config.onSelectItem?.(event.itemId);
-          }
-        })
-      );
-    }
+export interface NitroPointOfInterestTemplateConfig extends TemplateConfig {
+  title: AutoText;
+  items: Array<PointOfInterest>;
+  actionStrip?: NitroActionStrip;
+  colors?: NitroPointOfInterestColors;
+  onSelectItem?: (itemId: string) => void;
+}
 
-    if (this.config.onPopped) {
-      this.subscriptions.push(
-        DeviceEventEmitter.addListener('PoiPopped', (event: { templateId: string }) => {
-          if (event.templateId === this.templateId) {
-            this.cleanup();
-            this.config.onPopped?.();
-          }
-        })
-      );
-    }
+export type PointOfInterestTemplateConfig = Omit<
+  NitroPointOfInterestTemplateConfig,
+  'actionStrip' | 'colors' | 'onSelectItem'
+> & {
+  /**
+   * an action shown in the action strip of the `PlaceListMapTemplate`
+   * @namespace Android
+   */
+  actionStrip?: ActionStripConfig;
 
-    const params: Record<string, unknown> = {
-      id: this.templateId,
-      title: this.config.title,
-      items: serializeItems(this.config.items),
+  /**
+   * colors of the default pin renderer
+   */
+  colors?: PointOfInterestColors;
+
+  /**
+   * callback for a pressed list row/pin
+   * @param template the template the item belongs to
+   * @param itemId id of the pressed {@link PointOfInterest}
+   */
+  onSelectItem?: (template: PointOfInterestTemplate, itemId: string) => void;
+};
+
+const convertColors = (colors: PointOfInterestColors): NitroPointOfInterestColors => ({
+  available: NitroColorUtil.convert(colors.available),
+  busy: NitroColorUtil.convert(colors.busy),
+  inactive: NitroColorUtil.convert(colors.inactive),
+  highlight: NitroColorUtil.convert(colors.highlight),
+});
+
+/**
+ * A `PlaceListMapTemplate` (Android Auto) / `CPPointOfInterestTemplate` (CarPlay) list of pinned
+ * places, e.g. for a "find nearby chargers" flow.
+ */
+export class PointOfInterestTemplate extends Template<PointOfInterestTemplateConfig, undefined> {
+  private template = this;
+
+  constructor(config: PointOfInterestTemplateConfig) {
+    super(config);
+
+    const { actionStrip, colors, onSelectItem, ...rest } = config;
+
+    const nitroConfig: NitroPointOfInterestTemplateConfig & NitroTemplateConfig = {
+      ...rest,
+      id: this.id,
+      actionStrip:
+        actionStrip != null
+          ? { label: actionStrip.label, onPress: () => actionStrip.onPress(this.template) }
+          : undefined,
+      colors: colors != null ? convertColors(colors) : undefined,
+      onSelectItem:
+        onSelectItem != null ? (itemId: string) => onSelectItem(this.template, itemId) : undefined,
     };
-    if (this.config.actionStrip) {
-      params.actionStrip = this.config.actionStrip;
-    }
 
-    POIModule.push(params).catch(() => {});
+    HybridPointOfInterestTemplate.createPointOfInterestTemplate(nitroConfig);
   }
 
-  updateItems(items: PointOfInterest[], actionStrip?: ActionStripConfig): void {
-    if (!POIModule) return;
-    const params: Record<string, unknown> = {
-      id: this.templateId,
-      items: serializeItems(items),
-    };
-    if (actionStrip) {
-      params.actionStrip = actionStrip;
-    }
-    POIModule.update(params).catch(() => {});
-  }
-
-  pop(): void {
-    this.cleanup();
-    POIModule?.pop({ id: this.templateId }).catch(() => {});
-  }
-
-  private cleanup(): void {
-    this.subscriptions.forEach((s) => s.remove());
-    this.subscriptions = [];
+  /**
+   * replaces the shown places, e.g. after the list of nearby chargers was refreshed
+   */
+  public updateItems(items: Array<PointOfInterest>) {
+    return HybridPointOfInterestTemplate.updatePointOfInterestTemplateItems(this.id, items);
   }
 }

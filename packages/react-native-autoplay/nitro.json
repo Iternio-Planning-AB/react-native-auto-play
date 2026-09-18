@@ -103,6 +103,16 @@
         "language": "swift"
       }
     },
+    "PointOfInterestTemplate": {
+      "android": {
+        "implementationClassName": "HybridPointOfInterestTemplate",
+        "language": "kotlin"
+      },
+      "ios": {
+        "implementationClassName": "HybridPointOfInterestTemplate",
+        "language": "swift"
+      }
+    },
     "SearchTemplate": {
       "android": {
         "implementationClassName": "HybridSearchTemplate",

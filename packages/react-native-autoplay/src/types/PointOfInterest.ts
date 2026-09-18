@@ -1,22 +1,50 @@
+import type { AutoText } from './Text';
+
+/**
+ * Drives the default pin renderer's color and center label. `Available` and `Busy` render the
+ * `available`/`total` count as the label, anything else renders as inactive with a cross.
+ */
+export type PointOfInterestStatus = 'Available' | 'Busy' | 'Inactive';
+
 export type PointOfInterest = {
   id: string;
-  title: string;
+  title: AutoText;
+  /**
+   * first line of the list row, the host prepends the formatted distance to it
+   * @namespace Android
+   */
   line1?: string;
   line2?: string;
-  /** @deprecated use `line1` */
-  subtitle?: string;
   lat: number;
   lng: number;
-  imageUri?: string;
-  primaryButtonTitle?: string;
+  /**
+   * distance shown in front of `line1`, in meters
+   * @default 0
+   * @namespace Android
+   */
   distanceMeters?: number;
   /**
-   * Drives the default pin renderer's color and center label. `"Available"`/`"Busy"` render
-   * with the available/total count as the label; anything else renders as inactive with an X.
+   * @default Inactive
    */
-  status?: 'Available' | 'Busy' | 'Inactive';
+  status?: PointOfInterestStatus;
+  /**
+   * current value shown on the pin, ignored when the status is inactive
+   * @default 0
+   */
   available?: number;
+  /**
+   * denominator for `available`
+   * @default 1
+   */
   total?: number;
+  /**
+   * draws the secondary badge on the pin
+   * @default false
+   */
   hasBadge?: boolean;
+  /**
+   * draws the highlight ring on the pin, e.g. for a favorited item
+   * @default false
+   */
   isHighlighted?: boolean;
 };

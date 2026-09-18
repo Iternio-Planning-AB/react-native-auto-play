@@ -50,6 +50,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridListTe
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMapTemplateSpec; }
 // Forward declaration of `HybridMessageTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMessageTemplateSpec; }
+// Forward declaration of `HybridPointOfInterestTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridPointOfInterestTemplateSpec; }
 // Forward declaration of `HybridSearchTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSearchTemplateSpec; }
 // Forward declaration of `HybridVoiceSpec` to properly resolve imports.
@@ -68,6 +70,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAlertAction; }
+// Forward declaration of `NitroActionStrip` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroActionStrip; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -106,6 +110,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
 // Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroPointOfInterestColors` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPointOfInterestColors; }
 // Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroRow` to properly resolve imports.
@@ -118,6 +124,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSectio
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OffRampType; }
 // Forward declaration of `OnRampType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class OnRampType; }
+// Forward declaration of `PointOfInterestStatus` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class PointOfInterestStatus; }
+// Forward declaration of `PointOfInterest` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct PointOfInterest; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `PreferredImageLane` to properly resolve imports.
@@ -172,6 +182,8 @@ namespace ReactNativeAutoPlay { class HybridListTemplateSpec_cxx; }
 namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 // Forward declaration of `HybridMessageTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridMessageTemplateSpec_cxx; }
+// Forward declaration of `HybridPointOfInterestTemplateSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridPointOfInterestTemplateSpec_cxx; }
 // Forward declaration of `HybridSearchTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
 // Forward declaration of `HybridVoiceSpec_cxx` to properly resolve imports.
@@ -198,6 +210,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "HybridListTemplateSpec.hpp"
 #include "HybridMapTemplateSpec.hpp"
 #include "HybridMessageTemplateSpec.hpp"
+#include "HybridPointOfInterestTemplateSpec.hpp"
 #include "HybridSearchTemplateSpec.hpp"
 #include "HybridVoiceSpec.hpp"
 #include "ImageLane.hpp"
@@ -208,6 +221,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "ManeuverType.hpp"
 #include "NavigationAlertAction.hpp"
 #include "NitroAction.hpp"
+#include "NitroActionStrip.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
 #include "NitroAttributedString.hpp"
@@ -226,6 +240,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "NitroOptionsPanelChargerSection.hpp"
 #include "NitroOptionsPanelConfig.hpp"
 #include "NitroOptionsPanelGridSection.hpp"
+#include "NitroPointOfInterestColors.hpp"
 #include "NitroRoutingManeuver.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
@@ -233,6 +248,8 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "OffRampType.hpp"
 #include "OnRampType.hpp"
 #include "Point.hpp"
+#include "PointOfInterest.hpp"
+#include "PointOfInterestStatus.hpp"
 #include "PreferredImageLane.hpp"
 #include "RemoteImage.hpp"
 #include "RouteChoice.hpp"
@@ -1746,6 +1763,89 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridMessageTemplateSpec>
   using std__weak_ptr_HybridMessageTemplateSpec_ = std::weak_ptr<HybridMessageTemplateSpec>;
   inline std__weak_ptr_HybridMessageTemplateSpec_ weakify_std__shared_ptr_HybridMessageTemplateSpec_(const std::shared_ptr<HybridMessageTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::optional<PointOfInterestStatus>
+  /**
+   * Specialized version of `std::optional<PointOfInterestStatus>`.
+   */
+  using std__optional_PointOfInterestStatus_ = std::optional<PointOfInterestStatus>;
+  inline std::optional<PointOfInterestStatus> create_std__optional_PointOfInterestStatus_(const PointOfInterestStatus& value) noexcept {
+    return std::optional<PointOfInterestStatus>(value);
+  }
+  inline bool has_value_std__optional_PointOfInterestStatus_(const std::optional<PointOfInterestStatus>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline PointOfInterestStatus get_std__optional_PointOfInterestStatus_(const std::optional<PointOfInterestStatus>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::vector<PointOfInterest>
+  /**
+   * Specialized version of `std::vector<PointOfInterest>`.
+   */
+  using std__vector_PointOfInterest_ = std::vector<PointOfInterest>;
+  inline std::vector<PointOfInterest> create_std__vector_PointOfInterest_(size_t size) noexcept {
+    std::vector<PointOfInterest> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::optional<NitroActionStrip>
+  /**
+   * Specialized version of `std::optional<NitroActionStrip>`.
+   */
+  using std__optional_NitroActionStrip_ = std::optional<NitroActionStrip>;
+  inline std::optional<NitroActionStrip> create_std__optional_NitroActionStrip_(const NitroActionStrip& value) noexcept {
+    return std::optional<NitroActionStrip>(value);
+  }
+  inline bool has_value_std__optional_NitroActionStrip_(const std::optional<NitroActionStrip>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroActionStrip get_std__optional_NitroActionStrip_(const std::optional<NitroActionStrip>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<NitroPointOfInterestColors>
+  /**
+   * Specialized version of `std::optional<NitroPointOfInterestColors>`.
+   */
+  using std__optional_NitroPointOfInterestColors_ = std::optional<NitroPointOfInterestColors>;
+  inline std::optional<NitroPointOfInterestColors> create_std__optional_NitroPointOfInterestColors_(const NitroPointOfInterestColors& value) noexcept {
+    return std::optional<NitroPointOfInterestColors>(value);
+  }
+  inline bool has_value_std__optional_NitroPointOfInterestColors_(const std::optional<NitroPointOfInterestColors>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroPointOfInterestColors get_std__optional_NitroPointOfInterestColors_(const std::optional<NitroPointOfInterestColors>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<std::function<void(const std::string& /* itemId */)>>
+  /**
+   * Specialized version of `std::optional<std::function<void(const std::string& / * itemId * /)>>`.
+   */
+  using std__optional_std__function_void_const_std__string_____itemId______ = std::optional<std::function<void(const std::string& /* itemId */)>>;
+  inline std::optional<std::function<void(const std::string& /* itemId */)>> create_std__optional_std__function_void_const_std__string_____itemId______(const std::function<void(const std::string& /* itemId */)>& value) noexcept {
+    return std::optional<std::function<void(const std::string& /* itemId */)>>(value);
+  }
+  inline bool has_value_std__optional_std__function_void_const_std__string_____itemId______(const std::optional<std::function<void(const std::string& /* itemId */)>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::function<void(const std::string& /* itemId */)> get_std__optional_std__function_void_const_std__string_____itemId______(const std::optional<std::function<void(const std::string& /* itemId */)>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridPointOfInterestTemplateSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridPointOfInterestTemplateSpec>`.
+   */
+  using std__shared_ptr_HybridPointOfInterestTemplateSpec_ = std::shared_ptr<HybridPointOfInterestTemplateSpec>;
+  std::shared_ptr<HybridPointOfInterestTemplateSpec> create_std__shared_ptr_HybridPointOfInterestTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridPointOfInterestTemplateSpec_(std__shared_ptr_HybridPointOfInterestTemplateSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridPointOfInterestTemplateSpec>
+  using std__weak_ptr_HybridPointOfInterestTemplateSpec_ = std::weak_ptr<HybridPointOfInterestTemplateSpec>;
+  inline std__weak_ptr_HybridPointOfInterestTemplateSpec_ weakify_std__shared_ptr_HybridPointOfInterestTemplateSpec_(const std::shared_ptr<HybridPointOfInterestTemplateSpec>& strong) noexcept { return strong; }
   
   // pragma MARK: std::shared_ptr<HybridSearchTemplateSpec>
   /**
