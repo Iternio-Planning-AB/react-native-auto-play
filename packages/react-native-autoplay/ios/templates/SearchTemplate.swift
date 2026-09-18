@@ -162,7 +162,7 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
                     listTemplate.invalidate()
 
                     let _ = try await interfaceController.pushTemplate(
-                        listTemplate.template,
+                        try listTemplate.getTemplate(),
                         animated: true
                     )
                 }

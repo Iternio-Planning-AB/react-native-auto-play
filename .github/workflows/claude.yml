@@ -43,9 +43,15 @@ jobs:
           # assignee_trigger: "claude-bot"
 
           # Optional: Configure Claude's behavior with CLI arguments
+          #
+          # --allowedTools *adds* to the action's defaults (file reads,
+          # read-only git, comment management); it does not replace them.
+          # The mcp__github_ci__* tools need the `actions: read` permission
+          # granted above, and let Claude read a failing job's log instead of
+          # inferring the failure from the diff.
           claude_args: |
-            --model claude-opus-4-6
-            --allowedTools "Read,Glob,Grep,WebSearch,WebFetch"
+            --model fable
+            --allowedTools "Read,Glob,Grep,WebSearch,WebFetch,mcp__github_ci__get_ci_status,mcp__github_ci__get_workflow_run_details,mcp__github_ci__download_job_log"
             --system-prompt "You are an experienced software developer specializing in React Native for iOS, Android, and web. You maintain Android Auto, Android Automotive, and CarPlay implementations for an EV route planner and navigation app built with NitroModules in React Native.
 
             Review only what matters:

@@ -11,6 +11,31 @@ import CarPlay
 class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     let interfaceController: CPInterfaceController
 
+    /// `CPMapTemplate` exposes no way to inspect its panel stack (only push/pop operations),
+    /// so this mirrors the combined logical navigation stack of regular pushed templates and
+    /// panels pushed onto a `CPMapTemplate`, in push order, to know what `popTemplate` etc.
+    /// need to pop next.
+    private enum NavigationEntry {
+        case template(id: String)
+        case panel(id: String, mapTemplate: CPMapTemplate)
+
+        var id: String {
+            switch self {
+            case .template(let id): return id
+            case .panel(let id, _): return id
+            }
+        }
+    }
+
+    private var navigationStack: [NavigationEntry] = []
+
+    /// Set by `templateWillDisappear` whenever root is covered while a panel is visible, and
+    /// consulted by `templateWillAppear` to know which panel to reveal — inferring it from
+    /// `navigationStack` position only works when the coverer is a pushed template (tracked in
+    /// the stack); a presented template (e.g. a `MessageTemplate` without `mapConfig`) never
+    /// touches `navigationStack` at all, so position-based inference silently breaks for it.
+    private var coveredPanelId: String?
+
     init(
         interfaceController: CPInterfaceController
     ) {
@@ -29,16 +54,8 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         interfaceController.rootTemplate
     }
 
-    var topTemplate: CPTemplate? {
-        interfaceController.topTemplate
-    }
-
     var templates: [CPTemplate] {
         interfaceController.templates
-    }
-
-    var topTemplateId: String? {
-        return interfaceController.topTemplate?.id
     }
 
     var rootTemplateId: String? {
@@ -49,99 +66,240 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         _ templateToPush: CPTemplate,
         animated: Bool
     ) async throws -> Bool {
-        return try await interfaceController.pushTemplate(
+        let result = try await interfaceController.pushTemplate(
             templateToPush,
             animated: animated
         )
+
+        navigationStack.append(.template(id: templateToPush.id))
+
+        return result
+    }
+
+    /// Pushes `panel` onto the current root template, which must already be a `CPMapTemplate`
+    /// (e.g. a `MapTemplate` previously set via `setRootTemplate`).
+    @available(iOS 27.0, *)
+    func pushPanel(
+        _ panel: CPMapPanel,
+        templateId: String
+    ) async throws {
+        guard let mapTemplate = rootTemplate as? CPMapTemplate else {
+            throw AutoPlayError.rootTemplateNotMapTemplate(
+                "\(templateId) has mapConfig set, which requires the root template to be a CPMapTemplate"
+            )
+        }
+
+        // A regular pushed template covers the map (and everything on it, panels included) on
+        // screen, but pushPanel only operates on the map's own, separate panel stack — pushing
+        // onto it here would silently attach to a hidden surface with no visible effect and no
+        // lifecycle callbacks, so this must be rejected rather than desyncing navigationStack.
+        guard
+            !navigationStack.contains(where: {
+                if case .template(let id) = $0 { return id != rootTemplate.id }
+                return false
+            })
+        else {
+            throw AutoPlayError.mapTemplateNotVisible(
+                "\(templateId) has mapConfig set, but the map template is currently covered by another pushed template"
+            )
+        }
+
+        // CarPlay rejects pushPanel outright while a navigation alert is showing
+        // (CPMapTemplatePanelErrorDomain code 4) — dismiss it first, same as showAlert already
+        // does when replacing one alert with another.
+        if mapTemplate.currentNavigationAlert != nil {
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                mapTemplate.dismissNavigationAlert(animated: true) { _ in
+                    continuation.resume()
+                }
+            }
+        }
+
+        try await withCheckedThrowingContinuation {
+            (continuation: CheckedContinuation<Void, Error>) in
+            mapTemplate.pushPanel(panel) { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume()
+            }
+        }
+
+        navigationStack.append(.panel(id: templateId, mapTemplate: mapTemplate))
     }
 
     func setRootTemplate(
         _ rootTemplate: CPTemplate,
         animated: Bool
     ) async throws -> Bool {
-        return try await interfaceController.setRootTemplate(
+        let result = try await interfaceController.setRootTemplate(
             rootTemplate,
             animated: animated
         )
+
+        let previousEntries = navigationStack
+        navigationStack = [.template(id: rootTemplate.id)]
+
+        // No CarPlay callback tears down a panel when its root is replaced, unlike templateDidDisappear for regular templates.
+        if #available(iOS 27.0, *) {
+            let panelIds = previousEntries.compactMap { entry -> String? in
+                if case .panel(let id, _) = entry { return id }
+                return nil
+            }
+
+            if !panelIds.isEmpty {
+                // Only the topmost entry could still be visible; others already got their disappear pair when covered.
+                if let last = previousEntries.last, case .panel(let visiblePanelId, _) = last {
+                    try? RootModule.withAutoPlayTemplate(templateId: visiblePanelId) {
+                        (template: AutoPlayTemplate) in
+                        template.onWillDisappear(animated: animated)
+                        template.onDidDisappear(animated: animated)
+                    }
+                }
+
+                try RootModule.withTemplateStore { templateStore in
+                    templateStore.removeTemplates(templateIds: panelIds)
+                }
+                panelIds.forEach { HybridAutoPlay.removeListeners(templateId: $0) }
+            }
+        }
+
+        return result
+    }
+
+    /// Whether `templateId` is the top entry of the combined template/panel navigation stack.
+    func isTopEntry(templateId: String) -> Bool {
+        return navigationStack.last?.id == templateId
+    }
+
+    /// Removes the navigation-stack entry for `templateId` if present; idempotent if it's
+    /// already gone. For `.template` entries, `popTopEntry` removes the entry directly for
+    /// app-initiated pops, and `templateDidDisappear` calls this for CarPlay-initiated pops
+    /// (e.g. its built-in back button) that `popTopEntry` never sees. For `.panel` entries,
+    /// `popTopEntry` doesn't touch `navigationStack` at all — `CPMapPanelDelegate.panelDidHide`
+    /// calling this is the only place a panel entry is removed, covering both app-initiated
+    /// and CarPlay-initiated pops alike.
+    func removeNavigationEntryIfPresent(templateId: String) {
+        navigationStack.removeAll { $0.id == templateId }
+    }
+
+    /// Ids of all panel entries currently in the navigation stack, in push order. `navigationStack`
+    /// itself is private, so this is the minimal data `CPMapPanelDelegate` callbacks need to
+    /// simulate cover/reveal lifecycle events themselves — `CPMapPanelDelegate` has no
+    /// equivalent of `CPInterfaceControllerDelegate` telling a covered/revealed panel about it.
+    @available(iOS 27.0, *)
+    var panelTemplateIds: [String] {
+        navigationStack.compactMap { entry in
+            if case .panel(let id, _) = entry { return id }
+            return nil
+        }
+    }
+
+    /// Whether any panel exists in the stack, even if currently covered by a regular template.
+    @available(iOS 27.0, *)
+    var hasPanel: Bool {
+        !panelTemplateIds.isEmpty
     }
 
     func popTemplate(
         animated: Bool
     ) async throws -> String? {
-        guard let templateId = topTemplateId else { return nil }
+        return try await popTopEntry(animated: animated)
+    }
 
-        // Ensure at least one template remains
-        guard templates.count > 1 else { return nil }
+    /// Pops whatever is on top of the combined navigation stack: a regular pushed template via
+    /// `CPInterfaceController.popTemplate`, or a panel via `CPMapTemplate.popPanelWithCompletion`.
+    private func popTopEntry(animated: Bool) async throws -> String? {
+        // Ensure at least one entry (the root) remains
+        guard navigationStack.count > 1, let top = navigationStack.last else { return nil }
 
-        try await interfaceController.popTemplate(
-            animated: animated
-        )
+        switch top {
+        case .template(let templateId):
+            try await interfaceController.popTemplate(animated: animated)
 
-        try RootModule.withTemplateStore { templateStore in
-            templateStore.removeTemplate(templateId: templateId)
+            try RootModule.withTemplateStore { templateStore in
+                templateStore.removeTemplate(templateId: templateId)
+            }
+
+            removeNavigationEntryIfPresent(templateId: templateId)
+
+            return templateId
+
+        case .panel(let templateId, let mapTemplate):
+            guard #available(iOS 27.0, *) else { return nil }
+
+            try await mapTemplate.popPanel()
+
+            // popPanel() never triggers panelDidHide (only hidePanel() does), so this has to
+            // do the teardown + reveal itself rather than rely on the delegate.
+            await handlePanelPopped(templateId: templateId, animated: animated)
+
+            return templateId
         }
-
-        return templateId
     }
 
     func popToRootTemplate(
         animated: Bool
     ) async throws -> [String] {
-        var templateIds: [String] = []
+        guard navigationStack.count > 1 else { return [] }
 
-        templates.forEach { template in
-            let templateId = template.id
+        let entriesToPop = Array(navigationStack.dropFirst())
+        let poppedIds = entriesToPop.map { $0.id }
 
-            if templateId == rootTemplateId {
-                return
-            }
-            templateIds.append(templateId)
+        if entriesToPop.contains(where: {
+            if case .template = $0 { return true }
+            return false
+        }) {
+            try await interfaceController.popToRootTemplate(animated: animated)
         }
 
-        if templateIds.count == 0 {
-            return templateIds
-        }
-        try await interfaceController.popToRootTemplate(
-            animated: animated
-        )
+        let panelTemplates = entriesToPop.compactMap({ entry in
+            if case .panel = entry { return entry.id }
+            return nil
+        })
+
+        // The visible panel is left for panelDidHide to tear down (via hidePanel() below) so its
+        // lifecycle + button reclaim isn't duplicated here; only the already-covered ones (which
+        // already got their disappear pair) need removing now.
+        let visiblePanelId = panelTemplates.last
+        let idsToRemoveNow = poppedIds.filter { $0 != visiblePanelId }
 
         try RootModule.withTemplateStore { templateStore in
-            templateStore.removeTemplates(templateIds: templateIds)
+            templateStore.removeTemplates(templateIds: idsToRemoveNow)
         }
 
-        return templateIds
+        // Keep the visible panel tracked so panelDidHide still finds it there.
+        let keptEntry = visiblePanelId.flatMap { id in entriesToPop.first { $0.id == id } }
+        navigationStack = [navigationStack[0]] + (keptEntry.map { [$0] } ?? [])
+
+        if visiblePanelId != nil, #available(iOS 27.0, *) {
+            try await RootModule.withInterfaceController { interfaceController in
+                let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
+                try await mapTemplate?.hidePanel()
+            }
+        }
+
+        return poppedIds
     }
 
     func popToTemplate(templateId: String, animated: Bool) async throws
         -> [String]
     {
-        guard
-            let template = interfaceController.templates.first(
-                where: {
-                    templateId == $0.id
-                })
-        else { return [] }
-
-        var templateIds: [String] = interfaceController.templates.map {
-            template in template.id
+        guard navigationStack.contains(where: { $0.id == templateId }) else {
+            return []
         }
 
-        if let startIndex = templateIds.firstIndex(where: {
-            $0 == templateId
-        }),
-            let endIndex = templateIds.firstIndex(where: {
-                $0 == topTemplateId
-            })
-        {
-            templateIds = Array(templateIds[(startIndex)..<endIndex])
+        var poppedIds: [String] = []
+
+        while navigationStack.last?.id != templateId {
+            guard let poppedId = try await popTopEntry(animated: animated) else {
+                break
+            }
+            poppedIds.append(poppedId)
         }
 
-        try await interfaceController.pop(
-            to: template,
-            animated: animated
-        )
-
-        return templateIds
+        return poppedIds
     }
 
     func presentTemplate(
@@ -181,6 +339,21 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
                 animated: animated
             )
         }
+
+        // Panels only attach to root, so only relevant when root reappears. `coveredPanelId` is
+        // set by templateWillDisappear when root was covered — this can't be inferred from
+        // navigationStack position, since a presented (not pushed) covering template, like a
+        // MessageTemplate without mapConfig, never touches navigationStack at all.
+        if #available(iOS 27.0, *), templateId == rootTemplateId {
+            if let panelId = coveredPanelId, panelTemplateIds.contains(panelId) {
+                try? RootModule.withAutoPlayTemplate(templateId: panelId) {
+                    (template: AutoPlayTemplate) in
+                    template.onWillAppear(animated: animated)
+                    template.onDidAppear(animated: animated)
+                }
+            }
+            coveredPanelId = nil
+        }
     }
 
     func templateDidAppear(
@@ -188,13 +361,6 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         animated: Bool
     ) {
         let templateId = aTemplate.id
-
-        if rootTemplateId == templateId {
-            // this makes sure we purge outdated CPSearchTemplate since that one can be popped on with a CarPlay native button we can not intercept
-            try? RootModule.withTemplateStore { templateStore in
-                templateStore.purge()
-            }
-        }
 
         try? RootModule.withAutoPlayTemplate(
             templateId: templateId,
@@ -222,6 +388,22 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
                 )
             }
         )
+
+        // Panels only attach to root, so only relevant when root is covered — by a push (not yet
+        // appended to navigationStack at this point, so .last is still the panel being covered)
+        // or by presenting a template (e.g. a MessageTemplate without mapConfig, which never
+        // touches navigationStack at all, so .last is still the panel either way).
+        if #available(iOS 27.0, *), templateId == rootTemplateId,
+            let last = navigationStack.last,
+            case .panel(let panelId, _) = last
+        {
+            coveredPanelId = panelId
+            try? RootModule.withAutoPlayTemplate(templateId: panelId) {
+                (template: AutoPlayTemplate) in
+                template.onWillDisappear(animated: animated)
+                template.onDidDisappear(animated: animated)
+            }
+        }
     }
 
     func templateDidDisappear(
@@ -239,14 +421,21 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             }
         )
 
-        if aTemplate is CPAlertTemplate {
-            try? RootModule.withTemplateStore { templateStore in
-                templateStore.removeTemplate(templateId: templateId)
-            }
-
-            HybridAutoPlay.removeListeners(
-                templateId: templateId
-            )
+        /// this makes sure onPopped for templates is only invoked when they are gone forever
+        /// in case the template is just hidden by some other template it will not fire
+        /// since CPAlertTemplate is presented and nothing can be pushed on top of it there is no special handling required
+        guard !interfaceController.templates.contains(where: { $0.id == templateId }) else {
+            return
         }
+
+        removeNavigationEntryIfPresent(templateId: templateId)
+
+        try? RootModule.withTemplateStore { templateStore in
+            templateStore.removeTemplate(templateId: templateId)
+        }
+
+        HybridAutoPlay.removeListeners(
+            templateId: templateId
+        )
     }
 }

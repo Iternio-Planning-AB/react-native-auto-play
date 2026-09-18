@@ -18,7 +18,7 @@ public extension NitroRow {
   /**
    * Create a new instance of `NitroRow`.
    */
-  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?) {
+  init(title: AutoText, detailedText: AutoText?, browsable: Bool?, enabled: Bool, image: Variant_GlyphImage_AssetImage_RemoteImage?, imageType: ListImageType?, checked: Bool?, onPress: ((_ checked: Bool?) -> Void)?, selected: Bool?, coordinate: WaypointCoordinate?, distance: Distance?, duration: DurationWithTimeZone?, travelEstimatesVisible: Bool?, address: String?) {
     self.init(title, { () -> bridge.std__optional_AutoText_ in
       if let __unwrappedValue = detailedText {
         return bridge.create_std__optional_AutoText_(__unwrappedValue)
@@ -46,6 +46,12 @@ public extension NitroRow {
       } else {
         return .init()
       }
+    }(), { () -> bridge.std__optional_ListImageType_ in
+      if let __unwrappedValue = imageType {
+        return bridge.create_std__optional_ListImageType_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }(), { () -> bridge.std__optional_bool_ in
       if let __unwrappedValue = checked {
         return bridge.create_std__optional_bool_(__unwrappedValue)
@@ -64,6 +70,36 @@ public extension NitroRow {
     }(), { () -> bridge.std__optional_bool_ in
       if let __unwrappedValue = selected {
         return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_WaypointCoordinate_ in
+      if let __unwrappedValue = coordinate {
+        return bridge.create_std__optional_WaypointCoordinate_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_Distance_ in
+      if let __unwrappedValue = distance {
+        return bridge.create_std__optional_Distance_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_DurationWithTimeZone_ in
+      if let __unwrappedValue = duration {
+        return bridge.create_std__optional_DurationWithTimeZone_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = travelEstimatesVisible {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = address {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
@@ -125,6 +161,11 @@ public extension NitroRow {
   }
   
   @inline(__always)
+  var imageType: ListImageType? {
+    return self.__imageType.value
+  }
+  
+  @inline(__always)
   var checked: Bool? {
     return { () -> Bool? in
       if bridge.has_value_std__optional_bool_(self.__checked) {
@@ -165,6 +206,45 @@ public extension NitroRow {
       if bridge.has_value_std__optional_bool_(self.__selected) {
         let __unwrapped = bridge.get_std__optional_bool_(self.__selected)
         return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var coordinate: WaypointCoordinate? {
+    return self.__coordinate.value
+  }
+  
+  @inline(__always)
+  var distance: Distance? {
+    return self.__distance.value
+  }
+  
+  @inline(__always)
+  var duration: DurationWithTimeZone? {
+    return self.__duration.value
+  }
+  
+  @inline(__always)
+  var travelEstimatesVisible: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__travelEstimatesVisible) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__travelEstimatesVisible)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var address: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__address) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__address)
+        return String(__unwrapped)
       } else {
         return nil
       }

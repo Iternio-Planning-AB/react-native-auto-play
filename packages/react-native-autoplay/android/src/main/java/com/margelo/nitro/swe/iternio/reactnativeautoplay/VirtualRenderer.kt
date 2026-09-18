@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Display
 import android.view.LayoutInflater
@@ -42,6 +43,10 @@ class VirtualRenderer(
 ) {
     private var virtualDisplay: VirtualDisplay? = null
     private val pendingDisplays = mutableListOf<VirtualDisplay>()
+    // Optional host view under the React surface (see NativeBackdrop), one per presentation;
+    // parked ones are destroyed in the same sweep as pendingDisplays
+    private var currentBackdrop: NativeBackdrop? = null
+    private val pendingBackdrops = mutableListOf<NativeBackdrop>()
 
     private var reactSurfaceImpl: ReactSurfaceImpl? = null
     private var reactSurfaceView: ReactSurfaceView? = null
@@ -408,14 +413,39 @@ class VirtualRenderer(
             }
 
 
+            // Ask the host for a native backdrop for this display; the host is told whether it
+            // is the root or a cluster and may answer null for either. `this@VirtualRenderer.context`
+            // is the CarContext — the presentation's own `context` parameter is the ReactContext
+            // and shadows it. A throwing factory is logged and ignored so the React surface still
+            // renders.
+            val display = if (isCluster) NativeBackdropDisplay.CLUSTER else NativeBackdropDisplay.ROOT
+            val backdrop: NativeBackdrop? = NativeBackdropRegistry.factory?.let { factory ->
+                runCatching { factory(this@VirtualRenderer.context, display) }
+                    .onFailure { Log.w(TAG, "native backdrop factory failed ($display); rendering without it", it) }
+                    .getOrNull()
+            }
+            currentBackdrop?.let { pendingBackdrops.add(it) }
+            currentBackdrop = backdrop
+
             val rootContainer = FrameLayout(themedContext).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
                 )
                 clipChildren = false
 
+                backdrop?.let {
+                    // A view the host hands out more than once must not crash Presentation.onCreate
+                    (it.view.parent as? ViewGroup)?.removeView(it.view)
+                    addView(it.view, FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+                    ))
+                }
                 addView(reactSurfaceView)
             }
+            // The surface view is painted opaque DKGRAY at construction and survives resizes by
+            // re-parenting, so (re)apply per presentation: see-through only while a backdrop is
+            // actually attached.
+            reactSurfaceView?.setBackgroundColor(if (backdrop != null) Color.TRANSPARENT else Color.DKGRAY)
 
             splashScreenView?.let {
                 rootContainer.addView(it)
@@ -434,6 +464,9 @@ class VirtualRenderer(
                             it.release()
                         }
                         pendingDisplays.clear()
+                        // Backdrops share the lifetime of the displays they drew on
+                        pendingBackdrops.forEach { destroyBackdropQuietly(it, "parked") }
+                        pendingBackdrops.clear()
                     }
                 }
             })
@@ -509,8 +542,22 @@ class VirtualRenderer(
         }
     }
 
+    /** Host code, same trust boundary as the factory: log and continue on failure. */
+    private fun destroyBackdropQuietly(backdrop: NativeBackdrop, which: String) {
+        runCatching { backdrop.destroy() }
+            .onFailure { Log.w(TAG, "native backdrop ($which) destroy failed; continuing teardown", it) }
+    }
+
     @MainThread
     private fun stop() {
+        // Current and parked — a stop during a resize must not leak the backdrop whose
+        // replacement never drew. Host destroy() is guarded like the factory call: a
+        // throwing host must not skip the virtual-display release and surface teardown below.
+        currentBackdrop?.let { destroyBackdropQuietly(it, "current") }
+        currentBackdrop = null
+        pendingBackdrops.forEach { destroyBackdropQuietly(it, "parked") }
+        pendingBackdrops.clear()
+
         virtualDisplay?.release()
         virtualDisplay = null
 
@@ -553,6 +600,11 @@ class VirtualRenderer(
         fun removeRenderer(moduleId: String) {
             virtualRenderer[moduleId]?.stop()
             virtualRenderer.remove(moduleId)
+        }
+
+        // Forwarded by AndroidAutoSession.onCarConfigurationChanged
+        fun onColorSchemeChanged(moduleId: String, dark: Boolean) {
+            virtualRenderer[moduleId]?.currentBackdrop?.onColorSchemeChanged(dark)
         }
     }
 }

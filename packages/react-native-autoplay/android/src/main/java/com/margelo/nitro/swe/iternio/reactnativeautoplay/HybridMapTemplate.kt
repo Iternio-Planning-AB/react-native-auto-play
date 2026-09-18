@@ -147,8 +147,10 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
 
     override fun startNavigation(
         templateId: String, trip: TripConfig
-    ) {
-        MapTemplate.startNavigation(trip)
+    ): Promise<Unit> {
+        return Promise.async {
+            MapTemplate.startNavigation(trip)
+        }
     }
 
     override fun stopNavigation(templateId: String) {
@@ -157,5 +159,10 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
 
     override fun setManeuverState(templateId: String, state: ManeuverState) {
         // Android Auto does not have an equivalent to CPManeuverState
+    }
+
+    override fun updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?): Promise<Unit> {
+        // Android Auto has no equivalent to CarPlay's navigation session options panel
+        return Promise.async {}
     }
 }

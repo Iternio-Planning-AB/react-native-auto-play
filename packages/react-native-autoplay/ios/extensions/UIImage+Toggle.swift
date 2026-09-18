@@ -10,9 +10,12 @@ import UIKit
 extension UIImage {
     static func makeToggleImage(
         enabled: Bool,
-        maximumImageSize: CGSize
+        maximumImageSize: CGSize,
+        traitCollection: UITraitCollection
     ) -> UIImage {
-        let renderer = UIGraphicsImageRenderer(size: maximumImageSize)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = traitCollection.displayScale
+        let renderer = UIGraphicsImageRenderer(size: maximumImageSize, format: format)
         return renderer.image { ctx in
             // Draw the track as a pill, centered vertically
             let trackHeight = maximumImageSize.height * 0.5

@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `GridImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
 
@@ -44,6 +46,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 #include <vector>
 #include "AutoText.hpp"
 #include "NitroGridButton.hpp"
+#include "GridImageSize.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
@@ -63,11 +66,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::vector<NitroAction>> headerActions     SWIFT_PRIVATE;
     AutoText title     SWIFT_PRIVATE;
     std::vector<NitroGridButton> buttons     SWIFT_PRIVATE;
+    std::optional<GridImageSize> imageSize     SWIFT_PRIVATE;
     std::optional<NitroBaseMapTemplateConfig> mapConfig     SWIFT_PRIVATE;
 
   public:
     GridTemplateConfig() = default;
-    explicit GridTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::vector<NitroGridButton> buttons, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), buttons(buttons), mapConfig(mapConfig) {}
+    explicit GridTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::vector<NitroGridButton> buttons, std::optional<GridImageSize> imageSize, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), buttons(buttons), imageSize(imageSize), mapConfig(mapConfig) {}
 
   public:
     // GridTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, buttons, mapConfig
@@ -93,6 +97,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
         JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "buttons"))),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridImageSize>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageSize"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))
       );
     }
@@ -108,6 +113,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "headerActions"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.headerActions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "buttons"), JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::toJSI(runtime, arg.buttons));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "imageSize"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridImageSize>>::toJSI(runtime, arg.imageSize));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "mapConfig"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::toJSI(runtime, arg.mapConfig));
       return obj;
     }
@@ -129,6 +135,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "buttons")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridImageSize>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageSize")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))) return false;
       return true;
     }

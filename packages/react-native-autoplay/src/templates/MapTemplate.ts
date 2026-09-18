@@ -7,7 +7,13 @@ import { SafeAreaInsetsProvider } from '../components/SafeAreaInsetsContext';
 import { WindowInformationWrapper } from '../components/WindowInformationWrapper';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MapTemplate as NitroMapTemplate } from '../specs/MapTemplate.nitro';
-import type { ActionButtonAndroid, MapButton, MapPanButton } from '../types/Button';
+import type {
+  ActionButtonAndroid,
+  ImageButton,
+  MapButton,
+  MapPanButton,
+  TextButton,
+} from '../types/Button';
 import type { AutoManeuver, ManeuverState } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
@@ -21,6 +27,7 @@ import { type NavigationAlert, NitroAlertUtil } from '../utils/NitroAlert';
 import { type NitroColor, NitroColorUtil, type ThemedColor } from '../utils/NitroColor';
 import { NitroManeuverUtil, type NitroRoutingManeuver } from '../utils/NitroManeuver';
 import { NitroMapButton } from '../utils/NitroMapButton';
+import { NitroOptionsPanelUtil, type OptionsPanelConfig } from '../utils/NitroOptionsPanel';
 import {
   type HeaderActionsIos,
   type NitroBaseMapTemplateConfig,
@@ -30,6 +37,17 @@ import {
 } from './Template';
 
 const HybridMapTemplate = NitroModules.createHybridObject<NitroMapTemplate>('MapTemplate');
+
+export type {
+  ChargerLocation,
+  ChargerOutlet,
+  ChargingConnector,
+  OptionsPanelChargerSection,
+  OptionsPanelConfig,
+  OptionsPanelGridSection,
+  OptionsPanelListSection,
+  OptionsPanelSection,
+} from '../utils/NitroOptionsPanel';
 
 export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
@@ -118,6 +136,19 @@ export type MapHeaderActions<T> = {
   ios?: HeaderActionsIos<T>;
 };
 
+/**
+ * @namespace iOS - not supported; CarPlay has no separate header for the map behind a panel, so
+ * the panel template's own `headerActions` are applied to the root map template's nav bar instead.
+ */
+export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'>;
+
+/**
+ * @namespace iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
+ * optional icon-only button (any title is dropped natively), so a second action must be an
+ * ImageButton rather than a TextButton, and a third action isn't supported at all.
+ */
+export type PanelActionsIos<T> = [TextButton<T>] | [TextButton<T>, ImageButton<T>];
+
 export type BaseMapTemplateConfig<T> = {
   /**
    * buttons that represent actions on the map template, usually on the bottom right corner
@@ -145,6 +176,13 @@ export type MapTemplateConfig = Omit<
      * react component that is rendered
      */
     component: React.ComponentType<RootComponentInitialProps>;
+
+    /**
+     * the panel shown when tapping the ellipsis button next to the travel estimates during active navigation (iOS 27+).
+     * No-op on Android
+     * @namespace iOS
+     */
+    optionsPanel?: OptionsPanelConfig<MapTemplate>;
 
     /**
      * Notification that navigation was stopped. May occur when another source such as the car head unit starts navigating.
@@ -185,6 +223,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
       onStopNavigation,
       onAutoDriveEnabled,
       defaultGuidanceBackgroundColor,
+      optionsPanel,
       ...baseConfig
     } = config;
 
@@ -220,6 +259,25 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     };
 
     HybridMapTemplate.createMapTemplate(nitroConfig);
+
+    // routed through updateOptionsPanel, not embedded in nitroConfig above — nitrogen can't generate
+    // a spec for a variant type nested that deep inside NitroMapTemplateConfig.
+    this.updateOptionsPanel(optionsPanel);
+  }
+
+  /**
+   * @namespace iOS updates the panel shown when tapping the ellipsis button
+   * next to the travel estimates during navigation (iOS 27+).
+   */
+  public updateOptionsPanel(optionsPanel?: OptionsPanelConfig<MapTemplate>) {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
+
+    return HybridMapTemplate.updateOptionsPanel(
+      this.id,
+      NitroOptionsPanelUtil.convert(this.template, optionsPanel)
+    );
   }
 
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
@@ -364,7 +422,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * or use this to start a navigation session without asking the user
    */
   public startNavigation(trip: TripConfig) {
-    HybridMapTemplate.startNavigation(this.id, trip);
+    return HybridMapTemplate.startNavigation(this.id, trip);
   }
 
   public stopNavigation() {

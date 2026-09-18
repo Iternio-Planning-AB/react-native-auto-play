@@ -24,9 +24,13 @@ The highlights, so you know what you're looking for:
    the library. Behaviour is controlled by `ReactNativeAutoPlay_*` **Gradle properties**, not
    code, and `getExtOrDefault` only reads `rootProject.ext` or the prefixed project property,
    so setting them anywhere else silently does nothing.
-3. `HeadlessTaskService` is a **bound** service and car reconnects rebind it, so the JS task
+3. **iOS Swift state is reached from two threads** — the main thread and the JS/Nitro
+   thread. Plain `throws` hybrid methods (`createXTemplate`, every `addListener*`) run on
+   the JS thread, so shared mutable state needs the `NSLock` + `withLock` convention, and
+   listener callbacks must be invoked outside the lock because they can re-enter.
+4. `HeadlessTaskService` is a **bound** service and car reconnects rebind it, so the JS task
    must be idempotent.
-4. `fix-prefab.gradle` and the ProGuard `-keep` rule for the nitro package are both
+5. `fix-prefab.gradle` and the ProGuard `-keep` rule for the nitro package are both
    load-bearing. Don't remove either.
 
 Then follow the file, not this summary.

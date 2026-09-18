@@ -22,6 +22,10 @@
 -   **Headless Operation:** Runs in the background to keep the automotive experience alive even when the main app is not in the foreground.
 -   **Powered by [NitroModules](https://nitro.margelo.com/)**
 
+## Requirements
+
+-   **iOS builds require Xcode 27+** (the iOS 27 SDK), even for apps that don't use any `mapConfig`/panel features — the library references `CPMapPanel`/`CPPanel` types internally behind `@available(iOS 27.0, *)` checks, but `@available` only defers *runtime* execution, not compile-time symbol resolution, so the SDK must be present to build at all.
+
 ## Installation
 
 1.  **Install the package and its peer dependencies:**
@@ -137,37 +141,36 @@ Paste this into your Info.plist and adjust it to your needs. Check [Apple docs](
 
 #### MapTemplate
 if you want to make use of the MapTemplate and render react components you need to add this to your AppDelegate.swift
-This should cover old and new architecture, adjust to your needs!
+This is an example that works for bare react-native (>= 0.82) and Expo SDK 57, check [this](https://github.com/Iternio-Planning-AB/react-native-auto-play/blob/dbd33ff32ee58338282ffe0f8a970e687e1e3520/packages/react-native-autoplay/README.md?plain=1#L139) for older versions.
 
 ```swift
-@objc func getRootViewForAutoplay(
+  @objc func getRootViewForAutoplay(
     moduleName: String,
     initialProperties: [String: Any]?
   ) -> UIView? {
-    if RCTIsNewArchEnabled() {
-      if let factory = reactNativeFactory?.rootViewFactory as? ExpoReactRootViewFactory {
-         return factory.superView(
-          withModuleName: moduleName,
-          initialProperties: initialProperties,
-          launchOptions: nil
-        )
-      }
-      
-      return reactNativeFactory?.rootViewFactory.view(
+    var autoPlayRootView: UIView?
+
+    if let factory = reactNativeFactory?.rootViewFactory
+      as? ExpoReactRootViewFactory
+    {
+      autoPlayRootView = factory.superView(
+        withModuleName: moduleName,
+        initialProperties: initialProperties,
+        bundleConfiguration: RCTBundleConfiguration(),
+        devMenuConfiguration: RCTDevMenuConfiguration(),
+      )
+    }
+
+    if autoPlayRootView == nil,
+      let factory = reactNativeFactory?.rootViewFactory
+    {
+      autoPlayRootView = factory.view(
         withModuleName: moduleName,
         initialProperties: initialProperties
       )
     }
 
-    if let rootView = window?.rootViewController?.view as? RCTRootView {
-      return RCTRootView(
-        bridge: rootView.bridge,
-        moduleName: moduleName,
-        initialProperties: initialProperties
-      )
-    }
-
-    return nil
+    return autoPlayRootView
   }
 ```
 
@@ -176,6 +179,10 @@ It is recommended to attach a listener to MapTemplate.onAppearanceDidChange and 
 Reason for this is that CarPlay does not allow for color updates on maneuvers shown on the screen. You need to send maneuvers with a new id to get them updated properly on the screen.
 The color properties do not need to handle the mode change, best practice is to use ThemedColor whenever possible and set appropriate light and dark mode colors.
 This is mainly required on CarPlay for now since Android Auto lacks light mode.
+
+#### CPListTemplate day/night header
+
+**Known CarPlay platform bug, not fixable in this library:** on `ListTemplate` (`CPListTemplate`) only, the entire header — title text and buttons alike — doesn't track live light/dark mode switches; each toggle flips it to the *opposite* of the actual current theme instead, until the template is popped and pushed again. Other templates work fine, this seems to be an iOS 26 issue only.
 
 #### Dashboard buttons
 In case you wanna open up your CarPlay app from one of the CarPlay dashboard buttons set `launchHeadUnitScene` on the button and add this to your Info.plist. Make sure to apply your "Bundle Identifier" instead of the example one.
@@ -202,6 +209,49 @@ In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in
 ```
 -keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }
 ```
+
+#### Native backdrop under the MapTemplate surface
+On Android the React content of a `MapTemplate` is rendered onto the car screen through a virtual display. Some native views cannot be hosted there as React Native views — Fragment-based map SDK wrappers, for example, are bound to the phone `Activity`. For those the library can place a host-provided native `View` **under** the React surface of a display: the Android counterpart of the iOS `getRootViewForAutoplay` hook above. Your React tree then draws on top of it as an overlay. The factory is asked for the root display and for each cluster display, and may answer `null` for either.
+
+```kotlin
+interface NativeBackdrop {
+    /** Added as the presentation root's FIRST child, match-parent. */
+    val view: View
+
+    /** The car's day/night changed (CarContext.isDarkMode) — redraw accordingly. */
+    fun onColorSchemeChanged(dark: Boolean)
+
+    /** Release everything; must be idempotent. */
+    fun destroy()
+}
+
+/** Which car display is asking for a backdrop. */
+enum class NativeBackdropDisplay { ROOT, CLUSTER }
+
+object NativeBackdropRegistry {
+    /** Return null to render that display without a backdrop. */
+    @Volatile
+    var factory: ((CarContext, NativeBackdropDisplay) -> NativeBackdrop?)? = null
+}
+```
+
+Register the factory in your `Application.onCreate`, before the `CarAppService` can start:
+
+```kotlin
+NativeBackdropRegistry.factory = { carContext, display ->
+    when (display) {
+        NativeBackdropDisplay.ROOT -> MyMapBackdrop(carContext)
+        NativeBackdropDisplay.CLUSTER -> null   // or a second map view for the cluster
+    }
+}
+```
+
+Lifecycle contract:
+
+-   The factory is consulted once per presentation of each display — i.e. again after every surface resize — and each backdrop is destroyed when its presentation is replaced or the renderer stops. A `destroy()` that throws is logged and does not interrupt teardown.
+-   A factory that throws is logged and ignored; the React surface still renders.
+-   The React surface view is transparent only while a backdrop is attached. Without a registered factory nothing changes: the surface stays opaque as before.
+-   `onColorSchemeChanged(dark)` is forwarded from each session's `onCarConfigurationChanged` to that display's backdrop, so it can follow the car's day/night setting (car app quality guideline MR-1). It fires regardless of which template is currently on screen.
 
 ### Android Auto Customization
 You can customize certain behaviors of the library on Android Auto by setting properties in your app's `android/gradle.properties` file.
@@ -550,6 +600,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
 | `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton` |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |
+| `optionsPanel` | `OptionsPanelConfig<MapTemplate>` | ❌ | **iOS 27+ only, no-op on Android.** Panel shown when tapping the ellipsis button next to the travel estimates during active navigation. See **Options Panel** below. |
 | `onDidPan` / `onDidUpdateZoomGestureWithCenter` | callbacks | ❌ | Map gesture events. |
 | `onAppearanceDidChange` | `(colorScheme) => void` | ❌ | Listen for light/dark mode changes. |
 | `onAutoDriveEnabled` | `(template) => void` | ⚠️ | Android-only auto drive callback. Make sure to take action when receiving this and simulate a drive to the set destination. [Check Android docs for details](https://developer.android.com/reference/androidx/car/app/navigation/NavigationManagerCallback#onAutoDriveEnabled()) |
@@ -561,7 +612,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `title` | `AutoText` | ✅ | Header title. |
 | `sections` | `Section<ListTemplate>` | ❌ | List sections/rows. Not providing anything here will result in a loading indicator on Android and an empty list on iOS. |
 | `headerActions` | `HeaderActions<ListTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<ListTemplate>` | ❌ | Android map-with-content layout. |
+| `mapConfig` | `BaseMapTemplateConfig<ListTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
 
 #### GridTemplateConfig
 
@@ -570,7 +621,8 @@ Below is a concise overview of the most important props per template. Optional p
 | `title` | `AutoText` | ✅ | Header title. |
 | `buttons` | `GridButton<GridTemplate>[]` | ✅ | Grid items. Providing an empty array will result in a loading indicator on Android and an empty template on iOS. |
 | `headerActions` | `HeaderActions<GridTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<GridTemplate>` | ❌ | Android map-with-content layout. |
+| `imageSize` | `'unset'` `'large'` `'medium'` `'small'` | ❌ | **Android only**, requires Android Car API 8. Controls grid item image size; defaults to `unset` (platform default layout). Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate` doesn't support the sized grid content type. |
+| `mapConfig` | `BaseMapTemplateConfig<GridTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
 
 #### SearchTemplateConfig
 
@@ -590,9 +642,9 @@ Below is a concise overview of the most important props per template. Optional p
 | --- | --- | --- | --- |
 | `title` | `AutoText` | ✅ | Header title. |
 | `items` | `InformationItems` | ❌ | 1–4 rows. |
-| `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. |
+| `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. **iOS 27+ with `mapConfig` set**: at most 1 `TextButton` plus 1 icon-only `ImageButton`, enforced at the type level. |
 | `headerActions` | `HeaderActions<InformationTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<InformationTemplate>` | ❌ | Android map-with-content layout. |
+| `mapConfig` | `BaseMapTemplateConfig<InformationTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
 
 #### MessageTemplateConfig
 
@@ -601,9 +653,9 @@ Below is a concise overview of the most important props per template. Optional p
 | `message` | `AutoText` | ✅ | Main message text. |
 | `title` | `AutoText` | ❌ | Android header title. |
 | `image` | `AutoImage` | ❌ | Android-only image above the message. |
-| `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. |
-| `headerActions` | `HeaderActionsAndroid<MessageTemplate>` | ❌ | Android-only header actions. |
-| `mapConfig` | `BaseMapTemplateConfig<MessageTemplate>` | ❌ | Android map-with-content layout. |
+| `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. **iOS 27+ with `mapConfig` set**: at most 1 `TextButton` plus 1 icon-only `ImageButton`, enforced at the type level. |
+| `headerActions` | `HeaderActions<MessageTemplate>` | ❌ | Header actions. See **Header Actions** below. **iOS**: `ios` only takes effect once this renders as a `CPMapPanel` (`mapConfig` set, iOS 27+) — without `mapConfig` (or below iOS 27) this is a full-screen `CPAlertTemplate` with no nav bar, so `ios` is silently unused. |
+| `mapConfig` | `BaseMapTemplateConfig<MessageTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead, trading the usual full-screen modal alert for panel content. See **Map + Content** below. |
 
 #### SignInTemplateConfig (Android-only)
 
@@ -826,11 +878,11 @@ useEffect(() => {
 | Template | Purpose | Notes |
 | --- | --- | --- |
 | `MapTemplate` | Navigation, map rendering | Use as root; supports map buttons & navigation APIs. |
-| `ListTemplate` | Lists/menus | Supports sections, radio/toggle rows. |
-| `GridTemplate` | Action grid | Use `GridButton` items. |
+| `ListTemplate` | Lists/menus | Supports sections, radio/toggle rows. Can render as a CarPlay map panel, see **Map + Content**. |
+| `GridTemplate` | Action grid | Use `GridButton` items. Can render as a CarPlay map panel, see **Map + Content**. |
 | `SearchTemplate` | Search UI | Android-only search bar callbacks. |
-| `InformationTemplate` | Info panels | Android uses PaneTemplate; iOS uses InformationTemplate. |
-| `MessageTemplate` | Modal messages | Always shown on top until popped. |
+| `InformationTemplate` | Info panels | Android uses PaneTemplate; iOS uses InformationTemplate. Can render as a CarPlay map panel, see **Map + Content**. |
+| `MessageTemplate` | Modal messages | Always shown on top until popped (a true full-screen modal alert on iOS). Can render as a CarPlay map panel instead, see **Map + Content**. |
 
 **Template quick examples:**
 
@@ -850,6 +902,137 @@ new ListTemplate({
   headerActions: { android: { startHeaderAction: { type: 'back', onPress: () => {} } } },
 }).push();
 ```
+
+### Map + Content (`mapConfig`)
+
+`ListTemplate`, `GridTemplate`, `InformationTemplate`, and `MessageTemplate` all accept an optional `mapConfig` prop. Setting it (an empty object is enough — no actions need to be specified) gives the template a map background instead of its normal full-screen presentation. The two platforms implement this completely differently, so behavior and limitations differ accordingly.
+
+```ts
+new ListTemplate({
+  title: { text: 'Nearby' },
+  sections: [{ type: 'default', title: 'Stops', items: [{ type: 'default', title: { text: 'Charger' }, onPress: () => {} }] }],
+  mapConfig: {},
+}).push();
+```
+
+#### Android
+
+`mapConfig` wraps the template in a `MapWithContentTemplate`, giving it a map background while the template's own content (list, grid, info, or message) is laid out on top.
+
+#### iOS (27+)
+
+`mapConfig` instead renders the template as a [`CPMapPanel`](https://developer.apple.com/documentation/carplay/cpmappanel) — an overlay shown **on the current root map template** (a `MapTemplate` set via `setRootTemplate()`). On iOS versions below 27, `mapConfig` is currently a no-op and the template renders normally (there is no map-background equivalent pre-27).
+
+```ts
+// Root map template must already be set for the panel to have somewhere to attach to
+new MapTemplate({ component: MapScreen, onStopNavigation: () => {} }).setRootTemplate();
+
+// Pushing this on top now shows it as an overlay panel on the map, instead of a full-screen list.
+// headerActions.ios.backButton is required here — as the first (and only) panel in the stack it
+// gets no native close/back control (see "Things that behave differently in panel mode" below),
+// so without it the driver has no way to leave the panel.
+new ListTemplate({
+  title: { text: 'Nearby' },
+  sections: [{ type: 'default', title: 'Stops', items: [{ type: 'default', title: { text: 'Charger' }, onPress: () => {} }] }],
+  headerActions: { ios: { backButton: { type: 'back', onPress: () => HybridAutoPlay.popTemplate() } } },
+  mapConfig: {},
+}).push();
+```
+
+**Panels share the same push/pop stack as regular templates** — this is a library-level abstraction, not how Apple's API actually works. From your JS code's perspective, `.push()`, `HybridAutoPlay.popTemplate()`/`popToRootTemplate()`/`popToTemplate()`, and the lifecycle callbacks (`onWillAppear`, `onDidAppear`, etc.) behave the same whether the top of the stack is a panel or a regular pushed template — you can mix and pop through both without caring which is which. Natively, however, `CPMapPanel` is **not** part of `CPInterfaceController`'s template stack at all — Apple's API gives it its own, completely separate panel stack that lives on the `CPMapTemplate` that pushed it (`pushPanel`/`popPanel`/`CPMapPanelDelegate`, unrelated to `CPInterfaceController.pushTemplate`/`popTemplate`). This library tracks both stacks together internally and presents one unified stack to JS, so if you go looking at Apple's CarPlay documentation expecting to see panels integrated with `CPInterfaceController`, you won't find it there — that integration is something this library provides on top.
+
+**Things that behave differently in panel mode:**
+
+-   **`headerActions`/`mapButtons` ownership**: while a panel is shown, it takes over the root map template's bar buttons and floating map buttons — using the panel template's **own** `headerActions`/`mapConfig.mapButtons`, not `mapConfig.headerActions` (which is Android-only; on iOS it's ignored, since there's no separate header for the map behind a panel). The map template's own buttons are restored automatically once the panel is popped.
+-   **The first panel must provide its own way to be closed**: CarPlay's native close button (✕) is always disabled on every panel — this library turns it off globally, and this is required for correct lifecycle tracking, not a style choice. Tapping ✕ on the topmost panel doesn't just pop that one panel — it discards the *entire* panel stack down to the map, covered panels included — but `CPMapPanelDelegate.panelDidHide` only ever fires once, for the topmost panel. This library would have no callback at all for the covered panels CarPlay silently destroyed underneath it: they'd stay tracked forever, `onPopped` would never fire for them, and their listeners/native templates would leak. The back chevron doesn't have this problem — it only ever pops one level, always the topmost panel — so it's left enabled: once a second panel is pushed, CarPlay shows it automatically to return to the first, and it isn't customizable. The first panel in the stack gets no such control, though, so it needs its own way out: `headerActions.ios.backButton` (supported by all four panel-capable templates, including `MessageTemplate` once `mapConfig` is set) or something inside the panel's own content (a list item, or `MessageTemplate`'s required `actions.ios[0]` `TextButton`) that calls `popTemplate()`/`popToRootTemplate()`. Without one, the driver has no way to leave that first panel short of `autoDismissMs`.
+-   **`InformationTemplate`/`MessageTemplate` `actions`**: a `CPMapPanel`'s button configuration only supports one `TextButton` (with a title) plus one optional icon-only `ImageButton` (any title on it is dropped natively) — far fewer than the up-to-3-`TextButton` shape available without `mapConfig`. The type system enforces this: `actions.ios` is restricted to `[TextButton]` or `[TextButton, ImageButton]` whenever `mapConfig` is set.
+-   **`MessageTemplate` stops being a true modal**: normally `MessageTemplate` is a full-screen, blocking alert (`CPAlertTemplate`) that covers everything regardless of OS version. With `mapConfig` set, it instead becomes dismissible panel content in the regular push/pop stack — a deliberate trade-off, not a partial implementation.
+
+**Known iOS 27 beta limitations** (not something fixable in this library — re-test against newer betas):
+
+-   The optional icon-only `symbolButton` in a panel's button configuration does not appear to respond to taps at all on this beta — the button renders correctly, but its press handler is never invoked by CarPlay.
+-   `toggle` row accessory images render noticeably smaller inside a panel than in a regular (non-panel) `ListTemplate` — this is how Apple sizes `CPListItem.accessoryImage` on panels specifically, not something this library controls (see the `CPListItem.accessoryImage` known issue under **Options Panel** for the same underlying sizing bug's non-panel form).
+
+### Waypoint Rows (`type: 'waypoint'`)
+
+Any list section (`ListTemplate.sections`, or an `OptionsPanel` list section — see below) can include a `waypoint` row alongside the usual `default`/`toggle`/`radio`/`text` rows:
+
+```ts
+{
+  type: 'waypoint',
+  title: { text: 'Supercharger' },
+  address: 'Main St 1\n1234 Springfield',
+  coordinate: { latitude: 48.2, longitude: 16.37 },
+  travelEstimates: {
+    distance: { unit: 'kilometers', value: 12 },
+    duration: { timezone: 'Europe/Vienna', seconds: 600 },
+    visible: true,
+  },
+  image: { type: 'glyph', name: 'pin_drop' },
+  onPress: () => {},
+}
+```
+
+**iOS 27+ inside a `CPMapPanel`** (i.e. the enclosing `ListTemplate`/`GridTemplate` has `mapConfig` set, or this row is part of an `OptionsPanel` list section): renders as a real [`CPMapTemplateWaypoint`](https://developer.apple.com/documentation/carplay/cpmaptemplatewaypoint) item — `title` becomes the name, `address` the address, `image` the leading image (see the known-issue note below on image sizing). `travelEstimates.distance`/`.duration` are always sent to the native waypoint object (CarPlay requires them structurally), but they're **not shown by the waypoint item itself** — set `travelEstimates.visible: true` to additionally insert a sibling native [`CPTravelEstimates`](https://developer.apple.com/documentation/carplay/cptravelestimates) row right after it. This is a static snapshot, not live-updating — re-set `distance`/`duration` yourself (e.g. via `updateSections`/`updateOptionsPanel`) if it needs to track a changing location; there's no lighter-weight update path for just this value today.
+
+**Everywhere else** (non-panel `ListTemplate`, Android, iOS < 27): falls back to a plain row, using `title` as the row title and `address` as the detail text — `travelEstimates.visible` has no effect here. Instead, reference `TextPlaceholders.Distance`/`TextPlaceholders.Duration` inside `title.text`/`address` yourself and this library fills them in automatically (the same substitution mechanism `AutoText.distance`/`.duration` already do everywhere):
+
+```ts
+{
+  type: 'waypoint',
+  title: { text: `Supercharger (${TextPlaceholders.Distance})` },
+  address: `Main St 1 · ${TextPlaceholders.Duration} away`,
+  travelEstimates: { distance: { unit: 'kilometers', value: 12 }, duration: { timezone: 'Europe/Vienna', seconds: 600 } },
+  coordinate: { latitude: 48.2, longitude: 16.37 },
+  onPress: () => {},
+}
+```
+
+### Options Panel (`optionsPanel`, iOS 27+)
+
+`MapTemplate`'s `optionsPanel` prop configures the panel CarPlay shows when the user taps the ellipsis button next to the travel estimates during active navigation. It's a no-op on Android and on iOS below 27.
+
+```ts
+mapTemplate.updateOptionsPanel({
+  title: { text: 'Trip options' },
+  sections: [
+    {
+      type: 'list',
+      title: 'Route',
+      items: [{ type: 'default', title: { text: 'Avoid tolls' }, onPress: () => {} }],
+    },
+    {
+      type: 'charger',
+      title: 'Charger',
+      location: {
+        name: 'Fast Network Inc.',
+        address: 'Main St 1',
+        coordinate: { latitude: 48.2, longitude: 16.37 },
+        travelEstimates: {
+          distance: { unit: 'kilometers', value: 12 },
+          duration: { timezone: 'Europe/Vienna', seconds: 600 },
+          visible: true,
+        },
+        onPress: () => {},
+      },
+      outlets: [{ connector: 'ccs2', voltage: 400, powerKw: 300, onPress: () => {} }],
+    },
+  ],
+});
+```
+
+A section is one of:
+
+| `type` | Renders as | Notes |
+| --- | --- | --- |
+| `'list'` | Rows (`default`/`toggle`/`radio`/`text`/`waypoint`) | Same row types and behavior as a regular `ListTemplate` section. |
+| `'grid'` | A row of `GridButton`s | Same shape as `GridTemplate.buttons`. |
+| `'charger'` | One `CPChargingStationConnection` item per outlet | `outlets[].connector` is one of `ccs1`/`ccs2`/`j1772`/`chaDeMo`/`mennekes`/`gbtDC`/`gbtAC`/`nacsDC`/`nacsAC`; `powerKw` above 1000 is shown in MW natively. `location` is optional and behaves exactly like a `waypoint` row's panel behavior above (own `CPMapTemplateWaypoint` item, `travelEstimates.visible` for the sibling estimate row) — except it uses `location.name` instead of a `title`, since the section's own `title` is already shown as the header (repeating it on the item would look redundant). |
+
+**Known iOS 27 beta issues affecting waypoint/options-panel content** (not fixable in this library — re-test against newer betas; each was confirmed by direct testing, several already have Apple Feedback reports filed):
+
+-   **Custom (non-system) images are unreliable across several of these newer panel APIs.** A `waypoint` row's/`ChargerLocation`'s glyph `image` overflows at `CPNavigationAlert.maximumAvatarImageSize` on iOS 27 — worked around by dividing the requested size by `traitCollection.displayScale`, which fixes the overflow but introduces some blur (a real tradeoff, not a full fix). Non-glyph custom images have no known-good size at all — everything from explicit point sizes to real custom `UIImage.isSymbolImage` assets was tried without a reliable, correctly-sized result; only genuine **system** symbols (`UIImage(systemName:)`) size correctly there. Expect `image` on a waypoint/charger row to render, but not necessarily at a sensible or crisp size.
+-   **`CPListItem.accessoryImage` (used for `toggle` rows) renders at some fixed, undersized footprint on iOS 27, regardless of the image's content, size, scale, or whether it's a real symbol image** — confirmed via extensive testing (content proportions, render scale, post-hoc scale metadata, genuine `UIImage.isSymbolImage` assets from both the app's own bundle and a library-owned resource bundle). Reproduces on a plain (non-panel) `ListTemplate` too, so it isn't specific to panels or to this library's usage of the API. No workaround found; filed as Apple Feedback.
 
 ### Voice Input
 
@@ -1103,6 +1286,8 @@ In case you are using Expo SDK >= 56 make sure to set `buildReactNativeFromSourc
     // Hide the splash screen for the CarPlay screen
     hideAsync(AutoPlayModules.AutoPlayRoot);
     ```
+-   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only `symbolButton` does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
+-   **Waypoint/options-panel images and toggle-row sizing (iOS 27 beta)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Beta platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
 ### Android
 -   **Broken exceptions with `react-native`** up to version 0.79
 When using react-native before 0.80.0 exceptions are broken and are reported as `Unknown runtime_error` or similar.

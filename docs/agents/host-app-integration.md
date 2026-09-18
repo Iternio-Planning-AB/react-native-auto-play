@@ -27,6 +27,25 @@ produce no error message at all.
   in the README's `UISceneConfigurations` block.
 - Native template/window mutation is main-thread-only, enforced via `@MainActor`
   annotations rather than manual dispatch. Keep new Swift code annotated the same way.
+- **Two threads reach the Swift side: the main thread (UIKit/CarPlay delegate callbacks)
+  and the JS/Nitro thread.** Hybrid spec methods that are plain `throws` — no
+  `Promise.async`, no `MainActor.run` — run *on the JS thread*, and `createXTemplate` and
+  every `addListener*` are in that group. Any shared mutable state they touch must be
+  synchronised: Swift `Dictionary`/`Array` are not thread-safe, and a concurrent access
+  crashes with `KERN_INVALID_ADDRESS` inside `Dictionary.subscript` or silently loses
+  writes (read-filter-reassign, as in `TemplateStore.purge()`). The convention is an
+  `NSLock` plus a private `withLock` / `withListenersLock` helper — see `HybridAutoPlay`,
+  `HybridCluster`, `HybridCarPlayDashboard`, `SceneStore`, `TemplateStore`, `SymbolFont`,
+  and `VoiceInputManager.ResultBox` for the original.
+- **Always snapshot listeners under the lock and invoke the callbacks outside it.**
+  Callbacks run JS and can re-enter: `TemplateStore.removeTemplate` → `onPopped` →
+  `VoiceInputTemplate.onDidDisappear` → `removeTemplate`.
+- Both `NSLocking.withLock { }` and explicit `lock()` / `defer { unlock() }` are fine and
+  both appear in the codebase (`VoiceInputManager` uses the former, the newer locks the
+  latter). `withLock` *looks* like it needs iOS 16, but Foundation declares it
+  `@available(iOS 8.0, *)` with `@_alwaysEmitIntoClient`, so it is inlined into the client
+  and back-deploys below the pod's deployment floor. This has been flagged as an
+  availability problem in review before, wrongly. **Don't rewrite one form into the other.**
 - Cluster support requires iOS 15.4+. The `com.apple.developer.carplay-maps` entitlement is
   Apple-approval-gated (the Simulator works without it).
 - Dashboard "open head unit" buttons open a generated `<bundleId>://<uuid>` URL, which is

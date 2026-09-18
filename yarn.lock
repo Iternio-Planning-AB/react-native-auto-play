@@ -1254,6 +1254,10 @@
   resolved "https://registry.npmjs.org/@istanbuljs/schema/-/schema-0.1.3.tgz"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
+"@iternio/react-native-auto-play@link:packages/react-native-auto-play":
+  version "0.0.0"
+  uid ""
+
 "@jest/console@^29.7.0":
   version "29.7.0"
   resolved "https://registry.npmjs.org/@jest/console/-/console-29.7.0.tgz"

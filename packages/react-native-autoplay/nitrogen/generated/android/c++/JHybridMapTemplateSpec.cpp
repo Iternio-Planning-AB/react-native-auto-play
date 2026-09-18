@@ -97,6 +97,30 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripConfig; }
 // Forward declaration of `ManeuverState` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverState; }
+// Forward declaration of `NitroOptionsPanelConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
+// Forward declaration of `NitroSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
+// Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroOptionsPanelChargerSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelChargerSection; }
+// Forward declaration of `NitroRow` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRow; }
+// Forward declaration of `ListImageType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
+// Forward declaration of `WaypointCoordinate` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct WaypointCoordinate; }
+// Forward declaration of `NitroSectionType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
+// Forward declaration of `NitroGridButton` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroChargerOutlet` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerOutlet; }
+// Forward declaration of `ChargingConnector` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
+// Forward declaration of `NitroChargerLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroChargerLocation; }
 
 #include "TripSelectorCallback.hpp"
 #include "JTripSelectorCallback.hpp"
@@ -211,6 +235,31 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 #include "JTripConfig.hpp"
 #include "ManeuverState.hpp"
 #include "JManeuverState.hpp"
+#include "NitroOptionsPanelConfig.hpp"
+#include "JNitroOptionsPanelConfig.hpp"
+#include "NitroSection.hpp"
+#include "NitroOptionsPanelGridSection.hpp"
+#include "NitroOptionsPanelChargerSection.hpp"
+#include "JNitroOptionsPanelSection.hpp"
+#include "JNitroSection.hpp"
+#include "NitroRow.hpp"
+#include "JNitroRow.hpp"
+#include "ListImageType.hpp"
+#include "JListImageType.hpp"
+#include "WaypointCoordinate.hpp"
+#include "JWaypointCoordinate.hpp"
+#include "NitroSectionType.hpp"
+#include "JNitroSectionType.hpp"
+#include "JNitroOptionsPanelGridSection.hpp"
+#include "NitroGridButton.hpp"
+#include "JNitroGridButton.hpp"
+#include "JNitroOptionsPanelChargerSection.hpp"
+#include "NitroChargerOutlet.hpp"
+#include "JNitroChargerOutlet.hpp"
+#include "ChargingConnector.hpp"
+#include "JChargingConnector.hpp"
+#include "NitroChargerLocation.hpp"
+#include "JNitroChargerLocation.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -333,9 +382,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
     method(_javaPart, jni::make_jstring(templateId), JNitroManeuver::fromCpp(maneuvers));
   }
-  void JHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
-    method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
   void JHybridMapTemplateSpec::stopNavigation(const std::string& templateId) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");
@@ -344,6 +404,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   void JHybridMapTemplateSpec::setManeuverState(const std::string& templateId, ManeuverState state) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JManeuverState> /* state */)>("setManeuverState");
     method(_javaPart, jni::make_jstring(templateId), JManeuverState::fromCpp(state));
+  }
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroOptionsPanelConfig> /* config */)>("updateOptionsPanel");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), config.has_value() ? JNitroOptionsPanelConfig::fromCpp(config.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

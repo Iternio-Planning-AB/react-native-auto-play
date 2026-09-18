@@ -46,6 +46,17 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
   warning. Always fill both.
 - **`setComponent()` on `AutoPlayCluster` and `CarPlayDashboard` can only be called once** —
   a second call throws.
+- **`mapConfig` makes a template's `actions` a discriminated union.** With `mapConfig` set,
+  the template renders as a panel — `MapWithContentTemplate` on Android, a `CPMapPanel` on
+  the root map template on iOS 27+ — and `actions.ios` narrows from up to three
+  `TextButton`s to `PanelActionsIos` (one `TextButton` plus one optional icon-only
+  `ImageButton`), because that is all a panel can show. Two consequences that are easy to
+  hit: TypeScript cannot narrow the union when `mapConfig` comes from a variable or prop
+  rather than an inline literal — branch with `if (mapConfig)` into two separate
+  constructor calls instead of passing it through — and on iOS a panel's own
+  `headerActions` are applied to the **root map template's** nav bar, since CarPlay has no
+  separate header behind a panel (`PanelHeaderActions` drops the `ios` key for that
+  reason).
 
 ## MapTemplate specifics
 

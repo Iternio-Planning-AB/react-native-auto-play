@@ -20,4 +20,7 @@ enum AutoPlayError: LocalizedError {
     case noUiWindow(String)
     case initReactRootViewFailed(String)
     case voiceInputCancelled
+    case rootTemplateNotMapTemplate(String)
+    case templateIsMapPanel(String)
+    case mapTemplateNotVisible(String)
 }

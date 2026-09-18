@@ -13,7 +13,7 @@
     "android:autodrive": "adb shell dumpsys activity service com.example/com.margelo.nitro.swe.iternio.autoplay.AndroidAutoService AUTO_DRIVE"
   },
   "dependencies": {
-    "@iternio/react-native-auto-play": "*",
+    "@iternio/react-native-auto-play": "link:../../packages/react-native-auto-play",
     "@reduxjs/toolkit": "^2.9.1",
     "react": "19.2.0",
     "react-native": "0.83.5",

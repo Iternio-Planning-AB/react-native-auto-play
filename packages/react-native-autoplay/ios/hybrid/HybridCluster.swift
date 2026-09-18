@@ -7,6 +7,11 @@
 import NitroModules
 
 class HybridCluster: HybridClusterSpec {
+    /// Guards every listener dictionary below. `addListener*` mutate them from
+    /// the JS thread while `ClusterSceneDelegate` emits from main-thread
+    /// CarPlay callbacks, and Swift dictionaries are not thread-safe.
+    private static let listenersLock = NSLock()
+
     private static var listeners = [
         ClusterEventName: [String: (_:String) -> Void]
     ]()
@@ -31,12 +36,20 @@ class HybridCluster: HybridClusterSpec {
         String: (_: String, _: Bool) -> Void
     ]()
 
+    private static func withListenersLock<T>(_ body: () -> T) -> T {
+        listenersLock.lock()
+        defer { listenersLock.unlock() }
+        return body()
+    }
+
     override init() {
-        HybridCluster.listeners.removeAll()
-        HybridCluster.colorSchemeListeners.removeAll()
-        HybridCluster.zoomListeners.removeAll()
-        HybridCluster.compassListeners.removeAll()
-        HybridCluster.speedLimitListeners.removeAll()
+        HybridCluster.withListenersLock {
+            HybridCluster.listeners.removeAll()
+            HybridCluster.colorSchemeListeners.removeAll()
+            HybridCluster.zoomListeners.removeAll()
+            HybridCluster.compassListeners.removeAll()
+            HybridCluster.speedLimitListeners.removeAll()
+        }
         super.init()
     }
 
@@ -45,20 +58,22 @@ class HybridCluster: HybridClusterSpec {
         callback: @escaping (_ clusterId: String) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
-        HybridCluster.listeners[eventType, default: [:]][uuid] =
-            callback
+        let queuedClusterIds = HybridCluster.withListenersLock {
+            () -> [String]? in
+            HybridCluster.listeners[eventType, default: [:]][uuid] = callback
 
-        if let queuedClusterIds = HybridCluster.eventQueue[eventType] {
-            for clusterId in queuedClusterIds {
-                callback(clusterId)
-            }
-            HybridCluster.eventQueue[eventType] = nil
+            return HybridCluster.eventQueue.removeValue(forKey: eventType)
         }
 
+        // Drain the queue outside the lock — the callback runs JS.
+        queuedClusterIds?.forEach { clusterId in callback(clusterId) }
+
         return {
-            HybridCluster.listeners[eventType]?.removeValue(
-                forKey: uuid
-            )
+            HybridCluster.withListenersLock {
+                _ = HybridCluster.listeners[eventType]?.removeValue(
+                    forKey: uuid
+                )
+            }
         }
     }
 
@@ -90,7 +105,17 @@ class HybridCluster: HybridClusterSpec {
         attributedInactiveDescriptionVariants:
             [NitroAttributedString]
     ) throws {
-        if #available(iOS 15.4, *) {
+        guard #available(iOS 15.4, *) else {
+            throw AutoPlayError.unsupportedVersion(
+                "Cluster support only available on iOS >= 15.4"
+            )
+        }
+
+        // This runs on the JS thread, but it ends up assigning
+        // CPInstrumentClusterController.attributedInactiveDescriptionVariants,
+        // which is main-thread only — and the stored variants are also read
+        // from main-thread trait/content-style callbacks.
+        Task { @MainActor in
             guard
                 let scene = SceneStore.getClusterScene(
                     clusterId: clusterId
@@ -104,23 +129,22 @@ class HybridCluster: HybridClusterSpec {
                     attributedInactiveDescriptionVariants
             )
         }
-        else {
-            throw AutoPlayError.unsupportedVersion(
-                "Cluster support only available on iOS >= 15.4"
-            )
-        }
     }
 
     func addListenerColorScheme(
         callback: @escaping (String, ColorScheme) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
-        HybridCluster.colorSchemeListeners[uuid] = callback
+        HybridCluster.withListenersLock {
+            HybridCluster.colorSchemeListeners[uuid] = callback
+        }
 
         return {
-            HybridCluster.colorSchemeListeners.removeValue(
-                forKey: uuid
-            )
+            HybridCluster.withListenersLock {
+                _ = HybridCluster.colorSchemeListeners.removeValue(
+                    forKey: uuid
+                )
+            }
         }
     }
 
@@ -128,12 +152,16 @@ class HybridCluster: HybridClusterSpec {
         callback: @escaping (_ clusterId: String, _ payload: ZoomEvent) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
-        HybridCluster.zoomListeners[uuid] = callback
+        HybridCluster.withListenersLock {
+            HybridCluster.zoomListeners[uuid] = callback
+        }
 
         return {
-            HybridCluster.zoomListeners.removeValue(
-                forKey: uuid
-            )
+            HybridCluster.withListenersLock {
+                _ = HybridCluster.zoomListeners.removeValue(
+                    forKey: uuid
+                )
+            }
         }
     }
 
@@ -141,12 +169,16 @@ class HybridCluster: HybridClusterSpec {
         callback: @escaping (_ clusterId: String, _ payload: Bool) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
-        HybridCluster.compassListeners[uuid] = callback
+        HybridCluster.withListenersLock {
+            HybridCluster.compassListeners[uuid] = callback
+        }
 
         return {
-            HybridCluster.compassListeners.removeValue(
-                forKey: uuid
-            )
+            HybridCluster.withListenersLock {
+                _ = HybridCluster.compassListeners.removeValue(
+                    forKey: uuid
+                )
+            }
         }
     }
 
@@ -154,48 +186,72 @@ class HybridCluster: HybridClusterSpec {
         callback: @escaping (_ clusterId: String, _ payload: Bool) -> Void
     ) throws -> () -> Void {
         let uuid = UUID().uuidString
-        HybridCluster.speedLimitListeners[uuid] = callback
+        HybridCluster.withListenersLock {
+            HybridCluster.speedLimitListeners[uuid] = callback
+        }
 
         return {
-            HybridCluster.speedLimitListeners.removeValue(
-                forKey: uuid
-            )
+            HybridCluster.withListenersLock {
+                _ = HybridCluster.speedLimitListeners.removeValue(
+                    forKey: uuid
+                )
+            }
         }
     }
 
     static func emit(event: ClusterEventName, clusterId: String) {
-        guard let listeners = HybridCluster.listeners[event], !listeners.isEmpty
-        else {
-            // no listeners -> queue the event
-            HybridCluster.eventQueue[event, default: []].append(clusterId)
-            return
+        // Snapshot under the lock, then call out without holding it so a
+        // callback that adds or removes a listener cannot deadlock.
+        let listeners = HybridCluster.withListenersLock {
+            () -> [(_: String) -> Void] in
+            guard let listeners = HybridCluster.listeners[event],
+                !listeners.isEmpty
+            else {
+                // no listeners -> queue the event
+                HybridCluster.eventQueue[event, default: []].append(clusterId)
+                return []
+            }
+
+            return Array(listeners.values)
         }
 
-        listeners.values.forEach {
+        listeners.forEach {
             $0(clusterId)
         }
     }
 
     static func emitColorScheme(clusterId: String, colorScheme: ColorScheme) {
-        HybridCluster.colorSchemeListeners.values.forEach {
+        let listeners = HybridCluster.withListenersLock {
+            Array(HybridCluster.colorSchemeListeners.values)
+        }
+        listeners.forEach {
             $0(clusterId, colorScheme)
         }
     }
 
     static func emitZoom(clusterId: String, payload: ZoomEvent) {
-        HybridCluster.zoomListeners.values.forEach {
+        let listeners = HybridCluster.withListenersLock {
+            Array(HybridCluster.zoomListeners.values)
+        }
+        listeners.forEach {
             $0(clusterId, payload)
         }
     }
 
     static func emitCompass(clusterId: String, payload: Bool) {
-        HybridCluster.compassListeners.values.forEach {
+        let listeners = HybridCluster.withListenersLock {
+            Array(HybridCluster.compassListeners.values)
+        }
+        listeners.forEach {
             $0(clusterId, payload)
         }
     }
 
     static func emitSpeedLimit(clusterId: String, payload: Bool) {
-        HybridCluster.speedLimitListeners.values.forEach {
+        let listeners = HybridCluster.withListenersLock {
+            Array(HybridCluster.speedLimitListeners.values)
+        }
+        listeners.forEach {
             $0(clusterId, payload)
         }
     }
