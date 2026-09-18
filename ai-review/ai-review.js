@@ -112,12 +112,6 @@ changed and why, with one bullet per feature or fix. This applies to AI-written 
 Do not report this if the description is already brief, or if the author states they were
 asked for more detail.
 
-Also report it if the PR was opened by a tool but its description does not end with a line
-naming both the tool and the model, e.g.
-"Generated with Claude Code (Claude Opus 5)" or "Generated with Cursor (GPT-5)".
-A footer naming only the tool, with no model, still counts as missing. Only raise this when
-the PR is clearly tool-authored.
-
 ## Output Format
 Respond with ONLY a JSON object in this exact structure:
 {

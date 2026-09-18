@@ -97,12 +97,6 @@ jobs:
             PRs too. Skip this if the description is already brief, or if the author says
             they were asked for more detail.
 
-            Also flag a tool-authored PR whose description does not end with a line naming
-            both the tool and the model, e.g. 'Generated with Claude Code (Claude Opus 5)'
-            or 'Generated with Cursor (GPT-5)'. A footer naming only the tool, with no
-            model, still counts as missing. Only raise this when the PR is clearly
-            tool-authored.
-
             Be concise. Only report real problems. If there are none, say so in one sentence."
 
           # Optional: Advanced settings configuration

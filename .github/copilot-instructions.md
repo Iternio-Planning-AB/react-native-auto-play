@@ -24,8 +24,8 @@ The rules that most often get broken:
 - **PR descriptions stay short and high level** — a few bullets on what changed and why,
   one bullet per feature or fix, never prose or a walkthrough of the diff. Write more only
   if the person opening the PR explicitly asks.
-- **If a tool opens the PR, the last line of the description must name the tool and the
-  model** (e.g. `🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)`),
-  on its own line at the bottom.
+- **If you are a tool opening the PR, sign off with the tool and the model** you are
+  running as, on its own line at the bottom — e.g.
+  `🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)`.
 - Formatting is Biome (`biome.json` at the root): single quotes, 100-char lines, ES5 trailing
   commas.

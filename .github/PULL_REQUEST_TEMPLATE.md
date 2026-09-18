@@ -68,8 +68,8 @@ from the Desktop Head Unit / CarPlay Simulator are the norm here.
       `.skills/*`, `.cursor/rules/*`, `.github/copilot-instructions.md`
 
 <!--
-If a tool opened this PR, the last line below must name the tool AND the model it ran as,
-so reviewers can weigh the diff accordingly. Examples:
+If a tool opened this PR, sign off on the last line with the tool and the model it ran as,
+so reviewers know what wrote the diff. Examples:
 
   🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)
   🤖 Generated with Cursor (GPT-5)
