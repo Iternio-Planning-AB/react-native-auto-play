@@ -68,7 +68,12 @@ from the Desktop Head Unit / CarPlay Simulator are the norm here.
       `.skills/*`, `.cursor/rules/*`, `.github/copilot-instructions.md`
 
 <!--
-If an AI agent wrote this PR, keep its attribution footer (e.g.
-"🤖 Generated with [Claude Code](https://claude.com/claude-code)") so reviewers can see it
-at a glance — that is already the convention in this repo.
+If a tool opened this PR, the last line below must name the tool AND the model it ran as,
+so reviewers can weigh the diff accordingly. Examples:
+
+  🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)
+  🤖 Generated with Cursor (GPT-5)
+  🤖 Generated with [Devin](https://devin.ai)
+
+Delete this comment and the line below if a human wrote the PR.
 -->

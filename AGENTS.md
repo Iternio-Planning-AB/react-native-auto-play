@@ -44,8 +44,13 @@ truncate it — the Devin CLI at 16 KB, which this file must stay under (it is c
   When you do open one, fill in [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)
   honestly — delete rows that don't apply rather than ticking them, and never tick a
   "tested on a head unit" box you did not do. Anything visible on a car surface needs a
-  screenshot or recording; bug fixes name the hardware and OS they reproduce on. If you are
-  an AI agent, keep your attribution footer in the description — that is the convention here.
+  screenshot or recording; bug fixes name the hardware and OS they reproduce on.
+- **If a tool opened the PR, the description's last line must identify the tool *and the
+  model*.** Not just "Generated with Claude Code" — name the model you are actually running
+  as, e.g. `🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)`
+  or `🤖 Generated with Cursor (GPT-5)`. Reviewers weigh an AI-authored diff differently
+  depending on the model, and the repo has no other way to tell. Keep it on its own line at
+  the very bottom.
 - **Don't create summary or report markdown files unless asked.** Put the summary in your
   reply, not in a new file at the repo root.
 - Before committing or opening a PR, run `yarn lint:auto-play` and `yarn typecheck:auto-play`
