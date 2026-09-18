@@ -1,0 +1,67 @@
+# Host-app integration
+
+What a consuming app has to do, and the failure modes that produce no error message.
+
+## iOS
+
+- **The host app must implement `@objc func getRootViewForAutoplay(moduleName:initialProperties:) -> UIView?` on its `AppDelegate`.**
+  It is looked up by Objective-C runtime reflection (`ios/utils/ViewUtils.swift`),
+  deliberately not via a protocol, to avoid importing `React_AppDelegate` (glog/C++ ABI
+  conflicts). If it is missing or misnamed there is **no compile error** — CarPlay just
+  fails to init the root view at connect time. Reference implementation:
+  `apps/example/ios/example/AppDelegate.swift`.
+- Scene delegates (`WindowApplicationSceneDelegate`, `HeadUnitSceneDelegate`,
+  `DashboardSceneDelegate`, `ClusterSceneDelegate`) ship with the library; the app
+  references them by **string class name** in `Info.plist` `UISceneConfigurations`. A typo
+  breaks exactly one surface while the others keep working — a very quiet partial failure.
+  The example wires four configurations.
+- Native template/window mutation is main-thread-only, enforced via `@MainActor`
+  annotations rather than manual dispatch. Keep new Swift code annotated the same way.
+- Cluster support requires iOS 15.4+. The `com.apple.developer.carplay-maps` entitlement is
+  Apple-approval-gated (the Simulator works without it).
+- Dashboard "open head unit" buttons open a generated `<bundleId>://<uuid>` URL, so
+  `CFBundleURLSchemes` must contain the bundle identifier.
+
+## Android
+
+- **No manifest setup is required in the host app.** The `CarAppService`,
+  `HeadlessTaskService`, permissions, `automotive_app_desc.xml` and `minCarApiLevel` all
+  live in the library's own `AndroidManifest.xml` and are merged in.
+  `apps/example/android/app/src/main/AndroidManifest.xml` is nearly empty for that reason.
+- **Behaviour is controlled by Gradle properties, not code.**
+  `packages/react-native-autoplay/android/gradle.properties` holds the defaults
+  (`ReactNativeAutoPlay_*`): `androidAutoAppCategory` (default `navigation`),
+  `isAutomotiveApp`, `androidAutoScaleFactor`, `androidTelemetryUpdateInterval`,
+  `clusterSplashDelayMs` / `clusterSplashDurationMs`, SDK/NDK versions. `getExtOrDefault`
+  checks `rootProject.ext` first, then the prefixed project property — **setting them
+  anywhere else silently does nothing.**
+  - A non-`navigation` category swaps in the lean `AndroidManifest-nonnav.xml` (drops
+    navigation/map/surface permissions, cluster category, geo intent filter). An invalid
+    category fails the build with a `GradleException`.
+  - `isAutomotiveApp=true` swaps the Kotlin sourceSet (`src/automotive/java` instead of
+    `src/auto/java`), the manifest (`src/automotive/` instead of `src/main/`), and the
+    `androidx.car.app` artifact (`app-automotive` instead of `app-projected`). It also adds
+    `useLibrary 'android.car'`, which requires API 29 — the build does **not** enforce that,
+    so the host app must raise `ReactNativeAutoPlay_minSdkVersion` itself (the library's
+    default in `android/gradle.properties` is lower). The host app must also remove its
+    launcher activity in that variant, or the Automotive launcher shows two icons.
+- `HeadlessTaskService` is a **bound** service (not started) so Android won't kill it while
+  Android Auto is active; the JS task starts on `onBind`, forced onto the UI thread. Car
+  reconnects rebind, so **the task must be idempotent.**
+- **Stack operations** (`setRootTemplate`, `pushTemplate`, `popTemplate`,
+  `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`) go through
+  `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures
+  come back as rejected promises by design. Per-template mutations are different — the
+  `Hybrid*Template` classes use `Promise.async { … }` against the `AndroidAutoTemplate`
+  registry instead. Match whichever pattern the neighbouring method uses rather than
+  assuming one applies everywhere.
+- OS-triggered voice navigation arrives as a hand-parsed `geo:` intent in
+  `AndroidAutoSession.onNewIntent`; coordinates `0,0` are a sentinel meaning "no
+  coordinates, geocode the query".
+- Clusters are given a placeholder `APPICON` action because `androidx.car.app` crashes
+  without one, even though clusters can't display actions.
+- Release builds need `-keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }`
+  in ProGuard rules.
+- `fix-prefab.gradle` works around an AGP/Prefab ordering bug where the prefab publication is
+  configured before the `.so` is built, producing header-only output and undefined-symbol
+  link errors downstream. **Don't remove it.** `CMakeLists.txt` requires C++20.
