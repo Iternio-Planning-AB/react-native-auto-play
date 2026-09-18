@@ -45,7 +45,9 @@ class AutoPlayTemplate: NSObject {
     /// Override in subclasses to perform template invalidation.
     /// Do not call this method directly. Call `invalidate()` instead.
     @MainActor func _invalidate() {}
-    @MainActor func traitCollectionDidChange() {}
+    @MainActor func traitCollectionDidChange() {
+        invalidate()
+    }
 
     func onWillAppear(animated: Bool) {}
     func onDidAppear(animated: Bool) {}

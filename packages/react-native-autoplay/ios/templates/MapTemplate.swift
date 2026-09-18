@@ -183,7 +183,7 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         template.tripEstimateStyle = isDark ? .dark : .light
 
-        invalidate()
+        super.traitCollectionDidChange()
     }
 
     // MARK: gestures
