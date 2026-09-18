@@ -77,11 +77,11 @@ jobs:
               default, entitlements, URL schemes, the ProGuard rule, setIconFont, or any
               exported symbol in src/index.ts.
             - An architectural rule or invariant changed without updating AGENTS.md — the
-              agent instruction file. Its 'Agent etiquette' section holds the hard rules
+              agent instruction file. Its 'Rules' section holds the hard rules
               (NitroModules only, committed nitrogen/generated output, tag-derived version,
               both platform branches of an action config) and its 'Common tasks' section
               has step lists for adding a native method and adding a template.
-            - Rule mirrors drifted apart. The hard rules in the 'Agent etiquette'
+            - Rule mirrors drifted apart. The hard rules in the 'Rules'
               section of AGENTS.md are duplicated, by necessity, into
               .github/copilot-instructions.md and .cursor/rules/project.mdc, because
               neither tool reads AGENTS.md and neither supports an include. Each

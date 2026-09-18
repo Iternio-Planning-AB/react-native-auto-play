@@ -3,12 +3,16 @@
 Guidance for AI coding agents (Claude Code, Cursor, Devin, Copilot, …) working in this repo.
 This is the single source of truth — `CLAUDE.md` is a symlink to this file.
 
-## Agent etiquette
+## Rules
 
 Deliberately the first section: tools inject this file into every agent's context and
 truncate it — the Devin CLI at 16 KB, which this file must stay under. The rules that must
 never be missed live here, where nothing can cut them off. Check with `wc -c AGENTS.md`
 before adding to it.
+
+These are rules about **what ends up in the PR** — the code, the docs, the description.
+How you like to work is yours: when to commit, whether to ask before pushing, what to write
+in chat. Keep that in your own global agent config, not here.
 
 - **This library uses [NitroModules](https://nitro.margelo.com) for every native call.
   Never add a TurboModule, a `TurboReactPackage`, a `ReactContextBaseJavaModule`, an ObjC
@@ -35,7 +39,7 @@ before adding to it.
   `TravelEstimates._doNotUse` and the `biome-ignore noChildrenProp` comments — and are
   documented as such in the on-demand docs below. Check before deleting anything that looks
   like dead code.
-- Don't commit, push, or open PRs unless explicitly asked. The default branch is `master`.
+- PRs open against `master`, the default branch.
 - **Keep PR descriptions short and high level.** Default to a few bullets covering what
   changed and why — not prose, not a walkthrough of the diff, not a per-file account. When
   a PR carries several features or fixes, list them as **one bullet each** rather than
@@ -51,10 +55,8 @@ before adding to it.
   `🤖 Generated with [Claude Code](https://claude.com/claude-code) (Claude Opus 5)` or
   `🤖 Generated with Cursor (GPT-5)`. Naming only the tool tells a reviewer less than it
   looks: the repo has no other way to know which model wrote the diff.
-- **Don't create summary or report markdown files unless asked.** Put the summary in your
-  reply, not in a new file at the repo root.
-- Before committing or opening a PR, run `yarn lint:auto-play` and `yarn typecheck:auto-play`
-  (plus the `:example` equivalents if you touched the example app) and fix everything.
+- Before opening a PR, run `yarn lint:auto-play` and `yarn typecheck:auto-play` (plus the
+  `:example` equivalents if you touched the example app) and fix everything — CI runs them.
 - Keep changes minimal and consistent with the surrounding file's style.
 - **Adding to this file? It holds only what must be in context *all the time*.** Because
   tools truncate it, appended text silently pushes existing rules out of context rather than
@@ -72,9 +74,9 @@ before adding to it.
 - **Changing a rule means changing it everywhere, in the same PR.**
   `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` carry a deliberate
   **subset** of the rules above — the ones that apply while editing code or opening a PR —
-  because neither tool reads `AGENTS.md` and neither supports an include. Session etiquette
-  (don't commit unless asked, don't write summary files, this rule) stays here only.
-  Likewise each `docs/<topic>.md` is summarised, not reproduced, by its
+  because neither tool reads `AGENTS.md` and neither supports an include. Repo-wide
+  meta-rules like this one stay here only. Likewise each `docs/<topic>.md` is summarised,
+  not reproduced, by its
   `.skills/<name>/SKILL.md`. So a rule being absent from a mirror is fine; a rule that
   **contradicts** its mirror is not. If you change a rule that a mirror does carry, change
   it there too.

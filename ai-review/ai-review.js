@@ -88,18 +88,18 @@ line, saying which file needs updating and why.
    ReactNativeAutoPlay_* Gradle property or its default, entitlements, URL schemes, the
    ProGuard rule, setIconFont, or any exported symbol in src/index.ts.
 2. An architectural rule or invariant changed, but AGENTS.md was not updated. AGENTS.md is
-   the agent instruction file. Its "Agent etiquette" section states hard rules (NitroModules
+   the agent instruction file. Its "Rules" section states hard rules (NitroModules
    only, committed nitrogen/generated/ output, tag-derived version, both platform branches
    of an action config) and its "Common tasks" section has step lists for adding a native
    method and adding a template. If the diff changes any of those, the rule or step list is
    now wrong.
-3. Rule mirrors drifted apart. The hard rules in the "Agent etiquette" section of
+3. Rule mirrors drifted apart. The hard rules in the "Rules" section of
    AGENTS.md are duplicated, by necessity, into .github/copilot-instructions.md and
    .cursor/rules/project.mdc, because neither tool reads AGENTS.md and neither supports an
    include. Each docs/<topic>.md is likewise summarised by a .skills/<name>/SKILL.md.
    These sets must be changed together. Check this whenever the diff touches any of them:
-     - AGENTS.md "Agent etiquette" <-> .github/copilot-instructions.md
-     - AGENTS.md "Agent etiquette" <-> .cursor/rules/project.mdc
+     - AGENTS.md "Rules" <-> .github/copilot-instructions.md
+     - AGENTS.md "Rules" <-> .cursor/rules/project.mdc
      - docs/native-modules.md      <-> .skills/nitro-native-modules/SKILL.md
      - docs/templates.md           <-> .skills/autoplay-templates/SKILL.md
      - docs/host-app-integration.md<-> .skills/host-app-integration/SKILL.md
