@@ -48,8 +48,8 @@ export interface MapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swi
   ): void;
   updateTravelEstimates(templateId: string, steps: Array<TripPoint>): void;
   updateManeuvers(templateId: string, maneuvers: NitroManeuver): void;
-  startNavigation(templateId: string, trip: TripConfig): void;
+  startNavigation(templateId: string, trip: TripConfig): Promise<void>;
   stopNavigation(templateId: string): void;
   setManeuverState(templateId: string, state: ManeuverState): void;
-  updateOptionsPanel(templateId: string, config?: NitroOptionsPanelConfig): void;
+  updateOptionsPanel(templateId: string, config?: NitroOptionsPanelConfig): Promise<void>;
 }

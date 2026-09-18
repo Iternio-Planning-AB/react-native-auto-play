@@ -12,6 +12,7 @@ import {
 } from '@iternio/react-native-auto-play';
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
+import { AutoMessageTemplate } from './AutoMessageTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
@@ -172,6 +173,13 @@ const getMainSection = (): Section<ListTemplate> => {
         type: 'glyph',
         name: 'pin_drop',
       },
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        AutoMessageTemplate.getTemplate({ message: { text: 'Message' } }).push();
+      },
+      title: { text: 'message template' },
     },
   ];
 

@@ -147,11 +147,15 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         }
     }
 
-    func startNavigation(templateId: String, trip: TripConfig) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
-            let trip = Parser.parseTrip(tripConfig: trip)
-            template.startNavigation(trip: trip)
+    func startNavigation(templateId: String, trip: TripConfig) throws -> Promise<Void> {
+        return Promise.async {
+            try await MainActor.run {
+                try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                    (template: MapTemplate) in
+                    let trip = Parser.parseTrip(tripConfig: trip)
+                    template.startNavigation(trip: trip)
+                }
+            }
         }
     }
 
@@ -169,10 +173,16 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         }
     }
 
-    func updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
-            template.updateOptionsPanel(config: config)
+    func updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) throws
+        -> Promise<Void>
+    {
+        return Promise.async {
+            try await MainActor.run {
+                try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                    (template: MapTemplate) in
+                    template.updateOptionsPanel(config: config)
+                }
+            }
         }
     }
 }

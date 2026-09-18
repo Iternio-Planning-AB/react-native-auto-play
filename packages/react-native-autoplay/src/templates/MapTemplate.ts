@@ -422,7 +422,7 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
    * or use this to start a navigation session without asking the user
    */
   public startNavigation(trip: TripConfig) {
-    HybridMapTemplate.startNavigation(this.id, trip);
+    return HybridMapTemplate.startNavigation(this.id, trip);
   }
 
   public stopNavigation() {

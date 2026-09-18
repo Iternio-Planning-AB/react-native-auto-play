@@ -29,6 +29,13 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
 
     private var navigationStack: [NavigationEntry] = []
 
+    /// Set by `templateWillDisappear` whenever root is covered while a panel is visible, and
+    /// consulted by `templateWillAppear` to know which panel to reveal — inferring it from
+    /// `navigationStack` position only works when the coverer is a pushed template (tracked in
+    /// the stack); a presented template (e.g. a `MessageTemplate` without `mapConfig`) never
+    /// touches `navigationStack` at all, so position-based inference silently breaks for it.
+    private var coveredPanelId: String?
+
     init(
         interfaceController: CPInterfaceController
     ) {
@@ -333,18 +340,19 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             )
         }
 
-        // Panels only attach to root, so only relevant when root reappears. The covering
-        // entry hasn't been removed from navigationStack yet, so the revealed panel is one
-        // before .last, not .last itself.
-        if #available(iOS 27.0, *), templateId == rootTemplateId,
-            let previous = navigationStack.dropLast().last,
-            case .panel(let panelId, _) = previous
-        {
-            try? RootModule.withAutoPlayTemplate(templateId: panelId) {
-                (template: AutoPlayTemplate) in
-                template.onWillAppear(animated: animated)
-                template.onDidAppear(animated: animated)
+        // Panels only attach to root, so only relevant when root reappears. `coveredPanelId` is
+        // set by templateWillDisappear when root was covered — this can't be inferred from
+        // navigationStack position, since a presented (not pushed) covering template, like a
+        // MessageTemplate without mapConfig, never touches navigationStack at all.
+        if #available(iOS 27.0, *), templateId == rootTemplateId {
+            if let panelId = coveredPanelId, panelTemplateIds.contains(panelId) {
+                try? RootModule.withAutoPlayTemplate(templateId: panelId) {
+                    (template: AutoPlayTemplate) in
+                    template.onWillAppear(animated: animated)
+                    template.onDidAppear(animated: animated)
+                }
             }
+            coveredPanelId = nil
         }
     }
 
@@ -381,13 +389,15 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             }
         )
 
-        // Panels only attach to root, so only relevant when root is covered by a new push.
-        // The new entry hasn't been appended to navigationStack yet, so .last is still the
-        // panel being covered.
+        // Panels only attach to root, so only relevant when root is covered — by a push (not yet
+        // appended to navigationStack at this point, so .last is still the panel being covered)
+        // or by presenting a template (e.g. a MessageTemplate without mapConfig, which never
+        // touches navigationStack at all, so .last is still the panel either way).
         if #available(iOS 27.0, *), templateId == rootTemplateId,
             let last = navigationStack.last,
             case .panel(let panelId, _) = last
         {
+            coveredPanelId = panelId
             try? RootModule.withAutoPlayTemplate(templateId: panelId) {
                 (template: AutoPlayTemplate) in
                 template.onWillDisappear(animated: animated)

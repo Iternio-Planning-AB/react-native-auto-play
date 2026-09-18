@@ -76,7 +76,7 @@ abstract class HybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun startNavigation(templateId: String, trip: TripConfig): Unit
+  abstract fun startNavigation(templateId: String, trip: TripConfig): Promise<Unit>
   
   @DoNotStrip
   @Keep
@@ -88,7 +88,7 @@ abstract class HybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?): Unit
+  abstract fun updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?): Promise<Unit>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

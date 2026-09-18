@@ -382,9 +382,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroManeuver> /* maneuvers */)>("updateManeuvers");
     method(_javaPart, jni::make_jstring(templateId), JNitroManeuver::fromCpp(maneuvers));
   }
-  void JHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
-    method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::startNavigation(const std::string& templateId, const TripConfig& trip) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JTripConfig> /* trip */)>("startNavigation");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JTripConfig::fromCpp(trip));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
   void JHybridMapTemplateSpec::stopNavigation(const std::string& templateId) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */)>("stopNavigation");
@@ -394,9 +405,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JManeuverState> /* state */)>("setManeuverState");
     method(_javaPart, jni::make_jstring(templateId), JManeuverState::fromCpp(state));
   }
-  void JHybridMapTemplateSpec::updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroOptionsPanelConfig> /* config */)>("updateOptionsPanel");
-    method(_javaPart, jni::make_jstring(templateId), config.has_value() ? JNitroOptionsPanelConfig::fromCpp(config.value()) : nullptr);
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JNitroOptionsPanelConfig> /* config */)>("updateOptionsPanel");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), config.has_value() ? JNitroOptionsPanelConfig::fromCpp(config.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
   }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

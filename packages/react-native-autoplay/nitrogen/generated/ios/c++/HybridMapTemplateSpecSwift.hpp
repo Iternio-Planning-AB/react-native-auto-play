@@ -305,11 +305,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void startNavigation(const std::string& templateId, const TripConfig& trip) override {
+    inline std::shared_ptr<Promise<void>> startNavigation(const std::string& templateId, const TripConfig& trip) override {
       auto __result = _swiftPart.startNavigation(templateId, std::forward<decltype(trip)>(trip));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
     inline void stopNavigation(const std::string& templateId) override {
       auto __result = _swiftPart.stopNavigation(templateId);
@@ -323,11 +325,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) override {
+    inline std::shared_ptr<Promise<void>> updateOptionsPanel(const std::string& templateId, const std::optional<NitroOptionsPanelConfig>& config) override {
       auto __result = _swiftPart.updateOptionsPanel(templateId, config);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:
