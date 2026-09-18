@@ -270,6 +270,12 @@ You can customize certain behaviors of the library on Android Auto by setting pr
     ```
     The value is in milliseconds. The default is `4000`.
 
+-   **Loading Template**: Show a `PaneTemplate` with a host-drawn loading spinner while the JS app is starting, instead of the default `MessageTemplate` with the app icon.
+    ```properties
+    ReactNativeAutoPlay_androidLoadingTemplate=true
+    ```
+    The default is `false`. The template title is `Loading <AppName>…`; declare a string resource named `AutoPlayLoadingLabel` in your app to override it. If the host rejects the `PaneTemplate`, the library falls back to the `MessageTemplate`.
+
 -   **UI Scale Factor**: Apply a scaling factor to the React Native UI rendered on the car screen. This does not affect the templates.
     ```properties
     ReactNativeAutoPlay_androidAutoScaleFactor=1.5f
