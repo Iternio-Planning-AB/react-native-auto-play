@@ -180,6 +180,10 @@ Reason for this is that CarPlay does not allow for color updates on maneuvers sh
 The color properties do not need to handle the mode change, best practice is to use ThemedColor whenever possible and set appropriate light and dark mode colors.
 This is mainly required on CarPlay for now since Android Auto lacks light mode.
 
+#### CPListTemplate day/night header
+
+**Known CarPlay platform bug, not fixable in this library:** on `ListTemplate` (`CPListTemplate`) only, the entire header — title text and buttons alike — doesn't track live light/dark mode switches; each toggle flips it to the *opposite* of the actual current theme instead, until the template is popped and pushed again. Other templates work fine, this seems to be an iOS 26 issue only.
+
 #### Dashboard buttons
 In case you wanna open up your CarPlay app from one of the CarPlay dashboard buttons set `launchHeadUnitScene` on the button and add this to your Info.plist. Make sure to apply your "Bundle Identifier" instead of the example one.
 ```xml
