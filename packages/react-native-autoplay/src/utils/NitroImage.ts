@@ -96,11 +96,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
   }
 
   if (image.type === 'glyph') {
-    const {
-      color = { darkColor: 'white', lightColor: 'black' },
-      fontScale,
-      backgroundColor = 'transparent',
-    } = image;
+    const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
 
     return {
       glyph: resolveGlyph(image),

@@ -24,7 +24,7 @@ export type GlyphMapKey = keyof AutoPlayGlyphMap extends never
 type GlyphStyleFields = {
   /**
    * Sets the icon dark and light mode color or a single color for both.
-   * Defaults to white for dark mode and black for light mode if not specified.
+   * Defaults to `'default'` if not specified, which is white for dark mode and black for light mode.
    * Might not get applied everywhere like MapTemplate buttons on Android.
    */
   color?: ThemedColor | string;
@@ -61,6 +61,8 @@ export type AutoImage =
       /**
        * if specified the image gets tinted, if not it will just use the original image
        * Might not get applied everywhere like MapTemplate buttons on Android.
+       * Use `'default'` for monochrome icons that must stay readable on both dark and light
+       * Android Auto templates (17.8+), see README.
        */
       color?: ThemedColor | string;
       type: 'asset';
@@ -70,6 +72,8 @@ export type AutoImage =
       uri: string;
       /**
        * if specified the image gets tinted, if not it will just use the original image
+       * Use `'default'` for monochrome icons that must stay readable on both dark and light
+       * Android Auto templates (17.8+), see README.
        */
       color?: ThemedColor | string;
       /**

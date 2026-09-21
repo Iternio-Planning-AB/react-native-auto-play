@@ -234,8 +234,15 @@ object Parser {
     ): CarIcon {
         val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage)
 
+        val applyDefaultTint = glyphImage?.color?.isDefault ?: assetImage?.color?.isDefault
+        ?: remoteImage?.color?.isDefault ?: false
+
         bitmap?.let {
-            return CarIcon.Builder(IconCompat.createWithBitmap(it)).build()
+            return CarIcon.Builder(IconCompat.createWithBitmap(it)).apply {
+                if (applyDefaultTint) {
+                    setTint(CarColor.DEFAULT)
+                }
+            }.build()
         }
 
         // remote images might fail to load so we provide some placeholder then
