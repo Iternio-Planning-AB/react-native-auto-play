@@ -1286,6 +1286,28 @@ CarPlayDashboard.setButtons([
 - `setAttributedInactiveDescriptionVariants(variants)` — iOS only inactive text.
 - `addListenerColorScheme(cb)` / `addListenerZoom(cb)` / `addListenerCompass(cb)` / `addListenerSpeedLimit(cb)`.
 
+## Testing with Jest
+
+The real package needs native modules and ships ESM, so it can't run under Jest. Use the bundled CommonJS mock instead, one line in your Jest setup file:
+
+```js
+// jest.setup.js
+jest.mock('@iternio/react-native-auto-play', () =>
+  require('@iternio/react-native-auto-play/jest')
+);
+```
+
+Templates, `HybridAutoPlay`, `HybridVoice`, `AutoPlayCluster`, `CarPlayDashboard` and the hooks that need a car surface are safe no-ops (any method call returns `undefined`), `Constants.isIos27OrGreater` is `false`, and all types are unchanged. Tests that need to record constructions or assert on calls should extend it per test file:
+
+```ts
+jest.mock('@iternio/react-native-auto-play', () => {
+  const actual = jest.requireActual('@iternio/react-native-auto-play/jest');
+  return { ...actual, ListTemplate: class { push = jest.fn(() => Promise.resolve()); } };
+});
+```
+
+The same no-op surface is what `react-native-web` builds get automatically via `index.web.ts`.
+
 ## Known Issues
 
 ### iOS
