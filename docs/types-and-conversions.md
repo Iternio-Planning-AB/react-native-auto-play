@@ -29,6 +29,11 @@ passed to native. That conversion layer is where most surprises live.
 - Map button `backgroundColor` is forced to `transparent` on Android regardless of what you pass.
 - `NitroColorUtil` uses RN `processColor`, so colors must be valid RN color strings. A single
   string is applied to both light and dark, with no derivation.
+- **The string `'default'` is special-cased in `NitroColorUtil`.** It bypasses `processColor`
+  and maps to `lightColor` black / `darkColor` white with `isDefault: true`. Android turns
+  `isDefault` into a `CarColor.DEFAULT` tint (the host picks the color for its day/night
+  mode); iOS ignores the flag and resolves the light/dark pair per appearance. Glyph images
+  fall back to `'default'` when `color` is unset (`NitroImage.ts`).
 - **Radio-list section validation** (exactly one `selected` item) only runs in `__DEV__` and
   **throws**, contradicting the JSDoc that promises a fallback. Production has no JS-side
   validation at all.

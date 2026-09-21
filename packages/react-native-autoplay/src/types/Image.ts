@@ -25,6 +25,7 @@ type GlyphStyleFields = {
   /**
    * Sets the icon dark and light mode color or a single color for both.
    * Defaults to `'default'` if not specified, which is white for dark mode and black for light mode.
+   * On Android Auto the host tint that follows the template is not applied when `backgroundColor` is not transparent.
    * Might not get applied everywhere like MapTemplate buttons on Android.
    */
   color?: ThemedColor | string;

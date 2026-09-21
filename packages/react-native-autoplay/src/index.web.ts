@@ -137,9 +137,13 @@ export const useVoiceInput = () => ({
   resetVoiceInputResult: () => {},
 });
 
-export const useAndroidAutoTelemetry = () => ({
-  permissionsGranted: false,
-  telemetry: {} as Telemetry,
+export const useAndroidAutoTelemetry = (): {
+  permissionsGranted: boolean | null;
+  telemetry: Telemetry | undefined;
+  error: string | undefined;
+} => ({
+  permissionsGranted: null,
+  telemetry: undefined,
   error: undefined,
 });
 

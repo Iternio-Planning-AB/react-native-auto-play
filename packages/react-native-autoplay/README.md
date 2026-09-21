@@ -465,7 +465,7 @@ Use the color `'default'` for every monochrome icon that has to stay readable in
 
 -   **Android Auto**: the host tints the icon with its own default icon color for the template it is currently showing, so it follows dark and light templates on every Android Auto version.
 -   **CarPlay**: `'default'` resolves to black in light mode and white in dark mode, so it is safe to use on iOS and does not change anything there.
--   **Glyphs** use `'default'` automatically when no `color` is set.
+-   **Glyphs** use `'default'` automatically when no `color` is set. Exception on Android Auto: a glyph with a non-transparent `backgroundColor` is not tinted, since the tint would recolor the background as well. It keeps the plain white (dark mode) / black (light mode) glyph color, so set `color` explicitly if that does not contrast with your background.
 -   **Asset and remote images** are not tinted unless you set a `color`, so colorful images such as a logo keep their original colors. Only pass `'default'` for monochrome icons.
 -   Any other color (a string or a `ThemedColor`) is applied as specified. Only use those where the color works on both dark and light templates, e.g. a colored icon.
 -   Known limitation: the host may not apply the tint to header action icons on Android Auto 17.8. That is an issue in Android Auto itself, not something the library can work around.

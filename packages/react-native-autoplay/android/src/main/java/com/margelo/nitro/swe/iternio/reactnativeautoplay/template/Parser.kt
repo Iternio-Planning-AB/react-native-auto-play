@@ -248,8 +248,12 @@ object Parser {
     ): CarIcon {
         val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage)
 
-        val applyDefaultTint = glyphImage?.color?.isDefault ?: assetImage?.color?.isDefault
-        ?: remoteImage?.color?.isDefault ?: false
+        // the tint recolors every opaque pixel, so it would also fill the background drawn in SymbolFont
+        val hasGlyphBackground =
+            glyphImage != null && (glyphImage.backgroundColor.get(context) ushr 24) != 0
+
+        val applyDefaultTint = !hasGlyphBackground && (glyphImage?.color?.isDefault
+            ?: assetImage?.color?.isDefault ?: remoteImage?.color?.isDefault ?: false)
 
         bitmap?.let {
             return CarIcon.Builder(IconCompat.createWithBitmap(it)).apply {
