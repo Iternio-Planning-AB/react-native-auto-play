@@ -1407,14 +1407,16 @@ class Parser {
     static func getTintedImage(color: Double, uiImage: UIImage) -> UIImage {
         guard let cgImage = uiImage.cgImage else { return uiImage }
 
-        let rect = CGRect(origin: .zero, size: uiImage.size)
+        // Tint in pixels, not points: `uiImage.size` is the point size, so a 128px asset at
+        // scale 4 would tint into a 32x32 context and come back 4x too small and blurry.
+        let rect = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
 
         guard
             let context = CGContext(
                 data: nil,
-                width: Int(uiImage.size.width),
-                height: Int(uiImage.size.height),
+                width: cgImage.width,
+                height: cgImage.height,
                 bitsPerComponent: 8,
                 bytesPerRow: 0,
                 space: colorSpace,
