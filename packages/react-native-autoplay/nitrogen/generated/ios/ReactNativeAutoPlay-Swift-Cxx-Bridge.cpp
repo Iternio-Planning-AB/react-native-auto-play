@@ -16,6 +16,7 @@
 #include "HybridListTemplateSpecSwift.hpp"
 #include "HybridMapTemplateSpecSwift.hpp"
 #include "HybridMessageTemplateSpecSwift.hpp"
+#include "HybridPointOfInterestTemplateSpecSwift.hpp"
 #include "HybridSearchTemplateSpecSwift.hpp"
 #include "HybridVoiceSpecSwift.hpp"
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
@@ -284,6 +285,22 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     }
     #endif
     ReactNativeAutoPlay::HybridMessageTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridPointOfInterestTemplateSpec>
+  std::shared_ptr<HybridPointOfInterestTemplateSpec> create_std__shared_ptr_HybridPointOfInterestTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    ReactNativeAutoPlay::HybridPointOfInterestTemplateSpec_cxx swiftPart = ReactNativeAutoPlay::HybridPointOfInterestTemplateSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::swe::iternio::reactnativeautoplay::HybridPointOfInterestTemplateSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridPointOfInterestTemplateSpec_(std__shared_ptr_HybridPointOfInterestTemplateSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::swe::iternio::reactnativeautoplay::HybridPointOfInterestTemplateSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::swe::iternio::reactnativeautoplay::HybridPointOfInterestTemplateSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridPointOfInterestTemplateSpec\" is not implemented in Swift!");
+    }
+    #endif
+    ReactNativeAutoPlay::HybridPointOfInterestTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

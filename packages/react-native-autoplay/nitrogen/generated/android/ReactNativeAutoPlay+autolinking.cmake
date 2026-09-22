@@ -44,6 +44,7 @@ target_sources(
   ../nitrogen/generated/shared/c++/HybridListTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridMapTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridMessageTemplateSpec.cpp
+  ../nitrogen/generated/shared/c++/HybridPointOfInterestTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridSearchTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridSignInTemplateSpec.cpp
   ../nitrogen/generated/shared/c++/HybridVoiceSpec.cpp
@@ -63,6 +64,7 @@ target_sources(
   ../nitrogen/generated/android/c++/JVariant_PreferredImageLane_ImageLane.cpp
   ../nitrogen/generated/android/c++/JNitroOptionsPanelSection.cpp
   ../nitrogen/generated/android/c++/JHybridMessageTemplateSpec.cpp
+  ../nitrogen/generated/android/c++/JHybridPointOfInterestTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridSearchTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JHybridSignInTemplateSpec.cpp
   ../nitrogen/generated/android/c++/JVariant_QrSignIn_PinSignIn_InputSignIn_GoogleSignIn.cpp
