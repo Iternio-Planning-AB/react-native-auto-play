@@ -178,7 +178,7 @@ This is an example that works for bare react-native (>= 0.82) and Expo SDK 57, c
 It is recommended to attach a listener to MapTemplate.onAppearanceDidChange and send maneuver updates based on this to make sure the colors are applied properly.
 Reason for this is that CarPlay does not allow for color updates on maneuvers shown on the screen. You need to send maneuvers with a new id to get them updated properly on the screen.
 The color properties do not need to handle the mode change, best practice is to use ThemedColor whenever possible and set appropriate light and dark mode colors.
-This is mainly required on CarPlay for now since Android Auto lacks light mode.
+This is mainly required on CarPlay. Android Auto redraws on its own when the day/night state changes, but note that Android Auto 17.8 introduced white templates in day mode while older versions always show dark templates. The car's day/night state (`isDarkMode`) is the same on both, so it does not tell you which template color you are drawn on. Use the `'default'` color for icons that have to stay readable in both cases, see **Icon colors and Android Auto light templates**.
 
 #### CPListTemplate day/night header
 
@@ -451,6 +451,25 @@ It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawa
 - iOS: Add to your `Images.xcassets`
 - Android: Add to `res/drawable`
 
+### Icon colors and Android Auto light templates
+
+Starting with **Android Auto 17.8** the host can show white (light) templates in day mode. Older versions (e.g. 17.6) always use dark templates, even in day mode. Both report the same car app API level, so an app cannot tell them apart, and a fixed icon color that is readable on one (white on dark) can be invisible on the other (white on white).
+
+Use the color `'default'` for every monochrome icon that has to stay readable in both cases:
+
+```ts
+{ type: 'glyph', name: 'search', color: 'default' }
+{ type: 'asset', image: require('./icon.png'), color: 'default' }
+{ type: 'remote', uri: 'https://example.com/icon.png', color: 'default' }
+```
+
+-   **Android Auto**: the host tints the icon with its own default icon color for the template it is currently showing, so it follows dark and light templates on every Android Auto version.
+-   **CarPlay**: `'default'` resolves to black in light mode and white in dark mode, so it is safe to use on iOS and does not change anything there.
+-   **Glyphs** use `'default'` automatically when no `color` is set. Exception on Android Auto: a glyph with a non-transparent `backgroundColor` is not tinted, since the tint would recolor the background as well. It keeps the plain white (dark mode) / black (light mode) glyph color, so set `color` explicitly if that does not contrast with your background.
+-   **Asset and remote images** are not tinted unless you set a `color`, so colorful images such as a logo keep their original colors. Only pass `'default'` for monochrome icons.
+-   Any other color (a string or a `ThemedColor`) is applied as specified. Only use those where the color works on both dark and light templates, e.g. a colored icon.
+-   Known limitation: the host may not apply the tint to header action icons on Android Auto 17.8. That is an issue in Android Auto itself, not something the library can work around.
+
 ## Usage
 
 ### 1. Register the AutoPlay Components
@@ -584,7 +603,7 @@ All root components rendered by templates/scenes receive `RootComponentInitialPr
 
 -   `id`: Module identifier (e.g. `AutoPlayRoot`, `CarPlayDashboard`, or a cluster UUID).
 -   `rootTag`: React Native root tag.
--   `colorScheme`: `'light' | 'dark'` initial color scheme (listen to `onAppearanceDidChange` on `MapTemplate` for updates).
+-   `colorScheme`: `'light' | 'dark'` initial color scheme (listen to `onAppearanceDidChange` on `MapTemplate` for updates). On Android Auto this is the car's day/night state and does not tell you whether the templates are dark or white (17.8+ can show white templates in day mode, older versions never do).
 -   `window`: `{ width, height, scale }`.
 
 ### Template Configs (Props)
@@ -1266,6 +1285,28 @@ CarPlayDashboard.setButtons([
 - `setComponent(component)` — register the cluster component.
 - `setAttributedInactiveDescriptionVariants(variants)` — iOS only inactive text.
 - `addListenerColorScheme(cb)` / `addListenerZoom(cb)` / `addListenerCompass(cb)` / `addListenerSpeedLimit(cb)`.
+
+## Testing with Jest
+
+The real package needs native modules and ships ESM, so it can't run under Jest. Use the bundled CommonJS mock instead, one line in your Jest setup file:
+
+```js
+// jest.setup.js
+jest.mock('@iternio/react-native-auto-play', () =>
+  require('@iternio/react-native-auto-play/jest')
+);
+```
+
+Templates, `HybridAutoPlay`, `HybridVoice`, `AutoPlayCluster`, `CarPlayDashboard` and the hooks that need a car surface are safe no-ops (any method call returns `undefined`), `Constants.isIos27OrGreater` is `false`, and all types are unchanged. Tests that need to record constructions or assert on calls should extend it per test file:
+
+```ts
+jest.mock('@iternio/react-native-auto-play', () => {
+  const actual = jest.requireActual('@iternio/react-native-auto-play/jest');
+  return { ...actual, ListTemplate: class { push = jest.fn(() => Promise.resolve()); } };
+});
+```
+
+The same no-op surface is what `react-native-web` builds get automatically via `index.web.ts`.
 
 ## Known Issues
 

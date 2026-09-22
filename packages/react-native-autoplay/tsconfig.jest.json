@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "declaration": false,
+    "module": "commonjs",
+    "verbatimModuleSyntax": false,
+    "outDir": "lib-cjs",
+    "rootDir": "src"
+  },
+  "include": [],
+  "files": ["src/index.web.ts"]
+}

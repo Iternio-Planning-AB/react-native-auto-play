@@ -30,7 +30,7 @@
 
 
 
-
+#include <optional>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -41,10 +41,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     double lightColor     SWIFT_PRIVATE;
     double darkColor     SWIFT_PRIVATE;
+    std::optional<bool> isDefault     SWIFT_PRIVATE;
 
   public:
     NitroColor() = default;
-    explicit NitroColor(double lightColor, double darkColor): lightColor(lightColor), darkColor(darkColor) {}
+    explicit NitroColor(double lightColor, double darkColor, std::optional<bool> isDefault): lightColor(lightColor), darkColor(darkColor), isDefault(isDefault) {}
 
   public:
     friend bool operator==(const NitroColor& lhs, const NitroColor& rhs) = default;
@@ -61,13 +62,15 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor(
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "lightColor"))),
-        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "darkColor")))
+        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "darkColor"))),
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isDefault")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "lightColor"), JSIConverter<double>::toJSI(runtime, arg.lightColor));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "darkColor"), JSIConverter<double>::toJSI(runtime, arg.darkColor));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "isDefault"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.isDefault));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -80,6 +83,7 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "lightColor")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "darkColor")))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isDefault")))) return false;
       return true;
     }
   };
