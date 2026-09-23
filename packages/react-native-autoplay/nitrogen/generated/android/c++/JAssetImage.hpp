@@ -34,25 +34,25 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     [[nodiscard]]
     AssetImage toCpp() const {
       static const auto clazz = javaClassStatic();
+      static const auto fieldUri = clazz->getField<jni::JString>("uri");
+      jni::local_ref<jni::JString> uri = this->getFieldValue(fieldUri);
+      static const auto fieldWidth = clazz->getField<double>("width");
+      double width = this->getFieldValue(fieldWidth);
+      static const auto fieldHeight = clazz->getField<double>("height");
+      double height = this->getFieldValue(fieldHeight);
+      static const auto fieldScale = clazz->getField<double>("scale");
+      double scale = this->getFieldValue(fieldScale);
       static const auto fieldColor = clazz->getField<JNitroColor>("color");
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldPackager_asset = clazz->getField<jboolean>("packager_asset");
       jboolean packager_asset = this->getFieldValue(fieldPackager_asset);
-      static const auto fieldWidth = clazz->getField<jni::JDouble>("width");
-      jni::local_ref<jni::JDouble> width = this->getFieldValue(fieldWidth);
-      static const auto fieldHeight = clazz->getField<jni::JDouble>("height");
-      jni::local_ref<jni::JDouble> height = this->getFieldValue(fieldHeight);
-      static const auto fieldUri = clazz->getField<jni::JString>("uri");
-      jni::local_ref<jni::JString> uri = this->getFieldValue(fieldUri);
-      static const auto fieldScale = clazz->getField<double>("scale");
-      double scale = this->getFieldValue(fieldScale);
       return AssetImage(
-        color != nullptr ? std::make_optional(color->toCpp()) : std::nullopt,
-        static_cast<bool>(packager_asset),
-        width != nullptr ? std::make_optional(width->value()) : std::nullopt,
-        height != nullptr ? std::make_optional(height->value()) : std::nullopt,
         uri->toStdString(),
-        scale
+        width,
+        height,
+        scale,
+        color != nullptr ? std::make_optional(color->toCpp()) : std::nullopt,
+        static_cast<bool>(packager_asset)
       );
     }
 
@@ -62,17 +62,17 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JAssetImage::javaobject> fromCpp(const AssetImage& value) {
-      using JSignature = JAssetImage(jni::alias_ref<JNitroColor>, jboolean, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, double);
+      using JSignature = JAssetImage(jni::alias_ref<jni::JString>, double, double, double, jni::alias_ref<JNitroColor>, jboolean);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.color.has_value() ? JNitroColor::fromCpp(value.color.value()) : nullptr,
-        value.packager_asset,
-        value.width.has_value() ? jni::JDouble::valueOf(value.width.value()) : nullptr,
-        value.height.has_value() ? jni::JDouble::valueOf(value.height.value()) : nullptr,
         jni::make_jstring(value.uri),
-        value.scale
+        value.width,
+        value.height,
+        value.scale,
+        value.color.has_value() ? JNitroColor::fromCpp(value.color.value()) : nullptr,
+        value.packager_asset
       );
     }
   };

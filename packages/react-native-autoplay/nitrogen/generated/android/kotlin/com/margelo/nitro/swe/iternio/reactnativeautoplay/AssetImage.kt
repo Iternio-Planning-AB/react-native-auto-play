@@ -20,44 +20,44 @@ import java.util.Objects
 data class AssetImage(
   @DoNotStrip
   @Keep
-  val color: NitroColor?,
-  @DoNotStrip
-  @Keep
-  val packager_asset: Boolean,
-  @DoNotStrip
-  @Keep
-  val width: Double?,
-  @DoNotStrip
-  @Keep
-  val height: Double?,
-  @DoNotStrip
-  @Keep
   val uri: String,
   @DoNotStrip
   @Keep
-  val scale: Double
+  val width: Double,
+  @DoNotStrip
+  @Keep
+  val height: Double,
+  @DoNotStrip
+  @Keep
+  val scale: Double,
+  @DoNotStrip
+  @Keep
+  val color: NitroColor?,
+  @DoNotStrip
+  @Keep
+  val packager_asset: Boolean
 ) {
   /* primary constructor */
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is AssetImage) return false
-    return Objects.deepEquals(this.color, other.color)
-      && Objects.deepEquals(this.packager_asset, other.packager_asset)
+    return Objects.deepEquals(this.uri, other.uri)
       && Objects.deepEquals(this.width, other.width)
       && Objects.deepEquals(this.height, other.height)
-      && Objects.deepEquals(this.uri, other.uri)
       && Objects.deepEquals(this.scale, other.scale)
+      && Objects.deepEquals(this.color, other.color)
+      && Objects.deepEquals(this.packager_asset, other.packager_asset)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
-      color,
-      packager_asset,
+      uri,
       width,
       height,
-      uri,
-      scale
+      scale,
+      color,
+      packager_asset
     ).contentDeepHashCode()
   }
 
@@ -69,8 +69,8 @@ data class AssetImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(color: NitroColor?, packager_asset: Boolean, width: Double?, height: Double?, uri: String, scale: Double): AssetImage {
-      return AssetImage(color, packager_asset, width, height, uri, scale)
+    private fun fromCpp(uri: String, width: Double, height: Double, scale: Double, color: NitroColor?, packager_asset: Boolean): AssetImage {
+      return AssetImage(uri, width, height, scale, color, packager_asset)
     }
   }
 }

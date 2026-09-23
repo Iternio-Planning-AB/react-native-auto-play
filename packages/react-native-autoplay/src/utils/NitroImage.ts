@@ -1,4 +1,4 @@
-import { Image, type ImageResolvedAssetSource } from 'react-native';
+import { Image } from 'react-native';
 import type { AutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
@@ -64,7 +64,11 @@ function resolveGlyph(image: Extract<AutoImage, { type: 'glyph' }>): number {
   throw new Error('Glyph image must provide either `name` or `codepoint`.');
 }
 
-interface AssetImage extends ImageResolvedAssetSource {
+interface AssetImage {
+  uri: string;
+  width: number;
+  height: number;
+  scale: number;
   color?: NitroColor;
   packager_asset: boolean;
 }
