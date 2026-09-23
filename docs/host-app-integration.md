@@ -75,6 +75,16 @@ produce no error message at all.
   `automotive_app_desc.xml` and `minCarApiLevel` all live in the library's own
   `AndroidManifest.xml` and are merged in.
   `apps/example/android/app/src/main/AndroidManifest.xml` is nearly empty for that reason.
+- **`AndroidAutoService.onCreate()` calls `(application as? ReactApplication)?.reactHost?.start()`
+  — do not remove it.** Android Auto can start this service directly (a car icon press) with
+  `MainActivity` never having launched, and `reactHost` is a `by lazy` property nothing else
+  touches in that path. Without this call the service and session come up fine but the JS
+  instance never boots, so the car screen is stuck on the placeholder `AppIcon` message
+  forever with no error. `start()` is documented as safe to call even when the instance is
+  already running (e.g. the phone app was opened first) — it no-ops in that case. This used
+  to happen as a side effect of binding to the now-removed `HeadlessTaskService`; removing
+  that for the `installAutoPlayTimers()` rework (*Both platforms*, above) silently broke
+  cold starts from Android Auto until this call was added back explicitly.
 - **Behaviour is controlled by Gradle properties, not code.** The defaults live in
   `packages/react-native-autoplay/android/gradle.properties`; the consumer-facing ones are
   documented in the README (*Android Auto Customization* and *Android Automotive*). Don't
