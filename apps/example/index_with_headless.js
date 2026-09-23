@@ -36,15 +36,11 @@
  *    - else branch taken initially (lightweight)
  *    - Activity or didConnect triggers lazy loading when needed
  */
-
-import { HybridAutoPlay, installAutoPlayTimers } from '@iternio/react-native-auto-play';
+import '@iternio/react-native-auto-play/installTimers';
+import { HybridAutoPlay } from '@iternio/react-native-auto-play';
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
-
-// Must run before any other module has a chance to capture a reference to the original
-// setTimeout/setInterval globals -- see installAutoPlayTimers' own docs.
-installAutoPlayTimers();
 
 let carListenersInitialized = false;
 
