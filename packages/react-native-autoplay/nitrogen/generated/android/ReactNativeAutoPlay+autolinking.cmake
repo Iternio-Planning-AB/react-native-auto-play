@@ -54,6 +54,7 @@ target_sources(
   ../nitrogen/generated/android/c++/JHybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAutoPlaySpec.cpp
   ../nitrogen/generated/android/c++/JVariant_GlyphImage_AssetImage_RemoteImage.cpp
+  ../nitrogen/generated/android/c++/JHybridAutoPlayTimingSpec.cpp
   ../nitrogen/generated/android/c++/JHybridClusterSpec.cpp
   ../nitrogen/generated/android/c++/JNitroImage.cpp
   ../nitrogen/generated/android/c++/JHybridGridTemplateSpec.cpp

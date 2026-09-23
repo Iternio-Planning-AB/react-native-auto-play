@@ -11,6 +11,24 @@ cannot usefully say.
 What follows is that delta: the mechanics behind the setup and the failure modes that
 produce no error message at all.
 
+## Both platforms
+
+- **`installAutoPlayTimers()` (README → *Register the AutoPlay Components*) must be called
+  as the consuming app's very first import**, before RN's own `Timers.js`/`TimerManager`
+  polyfill setup gets a chance to be captured by reference elsewhere. If it's skipped or
+  called late, `setTimeout`/`setInterval`/`requestAnimationFrame` silently keep RN's default
+  behaviour — they throttle or pause while the phone is backgrounded/locked, even though
+  CarPlay/Android Auto keeps the process itself alive. No error, no warning; ETA updates and
+  telemetry just quietly stop. `src/utils/AutoPlayTimers.ts` and `src/hybrid/HybridAutoPlayTiming.ts`
+  are the JS side; `HybridAutoPlayTiming` (Swift/Kotlin) is the native scheduler backing it —
+  a plain always-running timer on both platforms, deliberately not `CADisplayLink`
+  (iOS)/`Choreographer` (Android), since those are exactly what RN's own `RCTTiming`/
+  `JavaTimerManager` use and both pause under the same conditions this exists to avoid.
+  On Android this replaced a permanently-running headless JS task
+  (`AndroidAutoHeadlessJsTask`) that existed purely to satisfy `JavaTimerManager`'s
+  `isRunningTasks` escape hatch — process survival itself is unrelated and still comes from
+  `AndroidAutoService`'s own `startForeground()` call.
+
 ## iOS
 
 - **`getRootViewForAutoplay(moduleName:initialProperties:)` on the host `AppDelegate`**
@@ -53,9 +71,9 @@ produce no error message at all.
 
 ## Android
 
-- **No manifest setup is required in the host app.** The `CarAppService`,
-  `HeadlessTaskService`, permissions, `automotive_app_desc.xml` and `minCarApiLevel` all
-  live in the library's own `AndroidManifest.xml` and are merged in.
+- **No manifest setup is required in the host app.** The `CarAppService`, permissions,
+  `automotive_app_desc.xml` and `minCarApiLevel` all live in the library's own
+  `AndroidManifest.xml` and are merged in.
   `apps/example/android/app/src/main/AndroidManifest.xml` is nearly empty for that reason.
 - **Behaviour is controlled by Gradle properties, not code.** The defaults live in
   `packages/react-native-autoplay/android/gradle.properties`; the consumer-facing ones are
@@ -77,9 +95,6 @@ produce no error message at all.
     so the host app must raise `ReactNativeAutoPlay_minSdkVersion` itself (the library's
     default in `android/gradle.properties` is lower). The host app must also remove its
     launcher activity in that variant, or the Automotive launcher shows two icons.
-- `HeadlessTaskService` is a **bound** service (not started) so Android won't kill it while
-  Android Auto is active; the JS task starts on `onBind`, forced onto the UI thread. Car
-  reconnects rebind, so **the task must be idempotent.**
 - **Stack operations** (`setRootTemplate`, `pushTemplate`, `popTemplate`,
   `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`) go through
   `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures

@@ -475,14 +475,17 @@ Use the color `'default'` for every monochrome icon that has to stay readable in
 
 ### 1. Register the AutoPlay Components
 
-You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). This includes setting up the headless task that runs when CarPlay or Android Auto is connected.
+You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). Call `installAutoPlayTimers()` **first, before any other import** — it replaces the global `setTimeout`/`setInterval`/`requestAnimationFrame` (and their `clear*`/`cancel*` counterparts) with versions that keep running while CarPlay/Android Auto is actively driving the car screen, even if the phone itself is backgrounded or its screen is locked. React Native's own timers throttle or pause in that state regardless of whether the app process is actually still alive, which would otherwise stall ETA updates and telemetry polling. Calling it late risks some other module having already captured a reference to the original globals.
 
 ```javascript
 // index.js
+import { installAutoPlayTimers } from '@iternio/react-native-auto-play';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
 import registerAutoPlay from './src/AutoPlay'; // Your AutoPlay setup
+
+installAutoPlayTimers();
 
 AppRegistry.registerComponent(appName, () => App);
 registerAutoPlay();
@@ -1315,9 +1318,6 @@ The same no-op surface is what `react-native-web` builds get automatically via `
 
 -   **Broken exceptions with `react-native-skia`**: When using `react-native-skia` exceptions on iOS are not reported correctly. This is fixed since version `2.4.19` of `react-native-skia`. For more details, see this [pull request](https://github.com/Shopify/react-native-skia/pull/3595) and [issue](https://github.com/Shopify/react-native-skia/issues/3635).
 -   **AppState on iOS**: The `AppState` module from React Native does not work correctly on iOS because this library uses scenes, which are not supported by the stock `AppState` module. This library provides a custom state listener that works for both Android and iOS. Use `HybridAutoPlay.addListenerRenderState` instead of `AppState`.
--   **Timers stop on screen lock**: iOS stops all timers when the device main screen is turned off. To ensure timers continue to run (which is often necessary for background tasks related to autoplay), a patch for `react-native` is required. A patch is included in the root `patches/` directory and can be applied using `patch-package`. Modern React Native versions link a **prebuilt `React-Core` XCFramework by default**, which does not compile the patched source file, so the patch silently has no effect unless you also force `React-Core` to build from source:
-    - **Expo SDK >= 56**: set `buildReactNativeFromSource` to `true` in your app config for [expo-build-properties](https://docs.expo.dev/versions/latest/sdk/build-properties/#sharedbuildconfigfields).
-    - **Bare React Native**: set `ENV['RCT_USE_PREBUILT_RNCORE'] = '0'` and `ENV['RCT_USE_RN_DEP'] = '0'` at the top of your `ios/Podfile`, before `react_native_pods.rb` is required, then re-run `pod install`.
 -   **expo-splash-screen stuck on iOS**: The `expo-splash-screen` module is broken on iOS because it does not support scenes, which are used by this library. This can cause the splash screen to be stuck on either the mobile device or on CarPlay. To fix this, a patch for `expo-splash-screen` is included in the root `patches/` directory and can be applied using `patch-package`. After applying the patch, you can hide the splash screen for a specific scene by passing the module name to the `hide` or `hideAsync` function. The module name can be one of the values from the `AutoPlayModules` enum or the UUID of a cluster screen.
     ```tsx
     import { hideAsync } from 'expo-splash-screen';

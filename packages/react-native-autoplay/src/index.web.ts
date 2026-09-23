@@ -130,6 +130,8 @@ export const SafeAreaView = (props: ViewProps) => createElement(View, props);
 
 export function setIconFont(_name: string, _glyphMap?: Record<string, number>): void {}
 
+export function installAutoPlayTimers(): void {}
+
 export const useFocusedEffect = () => {};
 
 export const useVoiceInput = () => ({

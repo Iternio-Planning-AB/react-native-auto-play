@@ -30,7 +30,6 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 class AndroidAutoService : CarAppService() {
     private lateinit var notificationManager: NotificationManager
 
-    private var isServiceBound = false
     private var isSessionStarted = false
     private var isReactAppStarted = false
 
@@ -98,11 +97,6 @@ class AndroidAutoService : CarAppService() {
     }
 
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            val serviceIntent = Intent(applicationContext, HeadlessTaskService::class.java)
-            bindService(serviceIntent, connection, BIND_AUTO_CREATE)
-        }
-
         override fun onResume(owner: LifecycleOwner) {
             isSessionStarted = true
         }
@@ -112,24 +106,7 @@ class AndroidAutoService : CarAppService() {
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
-            if (isServiceBound) {
-                unbindService(connection)
-                isServiceBound = false
-            }
-
             this@AndroidAutoService.stopForeground(STOP_FOREGROUND_REMOVE)
-        }
-    }
-
-    private val connection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(
-            className: ComponentName, service: IBinder
-        ) {
-            isServiceBound = true
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            isServiceBound = false
         }
     }
 

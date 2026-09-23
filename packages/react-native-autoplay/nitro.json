@@ -120,6 +120,10 @@
       }
     },
     "AutoPlayTiming": {
+      "android": {
+        "implementationClassName": "HybridAutoPlayTiming",
+        "language": "kotlin"
+      },
       "ios": {
         "implementationClassName": "HybridAutoPlayTiming",
         "language": "swift"
