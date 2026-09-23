@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "ListImageType" and the the Kotlin enum "ListImageType".
+   * The C++ JNI bridge between the C++ enum "ListImageType" and the Kotlin enum "ListImageType".
    */
   struct JListImageType final: public jni::JavaClass<JListImageType> {
   public:

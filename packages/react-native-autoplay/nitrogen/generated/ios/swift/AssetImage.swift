@@ -18,14 +18,26 @@ public extension AssetImage {
   /**
    * Create a new instance of `AssetImage`.
    */
-  init(color: NitroColor?, packager_asset: Bool, height: Double, width: Double, scale: Double, uri: String) {
+  init(color: NitroColor?, packager_asset: Bool, width: Double?, height: Double?, uri: String, scale: Double) {
     self.init({ () -> bridge.std__optional_NitroColor_ in
       if let __unwrappedValue = color {
         return bridge.create_std__optional_NitroColor_(__unwrappedValue)
       } else {
         return .init()
       }
-    }(), packager_asset, height, width, scale, std.string(uri))
+    }(), packager_asset, { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = width {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = height {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), std.string(uri), scale)
   }
 
   @inline(__always)
@@ -39,22 +51,36 @@ public extension AssetImage {
   }
   
   @inline(__always)
-  var height: Double {
-    return self.__height
+  var width: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__width) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__width)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
-  var width: Double {
-    return self.__width
-  }
-  
-  @inline(__always)
-  var scale: Double {
-    return self.__scale
+  var height: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__height) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__height)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)
   var uri: String {
     return String(self.__uri)
+  }
+  
+  @inline(__always)
+  var scale: Double {
+    return self.__scale
   }
 }

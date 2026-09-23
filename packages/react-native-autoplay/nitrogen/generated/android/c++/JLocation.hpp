@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Location" and the the Kotlin data class "Location".
+   * The C++ JNI bridge between the C++ struct "Location" and the Kotlin data class "Location".
    */
   struct JLocation final: public jni::JavaClass<JLocation> {
   public:

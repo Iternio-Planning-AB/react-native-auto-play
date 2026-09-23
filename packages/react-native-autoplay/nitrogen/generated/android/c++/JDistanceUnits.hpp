@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "DistanceUnits" and the the Kotlin enum "DistanceUnits".
+   * The C++ JNI bridge between the C++ enum "DistanceUnits" and the Kotlin enum "DistanceUnits".
    */
   struct JDistanceUnits final: public jni::JavaClass<JDistanceUnits> {
   public:

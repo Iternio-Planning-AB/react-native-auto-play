@@ -59,7 +59,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "GridTemplateConfig" and the the Kotlin data class "GridTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "GridTemplateConfig" and the Kotlin data class "GridTemplateConfig".
    */
   struct JGridTemplateConfig final: public jni::JavaClass<JGridTemplateConfig> {
   public:

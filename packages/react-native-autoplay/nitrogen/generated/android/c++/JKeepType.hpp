@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "KeepType" and the the Kotlin enum "KeepType".
+   * The C++ JNI bridge between the C++ enum "KeepType" and the Kotlin enum "KeepType".
    */
   struct JKeepType final: public jni::JavaClass<JKeepType> {
   public:

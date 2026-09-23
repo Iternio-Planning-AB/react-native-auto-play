@@ -26,16 +26,16 @@ data class AssetImage(
   val packager_asset: Boolean,
   @DoNotStrip
   @Keep
-  val height: Double,
+  val width: Double?,
   @DoNotStrip
   @Keep
-  val width: Double,
+  val height: Double?,
   @DoNotStrip
   @Keep
-  val scale: Double,
+  val uri: String,
   @DoNotStrip
   @Keep
-  val uri: String
+  val scale: Double
 ) {
   /* primary constructor */
 
@@ -44,20 +44,20 @@ data class AssetImage(
     if (other !is AssetImage) return false
     return Objects.deepEquals(this.color, other.color)
       && Objects.deepEquals(this.packager_asset, other.packager_asset)
-      && Objects.deepEquals(this.height, other.height)
       && Objects.deepEquals(this.width, other.width)
-      && Objects.deepEquals(this.scale, other.scale)
+      && Objects.deepEquals(this.height, other.height)
       && Objects.deepEquals(this.uri, other.uri)
+      && Objects.deepEquals(this.scale, other.scale)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
       color,
       packager_asset,
-      height,
       width,
-      scale,
-      uri
+      height,
+      uri,
+      scale
     ).contentDeepHashCode()
   }
 
@@ -69,8 +69,8 @@ data class AssetImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(color: NitroColor?, packager_asset: Boolean, height: Double, width: Double, scale: Double, uri: String): AssetImage {
-      return AssetImage(color, packager_asset, height, width, scale, uri)
+    private fun fromCpp(color: NitroColor?, packager_asset: Boolean, width: Double?, height: Double?, uri: String, scale: Double): AssetImage {
+      return AssetImage(color, packager_asset, width, height, uri, scale)
     }
   }
 }

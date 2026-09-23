@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_VoiceInputChunk_cxx: Func_void_VoiceInputChunk {
   override fun invoke(chunk: VoiceInputChunk): Unit
     = invoke_cxx(chunk)
 
-  @FastNative
   private external fun invoke_cxx(chunk: VoiceInputChunk): Unit
 }
 

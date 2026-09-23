@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "TrafficSide" and the the Kotlin enum "TrafficSide".
+   * The C++ JNI bridge between the C++ enum "TrafficSide" and the Kotlin enum "TrafficSide".
    */
   struct JTrafficSide final: public jni::JavaClass<JTrafficSide> {
   public:

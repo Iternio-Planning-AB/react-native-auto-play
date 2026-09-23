@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_ActiveCarUxRestrictions_cxx: Func_void_ActiveCarUxRestrictions {
   override fun invoke(restrictions: ActiveCarUxRestrictions): Unit
     = invoke_cxx(restrictions)
 
-  @FastNative
   private external fun invoke_cxx(restrictions: ActiveCarUxRestrictions): Unit
 }
 

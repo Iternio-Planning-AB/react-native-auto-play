@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "NitroAlignment" and the the Kotlin enum "NitroAlignment".
+   * The C++ JNI bridge between the C++ enum "NitroAlignment" and the Kotlin enum "NitroAlignment".
    */
   struct JNitroAlignment final: public jni::JavaClass<JNitroAlignment> {
   public:

@@ -40,7 +40,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroOptionsPanelGridSection" and the the Kotlin data class "NitroOptionsPanelGridSection".
+   * The C++ JNI bridge between the C++ struct "NitroOptionsPanelGridSection" and the Kotlin data class "NitroOptionsPanelGridSection".
    */
   struct JNitroOptionsPanelGridSection final: public jni::JavaClass<JNitroOptionsPanelGridSection> {
   public:

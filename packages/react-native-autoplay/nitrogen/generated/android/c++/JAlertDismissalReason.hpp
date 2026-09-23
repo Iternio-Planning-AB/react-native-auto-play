@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "AlertDismissalReason" and the the Kotlin enum "AlertDismissalReason".
+   * The C++ JNI bridge between the C++ enum "AlertDismissalReason" and the Kotlin enum "AlertDismissalReason".
    */
   struct JAlertDismissalReason final: public jni::JavaClass<JAlertDismissalReason> {
   public:

@@ -378,7 +378,7 @@ object Parser {
                     }
                     row.onPress?.let {
                         setOnClickListener {
-                            row.onPress(null)
+                            it(null)
                         }
                     }
                     row.browsable?.let {
@@ -650,7 +650,7 @@ object Parser {
                 // whose backing bitmap has already been recycled or failed to allocate;
                 // copy() can also throw (e.g., OOM on very large remote images). Either
                 // way we return null so the caller falls back to a placeholder icon.
-                return image.underlyingBitmap.copy(Bitmap.Config.ARGB_8888, false)
+                return image.underlyingBitmap?.copy(Bitmap.Config.ARGB_8888, false)
             } else if (image is CloseableXml) {
                 val drawable = image.buildDrawable()
                 return drawable?.toBitmap(

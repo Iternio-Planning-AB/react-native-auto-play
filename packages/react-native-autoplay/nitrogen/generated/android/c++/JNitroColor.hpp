@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroColor" and the the Kotlin data class "NitroColor".
+   * The C++ JNI bridge between the C++ struct "NitroColor" and the Kotlin data class "NitroColor".
    */
   struct JNitroColor final: public jni::JavaClass<JNitroColor> {
   public:

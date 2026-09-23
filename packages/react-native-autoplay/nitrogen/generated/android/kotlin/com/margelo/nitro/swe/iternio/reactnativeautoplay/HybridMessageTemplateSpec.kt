@@ -10,6 +10,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
+import dalvik.annotation.optimization.FastNative
 import com.margelo.nitro.core.HybridObject
 
 /**
@@ -42,6 +43,7 @@ abstract class HybridMessageTemplateSpec: HybridObject() {
   @Keep
   protected open class CxxPart(javaPart: HybridMessageTemplateSpec): HybridObject.CxxPart(javaPart) {
     // C++ JHybridMessageTemplateSpec::CxxPart::initHybrid(...)
+    @FastNative
     external override fun initHybrid(): HybridData
   }
   override fun createCxxPart(): CxxPart {

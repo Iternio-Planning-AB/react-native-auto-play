@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_std__optional_std__string__std__optional_GoogleSignInAccount__cx
   override fun invoke(error: String?, signInAccount: GoogleSignInAccount?): Unit
     = invoke_cxx(error,signInAccount)
 
-  @FastNative
   private external fun invoke_cxx(error: String?, signInAccount: GoogleSignInAccount?): Unit
 }
 

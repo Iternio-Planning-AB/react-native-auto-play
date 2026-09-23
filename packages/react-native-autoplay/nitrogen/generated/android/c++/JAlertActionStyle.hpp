@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "AlertActionStyle" and the the Kotlin enum "AlertActionStyle".
+   * The C++ JNI bridge between the C++ enum "AlertActionStyle" and the Kotlin enum "AlertActionStyle".
    */
   struct JAlertActionStyle final: public jni::JavaClass<JAlertActionStyle> {
   public:

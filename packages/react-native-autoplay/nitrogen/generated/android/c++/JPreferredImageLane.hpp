@@ -29,7 +29,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "PreferredImageLane" and the the Kotlin data class "PreferredImageLane".
+   * The C++ JNI bridge between the C++ struct "PreferredImageLane" and the Kotlin data class "PreferredImageLane".
    */
   struct JPreferredImageLane final: public jni::JavaClass<JPreferredImageLane> {
   public:

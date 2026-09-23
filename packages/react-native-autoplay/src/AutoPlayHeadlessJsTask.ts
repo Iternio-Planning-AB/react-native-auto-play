@@ -1,11 +1,14 @@
-import { AppRegistry, Platform, type Task, type TaskProvider } from 'react-native';
+import { AppRegistry, Platform, type TaskProvider } from 'react-native';
 import type { AutoPlay as NitroAutoPlay } from './specs/AutoPlay.nitro';
+
+// react-native no longer exports `Task` publicly; TaskProvider's return type, reconstructed locally.
+type Task = () => Promise<void>;
 
 const createTaskProvider =
   (hybridAutoPlay: NitroAutoPlay): TaskProvider =>
   (): Task =>
   () =>
-    new Promise((resolve) => {
+    new Promise<void>((resolve) => {
       const remove = hybridAutoPlay.addListener('didDisconnect', () => {
         resolve();
         remove();

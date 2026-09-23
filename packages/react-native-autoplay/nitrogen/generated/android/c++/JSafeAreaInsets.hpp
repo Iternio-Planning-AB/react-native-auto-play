@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "SafeAreaInsets" and the the Kotlin data class "SafeAreaInsets".
+   * The C++ JNI bridge between the C++ struct "SafeAreaInsets" and the Kotlin data class "SafeAreaInsets".
    */
   struct JSafeAreaInsets final: public jni::JavaClass<JSafeAreaInsets> {
   public:
