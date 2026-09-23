@@ -14,6 +14,8 @@
     "lib",
     "lib-cjs",
     "jest.js",
+    "installTimers.ts",
+    "installTimers.web.ts",
     "nitrogen",
     "android/build.gradle",
     "android/gradle.properties",

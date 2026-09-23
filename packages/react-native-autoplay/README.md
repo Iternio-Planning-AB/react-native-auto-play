@@ -475,17 +475,15 @@ Use the color `'default'` for every monochrome icon that has to stay readable in
 
 ### 1. Register the AutoPlay Components
 
-You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). Call `installAutoPlayTimers()` **first, before any other import** — it replaces the global `setTimeout`/`setInterval`/`requestAnimationFrame` (and their `clear*`/`cancel*` counterparts) with versions that keep running while CarPlay/Android Auto is actively driving the car screen, even if the phone itself is backgrounded or its screen is locked. React Native's own timers throttle or pause in that state regardless of whether the app process is actually still alive, which would otherwise stall ETA updates and telemetry polling. Calling it late risks some other module having already captured a reference to the original globals.
+You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). Import `@iternio/react-native-auto-play/installTimers` — a side-effect-only module that replaces the global `setTimeout`/`setInterval`/`requestAnimationFrame` (and their `clear*`/`cancel*` counterparts) with versions that keep running while CarPlay/Android Auto is actively driving the car screen, even if the phone itself is backgrounded or its screen is locked. React Native's own timers throttle or pause in that state regardless of whether the app process is actually still alive, which would otherwise stall ETA updates and telemetry polling. It must run before any other module has a chance to capture a reference to the original globals, which means it must be your entry file's **first import** — ES import declarations are hoisted and evaluated in source order, so it needs to come before everything else, including `react-native` itself:
 
 ```javascript
 // index.js
-import { installAutoPlayTimers } from '@iternio/react-native-auto-play';
+import '@iternio/react-native-auto-play/installTimers';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
 import registerAutoPlay from './src/AutoPlay'; // Your AutoPlay setup
-
-installAutoPlayTimers();
 
 AppRegistry.registerComponent(appName, () => App);
 registerAutoPlay();

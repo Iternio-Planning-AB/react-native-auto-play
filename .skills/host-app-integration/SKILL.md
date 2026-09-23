@@ -14,11 +14,14 @@ symptom does not work.
 
 The highlights, so you know what you're looking for:
 
-1. **Both platforms:** `installAutoPlayTimers()` must be the app's very first import, or
-   `setTimeout`/`setInterval`/`requestAnimationFrame` silently keep RN's default
-   throttle-while-backgrounded behaviour — no error, ETA updates and telemetry just quietly
-   stop while the car surface is active and the phone is locked. This replaced a permanent
-   headless JS task on Android that existed only to keep `JavaTimerManager` unpaused.
+1. **Both platforms:** `@iternio/react-native-auto-play/installTimers` must be the app's
+   very first *import* (imports are hoisted, so anything later runs too late).
+   `installAutoPlayTimers()` isn't exported from the package's main entry — this side-effect
+   module is the only way to reach it. Skipping it leaves `setTimeout`/`setInterval`/
+   `requestAnimationFrame` on RN's default throttle-while-backgrounded behaviour — no error, ETA
+   updates and telemetry just quietly stop while the car surface is active and the phone is
+   locked. This replaced a permanent headless JS task on Android that existed only to keep
+   `JavaTimerManager` unpaused.
 2. **iOS:** the host app must implement
    `@objc func getRootViewForAutoplay(moduleName:initialProperties:) -> UIView?` on its
    `AppDelegate`. It is found by ObjC runtime reflection, not a protocol, so a missing or

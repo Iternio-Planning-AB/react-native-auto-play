@@ -55,7 +55,6 @@ export * from './types/Telemetry';
 export * from './types/Text';
 export * from './types/Trip';
 export type { VoiceInputChunk, VoiceInputOptions, VoiceInputResult } from './types/Voice';
-export * from './utils/AutoPlayTimers';
 export * from './utils/ErrorUtil';
 export type {
   AlertPriority,

@@ -5,32 +5,37 @@ private struct ScheduledTimer {
     let callback: () -> Void
     let interval: TimeInterval
     let repeats: Bool
-    var target: Date
+    var target: TimeInterval
 }
 
-/// Backs setTimeout/setInterval (see AutoPlayTimers.ts) with a scheduler driven by a plain,
-/// always-running `Timer` -- deliberately not tied to `CADisplayLink`/screen refresh, so it
-/// keeps firing while the phone screen is locked and CarPlay is actively driving the external
-/// screen. All due-time bookkeeping happens here, mirroring RCTTiming's own architecture, so
-/// JS only crosses the bridge when a timer actually fires. See AutoPlayTiming.nitro.ts.
+// Unlike ProcessInfo.systemUptime/mach_absolute_time(), keeps counting through sleep. RAW over
+// plain CLOCK_MONOTONIC: also immune to NTP frequency-discipline adjustments.
+private func now() -> TimeInterval {
+    TimeInterval(clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)) / 1_000_000_000
+}
+
+/// Backs setTimeout/setInterval (see AutoPlayTimers.ts) with a plain `Timer` -- not tied to
+/// `CADisplayLink`/screen refresh, so it keeps firing while the phone screen is locked and
+/// CarPlay is actively driving the external screen. See AutoPlayTiming.nitro.ts.
+///
+/// Ticks at a fixed ~60Hz while any timer is pending and stops entirely once idle, rather than
+/// scheduling a delay to the next due target: a `Timer`'s dispatch is gated on the run loop's
+/// own monotonic clock, which (like `mach_absolute_time()`) pauses during sleep, so a long
+/// pre-sleep delay would need that much *awake* time after waking. A short, repeated delay only
+/// needs ~16ms of awake time, so it fires within about one frame of the device waking
+/// regardless of sleep length.
 class HybridAutoPlayTiming: HybridAutoPlayTimingSpec {
-    // Matches RCTTiming's own frame cadence.
     private static let frameDuration: TimeInterval = 1.0 / 60.0
+
+    // RN's TimerManager also numbers ids from 1; offsetting avoids collisions with ids a
+    // pre-install caller (e.g. React's own scheduler) still holds against the original
+    // clearTimeout, now replaced.
+    private static let idOffset: Double = 1_000_000_000
 
     private let lock = NSLock()
     private var timers = [Double: ScheduledTimer]()
-    private var nextId: Double = 1
+    private var nextId: Double = HybridAutoPlayTiming.idOffset
     private var timer: Timer?
-
-    override init() {
-        super.init()
-        let timer = Timer.scheduledTimer(withTimeInterval: HybridAutoPlayTiming.frameDuration, repeats: true) {
-            [weak self] _ in
-            self?.tick()
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        self.timer = timer
-    }
 
     deinit {
         timer?.invalidate()
@@ -42,26 +47,52 @@ class HybridAutoPlayTiming: HybridAutoPlayTimingSpec {
         return body()
     }
 
-    private func tick() {
-        let now = Date()
-        var due = [ScheduledTimer]()
+    // Must be called while already holding `lock`.
+    private func scheduleTick() {
+        let next = Timer(timeInterval: HybridAutoPlayTiming.frameDuration, repeats: false) { [weak self] _ in
+            self?.tick()
+        }
+        RunLoop.main.add(next, forMode: .common)
+        timer = next
+    }
 
-        withLock {
-            let dueIds = timers.filter { $0.value.target <= now }.map(\.key)
-            for id in dueIds {
-                guard var entry = timers[id] else { continue }
-                due.append(entry)
+    private func tick() {
+        let currentTime = now()
+
+        // Sort by (target, id): Dictionary iteration order is unspecified, so
+        // setTimeout(a, 0); setTimeout(b, 0) could otherwise fire b before a.
+        let dueIds = withLock {
+            timers.filter { $0.value.target <= currentTime }
+                .sorted { lhs, rhs in
+                    lhs.value.target != rhs.value.target
+                        ? lhs.value.target < rhs.value.target
+                        : lhs.key < rhs.key
+                }
+                .map(\.key)
+        }
+
+        for id in dueIds {
+            // Re-check membership: a same-tick callback may have cleared a later timer in
+            // this snapshotted list (e.g. `clearTimeout(t); t = setTimeout(...)`).
+            let callback: (() -> Void)? = withLock {
+                guard var entry = timers[id] else { return nil }
                 if entry.repeats {
-                    entry.target = Date(timeIntervalSinceNow: entry.interval)
+                    entry.target = now() + entry.interval
                     timers[id] = entry
                 } else {
                     timers.removeValue(forKey: id)
                 }
+                return entry.callback
             }
+
+            callback?()
         }
 
-        for entry in due {
-            entry.callback()
+        withLock {
+            timer = nil
+            if !timers.isEmpty {
+                scheduleTick()
+            }
         }
     }
 
@@ -75,8 +106,11 @@ class HybridAutoPlayTiming: HybridAutoPlayTimingSpec {
                 callback: callback,
                 interval: interval,
                 repeats: repeats,
-                target: Date(timeIntervalSinceNow: interval)
+                target: now() + interval
             )
+            if timer == nil {
+                scheduleTick()
+            }
             return id
         }
     }

@@ -13,14 +13,18 @@ produce no error message at all.
 
 ## Both platforms
 
-- **`installAutoPlayTimers()` (README → *Register the AutoPlay Components*) must be called
-  as the consuming app's very first import**, before RN's own `Timers.js`/`TimerManager`
-  polyfill setup gets a chance to be captured by reference elsewhere. If it's skipped or
-  called late, `setTimeout`/`setInterval`/`requestAnimationFrame` silently keep RN's default
-  behaviour — they throttle or pause while the phone is backgrounded/locked, even though
-  CarPlay/Android Auto keeps the process itself alive. No error, no warning; ETA updates and
-  telemetry just quietly stop. `src/utils/AutoPlayTimers.ts` and `src/hybrid/HybridAutoPlayTiming.ts`
-  are the JS side; `HybridAutoPlayTiming` (Swift/Kotlin) is the native scheduler backing it —
+- **`@iternio/react-native-auto-play/installTimers` (README → *Register the AutoPlay
+  Components*) must be the consuming app's first *import*.** `installAutoPlayTimers()`
+  (`src/utils/AutoPlayTimers.ts`) isn't exported from the package's main entry at all — it's
+  deliberately only reachable through this side-effect-only module, so "runs before anything
+  else" is enforced by the API shape (there's no function a caller could call from the wrong
+  place) rather than left as a rule to get right. ES import declarations are hoisted and
+  evaluated in source order, so this import still has to come before everything else in the
+  entry file. If it's skipped, `setTimeout`/`setInterval`/`requestAnimationFrame` silently keep
+  RN's default behaviour — they throttle or pause while the phone is backgrounded/locked, even
+  though CarPlay/Android Auto keeps the process itself alive. No error, no warning; ETA updates
+  and telemetry just quietly stop. `src/hybrid/HybridAutoPlayTiming.ts` is the rest of the JS
+  side; `HybridAutoPlayTiming` (Swift/Kotlin) is the native scheduler backing it —
   a plain always-running timer on both platforms, deliberately not `CADisplayLink`
   (iOS)/`Choreographer` (Android), since those are exactly what RN's own `RCTTiming`/
   `JavaTimerManager` use and both pause under the same conditions this exists to avoid.
