@@ -12,7 +12,7 @@ index 2a7519a..6ce3811 100644
  - (instancetype)initWithDelegate:(id<RCTTimingDelegate>)delegate;
  - (void)createTimerForNextFrame:(NSNumber *)callbackID
 diff --git a/node_modules/react-native/React/CoreModules/RCTTiming.mm b/node_modules/react-native/React/CoreModules/RCTTiming.mm
-index 14ee784..234169e 100644
+index 14ee784..9825b92 100644
 --- a/node_modules/react-native/React/CoreModules/RCTTiming.mm
 +++ b/node_modules/react-native/React/CoreModules/RCTTiming.mm
 @@ -101,11 +101,10 @@ static const NSTimeInterval kIdleCallbackFrameDeadline = 0.001;
@@ -45,11 +45,13 @@ index 14ee784..234169e 100644
    for (NSString *name in @[
           UIApplicationWillResignActiveNotification,
           UIApplicationDidEnterBackgroundNotification,
-@@ -172,15 +172,12 @@ RCT_EXPORT_MODULE()
+@@ -172,15 +172,14 @@ RCT_EXPORT_MODULE()
  
  - (void)invalidate
  {
 -  [self stopTimers];
++  [_timer invalidate];
++  _timer = nil;
    _bridge = nil;
    _timingDelegate = nil;
  }
@@ -61,7 +63,7 @@ index 14ee784..234169e 100644
    _inBackground = YES;
  
    // Issue one final timer callback, which will schedule a
-@@ -191,7 +188,6 @@ RCT_EXPORT_MODULE()
+@@ -191,7 +190,6 @@ RCT_EXPORT_MODULE()
  - (void)appDidMoveToForeground
  {
    _inBackground = NO;
@@ -69,7 +71,7 @@ index 14ee784..234169e 100644
  }
  
  - (void)proximityChanged
-@@ -204,41 +200,6 @@ RCT_EXPORT_MODULE()
+@@ -204,41 +202,6 @@ RCT_EXPORT_MODULE()
    }
  }
  
@@ -111,7 +113,7 @@ index 14ee784..234169e 100644
  - (void)didUpdateFrame:(RCTFrameUpdate *)update
  {
    NSDate *nextScheduledTarget = [NSDate distantFuture];
-@@ -289,58 +250,6 @@ RCT_EXPORT_MODULE()
+@@ -289,58 +252,6 @@ RCT_EXPORT_MODULE()
        }
      }
    }
@@ -170,7 +172,7 @@ index 14ee784..234169e 100644
  }
  
  /**
-@@ -395,16 +304,6 @@ RCT_EXPORT_METHOD(
+@@ -395,16 +306,6 @@ RCT_EXPORT_METHOD(
    @synchronized(_timers) {
      _timers[callbackID] = timer;
    }
@@ -187,7 +189,7 @@ index 14ee784..234169e 100644
  }
  
  RCT_EXPORT_METHOD(deleteTimer : (double)timerID)
-@@ -412,19 +311,11 @@ RCT_EXPORT_METHOD(deleteTimer : (double)timerID)
+@@ -412,19 +313,11 @@ RCT_EXPORT_METHOD(deleteTimer : (double)timerID)
    @synchronized(_timers) {
      [_timers removeObjectForKey:[NSNumber numberWithDouble:timerID]];
    }
