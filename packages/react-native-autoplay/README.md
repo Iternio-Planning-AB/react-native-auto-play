@@ -25,6 +25,7 @@
 ## Requirements
 
 -   **iOS builds require Xcode 27+** (the iOS 27 SDK), even for apps that don't use any `mapConfig`/panel features — the library references `CPMapPanel`/`CPPanel` types internally behind `@available(iOS 27.0, *)` checks, but `@available` only defers *runtime* execution, not compile-time symbol resolution, so the SDK must be present to build at all.
+-   **`react-native-nitro-modules` 0.37.1 or newer** — the generated native bindings target that runtime shape; an older nitro-modules install fails at native build time.
 
 ## Installation
 

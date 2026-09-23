@@ -71,7 +71,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-nitro-modules": "*"
+    "react-native-nitro-modules": ">=0.37.1"
   },
   "dependencies": {
     "react-native-uuid": "^2.0.3"
