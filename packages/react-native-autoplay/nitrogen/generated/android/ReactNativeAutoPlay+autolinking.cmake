@@ -37,6 +37,7 @@ target_sources(
   ../nitrogen/generated/shared/c++/HybridAndroidAutoTelemetrySpec.cpp
   ../nitrogen/generated/shared/c++/HybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/shared/c++/HybridAutoPlaySpec.cpp
+  ../nitrogen/generated/shared/c++/HybridAutoPlayTimingSpec.cpp
   ../nitrogen/generated/shared/c++/HybridCarPlayDashboardSpec.cpp
   ../nitrogen/generated/shared/c++/HybridClusterSpec.cpp
   ../nitrogen/generated/shared/c++/HybridGridTemplateSpec.cpp

@@ -119,6 +119,12 @@
         "language": "swift"
       }
     },
+    "AutoPlayTiming": {
+      "ios": {
+        "implementationClassName": "HybridAutoPlayTiming",
+        "language": "swift"
+      }
+    },
     "Cluster": {
       "android": {
         "implementationClassName": "HybridCluster",

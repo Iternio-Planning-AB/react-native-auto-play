@@ -37,10 +37,14 @@
  *    - Activity or didConnect triggers lazy loading when needed
  */
 
+import { HybridAutoPlay, installAutoPlayTimers } from '@iternio/react-native-auto-play';
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import { HybridAutoPlay } from '@iternio/react-native-auto-play';
 import { name as appName } from './app.json';
+
+// Must run before any other module has a chance to capture a reference to the original
+// setTimeout/setInterval globals -- see installAutoPlayTimers' own docs.
+installAutoPlayTimers();
 
 let carListenersInitialized = false;
 
@@ -63,8 +67,7 @@ if (HybridAutoPlay.isCarServiceRunning()) {
     const { StateWrapper } = require('./src/state/store');
     const App = require('./src/App').default;
     initCarListeners();
-    return (props) =>
-      React.createElement(StateWrapper, null, React.createElement(App, props));
+    return (props) => React.createElement(StateWrapper, null, React.createElement(App, props));
   });
 
   HybridAutoPlay.addListener('didConnect', initCarListeners);
