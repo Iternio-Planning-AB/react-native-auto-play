@@ -27,6 +27,7 @@
 #include "JFunc_void_VisibilityState.hpp"
 #include "JFunc_void_std__optional_Location__std__optional_std__string_.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
+#include "JHybridAutoPlayTimingSpec.hpp"
 #include "JHybridClusterSpec.hpp"
 #include "JFunc_void_std__string.hpp"
 #include "JFunc_void_std__string_ColorScheme.hpp"
@@ -156,6 +157,14 @@ struct JHybridSearchTemplateSpecImpl: public jni::JavaClass<JHybridSearchTemplat
     return javaPart->getJHybridSearchTemplateSpec();
   }
 };
+struct JHybridAutoPlayTimingSpecImpl: public jni::JavaClass<JHybridAutoPlayTimingSpecImpl, JHybridAutoPlayTimingSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAutoPlayTiming;";
+  static std::shared_ptr<JHybridAutoPlayTimingSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAutoPlayTimingSpecImpl::javaobject()>();
+    jni::local_ref<JHybridAutoPlayTimingSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAutoPlayTimingSpec();
+  }
+};
 struct JHybridClusterSpecImpl: public jni::JavaClass<JHybridClusterSpecImpl, JHybridClusterSpec::JavaPart> {
   static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridCluster;";
   static std::shared_ptr<JHybridClusterSpec> create() {
@@ -182,6 +191,7 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VisibilityState_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Location__std__optional_std__string__cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_SafeAreaInsets_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlayTimingSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridClusterSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_ColorScheme_cxx::registerNatives();
@@ -277,6 +287,12 @@ void registerAllNatives() {
     "SearchTemplate",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridSearchTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AutoPlayTiming",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAutoPlayTimingSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(

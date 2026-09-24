@@ -31,7 +31,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroAttributedString" and the the Kotlin data class "NitroAttributedString".
+   * The C++ JNI bridge between the C++ struct "NitroAttributedString" and the Kotlin data class "NitroAttributedString".
    */
   struct JNitroAttributedString final: public jni::JavaClass<JNitroAttributedString> {
   public:

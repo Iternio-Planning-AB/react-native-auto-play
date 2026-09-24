@@ -1,4 +1,4 @@
-import type { Permission } from 'react-native/types';
+import type { Permission } from 'react-native';
 
 export type AndroidAutoPermissions =
   | Permission

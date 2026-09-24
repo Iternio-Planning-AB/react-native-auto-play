@@ -36,10 +36,10 @@
  *    - else branch taken initially (lightweight)
  *    - Activity or didConnect triggers lazy loading when needed
  */
-
+import '@iternio/react-native-auto-play/installTimers';
+import { HybridAutoPlay } from '@iternio/react-native-auto-play';
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import { HybridAutoPlay } from '@iternio/react-native-auto-play';
 import { name as appName } from './app.json';
 
 let carListenersInitialized = false;
@@ -63,8 +63,7 @@ if (HybridAutoPlay.isCarServiceRunning()) {
     const { StateWrapper } = require('./src/state/store');
     const App = require('./src/App').default;
     initCarListeners();
-    return (props) =>
-      React.createElement(StateWrapper, null, React.createElement(App, props));
+    return (props) => React.createElement(StateWrapper, null, React.createElement(App, props));
   });
 
   HybridAutoPlay.addListener('didConnect', initCarListeners);

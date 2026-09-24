@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage;
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlaySpec; }
+// Forward declaration of `HybridAutoPlayTimingSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlayTimingSpec; }
 // Forward declaration of `HybridCarPlayDashboardSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridCarPlayDashboardSpec; }
 // Forward declaration of `HybridClusterSpec` to properly resolve imports.
@@ -158,6 +160,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridAutoPlaySpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridAutoPlaySpec_cxx; }
+// Forward declaration of `HybridAutoPlayTimingSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridAutoPlayTimingSpec_cxx; }
 // Forward declaration of `HybridCarPlayDashboardSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridCarPlayDashboardSpec_cxx; }
 // Forward declaration of `HybridClusterSpec_cxx` to properly resolve imports.
@@ -191,6 +195,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
 #include "HybridAutoPlaySpec.hpp"
+#include "HybridAutoPlayTimingSpec.hpp"
 #include "HybridCarPlayDashboardSpec.hpp"
 #include "HybridClusterSpec.hpp"
 #include "HybridGridTemplateSpec.hpp"
@@ -611,6 +616,36 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Result<bool>::withError(error);
   }
   
+  // pragma MARK: std::shared_ptr<HybridAutoPlayTimingSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridAutoPlayTimingSpec>`.
+   */
+  using std__shared_ptr_HybridAutoPlayTimingSpec_ = std::shared_ptr<HybridAutoPlayTimingSpec>;
+  std::shared_ptr<HybridAutoPlayTimingSpec> create_std__shared_ptr_HybridAutoPlayTimingSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridAutoPlayTimingSpec_(std__shared_ptr_HybridAutoPlayTimingSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridAutoPlayTimingSpec>
+  using std__weak_ptr_HybridAutoPlayTimingSpec_ = std::weak_ptr<HybridAutoPlayTimingSpec>;
+  inline std__weak_ptr_HybridAutoPlayTimingSpec_ weakify_std__shared_ptr_HybridAutoPlayTimingSpec_(const std::shared_ptr<HybridAutoPlayTimingSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: Result<double>
+  using Result_double_ = Result<double>;
+  inline Result_double_ create_Result_double_(double value) noexcept {
+    return Result<double>::withValue(std::move(value));
+  }
+  inline Result_double_ create_Result_double_(const std::exception_ptr& error) noexcept {
+    return Result<double>::withError(error);
+  }
+  
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
+  }
+  
   // pragma MARK: std::vector<std::string>
   /**
    * Specialized version of `std::vector<std::string>`.
@@ -803,15 +838,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridClusterSpec>
   using std__weak_ptr_HybridClusterSpec_ = std::weak_ptr<HybridClusterSpec>;
   inline std__weak_ptr_HybridClusterSpec_ weakify_std__shared_ptr_HybridClusterSpec_(const std::shared_ptr<HybridClusterSpec>& strong) noexcept { return strong; }
-  
-  // pragma MARK: Result<void>
-  using Result_void_ = Result<void>;
-  inline Result_void_ create_Result_void_() noexcept {
-    return Result<void>::withValue();
-  }
-  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
-    return Result<void>::withError(error);
-  }
   
   // pragma MARK: std::function<void(std::optional<bool> /* animated */)>
   /**

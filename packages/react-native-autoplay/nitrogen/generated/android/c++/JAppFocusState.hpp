@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "AppFocusState" and the the Kotlin data class "AppFocusState".
+   * The C++ JNI bridge between the C++ struct "AppFocusState" and the Kotlin data class "AppFocusState".
    */
   struct JAppFocusState final: public jni::JavaClass<JAppFocusState> {
   public:

@@ -31,9 +31,9 @@
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 
+#include <string>
 #include "NitroColor.hpp"
 #include <optional>
-#include <string>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -42,16 +42,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
    */
   struct AssetImage final {
   public:
+    std::string uri     SWIFT_PRIVATE;
+    double width     SWIFT_PRIVATE;
+    double height     SWIFT_PRIVATE;
+    double scale     SWIFT_PRIVATE;
     std::optional<NitroColor> color     SWIFT_PRIVATE;
     bool packager_asset     SWIFT_PRIVATE;
-    double height     SWIFT_PRIVATE;
-    double width     SWIFT_PRIVATE;
-    double scale     SWIFT_PRIVATE;
-    std::string uri     SWIFT_PRIVATE;
 
   public:
     AssetImage() = default;
-    explicit AssetImage(std::optional<NitroColor> color, bool packager_asset, double height, double width, double scale, std::string uri): color(color), packager_asset(packager_asset), height(height), width(width), scale(scale), uri(uri) {}
+    explicit AssetImage(std::string uri, double width, double height, double scale, std::optional<NitroColor> color, bool packager_asset): uri(uri), width(width), height(height), scale(scale), color(color), packager_asset(packager_asset) {}
 
   public:
     friend bool operator==(const AssetImage& lhs, const AssetImage& rhs) = default;
@@ -67,22 +67,22 @@ namespace margelo::nitro {
     static inline margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage(
-        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color"))),
-        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "packager_asset"))),
-        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "height"))),
+        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "uri"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "width"))),
+        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "height"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scale"))),
-        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "uri")))
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color"))),
+        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "packager_asset")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::AssetImage& arg) {
       jsi::Object obj(runtime);
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "uri"), JSIConverter<std::string>::toJSI(runtime, arg.uri));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "width"), JSIConverter<double>::toJSI(runtime, arg.width));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "height"), JSIConverter<double>::toJSI(runtime, arg.height));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "scale"), JSIConverter<double>::toJSI(runtime, arg.scale));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "color"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::toJSI(runtime, arg.color));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "packager_asset"), JSIConverter<bool>::toJSI(runtime, arg.packager_asset));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "height"), JSIConverter<double>::toJSI(runtime, arg.height));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "width"), JSIConverter<double>::toJSI(runtime, arg.width));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "scale"), JSIConverter<double>::toJSI(runtime, arg.scale));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "uri"), JSIConverter<std::string>::toJSI(runtime, arg.uri));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -93,12 +93,12 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
+      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "uri")))) return false;
+      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "width")))) return false;
+      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "height")))) return false;
+      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scale")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color")))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "packager_asset")))) return false;
-      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "height")))) return false;
-      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "width")))) return false;
-      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scale")))) return false;
-      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "uri")))) return false;
       return true;
     }
   };

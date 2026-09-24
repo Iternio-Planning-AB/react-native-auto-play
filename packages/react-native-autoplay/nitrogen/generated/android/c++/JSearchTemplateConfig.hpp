@@ -60,7 +60,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "SearchTemplateConfig" and the the Kotlin data class "SearchTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "SearchTemplateConfig" and the Kotlin data class "SearchTemplateConfig".
    */
   struct JSearchTemplateConfig final: public jni::JavaClass<JSearchTemplateConfig> {
   public:

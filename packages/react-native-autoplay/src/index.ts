@@ -1,13 +1,10 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
-import AutoPlayHeadlessJsTask from './AutoPlayHeadlessJsTask';
 import { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
 import { HybridAndroidWindowInformation } from './hybrid/HybridAndroidWindowInformation';
 import { HybridAutoPlay } from './hybrid/HybridAutoPlay';
 import { HybridVoice } from './hybrid/HybridVoice';
 import type { AndroidAutomotive } from './specs/AndroidAutomotive.nitro';
-
-AutoPlayHeadlessJsTask.registerHeadlessTask(HybridAutoPlay);
 
 export { HybridAndroidAutoTelemetry, HybridAndroidWindowInformation, HybridAutoPlay, HybridVoice };
 

@@ -18,7 +18,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "PermissionRequestResult" and the the Kotlin data class "PermissionRequestResult".
+   * The C++ JNI bridge between the C++ struct "PermissionRequestResult" and the Kotlin data class "PermissionRequestResult".
    */
   struct JPermissionRequestResult final: public jni::JavaClass<JPermissionRequestResult> {
   public:

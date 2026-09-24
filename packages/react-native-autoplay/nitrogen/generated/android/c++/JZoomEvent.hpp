@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "ZoomEvent" and the the Kotlin enum "ZoomEvent".
+   * The C++ JNI bridge between the C++ enum "ZoomEvent" and the Kotlin enum "ZoomEvent".
    */
   struct JZoomEvent final: public jni::JavaClass<JZoomEvent> {
   public:

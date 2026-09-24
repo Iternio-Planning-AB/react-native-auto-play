@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_ColorScheme_cxx: Func_void_ColorScheme {
   override fun invoke(colorScheme: ColorScheme): Unit
     = invoke_cxx(colorScheme)
 
-  @FastNative
   private external fun invoke_cxx(colorScheme: ColorScheme): Unit
 }
 

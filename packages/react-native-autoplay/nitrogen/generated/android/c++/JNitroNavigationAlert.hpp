@@ -44,7 +44,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroNavigationAlert" and the the Kotlin data class "NitroNavigationAlert".
+   * The C++ JNI bridge between the C++ struct "NitroNavigationAlert" and the Kotlin data class "NitroNavigationAlert".
    */
   struct JNitroNavigationAlert final: public jni::JavaClass<JNitroNavigationAlert> {
   public:

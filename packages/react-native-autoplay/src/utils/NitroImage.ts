@@ -1,4 +1,4 @@
-import { Image, type ImageResolvedAssetSource } from 'react-native';
+import { Image } from 'react-native';
 import type { AutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
@@ -64,7 +64,11 @@ function resolveGlyph(image: Extract<AutoImage, { type: 'glyph' }>): number {
   throw new Error('Glyph image must provide either `name` or `codepoint`.');
 }
 
-interface AssetImage extends ImageResolvedAssetSource {
+interface AssetImage {
+  uri: string;
+  width: number;
+  height: number;
+  scale: number;
   color?: NitroColor;
   packager_asset: boolean;
 }
@@ -119,7 +123,13 @@ function convert(image?: AutoImage): NitroImage | undefined {
   // so the input allows all optional parameters which are returned as is even though
   // the return type claims to not have any optional parameters...
   // we specify some default values to not crash because of proper typing required by nitro-modules
-  const { height = 0, scale = 0, uri, width = 0, ...rest } = Image.resolveAssetSource(image.image);
+  const {
+    height = 0,
+    scale = 0,
+    uri = '',
+    width = 0,
+    ...rest
+  } = Image.resolveAssetSource(image.image) ?? {};
 
   const assetImage: AssetImage = {
     height,

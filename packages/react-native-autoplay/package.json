@@ -14,6 +14,8 @@
     "lib",
     "lib-cjs",
     "jest.js",
+    "installTimers.ts",
+    "installTimers.web.ts",
     "nitrogen",
     "android/build.gradle",
     "android/gradle.properties",
@@ -65,13 +67,13 @@
     "@types/jest": "^29.5.12",
     "@types/react": "~19.2.0",
     "dpdm": "^4.0.1",
-    "nitrogen": "^0.35.9",
-    "typescript": "^5.8.3"
+    "nitrogen": "^0.37.1",
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-nitro-modules": "*"
+    "react-native-nitro-modules": ">=0.37.1"
   },
   "dependencies": {
     "react-native-uuid": "^2.0.3"

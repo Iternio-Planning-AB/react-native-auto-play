@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "VoiceAudioEncoding" and the the Kotlin enum "VoiceAudioEncoding".
+   * The C++ JNI bridge between the C++ enum "VoiceAudioEncoding" and the Kotlin enum "VoiceAudioEncoding".
    */
   struct JVoiceAudioEncoding final: public jni::JavaClass<JVoiceAudioEncoding> {
   public:

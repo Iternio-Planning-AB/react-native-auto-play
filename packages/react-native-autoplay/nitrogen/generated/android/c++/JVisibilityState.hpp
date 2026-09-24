@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "VisibilityState" and the the Kotlin enum "VisibilityState".
+   * The C++ JNI bridge between the C++ enum "VisibilityState" and the Kotlin enum "VisibilityState".
    */
   struct JVisibilityState final: public jni::JavaClass<JVisibilityState> {
   public:

@@ -11,6 +11,28 @@ cannot usefully say.
 What follows is that delta: the mechanics behind the setup and the failure modes that
 produce no error message at all.
 
+## Both platforms
+
+- **`@iternio/react-native-auto-play/installTimers` (README → *Register the AutoPlay
+  Components*) must be the consuming app's first *import*.** `installAutoPlayTimers()`
+  (`src/utils/AutoPlayTimers.ts`) isn't exported from the package's main entry at all — it's
+  deliberately only reachable through this side-effect-only module, so "runs before anything
+  else" is enforced by the API shape (there's no function a caller could call from the wrong
+  place) rather than left as a rule to get right. ES import declarations are hoisted and
+  evaluated in source order, so this import still has to come before everything else in the
+  entry file. If it's skipped, `setTimeout`/`setInterval`/`requestAnimationFrame` silently keep
+  RN's default behaviour — they throttle or pause while the phone is backgrounded/locked, even
+  though CarPlay/Android Auto keeps the process itself alive. No error, no warning; ETA updates
+  and telemetry just quietly stop. `src/hybrid/HybridAutoPlayTiming.ts` is the rest of the JS
+  side; `HybridAutoPlayTiming` (Swift/Kotlin) is the native scheduler backing it —
+  a plain always-running timer on both platforms, deliberately not `CADisplayLink`
+  (iOS)/`Choreographer` (Android), since those are exactly what RN's own `RCTTiming`/
+  `JavaTimerManager` use and both pause under the same conditions this exists to avoid.
+  On Android this replaced a permanently-running headless JS task
+  (`AndroidAutoHeadlessJsTask`) that existed purely to satisfy `JavaTimerManager`'s
+  `isRunningTasks` escape hatch — process survival itself is unrelated and still comes from
+  `AndroidAutoService`'s own `startForeground()` call.
+
 ## iOS
 
 - **`getRootViewForAutoplay(moduleName:initialProperties:)` on the host `AppDelegate`**
@@ -53,10 +75,20 @@ produce no error message at all.
 
 ## Android
 
-- **No manifest setup is required in the host app.** The `CarAppService`,
-  `HeadlessTaskService`, permissions, `automotive_app_desc.xml` and `minCarApiLevel` all
-  live in the library's own `AndroidManifest.xml` and are merged in.
+- **No manifest setup is required in the host app.** The `CarAppService`, permissions,
+  `automotive_app_desc.xml` and `minCarApiLevel` all live in the library's own
+  `AndroidManifest.xml` and are merged in.
   `apps/example/android/app/src/main/AndroidManifest.xml` is nearly empty for that reason.
+- **`AndroidAutoService.onCreate()` calls `(application as? ReactApplication)?.reactHost?.start()`
+  — do not remove it.** Android Auto can start this service directly (a car icon press) with
+  `MainActivity` never having launched, and `reactHost` is a `by lazy` property nothing else
+  touches in that path. Without this call the service and session come up fine but the JS
+  instance never boots, so the car screen is stuck on the placeholder `AppIcon` message
+  forever with no error. `start()` is documented as safe to call even when the instance is
+  already running (e.g. the phone app was opened first) — it no-ops in that case. This used
+  to happen as a side effect of binding to the now-removed `HeadlessTaskService`; removing
+  that for the `installAutoPlayTimers()` rework (*Both platforms*, above) silently broke
+  cold starts from Android Auto until this call was added back explicitly.
 - **Behaviour is controlled by Gradle properties, not code.** The defaults live in
   `packages/react-native-autoplay/android/gradle.properties`; the consumer-facing ones are
   documented in the README (*Android Auto Customization* and *Android Automotive*). Don't
@@ -77,9 +109,6 @@ produce no error message at all.
     so the host app must raise `ReactNativeAutoPlay_minSdkVersion` itself (the library's
     default in `android/gradle.properties` is lower). The host app must also remove its
     launcher activity in that variant, or the Automotive launcher shows two icons.
-- `HeadlessTaskService` is a **bound** service (not started) so Android won't kill it while
-  Android Auto is active; the JS task starts on `onBind`, forced onto the UI thread. Car
-  reconnects rebind, so **the task must be idempotent.**
 - **Stack operations** (`setRootTemplate`, `pushTemplate`, `popTemplate`,
   `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`) go through
   `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures

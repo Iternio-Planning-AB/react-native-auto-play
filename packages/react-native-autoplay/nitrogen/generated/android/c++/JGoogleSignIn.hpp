@@ -25,7 +25,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "GoogleSignIn" and the the Kotlin data class "GoogleSignIn".
+   * The C++ JNI bridge between the C++ struct "GoogleSignIn" and the Kotlin data class "GoogleSignIn".
    */
   struct JGoogleSignIn final: public jni::JavaClass<JGoogleSignIn> {
   public:

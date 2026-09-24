@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "ChargingConnector" and the the Kotlin enum "ChargingConnector".
+   * The C++ JNI bridge between the C++ enum "ChargingConnector" and the Kotlin enum "ChargingConnector".
    */
   struct JChargingConnector final: public jni::JavaClass<JChargingConnector> {
   public:

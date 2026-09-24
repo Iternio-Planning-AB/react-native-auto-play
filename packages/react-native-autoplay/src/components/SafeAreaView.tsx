@@ -10,7 +10,7 @@ export const SafeAreaView = (props: ViewProps) => {
       style={[
         style,
         {
-          ...StyleSheet.absoluteFillObject,
+          ...StyleSheet.absoluteFill,
           paddingTop: safeAreaInsets.top,
           paddingBottom: safeAreaInsets.bottom,
           paddingRight: safeAreaInsets.right,

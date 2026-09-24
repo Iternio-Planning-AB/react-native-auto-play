@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "TurnType" and the the Kotlin enum "TurnType".
+   * The C++ JNI bridge between the C++ enum "TurnType" and the Kotlin enum "TurnType".
    */
   struct JTurnType final: public jni::JavaClass<JTurnType> {
   public:

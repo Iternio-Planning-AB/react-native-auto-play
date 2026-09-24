@@ -19,7 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "ActiveCarUxRestrictions" and the the Kotlin data class "ActiveCarUxRestrictions".
+   * The C++ JNI bridge between the C++ struct "ActiveCarUxRestrictions" and the Kotlin data class "ActiveCarUxRestrictions".
    */
   struct JActiveCarUxRestrictions final: public jni::JavaClass<JActiveCarUxRestrictions> {
   public:

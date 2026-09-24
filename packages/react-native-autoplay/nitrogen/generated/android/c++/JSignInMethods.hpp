@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "SignInMethods" and the the Kotlin enum "SignInMethods".
+   * The C++ JNI bridge between the C++ enum "SignInMethods" and the Kotlin enum "SignInMethods".
    */
   struct JSignInMethods final: public jni::JavaClass<JSignInMethods> {
   public:
