@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "ManeuverState" and the the Kotlin enum "ManeuverState".
+   * The C++ JNI bridge between the C++ enum "ManeuverState" and the Kotlin enum "ManeuverState".
    */
   struct JManeuverState final: public jni::JavaClass<JManeuverState> {
   public:

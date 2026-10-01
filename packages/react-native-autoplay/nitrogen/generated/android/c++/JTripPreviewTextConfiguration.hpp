@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "TripPreviewTextConfiguration" and the the Kotlin data class "TripPreviewTextConfiguration".
+   * The C++ JNI bridge between the C++ struct "TripPreviewTextConfiguration" and the Kotlin data class "TripPreviewTextConfiguration".
    */
   struct JTripPreviewTextConfiguration final: public jni::JavaClass<JTripPreviewTextConfiguration> {
   public:

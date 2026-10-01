@@ -13,14 +13,14 @@
     "android:autodrive": "adb shell dumpsys activity service com.example/com.margelo.nitro.swe.iternio.autoplay.AndroidAutoService AUTO_DRIVE"
   },
   "dependencies": {
-    "@iternio/react-native-auto-play": "link:../../packages/react-native-auto-play",
+    "@iternio/react-native-auto-play": "link:../../packages/react-native-autoplay",
     "@reduxjs/toolkit": "^2.9.1",
-    "react": "19.2.0",
-    "react-native": "0.83.5",
-    "react-native-blob-util": "^0.24.7",
-    "react-native-config": "^1.6.1",
-    "react-native-nitro-modules": "^0.35.9",
-    "react-native-safe-area-context": "^5.6.2",
+    "react": "19.2.3",
+    "react-native": "^0.87.1",
+    "react-native-blob-util": "^0.25.0",
+    "react-native-config": "^1.7.2",
+    "react-native-nitro-modules": "^0.37.1",
+    "react-native-safe-area-context": "^5.10.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
@@ -30,16 +30,17 @@
     "@react-native-community/cli": "20.0.0",
     "@react-native-community/cli-platform-android": "20.0.0",
     "@react-native-community/cli-platform-ios": "20.0.0",
-    "@react-native/babel-preset": "0.83.5",
-    "@react-native/eslint-config": "0.83.5",
-    "@react-native/metro-config": "0.83.5",
-    "@react-native/typescript-config": "0.83.5",
+    "@react-native/babel-preset": "^0.87.1",
+    "@react-native/eslint-config": "^0.87.1",
+    "@react-native/jest-preset": "^0.87.1",
+    "@react-native/metro-config": "^0.87.1",
+    "@react-native/typescript-config": "^0.87.1",
     "@types/jest": "^29.5.13",
     "@types/react": "19.2.0",
     "@types/react-test-renderer": "^19.1.0",
     "jest": "^29.6.3",
-    "react-test-renderer": "19.2.0",
-    "typescript": "^5.8.3"
+    "react-test-renderer": "19.2.3",
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=20"

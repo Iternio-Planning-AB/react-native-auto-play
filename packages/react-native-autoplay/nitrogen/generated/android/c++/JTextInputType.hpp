@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "TextInputType" and the the Kotlin enum "TextInputType".
+   * The C++ JNI bridge between the C++ enum "TextInputType" and the Kotlin enum "TextInputType".
    */
   struct JTextInputType final: public jni::JavaClass<JTextInputType> {
   public:

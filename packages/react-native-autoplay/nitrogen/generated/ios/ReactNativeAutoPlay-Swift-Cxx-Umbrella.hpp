@@ -40,6 +40,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridIma
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GridTemplateConfig; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlaySpec; }
+// Forward declaration of `HybridAutoPlayTimingSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlayTimingSpec; }
 // Forward declaration of `HybridCarPlayDashboardSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridCarPlayDashboardSpec; }
 // Forward declaration of `HybridClusterSpec` to properly resolve imports.
@@ -194,6 +196,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "GridImageSize.hpp"
 #include "GridTemplateConfig.hpp"
 #include "HybridAutoPlaySpec.hpp"
+#include "HybridAutoPlayTimingSpec.hpp"
 #include "HybridCarPlayDashboardSpec.hpp"
 #include "HybridClusterSpec.hpp"
 #include "HybridGridTemplateSpec.hpp"
@@ -285,6 +288,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridAutoPlaySpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridAutoPlaySpec_cxx; }
+// Forward declaration of `HybridAutoPlayTimingSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridAutoPlayTimingSpec_cxx; }
 // Forward declaration of `HybridCarPlayDashboardSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridCarPlayDashboardSpec_cxx; }
 // Forward declaration of `HybridClusterSpec_cxx` to properly resolve imports.

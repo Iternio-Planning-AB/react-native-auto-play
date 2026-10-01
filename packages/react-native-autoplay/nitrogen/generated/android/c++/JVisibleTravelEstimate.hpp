@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "VisibleTravelEstimate" and the the Kotlin enum "VisibleTravelEstimate".
+   * The C++ JNI bridge between the C++ enum "VisibleTravelEstimate" and the Kotlin enum "VisibleTravelEstimate".
    */
   struct JVisibleTravelEstimate final: public jni::JavaClass<JVisibleTravelEstimate> {
   public:

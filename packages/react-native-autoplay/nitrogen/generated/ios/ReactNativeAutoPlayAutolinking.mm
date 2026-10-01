@@ -19,6 +19,7 @@
 #include "HybridMessageTemplateSpecSwift.hpp"
 #include "HybridSearchTemplateSpecSwift.hpp"
 #include "HybridCarPlayDashboardSpecSwift.hpp"
+#include "HybridAutoPlayTimingSpecSwift.hpp"
 #include "HybridClusterSpecSwift.hpp"
 
 @interface ReactNativeAutoPlayAutolinking : NSObject
@@ -90,6 +91,13 @@
     "CarPlayDashboard",
     []() -> std::shared_ptr<HybridObject> {
       std::shared_ptr<HybridCarPlayDashboardSpec> hybridObject = ReactNativeAutoPlay::ReactNativeAutoPlayAutolinking::createCarPlayDashboard();
+      return hybridObject;
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AutoPlayTiming",
+    []() -> std::shared_ptr<HybridObject> {
+      std::shared_ptr<HybridAutoPlayTimingSpec> hybridObject = ReactNativeAutoPlay::ReactNativeAutoPlayAutolinking::createAutoPlayTiming();
       return hybridObject;
     }
   );
