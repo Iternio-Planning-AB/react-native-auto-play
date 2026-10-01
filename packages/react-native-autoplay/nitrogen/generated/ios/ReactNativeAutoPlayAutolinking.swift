@@ -120,6 +120,18 @@ public final class ReactNativeAutoPlayAutolinking {
     return HybridCarPlayDashboard.self is any RecyclableView.Type
   }
   
+  public static func createAutoPlayTiming() -> bridge.std__shared_ptr_HybridAutoPlayTimingSpec_ {
+    let hybridObject = HybridAutoPlayTiming()
+    return { () -> bridge.std__shared_ptr_HybridAutoPlayTimingSpec_ in
+      let __cxxWrapped = hybridObject.getCxxWrapper()
+      return __cxxWrapped.getCxxPart()
+    }()
+  }
+  
+  public static func isAutoPlayTimingRecyclable() -> Bool {
+    return HybridAutoPlayTiming.self is any RecyclableView.Type
+  }
+  
   public static func createCluster() -> bridge.std__shared_ptr_HybridClusterSpec_ {
     let hybridObject = HybridCluster()
     return { () -> bridge.std__shared_ptr_HybridClusterSpec_ in

@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "EventName" and the the Kotlin enum "EventName".
+   * The C++ JNI bridge between the C++ enum "EventName" and the Kotlin enum "EventName".
    */
   struct JEventName final: public jni::JavaClass<JEventName> {
   public:

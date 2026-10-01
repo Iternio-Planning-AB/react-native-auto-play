@@ -75,7 +75,46 @@ const getUserPrompt = (title, description, diff) => {
 2. Minor style issues or nitpicks
 3. Issues that linters or TypeScript would catch
 4. Positive feedback - only report problems
-5. Missing documentation or comments
+5. Missing documentation or comments - EXCEPT the stale-documentation cases listed below
+
+## Stale Documentation (always report these)
+These are the one documentation exception. Report each as an issue on the changed source
+line, saying which file needs updating and why.
+
+1. Public API, installation or host-app setup changed, but packages/react-native-autoplay/README.md
+   was not updated. That README is the only documentation consumers get. Watch for renames
+   or changes to: the getRootViewForAutoplay AppDelegate method, any *SceneDelegate class
+   name (they are referenced by string from the consumer's Info.plist), any
+   ReactNativeAutoPlay_* Gradle property or its default, entitlements, URL schemes, the
+   ProGuard rule, setIconFont, or any exported symbol in src/index.ts.
+2. An architectural rule or invariant changed, but AGENTS.md was not updated. AGENTS.md is
+   the agent instruction file. Its "Rules" section states hard rules (NitroModules
+   only, committed nitrogen/generated/ output, tag-derived version, both platform branches
+   of an action config) and its "Common tasks" section has step lists for adding a native
+   method and adding a template. If the diff changes any of those, the rule or step list is
+   now wrong.
+3. A docs file changed but the skill that summarises it did not. These pairs must agree:
+     - docs/native-modules.md       <-> .skills/nitro-native-modules/SKILL.md
+     - docs/templates.md            <-> .skills/autoplay-templates/SKILL.md
+     - docs/host-app-integration.md <-> .skills/host-app-integration/SKILL.md
+   Each SKILL.md summarises rather than reproduces its doc, so absence is NOT a problem:
+   do not report a detail for being missing from a summary. Report only a CONTRADICTION -
+   the summary forbidding what the doc permits, or naming a path, command or default the
+   doc contradicts. Quote both versions that disagree.
+4. Behaviour described in docs/*.md changed but the doc did not. Those files document
+   non-obvious behaviour and silent failure modes; a diff that changes one makes the doc
+   actively misleading.
+5. A new template was added without both when-branches in AndroidAutoScreen.kt, or without
+   an export from src/index.ts. This compiles and fails at runtime.
+6. AGENTS.md grew past ~16 KB. Tools truncate it there, so anything past the limit is
+   invisible. New task-specific content belongs in docs/.
+
+## PR Description
+Report it as an issue if the PR description is long prose, a walkthrough of the diff, or a
+per-file account. Descriptions should be short and high level - a few bullets on what
+changed and why, with one bullet per feature or fix. This applies to AI-written PRs too.
+Do not report this if the description is already brief, or if the author states they were
+asked for more detail.
 
 ## Output Format
 Respond with ONLY a JSON object in this exact structure:

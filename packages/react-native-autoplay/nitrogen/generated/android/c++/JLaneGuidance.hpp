@@ -34,7 +34,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "LaneGuidance" and the the Kotlin data class "LaneGuidance".
+   * The C++ JNI bridge between the C++ struct "LaneGuidance" and the Kotlin data class "LaneGuidance".
    */
   struct JLaneGuidance final: public jni::JavaClass<JLaneGuidance> {
   public:

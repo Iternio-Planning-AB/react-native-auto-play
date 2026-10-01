@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_std__string_ZoomEvent_cxx: Func_void_std__string_ZoomEvent {
   override fun invoke(clusterId: String, payload: ZoomEvent): Unit
     = invoke_cxx(clusterId,payload)
 
-  @FastNative
   private external fun invoke_cxx(clusterId: String, payload: ZoomEvent): Unit
 }
 

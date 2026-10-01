@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "WindowInformation" and the the Kotlin data class "WindowInformation".
+   * The C++ JNI bridge between the C++ struct "WindowInformation" and the Kotlin data class "WindowInformation".
    */
   struct JWindowInformation final: public jni::JavaClass<JWindowInformation> {
   public:

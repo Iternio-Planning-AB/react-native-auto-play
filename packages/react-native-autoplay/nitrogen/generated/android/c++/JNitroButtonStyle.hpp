@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "NitroButtonStyle" and the the Kotlin enum "NitroButtonStyle".
+   * The C++ JNI bridge between the C++ enum "NitroButtonStyle" and the Kotlin enum "NitroButtonStyle".
    */
   struct JNitroButtonStyle final: public jni::JavaClass<JNitroButtonStyle> {
   public:

@@ -29,7 +29,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "TravelEstimates" and the the Kotlin data class "TravelEstimates".
+   * The C++ JNI bridge between the C++ struct "TravelEstimates" and the Kotlin data class "TravelEstimates".
    */
   struct JTravelEstimates final: public jni::JavaClass<JTravelEstimates> {
   public:

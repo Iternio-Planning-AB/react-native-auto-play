@@ -18,7 +18,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "Distance" and the the Kotlin data class "Distance".
+   * The C++ JNI bridge between the C++ struct "Distance" and the Kotlin data class "Distance".
    */
   struct JDistance final: public jni::JavaClass<JDistance> {
   public:

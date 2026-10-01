@@ -20,7 +20,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "VoiceInputResult" and the the Kotlin data class "VoiceInputResult".
+   * The C++ JNI bridge between the C++ struct "VoiceInputResult" and the Kotlin data class "VoiceInputResult".
    */
   struct JVoiceInputResult final: public jni::JavaClass<JVoiceInputResult> {
   public:

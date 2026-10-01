@@ -71,10 +71,7 @@ function convertManeuverImage(image?: ManeuverImage): NitroImage | undefined {
   }
 
   if (image.type === 'glyph') {
-    const color =
-      typeof image.color === 'string'
-        ? image.color
-        : (image.color ?? { darkColor: 'white', lightColor: 'black' });
+    const color = typeof image.color === 'string' ? image.color : (image.color ?? 'default');
     return NitroImageUtil.convert({
       ...image,
       color: color,

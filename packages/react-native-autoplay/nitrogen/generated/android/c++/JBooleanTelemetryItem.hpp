@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "BooleanTelemetryItem" and the the Kotlin data class "BooleanTelemetryItem".
+   * The C++ JNI bridge between the C++ struct "BooleanTelemetryItem" and the Kotlin data class "BooleanTelemetryItem".
    */
   struct JBooleanTelemetryItem final: public jni::JavaClass<JBooleanTelemetryItem> {
   public:

@@ -17,7 +17,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "DurationWithTimeZone" and the the Kotlin data class "DurationWithTimeZone".
+   * The C++ JNI bridge between the C++ struct "DurationWithTimeZone" and the Kotlin data class "DurationWithTimeZone".
    */
   struct JDurationWithTimeZone final: public jni::JavaClass<JDurationWithTimeZone> {
   public:
