@@ -682,7 +682,7 @@ Below is a concise overview of the most important props per template. Optional p
 
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `signInMethod` | `SignInMethod` | ✅ | The sign-in method configuration. Can be QRSignIn, PinSignIn, InputSignIn. |
+| `signInMethod` | `SignInMethod` | ✅ | The sign-in method configuration. Can be QRSignIn, PinSignIn, InputSignIn, GoogleSignIn. |
 | `title` | `string` | ❌ | Header title. |
 | `additionalText` | `string` | ❌ | Additional descriptive text. |
 | `instructions` | `string` | ❌ | Sign-in Instructions text. |
@@ -696,6 +696,19 @@ Below is a concise overview of the most important props per template. Optional p
 | QR | `QrSignIn` | QR Code sign in |
 | PIN | `PinSignIn` | PIN Code sign in (1–12 characters) |
 | Input | `InputSignIn` | Text sign in, for example mail/username and password |
+| Google | `GoogleSignIn` | Sign in with Google. Requires Google Play services 23.08 or newer — check `SignInTemplate.isGoogleSignInAvailable()` first. |
+
+`GoogleSignIn` takes a `serverClientId` (your **Web** OAuth client ID), a `signInButtonText` and a `callback(error?, account?)`. The returned `GoogleSignInAccount` carries `idToken` and `serverAuthCode` (offline access, `openid` `profile` `email` scopes) for your backend.
+
+**Sign in with Google needs a recent Play services.** Constructing a `SignInTemplate` with `GoogleSignIn` throws `playServicesUnavailable` (and `updateTemplate` rejects with it) when Google Play services is missing or older than 23.08 (e.g. Android Automotive builds without GMS). Pick a different method up front instead:
+
+```ts
+const signInMethod: SignInMethod = SignInTemplate.isGoogleSignInAvailable()
+  ? { method: SignInMethods.GOOGLE, serverClientId, signInButtonText: 'Sign in with Google', callback }
+  : { method: SignInMethods.QR, url: loginUrl };
+```
+
+`isGoogleSignInAvailable()` always returns `false` on iOS.
 
 For InputSignIn the keyboard and input fields can be configured with following properties:
 

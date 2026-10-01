@@ -16,6 +16,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("createSignInTemplate", &HybridSignInTemplateSpec::createSignInTemplate);
       prototype.registerHybridMethod("updateTemplate", &HybridSignInTemplateSpec::updateTemplate);
+      prototype.registerHybridMethod("isGoogleSignInAvailable", &HybridSignInTemplateSpec::isGoogleSignInAvailable);
     });
   }
 

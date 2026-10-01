@@ -1,8 +1,8 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.template
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import androidx.car.app.CarContext
 import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
@@ -18,7 +18,9 @@ import androidx.car.app.model.signin.ProviderSignInMethod
 import androidx.car.app.model.signin.QRCodeSignInMethod
 import androidx.car.app.model.signin.SignInTemplate
 import androidx.core.graphics.drawable.IconCompat
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import androidx.core.net.toUri
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.KeyboardType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroActionType
@@ -26,8 +28,8 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.SignInTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.SignInWithGoogleActivity
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TextInputType
+import org.json.JSONObject
 import java.security.InvalidParameterException
-import androidx.core.net.toUri
 
 class SignInTemplate(
     context: CarContext, config: SignInTemplateConfig
@@ -115,32 +117,35 @@ class SignInTemplate(
                         ).build()
                     )
                     setOnClickListener(ParkedOnlyOnClickListener.create {
-                        val extras = Bundle(1)
+                        val extras = Bundle(2)
                         extras.putBinder(
                             SignInWithGoogleActivity.BINDER_KEY,
                             object : SignInWithGoogleActivity.OnSignInComplete() {
-                                override fun onSignInComplete(account: GoogleSignInAccount?) {
-                                    if (account == null) {
+                                override fun onSignInComplete(
+                                    credential: GoogleIdTokenCredential?,
+                                    serverAuthCode: String?
+                                ) {
+                                    if (credential == null) {
                                         googleSignIn.callback("Error signing in", null)
-                                    } else {
-                                        googleSignIn.callback(
-                                            null,
-                                            com.margelo.nitro.swe.iternio.reactnativeautoplay.GoogleSignInAccount(
-                                                serverAuthCode = account.serverAuthCode,
-                                                email = account.email,
-                                                id = account.id,
-                                                displayName = account.displayName,
-                                                photoUrl = account.photoUrl?.toString(),
-                                                idToken = account.idToken,
-                                                givenName = account.givenName,
-                                                familyName = account.familyName
-                                            )
-                                        )
+                                        return
                                     }
+                                    googleSignIn.callback(
+                                        null,
+                                        com.margelo.nitro.swe.iternio.reactnativeautoplay.GoogleSignInAccount(
+                                            serverAuthCode = serverAuthCode,
+                                            email = credential.id,
+                                            id = subFromIdToken(credential.idToken),
+                                            displayName = credential.displayName,
+                                            photoUrl = credential.profilePictureUri?.toString(),
+                                            idToken = credential.idToken,
+                                            givenName = credential.givenName,
+                                            familyName = credential.familyName
+                                        )
+                                    )
                                 }
                             })
                         extras.putString("serverClientId", googleSignIn.serverClientId)
-                        context.startActivity(
+                        NitroModules.applicationContext?.startActivity(
                             Intent().setClass(context, SignInWithGoogleActivity::class.java)
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtras(extras)
                         )
@@ -211,4 +216,13 @@ class SignInTemplate(
         config.onPopped?.let { it() }
         templates.remove(templateId)
     }
+
+    private fun subFromIdToken(idToken: String): String? = runCatching {
+        val payload = idToken.split(".")[1]
+        val json = String(
+            Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP),
+            Charsets.UTF_8
+        )
+        JSONObject(json).getString("sub")
+    }.getOrNull()
 }

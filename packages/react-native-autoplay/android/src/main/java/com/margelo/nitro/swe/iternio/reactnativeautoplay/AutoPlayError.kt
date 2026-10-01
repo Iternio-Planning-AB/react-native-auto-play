@@ -8,3 +8,7 @@ class TemplateNotFoundException(private val templateId: String) :
 class VoiceInputCancelledException : Exception("voiceInputCancelled") {
     override fun toString(): String = "voiceInputCancelled"
 }
+
+class PlayServicesUnavailableException : Exception("playServicesUnavailable") {
+    override fun toString(): String = "playServicesUnavailable"
+}
