@@ -4,42 +4,90 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.AuthorizationRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.Scope
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 import java.security.InvalidParameterException
-import javax.annotation.Nullable
 
 class SignInWithGoogleActivity : ComponentActivity() {
+
+    private var callback: OnSignInComplete? = null
+    private var idCredential: GoogleIdTokenCredential? = null
+
+    private val authLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val auth = runCatching {
+            Identity.getAuthorizationClient(this)
+                .getAuthorizationResultFromIntent(result.data)
+        }.getOrNull()
+        finishWith(auth?.serverAuthCode)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val signInCompleteCallback = intent.extras?.getBinder(BINDER_KEY) as OnSignInComplete?
-
+        callback = intent.extras?.getBinder(BINDER_KEY) as OnSignInComplete?
         val serverClientId = intent.extras?.getString("serverClientId")
             ?: throw InvalidParameterException("missing serverClientId parameter")
 
-        val activityResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            val account = GoogleSignIn.getSignedInAccountFromIntent(
-                result.data
-            ).result
-            signInCompleteCallback?.onSignInComplete(account)
-            finish()
-        }
-
-        val googleSignInClient = GoogleSignIn.getClient(
-            this,
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestServerAuthCode(serverClientId)
-                .requestEmail()
-                .requestIdToken(serverClientId)
+        lifecycleScope.launch {
+            // 1. Authentication: ID token
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(GetSignInWithGoogleOption.Builder(serverClientId).build())
                 .build()
-        )
-        activityResultLauncher.launch(googleSignInClient.signInIntent)
+            try {
+                val result = CredentialManager.create(this@SignInWithGoogleActivity)
+                    .getCredential(this@SignInWithGoogleActivity, request)
+                idCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
+            } catch (_: Exception) {
+                callback?.onSignInComplete(null, null)
+                finish()
+                return@launch
+            }
+
+            // 2. Authorization: server auth code
+            val authRequest = AuthorizationRequest.builder()
+                // matches the legacy DEFAULT_SIGN_IN + requestEmail() scopes, so the exchanged
+                // server auth code grants the same access as before the Credential Manager migration
+                .setRequestedScopes(
+                    listOf(Scope(Scopes.OPEN_ID), Scope(Scopes.PROFILE), Scope(Scopes.EMAIL))
+                )
+                .requestOfflineAccess(serverClientId)
+                .build()
+            Identity.getAuthorizationClient(this@SignInWithGoogleActivity)
+                .authorize(authRequest)
+                .addOnSuccessListener { res ->
+                    if (res.hasResolution()) {
+                        authLauncher.launch(
+                            IntentSenderRequest.Builder(res.pendingIntent!!.intentSender).build()
+                        )
+                    } else {
+                        finishWith(res.serverAuthCode)
+                    }
+                }
+                .addOnFailureListener { finishWith(null) }
+        }
+    }
+
+    private fun finishWith(serverAuthCode: String?) {
+        // a cancelled or failed authorization step yields no server auth code; report it as a
+        // failed sign in so callers get either an error or a complete account, as with the
+        // legacy GoogleSignIn flow, never an account without a server auth code
+        if (serverAuthCode == null) {
+            callback?.onSignInComplete(null, null)
+        } else {
+            callback?.onSignInComplete(idCredential, serverAuthCode)
+        }
+        finish()
     }
 
     /**
@@ -49,9 +97,13 @@ class SignInWithGoogleActivity : ComponentActivity() {
         /**
          * Notifies that sign in flow completed.
          *
-         * @param account the account signed in or `null` if there were issues signing in.
+         * @param credential the account signed in or `null` if there were issues signing in.
+         * @param serverAuthCode the server auth code, always non-null when [credential] is non-null.
          */
-        abstract fun onSignInComplete(@Nullable account: GoogleSignInAccount?)
+        abstract fun onSignInComplete(
+            credential: GoogleIdTokenCredential?,
+            serverAuthCode: String?
+        )
     }
 
     companion object {

@@ -114,4 +114,12 @@ export class SignInTemplate extends Template<
 
     return HybridSignInTemplate?.updateTemplate(this.id, nitroConfig);
   }
+
+  /**
+   * Whether "Sign in with Google" is usable, i.e. Google Play services 23.08+ is installed.
+   * Check this before creating a `SignInTemplate` with `GoogleSignIn` — creation throws otherwise.
+   */
+  static isGoogleSignInAvailable(): boolean {
+    return HybridSignInTemplate?.isGoogleSignInAvailable() ?? false;
+  }
 }

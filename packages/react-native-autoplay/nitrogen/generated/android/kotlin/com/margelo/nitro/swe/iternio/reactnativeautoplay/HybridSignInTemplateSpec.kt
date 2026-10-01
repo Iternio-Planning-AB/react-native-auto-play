@@ -37,6 +37,10 @@ abstract class HybridSignInTemplateSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun updateTemplate(templateId: String, config: SignInTemplateConfig): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun isGoogleSignInAvailable(): Boolean
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

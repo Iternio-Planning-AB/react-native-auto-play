@@ -56,6 +56,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     // Methods
     void createSignInTemplate(const SignInTemplateConfig& config) override;
     std::shared_ptr<Promise<void>> updateTemplate(const std::string& templateId, const SignInTemplateConfig& config) override;
+    bool isGoogleSignInAvailable() override;
 
   private:
     jni::global_ref<JHybridSignInTemplateSpec::JavaPart> _javaPart;

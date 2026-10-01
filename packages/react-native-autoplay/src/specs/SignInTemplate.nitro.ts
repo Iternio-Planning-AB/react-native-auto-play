@@ -7,4 +7,5 @@ interface SignInTemplateConfig extends NitroTemplateConfig, NitroSignInTemplateC
 export interface SignInTemplate extends HybridObject<{ android: 'kotlin' }> {
   createSignInTemplate(config: SignInTemplateConfig): void;
   updateTemplate(templateId: string, config: SignInTemplateConfig): Promise<void>;
+  isGoogleSignInAvailable(): boolean;
 }
