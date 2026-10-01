@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "NitroActionType" and the the Kotlin enum "NitroActionType".
+   * The C++ JNI bridge between the C++ enum "NitroActionType" and the Kotlin enum "NitroActionType".
    */
   struct JNitroActionType final: public jni::JavaClass<JNitroActionType> {
   public:

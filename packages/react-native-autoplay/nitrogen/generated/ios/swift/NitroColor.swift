@@ -18,8 +18,14 @@ public extension NitroColor {
   /**
    * Create a new instance of `NitroColor`.
    */
-  init(lightColor: Double, darkColor: Double) {
-    self.init(lightColor, darkColor)
+  init(lightColor: Double, darkColor: Double, isDefault: Bool?) {
+    self.init(lightColor, darkColor, { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = isDefault {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
@@ -30,5 +36,17 @@ public extension NitroColor {
   @inline(__always)
   var darkColor: Double {
     return self.__darkColor
+  }
+  
+  @inline(__always)
+  var isDefault: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__isDefault) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__isDefault)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
 }

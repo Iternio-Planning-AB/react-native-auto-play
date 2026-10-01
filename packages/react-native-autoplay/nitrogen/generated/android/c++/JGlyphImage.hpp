@@ -20,7 +20,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "GlyphImage" and the the Kotlin data class "GlyphImage".
+   * The C++ JNI bridge between the C++ struct "GlyphImage" and the Kotlin data class "GlyphImage".
    */
   struct JGlyphImage final: public jni::JavaClass<JGlyphImage> {
   public:

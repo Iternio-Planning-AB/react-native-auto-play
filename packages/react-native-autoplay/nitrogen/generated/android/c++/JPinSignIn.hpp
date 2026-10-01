@@ -19,7 +19,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "PinSignIn" and the the Kotlin data class "PinSignIn".
+   * The C++ JNI bridge between the C++ struct "PinSignIn" and the Kotlin data class "PinSignIn".
    */
   struct JPinSignIn final: public jni::JavaClass<JPinSignIn> {
   public:

@@ -10,14 +10,14 @@
 #include <fbjni/fbjni.h>
 #include "NitroColor.hpp"
 
-
+#include <optional>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroColor" and the the Kotlin data class "NitroColor".
+   * The C++ JNI bridge between the C++ struct "NitroColor" and the Kotlin data class "NitroColor".
    */
   struct JNitroColor final: public jni::JavaClass<JNitroColor> {
   public:
@@ -35,9 +35,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       double lightColor = this->getFieldValue(fieldLightColor);
       static const auto fieldDarkColor = clazz->getField<double>("darkColor");
       double darkColor = this->getFieldValue(fieldDarkColor);
+      static const auto fieldIsDefault = clazz->getField<jni::JBoolean>("isDefault");
+      jni::local_ref<jni::JBoolean> isDefault = this->getFieldValue(fieldIsDefault);
       return NitroColor(
         lightColor,
-        darkColor
+        darkColor,
+        isDefault != nullptr ? std::make_optional(static_cast<bool>(isDefault->value())) : std::nullopt
       );
     }
 
@@ -47,13 +50,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroColor::javaobject> fromCpp(const NitroColor& value) {
-      using JSignature = JNitroColor(double, double);
+      using JSignature = JNitroColor(double, double, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.lightColor,
-        value.darkColor
+        value.darkColor,
+        value.isDefault.has_value() ? jni::JBoolean::valueOf(value.isDefault.value()) : nullptr
       );
     }
   };

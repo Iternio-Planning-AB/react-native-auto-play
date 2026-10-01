@@ -30,8 +30,8 @@ const startVoiceInput: StartVoiceInput = async (options?: VoiceInputOptions) => 
   const listeningImageRepeats =
     listeningImage?.type === 'asset' ? listeningImage.repeats : undefined;
 
-  const startSoundUri = startSound != null ? Image.resolveAssetSource(startSound).uri : undefined;
-  const endSoundUri = endSound != null ? Image.resolveAssetSource(endSound).uri : undefined;
+  const startSoundUri = startSound != null ? Image.resolveAssetSource(startSound)?.uri : undefined;
+  const endSoundUri = endSound != null ? Image.resolveAssetSource(endSound)?.uri : undefined;
 
   return await _native.startVoiceInput(
     silenceThresholdMs,

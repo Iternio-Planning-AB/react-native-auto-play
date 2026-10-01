@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_AlertDismissalReason_cxx: Func_void_AlertDismissalReason {
   override fun invoke(reason: AlertDismissalReason): Unit
     = invoke_cxx(reason)
 
-  @FastNative
   private external fun invoke_cxx(reason: AlertDismissalReason): Unit
 }
 

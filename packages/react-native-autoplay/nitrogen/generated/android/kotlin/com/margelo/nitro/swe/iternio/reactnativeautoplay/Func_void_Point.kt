@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_Point_cxx: Func_void_Point {
   override fun invoke(center: Point): Unit
     = invoke_cxx(center)
 
-  @FastNative
   private external fun invoke_cxx(center: Point): Unit
 }
 

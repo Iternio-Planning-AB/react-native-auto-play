@@ -67,7 +67,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "ListTemplateConfig" and the the Kotlin data class "ListTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "ListTemplateConfig" and the Kotlin data class "ListTemplateConfig".
    */
   struct JListTemplateConfig final: public jni::JavaClass<JListTemplateConfig> {
   public:

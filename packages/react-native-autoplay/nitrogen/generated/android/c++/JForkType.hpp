@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "ForkType" and the the Kotlin enum "ForkType".
+   * The C++ JNI bridge between the C++ enum "ForkType" and the Kotlin enum "ForkType".
    */
   struct JForkType final: public jni::JavaClass<JForkType> {
   public:

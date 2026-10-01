@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_WindowInformation_cxx: Func_void_WindowInformation {
   override fun invoke(window: WindowInformation): Unit
     = invoke_cxx(window)
 
-  @FastNative
   private external fun invoke_cxx(window: WindowInformation): Unit
 }
 

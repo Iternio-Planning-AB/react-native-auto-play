@@ -23,7 +23,10 @@ data class NitroColor(
   val lightColor: Double,
   @DoNotStrip
   @Keep
-  val darkColor: Double
+  val darkColor: Double,
+  @DoNotStrip
+  @Keep
+  val isDefault: Boolean?
 ) {
   /* primary constructor */
 
@@ -32,12 +35,14 @@ data class NitroColor(
     if (other !is NitroColor) return false
     return Objects.deepEquals(this.lightColor, other.lightColor)
       && Objects.deepEquals(this.darkColor, other.darkColor)
+      && Objects.deepEquals(this.isDefault, other.isDefault)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
       lightColor,
-      darkColor
+      darkColor,
+      isDefault
     ).contentDeepHashCode()
   }
 
@@ -49,8 +54,8 @@ data class NitroColor(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(lightColor: Double, darkColor: Double): NitroColor {
-      return NitroColor(lightColor, darkColor)
+    private fun fromCpp(lightColor: Double, darkColor: Double, isDefault: Boolean?): NitroColor {
+      return NitroColor(lightColor, darkColor, isDefault)
     }
   }
 }

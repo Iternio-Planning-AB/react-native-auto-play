@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_std__optional_Telemetry__cxx: Func_void_std__optional_Telemetry_
   override fun invoke(tlm: Telemetry?): Unit
     = invoke_cxx(tlm)
 
-  @FastNative
   private external fun invoke_cxx(tlm: Telemetry?): Unit
 }
 

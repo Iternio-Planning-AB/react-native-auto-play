@@ -28,8 +28,6 @@
         <meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc" tools:ignore="MetadataTagInsideApplicationTag" />
         <meta-data android:name="androidx.car.app.minCarApiLevel" android:value="1" />
 
-        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.HeadlessTaskService" />
-
         <provider android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.ActivityRenderStateProvider" android:authorities="${applicationId}.ActivityRenderStateProvider" android:exported="false" />
     </application>
 </manifest>
