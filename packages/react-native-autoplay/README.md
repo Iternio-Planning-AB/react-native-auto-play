@@ -698,7 +698,7 @@ Below is a concise overview of the most important props per template. Optional p
 | Input | `InputSignIn` | Text sign in, for example mail/username and password |
 | Google | `GoogleSignIn` | Sign in with Google. Requires Google Play services 23.08 or newer — check `SignInTemplate.isGoogleSignInAvailable()` first. |
 
-`GoogleSignIn` takes a `serverClientId` (your **Web** OAuth client ID), a `signInButtonText` and a `callback(error?, account?)`. The returned `GoogleSignInAccount` carries `idToken` and `serverAuthCode` (offline access, `openid` `profile` `email` scopes) for your backend.
+`GoogleSignIn` takes a `serverClientId` (your **Web** OAuth client ID), a `signInButtonText` and a `callback(error?, account?)`. On success the returned `GoogleSignInAccount` always carries both `idToken` and `serverAuthCode` (offline access, `openid` `profile` `email` scopes) for your backend. If the user cancels, or either the account picker or the authorization step fails, `callback` is called with an `error` and no account.
 
 **Sign in with Google needs a recent Play services.** Constructing a `SignInTemplate` with `GoogleSignIn` throws `playServicesUnavailable` (and `updateTemplate` rejects with it) when Google Play services is missing or older than 23.08 (e.g. Android Automotive builds without GMS). Pick a different method up front instead:
 

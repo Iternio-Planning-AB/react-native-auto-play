@@ -79,7 +79,14 @@ class SignInWithGoogleActivity : ComponentActivity() {
     }
 
     private fun finishWith(serverAuthCode: String?) {
-        callback?.onSignInComplete(idCredential, serverAuthCode)
+        // a cancelled or failed authorization step yields no server auth code; report it as a
+        // failed sign in so callers get either an error or a complete account, as with the
+        // legacy GoogleSignIn flow, never an account without a server auth code
+        if (serverAuthCode == null) {
+            callback?.onSignInComplete(null, null)
+        } else {
+            callback?.onSignInComplete(idCredential, serverAuthCode)
+        }
         finish()
     }
 
@@ -91,6 +98,7 @@ class SignInWithGoogleActivity : ComponentActivity() {
          * Notifies that sign in flow completed.
          *
          * @param credential the account signed in or `null` if there were issues signing in.
+         * @param serverAuthCode the server auth code, always non-null when [credential] is non-null.
          */
         abstract fun onSignInComplete(
             credential: GoogleIdTokenCredential?,
