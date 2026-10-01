@@ -7,8 +7,11 @@ import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
+import androidx.car.app.model.Action
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.MessageTemplate
+import androidx.car.app.model.Pane
+import androidx.car.app.model.PaneTemplate
 import androidx.car.app.model.Template
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -66,6 +69,22 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         val appName = AppInfo.getApplicationLabel(carContext)
+
+        // Opt-in via ReactNativeAutoPlay_androidLoadingTemplate. The PaneTemplate gets a
+        // host-drawn spinner instead of the plain app icon MessageTemplate shows.
+        if (BuildConfig.LOADING_TEMPLATE) {
+            val loadingText = AppInfo.getLoadingLabel(carContext, appName)
+
+            try {
+                val pane = Pane.Builder().setLoading(true).build()
+                return PaneTemplate.Builder(pane)
+                    .setTitle(loadingText)
+                    .setHeaderAction(Action.APP_ICON)
+                    .build()
+            } catch (_: Exception) {
+                // fall through to the MessageTemplate below
+            }
+        }
 
         return MessageTemplate.Builder(appName).apply {
             setIcon(CarIcon.APP_ICON)
