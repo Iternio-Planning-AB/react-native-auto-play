@@ -242,6 +242,14 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListenerVoiceInput(callback: (Location?, String?) -> Unit): () -> Unit {
         voiceInputListeners.add(callback)
 
+        // Replay an event that arrived before this listener existed. Consume-once, TTL applies.
+        pendingVoiceInput?.let { (location, query, ts) ->
+            pendingVoiceInput = null
+            if (System.currentTimeMillis() - ts <= VOICE_INPUT_BUFFER_TTL_MS) {
+                callback(location, query)
+            }
+        }
+
         return {
             voiceInputListeners.remove(callback)
         }
@@ -256,6 +264,13 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
         private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
+
+        // emitVoiceInput is fire-and-forget: an event emitted before JS registered its listener
+        // was lost, which made voice a startup race. Buffer the latest emit and hand it to the
+        // first listener that registers within the TTL.
+        @Volatile
+        private var pendingVoiceInput: Triple<Location?, String?, Long>? = null
+        private const val VOICE_INPUT_BUFFER_TTL_MS = 30_000L
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()
@@ -278,6 +293,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
 
         fun emitVoiceInput(location: Location?, query: String?) {
+            if (voiceInputListeners.isEmpty()) {
+                pendingVoiceInput = Triple(location, query, System.currentTimeMillis())
+                return
+            }
             voiceInputListeners.forEach {
                 it(location, query)
             }
