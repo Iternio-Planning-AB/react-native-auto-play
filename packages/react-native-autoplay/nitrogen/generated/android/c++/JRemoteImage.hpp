@@ -20,7 +20,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "RemoteImage" and the the Kotlin data class "RemoteImage".
+   * The C++ JNI bridge between the C++ struct "RemoteImage" and the Kotlin data class "RemoteImage".
    */
   struct JRemoteImage final: public jni::JavaClass<JRemoteImage> {
   public:

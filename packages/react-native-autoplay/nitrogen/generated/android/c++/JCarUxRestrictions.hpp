@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "CarUxRestrictions" and the the Kotlin enum "CarUxRestrictions".
+   * The C++ JNI bridge between the C++ enum "CarUxRestrictions" and the Kotlin enum "CarUxRestrictions".
    */
   struct JCarUxRestrictions final: public jni::JavaClass<JCarUxRestrictions> {
   public:

@@ -47,7 +47,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "NitroBaseMapTemplateConfig" and the the Kotlin data class "NitroBaseMapTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "NitroBaseMapTemplateConfig" and the Kotlin data class "NitroBaseMapTemplateConfig".
    */
   struct JNitroBaseMapTemplateConfig final: public jni::JavaClass<JNitroBaseMapTemplateConfig> {
   public:

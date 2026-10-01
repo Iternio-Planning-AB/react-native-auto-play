@@ -66,7 +66,41 @@ jobs:
             - Minor style issues or nitpicks
             - Anything TypeScript or Biome would catch
             - Positive feedback
-            - Missing documentation
+            - Missing documentation, EXCEPT the stale-documentation cases below
+
+            Always report stale documentation (the one documentation exception):
+            - Public API, installation or host-app setup changed without updating
+              packages/react-native-autoplay/README.md. It is the only documentation
+              consumers get. Watch for renames or changes to the getRootViewForAutoplay
+              AppDelegate method, any *SceneDelegate class name (referenced by string from
+              the consumer's Info.plist), any ReactNativeAutoPlay_* Gradle property or its
+              default, entitlements, URL schemes, the ProGuard rule, setIconFont, or any
+              exported symbol in src/index.ts.
+            - An architectural rule or invariant changed without updating AGENTS.md — the
+              agent instruction file. Its 'Rules' section holds the hard rules
+              (NitroModules only, committed nitrogen/generated output, tag-derived version,
+              both platform branches of an action config) and its 'Common tasks' section
+              has step lists for adding a native method and adding a template.
+            - A docs file changed but the skill summarising it did not. The pairs are
+              docs/native-modules.md <-> .skills/nitro-native-modules/SKILL.md,
+              docs/templates.md <-> .skills/autoplay-templates/SKILL.md, and
+              docs/host-app-integration.md <-> .skills/host-app-integration/SKILL.md.
+              If the PR touches either side of a pair, use Read to open both and compare.
+              Each SKILL.md summarises rather than reproduces its doc, so absence is NOT a
+              problem: never report a detail for being missing from a summary. Report only
+              a CONTRADICTION - the summary forbidding what the doc permits, or naming a
+              path, command or default the doc contradicts - and quote both versions.
+            - Behaviour documented in docs/*.md changed without updating the doc.
+            - A new template without both when-branches in AndroidAutoScreen.kt or without
+              an export from src/index.ts — this compiles and fails at runtime.
+            - AGENTS.md grew past ~16 KB, where tools truncate it. New task-specific
+              content belongs in docs/.
+
+            Also flag a PR description that is long prose, a walkthrough of the diff, or a
+            per-file account. Descriptions should be short and high level: a few bullets on
+            what changed and why, one bullet per feature or fix. This applies to AI-written
+            PRs too. Skip this if the description is already brief, or if the author says
+            they were asked for more detail.
 
             Be concise. Only report real problems. If there are none, say so in one sentence."
 

@@ -9,6 +9,7 @@
 
 // Include C++ implementation defined types
 #include "HybridAutoPlaySpecSwift.hpp"
+#include "HybridAutoPlayTimingSpecSwift.hpp"
 #include "HybridCarPlayDashboardSpecSwift.hpp"
 #include "HybridClusterSpecSwift.hpp"
 #include "HybridGridTemplateSpecSwift.hpp"
@@ -76,6 +77,22 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     }
     #endif
     ReactNativeAutoPlay::HybridAutoPlaySpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridAutoPlayTimingSpec>
+  std::shared_ptr<HybridAutoPlayTimingSpec> create_std__shared_ptr_HybridAutoPlayTimingSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    ReactNativeAutoPlay::HybridAutoPlayTimingSpec_cxx swiftPart = ReactNativeAutoPlay::HybridAutoPlayTimingSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::swe::iternio::reactnativeautoplay::HybridAutoPlayTimingSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridAutoPlayTimingSpec_(std__shared_ptr_HybridAutoPlayTimingSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::swe::iternio::reactnativeautoplay::HybridAutoPlayTimingSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::swe::iternio::reactnativeautoplay::HybridAutoPlayTimingSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridAutoPlayTimingSpec\" is not implemented in Swift!");
+    }
+    #endif
+    ReactNativeAutoPlay::HybridAutoPlayTimingSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

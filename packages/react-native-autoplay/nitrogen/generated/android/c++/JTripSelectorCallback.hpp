@@ -20,7 +20,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "TripSelectorCallback" and the the Kotlin data class "TripSelectorCallback".
+   * The C++ JNI bridge between the C++ struct "TripSelectorCallback" and the Kotlin data class "TripSelectorCallback".
    */
   struct JTripSelectorCallback final: public jni::JavaClass<JTripSelectorCallback> {
   public:

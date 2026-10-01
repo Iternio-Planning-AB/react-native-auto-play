@@ -34,7 +34,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "RouteChoice" and the the Kotlin data class "RouteChoice".
+   * The C++ JNI bridge between the C++ struct "RouteChoice" and the Kotlin data class "RouteChoice".
    */
   struct JRouteChoice final: public jni::JavaClass<JRouteChoice> {
   public:

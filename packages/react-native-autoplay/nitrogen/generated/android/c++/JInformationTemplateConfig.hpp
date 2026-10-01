@@ -67,7 +67,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "InformationTemplateConfig" and the the Kotlin data class "InformationTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "InformationTemplateConfig" and the Kotlin data class "InformationTemplateConfig".
    */
   struct JInformationTemplateConfig final: public jni::JavaClass<JInformationTemplateConfig> {
   public:
