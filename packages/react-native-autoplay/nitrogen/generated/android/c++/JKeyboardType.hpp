@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "KeyboardType" and the the Kotlin enum "KeyboardType".
+   * The C++ JNI bridge between the C++ enum "KeyboardType" and the Kotlin enum "KeyboardType".
    */
   struct JKeyboardType final: public jni::JavaClass<JKeyboardType> {
   public:

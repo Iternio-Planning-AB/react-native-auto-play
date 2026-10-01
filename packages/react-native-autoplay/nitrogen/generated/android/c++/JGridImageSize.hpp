@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "GridImageSize" and the the Kotlin enum "GridImageSize".
+   * The C++ JNI bridge between the C++ enum "GridImageSize" and the Kotlin enum "GridImageSize".
    */
   struct JGridImageSize final: public jni::JavaClass<JGridImageSize> {
   public:

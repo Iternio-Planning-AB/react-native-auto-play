@@ -31,7 +31,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "TripPoint" and the the Kotlin data class "TripPoint".
+   * The C++ JNI bridge between the C++ struct "TripPoint" and the Kotlin data class "TripPoint".
    */
   struct JTripPoint final: public jni::JavaClass<JTripPoint> {
   public:

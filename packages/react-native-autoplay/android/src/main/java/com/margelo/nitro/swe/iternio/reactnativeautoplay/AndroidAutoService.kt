@@ -5,14 +5,10 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
-import android.os.IBinder
 import android.util.Log
 import androidx.car.app.CarAppService
 import androidx.car.app.Session
@@ -23,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
@@ -30,7 +27,6 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 class AndroidAutoService : CarAppService() {
     private lateinit var notificationManager: NotificationManager
 
-    private var isServiceBound = false
     private var isSessionStarted = false
     private var isReactAppStarted = false
 
@@ -47,6 +43,8 @@ class AndroidAutoService : CarAppService() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        (application as? ReactApplication)?.reactHost?.start()
 
         NitroModules.applicationContext?.addLifecycleEventListener(reactLifecycleObserver)
 
@@ -98,11 +96,6 @@ class AndroidAutoService : CarAppService() {
     }
 
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            val serviceIntent = Intent(applicationContext, HeadlessTaskService::class.java)
-            bindService(serviceIntent, connection, BIND_AUTO_CREATE)
-        }
-
         override fun onResume(owner: LifecycleOwner) {
             isSessionStarted = true
         }
@@ -112,24 +105,7 @@ class AndroidAutoService : CarAppService() {
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
-            if (isServiceBound) {
-                unbindService(connection)
-                isServiceBound = false
-            }
-
             this@AndroidAutoService.stopForeground(STOP_FOREGROUND_REMOVE)
-        }
-    }
-
-    private val connection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(
-            className: ComponentName, service: IBinder
-        ) {
-            isServiceBound = true
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            isServiceBound = false
         }
     }
 

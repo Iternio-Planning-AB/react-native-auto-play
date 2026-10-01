@@ -60,7 +60,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ struct "SignInTemplateConfig" and the the Kotlin data class "SignInTemplateConfig".
+   * The C++ JNI bridge between the C++ struct "SignInTemplateConfig" and the Kotlin data class "SignInTemplateConfig".
    */
   struct JSignInTemplateConfig final: public jni::JavaClass<JSignInTemplateConfig> {
   public:
