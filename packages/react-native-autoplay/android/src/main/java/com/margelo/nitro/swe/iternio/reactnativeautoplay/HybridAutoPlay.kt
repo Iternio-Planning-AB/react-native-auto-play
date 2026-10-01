@@ -1,6 +1,9 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import androidx.car.app.CarContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -39,6 +42,16 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
     override fun isCarServiceRunning(): Boolean {
         return AndroidAutoService.instance != null
+    }
+
+    override fun navigate(latitude: Double, longitude: Double, label: String): Promise<Unit> {
+        return Promise.async {
+            val carContext = AndroidAutoSession.getRootContext()
+                ?: throw IllegalStateException("navigate failed, Android Auto not connected")
+
+            val uri = Uri.parse("geo:$latitude,$longitude?q=${Uri.encode(label)}")
+            carContext.startCarApp(Intent(CarContext.ACTION_NAVIGATE, uri))
+        }
     }
 
     override fun addListenerRenderState(

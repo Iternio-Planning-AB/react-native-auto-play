@@ -265,5 +265,20 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     auto __result = method(_javaPart);
     return static_cast<bool>(__result);
   }
+  std::shared_ptr<Promise<void>> JHybridAutoPlaySpec::navigate(double latitude, double longitude, const std::string& label) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(double /* latitude */, double /* longitude */, jni::alias_ref<jni::JString> /* label */)>("navigate");
+    auto __result = method(_javaPart, latitude, longitude, jni::make_jstring(label));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

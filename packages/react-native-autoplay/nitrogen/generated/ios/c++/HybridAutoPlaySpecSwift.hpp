@@ -202,6 +202,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline std::shared_ptr<Promise<void>> navigate(double latitude, double longitude, const std::string& label) override {
+      auto __result = _swiftPart.navigate(std::forward<decltype(latitude)>(latitude), std::forward<decltype(longitude)>(longitude), label);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
 
   private:
     ReactNativeAutoPlay::HybridAutoPlaySpec_cxx _swiftPart;
