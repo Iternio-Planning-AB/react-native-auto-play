@@ -25,6 +25,7 @@
 ## Requirements
 
 -   **iOS builds require Xcode 27+** (the iOS 27 SDK), even for apps that don't use any `mapConfig`/panel features — the library references `CPMapPanel`/`CPPanel` types internally behind `@available(iOS 27.0, *)` checks, but `@available` only defers *runtime* execution, not compile-time symbol resolution, so the SDK must be present to build at all.
+-   **`react-native-nitro-modules` 0.37.1 or newer** — the generated native bindings target that runtime shape; an older nitro-modules install fails at native build time.
 
 ## Installation
 
@@ -178,7 +179,7 @@ This is an example that works for bare react-native (>= 0.82) and Expo SDK 57, c
 It is recommended to attach a listener to MapTemplate.onAppearanceDidChange and send maneuver updates based on this to make sure the colors are applied properly.
 Reason for this is that CarPlay does not allow for color updates on maneuvers shown on the screen. You need to send maneuvers with a new id to get them updated properly on the screen.
 The color properties do not need to handle the mode change, best practice is to use ThemedColor whenever possible and set appropriate light and dark mode colors.
-This is mainly required on CarPlay for now since Android Auto lacks light mode.
+This is mainly required on CarPlay. Android Auto redraws on its own when the day/night state changes, but note that Android Auto 17.8 introduced white templates in day mode while older versions always show dark templates. The car's day/night state (`isDarkMode`) is the same on both, so it does not tell you which template color you are drawn on. Use the `'default'` color for icons that have to stay readable in both cases, see **Icon colors and Android Auto light templates**.
 
 #### CPListTemplate day/night header
 
@@ -451,14 +452,34 @@ It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawa
 - iOS: Add to your `Images.xcassets`
 - Android: Add to `res/drawable`
 
+### Icon colors and Android Auto light templates
+
+Starting with **Android Auto 17.8** the host can show white (light) templates in day mode. Older versions (e.g. 17.6) always use dark templates, even in day mode. Both report the same car app API level, so an app cannot tell them apart, and a fixed icon color that is readable on one (white on dark) can be invisible on the other (white on white).
+
+Use the color `'default'` for every monochrome icon that has to stay readable in both cases:
+
+```ts
+{ type: 'glyph', name: 'search', color: 'default' }
+{ type: 'asset', image: require('./icon.png'), color: 'default' }
+{ type: 'remote', uri: 'https://example.com/icon.png', color: 'default' }
+```
+
+-   **Android Auto**: the host tints the icon with its own default icon color for the template it is currently showing, so it follows dark and light templates on every Android Auto version.
+-   **CarPlay**: `'default'` resolves to black in light mode and white in dark mode, so it is safe to use on iOS and does not change anything there.
+-   **Glyphs** use `'default'` automatically when no `color` is set. Exception on Android Auto: a glyph with a non-transparent `backgroundColor` is not tinted, since the tint would recolor the background as well. It keeps the plain white (dark mode) / black (light mode) glyph color, so set `color` explicitly if that does not contrast with your background.
+-   **Asset and remote images** are not tinted unless you set a `color`, so colorful images such as a logo keep their original colors. Only pass `'default'` for monochrome icons.
+-   Any other color (a string or a `ThemedColor`) is applied as specified. Only use those where the color works on both dark and light templates, e.g. a colored icon.
+-   Known limitation: the host may not apply the tint to header action icons on Android Auto 17.8. That is an issue in Android Auto itself, not something the library can work around.
+
 ## Usage
 
 ### 1. Register the AutoPlay Components
 
-You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). This includes setting up the headless task that runs when CarPlay or Android Auto is connected.
+You need to register your AutoPlay components in your app's entry file (e.g., `index.js`). Import `@iternio/react-native-auto-play/installTimers` — a side-effect-only module that replaces the global `setTimeout`/`setInterval`/`requestAnimationFrame` (and their `clear*`/`cancel*` counterparts) with versions that keep running while CarPlay/Android Auto is actively driving the car screen, even if the phone itself is backgrounded or its screen is locked. React Native's own timers throttle or pause in that state regardless of whether the app process is actually still alive, which would otherwise stall ETA updates and telemetry polling. It must run before any other module has a chance to capture a reference to the original globals, which means it must be your entry file's **first import** — ES import declarations are hoisted and evaluated in source order, so it needs to come before everything else, including `react-native` itself:
 
 ```javascript
 // index.js
+import '@iternio/react-native-auto-play/installTimers';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
@@ -584,7 +605,7 @@ All root components rendered by templates/scenes receive `RootComponentInitialPr
 
 -   `id`: Module identifier (e.g. `AutoPlayRoot`, `CarPlayDashboard`, or a cluster UUID).
 -   `rootTag`: React Native root tag.
--   `colorScheme`: `'light' | 'dark'` initial color scheme (listen to `onAppearanceDidChange` on `MapTemplate` for updates).
+-   `colorScheme`: `'light' | 'dark'` initial color scheme (listen to `onAppearanceDidChange` on `MapTemplate` for updates). On Android Auto this is the car's day/night state and does not tell you whether the templates are dark or white (17.8+ can show white templates in day mode, older versions never do).
 -   `window`: `{ width, height, scale }`.
 
 ### Template Configs (Props)
@@ -1267,14 +1288,34 @@ CarPlayDashboard.setButtons([
 - `setAttributedInactiveDescriptionVariants(variants)` — iOS only inactive text.
 - `addListenerColorScheme(cb)` / `addListenerZoom(cb)` / `addListenerCompass(cb)` / `addListenerSpeedLimit(cb)`.
 
+## Testing with Jest
+
+The real package needs native modules and ships ESM, so it can't run under Jest. Use the bundled CommonJS mock instead, one line in your Jest setup file:
+
+```js
+// jest.setup.js
+jest.mock('@iternio/react-native-auto-play', () =>
+  require('@iternio/react-native-auto-play/jest')
+);
+```
+
+Templates, `HybridAutoPlay`, `HybridVoice`, `AutoPlayCluster`, `CarPlayDashboard` and the hooks that need a car surface are safe no-ops (any method call returns `undefined`), `Constants.isIos27OrGreater` is `false`, and all types are unchanged. Tests that need to record constructions or assert on calls should extend it per test file:
+
+```ts
+jest.mock('@iternio/react-native-auto-play', () => {
+  const actual = jest.requireActual('@iternio/react-native-auto-play/jest');
+  return { ...actual, ListTemplate: class { push = jest.fn(() => Promise.resolve()); } };
+});
+```
+
+The same no-op surface is what `react-native-web` builds get automatically via `index.web.ts`.
+
 ## Known Issues
 
 ### iOS
 
 -   **Broken exceptions with `react-native-skia`**: When using `react-native-skia` exceptions on iOS are not reported correctly. This is fixed since version `2.4.19` of `react-native-skia`. For more details, see this [pull request](https://github.com/Shopify/react-native-skia/pull/3595) and [issue](https://github.com/Shopify/react-native-skia/issues/3635).
 -   **AppState on iOS**: The `AppState` module from React Native does not work correctly on iOS because this library uses scenes, which are not supported by the stock `AppState` module. This library provides a custom state listener that works for both Android and iOS. Use `HybridAutoPlay.addListenerRenderState` instead of `AppState`.
--   **Timers stop on screen lock**: iOS stops all timers when the device main screen is turned off. To ensure timers continue to run (which is often necessary for background tasks related to autoplay), a patch for `react-native` is required. A patch is included in the root `patches/` directory and can be applied using `patch-package`.
-In case you are using Expo SDK >= 56 make sure to set `buildReactNativeFromSource` to `true` in your app config for [expo-build-properties](https://docs.expo.dev/versions/latest/sdk/build-properties/#sharedbuildconfigfields), otherwise the patch can't be applied.
 -   **expo-splash-screen stuck on iOS**: The `expo-splash-screen` module is broken on iOS because it does not support scenes, which are used by this library. This can cause the splash screen to be stuck on either the mobile device or on CarPlay. To fix this, a patch for `expo-splash-screen` is included in the root `patches/` directory and can be applied using `patch-package`. After applying the patch, you can hide the splash screen for a specific scene by passing the module name to the `hide` or `hideAsync` function. The module name can be one of the values from the `AutoPlayModules` enum or the UUID of a cluster screen.
     ```tsx
     import { hideAsync } from 'expo-splash-screen';

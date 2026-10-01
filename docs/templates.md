@@ -126,13 +126,14 @@ so a cluster must read its own id from props rather than assume a constant.
 
 ## Initialization flow
 
-1. Importing the library auto-registers the Android headless task
-   `AndroidAutoHeadlessJsTask` (`src/AutoPlayHeadlessJsTask.ts`) — alive until
-   `didDisconnect`. No manual registration needed.
-2. On car connection native invokes the headless JS task (Android) / the scene delegate (iOS).
-3. The app creates templates and calls `template.setRootTemplate()`.
-4. Connection events: `HybridAutoPlay.addListener('didConnect' | 'didDisconnect', cb)`.
+1. On car connection native invokes the `CarAppService` session (Android) / the scene
+   delegate (iOS) directly. There is no headless JS task involved on either platform anymore
+   — `installAutoPlayTimers()` (`docs/host-app-integration.md` → *Both platforms*) is what
+   keeps timers running while the car surface is active, replacing a permanently-pending
+   headless task that used to exist purely to satisfy Android's `JavaTimerManager`.
+2. The app creates templates and calls `template.setRootTemplate()`.
+3. Connection events: `HybridAutoPlay.addListener('didConnect' | 'didDisconnect', cb)`.
    Query with `isConnected()` and `isCarServiceRunning()` — the latter distinguishes a
-   car-triggered headless run from e.g. a notification-triggered one.
-5. Per-surface visibility: `addListenerRenderState(moduleName, cb)`; safe area:
+   car-triggered start from e.g. a notification-triggered one.
+4. Per-surface visibility: `addListenerRenderState(moduleName, cb)`; safe area:
    `addSafeAreaInsetsListener(moduleName, cb)`.

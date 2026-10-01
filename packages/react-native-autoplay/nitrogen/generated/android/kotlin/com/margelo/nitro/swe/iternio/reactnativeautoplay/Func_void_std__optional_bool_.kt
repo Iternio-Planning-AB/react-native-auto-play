@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_std__optional_bool__cxx: Func_void_std__optional_bool_ {
   override fun invoke(animated: Boolean?): Unit
     = invoke_cxx(animated)
 
-  @FastNative
   private external fun invoke_cxx(animated: Boolean?): Unit
 }
 

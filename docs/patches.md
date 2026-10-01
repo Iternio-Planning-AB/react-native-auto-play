@@ -7,11 +7,13 @@ Patch filenames carry the patched package's version, so they change on every upg
 `ls patches/` for the current set, and the dependency versions themselves live in the
 relevant `package.json`, never in this doc.
 
-- **`patches/react-native+<version>.patch`** rewrites `RCTTiming` to never pause the JS timer loop,
-  replacing the `CADisplayLink` pause/resume machinery with an always-running `NSTimer`.
-  RN normally stops `setTimeout` / `setInterval` when the phone's own scene backgrounds —
-  which would kill ETA updates and telemetry polling while CarPlay is actively in use with
-  the phone screen off. **After an RN upgrade this must be re-derived, not blindly rebased.**
+- **There is no `react-native` patch anymore.** An earlier one rewrote `RCTTiming` to keep
+  JS timers running while the phone screen is locked, but it turned out to be a no-op once
+  RN started linking a prebuilt `React-Core` XCFramework by default (the patched file was
+  never compiled). It's replaced by `installAutoPlayTimers()` — a Nitro module
+  (`HybridAutoPlayTiming`, iOS + Android) that overrides `setTimeout`/`setInterval`/
+  `requestAnimationFrame` from the JS side instead of patching native RN at all. See
+  `docs/host-app-integration.md` → *Both platforms*.
 - **`patches/expo-splash-screen+<version>.patch`** (several version variants) add a `moduleName` parameter and
   key the splash overlay by root-view module name instead of a single global root view. This
   library renders several root views at once (phone window, head unit, dashboard, clusters),

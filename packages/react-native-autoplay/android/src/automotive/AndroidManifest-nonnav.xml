@@ -58,8 +58,6 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.HeadlessTaskService" />
-
         <activity android:name="com.margelo.nitro.swe.iternio.reactnativeautoplay.SignInWithGoogleActivity" />
 
         <provider

@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_std__string_cxx: Func_void_std__string {
   override fun invoke(text: String): Unit
     = invoke_cxx(text)
 
-  @FastNative
   private external fun invoke_cxx(text: String): Unit
 }
 

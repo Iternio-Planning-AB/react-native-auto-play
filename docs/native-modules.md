@@ -18,10 +18,10 @@ library's `ReactNativeAutoPlayPackage` is not wired to export legacy modules.
 | `android/src/main/java/com/margelo/nitro/swe/iternio/reactnativeautoplay/` | Kotlin implementations |
 | `src/hybrid/*.ts` | Ergonomic TS wrappers over the raw hybrid objects |
 
-Autolinked modules: `AutoPlay`, `Voice`, `Cluster`, `CarPlayDashboard` (iOS),
-`AndroidWindowInformation`, `AndroidAutoTelemetry`, `AndroidAutomotive`, `SignInTemplate`
-(Android), plus the `List` / `Grid` / `Map` / `Message` / `Search` / `Information`
-templates.
+Autolinked modules: `AutoPlay`, `Voice`, `Cluster`, `AutoPlayTiming`, `CarPlayDashboard`
+(iOS), `AndroidWindowInformation`, `AndroidAutoTelemetry`, `AndroidAutomotive`,
+`SignInTemplate` (Android), plus the `List` / `Grid` / `Map` / `Message` / `Search` /
+`Information` templates.
 
 ## Adding or changing a native method
 

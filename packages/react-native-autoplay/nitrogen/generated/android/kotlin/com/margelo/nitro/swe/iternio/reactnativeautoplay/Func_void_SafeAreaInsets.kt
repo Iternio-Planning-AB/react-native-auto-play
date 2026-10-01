@@ -10,7 +10,6 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData
 import com.facebook.proguard.annotations.DoNotStrip
-import dalvik.annotation.optimization.FastNative
 
 
 /**
@@ -59,7 +58,6 @@ class Func_void_SafeAreaInsets_cxx: Func_void_SafeAreaInsets {
   override fun invoke(insets: SafeAreaInsets): Unit
     = invoke_cxx(insets)
 
-  @FastNative
   private external fun invoke_cxx(insets: SafeAreaInsets): Unit
 }
 

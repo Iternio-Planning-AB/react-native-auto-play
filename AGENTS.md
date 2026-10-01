@@ -26,6 +26,12 @@ in chat. Keep that in your own global agent config, not here.
   `yarn specs` / `yarn prepare`, commit the regenerated output in the same commit. The
   publish workflow fails if `yarn install` leaves the tree dirty, and stale nitrogen output
   makes `pod install` fail with no useful error.
+- **`nitrogen` (devDependency) and `react-native-nitro-modules` (peerDependency) must move
+  together.** The generated bindings target a specific nitro-modules runtime shape, so
+  `packages/react-native-autoplay/package.json`'s `react-native-nitro-modules` peer floor
+  must match the `nitrogen` devDependency version whenever either is bumped, or older
+  consumers get a native build failure with no hint. No upper bound — just keep the floor
+  in sync.
 - **Do not hand-edit the package version.** `.github/workflows/npm-publish.yml` derives it
   from the GitHub release tag.
 - **Always use braces for `if` statements** — no single-line braceless ifs, in any language.

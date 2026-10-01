@@ -15,7 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   using namespace facebook;
 
   /**
-   * The C++ JNI bridge between the C++ enum "OnRampType" and the the Kotlin enum "OnRampType".
+   * The C++ JNI bridge between the C++ enum "OnRampType" and the Kotlin enum "OnRampType".
    */
   struct JOnRampType final: public jni::JavaClass<JOnRampType> {
   public:
