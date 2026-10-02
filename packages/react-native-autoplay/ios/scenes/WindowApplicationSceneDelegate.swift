@@ -31,9 +31,9 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         self.window = window
 
-        if let url = connectionOptions.urlContexts.first?.url {
+        if let urlContext = connectionOptions.urlContexts.first {
             // Linking API -> on app start
-            NitroLinkingManager.shared().launchURL = url
+            NitroLinkingManager.shared().openURL(urlContext)
         }
 
         if let userActivity = connectionOptions.userActivities.first(where: {
@@ -41,7 +41,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
             userActivity.webpageURL != nil
         }) {
             // Universal Links -> on app start
-            NitroLinkingManager.shared().launchURL = userActivity.webpageURL
+            NitroLinkingManager.shared().continue(userActivity)
         }
     }
 

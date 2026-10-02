@@ -9,7 +9,8 @@
 
 @interface NitroLinkingManager : NSObject
 
-@property (nonatomic, strong) NSURL *launchURL;
+@property (atomic, strong) NSURL *launchURL;
+@property (atomic, assign) BOOL initialURLRequested;
 
 + (instancetype)shared;
 - (void)continueUserActivity:(NSUserActivity *)userActivity;

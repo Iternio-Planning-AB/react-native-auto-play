@@ -15,7 +15,9 @@
 
 RCT_EXPORT_METHOD(getInitialURL:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
+    [NitroLinkingManager shared].initialURLRequested = YES;
     NSURL *initialURL = [NitroLinkingManager shared].launchURL;
+    [NitroLinkingManager shared].launchURL = nil;
 
     if (initialURL) {
         resolve(RCTNullIfNil(initialURL.absoluteString));
