@@ -140,6 +140,41 @@ Paste this into your Info.plist and adjust it to your needs. Check [Apple docs](
 	</dict>
 ```
 
+#### Deep links
+`WindowApplicationSceneDelegate` forwards custom URL schemes and universal links to React Native's `Linking` API, so no extra `AppDelegate` or scene wiring is needed.
+
+- **App not running:** the link is returned by `Linking.getInitialURL()`.
+- **App already running:** the link is delivered as a `Linking` `'url'` event. This includes the case where CarPlay launched the app and the phone UI is opened by a link afterwards.
+- **Links that arrive before JS has called `getInitialURL()`** are kept and returned by that first call. Only the first call returns the link; later calls resolve to `null`.
+
+Call `getInitialURL()` once, as early as possible, and before you subscribe to `'url'` events. If you subscribe first and call `getInitialURL()` later, a link that arrives in between is delivered by both, and your app handles it twice. Do not defer the call until a splash screen or sign-in has finished. Read the URL right away and keep it until your app is ready to act on it.
+
+```tsx
+import { useEffect } from 'react';
+import { Linking } from 'react-native';
+
+function handleLink(url: string) {
+  // navigate, or store the URL until the app is ready
+}
+
+export function App() {
+  useEffect(() => {
+    // Read the initial URL first, then subscribe, in the same effect.
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleLink(url);
+      }
+    });
+    const subscription = Linking.addEventListener('url', ({ url }) => handleLink(url));
+    return () => subscription.remove();
+  }, []);
+
+  // ...
+}
+```
+
+React Navigation's `linking` prop already follows this order, so it needs no extra setup.
+
 #### MapTemplate
 if you want to make use of the MapTemplate and render react components you need to add this to your AppDelegate.swift
 This is an example that works for bare react-native (>= 0.82) and Expo SDK 57, check [this](https://github.com/Iternio-Planning-AB/react-native-auto-play/blob/dbd33ff32ee58338282ffe0f8a970e687e1e3520/packages/react-native-autoplay/README.md?plain=1#L139) for older versions.
