@@ -45,6 +45,10 @@ class ListTemplate: AutoPlayHeaderProviding {
         return config.mapConfig?.mapButtons
     }
 
+    override func getPanelShowsCloseButton() -> Bool {
+        return config.platform?.showsPanelCloseButton ?? false
+    }
+
     init(config: ListTemplateConfig) {
         self.config = config
 

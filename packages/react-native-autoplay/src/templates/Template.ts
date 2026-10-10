@@ -72,6 +72,31 @@ export interface NitroBaseMapTemplateConfig extends TemplateConfig {
   onDidChangePanningInterface?: (isPanningInterfaceVisible: boolean) => void;
 }
 
+/**
+ * iOS only props of templates that can render as a CPMapPanel (`ListTemplate`, `GridTemplate`,
+ * `InformationTemplate`, `MessageTemplate`). Templates with own iOS only props extend this.
+ * @namespace iOS
+ */
+export type PanelTemplateIosConfig = {
+  /**
+   * shows CarPlay's native close button on the panel, closing it pops the template like
+   * `popTemplate()` does. Requires `mapConfig` to be set and iOS 27+, since only then the
+   * template renders as a panel. Only applies to the first panel on the stack — a panel pushed
+   * on top of another panel never shows it, since closing it natively would drop the covered
+   * panels without CarPlay notifying them, leaving their lifecycle callbacks unfired.
+   * @default false
+   */
+  showsPanelCloseButton?: boolean;
+};
+
+/**
+ * the platform specific props of the current platform, the TS template class passes either
+ * its `ios` or `android` config here. Holds the fields of both platforms.
+ */
+export interface NitroPanelTemplatePlatformConfig {
+  showsPanelCloseButton?: boolean;
+}
+
 export class Template<TemplateConfigType, ActionsType> {
   public id!: string;
 

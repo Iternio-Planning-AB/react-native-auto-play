@@ -18,7 +18,7 @@ public extension InformationTemplateConfig {
   /**
    * Create a new instance of `InformationTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, headerActions: [NitroAction]?, title: AutoText, section: NitroSection, actions: [NitroAction]?, mapConfig: NitroBaseMapTemplateConfig?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, headerActions: [NitroAction]?, title: AutoText, section: NitroSection, actions: [NitroAction]?, mapConfig: NitroBaseMapTemplateConfig?, platform: NitroPanelTemplatePlatformConfig?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -97,6 +97,12 @@ public extension InformationTemplateConfig {
     }(), { () -> bridge.std__optional_NitroBaseMapTemplateConfig_ in
       if let __unwrappedValue = mapConfig {
         return bridge.create_std__optional_NitroBaseMapTemplateConfig_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_NitroPanelTemplatePlatformConfig_ in
+      if let __unwrappedValue = platform {
+        return bridge.create_std__optional_NitroPanelTemplatePlatformConfig_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -266,5 +272,10 @@ public extension InformationTemplateConfig {
   @inline(__always)
   var mapConfig: NitroBaseMapTemplateConfig? {
     return self.__mapConfig.value
+  }
+  
+  @inline(__always)
+  var platform: NitroPanelTemplatePlatformConfig? {
+    return self.__platform.value
   }
 }

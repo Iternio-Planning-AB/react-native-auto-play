@@ -43,6 +43,10 @@ class GridTemplate: AutoPlayHeaderProviding {
         return config.mapConfig?.mapButtons
     }
 
+    override func getPanelShowsCloseButton() -> Bool {
+        return config.platform?.showsPanelCloseButton ?? false
+    }
+
     init(config: GridTemplateConfig) {
         self.config = config
         buttons = config.buttons

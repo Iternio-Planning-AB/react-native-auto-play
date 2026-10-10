@@ -108,6 +108,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
 // Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroPanelTemplatePlatformConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelTemplatePlatformConfig; }
 // Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroRow` to properly resolve imports.
@@ -231,6 +233,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "NitroOptionsPanelChargerSection.hpp"
 #include "NitroOptionsPanelConfig.hpp"
 #include "NitroOptionsPanelGridSection.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
 #include "NitroRoutingManeuver.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
@@ -1007,6 +1010,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline NitroBaseMapTemplateConfig get_std__optional_NitroBaseMapTemplateConfig_(const std::optional<NitroBaseMapTemplateConfig>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<NitroPanelTemplatePlatformConfig>
+  /**
+   * Specialized version of `std::optional<NitroPanelTemplatePlatformConfig>`.
+   */
+  using std__optional_NitroPanelTemplatePlatformConfig_ = std::optional<NitroPanelTemplatePlatformConfig>;
+  inline std::optional<NitroPanelTemplatePlatformConfig> create_std__optional_NitroPanelTemplatePlatformConfig_(const NitroPanelTemplatePlatformConfig& value) noexcept {
+    return std::optional<NitroPanelTemplatePlatformConfig>(value);
+  }
+  inline bool has_value_std__optional_NitroPanelTemplatePlatformConfig_(const std::optional<NitroPanelTemplatePlatformConfig>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline NitroPanelTemplatePlatformConfig get_std__optional_NitroPanelTemplatePlatformConfig_(const std::optional<NitroPanelTemplatePlatformConfig>& optional) noexcept {
     return optional.value();
   }
   

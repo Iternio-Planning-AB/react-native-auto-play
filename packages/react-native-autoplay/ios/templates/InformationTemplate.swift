@@ -50,6 +50,10 @@ class InformationTemplate: AutoPlayHeaderProviding {
         return config.mapConfig?.mapButtons
     }
 
+    override func getPanelShowsCloseButton() -> Bool {
+        return config.platform?.showsPanelCloseButton ?? false
+    }
+
     init(config: InformationTemplateConfig) {
         self.config = config
 

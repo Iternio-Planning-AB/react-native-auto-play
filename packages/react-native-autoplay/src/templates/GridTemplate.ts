@@ -9,7 +9,9 @@ import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
+  type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
+  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -28,11 +30,12 @@ export interface NitroGridTemplateConfig extends TemplateConfig {
   buttons: Array<NitroGridButton>;
   imageSize?: GridImageSize;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 export type GridTemplateConfig = Omit<
   NitroGridTemplateConfig,
-  'headerActions' | 'buttons' | 'mapConfig'
+  'headerActions' | 'buttons' | 'mapConfig' | 'platform'
 > & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -61,6 +64,12 @@ export type GridTemplateConfig = Omit<
   mapConfig?: Omit<BaseMapTemplateConfig<GridTemplate>, 'headerActions'> & {
     headerActions?: PanelHeaderActions<GridTemplate>;
   };
+
+  /**
+   * iOS only props
+   * @namespace iOS
+   */
+  ios?: PanelTemplateIosConfig;
 };
 
 export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<GridTemplate>> {
@@ -69,7 +78,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
   constructor(config: GridTemplateConfig) {
     super(config);
 
-    const { headerActions, buttons, mapConfig, ...rest } = config;
+    const { headerActions, buttons, mapConfig, ios, ...rest } = config;
 
     if (
       __DEV__ &&
@@ -94,6 +103,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
             headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
+      platform: Platform.OS === 'ios' ? ios : undefined,
     };
 
     HybridGridTemplate.createGridTemplate(nitroConfig);

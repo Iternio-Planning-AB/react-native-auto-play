@@ -11,7 +11,9 @@ import type { BaseMapTemplateConfig, PanelActionsIos, PanelHeaderActions } from 
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
+  type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
+  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -29,6 +31,7 @@ export interface NitroInformationTemplateConfig extends TemplateConfig {
   section: NitroSection;
   actions?: Array<NitroAction>;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 export type InformationItems =
@@ -39,7 +42,7 @@ export type InformationItems =
 
 type InformationTemplateBaseConfig = Omit<
   NitroInformationTemplateConfig,
-  'headerActions' | 'section' | 'mapConfig' | 'actions'
+  'headerActions' | 'section' | 'mapConfig' | 'platform' | 'actions'
 > & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -51,6 +54,12 @@ type InformationTemplateBaseConfig = Omit<
    * @namespace iOS this is an InformationTemplate, ⚠️ the row image is NOT supported
    */
   items?: InformationItems;
+
+  /**
+   * iOS only props
+   * @namespace iOS
+   */
+  ios?: PanelTemplateIosConfig;
 };
 
 /**
@@ -116,7 +125,7 @@ export class InformationTemplate extends Template<
   constructor(config: InformationTemplateConfig) {
     super(config);
 
-    const { headerActions, mapConfig, items, actions, ...rest } = config;
+    const { headerActions, mapConfig, items, actions, ios, ...rest } = config;
 
     const platformActions =
       Platform.OS === 'android'
@@ -140,6 +149,7 @@ export class InformationTemplate extends Template<
             headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
+      platform: Platform.OS === 'ios' ? ios : undefined,
     };
 
     HybridInformationTemplate.createInformationTemplate(nitroConfig);

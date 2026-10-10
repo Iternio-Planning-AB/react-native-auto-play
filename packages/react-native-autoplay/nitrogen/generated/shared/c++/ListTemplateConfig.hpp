@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroSection; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
+// Forward declaration of `NitroPanelTemplatePlatformConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelTemplatePlatformConfig; }
 
 #include <string>
 #include <optional>
@@ -45,6 +47,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 #include "AutoText.hpp"
 #include "NitroSection.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -64,10 +67,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     AutoText title     SWIFT_PRIVATE;
     std::optional<std::vector<NitroSection>> sections     SWIFT_PRIVATE;
     std::optional<NitroBaseMapTemplateConfig> mapConfig     SWIFT_PRIVATE;
+    std::optional<NitroPanelTemplatePlatformConfig> platform     SWIFT_PRIVATE;
 
   public:
     ListTemplateConfig() = default;
-    explicit ListTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::optional<std::vector<NitroSection>> sections, std::optional<NitroBaseMapTemplateConfig> mapConfig): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), sections(sections), mapConfig(mapConfig) {}
+    explicit ListTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::optional<std::vector<NitroSection>> sections, std::optional<NitroBaseMapTemplateConfig> mapConfig, std::optional<NitroPanelTemplatePlatformConfig> platform): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), sections(sections), mapConfig(mapConfig), platform(platform) {}
 
   public:
     // ListTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, sections, mapConfig
@@ -93,7 +97,8 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sections"))),
-        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig"))),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "platform")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::ListTemplateConfig& arg) {
@@ -109,6 +114,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "sections"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection>>>::toJSI(runtime, arg.sections));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "mapConfig"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::toJSI(runtime, arg.mapConfig));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "platform"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig>>::toJSI(runtime, arg.platform));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -130,6 +136,7 @@ namespace margelo::nitro {
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::AutoText>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroSection>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sections")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapConfig")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "platform")))) return false;
       return true;
     }
   };

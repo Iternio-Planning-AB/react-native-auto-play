@@ -49,6 +49,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMapButton; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMapButtonType; }
+// Forward declaration of `NitroPanelTemplatePlatformConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelTemplatePlatformConfig; }
 
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
@@ -106,6 +108,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroMa
 #include "JNitroMapButtonType.hpp"
 #include "JNitroImage.hpp"
 #include "JFunc_void_bool.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
+#include "JNitroPanelTemplatePlatformConfig.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 

@@ -96,7 +96,9 @@ export type {
   HeaderActionsAndroid,
   HeaderActionsIos,
   NitroBaseMapTemplateConfig,
+  NitroPanelTemplatePlatformConfig,
   NitroTemplateConfig,
+  PanelTemplateIosConfig,
   TemplateConfig,
 } from './templates/Template';
 export * from './types/Button';

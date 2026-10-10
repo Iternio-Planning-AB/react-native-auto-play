@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { ListTemplate as NitroListTemplate } from '../specs/ListTemplate.nitro';
 import type { AutoText } from '../types/Text';
@@ -8,7 +9,9 @@ import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
+  type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
+  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -38,11 +41,12 @@ export interface NitroListTemplateConfig extends TemplateConfig {
   title: AutoText;
   sections?: Array<NitroSection>;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 export type ListTemplateConfig = Omit<
   NitroListTemplateConfig,
-  'headerActions' | 'sections' | 'mapConfig'
+  'headerActions' | 'sections' | 'mapConfig' | 'platform'
 > & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -67,6 +71,12 @@ export type ListTemplateConfig = Omit<
   mapConfig?: Omit<BaseMapTemplateConfig<ListTemplate>, 'headerActions'> & {
     headerActions?: PanelHeaderActions<ListTemplate>;
   };
+
+  /**
+   * iOS only props
+   * @namespace iOS
+   */
+  ios?: PanelTemplateIosConfig;
 };
 
 export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<ListTemplate>> {
@@ -75,7 +85,7 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
   constructor(config: ListTemplateConfig) {
     super(config);
 
-    const { headerActions, mapConfig, sections, ...rest } = config;
+    const { headerActions, mapConfig, sections, ios, ...rest } = config;
 
     const nitroConfig: NitroListTemplateConfig & NitroTemplateConfig = {
       ...rest,
@@ -88,6 +98,7 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
             headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
+      platform: Platform.OS === 'ios' ? ios : undefined,
     };
 
     HybridListTemplate.createListTemplate(nitroConfig);

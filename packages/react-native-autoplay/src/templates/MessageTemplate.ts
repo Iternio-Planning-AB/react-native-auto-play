@@ -15,7 +15,13 @@ import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroImage, NitroImageUtil } from '../utils/NitroImage';
 import { NitroMapButton } from '../utils/NitroMapButton';
 import type { PanelActionsIos, PanelHeaderActions } from './MapTemplate';
-import type { NitroBaseMapTemplateConfig, NitroTemplateConfig, TemplateConfig } from './Template';
+import type {
+  NitroBaseMapTemplateConfig,
+  NitroPanelTemplatePlatformConfig,
+  NitroTemplateConfig,
+  PanelTemplateIosConfig,
+  TemplateConfig,
+} from './Template';
 
 const HybridMessageTemplate =
   NitroModules.createHybridObject<NitroMessageTemplate>('MessageTemplate');
@@ -31,6 +37,7 @@ export interface NitroMessageTemplateConfig extends TemplateConfig {
   actions?: Array<NitroAction>;
   image?: NitroImage;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 type MessageActionsAndroid<T> =
@@ -39,7 +46,7 @@ type MessageActionsAndroid<T> =
 
 type MessageTemplateBaseConfig = Omit<
   NitroMessageTemplateConfig,
-  'headerActions' | 'image' | 'mapConfig' | 'actions'
+  'headerActions' | 'image' | 'mapConfig' | 'platform' | 'actions'
 > & {
   /**
    * action buttons, usually at the top right on Android
@@ -54,6 +61,12 @@ type MessageTemplateBaseConfig = Omit<
    * @namespace Android
    */
   image?: AutoImage;
+
+  /**
+   * iOS only props
+   * @namespace iOS
+   */
+  ios?: PanelTemplateIosConfig;
 };
 
 /**
@@ -123,7 +136,7 @@ export class MessageTemplate {
   public id = uuid.v4();
 
   constructor(config: MessageTemplateConfig) {
-    const { headerActions, image, mapConfig, actions, ...rest } = config;
+    const { headerActions, image, mapConfig, actions, ios, ...rest } = config;
 
     const platformActions =
       Platform.OS === 'android'
@@ -142,6 +155,7 @@ export class MessageTemplate {
             headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
           }
         : undefined,
+      platform: Platform.OS === 'ios' ? ios : undefined,
     };
 
     HybridMessageTemplate.createMessageTemplate(nitroConfig);
