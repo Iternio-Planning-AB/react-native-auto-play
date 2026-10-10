@@ -10,6 +10,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.util.Log
 import androidx.car.app.CarContext
+import androidx.car.app.versioning.CarAppApiLevels
 import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.CarColor
@@ -868,6 +869,12 @@ object Parser {
         context: CarContext, mapConfig: NitroBaseMapTemplateConfig?, template: Template
     ): Template {
         if (mapConfig == null) {
+            return template
+        }
+
+        // MapWithContentTemplate requires Car API 7 but minCarApiLevel is 1, so older hosts
+        // fall back to the content template full screen, as iOS does below 27.
+        if (context.carAppApiLevel < CarAppApiLevels.LEVEL_7) {
             return template
         }
 
