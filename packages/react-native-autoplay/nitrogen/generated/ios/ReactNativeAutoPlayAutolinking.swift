@@ -96,6 +96,18 @@ public final class ReactNativeAutoPlayAutolinking {
     return HybridMessageTemplate.self is any RecyclableView.Type
   }
   
+  public static func createPointOfInterestTemplate() -> bridge.std__shared_ptr_HybridPointOfInterestTemplateSpec_ {
+    let hybridObject = HybridPointOfInterestTemplate()
+    return { () -> bridge.std__shared_ptr_HybridPointOfInterestTemplateSpec_ in
+      let __cxxWrapped = hybridObject.getCxxWrapper()
+      return __cxxWrapped.getCxxPart()
+    }()
+  }
+  
+  public static func isPointOfInterestTemplateRecyclable() -> Bool {
+    return HybridPointOfInterestTemplate.self is any RecyclableView.Type
+  }
+  
   public static func createSearchTemplate() -> bridge.std__shared_ptr_HybridSearchTemplateSpec_ {
     let hybridObject = HybridSearchTemplate()
     return { () -> bridge.std__shared_ptr_HybridSearchTemplateSpec_ in
