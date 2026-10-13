@@ -708,7 +708,7 @@ How each platform renders it:
 | **Android, `mapConfig` set** | sectioned `ListTemplate` in a `MapWithContentTemplate` | exactly one grid section and nothing else: a `GridTemplate` in a `MapWithContentTemplate`, without the section title. Otherwise **no grid**: the buttons are rendered as list rows, one row per button. A `SectionedItemTemplate` on the map crashes Android Auto at runtime ([issue 572287914](https://issuetracker.google.com/issues/572287914)), so the library uses a `GridTemplate` or `ListTemplate` instead. |
 | **iOS, panel** (`mapConfig` set, iOS 27+) | list items of a `CPMapPanel` section | grid buttons of a `CPMapPanel` section |
 | **iOS 26+** | `CPListTemplate` section | one `CPListImageRowItem` with image grid elements, wrapping onto multiple lines |
-| **iOS below 26** | `CPListTemplate` section | one `CPListImageRowItem`, at most `CPMaximumNumberOfGridImages` buttons in a single line, the rest are dropped. Titles below the images need iOS 17.4+. |
+| **iOS below 26** | `CPListTemplate` section | one `CPListImageRowItem`, at most `CPMaximumNumberOfGridImages` buttons in a single line, the rest are dropped. Titles below the images need iOS 17.4+. Below iOS 26 CarPlay shows a chevron on this row that does nothing when tapped and can't be hidden, iOS 26+ shows none. |
 
 In the `CPListTemplate`, a grid section's `title` is shown as the section header, the same as for list sections. An empty `title` (`''`) shows an empty header line on CarPlay and on Android hosts below Car API 8.
 

@@ -1056,6 +1056,9 @@ class Parser {
             }
             completion()
         }
+        
+        // CarPlay shows a loading indicator until a row tap completes, the row itself has no action
+        rowItem.handler = { _, completion in completion() }
 
         return rowItem
     }
