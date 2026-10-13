@@ -238,7 +238,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
-
     override fun addListenerVoiceInput(callback: (Location?, String?) -> Unit): () -> Unit {
         voiceInputListeners.add(callback)
 
@@ -259,7 +258,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()
-
 
         fun removeListeners(templateId: String) {
             renderStateListeners.remove(templateId)

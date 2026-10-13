@@ -43,6 +43,7 @@ class VirtualRenderer(
 ) {
     private var virtualDisplay: VirtualDisplay? = null
     private val pendingDisplays = mutableListOf<VirtualDisplay>()
+
     // Optional host view under the React surface (see NativeBackdrop), one per presentation;
     // parked ones are destroyed in the same sweep as pendingDisplays
     private var currentBackdrop: NativeBackdrop? = null
@@ -241,8 +242,8 @@ class VirtualRenderer(
         // specs) must be recomputed when the metrics differ from the current ones. The react
         // surface itself is kept alive so JS state survives the resize; the JS side is informed
         // via the windowInformation listener since the window initial prop stays stale.
-        val isResize = reactSurfaceView != null && (width != surfaceWidth
-                || height != surfaceHeight || dpi != surfaceContainer.dpi)
+        val isResize = reactSurfaceView != null && (width != surfaceWidth ||
+            height != surfaceHeight || dpi != surfaceContainer.dpi)
 
         val manager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
 
@@ -299,10 +300,8 @@ class VirtualRenderer(
             })
         }
 
-        /**
-         * since react-native renders everything with the density/scaleFactor from the main display
-         * we have to adjust scaling on AA to take this into account
-         */
+        // since react-native renders everything with the density/scaleFactor from the main display
+        // we have to adjust scaling on AA to take this into account
         DisplayMetricsHolder.initDisplayMetricsIfNotInitialized(reactContext)
         val mainScreenDensity = DisplayMetricsHolder.getScreenDisplayMetrics().density
         val reactNativeScale = virtualScreenDensity / mainScreenDensity * BuildConfig.SCALE_FACTOR
@@ -411,7 +410,6 @@ class VirtualRenderer(
 
                 reactSurfaceView = surfaceView
             }
-
 
             // Ask the host for a native backdrop for this display; the host is told whether it
             // is the root or a cluster and may answer null for either. `this@VirtualRenderer.context`

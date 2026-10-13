@@ -43,6 +43,7 @@
     "specs": "nitrogen --logLevel=\"debug\"",
     "prepare": "yarn circular && tsc && yarn build:jest && nitrogen",
     "swift:format": "swift-format format ./ios --in-place --recursive",
+    "kotlin:format": "ktlint --format 'android/src/**/*.kt'",
     "circular": "dpdm ./src/* --circular --exit-code circular:1 --no-tree --warning=false --transform"
   },
   "keywords": [

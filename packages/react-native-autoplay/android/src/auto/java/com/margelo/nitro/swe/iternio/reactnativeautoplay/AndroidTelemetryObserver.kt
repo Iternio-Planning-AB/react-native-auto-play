@@ -16,15 +16,21 @@ object AndroidTelemetryObserver : TelemetryObserver() {
     private val mModelListener = OnCarDataAvailableListener<Model> { model ->
         val name = if (model.name.status == CarValue.STATUS_SUCCESS) {
             model.name.value
-        } else null
+        } else {
+            null
+        }
 
         val manufacturer = if (model.manufacturer.status == CarValue.STATUS_SUCCESS) {
             model.manufacturer.value
-        } else null
+        } else {
+            null
+        }
 
         val year = if (model.year.status == CarValue.STATUS_SUCCESS) {
             model.year.value
-        } else null
+        } else {
+            null
+        }
 
         telemetryHolder.updateVehicle(name, manufacturer, year, null)
 
@@ -50,14 +56,14 @@ object AndroidTelemetryObserver : TelemetryObserver() {
 
         if (carEnergyLevel.rangeRemainingMeters.status == CarValue.STATUS_SUCCESS) {
             carEnergyLevel.rangeRemainingMeters.value?.let {
-                telemetryHolder.updateRange(it.div(1000f)) //m->km
+                telemetryHolder.updateRange(it.div(1000f)) // m->km
             }
         }
     }
 
     private val mSpeedListener = OnCarDataAvailableListener<Speed> { carSpeed ->
         if (carSpeed.displaySpeedMetersPerSecond.status == CarValue.STATUS_SUCCESS) {
-            telemetryHolder.updateSpeed(carSpeed.displaySpeedMetersPerSecond.value?.times(3.6f)) //m/s->km/h
+            telemetryHolder.updateSpeed(carSpeed.displaySpeedMetersPerSecond.value?.times(3.6f)) // m/s->km/h
         }
     }
 
@@ -73,7 +79,6 @@ object AndroidTelemetryObserver : TelemetryObserver() {
         val carContext = AndroidAutoSession.getRootContext() ?: throw IllegalArgumentException(
             "Car context not available, failed to start telemetry"
         )
-
 
         AndroidTelemetryObserver.carContext = carContext
         if (carContext.carAppApiLevel < CarAppApiLevels.LEVEL_3) {
@@ -115,7 +120,6 @@ object AndroidTelemetryObserver : TelemetryObserver() {
         } catch (_: SecurityException) {
         } catch (_: NullPointerException) {
         }
-
 
         isObserverRunning = true
         return true

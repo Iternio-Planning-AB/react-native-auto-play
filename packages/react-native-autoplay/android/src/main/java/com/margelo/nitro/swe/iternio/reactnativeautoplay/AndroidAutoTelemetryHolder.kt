@@ -129,7 +129,7 @@ class AndroidAutoTelemetryHolder {
 
         val soc = levelWh / capacityWh * 100
         if (!soc.isFinite() || floor(soc) < 0 || floor(soc) > 100) {
-            throw Exception("got invalid soc $soc, expecting value from 0 to 100 EV_BATTERY_LEVEL: ${levelWh}, evBatteryCapacity: $capacityWh")
+            throw Exception("got invalid soc $soc, expecting value from 0 to 100 EV_BATTERY_LEVEL: $levelWh, evBatteryCapacity: $capacityWh")
         }
 
         soe = levelWh
@@ -189,7 +189,6 @@ private fun <T : Number> createNumericTelemetryItem(
     if (value == null || timestamp == null) {
         return null
     }
-
 
     return NumericTelemetryItem(timestamp.toDouble(), value.toDouble())
 }
