@@ -690,25 +690,15 @@ class MapTemplate: AutoPlayHeaderProviding,
             !maneuver.isSecondary
         }
 
-        for (index, nitroManeuver) in maneuvers.enumerated() {
-            if let maneuverIndex =
-                sessionManeuvers
-                .firstIndex(where: { $0.id == nitroManeuver.id })
-            {
+        for nitroManeuver in maneuvers {
+            if let maneuver = sessionManeuvers.first(where: { $0.id == nitroManeuver.id }) {
                 navigationSession.updateEstimates(
                     Parser.parseTravelEstimates(
                         travelEstimates: nitroManeuver.travelEstimates
                     ),
-                    for: sessionManeuvers[maneuverIndex]
+                    for: maneuver
                 )
-
-                if index != maneuverIndex {
-                    if let maneuver = navigationSession.upcomingManeuvers.first(
-                        where: { $0.id == nitroManeuver.id }
-                    ) {
-                        upcomingManeuvers.append(maneuver)
-                    }
-                }
+                upcomingManeuvers.append(maneuver)
                 continue
             }
 
@@ -719,9 +709,14 @@ class MapTemplate: AutoPlayHeaderProviding,
             upcomingManeuvers.append(maneuver)
         }
 
-        if upcomingManeuvers.count > 0 {
+        if upcomingManeuvers.map({ $0.id }) != sessionManeuvers.map({ $0.id }) {
             if #available(iOS 17.4, *) {
                 upcomingManeuvers = upcomingManeuvers.flatMap { maneuver in
+                    if let lanesManeuver = navigationSession.upcomingManeuvers.first(where: {
+                        $0.id == maneuver.id + "-lanes"
+                    }) {
+                        return [maneuver, lanesManeuver]
+                    }
                     if let laneImages = maneuver.laneImages {
                         // CarPlay has a limitation of 120x18 for the symbolImage on secondaryManeuver that shows lanes only
                         let secondarySymbolImage = Parser.imageFromLanes(
