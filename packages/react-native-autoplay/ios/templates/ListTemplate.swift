@@ -96,6 +96,7 @@ class ListTemplate: AutoPlayHeaderProviding {
                 updateSection: self.updateSection(section:sectionIndex:),
                 traitCollection: traitCollection
             )
+            mapPanel.logItemOverflow(panelId: config.id)
 
             reapplyPanelBarIfVisible(self, templateId: config.id)
             return

@@ -104,6 +104,7 @@ class InformationTemplate: AutoPlayHeaderProviding {
                 )
 
                 mapPanel = panel
+                panel.logItemOverflow(panelId: config.id)
 
                 let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
                 mapPanelDelegate = delegate
@@ -114,6 +115,7 @@ class InformationTemplate: AutoPlayHeaderProviding {
             }
 
             mapPanel.sections.first?.items = Parser.parseInformationPanelItems(section: section)
+            mapPanel.logItemOverflow(panelId: config.id)
             reapplyPanelBarIfVisible(self, templateId: config.id)
             return
         }

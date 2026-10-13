@@ -48,6 +48,18 @@ public final class ReactNativeAutoPlayAutolinking {
     return HybridListTemplate.self is any RecyclableView.Type
   }
   
+  public static func createSectionedItemTemplate() -> bridge.std__shared_ptr_HybridSectionedItemTemplateSpec_ {
+    let hybridObject = HybridSectionedItemTemplate()
+    return { () -> bridge.std__shared_ptr_HybridSectionedItemTemplateSpec_ in
+      let __cxxWrapped = hybridObject.getCxxWrapper()
+      return __cxxWrapped.getCxxPart()
+    }()
+  }
+  
+  public static func isSectionedItemTemplateRecyclable() -> Bool {
+    return HybridSectionedItemTemplate.self is any RecyclableView.Type
+  }
+  
   public static func createInformationTemplate() -> bridge.std__shared_ptr_HybridInformationTemplateSpec_ {
     let hybridObject = HybridInformationTemplate()
     return { () -> bridge.std__shared_ptr_HybridInformationTemplateSpec_ in

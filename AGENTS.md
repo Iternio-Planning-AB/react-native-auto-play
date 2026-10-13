@@ -206,8 +206,8 @@ The three layers, roughly:
 3. `src/templates/`, `src/hybrid/`, `src/hooks/`, `src/types/`, `src/utils/` — the public
    TypeScript API, exported from `src/index.ts` (`src/index.web.ts` is the web stub).
 
-Templates: `MapTemplate`, `ListTemplate`, `GridTemplate`, `SearchTemplate`,
-`InformationTemplate`, `MessageTemplate`, `SignInTemplate` (Android-only). Non-template
+Templates: `MapTemplate`, `ListTemplate`, `GridTemplate`, `SectionedItemTemplate`,
+`SearchTemplate`, `InformationTemplate`, `MessageTemplate`, `SignInTemplate` (Android-only). Non-template
 surfaces: `CarPlayDashboard` (iOS) and `AutoPlayCluster` (both).
 
 ## Platform differences

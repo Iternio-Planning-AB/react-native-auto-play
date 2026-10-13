@@ -13,6 +13,7 @@ import {
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
+import { AutoSectionedItemTemplate } from './AutoSectionedItemTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
@@ -130,6 +131,32 @@ const getMainSection = (): Section<ListTemplate> => {
       image: {
         type: 'glyph',
         name: 'grid_3x3',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        void AutoSectionedItemTemplate.getTemplate().push();
+      },
+      title: { text: 'sectioned item template' },
+      image: {
+        type: 'glyph',
+        name: 'view_agenda',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        void AutoSectionedItemTemplate.getTemplate({ mapConfig: {} }).push();
+      },
+      title: { text: 'sectioned item template (map)' },
+      image: {
+        type: 'glyph',
+        name: 'dashboard',
         color: DefaultTemplateImageColor,
       },
       browsable: true,

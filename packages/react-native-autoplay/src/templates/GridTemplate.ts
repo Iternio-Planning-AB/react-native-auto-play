@@ -47,8 +47,8 @@ export type GridTemplateConfig = Omit<
   /**
    * Controls the size of all images in the Android grid. Defaults to `unset`, which preserves
    * the platform's standard grid layout. `large`, `medium`, and `small` require Android Car API
-   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate`
-   * does not support the sized grid content type.
+   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set, since a sized grid on the
+   * map crashes Android Auto (https://issuetracker.google.com/issues/572287914).
    * @namespace Android
    */
   imageSize?: GridImageSize;
@@ -88,7 +88,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
       rest.imageSize !== 'unset'
     ) {
       console.warn(
-        'GridTemplate: imageSize is ignored on Android when mapConfig is set — MapWithContentTemplate does not support the sized grid content type'
+        'GridTemplate: imageSize is ignored on Android when mapConfig is set, a sized grid on the map crashes Android Auto (https://issuetracker.google.com/issues/572287914)'
       );
     }
 

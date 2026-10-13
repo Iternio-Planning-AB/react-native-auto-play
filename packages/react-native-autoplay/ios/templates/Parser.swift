@@ -461,6 +461,49 @@ class Parser {
         }
     }
 
+    static func parseSectionedItemSections(
+        sections: [NitroSectionedItemSection]?,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        pressedGridButton: (sectionIndex: Int, buttonIndex: Int)?,
+        onGridButtonPressed: @escaping (_ sectionIndex: Int, _ buttonIndex: Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPListSection] {
+        guard let sections else { return [] }
+
+        return sections.enumerated().map { (sectionIndex, section) in
+            switch section {
+            case .first(let listSection):
+                return CPListSection(
+                    items: parseListItems(
+                        section: listSection,
+                        sectionIndex: sectionIndex,
+                        updateSection: updateSection,
+                        traitCollection: traitCollection
+                    ),
+                    header: listSection.title,
+                    sectionIndexTitle: nil
+                )
+
+            case .second(let gridSection):
+                return CPListSection(
+                    items: [
+                        parseImageRowItem(
+                            buttons: gridSection.buttons,
+                            pressedButtonIndex: pressedGridButton?.sectionIndex == sectionIndex
+                                ? pressedGridButton?.buttonIndex : nil,
+                            onButtonPressed: { buttonIndex in
+                                onGridButtonPressed(sectionIndex, buttonIndex)
+                            },
+                            traitCollection: traitCollection
+                        )
+                    ],
+                    header: gridSection.title,
+                    sectionIndexTitle: nil
+                )
+            }
+        }
+    }
+
     /// Builds the `CPMapPanelItem`s for a list-type section in panel context. Mirrors `parseListItems`, except a row carrying
     /// waypoint data (`coordinate`) becomes a `CPMapTemplateWaypoint`-backed item instead of a `CPListItem`-backed one — used
     /// both by `ListTemplate` panels and the options panel's list sections.
@@ -531,17 +574,77 @@ class Parser {
         guard let sections else { return [] }
 
         return sections.enumerated().map { (sectionIndex, section) in
-            let items = parsePanelItems(
+            parsePanelListSection(
                 section: section,
                 sectionIndex: sectionIndex,
                 updateSection: updateSection,
                 traitCollection: traitCollection
             )
+        }
+    }
 
-            return CPMapPanelSection(
-                title: section.title,
-                items: items
-            )
+    @available(iOS 27.0, *)
+    private static func parsePanelListSection(
+        section: NitroSection,
+        sectionIndex: Int,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> CPMapPanelSection {
+        let items = parsePanelItems(
+            section: section,
+            sectionIndex: sectionIndex,
+            updateSection: updateSection,
+            traitCollection: traitCollection
+        )
+
+        return CPMapPanelSection(
+            title: section.title,
+            items: items
+        )
+    }
+
+    @available(iOS 27.0, *)
+    private static func parsePanelGridSection(
+        title: String?,
+        buttons: [NitroGridButton],
+        traitCollection: UITraitCollection
+    ) -> CPMapPanelSection {
+        let gridButtons = parseGridButtons(
+            buttons: buttons,
+            traitCollection: traitCollection
+        )
+
+        return CPMapPanelSection(
+            title: title,
+            items: [CPMapPanelItem(gridButtons: gridButtons)]
+        )
+    }
+
+    @available(iOS 27.0, *)
+    static func parseSectionedItemPanelSections(
+        sections: [NitroSectionedItemSection]?,
+        updateSection: @escaping (NitroSection, Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> [CPMapPanelSection] {
+        guard let sections else { return [] }
+
+        return sections.enumerated().map { (sectionIndex, section) in
+            switch section {
+            case .first(let listSection):
+                return parsePanelListSection(
+                    section: listSection,
+                    sectionIndex: sectionIndex,
+                    updateSection: updateSection,
+                    traitCollection: traitCollection
+                )
+
+            case .second(let gridSection):
+                return parsePanelGridSection(
+                    title: gridSection.title,
+                    buttons: gridSection.buttons,
+                    traitCollection: traitCollection
+                )
+            }
         }
     }
 
@@ -563,27 +666,18 @@ class Parser {
         return sections.enumerated().map { (sectionIndex, section) in
             switch section {
             case .first(let listSection):
-                let items = parsePanelItems(
+                return parsePanelListSection(
                     section: listSection,
                     sectionIndex: sectionIndex,
                     updateSection: updateSection,
                     traitCollection: traitCollection
                 )
 
-                return CPMapPanelSection(
-                    title: listSection.title,
-                    items: items
-                )
-
             case .second(let gridSection):
-                let buttons = parseGridButtons(
+                return parsePanelGridSection(
+                    title: gridSection.title,
                     buttons: gridSection.buttons,
                     traitCollection: traitCollection
-                )
-
-                return CPMapPanelSection(
-                    title: gridSection.title,
-                    items: [CPMapPanelItem(gridButtons: buttons)]
                 )
 
             case .third(let chargerSection):
@@ -817,31 +911,13 @@ class Parser {
         }
 
         return buttons.compactMap { button in
-            var image: UIImage?
-
-            if let glyphImage = button.image.glyphImage {
-                image = SymbolFont.imageFromNitroImage(
-                    image: glyphImage,
+            guard
+                let image = parseGridButtonImage(
+                    image: button.image,
                     size: gridButtonHeight,
                     traitCollection: traitCollection
                 )
-            }
-
-            if let assetImage = button.image.assetImage {
-                image = Parser.parseAssetImage(
-                    assetImage: assetImage,
-                    traitCollection: traitCollection
-                )
-            }
-
-            if let remoteImage = button.image.remoteImage {
-                image = Parser.parseRemoteImage(
-                    remoteImage: remoteImage,
-                    traitCollection: traitCollection
-                )
-            }
-
-            guard let image = image else { return nil }
+            else { return nil }
             guard let title = Parser.parseText(text: button.title) else { return nil }
 
             return CPGridButton(
@@ -851,6 +927,137 @@ class Parser {
                 button.onPress()
             }
         }
+    }
+
+    /// Glyphs are rendered at `size`, asset and remote images keep their own size.
+    private static func parseGridButtonImage(
+        image: NitroImage,
+        size: CGFloat,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        var parsedImage: UIImage?
+
+        if let glyphImage = image.glyphImage {
+            parsedImage = SymbolFont.imageFromNitroImage(
+                image: glyphImage,
+                size: size,
+                traitCollection: traitCollection
+            )
+        }
+
+        if let assetImage = image.assetImage {
+            parsedImage = Parser.parseAssetImage(
+                assetImage: assetImage,
+                traitCollection: traitCollection
+            )
+        }
+
+        if let remoteImage = image.remoteImage {
+            parsedImage = Parser.parseRemoteImage(
+                remoteImage: remoteImage,
+                traitCollection: traitCollection
+            )
+        }
+
+        return parsedImage
+    }
+
+    static func parseImageRowItem(
+        buttons: [NitroGridButton],
+        pressedButtonIndex: Int?,
+        onButtonPressed: @escaping (Int) -> Void,
+        traitCollection: UITraitCollection
+    ) -> CPListImageRowItem {
+        let imageSize: CGFloat
+
+        if #available(iOS 26.0, *) {
+            imageSize = CPListImageRowItemImageGridElement.maximumImageSize.height
+        }
+        else {
+            imageSize = CPListImageRowItem.maximumImageSize.height
+        }
+
+        let parsedButtons: [(index: Int, button: NitroGridButton, image: UIImage, title: String)] =
+            buttons.enumerated().compactMap { (index, button) in
+                guard
+                    let image = parseGridButtonImage(
+                        image: button.image,
+                        size: imageSize,
+                        traitCollection: traitCollection
+                    ),
+                    let title = parseText(text: button.title)
+                else { return nil }
+
+                return (index, button, image, title)
+            }
+
+        let visibleButtons: [(index: Int, button: NitroGridButton, image: UIImage, title: String)]
+
+        if #available(iOS 26.0, *) {
+            visibleButtons = parsedButtons
+        }
+        else {
+            visibleButtons = Array(parsedButtons.prefix(Int(CPMaximumNumberOfGridImages)))
+        }
+
+        if #available(iOS 26.0, *) {
+            let elements = visibleButtons.map { visibleButton in
+                let element = CPListImageRowItemImageGridElement(
+                    image: visibleButton.image,
+                    imageShape: .roundedRectangle,
+                    title: visibleButton.title,
+                    accessorySymbolName: nil
+                )
+                element.isEnabled = visibleButton.index != pressedButtonIndex
+                return element
+            }
+
+            let rowItem = CPListImageRowItem(
+                text: nil,
+                imageGridElements: elements,
+                allowsMultipleLines: true
+            )
+
+            rowItem.listImageRowHandler = { item, index, completion in
+                MainActor.assumeIsolated {
+                    guard visibleButtons.indices.contains(index), elements[index].isEnabled else {
+                        return
+                    }
+
+                    /// since pressed items give no visible feedback we disable them here for 100ms to let the user know about pressing it
+                    elements[index].isEnabled = false
+
+                    onButtonPressed(visibleButtons[index].index)
+                    visibleButtons[index].button.onPress()
+                }
+                completion()
+            }
+
+            return rowItem
+        }
+
+        let rowItem: CPListImageRowItem
+        let images = visibleButtons.map { $0.image }
+
+        if #available(iOS 17.4, *) {
+            rowItem = CPListImageRowItem(
+                text: "",
+                images: images,
+                imageTitles: visibleButtons.map { $0.title }
+            )
+        }
+        else {
+            rowItem = CPListImageRowItem(text: "", images: images)
+        }
+
+        rowItem.listImageRowHandler = { _, index, completion in
+            if visibleButtons.indices.contains(index) {
+                visibleButtons[index].button.onPress()
+            }
+            completion()
+        }
+
+        return rowItem
     }
 
     static func parseTextButtonStyle(style: NitroButtonStyle?)

@@ -74,7 +74,8 @@ export interface NitroBaseMapTemplateConfig extends TemplateConfig {
 
 /**
  * iOS only props of templates that can render as a CPMapPanel (`ListTemplate`, `GridTemplate`,
- * `InformationTemplate`, `MessageTemplate`). Templates with own iOS only props extend this.
+ * `SectionedItemTemplate`, `InformationTemplate`, `MessageTemplate`). Templates with own iOS only
+ * props extend this.
  * @namespace iOS
  */
 export type PanelTemplateIosConfig = {

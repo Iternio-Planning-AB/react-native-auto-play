@@ -54,6 +54,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMapTem
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMessageTemplateSpec; }
 // Forward declaration of `HybridSearchTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSearchTemplateSpec; }
+// Forward declaration of `HybridSectionedItemTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSectionedItemTemplateSpec; }
 // Forward declaration of `HybridVoiceSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridVoiceSpec; }
 // Forward declaration of `ImageLane` to properly resolve imports.
@@ -94,6 +96,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridSection; }
 // Forward declaration of `NitroLoadingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
@@ -180,6 +184,8 @@ namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 namespace ReactNativeAutoPlay { class HybridMessageTemplateSpec_cxx; }
 // Forward declaration of `HybridSearchTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
+// Forward declaration of `HybridSectionedItemTemplateSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridSectionedItemTemplateSpec_cxx; }
 // Forward declaration of `HybridVoiceSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 
@@ -206,6 +212,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "HybridMapTemplateSpec.hpp"
 #include "HybridMessageTemplateSpec.hpp"
 #include "HybridSearchTemplateSpec.hpp"
+#include "HybridSectionedItemTemplateSpec.hpp"
 #include "HybridVoiceSpec.hpp"
 #include "ImageLane.hpp"
 #include "KeepType.hpp"
@@ -226,6 +233,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
+#include "NitroGridSection.hpp"
 #include "NitroLoadingManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
@@ -1802,6 +1810,73 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridSearchTemplateSpec>
   using std__weak_ptr_HybridSearchTemplateSpec_ = std::weak_ptr<HybridSearchTemplateSpec>;
   inline std__weak_ptr_HybridSearchTemplateSpec_ weakify_std__shared_ptr_HybridSearchTemplateSpec_(const std::shared_ptr<HybridSearchTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::variant<NitroSection, NitroGridSection>
+  /**
+   * Wrapper struct for `std::variant<NitroSection, NitroGridSection>`.
+   * std::variant cannot be used in Swift because of a Swift bug.
+   * Not even specializing it works. So we create a wrapper struct.
+   */
+  struct std__variant_NitroSection__NitroGridSection_ final {
+    std::variant<NitroSection, NitroGridSection> variant;
+    std__variant_NitroSection__NitroGridSection_(std::variant<NitroSection, NitroGridSection> variant): variant(variant) { }
+    operator std::variant<NitroSection, NitroGridSection>() const noexcept {
+      return variant;
+    }
+    inline size_t index() const noexcept {
+      return variant.index();
+    }
+    inline NitroSection get_0() const noexcept {
+      return std::get<0>(variant);
+    }
+    inline NitroGridSection get_1() const noexcept {
+      return std::get<1>(variant);
+    }
+  };
+  inline std__variant_NitroSection__NitroGridSection_ create_std__variant_NitroSection__NitroGridSection_(const NitroSection& value) noexcept {
+    return std__variant_NitroSection__NitroGridSection_(value);
+  }
+  inline std__variant_NitroSection__NitroGridSection_ create_std__variant_NitroSection__NitroGridSection_(const NitroGridSection& value) noexcept {
+    return std__variant_NitroSection__NitroGridSection_(value);
+  }
+  
+  // pragma MARK: std::vector<std::variant<NitroSection, NitroGridSection>>
+  /**
+   * Specialized version of `std::vector<std::variant<NitroSection, NitroGridSection>>`.
+   */
+  using std__vector_std__variant_NitroSection__NitroGridSection__ = std::vector<std::variant<NitroSection, NitroGridSection>>;
+  inline std::vector<std::variant<NitroSection, NitroGridSection>> create_std__vector_std__variant_NitroSection__NitroGridSection__(size_t size) noexcept {
+    std::vector<std::variant<NitroSection, NitroGridSection>> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>
+  /**
+   * Specialized version of `std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>`.
+   */
+  using std__optional_std__vector_std__variant_NitroSection__NitroGridSection___ = std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>;
+  inline std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>> create_std__optional_std__vector_std__variant_NitroSection__NitroGridSection___(const std::vector<std::variant<NitroSection, NitroGridSection>>& value) noexcept {
+    return std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>(value);
+  }
+  inline bool has_value_std__optional_std__vector_std__variant_NitroSection__NitroGridSection___(const std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::vector<std::variant<NitroSection, NitroGridSection>> get_std__optional_std__vector_std__variant_NitroSection__NitroGridSection___(const std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridSectionedItemTemplateSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridSectionedItemTemplateSpec>`.
+   */
+  using std__shared_ptr_HybridSectionedItemTemplateSpec_ = std::shared_ptr<HybridSectionedItemTemplateSpec>;
+  std::shared_ptr<HybridSectionedItemTemplateSpec> create_std__shared_ptr_HybridSectionedItemTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridSectionedItemTemplateSpec_(std__shared_ptr_HybridSectionedItemTemplateSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridSectionedItemTemplateSpec>
+  using std__weak_ptr_HybridSectionedItemTemplateSpec_ = std::weak_ptr<HybridSectionedItemTemplateSpec>;
+  inline std__weak_ptr_HybridSectionedItemTemplateSpec_ weakify_std__shared_ptr_HybridSectionedItemTemplateSpec_(const std::shared_ptr<HybridSectionedItemTemplateSpec>& strong) noexcept { return strong; }
   
   // pragma MARK: std::shared_ptr<Promise<bool>>
   /**
