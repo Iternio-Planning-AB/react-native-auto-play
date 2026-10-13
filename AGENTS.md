@@ -180,7 +180,10 @@ yarn circular       # Detect circular dependencies (dpdm)
 yarn specs          # Re-generate Nitrogen specs
 yarn clean          # Remove build artifacts
 yarn swift:format   # Format Swift source files (swift-format)
+yarn kotlin:format  # Format Kotlin source files (ktlint, uses .editorconfig)
 ```
+
+The formatters are not repo dependencies: `brew install swift-format ktlint`.
 
 `.github/workflows/code-quality-checks.yml` runs lint + typecheck + build for the library and
 lint + typecheck for the example app on PRs. `.github/workflows/npm-publish.yml` publishes.
