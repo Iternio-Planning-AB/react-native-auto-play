@@ -658,6 +658,8 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         if #available(iOS 17.4, *) {
             navigationSession.add([maneuver])
+            // a message maneuver has no lanes, don't leave the vehicle showing the previous maneuver's lane assist
+            navigationSession.currentLaneGuidance = nil
         }
 
         navigationSession.upcomingManeuvers = [maneuver]
@@ -667,6 +669,9 @@ class MapTemplate: AutoPlayHeaderProviding,
         guard let navigationSession = navigationSession else { return }
 
         if maneuvers.isEmpty {
+            if #available(iOS 17.4, *) {
+                navigationSession.currentLaneGuidance = nil
+            }
             navigationSession.upcomingManeuvers = []
             return
         }
