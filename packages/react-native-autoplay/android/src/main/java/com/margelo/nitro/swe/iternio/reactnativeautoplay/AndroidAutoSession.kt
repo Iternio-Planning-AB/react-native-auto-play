@@ -35,27 +35,28 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 NitroAction(null, null, null, {}, NitroActionType.APPICON, null, null, null)
 
             // clusters can host NavigationTemplate only which is a MapTemplate on AutoPlay
+            // named arguments, nitrogen reorders the generated fields whenever the spec changes
             val config = MapTemplateConfig(
-                moduleName,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                {},
-                null,
-                null,
-                arrayOf(action),
-                null,
-                null,
-                null
+                id = moduleName,
+                onWillAppear = null,
+                onWillDisappear = null,
+                onDidAppear = null,
+                onDidDisappear = null,
+                onPopped = null,
+                autoDismissMs = null,
+                onDidChangePanningInterface = null,
+                visibleTravelEstimate = null,
+                onDidPan = null,
+                onDidUpdateZoomGestureWithCenter = null,
+                onClick = null,
+                onDoubleClick = null,
+                onAppearanceDidChange = null,
+                onStopNavigation = {},
+                onAutoDriveEnabled = null,
+                mapButtons = null,
+                headerActions = arrayOf(action),
+                defaultGuidanceBackgroundColor = null,
+                panButtonScrollPercentage = null
             )
 
             val template = MapTemplate(context = carContext, config, initNavigationManager = false)

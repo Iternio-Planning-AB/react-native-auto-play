@@ -21,7 +21,6 @@
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
-#include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
 #include "JGridImageSize.hpp"

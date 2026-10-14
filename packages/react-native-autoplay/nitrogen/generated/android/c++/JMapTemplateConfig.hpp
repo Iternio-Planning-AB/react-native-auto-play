@@ -85,6 +85,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JFunc_void::javaobject> onPopped = this->getFieldValue(fieldOnPopped);
       static const auto fieldAutoDismissMs = clazz->getField<jni::JDouble>("autoDismissMs");
       jni::local_ref<jni::JDouble> autoDismissMs = this->getFieldValue(fieldAutoDismissMs);
+      static const auto fieldOnDidChangePanningInterface = clazz->getField<JFunc_void_bool::javaobject>("onDidChangePanningInterface");
+      jni::local_ref<JFunc_void_bool::javaobject> onDidChangePanningInterface = this->getFieldValue(fieldOnDidChangePanningInterface);
       static const auto fieldVisibleTravelEstimate = clazz->getField<JVisibleTravelEstimate>("visibleTravelEstimate");
       jni::local_ref<JVisibleTravelEstimate> visibleTravelEstimate = this->getFieldValue(fieldVisibleTravelEstimate);
       static const auto fieldOnDidPan = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidPan");
@@ -109,8 +111,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroColor> defaultGuidanceBackgroundColor = this->getFieldValue(fieldDefaultGuidanceBackgroundColor);
       static const auto fieldPanButtonScrollPercentage = clazz->getField<jni::JDouble>("panButtonScrollPercentage");
       jni::local_ref<jni::JDouble> panButtonScrollPercentage = this->getFieldValue(fieldPanButtonScrollPercentage);
-      static const auto fieldOnDidChangePanningInterface = clazz->getField<JFunc_void_bool::javaobject>("onDidChangePanningInterface");
-      jni::local_ref<JFunc_void_bool::javaobject> onDidChangePanningInterface = this->getFieldValue(fieldOnDidChangePanningInterface);
       return MapTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -159,6 +159,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
         }()) : std::nullopt,
         autoDismissMs != nullptr ? std::make_optional(autoDismissMs->value()) : std::nullopt,
+        onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
+          if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
+            auto downcast = jni::static_ref_cast<JFunc_void_bool_cxx::javaobject>(onDidChangePanningInterface);
+            return downcast->cthis()->getFunction();
+          } else {
+            auto onDidChangePanningInterfaceRef = jni::make_global(onDidChangePanningInterface);
+            return JNICallable<JFunc_void_bool, void(bool)>(std::move(onDidChangePanningInterfaceRef));
+          }
+        }()) : std::nullopt,
         visibleTravelEstimate != nullptr ? std::make_optional(visibleTravelEstimate->toCpp()) : std::nullopt,
         onDidPan != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> {
           if (onDidPan->isInstanceOf(JFunc_void_Point_std__optional_Point__cxx::javaClassStatic())) [[likely]] {
@@ -244,16 +253,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __vector;
         }(headerActions)) : std::nullopt,
         defaultGuidanceBackgroundColor != nullptr ? std::make_optional(defaultGuidanceBackgroundColor->toCpp()) : std::nullopt,
-        panButtonScrollPercentage != nullptr ? std::make_optional(panButtonScrollPercentage->value()) : std::nullopt,
-        onDidChangePanningInterface != nullptr ? std::make_optional([&]() -> std::function<void(bool /* isPanningInterfaceVisible */)> {
-          if (onDidChangePanningInterface->isInstanceOf(JFunc_void_bool_cxx::javaClassStatic())) [[likely]] {
-            auto downcast = jni::static_ref_cast<JFunc_void_bool_cxx::javaobject>(onDidChangePanningInterface);
-            return downcast->cthis()->getFunction();
-          } else {
-            auto onDidChangePanningInterfaceRef = jni::make_global(onDidChangePanningInterface);
-            return JNICallable<JFunc_void_bool, void(bool)>(std::move(onDidChangePanningInterfaceRef));
-          }
-        }()) : std::nullopt
+        panButtonScrollPercentage != nullptr ? std::make_optional(panButtonScrollPercentage->value()) : std::nullopt
       );
     }
 
@@ -263,7 +263,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -275,6 +275,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.onDidDisappear.has_value() ? JFunc_void_std__optional_bool__cxx::fromCpp(value.onDidDisappear.value()) : nullptr,
         value.onPopped.has_value() ? JFunc_void_cxx::fromCpp(value.onPopped.value()) : nullptr,
         value.autoDismissMs.has_value() ? jni::JDouble::valueOf(value.autoDismissMs.value()) : nullptr,
+        value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr,
         value.visibleTravelEstimate.has_value() ? JVisibleTravelEstimate::fromCpp(value.visibleTravelEstimate.value()) : nullptr,
         value.onDidPan.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidPan.value()) : nullptr,
         value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
@@ -304,8 +305,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __array;
         }(value.headerActions.value()) : nullptr,
         value.defaultGuidanceBackgroundColor.has_value() ? JNitroColor::fromCpp(value.defaultGuidanceBackgroundColor.value()) : nullptr,
-        value.panButtonScrollPercentage.has_value() ? jni::JDouble::valueOf(value.panButtonScrollPercentage.value()) : nullptr,
-        value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr
+        value.panButtonScrollPercentage.has_value() ? jni::JDouble::valueOf(value.panButtonScrollPercentage.value()) : nullptr
       );
     }
   };
