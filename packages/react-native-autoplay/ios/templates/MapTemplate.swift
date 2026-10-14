@@ -738,24 +738,22 @@ class MapTemplate: AutoPlayHeaderProviding,
                     }
                 }
 
-                navigationSession.add(
-                    upcomingManeuvers.filter({ maneuver in
-                        !navigationSession.upcomingManeuvers.contains(where: {
-                            $0.id == maneuver.id
-                        })
+                let newManeuvers = upcomingManeuvers.filter { maneuver in
+                    !navigationSession.upcomingManeuvers.contains(where: {
+                        $0.id == maneuver.id
                     })
-                )
+                }
 
-                let laneGuidances = upcomingManeuvers.compactMap {
-                    $0.laneGuidance
+                // lane guidances have to be known to the session before the maneuvers linking to them are added
+                let newLaneGuidances = newManeuvers.compactMap { $0.laneGuidance }
+                if !newLaneGuidances.isEmpty {
+                    navigationSession.add(newLaneGuidances)
                 }
-                if laneGuidances.isEmpty {
-                    navigationSession.currentLaneGuidance = nil
-                }
-                else {
-                    navigationSession.add(laneGuidances)
-                    navigationSession.currentLaneGuidance = laneGuidances.first
-                }
+                navigationSession.add(newManeuvers)
+
+                // the vehicle expects the lane guidance of the current maneuver, nil when it has none
+                navigationSession.currentLaneGuidance =
+                    upcomingManeuvers.first?.laneGuidance
 
                 if let roadFollowingManeuverVariants = upcomingManeuvers.first?
                     .roadFollowingManeuverVariants
