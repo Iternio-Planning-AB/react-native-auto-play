@@ -69,8 +69,18 @@ class MessageTemplate: AutoPlayTemplate {
 
     @MainActor
     override func _invalidate() {
-        guard usesMapPanel, #available(iOS 27.0, *), mapPanel == nil else { return }
+        guard usesMapPanel, #available(iOS 27.0, *) else { return }
         guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
+
+        _ = getOrCreateMapPanel(traitCollection: traitCollection)
+    }
+
+    @available(iOS 27.0, *)
+    @MainActor
+    private func getOrCreateMapPanel(traitCollection: UITraitCollection) -> CPMapPanel {
+        if let mapPanel = mapPanel as? CPMapPanel {
+            return mapPanel
+        }
 
         // The message and its actions are only ever set once and never updated afterwards,
         // so there's nothing to keep in sync with the panel's content later.
@@ -97,6 +107,8 @@ class MessageTemplate: AutoPlayTemplate {
         let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
         mapPanelDelegate = delegate
         panel.delegate = delegate
+
+        return panel
     }
 
     override func onWillAppear(animated: Bool) {

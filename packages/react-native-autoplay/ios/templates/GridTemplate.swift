@@ -14,6 +14,10 @@ class GridTemplate: AutoPlayHeaderProviding {
 
     var buttons: [NitroGridButton]
 
+    /// Whether this template renders as a `CPMapPanel` instead of a plain `CPGridTemplate`.
+    private let usesMapPanel: Bool
+
+    /// Built lazily on the first `_invalidate()` call, see `InformationTemplate.mapPanel`.
     /// Boxed as `Any` since `CPMapPanel` itself is only available on iOS 27+ while this class supports a much lower deployment target.
     private var mapPanel: Any?
 
@@ -51,18 +55,16 @@ class GridTemplate: AutoPlayHeaderProviding {
         self.config = config
         buttons = config.buttons
 
-        let title = Parser.parseText(text: config.title)
-
-        if #available(iOS 27.0, *), config.mapConfig != nil {
-            mapPanel = CPMapPanel(
-                title: title,
-                sections: [CPMapPanelSection(title: nil, items: [])],
-                buttonConfiguration: nil
-            )
+        if #available(iOS 27.0, *) {
+            usesMapPanel = config.mapConfig != nil
         }
         else {
+            usesMapPanel = false
+        }
+
+        if !usesMapPanel {
             template = CPGridTemplate(
-                title: title,
+                title: Parser.parseText(text: config.title),
                 gridButtons: GridTemplate.parseButtons(buttons: buttons),
                 id: config.id
             )
@@ -71,12 +73,30 @@ class GridTemplate: AutoPlayHeaderProviding {
         super.init()
 
         barButtons = config.headerActions
+    }
 
-        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
-            let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
-            mapPanelDelegate = delegate
-            mapPanel.delegate = delegate
+    @available(iOS 27.0, *)
+    @MainActor
+    private func getOrCreateMapPanel(traitCollection: UITraitCollection) -> CPMapPanel {
+        if let mapPanel = mapPanel as? CPMapPanel {
+            return mapPanel
         }
+
+        let panel = CPMapPanel(
+            title: Parser.parseText(text: config.title),
+            sections: [CPMapPanelSection(title: nil, items: [])],
+            buttonConfiguration: Parser.parsePanelButtonConfiguration(
+                actions: config.platform?.panelButtonConfiguration,
+                traitCollection: traitCollection
+            )
+        )
+        mapPanel = panel
+
+        let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
+        mapPanelDelegate = delegate
+        panel.delegate = delegate
+
+        return panel
     }
 
     static func parseButtons(buttons: [NitroGridButton]) -> [CPGridButton] {
@@ -86,7 +106,9 @@ class GridTemplate: AutoPlayHeaderProviding {
 
     @MainActor
     override func _invalidate() {
-        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
+        if usesMapPanel, #available(iOS 27.0, *) {
+            guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
+            let mapPanel = getOrCreateMapPanel(traitCollection: traitCollection)
             let parsedButtons = GridTemplate.parseButtons(buttons: buttons)
             mapPanel.sections.first?.items = [CPMapPanelItem(gridButtons: parsedButtons)]
             reapplyPanelBarIfVisible(self, templateId: config.id)

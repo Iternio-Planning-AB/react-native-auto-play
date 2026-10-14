@@ -137,17 +137,78 @@ export type MapHeaderActions<T> = {
 };
 
 /**
- * @namespace iOS - not supported; CarPlay has no separate header for the map behind a panel, so
- * the panel template's own `headerActions` are applied to the root map template's nav bar instead.
- */
-export type PanelHeaderActions<T> = Omit<MapHeaderActions<T>, 'ios'>;
-
-/**
  * @namespace iOS - a CPMapPanel can only show one CPTextButton (with a title) and one
  * optional icon-only button (any title is dropped natively), so a second action must be an
  * ImageButton rather than a TextButton, and a third action isn't supported at all.
  */
 export type PanelActionsIos<T> = [TextButton<T>] | [TextButton<T>, ImageButton<T>];
+
+/**
+ * `mapConfig` of `InformationTemplate` and `MessageTemplate`, which show their `actions` on the
+ * map instead. A template with `mapConfig` is shown on the map: a MapWithContentTemplate on
+ * Android, a CPMapPanel on the root map template on iOS 27+.
+ */
+export type MapConfigWithoutActions<T> = {
+  /**
+   * buttons that represent actions on the map, usually on the bottom right corner
+   * @namespace Android - adding a pan button will always make the pan button the first one
+   * @namespace iOS - the pan button can be on any position
+   */
+  mapButtons?: MapButtons<T>;
+
+  /**
+   * @namespace Android
+   */
+  android?: {
+    /**
+     * the action strip of the MapWithContentTemplate. There is no iOS equivalent, CarPlay has no
+     * separate header for the map behind a panel, so the template's own `headerActions` are
+     * applied to the root map template's nav bar instead.
+     */
+    headerActions?: HeaderActionsAndroidMap<T>;
+  };
+
+  /**
+   * ignored below iOS 27, where the template is shown without a map
+   * @namespace iOS
+   */
+  ios?: {
+    /**
+     * shows CarPlay's native close button, closing it pops the template like `popTemplate()`
+     * does. Only applies to the first template on the map — one pushed on top of another never
+     * shows it, since closing it natively would drop the covered ones without CarPlay notifying
+     * them, leaving their lifecycle callbacks unfired.
+     * @default false
+     */
+    showCloseButton?: boolean;
+  };
+};
+
+/**
+ * buttons at the bottom of a template on the map, a secondary action requires a primary one.
+ * Android Auto has no equivalent, use `headerActions.android.endHeaderActions` there with image
+ * buttons, on map content text buttons are not shown and textImage buttons lose their title.
+ * @namespace iOS
+ */
+export type MapConfigActionsIos<T> =
+  | { primaryAction?: undefined; secondaryAction?: undefined }
+  | {
+      primaryAction: TextButton<T>;
+      /**
+       * shown icon-only next to the primary action
+       */
+      secondaryAction?: ImageButton<T>;
+    };
+
+/**
+ * `mapConfig` of `ListTemplate`, `GridTemplate` and `SectionedItemTemplate`
+ */
+export type MapConfig<T> = MapConfigWithoutActions<T> & {
+  /**
+   * @namespace iOS
+   */
+  ios?: MapConfigActionsIos<T>;
+};
 
 export type BaseMapTemplateConfig<T> = {
   /**

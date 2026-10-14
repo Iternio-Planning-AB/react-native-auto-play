@@ -4,14 +4,13 @@ import type { GridTemplate as NitroGridTemplate } from '../specs/GridTemplate.ni
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
-import { NitroMapButton } from '../utils/NitroMapButton';
-import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
+import type { MapConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
   type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
-  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -57,19 +56,11 @@ export type GridTemplateConfig = Omit<
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a GridTemplate with a map in background. No actions need to be specified, can be empty object.
    * @namespace Android - uses MapWithContentTemplate
    * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
-   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
-   * applied to the root map template's nav bar instead, since CarPlay has no separate header
-   * for the map behind a panel.
+   * `android.headerActions` here has no iOS equivalent — on iOS this template's own
+   * `headerActions` are applied to the root map template's nav bar instead, since CarPlay
+   * has no separate header for the map behind a panel.
    */
-  mapConfig?: Omit<BaseMapTemplateConfig<GridTemplate>, 'headerActions'> & {
-    headerActions?: PanelHeaderActions<GridTemplate>;
-  };
-
-  /**
-   * iOS only props
-   * @namespace iOS
-   */
-  ios?: PanelTemplateIosConfig;
+  mapConfig?: MapConfig<GridTemplate>;
 };
 
 export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<GridTemplate>> {
@@ -78,7 +69,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
   constructor(config: GridTemplateConfig) {
     super(config);
 
-    const { headerActions, buttons, mapConfig, ios, ...rest } = config;
+    const { headerActions, buttons, mapConfig, ...rest } = config;
 
     if (
       __DEV__ &&
@@ -97,13 +88,8 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       buttons: NitroGridUtil.convert(this.template, buttons),
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
-      platform: Platform.OS === 'ios' ? ios : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridGridTemplate.createGridTemplate(nitroConfig);

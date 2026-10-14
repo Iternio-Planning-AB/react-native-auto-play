@@ -17,6 +17,10 @@ export type HeaderActionsIos<T> = {
 
 export type HeaderActionsAndroid<T> = {
   startHeaderAction?: AppButton | BackButton<T>;
+  /**
+   * with a `mapConfig` Android Auto only shows icons: text buttons are not shown at all and
+   * textImage buttons lose their title, so use image buttons there
+   */
   endHeaderActions?: [ActionButtonAndroid<T>, ActionButtonAndroid<T>] | [ActionButtonAndroid<T>];
 };
 
@@ -73,29 +77,15 @@ export interface NitroBaseMapTemplateConfig extends TemplateConfig {
 }
 
 /**
- * iOS only props of templates that can render as a CPMapPanel (`ListTemplate`, `GridTemplate`,
- * `SectionedItemTemplate`, `InformationTemplate`, `MessageTemplate`). Templates with own iOS only
- * props extend this.
- * @namespace iOS
- */
-export type PanelTemplateIosConfig = {
-  /**
-   * shows CarPlay's native close button on the panel, closing it pops the template like
-   * `popTemplate()` does. Requires `mapConfig` to be set and iOS 27+, since only then the
-   * template renders as a panel. Only applies to the first panel on the stack — a panel pushed
-   * on top of another panel never shows it, since closing it natively would drop the covered
-   * panels without CarPlay notifying them, leaving their lifecycle callbacks unfired.
-   * @default false
-   */
-  showsPanelCloseButton?: boolean;
-};
-
-/**
- * the platform specific props of the current platform, the TS template class passes either
- * its `ios` or `android` config here. Holds the fields of both platforms.
+ * the panel options passed to native, converted from `mapConfig.ios` by `NitroMapConfigUtil`
+ * since `mapConfig` itself is shared with Android's MapWithContentTemplate.
  */
 export interface NitroPanelTemplatePlatformConfig {
   showsPanelCloseButton?: boolean;
+  /**
+   * `[primaryAction, secondaryButton?]`
+   */
+  panelButtonConfiguration?: Array<NitroAction>;
 }
 
 export class Template<TemplateConfigType, ActionsType> {

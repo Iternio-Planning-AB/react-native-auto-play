@@ -14,6 +14,11 @@ class ListTemplate: AutoPlayHeaderProviding {
 
     var sections: [NitroSection]?
 
+    /// Whether this template renders as a `CPMapPanel` instead of a plain `CPListTemplate`.
+    private let usesMapPanel: Bool
+
+    /// Built lazily on the first `_invalidate()` call, see `InformationTemplate.mapPanel`:
+    /// the readonly `buttonConfiguration` needs `traitCollection` for its symbol button image.
     /// Boxed as `Any` since `CPMapPanel` itself is only available on
     /// iOS 27+ while this class supports a much lower deployment target.
     private var mapPanel: Any?
@@ -53,20 +58,17 @@ class ListTemplate: AutoPlayHeaderProviding {
         self.config = config
 
         sections = config.sections
-        let title = Parser.parseText(text: config.title)
 
-        if #available(iOS 27.0, *), config.mapConfig != nil {
-            mapPanel = CPMapPanel(
-                title: title,
-                sections: (config.sections ?? []).map { section in
-                    CPMapPanelSection(title: section.title, items: [])
-                },
-                buttonConfiguration: nil
-            )
+        if #available(iOS 27.0, *) {
+            usesMapPanel = config.mapConfig != nil
         }
         else {
+            usesMapPanel = false
+        }
+
+        if !usesMapPanel {
             template = CPListTemplate(
-                title: title,
+                title: Parser.parseText(text: config.title),
                 sections: [],
                 assistantCellConfiguration: nil,
                 id: config.id
@@ -76,12 +78,30 @@ class ListTemplate: AutoPlayHeaderProviding {
         super.init()
 
         barButtons = config.headerActions
+    }
 
-        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
-            let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
-            mapPanelDelegate = delegate
-            mapPanel.delegate = delegate
+    @available(iOS 27.0, *)
+    @MainActor
+    private func getOrCreateMapPanel(traitCollection: UITraitCollection) -> CPMapPanel {
+        if let mapPanel = mapPanel as? CPMapPanel {
+            return mapPanel
         }
+
+        let panel = CPMapPanel(
+            title: Parser.parseText(text: config.title),
+            sections: [],
+            buttonConfiguration: Parser.parsePanelButtonConfiguration(
+                actions: config.platform?.panelButtonConfiguration,
+                traitCollection: traitCollection
+            )
+        )
+        mapPanel = panel
+
+        let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
+        mapPanelDelegate = delegate
+        panel.delegate = delegate
+
+        return panel
     }
 
     @MainActor
@@ -90,7 +110,8 @@ class ListTemplate: AutoPlayHeaderProviding {
             return
         }
 
-        if #available(iOS 27.0, *), let mapPanel = mapPanel as? CPMapPanel {
+        if usesMapPanel, #available(iOS 27.0, *) {
+            let mapPanel = getOrCreateMapPanel(traitCollection: traitCollection)
             mapPanel.sections = Parser.parseMapPanelSections(
                 sections: sections,
                 updateSection: self.updateSection(section:sectionIndex:),

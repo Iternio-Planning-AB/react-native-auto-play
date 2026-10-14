@@ -1,17 +1,15 @@
-import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { ListTemplate as NitroListTemplate } from '../specs/ListTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
-import { NitroMapButton } from '../utils/NitroMapButton';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
 import { type NitroSection, NitroSectionUtil, type Section } from '../utils/NitroSection';
-import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
+import type { MapConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
   type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
-  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -64,19 +62,11 @@ export type ListTemplateConfig = Omit<
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a ListTemplate with a map in background. No actions need to be specified, can be empty object.
    * @namespace Android - uses MapWithContentTemplate
    * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
-   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
-   * applied to the root map template's nav bar instead, since CarPlay has no separate header
-   * for the map behind a panel.
+   * `android.headerActions` here has no iOS equivalent — on iOS this template's own
+   * `headerActions` are applied to the root map template's nav bar instead, since CarPlay
+   * has no separate header for the map behind a panel.
    */
-  mapConfig?: Omit<BaseMapTemplateConfig<ListTemplate>, 'headerActions'> & {
-    headerActions?: PanelHeaderActions<ListTemplate>;
-  };
-
-  /**
-   * iOS only props
-   * @namespace iOS
-   */
-  ios?: PanelTemplateIosConfig;
+  mapConfig?: MapConfig<ListTemplate>;
 };
 
 export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<ListTemplate>> {
@@ -85,20 +75,15 @@ export class ListTemplate extends Template<ListTemplateConfig, HeaderActions<Lis
   constructor(config: ListTemplateConfig) {
     super(config);
 
-    const { headerActions, mapConfig, sections, ios, ...rest } = config;
+    const { headerActions, mapConfig, sections, ...rest } = config;
 
     const nitroConfig: NitroListTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       sections: NitroSectionUtil.convert(this.template, sections),
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
-      platform: Platform.OS === 'ios' ? ios : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridListTemplate.createListTemplate(nitroConfig);

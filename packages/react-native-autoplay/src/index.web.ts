@@ -75,6 +75,9 @@ export type {
   ChargingConnector,
   HeaderActionsAndroidMap,
   MapButtons,
+  MapConfig,
+  MapConfigActionsIos,
+  MapConfigWithoutActions,
   MapHeaderActions,
   MapTemplateConfig,
   OptionsPanelChargerSection,
@@ -83,7 +86,6 @@ export type {
   OptionsPanelListSection,
   OptionsPanelSection,
   PanelActionsIos,
-  PanelHeaderActions,
   Point,
   TripSelectorCallback,
   VisibleTravelEstimate,
@@ -107,7 +109,6 @@ export type {
   NitroBaseMapTemplateConfig,
   NitroPanelTemplatePlatformConfig,
   NitroTemplateConfig,
-  PanelTemplateIosConfig,
   TemplateConfig,
 } from './templates/Template';
 export * from './types/Button';

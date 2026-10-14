@@ -1,10 +1,9 @@
-import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import type { SectionedItemTemplate as NitroSectionedItemTemplate } from '../specs/SectionedItemTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
-import { NitroMapButton } from '../utils/NitroMapButton';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
 import {
   type DefaultRow,
   type NitroSection,
@@ -12,13 +11,12 @@ import {
   type TextRow,
   type ToggleRow,
 } from '../utils/NitroSection';
-import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
+import type { MapConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
   type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
-  type PanelTemplateIosConfig,
   Template,
   type TemplateConfig,
 } from './Template';
@@ -90,15 +88,7 @@ export type SectionedItemTemplateConfig = Omit<
    * @namespace iOS - a CPMapPanel on the root map template (iOS 27+), full screen below.
    * `headerActions` here are Android only, iOS shows the template's own on the map's nav bar.
    */
-  mapConfig?: Omit<BaseMapTemplateConfig<SectionedItemTemplate>, 'headerActions'> & {
-    headerActions?: PanelHeaderActions<SectionedItemTemplate>;
-  };
-
-  /**
-   * iOS only props
-   * @namespace iOS
-   */
-  ios?: PanelTemplateIosConfig;
+  mapConfig?: MapConfig<SectionedItemTemplate>;
 };
 
 const convertSections = <T>(
@@ -137,20 +127,15 @@ export class SectionedItemTemplate extends Template<
   constructor(config: SectionedItemTemplateConfig) {
     super(config);
 
-    const { headerActions, mapConfig, sections, ios, ...rest } = config;
+    const { headerActions, mapConfig, sections, ...rest } = config;
 
     const nitroConfig: NitroSectionedItemTemplateConfig & NitroTemplateConfig = {
       ...rest,
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       sections: convertSections(this.template, sections),
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
-      platform: Platform.OS === 'ios' ? ios : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridSectionedItemTemplate.createSectionedItemTemplate(nitroConfig);

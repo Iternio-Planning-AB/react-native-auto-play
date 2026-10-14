@@ -20,7 +20,24 @@ const getRadioTemplate = (): ListTemplate => {
   const template = new ListTemplate({
     title: { text: 'radios' },
     headerActions: AutoTemplate.headerActions,
-    mapConfig: {},
+    mapConfig: {
+      ios: {
+        primaryAction: {
+          type: 'text',
+          title: 'back',
+          onPress: () => {
+            HybridAutoPlay.popTemplate();
+          },
+        },
+        secondaryAction: {
+          type: 'image',
+          image: { type: 'glyph', name: 'close' },
+          onPress: () => {
+            HybridAutoPlay.popToRootTemplate();
+          },
+        },
+      },
+    },
     sections: {
       type: 'radio',
       items: [
@@ -45,20 +62,6 @@ const getRadioTemplate = (): ListTemplate => {
           onPress: () => {
             console.log('*** radio #3');
           },
-        },
-        {
-          type: 'radio',
-          onPress: () => {
-            HybridAutoPlay.popTemplate();
-          },
-          title: { text: 'pop template' },
-        },
-        {
-          type: 'radio',
-          onPress: () => {
-            HybridAutoPlay.popToRootTemplate();
-          },
-          title: { text: 'pop to root' },
         },
       ],
     },
@@ -162,22 +165,6 @@ const getMainSection = (): Section<ListTemplate> => {
       browsable: true,
     },
     {
-      type: 'default',
-      onPress: () => {
-        HybridAutoPlay.popTemplate();
-      },
-      title: { text: 'pop template' },
-      image: { type: 'glyph', name: 'arrow_back' },
-    },
-    {
-      type: 'default',
-      onPress: () => {
-        HybridAutoPlay.popToRootTemplate();
-      },
-      title: { text: 'pop to root' },
-      image: { type: 'glyph', name: 'map' },
-    },
-    {
       type: 'waypoint',
       coordinate: {
         latitude: 0,
@@ -244,7 +231,27 @@ const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): L
       distance: { unit: 'meters', value: 1234 },
       duration: 4711,
     },
-    mapConfig: props?.mapConfig,
+    mapConfig: props?.mapConfig
+      ? {
+          ...props.mapConfig,
+          ios: {
+            primaryAction: {
+              type: 'text',
+              title: 'back',
+              onPress: () => {
+                HybridAutoPlay.popTemplate();
+              },
+            },
+            secondaryAction: {
+              type: 'image',
+              image: { type: 'glyph', name: 'close' },
+              onPress: () => {
+                HybridAutoPlay.popToRootTemplate();
+              },
+            },
+          },
+        }
+      : undefined,
     headerActions: AutoTemplate.headerActions,
     sections: getMainSection(),
     onDidAppear: () => console.log('ListTemplate onDidAppear', template.id),

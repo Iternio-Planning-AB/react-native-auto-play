@@ -668,8 +668,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `title` | `AutoText` | ✅ | Header title. |
 | `sections` | `Section<ListTemplate>` | ❌ | List sections/rows. Not providing anything here will result in a loading indicator on Android and an empty list on iOS. |
 | `headerActions` | `HeaderActions<ListTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<ListTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
-| `ios` | `PanelTemplateIosConfig` | ❌ | **iOS only.** `showsPanelCloseButton` (default `false`) shows CarPlay's native close button while this renders as a panel (`mapConfig` set, iOS 27+). First panel in the stack only, see **Map + Content** below. |
+| `mapConfig` | `MapConfig<ListTemplate>` | ❌ | Android map-with-content layout. `android.headerActions` sets its action strip. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. `ios.showCloseButton` (default `false`) shows CarPlay's native close button on the panel, first panel in the stack only. `ios.primaryAction` (`TextButton`) and `ios.secondaryAction` (`ImageButton`, requires `primaryAction`) add buttons at the bottom of the panel. See **Map + Content** below. |
 
 #### GridTemplateConfig
 
@@ -679,8 +678,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `buttons` | `GridButton<GridTemplate>[]` | ✅ | Grid items. Providing an empty array will result in a loading indicator on Android and an empty template on iOS. |
 | `headerActions` | `HeaderActions<GridTemplate>` | ❌ | Header actions. See **Header Actions** below. |
 | `imageSize` | `'unset'` `'large'` `'medium'` `'small'` | ❌ | **Android only**, requires Android Car API 8. Controls grid item image size; defaults to `unset` (platform default layout). Hosts below Car API 8 get the default layout. Ignored (with a `__DEV__` warning) when `mapConfig` is also set, since a sized grid on the map crashes Android Auto ([issue 572287914](https://issuetracker.google.com/issues/572287914)). |
-| `mapConfig` | `BaseMapTemplateConfig<GridTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
-| `ios` | `PanelTemplateIosConfig` | ❌ | **iOS only.** `showsPanelCloseButton` (default `false`) shows CarPlay's native close button while this renders as a panel (`mapConfig` set, iOS 27+). First panel in the stack only, see **Map + Content** below. |
+| `mapConfig` | `MapConfig<GridTemplate>` | ❌ | Android map-with-content layout. `android.headerActions` sets its action strip. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. `ios.showCloseButton` (default `false`) shows CarPlay's native close button on the panel, first panel in the stack only. `ios.primaryAction` (`TextButton`) and `ios.secondaryAction` (`ImageButton`, requires `primaryAction`) add buttons at the bottom of the panel. See **Map + Content** below. |
 
 #### SectionedItemTemplateConfig
 
@@ -696,8 +694,7 @@ List and grid sections mixed in one template. A section is one of:
 | `title` | `AutoText` | ✅ | Header title. |
 | `sections` | `SectionedItemSection<SectionedItemTemplate>[]` | ❌ | Sections in display order. Sections without items or buttons are not shown. Not providing anything here, or only empty sections, will result in a loading indicator on Android and an empty list on iOS. Update them with `updateSections()`. |
 | `headerActions` | `HeaderActions<SectionedItemTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<SectionedItemTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
-| `ios` | `PanelTemplateIosConfig` | ❌ | **iOS only.** `showsPanelCloseButton` (default `false`) shows CarPlay's native close button while this renders as a panel (`mapConfig` set, iOS 27+). First panel in the stack only, see **Map + Content** below. |
+| `mapConfig` | `MapConfig<SectionedItemTemplate>` | ❌ | Android map-with-content layout. `android.headerActions` sets its action strip. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. `ios.showCloseButton` (default `false`) shows CarPlay's native close button on the panel, first panel in the stack only. `ios.primaryAction` (`TextButton`) and `ios.secondaryAction` (`ImageButton`, requires `primaryAction`) add buttons at the bottom of the panel. See **Map + Content** below. |
 
 How each platform renders it:
 
@@ -732,8 +729,7 @@ In the `CPListTemplate`, a grid section's `title` is shown as the section header
 | `items` | `InformationItems` | ❌ | 1–4 rows. |
 | `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. **iOS 27+ with `mapConfig` set**: at most 1 `TextButton` plus 1 icon-only `ImageButton`, enforced at the type level. |
 | `headerActions` | `HeaderActions<InformationTemplate>` | ❌ | Header actions. See **Header Actions** below. |
-| `mapConfig` | `BaseMapTemplateConfig<InformationTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. See **Map + Content** below. |
-| `ios` | `PanelTemplateIosConfig` | ❌ | **iOS only.** `showsPanelCloseButton` (default `false`) shows CarPlay's native close button while this renders as a panel (`mapConfig` set, iOS 27+). First panel in the stack only, see **Map + Content** below. |
+| `mapConfig` | `MapConfigWithoutActions<InformationTemplate>` | ❌ | Android map-with-content layout. `android.headerActions` sets its action strip. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead. `ios.showCloseButton` (default `false`) shows CarPlay's native close button on the panel, first panel in the stack only. See **Map + Content** below. |
 
 #### MessageTemplateConfig
 
@@ -744,8 +740,7 @@ In the `CPListTemplate`, a grid section's `title` is shown as the section header
 | `image` | `AutoImage` | ❌ | Android-only image above the message. |
 | `actions` | platform-specific | ❌ | Up to 2 buttons on Android, up to 3 on iOS. **iOS 27+ with `mapConfig` set**: at most 1 `TextButton` plus 1 icon-only `ImageButton`, enforced at the type level. |
 | `headerActions` | `HeaderActions<MessageTemplate>` | ❌ | Header actions. See **Header Actions** below. **iOS**: `ios` only takes effect once this renders as a `CPMapPanel` (`mapConfig` set, iOS 27+) — without `mapConfig` (or below iOS 27) this is a full-screen `CPAlertTemplate` with no nav bar, so `ios` is silently unused. |
-| `mapConfig` | `BaseMapTemplateConfig<MessageTemplate>` | ❌ | Android map-with-content layout. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead, trading the usual full-screen modal alert for panel content. See **Map + Content** below. |
-| `ios` | `PanelTemplateIosConfig` | ❌ | **iOS only.** `showsPanelCloseButton` (default `false`) shows CarPlay's native close button while this renders as a panel (`mapConfig` set, iOS 27+). First panel in the stack only, see **Map + Content** below. |
+| `mapConfig` | `MapConfigWithoutActions<MessageTemplate>` | ❌ | Android map-with-content layout. `android.headerActions` sets its action strip. **iOS 27+**: renders as a `CPMapPanel` on the current root map template instead, trading the usual full-screen modal alert for panel content. `ios.showCloseButton` (default `false`) shows CarPlay's native close button on the panel, first panel in the stack only. See **Map + Content** below. |
 
 #### SignInTemplateConfig (Android-only)
 
@@ -833,15 +828,15 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
 
 | Platform | Property | Shape | Limits / Notes |
 | --- | --- | --- | --- |
-| Android (header templates) | `headerActions.android` | `{ startHeaderAction?, endHeaderActions? }` | `endHeaderActions`: 1–2 buttons. `startHeaderAction` can be `appIcon`/`back`/custom. |
+| Android (header templates) | `headerActions.android` | `{ startHeaderAction?, endHeaderActions? }` | `endHeaderActions`: 1–2 buttons, **use `image` buttons with `mapConfig`**: Android Auto drops `text` buttons there and strips the title from `textImage` buttons. `startHeaderAction` can only be `appIcon` or `back`. |
 | Android (MapTemplate) | `headerActions.android` | `ActionButton[]` | 1–4 action strip buttons. |
 | iOS | `headerActions.ios` | `{ backButton?, leadingNavigationBarButtons?, trailingNavigationBarButtons? }` | Each list supports 1–2 buttons. `backButton` optional (system back is added if omitted). |
 
 ### Actions & Button Types (Quick Reference)
 
 -   **Android header actions** use `startHeaderAction` + `endHeaderActions`:
-    - `startHeaderAction`: `AppButton | BackButton | ActionButton`
-    - `endHeaderActions`: 1–2 buttons
+    - `startHeaderAction`: `AppButton | BackButton` only, Android Auto's `Header` rejects custom start actions (`ACTIONS_CONSTRAINTS_HEADER` allows no click listener)
+    - `endHeaderActions`: 1–2 buttons. **With `mapConfig`, use `image` buttons**: Android Auto drops `text` buttons there and strips the title from `textImage` buttons
     - **If `headerActions` is omitted**: Android renders the **app icon** automatically.
 -   **iOS header actions** use:
     - `backButton` (optional, otherwise iOS provides a default back action)
@@ -1023,6 +1018,16 @@ new ListTemplate({
 
 `ListTemplate`, `GridTemplate`, `SectionedItemTemplate`, `InformationTemplate`, and `MessageTemplate` all accept an optional `mapConfig` prop. Setting it (an empty object is enough — no actions need to be specified) gives the template a map background instead of its normal full-screen presentation. The two platforms implement this completely differently, so behavior and limitations differ accordingly.
 
+Options that only one platform supports sit in `mapConfig.android` and `mapConfig.ios`:
+
+```ts
+mapConfig: {
+  mapButtons,                    // both platforms
+  android: { headerActions },    // action strip of the MapWithContentTemplate
+  ios: { showCloseButton, primaryAction, secondaryAction }, // actions: ListTemplate, GridTemplate, SectionedItemTemplate only
+}
+```
+
 ```ts
 new ListTemplate({
   title: { text: 'Nearby' },
@@ -1044,7 +1049,7 @@ new ListTemplate({
 new MapTemplate({ component: MapScreen, onStopNavigation: () => {} }).setRootTemplate();
 
 // Pushing this on top now shows it as an overlay panel on the map, instead of a full-screen list.
-// headerActions.ios.backButton (or ios.showsPanelCloseButton) is required here — as the first panel in the stack it
+// headerActions.ios.backButton (or mapConfig.ios.showCloseButton) is required here — as the first panel in the stack it
 // gets no native close/back control by default (see "Things that behave differently in panel mode" below),
 // so without it the driver has no way to leave the panel.
 new ListTemplate({
@@ -1059,18 +1064,19 @@ new ListTemplate({
 
 **Things that behave differently in panel mode:**
 
--   **`headerActions`/`mapButtons` ownership**: while a panel is shown, it takes over the root map template's bar buttons and floating map buttons — using the panel template's **own** `headerActions`/`mapConfig.mapButtons`, not `mapConfig.headerActions` (which is Android-only; on iOS it's ignored, since there's no separate header for the map behind a panel). The map template's own buttons are restored automatically once the panel is popped.
+-   **`headerActions`/`mapButtons` ownership**: while a panel is shown, it takes over the root map template's bar buttons and floating map buttons — using the panel template's **own** `headerActions`/`mapConfig.mapButtons`, not `mapConfig.android.headerActions` (Android only, since there's no separate header for the map behind a panel). The map template's own buttons are restored automatically once the panel is popped.
 -   **The first panel must provide its own way to be closed**: CarPlay's native close button (✕) is hidden by default. Tapping ✕ on the topmost panel doesn't just pop that one panel — it discards the *entire* panel stack down to the map, covered panels included — but `CPMapPanelDelegate.panelDidHide` only ever fires once, for the topmost panel. This library would have no callback at all for the covered panels CarPlay silently destroyed underneath it: they'd stay tracked forever, `onPopped` would never fire for them, and their listeners/native templates would leak. The back chevron doesn't have this problem — it only ever pops one level, always the topmost panel — so it's left enabled: once a second panel is pushed, CarPlay shows it automatically to return to the first, and it isn't customizable. The first panel in the stack gets no such control, though, so it needs its own way out:
-    -   `ios.showsPanelCloseButton: true` shows ✕ on it, and closing it pops the template like `popTemplate()` does. **This only works on the first panel in the stack** — it is ignored on any panel pushed on top of another panel. The first panel is only visible while it is the only panel, so its ✕ can never take covered panels down with it.
+    -   `mapConfig.ios.showCloseButton: true` shows ✕ on it, and closing it pops the template like `popTemplate()` does. **This only works on the first panel in the stack** — it is ignored on any panel pushed on top of another panel. The first panel is only visible while it is the only panel, so its ✕ can never take covered panels down with it.
     -   `headerActions.ios.backButton` (supported by all panel-capable templates, including `MessageTemplate` once `mapConfig` is set), or something inside the panel's own content (a list item, or `MessageTemplate`'s required `actions.ios[0]` `TextButton`) that calls `popTemplate()`/`popToRootTemplate()`.
 
     Without one of these, the driver has no way to leave that first panel short of `autoDismissMs`.
+-   **Panel buttons on `ListTemplate`/`GridTemplate`/`SectionedItemTemplate`**: `mapConfig.ios.primaryAction` and `mapConfig.ios.secondaryAction` map to the panel's `CPMapPanelButtonConfiguration`: `primaryAction` is a `TextButton`, the optional `secondaryAction` an `ImageButton` shown icon-only, and the type only allows it together with a `primaryAction`. It is ignored below iOS 27, where the template renders without a map, and it is read once when the panel is built, so changes need a new template. **Android Auto has no equivalent**, it has no buttons at the bottom of map content. Use `headerActions.android.endHeaderActions` there instead, which shows them in the header of the content card. Use `image` buttons there: on map content Android Auto drops `text` buttons and strips the title from `textImage` buttons.
 -   **`InformationTemplate`/`MessageTemplate` `actions`**: a `CPMapPanel`'s button configuration only supports one `TextButton` (with a title) plus one optional icon-only `ImageButton` (any title on it is dropped natively) — far fewer than the up-to-3-`TextButton` shape available without `mapConfig`. The type system enforces this: `actions.ios` is restricted to `[TextButton]` or `[TextButton, ImageButton]` whenever `mapConfig` is set.
 -   **`MessageTemplate` stops being a true modal**: normally `MessageTemplate` is a full-screen, blocking alert (`CPAlertTemplate`) that covers everything regardless of OS version. With `mapConfig` set, it instead becomes dismissible panel content in the regular push/pop stack — a deliberate trade-off, not a partial implementation.
 
 **Known iOS 27 beta limitations** (not something fixable in this library — re-test against newer betas):
 
--   The optional icon-only `symbolButton` in a panel's button configuration does not appear to respond to taps at all on this beta — the button renders correctly, but its press handler is never invoked by CarPlay.
+-   The optional icon-only secondary button of a panel (`mapConfig.ios.secondaryAction`, or the `ImageButton` in `InformationTemplate`/`MessageTemplate` `actions.ios`) does not appear to respond to taps at all on this beta — the button renders correctly, but its press handler is never invoked by CarPlay.
 -   `toggle` row accessory images render noticeably smaller inside a panel than in a regular (non-panel) `ListTemplate` — this is how Apple sizes `CPListItem.accessoryImage` on panels specifically, not something this library controls (see the `CPListItem.accessoryImage` known issue under **Options Panel** for the same underlying sizing bug's non-panel form).
 
 ### Waypoint Rows (`type: 'waypoint'`)
@@ -1426,7 +1432,7 @@ The same no-op surface is what `react-native-web` builds get automatically via `
     // Hide the splash screen for the CarPlay screen
     hideAsync(AutoPlayModules.AutoPlayRoot);
     ```
--   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only `symbolButton` does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
+-   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only secondary button (`mapConfig.ios.secondaryAction`, or the second `actions.ios` entry) does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
 -   **Waypoint/options-panel images and toggle-row sizing (iOS 27 beta)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Beta platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
 ### Android
 -   **Broken exceptions with `react-native`** up to version 0.79

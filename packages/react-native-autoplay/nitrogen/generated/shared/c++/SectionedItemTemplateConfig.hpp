@@ -78,7 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     explicit SectionedItemTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::optional<std::vector<std::variant<NitroSection, NitroGridSection>>> sections, std::optional<NitroBaseMapTemplateConfig> mapConfig, std::optional<NitroPanelTemplatePlatformConfig> platform): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), sections(sections), mapConfig(mapConfig), platform(platform) {}
 
   public:
-    // SectionedItemTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, sections, mapConfig
+    // SectionedItemTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, sections, mapConfig, platform
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

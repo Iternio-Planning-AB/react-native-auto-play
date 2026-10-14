@@ -78,7 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     explicit GridTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, AutoText title, std::vector<NitroGridButton> buttons, std::optional<GridImageSize> imageSize, std::optional<NitroBaseMapTemplateConfig> mapConfig, std::optional<NitroPanelTemplatePlatformConfig> platform): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), buttons(buttons), imageSize(imageSize), mapConfig(mapConfig), platform(platform) {}
 
   public:
-    // GridTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, buttons, mapConfig
+    // GridTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, buttons, mapConfig, platform
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

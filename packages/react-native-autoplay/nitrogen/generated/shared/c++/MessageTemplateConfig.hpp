@@ -83,7 +83,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     explicit MessageTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::vector<NitroAction>> headerActions, std::optional<AutoText> title, AutoText message, std::optional<std::vector<NitroAction>> actions, std::optional<std::variant<GlyphImage, AssetImage, RemoteImage>> image, std::optional<NitroBaseMapTemplateConfig> mapConfig, std::optional<NitroPanelTemplatePlatformConfig> platform): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), headerActions(headerActions), title(title), message(message), actions(actions), image(image), mapConfig(mapConfig), platform(platform) {}
 
   public:
-    // MessageTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, actions, mapConfig
+    // MessageTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, headerActions, actions, mapConfig, platform
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay

@@ -28,9 +28,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `NitroAction` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction; }
 
 #include <optional>
+#include "NitroAction.hpp"
+#include <vector>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -40,13 +43,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   struct NitroPanelTemplatePlatformConfig final {
   public:
     std::optional<bool> showsPanelCloseButton     SWIFT_PRIVATE;
+    std::optional<std::vector<NitroAction>> panelButtonConfiguration     SWIFT_PRIVATE;
 
   public:
     NitroPanelTemplatePlatformConfig() = default;
-    explicit NitroPanelTemplatePlatformConfig(std::optional<bool> showsPanelCloseButton): showsPanelCloseButton(showsPanelCloseButton) {}
+    explicit NitroPanelTemplatePlatformConfig(std::optional<bool> showsPanelCloseButton, std::optional<std::vector<NitroAction>> panelButtonConfiguration): showsPanelCloseButton(showsPanelCloseButton), panelButtonConfiguration(panelButtonConfiguration) {}
 
   public:
-    friend bool operator==(const NitroPanelTemplatePlatformConfig& lhs, const NitroPanelTemplatePlatformConfig& rhs) = default;
+    // NitroPanelTemplatePlatformConfig is not equatable because these properties are not equatable: panelButtonConfiguration
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
@@ -59,12 +63,14 @@ namespace margelo::nitro {
     static inline margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig(
-        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "showsPanelCloseButton")))
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "showsPanelCloseButton"))),
+        JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "panelButtonConfiguration")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroPanelTemplatePlatformConfig& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "showsPanelCloseButton"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.showsPanelCloseButton));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "panelButtonConfiguration"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.panelButtonConfiguration));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -76,6 +82,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "showsPanelCloseButton")))) return false;
+      if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "panelButtonConfiguration")))) return false;
       return true;
     }
   };

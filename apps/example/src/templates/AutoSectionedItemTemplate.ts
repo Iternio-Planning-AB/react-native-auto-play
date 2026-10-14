@@ -1,6 +1,5 @@
 import {
   type GridButton,
-  HybridAutoPlay,
   type SectionedItemSection,
   SectionedItemTemplate,
   type SectionedItemTemplateConfig,
@@ -58,15 +57,6 @@ const getSections = (state: State): Array<SectionedItemSection<SectionedItemTemp
             state.notifications = checked;
           },
         },
-        {
-          type: 'default',
-          title: { text: 'pop template' },
-          image: { type: 'glyph', name: 'arrow_back', color: DefaultTemplateImageColor },
-          browsable: true,
-          onPress: () => {
-            void HybridAutoPlay.popTemplate();
-          },
-        },
       ],
     },
   ];
@@ -78,7 +68,6 @@ const getTemplate = (props?: {
   const template = new SectionedItemTemplate({
     title: { text: 'sectioned items' },
     mapConfig: props?.mapConfig,
-    ios: { showsPanelCloseButton: props?.mapConfig != null },
     headerActions: AutoTemplate.headerActions,
     sections: getSections({ lastPressed: '-', notifications: true }),
     onDidAppear: () => console.log('SectionedItemTemplate onDidAppear', template.id),

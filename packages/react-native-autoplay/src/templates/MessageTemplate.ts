@@ -1,25 +1,18 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
 import uuid from 'react-native-uuid';
-import type {
-  AutoImage,
-  BaseMapTemplateConfig,
-  CustomActionButtonAndroid,
-  HeaderActions,
-  TextButton,
-} from '..';
+import type { AutoImage, CustomActionButtonAndroid, HeaderActions, TextButton } from '..';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 import type { MessageTemplate as NitroMessageTemplate } from '../specs/MessageTemplate.nitro';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type NitroImage, NitroImageUtil } from '../utils/NitroImage';
-import { NitroMapButton } from '../utils/NitroMapButton';
-import type { PanelActionsIos, PanelHeaderActions } from './MapTemplate';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
+import type { MapConfigWithoutActions, PanelActionsIos } from './MapTemplate';
 import type {
   NitroBaseMapTemplateConfig,
   NitroPanelTemplatePlatformConfig,
   NitroTemplateConfig,
-  PanelTemplateIosConfig,
   TemplateConfig,
 } from './Template';
 
@@ -61,12 +54,6 @@ type MessageTemplateBaseConfig = Omit<
    * @namespace Android
    */
   image?: AutoImage;
-
-  /**
-   * iOS only props
-   * @namespace iOS
-   */
-  ios?: PanelTemplateIosConfig;
 };
 
 /**
@@ -106,13 +93,11 @@ export type MessageTemplateConfig = MessageTemplateBaseConfig &
          * @namespace Android - uses MapWithContentTemplate
          * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+),
          * trading the usual full-screen modal alert presentation for panel content;
-         * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
-         * applied to the root map template's nav bar instead, since CarPlay has no separate
-         * header for the map behind a panel.
+         * `android.headerActions` here has no iOS equivalent — on iOS this template's own
+         * `headerActions` are applied to the root map template's nav bar instead, since CarPlay
+         * has no separate header for the map behind a panel.
          */
-        mapConfig: Omit<BaseMapTemplateConfig<MessageTemplate>, 'headerActions'> & {
-          headerActions?: PanelHeaderActions<MessageTemplate>;
-        };
+        mapConfig: MapConfigWithoutActions<MessageTemplate>;
 
         /**
          * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
@@ -136,7 +121,7 @@ export class MessageTemplate {
   public id = uuid.v4();
 
   constructor(config: MessageTemplateConfig) {
-    const { headerActions, image, mapConfig, actions, ios, ...rest } = config;
+    const { headerActions, image, mapConfig, actions, ...rest } = config;
 
     const platformActions =
       Platform.OS === 'android'
@@ -149,13 +134,8 @@ export class MessageTemplate {
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       image: NitroImageUtil.convert(image),
       actions: platformActions,
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
-      platform: Platform.OS === 'ios' ? ios : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridMessageTemplate.createMessageTemplate(nitroConfig);

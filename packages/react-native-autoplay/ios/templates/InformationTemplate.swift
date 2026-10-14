@@ -81,39 +81,37 @@ class InformationTemplate: AutoPlayHeaderProviding {
         barButtons = config.headerActions
     }
 
+    @available(iOS 27.0, *)
+    @MainActor
+    private func getOrCreateMapPanel(traitCollection: UITraitCollection) -> CPMapPanel {
+        if let mapPanel = mapPanel as? CPMapPanel {
+            return mapPanel
+        }
+
+        // InformationTemplate's actions are only ever set once and never updated
+        // afterwards, so there's nothing to keep in sync with buttonConfiguration later.
+        let panel = CPMapPanel(
+            title: Parser.parseText(text: config.title),
+            sections: [CPMapPanelSection(title: nil, items: [])],
+            buttonConfiguration: Parser.parsePanelButtonConfiguration(
+                actions: config.actions,
+                traitCollection: traitCollection
+            )
+        )
+        mapPanel = panel
+
+        let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
+        mapPanelDelegate = delegate
+        panel.delegate = delegate
+
+        return panel
+    }
+
     @MainActor
     override func _invalidate() {
         if usesMapPanel, #available(iOS 27.0, *) {
-            guard let mapPanel = mapPanel as? CPMapPanel else {
-                guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
-
-                // InformationTemplate's actions are only ever set once and never updated
-                // afterwards, so there's nothing to keep in sync with buttonConfiguration later.
-                let panel = CPMapPanel(
-                    title: Parser.parseText(text: config.title),
-                    sections: [
-                        CPMapPanelSection(
-                            title: nil,
-                            items: Parser.parseInformationPanelItems(section: section)
-                        )
-                    ],
-                    buttonConfiguration: Parser.parsePanelButtonConfiguration(
-                        actions: config.actions,
-                        traitCollection: traitCollection
-                    )
-                )
-
-                mapPanel = panel
-                panel.logItemOverflow(panelId: config.id)
-
-                let delegate = AutoPlayMapPanelDelegate(template: self, templateId: config.id)
-                mapPanelDelegate = delegate
-                panel.delegate = delegate
-
-                reapplyPanelBarIfVisible(self, templateId: config.id)
-                return
-            }
-
+            guard let traitCollection = SceneStore.getRootTraitCollection() else { return }
+            let mapPanel = getOrCreateMapPanel(traitCollection: traitCollection)
             mapPanel.sections.first?.items = Parser.parseInformationPanelItems(section: section)
             mapPanel.logItemOverflow(panelId: config.id)
             reapplyPanelBarIfVisible(self, templateId: config.id)

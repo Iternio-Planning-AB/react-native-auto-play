@@ -288,8 +288,8 @@ const mapHeaderActions: MapTemplateConfig['headerActions'] = {
       onPress: () =>
         AutoListTemplate.getTemplate({
           mapConfig: {
-            headerActions: {
-              android: [
+            android: {
+              headerActions: [
                 {
                   type: 'image',
                   image: { type: 'glyph', name: 'list' },
@@ -461,8 +461,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               onPress: () => {
                 AutoMessageTemplate.getTemplate({
                   mapConfig: {
-                    headerActions: {
-                      android: [
+                    android: {
+                      headerActions: [
                         {
                           type: 'text',
                           title: 'button #1',
@@ -495,8 +495,8 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
               onPress: () => {},
             },
           ],
-          headerActions: {
-            android: [
+          android: {
+            headerActions: [
               {
                 type: 'image',
                 image: { name: 'battery_vert_050', type: 'glyph' },

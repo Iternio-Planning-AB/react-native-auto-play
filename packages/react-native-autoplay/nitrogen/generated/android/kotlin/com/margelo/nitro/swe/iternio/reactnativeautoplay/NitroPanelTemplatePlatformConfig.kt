@@ -20,7 +20,10 @@ import java.util.Objects
 data class NitroPanelTemplatePlatformConfig(
   @DoNotStrip
   @Keep
-  val showsPanelCloseButton: Boolean?
+  val showsPanelCloseButton: Boolean?,
+  @DoNotStrip
+  @Keep
+  val panelButtonConfiguration: Array<NitroAction>?
 ) {
   /* primary constructor */
 
@@ -28,11 +31,13 @@ data class NitroPanelTemplatePlatformConfig(
     if (this === other) return true
     if (other !is NitroPanelTemplatePlatformConfig) return false
     return Objects.deepEquals(this.showsPanelCloseButton, other.showsPanelCloseButton)
+      && Objects.deepEquals(this.panelButtonConfiguration, other.panelButtonConfiguration)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
-      showsPanelCloseButton
+      showsPanelCloseButton,
+      panelButtonConfiguration
     ).contentDeepHashCode()
   }
 
@@ -44,8 +49,8 @@ data class NitroPanelTemplatePlatformConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(showsPanelCloseButton: Boolean?): NitroPanelTemplatePlatformConfig {
-      return NitroPanelTemplatePlatformConfig(showsPanelCloseButton)
+    private fun fromCpp(showsPanelCloseButton: Boolean?, panelButtonConfiguration: Array<NitroAction>?): NitroPanelTemplatePlatformConfig {
+      return NitroPanelTemplatePlatformConfig(showsPanelCloseButton, panelButtonConfiguration)
     }
   }
 }
