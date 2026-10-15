@@ -53,13 +53,16 @@ data class GridTemplateConfig(
   val imageSize: GridImageSize?,
   @DoNotStrip
   @Keep
-  val mapConfig: NitroBaseMapTemplateConfig?
+  val mapConfig: NitroBaseMapTemplateConfig?,
+  @DoNotStrip
+  @Keep
+  val platform: NitroPanelTemplatePlatformConfig?
 ) {
   /**
    * Create a new instance of GridTemplateConfig from Kotlin
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, buttons: Array<NitroGridButton>, imageSize: GridImageSize?, mapConfig: NitroBaseMapTemplateConfig?):
-         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, headerActions, title, buttons, imageSize, mapConfig)
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, buttons: Array<NitroGridButton>, imageSize: GridImageSize?, mapConfig: NitroBaseMapTemplateConfig?, platform: NitroPanelTemplatePlatformConfig?):
+         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, headerActions, title, buttons, imageSize, mapConfig, platform)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -76,6 +79,7 @@ data class GridTemplateConfig(
       && Objects.deepEquals(this.buttons, other.buttons)
       && Objects.deepEquals(this.imageSize, other.imageSize)
       && Objects.deepEquals(this.mapConfig, other.mapConfig)
+      && Objects.deepEquals(this.platform, other.platform)
   }
 
   override fun hashCode(): Int {
@@ -91,7 +95,8 @@ data class GridTemplateConfig(
       title,
       buttons,
       imageSize,
-      mapConfig
+      mapConfig,
+      platform
     ).contentDeepHashCode()
   }
 
@@ -103,8 +108,8 @@ data class GridTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, buttons: Array<NitroGridButton>, imageSize: GridImageSize?, mapConfig: NitroBaseMapTemplateConfig?): GridTemplateConfig {
-      return GridTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, headerActions, title, buttons, imageSize, mapConfig)
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, buttons: Array<NitroGridButton>, imageSize: GridImageSize?, mapConfig: NitroBaseMapTemplateConfig?, platform: NitroPanelTemplatePlatformConfig?): GridTemplateConfig {
+      return GridTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, headerActions, title, buttons, imageSize, mapConfig, platform)
     }
   }
 }

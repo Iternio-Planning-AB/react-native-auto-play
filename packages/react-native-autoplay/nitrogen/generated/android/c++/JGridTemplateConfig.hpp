@@ -35,6 +35,7 @@
 #include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JNitroPanelTemplatePlatformConfig.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"
 #include "NitroAction.hpp"
@@ -46,6 +47,7 @@
 #include "NitroGridButton.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
 #include "RemoteImage.hpp"
 #include <NitroModules/JNICallable.hpp>
 #include <functional>
@@ -97,6 +99,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JGridImageSize> imageSize = this->getFieldValue(fieldImageSize);
       static const auto fieldMapConfig = clazz->getField<JNitroBaseMapTemplateConfig>("mapConfig");
       jni::local_ref<JNitroBaseMapTemplateConfig> mapConfig = this->getFieldValue(fieldMapConfig);
+      static const auto fieldPlatform = clazz->getField<JNitroPanelTemplatePlatformConfig>("platform");
+      jni::local_ref<JNitroPanelTemplatePlatformConfig> platform = this->getFieldValue(fieldPlatform);
       return GridTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -167,7 +171,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __vector;
         }(buttons),
         imageSize != nullptr ? std::make_optional(imageSize->toCpp()) : std::nullopt,
-        mapConfig != nullptr ? std::make_optional(mapConfig->toCpp()) : std::nullopt
+        mapConfig != nullptr ? std::make_optional(mapConfig->toCpp()) : std::nullopt,
+        platform != nullptr ? std::make_optional(platform->toCpp()) : std::nullopt
       );
     }
 
@@ -177,7 +182,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JGridTemplateConfig::javaobject> fromCpp(const GridTemplateConfig& value) {
-      using JSignature = JGridTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>, jni::alias_ref<JGridImageSize>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
+      using JSignature = JGridTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>, jni::alias_ref<JGridImageSize>, jni::alias_ref<JNitroBaseMapTemplateConfig>, jni::alias_ref<JNitroPanelTemplatePlatformConfig>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -211,7 +216,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           return __array;
         }(value.buttons),
         value.imageSize.has_value() ? JGridImageSize::fromCpp(value.imageSize.value()) : nullptr,
-        value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr
+        value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr,
+        value.platform.has_value() ? JNitroPanelTemplatePlatformConfig::fromCpp(value.platform.value()) : nullptr
       );
     }
   };

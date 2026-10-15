@@ -63,6 +63,16 @@
         "language": "swift"
       }
     },
+    "SectionedItemTemplate": {
+      "android": {
+        "implementationClassName": "HybridSectionedItemTemplate",
+        "language": "kotlin"
+      },
+      "ios": {
+        "implementationClassName": "HybridSectionedItemTemplate",
+        "language": "swift"
+      }
+    },
     "InformationTemplate": {
       "android": {
         "implementationClassName": "HybridInformationTemplate",

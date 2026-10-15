@@ -18,10 +18,10 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AutoText
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroMapButton
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripPreviewTextConfiguration
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripsConfig
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
 
 class TripPreviewTemplate(
     carContext: CarContext,
@@ -46,16 +46,14 @@ class TripPreviewTemplate(
         )
 
         UiThreadUtil.runOnUiThread {
-            carContext.onBackPressedDispatcher.addCallback(
-                this, object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        finish()
-                        onBackPressed()
-                    }
-                })
+            carContext.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    finish()
+                    onBackPressed()
+                }
+            })
         }
     }
-
 
     override fun onGetTemplate(): Template {
         var selectedTrip = trips[selectedTripIndex]
@@ -65,11 +63,11 @@ class TripPreviewTemplate(
             val pane = Pane.Builder().apply {
                 selectedRoute.additionalInformationVariants.firstOrNull()
                     ?.takeIf { it.isNotEmpty() }?.let {
-                    addRow(Row.Builder().apply {
-                        setTitle(Parser.parseText(selectedRoute.additionalInformationVariants))
-                        addText(Parser.parseText(selectedRoute.selectionSummaryVariants))
-                    }.build())
-                }
+                        addRow(Row.Builder().apply {
+                            setTitle(Parser.parseText(selectedRoute.additionalInformationVariants))
+                            addText(Parser.parseText(selectedRoute.selectionSummaryVariants))
+                        }.build())
+                    }
                 addRow(Row.Builder().apply {
                     setTitle(
                         "${textConfig.travelEstimatesTitle} ${
@@ -113,22 +111,21 @@ class TripPreviewTemplate(
                             ).build()
                         )
                         setOnClickListener {
-                            AndroidAutoScreen.getScreenManager()?.pushForResult(
-                                RoutePreviewTemplate(
-                                    carContext,
-                                    selectedTrip.id,
-                                    selectedTrip.routeChoices,
-                                    selectedRouteIndex,
-                                    textConfig.additionalRoutesButtonTitle,
-                                    onTripSelected,
-                                    mapButtons
-                                ), object : OnScreenResultListener {
-                                    override fun onScreenResult(result: Any?) {
-                                        if (result is Int) {
-                                            selectedRouteIndex = result
-                                        }
+                            AndroidAutoScreen.getScreenManager()?.pushForResult(RoutePreviewTemplate(
+                                carContext,
+                                selectedTrip.id,
+                                selectedTrip.routeChoices,
+                                selectedRouteIndex,
+                                textConfig.additionalRoutesButtonTitle,
+                                onTripSelected,
+                                mapButtons
+                            ), object : OnScreenResultListener {
+                                override fun onScreenResult(result: Any?) {
+                                    if (result is Int) {
+                                        selectedRouteIndex = result
                                     }
-                                })
+                                }
+                            })
                         }
                     }.build())
                 }

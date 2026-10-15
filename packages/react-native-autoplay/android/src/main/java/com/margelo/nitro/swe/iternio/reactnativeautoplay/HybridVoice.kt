@@ -50,7 +50,7 @@ class HybridVoice : HybridVoiceSpec() {
                             }
                             cont.resume(
                                 grantResults.isNotEmpty() &&
-                                        grantResults.first() == PackageManager.PERMISSION_GRANTED
+                                    grantResults.first() == PackageManager.PERMISSION_GRANTED
                             )
                             true
                         }

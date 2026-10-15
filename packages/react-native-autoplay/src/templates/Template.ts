@@ -17,6 +17,10 @@ export type HeaderActionsIos<T> = {
 
 export type HeaderActionsAndroid<T> = {
   startHeaderAction?: AppButton | BackButton<T>;
+  /**
+   * with a `mapConfig` Android Auto only shows icons: text buttons are not shown at all and
+   * textImage buttons lose their title, so use image buttons there
+   */
   endHeaderActions?: [ActionButtonAndroid<T>, ActionButtonAndroid<T>] | [ActionButtonAndroid<T>];
 };
 
@@ -70,6 +74,18 @@ export interface NitroBaseMapTemplateConfig extends TemplateConfig {
   mapButtons?: Array<NitroMapButton>;
   headerActions?: Array<NitroAction>;
   onDidChangePanningInterface?: (isPanningInterfaceVisible: boolean) => void;
+}
+
+/**
+ * the panel options passed to native, converted from `mapConfig.ios` by `NitroMapConfigUtil`
+ * since `mapConfig` itself is shared with Android's MapWithContentTemplate.
+ */
+export interface NitroPanelTemplatePlatformConfig {
+  showsPanelCloseButton?: boolean;
+  /**
+   * `[primaryAction, secondaryButton?]`
+   */
+  panelButtonConfiguration?: Array<NitroAction>;
 }
 
 export class Template<TemplateConfigType, ActionsType> {

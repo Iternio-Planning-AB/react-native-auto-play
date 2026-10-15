@@ -858,7 +858,7 @@ class MapTemplate: AutoPlayHeaderProviding,
             traitCollection: traitCollection
         )
 
-        navigationSession.optionsPanel = CPMapPanel(
+        let panel = CPMapPanel(
             title: Parser.parseText(text: optionsPanel.title),
             sections: sections,
             buttonConfiguration: Parser.parsePanelButtonConfiguration(
@@ -866,6 +866,8 @@ class MapTemplate: AutoPlayHeaderProviding,
                 traitCollection: traitCollection
             )
         )
+        panel.logItemOverflow(panelId: "optionsPanel")
+        navigationSession.optionsPanel = panel
     }
 
     func setManeuverState(state: ManeuverState) {

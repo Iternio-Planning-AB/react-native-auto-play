@@ -43,6 +43,7 @@ export * from './templates/ListTemplate';
 export * from './templates/MapTemplate';
 export * from './templates/MessageTemplate';
 export * from './templates/SearchTemplate';
+export * from './templates/SectionedItemTemplate';
 export * from './templates/SignInTemplate';
 export * from './templates/Template';
 export * from './types/Button';

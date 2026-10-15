@@ -34,7 +34,7 @@ object SymbolFont {
         glyphImage: GlyphImage,
         color: Int,
         backgroundColor: Int,
-        cornerRadius: Float = 8f, //TODO: make accessible and add it to GlyphImage.cacheKey
+        cornerRadius: Float = 8f, // TODO: make accessible and add it to GlyphImage.cacheKey
     ): Bitmap? {
         val font =
             loadTypeface(context, glyphImage.fontName) ?: run {

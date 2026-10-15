@@ -1,0 +1,15 @@
+root = true
+
+[*.{kt,kts}]
+# close to Android Studio's "Reformat File": layout only, no rewrapping or code changes
+ktlint_code_style = intellij_idea
+ktlint_standard_argument-list-wrapping = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_function-expression-body = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_parameter-list-wrapping = disabled
+ktlint_standard_statement-wrapping = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_wrapping = disabled

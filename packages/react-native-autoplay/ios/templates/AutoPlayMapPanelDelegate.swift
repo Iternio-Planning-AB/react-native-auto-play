@@ -162,7 +162,7 @@ func reapplyPanelBarIfVisible(_ template: AutoPlayTemplate, templateId: String) 
     applyPanelMapButtons(template.getPanelMapButtons(), to: mapTemplate)
 }
 
-/// apply header buttons according to mapConfig.headerActions or remove the map provided buttons in case none are specified for the panel
+/// apply the panel template's own headerActions to the map template or remove the map provided buttons in case none are specified for the panel
 @available(iOS 27.0, *)
 @MainActor
 private func applyPanelHeaderActions(_ headerActions: [NitroAction]?, to mapTemplate: CPMapTemplate) {

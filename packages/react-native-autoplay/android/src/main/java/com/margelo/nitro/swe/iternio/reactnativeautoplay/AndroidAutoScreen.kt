@@ -9,7 +9,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.UiThreadUtil
-import java.util.concurrent.ConcurrentHashMap
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.GridTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.InformationTemplate
@@ -17,7 +16,9 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.ListTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SearchTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SectionedItemTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SignInTemplate
+import java.util.concurrent.ConcurrentHashMap
 
 class AndroidAutoScreen(
     carContext: CarContext, private val moduleName: String, private var template: Template
@@ -68,6 +69,7 @@ class AndroidAutoScreen(
                     is GridTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is MessageTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is SearchTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
+                    is SectionedItemTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is InformationTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     is SignInTemplateConfig -> config.headerActions?.find { it.type == NitroActionType.BACK }
                     else -> null
@@ -94,6 +96,7 @@ class AndroidAutoScreen(
             is GridTemplateConfig -> GridTemplate(carContext, config)
             is MessageTemplateConfig -> MessageTemplate(carContext, config)
             is SearchTemplateConfig -> SearchTemplate(carContext, config)
+            is SectionedItemTemplateConfig -> SectionedItemTemplate(carContext, config)
             is InformationTemplateConfig -> InformationTemplate(carContext, config)
             is SignInTemplateConfig -> SignInTemplate(carContext, config)
             else -> null
@@ -129,7 +132,7 @@ class AndroidAutoScreen(
             return screens.entries
                 .firstOrNull { !clusterSessions.contains(it.key) }
                 ?.value?.screenManager
-         }
+        }
 
         fun invalidateScreens() {
             for (screen in screens) {

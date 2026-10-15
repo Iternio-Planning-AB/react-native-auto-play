@@ -58,6 +58,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMapTem
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridMessageTemplateSpec; }
 // Forward declaration of `HybridSearchTemplateSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSearchTemplateSpec; }
+// Forward declaration of `HybridSectionedItemTemplateSpec` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridSectionedItemTemplateSpec; }
 // Forward declaration of `HybridVoiceSpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridVoiceSpec; }
 // Forward declaration of `ImageLane` to properly resolve imports.
@@ -108,6 +110,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `NitroGridSection` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridSection; }
 // Forward declaration of `NitroLoadingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroLoadingManeuver; }
 // Forward declaration of `NitroMapButtonType` to properly resolve imports.
@@ -124,6 +128,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelConfig; }
 // Forward declaration of `NitroOptionsPanelGridSection` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOptionsPanelGridSection; }
+// Forward declaration of `NitroPanelTemplatePlatformConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelTemplatePlatformConfig; }
 // Forward declaration of `NitroRoutingManeuver` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroRoutingManeuver; }
 // Forward declaration of `NitroRow` to properly resolve imports.
@@ -148,6 +154,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RouteChoice
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SafeAreaInsets; }
 // Forward declaration of `SearchTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SearchTemplateConfig; }
+// Forward declaration of `SectionedItemTemplateConfig` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SectionedItemTemplateConfig; }
 // Forward declaration of `TrafficSide` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class TrafficSide; }
 // Forward declaration of `TravelEstimates` to properly resolve imports.
@@ -205,6 +213,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "HybridMapTemplateSpec.hpp"
 #include "HybridMessageTemplateSpec.hpp"
 #include "HybridSearchTemplateSpec.hpp"
+#include "HybridSectionedItemTemplateSpec.hpp"
 #include "HybridVoiceSpec.hpp"
 #include "ImageLane.hpp"
 #include "InformationTemplateConfig.hpp"
@@ -230,6 +239,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "NitroChargerOutlet.hpp"
 #include "NitroColor.hpp"
 #include "NitroGridButton.hpp"
+#include "NitroGridSection.hpp"
 #include "NitroLoadingManeuver.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
@@ -238,6 +248,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "NitroOptionsPanelChargerSection.hpp"
 #include "NitroOptionsPanelConfig.hpp"
 #include "NitroOptionsPanelGridSection.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
 #include "NitroRoutingManeuver.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
@@ -250,6 +261,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "RouteChoice.hpp"
 #include "SafeAreaInsets.hpp"
 #include "SearchTemplateConfig.hpp"
+#include "SectionedItemTemplateConfig.hpp"
 #include "TrafficSide.hpp"
 #include "TravelEstimates.hpp"
 #include "TripConfig.hpp"
@@ -306,6 +318,8 @@ namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 namespace ReactNativeAutoPlay { class HybridMessageTemplateSpec_cxx; }
 // Forward declaration of `HybridSearchTemplateSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridSearchTemplateSpec_cxx; }
+// Forward declaration of `HybridSectionedItemTemplateSpec_cxx` to properly resolve imports.
+namespace ReactNativeAutoPlay { class HybridSectionedItemTemplateSpec_cxx; }
 // Forward declaration of `HybridVoiceSpec_cxx` to properly resolve imports.
 namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 

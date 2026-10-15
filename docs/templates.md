@@ -8,6 +8,7 @@ this library provides typed TS wrappers over the native CarPlay / Android Auto t
 | `MapTemplate` | Navigation map with maneuvers, trip data |
 | `ListTemplate` | Sectioned list/menu |
 | `GridTemplate` | Button grid |
+| `SectionedItemTemplate` | List and grid sections mixed |
 | `SearchTemplate` | Search input with results |
 | `InformationTemplate` | Read-only information display |
 | `MessageTemplate` | Alert/modal messages |

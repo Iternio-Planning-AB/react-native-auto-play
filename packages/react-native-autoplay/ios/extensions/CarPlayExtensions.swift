@@ -145,3 +145,20 @@ extension CPLane {
         }
     }
 }
+
+@available(iOS 27.0, *)
+extension CPMapPanel {
+    /// Debug builds only, CarPlay silently drops panel items beyond `maximumPanelItemsCount`.
+    func logItemOverflow(panelId: String) {
+        #if DEBUG
+            let itemCount = sections.reduce(0) { $0 + $1.items.count }
+            let maximumItemCount = CPMapPanel.maximumPanelItemsCount
+
+            if itemCount > maximumItemCount {
+                print(
+                    "[AutoPlay] panel \(panelId) has \(itemCount) items, CarPlay only shows the first \(maximumItemCount). A grid section counts as one item."
+                )
+            }
+        #endif
+    }
+}

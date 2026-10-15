@@ -20,6 +20,7 @@ import androidx.car.app.model.DateTimeWithZone
 import androidx.car.app.model.Distance
 import androidx.car.app.model.DistanceSpan
 import androidx.car.app.model.DurationSpan
+import androidx.car.app.model.GridItem
 import androidx.car.app.model.Header
 import androidx.car.app.model.ItemList
 import androidx.car.app.model.ParkedOnlyOnClickListener
@@ -33,6 +34,7 @@ import androidx.car.app.navigation.model.MapController
 import androidx.car.app.navigation.model.MapWithContentTemplate
 import androidx.car.app.navigation.model.Step
 import androidx.car.app.navigation.model.TravelEstimate
+import androidx.car.app.versioning.CarAppApiLevels
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -62,6 +64,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAttributedString
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroBaseMapTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroButtonStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroColor
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroGridButton
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroMapButton
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroMapButtonType
@@ -183,9 +186,7 @@ object Parser {
     }
 
     fun parseAction(
-        context: CarContext,
-        action: NitroAction,
-        useParkedOnlyClickListener: Boolean = false
+        context: CarContext, action: NitroAction, useParkedOnlyClickListener: Boolean = false
     ): Action {
         if (action.type == NitroActionType.APPICON) {
             return Action.APP_ICON
@@ -224,19 +225,13 @@ object Parser {
 
     fun parseImage(context: CarContext, image: Variant_GlyphImage_AssetImage_RemoteImage): CarIcon {
         return parseImage(
-            context,
-            image.asFirstOrNull(),
-            image.asSecondOrNull(),
-            image.asThirdOrNull()
+            context, image.asFirstOrNull(), image.asSecondOrNull(), image.asThirdOrNull()
         )
     }
 
     fun parseImage(context: CarContext, image: NitroImage): CarIcon {
         return parseImage(
-            context,
-            image.asFirstOrNull(),
-            image.asSecondOrNull(),
-            image.asThirdOrNull()
+            context, image.asFirstOrNull(), image.asSecondOrNull(), image.asThirdOrNull()
         )
     }
 
@@ -252,8 +247,9 @@ object Parser {
         val hasGlyphBackground =
             glyphImage != null && (glyphImage.backgroundColor.get(context) ushr 24) != 0
 
-        val applyDefaultTint = !hasGlyphBackground && (glyphImage?.color?.isDefault
-            ?: assetImage?.color?.isDefault ?: remoteImage?.color?.isDefault ?: false)
+        val applyDefaultTint =
+            !hasGlyphBackground && (glyphImage?.color?.isDefault ?: assetImage?.color?.isDefault
+                ?: remoteImage?.color?.isDefault ?: false)
 
         bitmap?.let {
             return CarIcon.Builder(IconCompat.createWithBitmap(it)).apply {
@@ -420,47 +416,62 @@ object Parser {
                 }
             }
             rows.forEachIndexed { index, row ->
-                addItem(Row.Builder().apply {
-                    setTitle(parseText(row.title))
-                    setEnabled(row.enabled)
-                    row.detailedText?.let { detailedText ->
-                        addText(parseText(detailedText))
-                    }
-                    row.image?.let { image ->
-                        val parsedImage = parseImage(context, image)
-                        val imageType = row.imageType
-                        if (imageType == null) {
-                            setImage(parsedImage)
-                        } else {
-                            setImage(parsedImage, imageType.toRowImageType())
-                        }
-                    }
-                    row.browsable?.let { browsable ->
-                        setBrowsable(browsable)
-                    }
-                    row.checked?.let { checked ->
-                        setToggle(Toggle.Builder { isChecked ->
-                            // onpPress is always defined on toggle rows
-                            row.onPress!!(isChecked)
-                            val item = row.copy(checked = isChecked)
-                            rows[index] = item
-                            AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
-                        }.apply {
-                            setEnabled(row.enabled)
-                            setChecked(checked)
-                        }.build())
-                    } ?: run {
-                        if (selectedIndex == null && row.onPress != null) {
-                            setOnClickListener {
-                                row.onPress(null)
-                            }
-                        }
-                    }
-
-                }.build())
+                addItem(parseRow(context, row, onToggle = { isChecked ->
+                    // onpPress is always defined on toggle rows
+                    row.onPress!!(isChecked)
+                    val item = row.copy(checked = isChecked)
+                    rows[index] = item
+                    AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                }, onClick = if (selectedIndex == null && row.onPress != null) {
+                    { row.onPress(null) }
+                } else {
+                    null
+                }))
             }
         }.build()
     }
+
+    /**
+     * a toggle row calls [onToggle], any other row gets [onClick] as its click listener if set.
+     */
+    fun parseRow(
+        context: CarContext, row: NitroRow, onToggle: (Boolean) -> Unit, onClick: (() -> Unit)?
+    ): Row = Row.Builder().apply {
+        setTitle(parseText(row.title))
+        setEnabled(row.enabled)
+        row.detailedText?.let { detailedText ->
+            addText(parseText(detailedText))
+        }
+        row.image?.let { image ->
+            val parsedImage = parseImage(context, image)
+            val imageType = row.imageType
+            if (imageType == null) {
+                setImage(parsedImage)
+            } else {
+                setImage(parsedImage, imageType.toRowImageType())
+            }
+        }
+        row.browsable?.let { browsable ->
+            setBrowsable(browsable)
+        }
+        row.checked?.let { checked ->
+            setToggle(Toggle.Builder { isChecked ->
+                onToggle(isChecked)
+            }.apply {
+                setEnabled(row.enabled)
+                setChecked(checked)
+            }.build())
+        } ?: run {
+            onClick?.let { setOnClickListener(it) }
+        }
+    }.build()
+
+    fun parseGridItem(context: CarContext, button: NitroGridButton): GridItem =
+        GridItem.Builder().apply {
+            setTitle(parseText(button.title))
+            setOnClickListener(button.onPress)
+            setImage(parseImage(context, button.image))
+        }.build()
 
     private fun ListImageType.toRowImageType(): Int = when (this) {
         ListImageType.LARGE -> Row.IMAGE_TYPE_LARGE
@@ -583,8 +594,7 @@ object Parser {
             context = context,
             color = assetImage.color,
             bitmap = bitmap,
-            cache = { result -> BitmapCache.put(context, assetImage, result) }
-        )
+            cache = { result -> BitmapCache.put(context, assetImage, result) })
     }
 
     fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
@@ -598,14 +608,13 @@ object Parser {
             context = context,
             color = remoteImage.color,
             bitmap = bitmap,
-            cache = { result -> BitmapCache.put(context, remoteImage, result) }
-        )
+            cache = { result -> BitmapCache.put(context, remoteImage, result) })
     }
 
     // Disable Fresco's own caching — BitmapCache handles all caching uniformly
     private fun buildImageRequest(uri: android.net.Uri): ImageRequest =
-        ImageRequestBuilder.newBuilderWithSource(uri)
-            .disableDiskCache().disableMemoryCache().build()
+        ImageRequestBuilder.newBuilderWithSource(uri).disableDiskCache().disableMemoryCache()
+            .build()
 
     /**
      * Fetches a bitmap via Fresco's image pipeline.
@@ -613,9 +622,7 @@ object Parser {
      * When `null`, the fetch runs synchronously (bundled assets, no network I/O).
      */
     private fun fetchBitmap(
-        context: CarContext,
-        imageRequest: ImageRequest,
-        timeoutMs: Long?
+        context: CarContext, imageRequest: ImageRequest, timeoutMs: Long?
     ): Bitmap? {
         if (timeoutMs == null) return fetchSync(context, imageRequest)
 
@@ -654,9 +661,7 @@ object Parser {
             } else if (image is CloseableXml) {
                 val drawable = image.buildDrawable()
                 return drawable?.toBitmap(
-                    width = image.width,
-                    height = image.height,
-                    Bitmap.Config.ARGB_8888
+                    width = image.width, height = image.height, Bitmap.Config.ARGB_8888
                 )
             }
         } catch (_: Exception) {
@@ -673,10 +678,7 @@ object Parser {
     }
 
     private fun applyTintAndCache(
-        context: CarContext,
-        color: NitroColor?,
-        bitmap: Bitmap,
-        cache: (Bitmap) -> Unit
+        context: CarContext, color: NitroColor?, bitmap: Bitmap, cache: (Bitmap) -> Unit
     ): Bitmap {
         color?.get(context)?.let { tint ->
             val tinted = createBitmap(bitmap.width, bitmap.height)
@@ -868,6 +870,12 @@ object Parser {
         context: CarContext, mapConfig: NitroBaseMapTemplateConfig?, template: Template
     ): Template {
         if (mapConfig == null) {
+            return template
+        }
+
+        // MapWithContentTemplate requires Car API 7 but minCarApiLevel is 1, so older hosts
+        // fall back to the content template full screen, as iOS does below 27.
+        if (context.carAppApiLevel < CarAppApiLevels.LEVEL_7) {
             return template
         }
 

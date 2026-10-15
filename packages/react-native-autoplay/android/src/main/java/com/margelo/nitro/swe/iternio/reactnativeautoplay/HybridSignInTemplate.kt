@@ -32,8 +32,8 @@ class HybridSignInTemplate : HybridSignInTemplateSpec() {
         // on older versions sign in with google is no longer supported
         val googleServiceMinVersion = 230815045
         val available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                context, googleServiceMinVersion
-            )
+            context, googleServiceMinVersion
+        )
         return ConnectionResult.SUCCESS == available
     }
 

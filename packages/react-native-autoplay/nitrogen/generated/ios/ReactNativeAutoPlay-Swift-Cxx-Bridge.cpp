@@ -18,6 +18,7 @@
 #include "HybridMapTemplateSpecSwift.hpp"
 #include "HybridMessageTemplateSpecSwift.hpp"
 #include "HybridSearchTemplateSpecSwift.hpp"
+#include "HybridSectionedItemTemplateSpecSwift.hpp"
 #include "HybridVoiceSpecSwift.hpp"
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"
 #include <NitroModules/NitroDefines.hpp>
@@ -317,6 +318,22 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     }
     #endif
     ReactNativeAutoPlay::HybridSearchTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridSectionedItemTemplateSpec>
+  std::shared_ptr<HybridSectionedItemTemplateSpec> create_std__shared_ptr_HybridSectionedItemTemplateSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    ReactNativeAutoPlay::HybridSectionedItemTemplateSpec_cxx swiftPart = ReactNativeAutoPlay::HybridSectionedItemTemplateSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::swe::iternio::reactnativeautoplay::HybridSectionedItemTemplateSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridSectionedItemTemplateSpec_(std__shared_ptr_HybridSectionedItemTemplateSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::swe::iternio::reactnativeautoplay::HybridSectionedItemTemplateSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::swe::iternio::reactnativeautoplay::HybridSectionedItemTemplateSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridSectionedItemTemplateSpec\" is not implemented in Swift!");
+    }
+    #endif
+    ReactNativeAutoPlay::HybridSectionedItemTemplateSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

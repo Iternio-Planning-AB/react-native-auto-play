@@ -47,6 +47,7 @@
 #include "JFunc_void_std__string_std__string.hpp"
 #include "JHybridMessageTemplateSpec.hpp"
 #include "JHybridSearchTemplateSpec.hpp"
+#include "JHybridSectionedItemTemplateSpec.hpp"
 #include "JHybridSignInTemplateSpec.hpp"
 #include "JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount_.hpp"
 #include "JHybridVoiceSpec.hpp"
@@ -115,6 +116,14 @@ struct JHybridListTemplateSpecImpl: public jni::JavaClass<JHybridListTemplateSpe
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridListTemplateSpecImpl::javaobject()>();
     jni::local_ref<JHybridListTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridListTemplateSpec();
+  }
+};
+struct JHybridSectionedItemTemplateSpecImpl: public jni::JavaClass<JHybridSectionedItemTemplateSpecImpl, JHybridSectionedItemTemplateSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridSectionedItemTemplate;";
+  static std::shared_ptr<JHybridSectionedItemTemplateSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridSectionedItemTemplateSpecImpl::javaobject()>();
+    jni::local_ref<JHybridSectionedItemTemplateSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridSectionedItemTemplateSpec();
   }
 };
 struct JHybridInformationTemplateSpecImpl: public jni::JavaClass<JHybridInformationTemplateSpecImpl, JHybridInformationTemplateSpec::JavaPart> {
@@ -211,6 +220,7 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_std__string_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMessageTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSearchTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSectionedItemTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridSignInTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount__cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridVoiceSpec::CxxPart::registerNatives();
@@ -257,6 +267,12 @@ void registerAllNatives() {
     "ListTemplate",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridListTemplateSpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "SectionedItemTemplate",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridSectionedItemTemplateSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(

@@ -4,11 +4,12 @@ import type { GridTemplate as NitroGridTemplate } from '../specs/GridTemplate.ni
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
 import { type GridButton, type NitroGridButton, NitroGridUtil } from '../utils/NitroGrid';
-import { NitroMapButton } from '../utils/NitroMapButton';
-import type { BaseMapTemplateConfig, PanelHeaderActions } from './MapTemplate';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
+import type { MapConfig } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
+  type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
   Template,
   type TemplateConfig,
@@ -28,11 +29,12 @@ export interface NitroGridTemplateConfig extends TemplateConfig {
   buttons: Array<NitroGridButton>;
   imageSize?: GridImageSize;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 export type GridTemplateConfig = Omit<
   NitroGridTemplateConfig,
-  'headerActions' | 'buttons' | 'mapConfig'
+  'headerActions' | 'buttons' | 'mapConfig' | 'platform'
 > & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -44,8 +46,8 @@ export type GridTemplateConfig = Omit<
   /**
    * Controls the size of all images in the Android grid. Defaults to `unset`, which preserves
    * the platform's standard grid layout. `large`, `medium`, and `small` require Android Car API
-   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set — `MapWithContentTemplate`
-   * does not support the sized grid content type.
+   * 8. Ignored (with a `__DEV__` warning) when `mapConfig` is also set, since a sized grid on the
+   * map crashes Android Auto (https://issuetracker.google.com/issues/572287914).
    * @namespace Android
    */
   imageSize?: GridImageSize;
@@ -54,13 +56,11 @@ export type GridTemplateConfig = Omit<
    * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a GridTemplate with a map in background. No actions need to be specified, can be empty object.
    * @namespace Android - uses MapWithContentTemplate
    * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
-   * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
-   * applied to the root map template's nav bar instead, since CarPlay has no separate header
-   * for the map behind a panel.
+   * `android.headerActions` here has no iOS equivalent — on iOS this template's own
+   * `headerActions` are applied to the root map template's nav bar instead, since CarPlay
+   * has no separate header for the map behind a panel.
    */
-  mapConfig?: Omit<BaseMapTemplateConfig<GridTemplate>, 'headerActions'> & {
-    headerActions?: PanelHeaderActions<GridTemplate>;
-  };
+  mapConfig?: MapConfig<GridTemplate>;
 };
 
 export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<GridTemplate>> {
@@ -79,7 +79,7 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
       rest.imageSize !== 'unset'
     ) {
       console.warn(
-        'GridTemplate: imageSize is ignored on Android when mapConfig is set — MapWithContentTemplate does not support the sized grid content type'
+        'GridTemplate: imageSize is ignored on Android when mapConfig is set, a sized grid on the map crashes Android Auto (https://issuetracker.google.com/issues/572287914)'
       );
     }
 
@@ -88,12 +88,8 @@ export class GridTemplate extends Template<GridTemplateConfig, HeaderActions<Gri
       id: this.id,
       headerActions: NitroActionUtil.convert(this.template, headerActions),
       buttons: NitroGridUtil.convert(this.template, buttons),
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridGridTemplate.createGridTemplate(nitroConfig);
