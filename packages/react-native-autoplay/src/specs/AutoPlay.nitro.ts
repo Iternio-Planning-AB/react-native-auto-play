@@ -99,4 +99,19 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
    * from one triggered by other sources (e.g. notification updates).
    */
   isCarServiceRunning(): boolean;
+
+  /**
+   * Hands a destination to the navigation app on the connected head unit.
+   *
+   * `Linking.openURL` cannot do this: on Android Auto the app runs in a `CarAppService`
+   * without an Activity context, and the CarPlay sandbox rejects `UIApplication.open()`.
+   * Android Auto receives `CarContext.ACTION_NAVIGATE`, CarPlay an `MKMapItem` opened
+   * with the current `CPTemplateApplicationScene`.
+   *
+   * @param latitude destination latitude
+   * @param longitude destination longitude
+   * @param label destination name shown in the navigation app
+   * @throws when no head unit is connected, or the navigation app cannot be opened
+   */
+  navigate(latitude: number, longitude: number, label: string): Promise<void>;
 }

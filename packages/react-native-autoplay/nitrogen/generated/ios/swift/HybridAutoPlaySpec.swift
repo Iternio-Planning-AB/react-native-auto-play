@@ -25,6 +25,7 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func setTemplateHeaderActions(templateId: String, headerActions: [NitroAction]?) throws -> Promise<Void>
   func isConnected() throws -> Bool
   func isCarServiceRunning() throws -> Bool
+  func navigate(latitude: Double, longitude: Double, label: String) throws -> Promise<Void>
 }
 
 public extension HybridAutoPlaySpec_protocol {

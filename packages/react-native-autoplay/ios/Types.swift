@@ -23,4 +23,6 @@ enum AutoPlayError: LocalizedError {
     case rootTemplateNotMapTemplate(String)
     case templateIsMapPanel(String)
     case mapTemplateNotVisible(String)
+    case navigationNotAvailable(String)
+    case navigationFailed(String)
 }

@@ -66,6 +66,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::shared_ptr<Promise<void>> setTemplateHeaderActions(const std::string& templateId, const std::optional<std::vector<NitroAction>>& headerActions) override;
     bool isConnected() override;
     bool isCarServiceRunning() override;
+    std::shared_ptr<Promise<void>> navigate(double latitude, double longitude, const std::string& label) override;
 
   private:
     jni::global_ref<JHybridAutoPlaySpec::JavaPart> _javaPart;
