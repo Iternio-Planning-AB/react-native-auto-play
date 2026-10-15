@@ -11,6 +11,14 @@ struct NavigationAlertWrapper {
     let config: NitroNavigationAlert
 }
 
+private struct PendingNavigationStart {
+    let generation: Int
+    let trip: CPTrip
+    let routeChoice: CPRouteChoice?
+    var completions: [() -> Void]
+    var sessionCalls: [() -> Void]
+}
+
 class MapTemplate: AutoPlayHeaderProviding,
     CPMapTemplateDelegate
 {
@@ -35,6 +43,18 @@ class MapTemplate: AutoPlayHeaderProviding,
     var onTripSelected: ((_ tripId: String, _ routeId: String) -> Void)?
     var onTripStarted: ((_ tripId: String, _ routeId: String) -> Void)?
     var navigationSession: CPNavigationSession?
+    /// the route choice the active navigation session follows, a session started from the trip preview
+    /// is started with CarPlay's own trip and therefore carries every route choice of that trip
+    private(set) var activeRouteChoice: CPRouteChoice?
+    /// a navigation session start that has not reached CarPlay yet, see startNavigation
+    private var pendingStart: PendingNavigationStart?
+    private var pendingStartGeneration = 0
+    /// number of finishTrip() calls whose main queue turn has not passed yet
+    private var finishingTrips = 0
+    /// when the active session was started
+    private var navigationSessionStartedAt: Date?
+    /// a session must not start before this, set when a session younger than minimumSessionAge is finished
+    private var nextSessionStartNotBefore: Date?
     var navigationAlert: NavigationAlertWrapper?
     var currentTripId: String?
 
@@ -448,11 +468,20 @@ class MapTemplate: AutoPlayHeaderProviding,
         onBackPressed: @escaping () -> Void,
         mapButtons: [NitroMapButton]
     ) -> TripSelectorCallback {
-        tripSelectorVisible = true
-        self.onTripSelected = onTripSelected
-        self.onTripStarted = onTripStarted
+        let textConfiguration = Parser.parseTripPreviewTextConfig(
+            textConfig: textConfig
+        )
+
+        let tripPreviews = Parser.parseTrips(trips: trips)
+        let selectedTrip = selectedTripId.flatMap { tripId in
+            tripPreviews.first(where: { $0.id == tripId })
+        }
 
         DispatchQueue.main.async {
+            self.tripSelectorVisible = true
+            self.onTripSelected = onTripSelected
+            self.onTripStarted = onTripStarted
+
             self.template.backButton = CPBarButton(title: "") { _ in
                 self.hideTripSelector()
 
@@ -465,41 +494,34 @@ class MapTemplate: AutoPlayHeaderProviding,
                 mapButtons: mapButtons,
                 onPanButtonPress: self.onPanButtonPress
             )
-        }
 
-        let textConfiguration = Parser.parseTripPreviewTextConfig(
-            textConfig: textConfig
-        )
+            self.template.showTripPreviews(
+                tripPreviews,
+                selectedTrip: selectedTrip,
+                textConfiguration: textConfiguration
+            )
 
-        let tripPreviews = Parser.parseTrips(trips: trips)
-        let selectedTrip = selectedTripId.flatMap { tripId in
-            tripPreviews.first(where: { $0.id == tripId })
-        }
+            tripPreviews.forEach { trip in
+                guard
+                    let travelEstimates = trip.routeChoices.first?
+                        .travelEstimates.last
+                else { return }
 
-        template.showTripPreviews(
-            tripPreviews,
-            selectedTrip: selectedTrip,
-            textConfiguration: textConfiguration
-        )
-
-        tripPreviews.forEach { trip in
-            guard
-                let travelEstimates = trip.routeChoices.first?
-                    .travelEstimates.last
-            else { return }
-
-            template.updateEstimates(travelEstimates, for: trip)
+                self.template.updateEstimates(travelEstimates, for: trip)
+            }
         }
 
         let callback = TripSelectorCallback { tripId in
             let selectedTrip = tripPreviews.first { trip in
                 trip.id == tripId
             }
-            self.template.showTripPreviews(
-                tripPreviews,
-                selectedTrip: selectedTrip,
-                textConfiguration: textConfiguration
-            )
+            DispatchQueue.main.async {
+                self.template.showTripPreviews(
+                    tripPreviews,
+                    selectedTrip: selectedTrip,
+                    textConfiguration: textConfiguration
+                )
+            }
         }
 
         return callback
@@ -544,14 +566,9 @@ class MapTemplate: AutoPlayHeaderProviding,
         startedTrip trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        let trip = CPTrip(
-            origin: trip.origin,
-            destination: trip.destination,
-            routeChoices: [routeChoice],
-            id: trip.id
-        )
-
-        startNavigation(trip: trip)
+        // CarPlay expects the session to be started for the trip it handed over, a rebuilt trip
+        // with the same id is a different trip to CarPlay
+        startNavigation(trip: trip, routeChoice: routeChoice, startImmediately: true)
 
         if let onTripStarted = self.onTripStarted {
             let tripId = trip.id
@@ -572,7 +589,7 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         guard let trip = navigationSession?.trip else { return }
 
-        let travelEstimates = trip.routeChoices.first?
+        let travelEstimates = activeRouteChoice?
             .travelEstimates
         if let estimates = self.visibleTravelEstimate == .first
             ? travelEstimates?.first : travelEstimates?.last
@@ -583,7 +600,7 @@ class MapTemplate: AutoPlayHeaderProviding,
     }
 
     func updateTravelEstimates(steps: [TripPoint]) {
-        guard let route = navigationSession?.trip.routeChoices.first else {
+        guard navigationSession != nil, let route = activeRouteChoice else {
             return
         }
 
@@ -785,8 +802,28 @@ class MapTemplate: AutoPlayHeaderProviding,
         }
     }
 
-    func startNavigation(trip: CPTrip) {
-        let routeChoice = trip.routeChoices.first
+    /// CarPlay confirms a session start asynchronously (about 20 ms measured on device) and raises
+    /// "Attempted to start a new navigation session while one is already active" when a session is
+    /// finished before that and another one is started. Sessions are therefore never finished, and
+    /// no new session started after finishing one, before they are this old.
+    private static let minimumSessionAge: TimeInterval = 0.3
+
+    /// Starts are not handed to CarPlay right away but on the next main queue turn, so back to back
+    /// calls (e.g. a start immediately followed by a start for another trip) only start the last trip
+    /// instead of starting and immediately finishing a session. Calls touching the session in the
+    /// meantime are queued, see performWithNavigationSession.
+    /// - Parameters:
+    ///   - routeChoice: the route choice to follow, defaults to the first one of the trip
+    ///   - completion: called once the session is started, ignored or the start was cancelled
+    ///   - startImmediately: start right away when no session is active, pending or just finished, so
+    ///     the common trip preview start stays synchronous; otherwise it is deferred like any other start
+    func startNavigation(
+        trip: CPTrip,
+        routeChoice: CPRouteChoice? = nil,
+        completion: (() -> Void)? = nil,
+        startImmediately: Bool = false
+    ) {
+        let routeChoice = routeChoice ?? trip.routeChoices.first
 
         if let travelEstimates = visibleTravelEstimate == .first
             ? routeChoice?.travelEstimates.first
@@ -795,27 +832,193 @@ class MapTemplate: AutoPlayHeaderProviding,
             template.updateEstimates(travelEstimates, for: trip)
         }
 
-        if let navigationSession = self.navigationSession {
-            let knownTripIds = navigationSession.trip.routeChoices.map { $0.id }
-            let incomingTripIds = trip.routeChoices.map { $0.id }
-
-            if navigationSession.trip.id == trip.id
-                && knownTripIds == incomingTripIds
-            {
-                // in case startNavigation is called with the exact same ids we can ignore the call
+        if var pendingStart {
+            if MapTemplate.isSameTrip(
+                trip,
+                routeChoice,
+                as: pendingStart.trip,
+                pendingStart.routeChoice
+            ) {
+                pendingStart.completions.append(completion ?? {})
+                self.pendingStart = pendingStart
                 return
             }
 
-            navigationSession.finishTrip()
+            // session updates queued so far belong to the replaced trip
+            self.pendingStart = PendingNavigationStart(
+                generation: pendingStart.generation,
+                trip: trip,
+                routeChoice: routeChoice,
+                completions: pendingStart.completions + [completion ?? {}],
+                sessionCalls: []
+            )
+            return
         }
 
-        self.navigationSession = template.startNavigationSession(for: trip)
+        if let navigationSession,
+            MapTemplate.isSameTrip(
+                trip,
+                routeChoice,
+                as: navigationSession.trip,
+                activeRouteChoice
+            )
+        {
+            // in case startNavigation is called with the exact same ids we can ignore the call
+            completion?()
+            return
+        }
+
+        if startImmediately && navigationSession == nil && canStartNavigationSession() {
+            beginNavigationSession(trip: trip, routeChoice: routeChoice)
+            completion?()
+            return
+        }
+
+        pendingStartGeneration += 1
+        let generation = pendingStartGeneration
+        pendingStart = PendingNavigationStart(
+            generation: generation,
+            trip: trip,
+            routeChoice: routeChoice,
+            completions: [completion ?? {}],
+            sessionCalls: []
+        )
+        DispatchQueue.main.async { [weak self] in
+            self?.runPendingStart(generation: generation)
+        }
+    }
+
+    private func runPendingStart(generation: Int) {
+        guard let pendingStart, pendingStart.generation == generation else { return }
+
+        // e.g. A active, start B, start A: the pending start was replaced with the active trip again,
+        // keep the running session instead of finishing and restarting it
+        if let navigationSession,
+            MapTemplate.isSameTrip(
+                pendingStart.trip,
+                pendingStart.routeChoice,
+                as: navigationSession.trip,
+                activeRouteChoice
+            )
+        {
+            self.pendingStart = nil
+            pendingStart.sessionCalls.forEach { $0() }
+            pendingStart.completions.forEach { $0() }
+            return
+        }
+
+        func retry(after delay: TimeInterval?) {
+            let block: () -> Void = { [weak self] in
+                self?.runPendingStart(generation: generation)
+            }
+            if let delay {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: block)
+            }
+            else {
+                DispatchQueue.main.async(execute: block)
+            }
+        }
+
+        if navigationSession != nil {
+            if let wait = remainingSessionAge(), wait > 0 {
+                retry(after: wait)
+                return
+            }
+            finishNavigationSession()
+        }
+
+        if finishingTrips > 0 {
+            retry(after: nil)
+            return
+        }
+
+        if let notBefore = nextSessionStartNotBefore, notBefore > Date() {
+            retry(after: notBefore.timeIntervalSinceNow)
+            return
+        }
+
+        self.pendingStart = nil
+        beginNavigationSession(
+            trip: pendingStart.trip,
+            routeChoice: pendingStart.routeChoice
+        )
+        pendingStart.sessionCalls.forEach { $0() }
+        pendingStart.completions.forEach { $0() }
+    }
+
+    private func canStartNavigationSession() -> Bool {
+        if finishingTrips > 0 {
+            return false
+        }
+        if let notBefore = nextSessionStartNotBefore, notBefore > Date() {
+            return false
+        }
+        return true
+    }
+
+    /// time until the active session reached minimumSessionAge, nil when there is none
+    private func remainingSessionAge() -> TimeInterval? {
+        guard let navigationSessionStartedAt else { return nil }
+        return MapTemplate.minimumSessionAge + navigationSessionStartedAt.timeIntervalSinceNow
+    }
+
+    private func beginNavigationSession(trip: CPTrip, routeChoice: CPRouteChoice?) {
+        navigationSession = template.startNavigationSession(for: trip)
+        navigationSessionStartedAt = Date()
+        activeRouteChoice = routeChoice
+        nextSessionStartNotBefore = nil
         applyOptionsPanel()
     }
 
+    private func finishNavigationSession() {
+        guard let navigationSession else { return }
+
+        if let wait = remainingSessionAge(), wait > 0 {
+            // a stop can not wait, the next session start has to instead
+            nextSessionStartNotBefore = Date().addingTimeInterval(wait)
+        }
+
+        navigationSession.finishTrip()
+        self.navigationSession = nil
+        navigationSessionStartedAt = nil
+        activeRouteChoice = nil
+
+        finishingTrips += 1
+        DispatchQueue.main.async { [weak self] in
+            self?.finishingTrips -= 1
+        }
+    }
+
+    private static func isSameTrip(
+        _ trip: CPTrip,
+        _ routeChoice: CPRouteChoice?,
+        as otherTrip: CPTrip,
+        _ otherRouteChoice: CPRouteChoice?
+    ) -> Bool {
+        return trip.id == otherTrip.id && routeChoice?.id == otherRouteChoice?.id
+    }
+
+    /// Runs a call that updates the navigation session right away, or once a pending session
+    /// start ran so updates sent right after startNavigation are not dropped.
+    func performWithNavigationSession(_ call: @escaping () -> Void) {
+        if pendingStart != nil {
+            pendingStart?.sessionCalls.append(call)
+            return
+        }
+        call()
+    }
+
+    var isNavigationSessionActive: Bool {
+        return navigationSession != nil || pendingStart != nil
+    }
+
     func stopNavigation() {
-        navigationSession?.finishTrip()
-        navigationSession = nil
+        if let pendingStart {
+            self.pendingStart = nil
+            pendingStart.completions.forEach { $0() }
+        }
+
+        finishNavigationSession()
     }
 
     func updateOptionsPanel(config: NitroOptionsPanelConfig?) {

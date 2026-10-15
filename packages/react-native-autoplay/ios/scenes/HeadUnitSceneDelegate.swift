@@ -33,6 +33,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             ],
         ]
 
+        stopStaleNavigationOnConnect()
         connect(props: props)
         HybridAutoPlay.emit(event: .didconnect)
     }
@@ -45,6 +46,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             interfaceController: interfaceController
         )
 
+        stopStaleNavigationOnConnect()
         connect(props: [
             "colorScheme": interfaceController.carTraitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light"
@@ -57,12 +59,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         didDisconnect interfaceController: CPInterfaceController,
         from window: CPWindow
     ) {
-        if let mapTemplate = try? templateStore.getTemplate(
-            templateId: SceneStore.rootModuleName
-        ) as? MapTemplate {
-            mapTemplate.stopNavigation()
-        }
-
+        stopNavigationOnDisconnect()
         disconnect()
 
         HybridAutoPlay.emit(event: .diddisconnect)
@@ -73,8 +70,29 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         didDisconnectInterfaceController interfaceController:
             CPInterfaceController
     ) {
+        stopNavigationOnDisconnect()
         disconnect()
         HybridAutoPlay.emit(event: .diddisconnect)
+    }
+
+    private var rootMapTemplate: MapTemplate? {
+        return try? templateStore.getTemplate(
+            templateId: SceneStore.rootModuleName
+        ) as? MapTemplate
+    }
+
+    /// a session that is not finished on disconnect stays active on the CarPlay side and can make
+    /// the session start after the next connect fail
+    private func stopNavigationOnDisconnect() {
+        rootMapTemplate?.stopNavigation()
+    }
+
+    /// the scene can connect again without a disconnect in between (e.g. after the app was in the
+    /// background), a session left over from before would make the next session start fail
+    private func stopStaleNavigationOnConnect() {
+        if let mapTemplate = rootMapTemplate, mapTemplate.isNavigationSessionActive {
+            mapTemplate.stopNavigation()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

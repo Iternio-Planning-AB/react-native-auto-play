@@ -9,6 +9,66 @@ import CarPlay
 import NitroModules
 
 class HybridMapTemplate: HybridMapTemplateSpec {
+    /// The template lookup stays synchronous so a missing template still throws to JS,
+    /// nil means there is no root scene and the call is a no-op.
+    private func getMapTemplate(templateId: String) throws -> MapTemplate? {
+        var mapTemplate: MapTemplate?
+        try RootModule.withAutoPlayTemplate(templateId: templateId) {
+            (template: MapTemplate) in
+            mapTemplate = template
+        }
+        return mapTemplate
+    }
+
+    /// CPMapTemplate and CPNavigationSession are main thread only. Calls are queued on the main
+    /// queue in the order JS issued them, so e.g. maneuvers sent right after startNavigation can
+    /// not overtake the session start.
+    private func onMainThread(
+        templateId: String,
+        perform action: @escaping @MainActor (MapTemplate) -> Void
+    ) throws {
+        guard let mapTemplate = try getMapTemplate(templateId: templateId) else { return }
+
+        DispatchQueue.main.async {
+            action(mapTemplate)
+        }
+    }
+
+    private func onMainThread(
+        templateId: String,
+        perform action: @escaping @MainActor (MapTemplate, _ resolve: @escaping () -> Void) -> Void
+    ) -> Promise<Void> {
+        let promise = Promise<Void>()
+
+        do {
+            guard let mapTemplate = try getMapTemplate(templateId: templateId) else {
+                promise.resolve()
+                return promise
+            }
+
+            DispatchQueue.main.async {
+                action(mapTemplate) { promise.resolve() }
+            }
+        }
+        catch {
+            promise.reject(withError: error)
+        }
+
+        return promise
+    }
+
+    /// for calls that update the navigation session, they wait for a pending session start
+    private func withNavigationSession(
+        templateId: String,
+        perform action: @escaping (MapTemplate) -> Void
+    ) throws {
+        try onMainThread(templateId: templateId) { template in
+            template.performWithNavigationSession {
+                action(template)
+            }
+        }
+    }
+
     func createMapTemplate(config: MapTemplateConfig) throws {
         let template = MapTemplate(config: config)
 
@@ -23,22 +83,17 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?)
         throws -> Promise<Void>
     {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: MapTemplate) in
-                    template.mapButtons = buttons
-                    template.invalidate()
-                }
-            }
+        return onMainThread(templateId: templateId) { template, resolve in
+            template.mapButtons = buttons
+            template.invalidate()
+            resolve()
         }
     }
 
     func showNavigationAlert(templateId: String, alert: NitroNavigationAlert)
         throws
     {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try onMainThread(templateId: templateId) { template in
             template.showAlert(alertConfig: alert)
         }
     }
@@ -49,8 +104,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         title: AutoText,
         subtitle: AutoText?
     ) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try onMainThread(templateId: templateId) { template in
             template.updateNavigationAlert(
                 alertId: navigationAlertId,
                 title: title,
@@ -62,8 +116,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     func dismissNavigationAlert(templateId: String, navigationAlertId: Double)
         throws
     {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try onMainThread(templateId: templateId) { template in
             template.dismissNavigationAlert(alertId: navigationAlertId)
         }
     }
@@ -101,8 +154,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func hideTripSelector(templateId: String) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try onMainThread(templateId: templateId) { template in
             template.hideTripSelector()
         }
     }
@@ -111,8 +163,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         templateId: String,
         visibleTravelEstimate: VisibleTravelEstimate
     ) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try withNavigationSession(templateId: templateId) { template in
             template.updateVisibleTravelEstimate(
                 visibleTravelEstimate: visibleTravelEstimate
             )
@@ -120,15 +171,13 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func updateTravelEstimates(templateId: String, steps: [TripPoint]) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try withNavigationSession(templateId: templateId) { template in
             template.updateTravelEstimates(steps: steps)
         }
     }
 
     func updateManeuvers(templateId: String, maneuvers: NitroManeuver) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try withNavigationSession(templateId: templateId) { template in
             switch maneuvers {
             case .first(let routingManeuvers):
                 {
@@ -148,27 +197,20 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     }
 
     func startNavigation(templateId: String, trip: TripConfig) throws -> Promise<Void> {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: MapTemplate) in
-                    let trip = Parser.parseTrip(tripConfig: trip)
-                    template.startNavigation(trip: trip)
-                }
-            }
+        return onMainThread(templateId: templateId) { template, resolve in
+            let trip = Parser.parseTrip(tripConfig: trip)
+            template.startNavigation(trip: trip, completion: resolve)
         }
     }
 
     func stopNavigation(templateId: String) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try onMainThread(templateId: templateId) { template in
             template.stopNavigation()
         }
     }
 
     func setManeuverState(templateId: String, state: ManeuverState) throws {
-        try RootModule.withAutoPlayTemplate(templateId: templateId) {
-            (template: MapTemplate) in
+        try withNavigationSession(templateId: templateId) { template in
             template.setManeuverState(state: state)
         }
     }
@@ -176,13 +218,9 @@ class HybridMapTemplate: HybridMapTemplateSpec {
     func updateOptionsPanel(templateId: String, config: NitroOptionsPanelConfig?) throws
         -> Promise<Void>
     {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: MapTemplate) in
-                    template.updateOptionsPanel(config: config)
-                }
-            }
+        return onMainThread(templateId: templateId) { template, resolve in
+            template.updateOptionsPanel(config: config)
+            resolve()
         }
     }
 }
