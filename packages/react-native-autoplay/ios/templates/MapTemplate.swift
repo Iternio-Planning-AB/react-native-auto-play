@@ -658,6 +658,8 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         if #available(iOS 17.4, *) {
             navigationSession.add([maneuver])
+            // a message maneuver has no lanes, don't leave the vehicle showing the previous maneuver's lane assist
+            navigationSession.currentLaneGuidance = nil
         }
 
         navigationSession.upcomingManeuvers = [maneuver]
@@ -667,6 +669,9 @@ class MapTemplate: AutoPlayHeaderProviding,
         guard let navigationSession = navigationSession else { return }
 
         if maneuvers.isEmpty {
+            if #available(iOS 17.4, *) {
+                navigationSession.currentLaneGuidance = nil
+            }
             navigationSession.upcomingManeuvers = []
             return
         }
@@ -690,25 +695,15 @@ class MapTemplate: AutoPlayHeaderProviding,
             !maneuver.isSecondary
         }
 
-        for (index, nitroManeuver) in maneuvers.enumerated() {
-            if let maneuverIndex =
-                sessionManeuvers
-                .firstIndex(where: { $0.id == nitroManeuver.id })
-            {
+        for nitroManeuver in maneuvers {
+            if let maneuver = sessionManeuvers.first(where: { $0.id == nitroManeuver.id }) {
                 navigationSession.updateEstimates(
                     Parser.parseTravelEstimates(
                         travelEstimates: nitroManeuver.travelEstimates
                     ),
-                    for: sessionManeuvers[maneuverIndex]
+                    for: maneuver
                 )
-
-                if index != maneuverIndex {
-                    if let maneuver = navigationSession.upcomingManeuvers.first(
-                        where: { $0.id == nitroManeuver.id }
-                    ) {
-                        upcomingManeuvers.append(maneuver)
-                    }
-                }
+                upcomingManeuvers.append(maneuver)
                 continue
             }
 
@@ -719,9 +714,14 @@ class MapTemplate: AutoPlayHeaderProviding,
             upcomingManeuvers.append(maneuver)
         }
 
-        if upcomingManeuvers.count > 0 {
+        if upcomingManeuvers.map({ $0.id }) != sessionManeuvers.map({ $0.id }) {
             if #available(iOS 17.4, *) {
                 upcomingManeuvers = upcomingManeuvers.flatMap { maneuver in
+                    if let lanesManeuver = navigationSession.upcomingManeuvers.first(where: {
+                        $0.id == maneuver.id + "-lanes"
+                    }) {
+                        return [maneuver, lanesManeuver]
+                    }
                     if let laneImages = maneuver.laneImages {
                         // CarPlay has a limitation of 120x18 for the symbolImage on secondaryManeuver that shows lanes only
                         let secondarySymbolImage = Parser.imageFromLanes(
@@ -743,24 +743,22 @@ class MapTemplate: AutoPlayHeaderProviding,
                     }
                 }
 
-                navigationSession.add(
-                    upcomingManeuvers.filter({ maneuver in
-                        !navigationSession.upcomingManeuvers.contains(where: {
-                            $0.id == maneuver.id
-                        })
+                let newManeuvers = upcomingManeuvers.filter { maneuver in
+                    !navigationSession.upcomingManeuvers.contains(where: {
+                        $0.id == maneuver.id
                     })
-                )
+                }
 
-                let laneGuidances = upcomingManeuvers.compactMap {
-                    $0.laneGuidance
+                // lane guidances have to be known to the session before the maneuvers linking to them are added
+                let newLaneGuidances = newManeuvers.compactMap { $0.laneGuidance }
+                if !newLaneGuidances.isEmpty {
+                    navigationSession.add(newLaneGuidances)
                 }
-                if laneGuidances.isEmpty {
-                    navigationSession.currentLaneGuidance = nil
-                }
-                else {
-                    navigationSession.add(laneGuidances)
-                    navigationSession.currentLaneGuidance = laneGuidances.first
-                }
+                navigationSession.add(newManeuvers)
+
+                // the vehicle expects the lane guidance of the current maneuver, nil when it has none
+                navigationSession.currentLaneGuidance =
+                    upcomingManeuvers.first?.laneGuidance
 
                 if let roadFollowingManeuverVariants = upcomingManeuvers.first?
                     .roadFollowingManeuverVariants
