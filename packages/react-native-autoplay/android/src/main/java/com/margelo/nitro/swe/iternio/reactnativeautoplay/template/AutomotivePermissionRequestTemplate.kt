@@ -78,15 +78,14 @@ class AutomotivePermissionRequestTemplate(
             }.build()).addAction(Action.Builder().apply {
                 setTitle(grantButtonText)
                 setOnClickListener(ParkedOnlyOnClickListener.create {
-                    carContext.requestPermissions(
-                        permissions.toList(), { granted: List<String>, denied: List<String> ->
-                            setResult(
-                                PermissionRequestResult(
-                                    granted.toTypedArray(), denied.toTypedArray()
-                                )
+                    carContext.requestPermissions(permissions.toList(), { granted: List<String>, denied: List<String> ->
+                        setResult(
+                            PermissionRequestResult(
+                                granted.toTypedArray(), denied.toTypedArray()
                             )
-                            finish()
-                        })
+                        )
+                        finish()
+                    })
                 })
                 cancelButtonText?.let {
                     addAction(Action.Builder().apply {

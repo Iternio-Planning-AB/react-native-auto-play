@@ -253,12 +253,11 @@ class MapTemplate(
                 }.build()
                 try {
                     navigationManager.updateTrip(trip)
-                } catch(e: IllegalStateException) {
+                } catch (e: IllegalStateException) {
                     // Sometimes we get a "java.lang.IllegalStateException: Navigation is not started" here, although the navigation
                     // is started already (we check for isNavigating at the top). So i guess this is a race condition, that we start navigation
                     // and the AA app is not ready yet. Unfortunately we can not ask the AA app for it's state, so we just catch the error.
                 }
-
             }
         }
 
@@ -411,7 +410,7 @@ class MapTemplate(
                 }.build()
                 try {
                     navigationManager.updateTrip(trip)
-                } catch(exception: IllegalStateException) {
+                } catch (exception: IllegalStateException) {
                     // Sometimes we get a "java.lang.IllegalStateException: Navigation is not started" here, although the navigation
                     // is started already (we check for isNavigating at the top). So i guess this is a race condition, that we start navigation
                     // and the AA app is not ready yet. Unfortunately we can not ask the AA app for it's state, so we just catch the error.

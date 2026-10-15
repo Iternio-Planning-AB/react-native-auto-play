@@ -1,12 +1,14 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.template
 
 import androidx.car.app.CarContext
-import androidx.car.app.model.ListTemplate
+import androidx.car.app.model.ItemList
 import androidx.car.app.model.SectionedItemList
 import androidx.car.app.model.Template
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.AutoText
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSection
+import androidx.car.app.model.ListTemplate as CarListTemplate
 
 class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     AndroidAutoTemplate<ListTemplateConfig>(context, config) {
@@ -17,34 +19,11 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     override val autoDismissMs = config.autoDismissMs
 
     override fun parse(): Template {
-        val template = ListTemplate.Builder().apply {
-            setHeader(Parser.parseHeader(context, config.title, config.headerActions))
-
-            config.sections?.let { sections ->
-                if (sections.isEmpty()) {
-                    setLoading(true)
-                } else if (sections.size == 1 && sections.first().title == null) {
-                    val section = sections[0]
-                    setSingleList(
-                        Parser.parseRows(
-                            context, section.items, 0, config.id, section.type
-                        )
-                    )
-                } else {
-                    sections.forEachIndexed { index, section ->
-                        addSectionedList(
-                            SectionedItemList.create(
-                                Parser.parseRows(
-                                    context, section.items, index, config.id, section.type
-                                ), section.title!!
-                            )
-                        )
-                    }
-                }
-            } ?: run {
-                setLoading(true)
-            }
-        }.build()
+        val sections = config.sections?.mapIndexed { index, section ->
+            val rows = Parser.parseRows(context, section.items, index, config.id, section.type)
+            section.title to rows
+        }
+        val template = parse(context, config.title, config.headerActions, sections)
 
         return Parser.parseMapWithContentConfig(context, config.mapConfig, template)
     }
@@ -81,6 +60,31 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     }
 
     companion object {
+        /** a ListTemplate, loading without sections, a single untitled section has no header */
+        fun parse(
+            context: CarContext,
+            title: AutoText,
+            headerActions: Array<NitroAction>?,
+            sections: List<Pair<String?, ItemList>>?
+        ): Template = CarListTemplate.Builder().apply {
+            setHeader(Parser.parseHeader(context, title, headerActions))
 
+            if (sections.isNullOrEmpty()) {
+                setLoading(true)
+                return@apply
+            }
+
+            val singleSection = sections.singleOrNull()
+            if (singleSection != null && singleSection.first == null) {
+                setSingleList(singleSection.second)
+                return@apply
+            }
+
+            sections.forEach { (sectionTitle, itemList) ->
+                // empty headers are rejected, a blank one shows an empty line like on CarPlay
+                val header = sectionTitle?.takeUnless { it.isEmpty() } ?: " "
+                addSectionedList(SectionedItemList.create(itemList, header))
+            }
+        }.build()
     }
 }

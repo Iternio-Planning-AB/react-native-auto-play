@@ -13,13 +13,31 @@ import {
 import { DefaultTemplateImageColor } from '../config/Color';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
+import { AutoSectionedItemTemplate } from './AutoSectionedItemTemplate';
 import { AutoTemplate } from './AutoTemplate';
 
 const getRadioTemplate = (): ListTemplate => {
   const template = new ListTemplate({
     title: { text: 'radios' },
     headerActions: AutoTemplate.headerActions,
-    mapConfig: {},
+    mapConfig: {
+      ios: {
+        primaryAction: {
+          type: 'text',
+          title: 'back',
+          onPress: () => {
+            HybridAutoPlay.popTemplate();
+          },
+        },
+        secondaryAction: {
+          type: 'image',
+          image: { type: 'glyph', name: 'close' },
+          onPress: () => {
+            HybridAutoPlay.popToRootTemplate();
+          },
+        },
+      },
+    },
     sections: {
       type: 'radio',
       items: [
@@ -44,20 +62,6 @@ const getRadioTemplate = (): ListTemplate => {
           onPress: () => {
             console.log('*** radio #3');
           },
-        },
-        {
-          type: 'radio',
-          onPress: () => {
-            HybridAutoPlay.popTemplate();
-          },
-          title: { text: 'pop template' },
-        },
-        {
-          type: 'radio',
-          onPress: () => {
-            HybridAutoPlay.popToRootTemplate();
-          },
-          title: { text: 'pop to root' },
         },
       ],
     },
@@ -137,18 +141,28 @@ const getMainSection = (): Section<ListTemplate> => {
     {
       type: 'default',
       onPress: () => {
-        HybridAutoPlay.popTemplate();
+        void AutoSectionedItemTemplate.getTemplate().push();
       },
-      title: { text: 'pop template' },
-      image: { type: 'glyph', name: 'arrow_back' },
+      title: { text: 'sectioned item template' },
+      image: {
+        type: 'glyph',
+        name: 'view_agenda',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
     },
     {
       type: 'default',
       onPress: () => {
-        HybridAutoPlay.popToRootTemplate();
+        void AutoSectionedItemTemplate.getTemplate({ mapConfig: {} }).push();
       },
-      title: { text: 'pop to root' },
-      image: { type: 'glyph', name: 'map' },
+      title: { text: 'sectioned item template (map)' },
+      image: {
+        type: 'glyph',
+        name: 'dashboard',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
     },
     {
       type: 'waypoint',
@@ -217,7 +231,27 @@ const getTemplate = (props?: { mapConfig?: ListTemplateConfig['mapConfig'] }): L
       distance: { unit: 'meters', value: 1234 },
       duration: 4711,
     },
-    mapConfig: props?.mapConfig,
+    mapConfig: props?.mapConfig
+      ? {
+          ...props.mapConfig,
+          ios: {
+            primaryAction: {
+              type: 'text',
+              title: 'back',
+              onPress: () => {
+                HybridAutoPlay.popTemplate();
+              },
+            },
+            secondaryAction: {
+              type: 'image',
+              image: { type: 'glyph', name: 'close' },
+              onPress: () => {
+                HybridAutoPlay.popToRootTemplate();
+              },
+            },
+          },
+        }
+      : undefined,
     headerActions: AutoTemplate.headerActions,
     sections: getMainSection(),
     onDidAppear: () => console.log('ListTemplate onDidAppear', template.id),

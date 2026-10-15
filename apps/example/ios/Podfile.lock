@@ -1741,7 +1741,7 @@ PODS:
     - React-perflogger (= 0.87.1)
     - React-utils (= 0.87.1)
     - ReactNativeDependencies
-  - ReactNativeAutoPlay (0.6.1):
+  - ReactNativeAutoPlay (0.8.1):
     - hermes-engine
     - NitroModules
     - RCTRequired
@@ -2134,7 +2134,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 531dee09fa5ac21ef8a236a0c4767c3b2f9db977
   ReactCodegen: 541e7dfbcc72e0dea71b9aa41ba6fba7140439eb
   ReactCommon: 7d2d036b7250e66dce71d19f47160d4b31fbb92a
-  ReactNativeAutoPlay: 76ea40eeca20c58347e808f42acfaf1386a63061
+  ReactNativeAutoPlay: 99cd64855144ac802c685f5ccca9ca9cdea05bcf
   ReactNativeDependencies: 94c922c39e0e6150ee9ad05e2ca1946e0ef55783
   SocketRocket: d57b1af80c029e12a75cd9b218287c67381e4593
   Yoga: 58b502c52b14ad3c4468805d461fc37d275c2a42

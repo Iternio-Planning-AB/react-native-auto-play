@@ -11,7 +11,7 @@ import com.margelo.nitro.NitroModules
 import kotlin.math.floor
 
 private val REQUIRED_VEHICLE_PROPERTY_IDS = listOf(
-    //make sure all these ids are handled in vehiclePropertyReceiver
+    // make sure all these ids are handled in vehiclePropertyReceiver
     VehiclePropertyIds.GEAR_SELECTION,
     VehiclePropertyIds.EV_BATTERY_LEVEL,
     VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE,

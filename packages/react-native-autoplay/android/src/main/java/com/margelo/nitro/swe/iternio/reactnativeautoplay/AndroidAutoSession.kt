@@ -30,7 +30,6 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
 
     private fun getInitialTemplate(): Template {
         if (isCluster) {
-
             // clusters can not display any actions but still need one to not crash...
             val action =
                 NitroAction(null, null, null, {}, NitroActionType.APPICON, null, null, null)
@@ -107,7 +106,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         appRegistry.runApplication(jsAppModuleName, appParams)
-        */
+         */
     }
 
     override fun onCarConfigurationChanged(configuration: Configuration) {

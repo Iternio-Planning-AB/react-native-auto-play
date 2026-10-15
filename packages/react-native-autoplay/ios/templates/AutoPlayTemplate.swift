@@ -34,6 +34,12 @@ class AutoPlayTemplate: NSObject {
         return nil
     }
 
+    /// Whether the template opts into CarPlay's native close button while rendering as a map panel
+    /// (see `getPanel()`). Only honored for the bottom panel, see `HybridAutoPlay.pushTemplate`.
+    func getPanelShowsCloseButton() -> Bool {
+        return false
+    }
+
     @MainActor final func invalidate() {
         if SceneStore.getRootScene() == nil {
             return

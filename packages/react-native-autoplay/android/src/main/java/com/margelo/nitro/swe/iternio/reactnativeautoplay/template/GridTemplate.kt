@@ -1,19 +1,18 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.template
 
 import androidx.car.app.CarContext
-import androidx.car.app.annotations.ExperimentalCarApi
-import androidx.car.app.model.GridItem
 import androidx.car.app.model.GridSection
-import androidx.car.app.model.GridTemplate
 import androidx.car.app.model.ItemList
 import androidx.car.app.model.SectionedItemTemplate
 import androidx.car.app.model.Template
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.GridTemplateConfig
+import androidx.car.app.versioning.CarAppApiLevels
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.AutoText
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GridImageSize
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.GridTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroGridButton
+import androidx.car.app.model.GridTemplate as CarGridTemplate
 
-@OptIn(ExperimentalCarApi::class)
 class GridTemplate(context: CarContext, config: GridTemplateConfig) :
     AndroidAutoTemplate<GridTemplateConfig>(context, config) {
 
@@ -25,9 +24,11 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
     override fun parse(): Template {
         val imageSize = config.imageSize
         val template = when {
-            // SectionedItemTemplate (needed for per-item imageSize) is not a valid content
-            // template for MapWithContentTemplate, so imageSize is ignored while mapConfig is set.
+            // a sized grid in MapWithContentTemplate crashes Android Auto, see
+            // https://issuetracker.google.com/issues/572287914
             config.mapConfig != null -> createGridTemplate()
+            // SectionedItemTemplate requires Car API 8, older hosts get the default sized grid.
+            context.carAppApiLevel < CarAppApiLevels.LEVEL_8 -> createGridTemplate()
             imageSize == null || imageSize == GridImageSize.UNSET -> createGridTemplate()
             else -> createSizedGridTemplate(imageSize)
         }
@@ -35,18 +36,8 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
         return Parser.parseMapWithContentConfig(context, config.mapConfig, template)
     }
 
-    private fun createGridTemplate(): Template = GridTemplate.Builder().apply {
-        setHeader(Parser.parseHeader(context, config.title, config.headerActions))
-
-        if (config.buttons.isEmpty()) {
-            setLoading(true)
-            return@apply
-        }
-
-        setSingleList(ItemList.Builder().apply {
-            config.buttons.forEach { button -> addItem(createGridItem(button)) }
-        }.build())
-    }.build()
+    private fun createGridTemplate(): Template =
+        parse(context, config.title, config.headerActions, config.buttons)
 
     private fun createSizedGridTemplate(imageSize: GridImageSize): Template =
         SectionedItemTemplate.Builder().apply {
@@ -59,15 +50,9 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
 
             addSection(GridSection.Builder().apply {
                 setItemSize(imageSize.toItemSize())
-                config.buttons.forEach { button -> addItem(createGridItem(button)) }
+                config.buttons.forEach { button -> addItem(Parser.parseGridItem(context, button)) }
             }.build())
         }.build()
-
-    private fun createGridItem(button: NitroGridButton): GridItem = GridItem.Builder().apply {
-        setTitle(Parser.parseText(button.title))
-        setOnClickListener(button.onPress)
-        setImage(Parser.parseImage(context, button.image))
-    }.build()
 
     private fun GridImageSize.toItemSize(): Int = when (this) {
         GridImageSize.LARGE -> GridSection.ITEM_SIZE_LARGE
@@ -105,5 +90,26 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
     fun updateButtons(buttons: Array<NitroGridButton>) {
         config = config.copy(buttons = buttons)
         super.applyConfigUpdate()
+    }
+
+    companion object {
+        /** a GridTemplate with a single grid, loading while there are no buttons */
+        fun parse(
+            context: CarContext,
+            title: AutoText,
+            headerActions: Array<NitroAction>?,
+            buttons: Array<NitroGridButton>
+        ): Template = CarGridTemplate.Builder().apply {
+            setHeader(Parser.parseHeader(context, title, headerActions))
+
+            if (buttons.isEmpty()) {
+                setLoading(true)
+                return@apply
+            }
+
+            setSingleList(ItemList.Builder().apply {
+                buttons.forEach { button -> addItem(Parser.parseGridItem(context, button)) }
+            }.build())
+        }.build()
     }
 }

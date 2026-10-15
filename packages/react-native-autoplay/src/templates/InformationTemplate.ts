@@ -4,13 +4,14 @@ import type { InformationTemplate as NitroInformationTemplate } from '../specs/I
 import type { CustomActionButtonAndroid, TextButton } from '../types/Button';
 import type { AutoText } from '../types/Text';
 import { type NitroAction, NitroActionUtil } from '../utils/NitroAction';
-import { NitroMapButton } from '../utils/NitroMapButton';
+import { NitroMapConfigUtil } from '../utils/NitroMapConfig';
 import { type NitroSection, NitroSectionUtil } from '../utils/NitroSection';
 import type { SingleSection, TextRow } from './ListTemplate';
-import type { BaseMapTemplateConfig, PanelActionsIos, PanelHeaderActions } from './MapTemplate';
+import type { MapConfigWithoutActions, PanelActionsIos } from './MapTemplate';
 import {
   type HeaderActions,
   type NitroBaseMapTemplateConfig,
+  type NitroPanelTemplatePlatformConfig,
   type NitroTemplateConfig,
   Template,
   type TemplateConfig,
@@ -29,6 +30,7 @@ export interface NitroInformationTemplateConfig extends TemplateConfig {
   section: NitroSection;
   actions?: Array<NitroAction>;
   mapConfig?: NitroBaseMapTemplateConfig;
+  platform?: NitroPanelTemplatePlatformConfig;
 }
 
 export type InformationItems =
@@ -39,7 +41,7 @@ export type InformationItems =
 
 type InformationTemplateBaseConfig = Omit<
   NitroInformationTemplateConfig,
-  'headerActions' | 'section' | 'mapConfig' | 'actions'
+  'headerActions' | 'section' | 'mapConfig' | 'platform' | 'actions'
 > & {
   /**
    * action buttons, usually at the the top right on Android and a top bar on iOS
@@ -87,13 +89,11 @@ export type InformationTemplateConfig = InformationTemplateBaseConfig &
          * If mapConfig is defined, it will use a MapWithContentTemplate with the current template. This results in a PaneTemplate with a map in background. No actions need to be specified, can be empty object.
          * @namespace Android - uses MapWithContentTemplate
          * @namespace iOS - renders as a CPMapPanel on the current root map template (iOS 27+);
-         * `headerActions` here is Android-only — on iOS this template's own `headerActions` are
-         * applied to the root map template's nav bar instead, since CarPlay has no separate
-         * header for the map behind a panel.
+         * `android.headerActions` here has no iOS equivalent — on iOS this template's own
+         * `headerActions` are applied to the root map template's nav bar instead, since CarPlay
+         * has no separate header for the map behind a panel.
          */
-        mapConfig: Omit<BaseMapTemplateConfig<InformationTemplate>, 'headerActions'> & {
-          headerActions?: PanelHeaderActions<InformationTemplate>;
-        };
+        mapConfig: MapConfigWithoutActions<InformationTemplate>;
 
         /**
          * @namespace Android up to 2 buttons of type TextButton, TextAndImageButton or ImageButton
@@ -134,12 +134,8 @@ export class InformationTemplate extends Template<
         items: [],
         type: 'default',
       },
-      mapConfig: mapConfig
-        ? {
-            mapButtons: NitroMapButton.convert(this.template, mapConfig.mapButtons),
-            headerActions: NitroActionUtil.convert(this.template, mapConfig.headerActions),
-          }
-        : undefined,
+      mapConfig: NitroMapConfigUtil.convert(this.template, mapConfig),
+      platform: NitroMapConfigUtil.convertIos(this.template, mapConfig?.ios),
     };
 
     HybridInformationTemplate.createInformationTemplate(nitroConfig);

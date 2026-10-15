@@ -35,6 +35,7 @@
 #include "JNitroImage.hpp"
 #include "JNitroMapButton.hpp"
 #include "JNitroMapButtonType.hpp"
+#include "JNitroPanelTemplatePlatformConfig.hpp"
 #include "JNitroRow.hpp"
 #include "JNitroSection.hpp"
 #include "JNitroSectionType.hpp"
@@ -50,6 +51,7 @@
 #include "NitroColor.hpp"
 #include "NitroMapButton.hpp"
 #include "NitroMapButtonType.hpp"
+#include "NitroPanelTemplatePlatformConfig.hpp"
 #include "NitroRow.hpp"
 #include "NitroSection.hpp"
 #include "NitroSectionType.hpp"
@@ -105,6 +107,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JArrayClass<JNitroAction>> actions = this->getFieldValue(fieldActions);
       static const auto fieldMapConfig = clazz->getField<JNitroBaseMapTemplateConfig>("mapConfig");
       jni::local_ref<JNitroBaseMapTemplateConfig> mapConfig = this->getFieldValue(fieldMapConfig);
+      static const auto fieldPlatform = clazz->getField<JNitroPanelTemplatePlatformConfig>("platform");
+      jni::local_ref<JNitroPanelTemplatePlatformConfig> platform = this->getFieldValue(fieldPlatform);
       return InformationTemplateConfig(
         id->toStdString(),
         onWillAppear != nullptr ? std::make_optional([&]() -> std::function<void(std::optional<bool> /* animated */)> {
@@ -175,7 +179,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __vector;
         }(actions)) : std::nullopt,
-        mapConfig != nullptr ? std::make_optional(mapConfig->toCpp()) : std::nullopt
+        mapConfig != nullptr ? std::make_optional(mapConfig->toCpp()) : std::nullopt,
+        platform != nullptr ? std::make_optional(platform->toCpp()) : std::nullopt
       );
     }
 
@@ -185,7 +190,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JInformationTemplateConfig::javaobject> fromCpp(const InformationTemplateConfig& value) {
-      using JSignature = JInformationTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JNitroSection>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroBaseMapTemplateConfig>);
+      using JSignature = JInformationTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JAutoText>, jni::alias_ref<JNitroSection>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroBaseMapTemplateConfig>, jni::alias_ref<JNitroPanelTemplatePlatformConfig>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -219,7 +224,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __array;
         }(value.actions.value()) : nullptr,
-        value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr
+        value.mapConfig.has_value() ? JNitroBaseMapTemplateConfig::fromCpp(value.mapConfig.value()) : nullptr,
+        value.platform.has_value() ? JNitroPanelTemplatePlatformConfig::fromCpp(value.platform.value()) : nullptr
       );
     }
   };

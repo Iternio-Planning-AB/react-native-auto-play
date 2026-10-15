@@ -50,13 +50,16 @@ data class ListTemplateConfig(
   val sections: Array<NitroSection>?,
   @DoNotStrip
   @Keep
-  val mapConfig: NitroBaseMapTemplateConfig?
+  val mapConfig: NitroBaseMapTemplateConfig?,
+  @DoNotStrip
+  @Keep
+  val platform: NitroPanelTemplatePlatformConfig?
 ) {
   /**
    * Create a new instance of ListTemplateConfig from Kotlin
    */
-  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?, mapConfig: NitroBaseMapTemplateConfig?):
-         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, headerActions, title, sections, mapConfig)
+  constructor(id: String, onWillAppear: ((animated: Boolean?) -> Unit)?, onWillDisappear: ((animated: Boolean?) -> Unit)?, onDidAppear: ((animated: Boolean?) -> Unit)?, onDidDisappear: ((animated: Boolean?) -> Unit)?, onPopped: (() -> Unit)?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?, mapConfig: NitroBaseMapTemplateConfig?, platform: NitroPanelTemplatePlatformConfig?):
+         this(id, onWillAppear?.let { Func_void_std__optional_bool__java(it) }, onWillDisappear?.let { Func_void_std__optional_bool__java(it) }, onDidAppear?.let { Func_void_std__optional_bool__java(it) }, onDidDisappear?.let { Func_void_std__optional_bool__java(it) }, onPopped?.let { Func_void_java(it) }, autoDismissMs, headerActions, title, sections, mapConfig, platform)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -72,6 +75,7 @@ data class ListTemplateConfig(
       && Objects.deepEquals(this.title, other.title)
       && Objects.deepEquals(this.sections, other.sections)
       && Objects.deepEquals(this.mapConfig, other.mapConfig)
+      && Objects.deepEquals(this.platform, other.platform)
   }
 
   override fun hashCode(): Int {
@@ -86,7 +90,8 @@ data class ListTemplateConfig(
       headerActions,
       title,
       sections,
-      mapConfig
+      mapConfig,
+      platform
     ).contentDeepHashCode()
   }
 
@@ -98,8 +103,8 @@ data class ListTemplateConfig(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?, mapConfig: NitroBaseMapTemplateConfig?): ListTemplateConfig {
-      return ListTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, headerActions, title, sections, mapConfig)
+    private fun fromCpp(id: String, onWillAppear: Func_void_std__optional_bool_?, onWillDisappear: Func_void_std__optional_bool_?, onDidAppear: Func_void_std__optional_bool_?, onDidDisappear: Func_void_std__optional_bool_?, onPopped: Func_void?, autoDismissMs: Double?, headerActions: Array<NitroAction>?, title: AutoText, sections: Array<NitroSection>?, mapConfig: NitroBaseMapTemplateConfig?, platform: NitroPanelTemplatePlatformConfig?): ListTemplateConfig {
+      return ListTemplateConfig(id, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, autoDismissMs, headerActions, title, sections, mapConfig, platform)
     }
   }
 }

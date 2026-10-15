@@ -17,6 +17,7 @@ import type { ListTemplate as RealListTemplate } from './templates/ListTemplate'
 import type { MapTemplate as RealMapTemplate } from './templates/MapTemplate';
 import type { MessageTemplate as RealMessageTemplate } from './templates/MessageTemplate';
 import type { SearchTemplate as RealSearchTemplate } from './templates/SearchTemplate';
+import type { SectionedItemTemplate as RealSectionedItemTemplate } from './templates/SectionedItemTemplate';
 import type { SignInTemplate as RealSignInTemplate } from './templates/SignInTemplate';
 import type { Template as RealTemplate } from './templates/Template';
 import type { SafeAreaInsets } from './types/Event';
@@ -74,6 +75,9 @@ export type {
   ChargingConnector,
   HeaderActionsAndroidMap,
   MapButtons,
+  MapConfig,
+  MapConfigActionsIos,
+  MapConfigWithoutActions,
   MapHeaderActions,
   MapTemplateConfig,
   OptionsPanelChargerSection,
@@ -82,13 +86,20 @@ export type {
   OptionsPanelListSection,
   OptionsPanelSection,
   PanelActionsIos,
-  PanelHeaderActions,
   Point,
   TripSelectorCallback,
   VisibleTravelEstimate,
 } from './templates/MapTemplate';
 export type { MessageTemplateConfig } from './templates/MessageTemplate';
 export type { SearchSection, SearchTemplateConfig } from './templates/SearchTemplate';
+export type {
+  NitroGridSection,
+  NitroSectionedItemSection,
+  SectionedItemGridSection,
+  SectionedItemListSection,
+  SectionedItemSection,
+  SectionedItemTemplateConfig,
+} from './templates/SectionedItemTemplate';
 export type { SignInTemplateConfig } from './templates/SignInTemplate';
 export type {
   ActionButton,
@@ -96,6 +107,7 @@ export type {
   HeaderActionsAndroid,
   HeaderActionsIos,
   NitroBaseMapTemplateConfig,
+  NitroPanelTemplatePlatformConfig,
   NitroTemplateConfig,
   TemplateConfig,
 } from './templates/Template';
@@ -159,6 +171,7 @@ export const HybridVoice = createNoopObject<Voice>();
 export const Template = createNoopClass<InstanceType<typeof RealTemplate>>();
 export const ListTemplate = createNoopClass<RealListTemplate>();
 export const GridTemplate = createNoopClass<RealGridTemplate>();
+export const SectionedItemTemplate = createNoopClass<RealSectionedItemTemplate>();
 export const InformationTemplate = createNoopClass<RealInformationTemplate>();
 export const MessageTemplate = createNoopClass<RealMessageTemplate>();
 export const MapTemplate = createNoopClass<RealMapTemplate>();

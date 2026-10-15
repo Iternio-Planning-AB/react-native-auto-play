@@ -1,6 +1,6 @@
 ---
 name: autoplay-templates
-description: Working with CarPlay / Android Auto templates in this library — MapTemplate, ListTemplate, GridTemplate, SearchTemplate, InformationTemplate, MessageTemplate, SignInTemplate, clusters, the dashboard, the template navigation stack, maneuvers, trips, or the hooks that only work on a car surface (useMapTemplate, useFocusedEffect, useSafeAreaInsets, useAndroidAutoTelemetry).
+description: Working with CarPlay / Android Auto templates in this library — MapTemplate, ListTemplate, GridTemplate, SectionedItemTemplate, SearchTemplate, InformationTemplate, MessageTemplate, SignInTemplate, clusters, the dashboard, the template navigation stack, maneuvers, trips, or the hooks that only work on a car surface (useMapTemplate, useFocusedEffect, useSafeAreaInsets, useAndroidAutoTelemetry).
 ---
 
 # Templates and car surfaces

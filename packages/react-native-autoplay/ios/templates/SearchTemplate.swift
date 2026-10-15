@@ -138,7 +138,8 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
             headerActions: config.headerActions,
             title: config.title,
             sections: [results],
-            mapConfig: nil
+            mapConfig: nil,
+            platform: nil
         )
 
         let listTemplate = ListTemplate(config: listConfig)
