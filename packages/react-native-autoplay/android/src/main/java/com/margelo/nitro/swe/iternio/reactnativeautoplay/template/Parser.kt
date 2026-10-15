@@ -47,6 +47,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.react.views.imagehelper.ImageSource
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoSession
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AssetImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AutoText
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.DistanceUnits
@@ -57,6 +58,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.KeepType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListImageType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ManeuverType
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.MapTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroActionType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAlignment
@@ -866,6 +868,12 @@ object Parser {
         }
     }
 
+    private fun getRootMapTemplateConfig(): MapTemplateConfig? {
+        val marker = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)?.marker
+            ?: return null
+        return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(marker)
+    }
+
     fun parseMapWithContentConfig(
         context: CarContext, mapConfig: NitroBaseMapTemplateConfig?, template: Template
     ): Template {
@@ -885,8 +893,10 @@ object Parser {
                 setMapController(
                     MapController.Builder().apply {
                         setMapActionStrip(parseMapActions(context, mapButtons)).build()
+                        // the map behind the content belongs to the root MapTemplate, so pan mode is
+                        // reported there, like CarPlay does for a panel on the root map template
                         setPanModeListener { isInPanMode ->
-                            mapConfig.onDidChangePanningInterface?.let {
+                            getRootMapTemplateConfig()?.onDidChangePanningInterface?.let {
                                 it(isInPanMode)
                             }
                         }

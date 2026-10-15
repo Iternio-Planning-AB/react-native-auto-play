@@ -35,10 +35,10 @@
 #include "JFunc_void_std__string_bool.hpp"
 #include "JHybridGridTemplateSpec.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
-#include "JFunc_void_bool.hpp"
 #include "JHybridInformationTemplateSpec.hpp"
 #include "JHybridListTemplateSpec.hpp"
 #include "JHybridMapTemplateSpec.hpp"
+#include "JFunc_void_bool.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_Point_double.hpp"
 #include "JFunc_void_Point.hpp"
@@ -208,10 +208,10 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__string_bool_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridGridTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_bool__cxx::registerNatives();
-  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_bool_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridInformationTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridListTemplateSpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridMapTemplateSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_bool_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_std__optional_Point__cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_double_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_Point_cxx::registerNatives();

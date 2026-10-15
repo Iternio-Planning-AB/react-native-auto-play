@@ -56,6 +56,12 @@ export type HeaderActionsAndroidMap<T> = Array<ActionButtonAndroid<T>> & { lengt
 
 export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemplateConfig {
   /**
+   * called when the pan interface is shown or hidden, also while a template with `mapConfig` is
+   * shown on this map
+   */
+  onDidChangePanningInterface?: (isPanningInterfaceVisible: boolean) => void;
+
+  /**
    * show either the next or final step travel estimates, defaults to final step so last
    */
   visibleTravelEstimate?: VisibleTravelEstimate;

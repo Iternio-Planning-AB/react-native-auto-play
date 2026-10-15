@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -67,6 +67,15 @@ public extension MapTemplateConfig {
     }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = autoDismissMs {
         return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
+      if let __unwrappedValue = onDidChangePanningInterface {
+        return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
+          let __closureWrapper = Func_void_bool(__unwrappedValue)
+          return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
+        }())
       } else {
         return .init()
       }
@@ -166,15 +175,6 @@ public extension MapTemplateConfig {
     }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = panButtonScrollPercentage {
         return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_std__function_void_bool____isPanningInterfaceVisible______ in
-      if let __unwrappedValue = onDidChangePanningInterface {
-        return bridge.create_std__optional_std__function_void_bool____isPanningInterfaceVisible______({ () -> bridge.Func_void_bool in
-          let __closureWrapper = Func_void_bool(__unwrappedValue)
-          return bridge.create_Func_void_bool(__closureWrapper.toUnsafe())
-        }())
       } else {
         return .init()
       }
@@ -301,6 +301,23 @@ public extension MapTemplateConfig {
       if bridge.has_value_std__optional_double_(self.__autoDismissMs) {
         let __unwrapped = bridge.get_std__optional_double_(self.__autoDismissMs)
         return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)? {
+    return { () -> ((_ isPanningInterfaceVisible: Bool) -> Void)? in
+      if bridge.has_value_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface) {
+        let __unwrapped = bridge.get_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface)
+        return { () -> (Bool) -> Void in
+          let __wrappedFunction = bridge.wrap_Func_void_bool(__unwrapped)
+          return { (__isPanningInterfaceVisible: Bool) -> Void in
+            __wrappedFunction.call(__isPanningInterfaceVisible)
+          }
+        }()
       } else {
         return nil
       }
@@ -465,23 +482,6 @@ public extension MapTemplateConfig {
       if bridge.has_value_std__optional_double_(self.__panButtonScrollPercentage) {
         let __unwrapped = bridge.get_std__optional_double_(self.__panButtonScrollPercentage)
         return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)? {
-    return { () -> ((_ isPanningInterfaceVisible: Bool) -> Void)? in
-      if bridge.has_value_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface) {
-        let __unwrapped = bridge.get_std__optional_std__function_void_bool____isPanningInterfaceVisible______(self.__onDidChangePanningInterface)
-        return { () -> (Bool) -> Void in
-          let __wrappedFunction = bridge.wrap_Func_void_bool(__unwrapped)
-          return { (__isPanningInterfaceVisible: Bool) -> Void in
-            __wrappedFunction.call(__isPanningInterfaceVisible)
-          }
-        }()
       } else {
         return nil
       }

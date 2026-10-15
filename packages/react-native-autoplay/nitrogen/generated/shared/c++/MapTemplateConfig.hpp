@@ -66,6 +66,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear     SWIFT_PRIVATE;
     std::optional<std::function<void()>> onPopped     SWIFT_PRIVATE;
     std::optional<double> autoDismissMs     SWIFT_PRIVATE;
+    std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface     SWIFT_PRIVATE;
     std::optional<VisibleTravelEstimate> visibleTravelEstimate     SWIFT_PRIVATE;
     std::optional<std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>> onDidPan     SWIFT_PRIVATE;
     std::optional<std::function<void(const Point& /* center */, double /* scale */)>> onDidUpdateZoomGestureWithCenter     SWIFT_PRIVATE;
@@ -78,14 +79,13 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::vector<NitroAction>> headerActions     SWIFT_PRIVATE;
     std::optional<NitroColor> defaultGuidanceBackgroundColor     SWIFT_PRIVATE;
     std::optional<double> panButtonScrollPercentage     SWIFT_PRIVATE;
-    std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface     SWIFT_PRIVATE;
 
   public:
     MapTemplateConfig() = default;
-    explicit MapTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<VisibleTravelEstimate> visibleTravelEstimate, std::optional<std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>> onDidPan, std::optional<std::function<void(const Point& /* center */, double /* scale */)>> onDidUpdateZoomGestureWithCenter, std::optional<std::function<void(const Point& /* center */)>> onClick, std::optional<std::function<void(const Point& /* center */)>> onDoubleClick, std::optional<std::function<void(ColorScheme /* colorScheme */)>> onAppearanceDidChange, std::function<void()> onStopNavigation, std::optional<std::function<void()>> onAutoDriveEnabled, std::optional<std::vector<NitroMapButton>> mapButtons, std::optional<std::vector<NitroAction>> headerActions, std::optional<NitroColor> defaultGuidanceBackgroundColor, std::optional<double> panButtonScrollPercentage, std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), visibleTravelEstimate(visibleTravelEstimate), onDidPan(onDidPan), onDidUpdateZoomGestureWithCenter(onDidUpdateZoomGestureWithCenter), onClick(onClick), onDoubleClick(onDoubleClick), onAppearanceDidChange(onAppearanceDidChange), onStopNavigation(onStopNavigation), onAutoDriveEnabled(onAutoDriveEnabled), mapButtons(mapButtons), headerActions(headerActions), defaultGuidanceBackgroundColor(defaultGuidanceBackgroundColor), panButtonScrollPercentage(panButtonScrollPercentage), onDidChangePanningInterface(onDidChangePanningInterface) {}
+    explicit MapTemplateConfig(std::string id, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs, std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface, std::optional<VisibleTravelEstimate> visibleTravelEstimate, std::optional<std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)>> onDidPan, std::optional<std::function<void(const Point& /* center */, double /* scale */)>> onDidUpdateZoomGestureWithCenter, std::optional<std::function<void(const Point& /* center */)>> onClick, std::optional<std::function<void(const Point& /* center */)>> onDoubleClick, std::optional<std::function<void(ColorScheme /* colorScheme */)>> onAppearanceDidChange, std::function<void()> onStopNavigation, std::optional<std::function<void()>> onAutoDriveEnabled, std::optional<std::vector<NitroMapButton>> mapButtons, std::optional<std::vector<NitroAction>> headerActions, std::optional<NitroColor> defaultGuidanceBackgroundColor, std::optional<double> panButtonScrollPercentage): id(id), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs), onDidChangePanningInterface(onDidChangePanningInterface), visibleTravelEstimate(visibleTravelEstimate), onDidPan(onDidPan), onDidUpdateZoomGestureWithCenter(onDidUpdateZoomGestureWithCenter), onClick(onClick), onDoubleClick(onDoubleClick), onAppearanceDidChange(onAppearanceDidChange), onStopNavigation(onStopNavigation), onAutoDriveEnabled(onAutoDriveEnabled), mapButtons(mapButtons), headerActions(headerActions), defaultGuidanceBackgroundColor(defaultGuidanceBackgroundColor), panButtonScrollPercentage(panButtonScrollPercentage) {}
 
   public:
-    // MapTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, onDidPan, onDidUpdateZoomGestureWithCenter, onClick, onDoubleClick, onAppearanceDidChange, onStopNavigation, onAutoDriveEnabled, mapButtons, headerActions, onDidChangePanningInterface
+    // MapTemplateConfig is not equatable because these properties are not equatable: onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped, onDidChangePanningInterface, onDidPan, onDidUpdateZoomGestureWithCenter, onClick, onDoubleClick, onAppearanceDidChange, onStopNavigation, onAutoDriveEnabled, mapButtons, headerActions
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
@@ -105,6 +105,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidDisappear"))),
         JSIConverter<std::optional<std::function<void()>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPopped"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "autoDismissMs"))),
+        JSIConverter<std::optional<std::function<void(bool)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visibleTravelEstimate"))),
         JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidPan"))),
         JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidUpdateZoomGestureWithCenter"))),
@@ -116,8 +117,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapButtons"))),
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "defaultGuidanceBackgroundColor"))),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "panButtonScrollPercentage"))),
-        JSIConverter<std::optional<std::function<void(bool)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface")))
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "panButtonScrollPercentage")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::MapTemplateConfig& arg) {
@@ -129,6 +129,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidDisappear"), JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidDisappear));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onPopped"), JSIConverter<std::optional<std::function<void()>>>::toJSI(runtime, arg.onPopped));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "autoDismissMs"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.autoDismissMs));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface"), JSIConverter<std::optional<std::function<void(bool)>>>::toJSI(runtime, arg.onDidChangePanningInterface));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "visibleTravelEstimate"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::toJSI(runtime, arg.visibleTravelEstimate));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidPan"), JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::toJSI(runtime, arg.onDidPan));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidUpdateZoomGestureWithCenter"), JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::toJSI(runtime, arg.onDidUpdateZoomGestureWithCenter));
@@ -141,7 +142,6 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "headerActions"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.headerActions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "defaultGuidanceBackgroundColor"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::toJSI(runtime, arg.defaultGuidanceBackgroundColor));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "panButtonScrollPercentage"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.panButtonScrollPercentage));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface"), JSIConverter<std::optional<std::function<void(bool)>>>::toJSI(runtime, arg.onDidChangePanningInterface));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -159,6 +159,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidDisappear")))) return false;
       if (!JSIConverter<std::optional<std::function<void()>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPopped")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "autoDismissMs")))) return false;
+      if (!JSIConverter<std::optional<std::function<void(bool)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::VisibleTravelEstimate>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "visibleTravelEstimate")))) return false;
       if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, const std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::Point>&)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidPan")))) return false;
       if (!JSIConverter<std::optional<std::function<void(const margelo::nitro::swe::iternio::reactnativeautoplay::Point&, double)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidUpdateZoomGestureWithCenter")))) return false;
@@ -171,7 +172,6 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "defaultGuidanceBackgroundColor")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "panButtonScrollPercentage")))) return false;
-      if (!JSIConverter<std::optional<std::function<void(bool)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface")))) return false;
       return true;
     }
   };

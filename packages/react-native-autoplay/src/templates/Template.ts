@@ -73,7 +73,6 @@ export interface TemplateConfig {
 export interface NitroBaseMapTemplateConfig extends TemplateConfig {
   mapButtons?: Array<NitroMapButton>;
   headerActions?: Array<NitroAction>;
-  onDidChangePanningInterface?: (isPanningInterfaceVisible: boolean) => void;
 }
 
 /**

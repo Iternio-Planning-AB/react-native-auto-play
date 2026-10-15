@@ -136,6 +136,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 #include <optional>
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void.hpp"
+#include "JFunc_void_bool.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "JVisibleTravelEstimate.hpp"
 #include "Point.hpp"
@@ -170,7 +171,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 #include "JNitroAlignment.hpp"
 #include "NitroButtonStyle.hpp"
 #include "JNitroButtonStyle.hpp"
-#include "JFunc_void_bool.hpp"
 #include "NitroNavigationAlert.hpp"
 #include "JNitroNavigationAlert.hpp"
 #include "AutoText.hpp"

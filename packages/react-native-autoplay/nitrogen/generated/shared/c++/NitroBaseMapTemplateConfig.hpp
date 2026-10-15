@@ -48,7 +48,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     std::optional<std::vector<NitroMapButton>> mapButtons     SWIFT_PRIVATE;
     std::optional<std::vector<NitroAction>> headerActions     SWIFT_PRIVATE;
-    std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear     SWIFT_PRIVATE;
     std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear     SWIFT_PRIVATE;
@@ -58,10 +57,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     NitroBaseMapTemplateConfig() = default;
-    explicit NitroBaseMapTemplateConfig(std::optional<std::vector<NitroMapButton>> mapButtons, std::optional<std::vector<NitroAction>> headerActions, std::optional<std::function<void(bool /* isPanningInterfaceVisible */)>> onDidChangePanningInterface, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs): mapButtons(mapButtons), headerActions(headerActions), onDidChangePanningInterface(onDidChangePanningInterface), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs) {}
+    explicit NitroBaseMapTemplateConfig(std::optional<std::vector<NitroMapButton>> mapButtons, std::optional<std::vector<NitroAction>> headerActions, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onWillDisappear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidAppear, std::optional<std::function<void(std::optional<bool> /* animated */)>> onDidDisappear, std::optional<std::function<void()>> onPopped, std::optional<double> autoDismissMs): mapButtons(mapButtons), headerActions(headerActions), onWillAppear(onWillAppear), onWillDisappear(onWillDisappear), onDidAppear(onDidAppear), onDidDisappear(onDidDisappear), onPopped(onPopped), autoDismissMs(autoDismissMs) {}
 
   public:
-    // NitroBaseMapTemplateConfig is not equatable because these properties are not equatable: mapButtons, headerActions, onDidChangePanningInterface, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped
+    // NitroBaseMapTemplateConfig is not equatable because these properties are not equatable: mapButtons, headerActions, onWillAppear, onWillDisappear, onDidAppear, onDidDisappear, onPopped
   };
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
@@ -76,7 +75,6 @@ namespace margelo::nitro {
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroBaseMapTemplateConfig(
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapButtons"))),
         JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions"))),
-        JSIConverter<std::optional<std::function<void(bool)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface"))),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onWillAppear"))),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onWillDisappear"))),
         JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidAppear"))),
@@ -89,7 +87,6 @@ namespace margelo::nitro {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "mapButtons"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::toJSI(runtime, arg.mapButtons));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "headerActions"), JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::toJSI(runtime, arg.headerActions));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface"), JSIConverter<std::optional<std::function<void(bool)>>>::toJSI(runtime, arg.onDidChangePanningInterface));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onWillAppear"), JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onWillAppear));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onWillDisappear"), JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onWillDisappear));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onDidAppear"), JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::toJSI(runtime, arg.onDidAppear));
@@ -108,7 +105,6 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroMapButton>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mapButtons")))) return false;
       if (!JSIConverter<std::optional<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroAction>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "headerActions")))) return false;
-      if (!JSIConverter<std::optional<std::function<void(bool)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidChangePanningInterface")))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onWillAppear")))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onWillDisappear")))) return false;
       if (!JSIConverter<std::optional<std::function<void(std::optional<bool>)>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onDidAppear")))) return false;

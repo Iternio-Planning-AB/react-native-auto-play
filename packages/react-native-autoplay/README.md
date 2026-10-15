@@ -654,11 +654,12 @@ Below is a concise overview of the most important props per template. Optional p
 | `component` | `React.ComponentType<RootComponentInitialProps>` | ✅ | React component to render on the map surface. |
 | `onStopNavigation` | `(template: MapTemplate) => void` | ✅ | Called when navigation is stopped by the system. |
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
-| `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton` |
+| `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton`. While a template with `mapConfig` is shown, it needs its own pan button in `mapConfig.mapButtons`; the gestures then still go to this MapTemplate's `onDidPan`/`onClick`/zoom callbacks. |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |
 | `optionsPanel` | `OptionsPanelConfig<MapTemplate>` | ❌ | **iOS 27+ only, no-op on Android.** Panel shown when tapping the ellipsis button next to the travel estimates during active navigation. See **Options Panel** below. |
 | `onDidPan` / `onDidUpdateZoomGestureWithCenter` | callbacks | ❌ | Map gesture events. |
 | `onAppearanceDidChange` | `(colorScheme) => void` | ❌ | Listen for light/dark mode changes. |
+| `onDidChangePanningInterface` | `(isPanningInterfaceVisible: boolean) => void` | ❌ | Called when the pan interface is shown or hidden, also while a template with `mapConfig` is shown on this map. |
 | `onAutoDriveEnabled` | `(template) => void` | ⚠️ | Android-only auto drive callback. Make sure to take action when receiving this and simulate a drive to the set destination. [Check Android docs for details](https://developer.android.com/reference/androidx/car/app/navigation/NavigationManagerCallback#onAutoDriveEnabled()) |
 
 #### ListTemplateConfig

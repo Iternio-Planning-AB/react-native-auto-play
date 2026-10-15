@@ -277,10 +277,13 @@ class VirtualRenderer(
         }
     }
 
+    /**
+     * the MapTemplate rendering on this surface, its id is the module name. Not the top screen's
+     * template: while a template with mapConfig is shown, its MapWithContentTemplate is on top and
+     * the gestures on the map behind it still belong to this MapTemplate.
+     */
     private fun getMapTemplateConfig(): MapTemplateConfig? {
-        val screenManager = AndroidAutoScreen.getScreen(moduleName)?.screenManager ?: return null
-        val marker = screenManager.top.marker ?: return null
-        return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(marker)
+        return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(moduleName)
     }
 
     private fun initRenderer(display: Display) {

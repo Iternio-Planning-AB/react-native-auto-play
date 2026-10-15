@@ -80,7 +80,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelT
 #include "NitroMapButtonType.hpp"
 #include "JNitroMapButtonType.hpp"
 #include "JNitroImage.hpp"
-#include "JFunc_void_bool.hpp"
 #include "NitroPanelTemplatePlatformConfig.hpp"
 #include "JNitroPanelTemplatePlatformConfig.hpp"
 

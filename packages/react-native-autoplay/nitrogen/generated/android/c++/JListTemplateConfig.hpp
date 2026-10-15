@@ -22,7 +22,6 @@
 #include "JDistanceUnits.hpp"
 #include "JDurationWithTimeZone.hpp"
 #include "JFunc_void.hpp"
-#include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JGlyphImage.hpp"
 #include "JListImageType.hpp"
