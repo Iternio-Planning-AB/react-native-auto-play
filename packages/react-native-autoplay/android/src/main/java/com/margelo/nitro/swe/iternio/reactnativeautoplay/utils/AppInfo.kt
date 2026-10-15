@@ -23,6 +23,18 @@ object AppInfo {
         }
     }
 
+    /**
+     * Title shown on the [androidx.car.app.model.PaneTemplate] loading screen while waiting
+     * for JS to render the first real screen. Override by declaring a string resource named
+     * `AutoPlayLoadingLabel` in the host app, same convention as [getApplicationLabel]'s
+     * `AutoPlayClusterSplashScreenLabel`.
+     */
+    fun getLoadingLabel(context: Context, appName: CharSequence): String {
+        val customId = context.resources.getIdentifier("AutoPlayLoadingLabel", "string", context.packageName)
+        return if (customId > 0) context.resources.getString(customId)
+        else "Loading $appName…"
+    }
+
     fun getApplicationIcon(context: Context): Drawable? {
         val packageManager = context.packageManager
         return try {
