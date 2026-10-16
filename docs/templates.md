@@ -64,6 +64,22 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
 
 - `updateManeuvers` requires `startNavigation()` first, and differs per platform: Android
   replaces all supplied maneuvers, iOS only updates travel estimates when maneuver ids match.
+- iOS navigation session lifecycle (`ios/templates/MapTemplate.swift`):
+  - A trip started from the trip preview starts the session with CarPlay's own `CPTrip` (all
+    route choices, `activeRouteChoice` tracks the chosen one); a follow-up `startNavigation`
+    with the same trip and route id is ignored.
+  - CarPlay confirms a session start asynchronously (~20 ms) and raises "Attempted to start a
+    new navigation session while one is already active" when that session is finished before
+    and another one started. Reproduced on device with `startNavigation(A)` immediately
+    followed by `startNavigation(B)`. So JS starts are handed to CarPlay on the next main queue
+    turn (back to back starts collapse to the last trip), and a session is never replaced, nor
+    a new one started after a stop, before it is `minimumSessionAge` (300 ms) old.
+  - All `HybridMapTemplate` calls hop to the main queue in JS call order; session updates sent
+    while a start is pending are replayed once it ran (`performWithNavigationSession`).
+  - A session still active on scene connect or disconnect is finished; the scene can reconnect
+    without a disconnect after the app was in the background. JS is not notified
+    (`onStopNavigation` only reports CarPlay cancelling navigation), so apps have to start
+    navigation again after `didConnect`.
 - `updateTravelEstimates(steps)` must receive only *future* steps — no origin, no passed steps.
 - `showTripSelector` validates synchronously and **throws** (empty trips, empty
   `routeChoices`, routes with `< 2` steps). In `__DEV__` on Android it also warns about

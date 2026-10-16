@@ -487,6 +487,10 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   /**
    * either use showTripSelector to show a set of trips and let the user start the navigation session
    * or use this to start a navigation session without asking the user
+   * @namespace iOS calling this with the trip and route that is already active is ignored. The session starts
+   * on the next main queue turn, so back to back calls only start the last trip. A different trip finishes the
+   * active session first, but not before it is 300 ms old. The promise resolves once the session started,
+   * maneuver and estimate updates sent in between are applied to the new session.
    */
   public startNavigation(trip: TripConfig) {
     return HybridMapTemplate.startNavigation(this.id, trip);
