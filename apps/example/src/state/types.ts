@@ -1,6 +1,9 @@
+import type { AlertPriority } from '@iternio/react-native-auto-play';
+
 export enum SliceName {
   Navigation = 'navigation',
   Audio = 'audio',
+  Alert = 'alert',
 }
 
 export type NavigationState = {
@@ -10,4 +13,17 @@ export type NavigationState = {
 
 export type AudioState = {
   recording: string | null;
+};
+
+export type AlertDefaultAction = 'none' | 'primary' | 'secondary';
+
+export type AlertOptions = {
+  priority: AlertPriority;
+  sameId: boolean;
+  defaultAction: AlertDefaultAction;
+  noTimer: boolean;
+};
+
+export type AlertState = {
+  log: Array<string>;
 };

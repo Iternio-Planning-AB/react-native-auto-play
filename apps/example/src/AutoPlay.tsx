@@ -19,9 +19,9 @@ import { Cluster } from './AutoPlayCluster';
 import { AutoPlayDashboard } from './AutoPlayDashboard';
 import { AutoManeuverUtil } from './config/AutoManeuver';
 import { AutoTrip } from './config/AutoTrip';
+import { actionDismissAlert, actionShowAlert, addAlertLog } from './state/alertSlice';
 import { setRecording } from './state/audioSlice';
 import {
-  actionShowAlert,
   actionStartNavigation,
   actionStopNavigation,
   setSelectedTrip,
@@ -37,6 +37,14 @@ import {
 } from './templates/AutoTemplate';
 import saveVoiceRecording from './utils/saveVoiceRecording';
 import { VoiceInputView } from './VoiceInputView';
+
+const timestamp = () => new Date().toISOString().slice(14, 23);
+
+// one id per priority, so each is an alert of its own; a shared id updates the visible alert
+const AlertIds = { low: 1, medium: 2, high: 3 } as const;
+const SHARED_ALERT_ID = 4;
+// Android Auto's Alert.DURATION_SHOW_INDEFINITELY, which shows no countdown
+const ALERT_DURATION_INDEFINITE = 2147483647;
 
 const AutoPlayRoot = (props: RootComponentInitialProps) => {
   const mapTemplate = useMapTemplate();
@@ -122,37 +130,72 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
       })
     );
 
+    let visibleAlertId: number | null = null;
+
     listeners.push(
       startAppListening({
         actionCreator: actionShowAlert,
-        effect: (action) => {
+        effect: (action, { dispatch }) => {
           if (mapTemplate == null) {
             return;
           }
-          const prio = action.payload;
-          let timer: number | null = null;
-          const id = Date.now();
+          const { priority, sameId, defaultAction, noTimer } = action.payload;
+          const id = sameId ? SHARED_ALERT_ID : AlertIds[priority];
+          const log = (event: string) => {
+            console.log(`*** alert ${id} (${priority}) ${event}`);
+            dispatch(addAlertLog(`${timestamp()} alert ${id} (${priority}) ${event}`));
+          };
+          let timer: ReturnType<typeof setTimeout> | null = null;
 
+          log('showAlert');
           mapTemplate.showAlert({
             id,
             title: { text: `Alert ${id}` },
-            subtitle: { text: `Prio: ${prio}` },
-            primaryAction: { title: 'OK', onPress: () => {} },
-            durationMs: 10000,
-            priority: prio,
+            subtitle: { text: `Prio: ${priority}` },
+            primaryAction: {
+              title: 'OK',
+              isDefault: defaultAction === 'primary',
+              onPress: () => log('OK pressed'),
+            },
+            secondaryAction: {
+              title: 'Dismiss',
+              isDefault: defaultAction === 'secondary',
+              onPress: () => log('Dismiss pressed'),
+            },
+            durationMs: noTimer ? ALERT_DURATION_INDEFINITE : 10000,
+            priority,
             onDidDismiss: (reason) => {
               if (timer != null) {
                 clearTimeout(timer);
                 timer = null;
               }
-              console.log('*** onDidDismiss', prio, reason);
+              if (visibleAlertId === id) {
+                visibleAlertId = null;
+              }
+              log(`onDidDismiss: ${reason}`);
             },
             onWillShow: () => {
+              visibleAlertId = id;
+              log('onWillShow');
               timer = setTimeout(() => {
-                mapTemplate.updateAlert(id, { text: `Alert ${Date.now()}` }, undefined);
+                mapTemplate.updateAlert(id, { text: `Alert ${id}, updated` }, undefined);
+                log('updateAlert');
               }, 5000);
             },
           });
+        },
+      })
+    );
+
+    listeners.push(
+      startAppListening({
+        actionCreator: actionDismissAlert,
+        effect: (_, { dispatch }) => {
+          if (mapTemplate == null || visibleAlertId == null) {
+            return;
+          }
+          dispatch(addAlertLog(`${timestamp()} dismissAlert(${visibleAlertId})`));
+          mapTemplate.dismissAlert(visibleAlertId);
         },
       })
     );
