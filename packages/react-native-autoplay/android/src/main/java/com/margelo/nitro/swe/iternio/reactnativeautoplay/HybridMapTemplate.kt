@@ -1,6 +1,5 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
-import androidx.car.app.AppManager
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -49,11 +48,8 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun dismissNavigationAlert(
         templateId: String, navigationAlertId: Double
     ) {
-        val carContext = AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
-            ?: throw IllegalArgumentException(
-                "dismissNavigationAlert failed, carContext not found"
-            )
-        carContext.getCarService(AppManager::class.java).dismissAlert(navigationAlertId.toInt())
+        val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
+        template.dismissAlert(navigationAlertId.toInt())
     }
 
     override fun showTripSelector(
