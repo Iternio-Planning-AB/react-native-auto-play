@@ -145,27 +145,30 @@ class MapTemplate: AutoPlayHeaderProviding,
             return
         }
 
-        // A panel owns the bar buttons while it exists; keep barButtons up to date but don't apply it.
-        let hasPanel: Bool = {
-            if #available(iOS 27.0, *) {
-                return SceneStore.getRootScene()?.interfaceController?.hasPanel ?? false
+        // A panel owns the bar and map buttons while it exists; keep barButtons/mapButtons up to date
+        // but don't apply them. Hand the buttons back to the topmost panel instead, since leaving
+        // the panning interface (or a trait change) would otherwise leave stale buttons behind.
+        if #available(iOS 27.0, *),
+            let topPanelId = SceneStore.getRootScene()?.interfaceController?.panelTemplateIds.last
+        {
+            try? RootModule.withAutoPlayTemplate(templateId: topPanelId) {
+                (panel: AutoPlayTemplate) in
+                reapplyPanelBarIfVisible(panel, templateId: topPanelId)
             }
-            return false
-        }()
+            return
+        }
 
-        if !hasPanel {
-            // Restore CarPlay's default auto-hide (disabled while a panel is shown, see panelDidShow).
-            template.automaticallyHidesNavigationBar = true
-            template.hidesButtonsWithNavigationBar = true
+        // Restore CarPlay's default auto-hide (disabled while a panel is shown, see panelDidShow).
+        template.automaticallyHidesNavigationBar = true
+        template.hidesButtonsWithNavigationBar = true
 
-            setBarButtons(template: template, barButtons: barButtons)
+        setBarButtons(template: template, barButtons: barButtons)
 
-            if let mapButtons = mapButtons {
-                template.mapButtons = Parser.parseMapButtons(
-                    mapButtons: mapButtons,
-                    onPanButtonPress: onPanButtonPress
-                )
-            }
+        if let mapButtons = mapButtons {
+            template.mapButtons = Parser.parseMapButtons(
+                mapButtons: mapButtons,
+                onPanButtonPress: onPanButtonPress
+            )
         }
     }
 
