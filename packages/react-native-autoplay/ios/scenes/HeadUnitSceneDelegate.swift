@@ -46,7 +46,6 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             interfaceController: interfaceController
         )
 
-        stopStaleNavigationOnConnect()
         connect(props: [
             "colorScheme": interfaceController.carTraitCollection
                 .userInterfaceStyle == .dark ? "dark" : "light"
@@ -70,7 +69,6 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         didDisconnectInterfaceController interfaceController:
             CPInterfaceController
     ) {
-        stopNavigationOnDisconnect()
         disconnect()
         HybridAutoPlay.emit(event: .diddisconnect)
     }
