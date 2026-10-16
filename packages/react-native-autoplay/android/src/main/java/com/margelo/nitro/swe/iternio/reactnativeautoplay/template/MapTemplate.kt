@@ -226,6 +226,9 @@ class MapTemplate(
         }.build()
 
         if (!alertIds.contains(alert.id)) {
+            // the host reports the dismissal of the alert this one replaces only after this one
+            // shows, so report it first, in the order CarPlay does
+            reportVisibleAlertDismissedByApp?.let { it() }
             alertConfig.onWillShow?.let { it() }
             alertIds.add(alert.id)
             alertPriority = alertConfig.priority.toInt()
