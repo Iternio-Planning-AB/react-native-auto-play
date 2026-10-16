@@ -236,8 +236,8 @@ class MapTemplate(
             reportVisibleAlertDismissedByApp?.let { it() }
             alertConfig.onWillShow?.let { it() }
             alertIds.add(alert.id)
-            alertPriority = alertConfig.priority.toInt()
         }
+        alertPriority = alertConfig.priority.toInt()
         visibleAlertId = alert.id
         reportVisibleAlertDismissedByApp = { reportDismissal(AlertDismissalReason.SYSTEM) }
 
