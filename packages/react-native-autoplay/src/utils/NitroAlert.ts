@@ -9,6 +9,13 @@ export type NavigationAlertAction = {
   title: string;
   style?: AlertActionStyle;
   onPress: () => void;
+  /**
+   * Android Auto shows the alert's countdown on this action and presses it when the alert times
+   * out; onDidDismiss may then report timeout or user. Set it on one action at most. Without it the
+   * countdown is a bar under the title. No effect on CarPlay.
+   * @namespace Android
+   */
+  isDefault?: boolean;
 };
 
 enum AlertPriorityEnum {

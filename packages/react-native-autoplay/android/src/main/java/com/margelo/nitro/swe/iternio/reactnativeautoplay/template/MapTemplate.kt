@@ -178,7 +178,9 @@ class MapTemplate(
             addAction(Action.Builder().apply {
                 setTitle(alertConfig.primaryAction.title)
                 setFlags(Action.FLAG_PRIMARY)
-                setFlags(Action.FLAG_DEFAULT)
+                if (alertConfig.primaryAction.isDefault == true) {
+                    setFlags(Action.FLAG_DEFAULT)
+                }
                 setOnClickListener(alertConfig.primaryAction.onPress)
                 alertConfig.primaryAction.style?.let { style ->
                     if (style == AlertActionStyle.DESTRUCTIVE) {
@@ -189,6 +191,9 @@ class MapTemplate(
             alertConfig.secondaryAction?.let { action ->
                 addAction(Action.Builder().apply {
                     setTitle(action.title)
+                    if (action.isDefault == true) {
+                        setFlags(Action.FLAG_DEFAULT)
+                    }
                     setOnClickListener(action.onPress)
                     action.style?.let { style ->
                         if (style == AlertActionStyle.DESTRUCTIVE) {

@@ -1,5 +1,7 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
+import android.os.SystemClock
+import androidx.car.app.model.Alert
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -10,6 +12,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQue
 
 class HybridMapTemplate : HybridMapTemplateSpec() {
     var navigationAlert: NitroNavigationAlert? = null
+    private var navigationAlertShownAt = 0L
 
     override fun createMapTemplate(config: MapTemplateConfig) {
         val context = AndroidAutoSession.getCarContext(config.id) ?: throw IllegalArgumentException(
@@ -30,6 +33,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
         val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
         template.showAlert(alertConfig)
         navigationAlert = alertConfig
+        navigationAlertShownAt = SystemClock.elapsedRealtime()
     }
 
     override fun updateNavigationAlert(
@@ -39,7 +43,14 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
             if (it.id != navigationAlertId) {
                 return
             }
-            val navigationAlert = it.copy(title = title, subtitle = subtitle)
+            // showing the alert again restarts its countdown, so pass only the time it has left
+            val durationMs = if (it.durationMs >= Alert.DURATION_SHOW_INDEFINITELY) {
+                it.durationMs
+            } else {
+                val elapsedMs = SystemClock.elapsedRealtime() - navigationAlertShownAt
+                (it.durationMs - elapsedMs).coerceAtLeast(1.0)
+            }
+            val navigationAlert = it.copy(title = title, subtitle = subtitle, durationMs = durationMs)
             val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
             template.showAlert(navigationAlert)
         }
