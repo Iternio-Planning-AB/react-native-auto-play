@@ -4,6 +4,7 @@ import {
   CarPlayDashboard,
   Constants,
   ErrorUtil,
+  Flag,
   type HeaderActions,
   HybridAutoPlay,
   HybridVoice,
@@ -222,6 +223,7 @@ const mapButtonHandler: (template: MapTemplate) => void = (template) => {
     },
     mapButtons: [
       {
+        flags: Flag.Persistent,
         image: { name: 'car_crash', type: 'glyph' },
         type: 'custom',
         onPress: () => {
@@ -408,8 +410,11 @@ const mapButtonConfig = {
   type: 'glyph' as const,
 };
 
+// Android keeps alert and pan visible while map and search may auto-hide.
+// CarPlay uses the MapTemplate visibility policy for the whole button group.
 const mapButtons: MapTemplateConfig['mapButtons'] = [
   {
+    flags: Flag.Persistent,
     type: 'custom',
     image: {
       ...mapButtonConfig,
@@ -605,6 +610,7 @@ const mapButtons: MapTemplateConfig['mapButtons'] = [
   },
   {
     type: 'pan',
+    flags: Flag.Persistent,
     image: {
       ...mapButtonConfig,
       name: 'open_with',
