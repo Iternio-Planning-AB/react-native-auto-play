@@ -73,6 +73,12 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     }
 
     override fun onCreateScreen(intent: Intent): Screen {
+        // The OS can cold-start us with a voice-navigation intent. Only the root session
+        // forwards it, a cluster session would duplicate the emit.
+        if (clusterId == null) {
+            handleVoiceIntent(intent)
+        }
+
         val initialTemplate = getInitialTemplate()
         val screen = AndroidAutoScreen(carContext, moduleName, initialTemplate)
 
@@ -135,40 +141,48 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     }
 
     override fun onNewIntent(intent: Intent) {
-        val action = intent.action ?: return
+        handleVoiceIntent(intent)
+    }
 
-        if (action == CarContext.ACTION_NAVIGATE) {
-            intent.data?.schemeSpecificPart?.let { schemeSpecificPart ->
-                try {
-                    // Parse the geo URI format: lat,lon?q=query&mode=x&intent=y
-                    val queryIndex = schemeSpecificPart.indexOf("?q=")
+    /**
+     * Parses an OS voice-navigation intent (`CarContext.ACTION_NAVIGATE`, geo: URI) and forwards
+     * it to JS. Returns true if a voice event was emitted, false for any other intent.
+     */
+    private fun handleVoiceIntent(intent: Intent): Boolean {
+        val action = intent.action ?: return false
+        if (action != CarContext.ACTION_NAVIGATE) return false
 
-                    val location = if (queryIndex > 0) {
-                        val coordinatesPart = schemeSpecificPart.substring(0, queryIndex)
-                        parseCoordinates(coordinatesPart)
-                    } else {
-                        null
-                    }
+        val schemeSpecificPart = intent.data?.schemeSpecificPart ?: return false
+        return try {
+            // Parse the geo URI format: lat,lon?q=query&mode=x&intent=y
+            val queryIndex = schemeSpecificPart.indexOf("?q=")
 
-                    val query = if (queryIndex >= 0) {
-                        val queryPart = schemeSpecificPart.substring(queryIndex + 3) // Skip "?q="
-                        val additionalParamsIndex = queryPart.indexOf('&')
-
-                        if (additionalParamsIndex >= 0) {
-                            val rawQuery = queryPart.substring(0, additionalParamsIndex)
-                            java.net.URLDecoder.decode(rawQuery, "UTF-8")
-                        } else {
-                            java.net.URLDecoder.decode(queryPart, "UTF-8")
-                        }
-                    } else {
-                        java.net.URLDecoder.decode(schemeSpecificPart, "UTF-8")
-                    }
-
-                    HybridAutoPlay.emitVoiceInput(location, query)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
-                }
+            val location = if (queryIndex > 0) {
+                val coordinatesPart = schemeSpecificPart.substring(0, queryIndex)
+                parseCoordinates(coordinatesPart)
+            } else {
+                null
             }
+
+            val query = if (queryIndex >= 0) {
+                val queryPart = schemeSpecificPart.substring(queryIndex + 3) // Skip "?q="
+                val additionalParamsIndex = queryPart.indexOf('&')
+
+                if (additionalParamsIndex >= 0) {
+                    val rawQuery = queryPart.substring(0, additionalParamsIndex)
+                    java.net.URLDecoder.decode(rawQuery, "UTF-8")
+                } else {
+                    java.net.URLDecoder.decode(queryPart, "UTF-8")
+                }
+            } else {
+                java.net.URLDecoder.decode(schemeSpecificPart, "UTF-8")
+            }
+
+            HybridAutoPlay.emitVoiceInput(location, query)
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
+            false
         }
     }
 
