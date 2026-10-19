@@ -11,6 +11,7 @@ import androidx.car.app.model.CarIcon
 import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.bridge.LifecycleEventListener
 import com.margelo.nitro.NitroModules
@@ -263,6 +264,10 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
 
         fun getRootContext(): CarContext? {
             return sessions[ROOT_SESSION]?.carContext
+        }
+
+        fun getRootLifecycle(): Lifecycle? {
+            return sessions[ROOT_SESSION]?.session?.lifecycle
         }
 
         fun getClusterSessions(): Array<String> {

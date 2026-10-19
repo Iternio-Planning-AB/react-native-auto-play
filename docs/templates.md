@@ -62,6 +62,11 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
 
 ## MapTemplate specifics
 
+- Android session destruction ends native car guidance without forwarding `onStopNavigation`
+  to JavaScript. The callback captures the original session lifecycle so delayed teardown
+  cannot stop a replacement session or the app's shared phone navigation; live host stops
+  still reach JavaScript.
+
 - `updateManeuvers` requires `startNavigation()` first, and differs per platform: Android
   replaces all supplied maneuvers, iOS only updates travel estimates when maneuver ids match.
 - iOS navigation session lifecycle (`ios/templates/MapTemplate.swift`):

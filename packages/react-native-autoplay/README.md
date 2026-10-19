@@ -237,6 +237,11 @@ In case you wanna open up your CarPlay app from one of the CarPlay dashboard but
 ```
 
 ### Android Auto
+
+Navigation notifications use the channel name **Android Auto Navigation** (channel ID
+`AutoPlayServiceChannel`). Disconnecting an Android Auto session cleans up car guidance
+without emitting `onStopNavigation`; live host cancellations still emit that callback.
+
 No platform specific setup required - we got you covered with all the required stuff.
 
 #### ProGuard

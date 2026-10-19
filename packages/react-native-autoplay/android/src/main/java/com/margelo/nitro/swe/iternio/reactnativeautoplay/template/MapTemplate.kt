@@ -18,6 +18,7 @@ import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
+import androidx.lifecycle.Lifecycle
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertActionStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
@@ -48,6 +49,7 @@ class MapTemplate(
 
     init {
         if (initNavigationManager) {
+            val sessionLifecycle = AndroidAutoSession.getRootLifecycle()
             val navigationManagerCallback = object : NavigationManagerCallback {
                 override fun onAutoDriveEnabled() {
                     config.onAutoDriveEnabled?.let {
@@ -57,6 +59,13 @@ class MapTemplate(
 
                 override fun onStopNavigation() {
                     navigationEnded()
+
+                    // NavigationManager also stops on session destruction. Only
+                    // live host cancellations should end the shared phone route.
+                    if (sessionLifecycle?.currentState == Lifecycle.State.DESTROYED) {
+                        return
+                    }
+
                     config.onStopNavigation()
                 }
             }
