@@ -53,6 +53,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroImage> image = this->getFieldValue(fieldImage);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
+      static const auto fieldFlags = clazz->getField<jni::JDouble>("flags");
+      jni::local_ref<jni::JDouble> flags = this->getFieldValue(fieldFlags);
       return NitroMapButton(
         type->toCpp(),
         image->toCpp(),
@@ -64,7 +66,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             auto onPressRef = jni::make_global(onPress);
             return JNICallable<JFunc_void, void()>(std::move(onPressRef));
           }
-        }()) : std::nullopt
+        }()) : std::nullopt,
+        flags != nullptr ? std::make_optional(flags->value()) : std::nullopt
       );
     }
 
@@ -74,14 +77,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroMapButton::javaobject> fromCpp(const NitroMapButton& value) {
-      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNitroMapButton(jni::alias_ref<JNitroMapButtonType>, jni::alias_ref<JNitroImage>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         JNitroMapButtonType::fromCpp(value.type),
         JNitroImage::fromCpp(value.image),
-        value.onPress.has_value() ? JFunc_void_cxx::fromCpp(value.onPress.value()) : nullptr
+        value.onPress.has_value() ? JFunc_void_cxx::fromCpp(value.onPress.value()) : nullptr,
+        value.flags.has_value() ? jni::JDouble::valueOf(value.flags.value()) : nullptr
       );
     }
   };

@@ -72,6 +72,8 @@ class MapTemplate: AutoPlayHeaderProviding,
         visibleTravelEstimate = config.visibleTravelEstimate
 
         template = CPMapTemplate(id: config.id)
+        template.automaticallyHidesNavigationBar = config.automaticallyHidesNavigationBar ?? true
+        template.hidesButtonsWithNavigationBar = config.hidesButtonsWithNavigationBar ?? true
         if let nitroColor = config.defaultGuidanceBackgroundColor,
             let traitCollection = SceneStore.getRootTraitCollection()
         {
@@ -158,9 +160,9 @@ class MapTemplate: AutoPlayHeaderProviding,
             return
         }
 
-        // Restore CarPlay's default auto-hide (disabled while a panel is shown, see panelDidShow).
-        template.automaticallyHidesNavigationBar = true
-        template.hidesButtonsWithNavigationBar = true
+        // Restore the configured auto-hide policy after a panel releases the controls.
+        template.automaticallyHidesNavigationBar = config.automaticallyHidesNavigationBar ?? true
+        template.hidesButtonsWithNavigationBar = config.hidesButtonsWithNavigationBar ?? true
 
         setBarButtons(template: template, barButtons: barButtons)
 

@@ -164,16 +164,20 @@ object Parser {
             buttons.forEach { button ->
                 if (button.type == NitroMapButtonType.PAN) {
                     addAction(
-                        Action.Builder(Action.PAN).setIcon(
-                            parseImage(
-                                context, button.image
-                            )
-                        ).build()
+                        Action.Builder(Action.PAN).apply {
+                            setIcon(parseImage(context, button.image))
+                            button.flags?.let { flags ->
+                                setFlags(flags.toInt())
+                            }
+                        }.build()
                     )
                     return@forEach
                 }
 
                 addAction(Action.Builder().apply {
+                    button.flags?.let { flags ->
+                        setFlags(flags.toInt())
+                    }
                     button.onPress?.let {
                         setOnClickListener(it)
                     }

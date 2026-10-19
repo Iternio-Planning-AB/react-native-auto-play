@@ -8,6 +8,7 @@ export type NitroMapButton = {
   type: NitroMapButtonType;
   image: NitroImage;
   onPress?: () => void;
+  flags?: number;
 };
 
 const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButton> | undefined => {
@@ -16,7 +17,7 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
   }
 
   return mapButtons?.map<NitroMapButton>((button) => {
-    const { type } = button;
+    const { type, flags } = button;
     const onPress = button.type === 'custom' ? () => button.onPress(template) : undefined;
 
     if (button.image.type === 'glyph') {
@@ -31,6 +32,7 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
 
       return {
         type,
+        flags,
         onPress,
         image: NitroImageUtil.convert({ ...button.image, backgroundColor, fontScale }),
       };
@@ -38,6 +40,7 @@ const convert = <T>(template: T, mapButtons?: MapButtons<T>): Array<NitroMapButt
 
     return {
       type,
+      flags,
       onPress,
       image: NitroImageUtil.convert(button.image),
     };

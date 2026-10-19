@@ -67,6 +67,23 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
   visibleTravelEstimate?: VisibleTravelEstimate;
 
   /**
+   * Whether the navigation bar may automatically hide when idle.
+   * Temporarily disabled while a map panel owns the controls.
+   * @namespace iOS
+   * @default true
+   */
+  automaticallyHidesNavigationBar?: boolean;
+
+  /**
+   * Whether all map buttons hide together with the navigation bar.
+   * Set false to keep map buttons visible while allowing the bar to hide.
+   * Temporarily disabled while a map panel owns the controls.
+   * @namespace iOS
+   * @default true
+   */
+  hidesButtonsWithNavigationBar?: boolean;
+
+  /**
    * callback for single finger pan gesture
    * @param translation distance in pixels along the x & y axis that has been scrolled since the last touch position during the scroll event
    * @param velocity the velocity of the pan gesture, iOS only

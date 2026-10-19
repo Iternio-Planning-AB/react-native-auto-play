@@ -18,7 +18,7 @@ public extension MapTemplateConfig {
   /**
    * Create a new instance of `MapTemplateConfig`.
    */
-  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?, visibleTravelEstimate: VisibleTravelEstimate?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?) {
+  init(id: String, onWillAppear: ((_ animated: Bool?) -> Void)?, onWillDisappear: ((_ animated: Bool?) -> Void)?, onDidAppear: ((_ animated: Bool?) -> Void)?, onDidDisappear: ((_ animated: Bool?) -> Void)?, onPopped: (() -> Void)?, autoDismissMs: Double?, onDidChangePanningInterface: ((_ isPanningInterfaceVisible: Bool) -> Void)?, visibleTravelEstimate: VisibleTravelEstimate?, automaticallyHidesNavigationBar: Bool?, hidesButtonsWithNavigationBar: Bool?, onDidPan: ((_ translation: Point, _ velocity: Point?) -> Void)?, onDidUpdateZoomGestureWithCenter: ((_ center: Point, _ scale: Double) -> Void)?, onClick: ((_ center: Point) -> Void)?, onDoubleClick: ((_ center: Point) -> Void)?, onAppearanceDidChange: ((_ colorScheme: ColorScheme) -> Void)?, onStopNavigation: @escaping () -> Void, onAutoDriveEnabled: (() -> Void)?, mapButtons: [NitroMapButton]?, headerActions: [NitroAction]?, defaultGuidanceBackgroundColor: NitroColor?, panButtonScrollPercentage: Double?) {
     self.init(std.string(id), { () -> bridge.std__optional_std__function_void_std__optional_bool_____animated______ in
       if let __unwrappedValue = onWillAppear {
         return bridge.create_std__optional_std__function_void_std__optional_bool_____animated______({ () -> bridge.Func_void_std__optional_bool_ in
@@ -82,6 +82,18 @@ public extension MapTemplateConfig {
     }(), { () -> bridge.std__optional_VisibleTravelEstimate_ in
       if let __unwrappedValue = visibleTravelEstimate {
         return bridge.create_std__optional_VisibleTravelEstimate_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = automaticallyHidesNavigationBar {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = hidesButtonsWithNavigationBar {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -327,6 +339,30 @@ public extension MapTemplateConfig {
   @inline(__always)
   var visibleTravelEstimate: VisibleTravelEstimate? {
     return self.__visibleTravelEstimate.value
+  }
+  
+  @inline(__always)
+  var automaticallyHidesNavigationBar: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__automaticallyHidesNavigationBar) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__automaticallyHidesNavigationBar)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var hidesButtonsWithNavigationBar: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__hidesButtonsWithNavigationBar) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__hidesButtonsWithNavigationBar)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

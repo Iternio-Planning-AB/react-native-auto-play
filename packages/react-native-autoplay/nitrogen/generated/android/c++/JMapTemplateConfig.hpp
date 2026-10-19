@@ -89,6 +89,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JFunc_void_bool::javaobject> onDidChangePanningInterface = this->getFieldValue(fieldOnDidChangePanningInterface);
       static const auto fieldVisibleTravelEstimate = clazz->getField<JVisibleTravelEstimate>("visibleTravelEstimate");
       jni::local_ref<JVisibleTravelEstimate> visibleTravelEstimate = this->getFieldValue(fieldVisibleTravelEstimate);
+      static const auto fieldAutomaticallyHidesNavigationBar = clazz->getField<jni::JBoolean>("automaticallyHidesNavigationBar");
+      jni::local_ref<jni::JBoolean> automaticallyHidesNavigationBar = this->getFieldValue(fieldAutomaticallyHidesNavigationBar);
+      static const auto fieldHidesButtonsWithNavigationBar = clazz->getField<jni::JBoolean>("hidesButtonsWithNavigationBar");
+      jni::local_ref<jni::JBoolean> hidesButtonsWithNavigationBar = this->getFieldValue(fieldHidesButtonsWithNavigationBar);
       static const auto fieldOnDidPan = clazz->getField<JFunc_void_Point_std__optional_Point_::javaobject>("onDidPan");
       jni::local_ref<JFunc_void_Point_std__optional_Point_::javaobject> onDidPan = this->getFieldValue(fieldOnDidPan);
       static const auto fieldOnDidUpdateZoomGestureWithCenter = clazz->getField<JFunc_void_Point_double::javaobject>("onDidUpdateZoomGestureWithCenter");
@@ -169,6 +173,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
         }()) : std::nullopt,
         visibleTravelEstimate != nullptr ? std::make_optional(visibleTravelEstimate->toCpp()) : std::nullopt,
+        automaticallyHidesNavigationBar != nullptr ? std::make_optional(static_cast<bool>(automaticallyHidesNavigationBar->value())) : std::nullopt,
+        hidesButtonsWithNavigationBar != nullptr ? std::make_optional(static_cast<bool>(hidesButtonsWithNavigationBar->value())) : std::nullopt,
         onDidPan != nullptr ? std::make_optional([&]() -> std::function<void(const Point& /* translation */, const std::optional<Point>& /* velocity */)> {
           if (onDidPan->isInstanceOf(JFunc_void_Point_std__optional_Point__cxx::javaClassStatic())) [[likely]] {
             auto downcast = jni::static_ref_cast<JFunc_void_Point_std__optional_Point__cxx::javaobject>(onDidPan);
@@ -263,7 +269,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JMapTemplateConfig::javaobject> fromCpp(const MapTemplateConfig& value) {
-      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JMapTemplateConfig(jni::alias_ref<jni::JString>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void_std__optional_bool_::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JDouble>, jni::alias_ref<JFunc_void_bool::javaobject>, jni::alias_ref<JVisibleTravelEstimate>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void_Point_std__optional_Point_::javaobject>, jni::alias_ref<JFunc_void_Point_double::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_Point::javaobject>, jni::alias_ref<JFunc_void_ColorScheme::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JArrayClass<JNitroMapButton>>, jni::alias_ref<jni::JArrayClass<JNitroAction>>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -277,6 +283,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.autoDismissMs.has_value() ? jni::JDouble::valueOf(value.autoDismissMs.value()) : nullptr,
         value.onDidChangePanningInterface.has_value() ? JFunc_void_bool_cxx::fromCpp(value.onDidChangePanningInterface.value()) : nullptr,
         value.visibleTravelEstimate.has_value() ? JVisibleTravelEstimate::fromCpp(value.visibleTravelEstimate.value()) : nullptr,
+        value.automaticallyHidesNavigationBar.has_value() ? jni::JBoolean::valueOf(value.automaticallyHidesNavigationBar.value()) : nullptr,
+        value.hidesButtonsWithNavigationBar.has_value() ? jni::JBoolean::valueOf(value.hidesButtonsWithNavigationBar.value()) : nullptr,
         value.onDidPan.has_value() ? JFunc_void_Point_std__optional_Point__cxx::fromCpp(value.onDidPan.value()) : nullptr,
         value.onDidUpdateZoomGestureWithCenter.has_value() ? JFunc_void_Point_double_cxx::fromCpp(value.onDidUpdateZoomGestureWithCenter.value()) : nullptr,
         value.onClick.has_value() ? JFunc_void_Point_cxx::fromCpp(value.onClick.value()) : nullptr,

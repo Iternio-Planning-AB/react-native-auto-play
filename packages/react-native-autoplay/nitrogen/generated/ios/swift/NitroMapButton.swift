@@ -18,7 +18,7 @@ public extension NitroMapButton {
   /**
    * Create a new instance of `NitroMapButton`.
    */
-  init(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Void)?) {
+  init(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Void)?, flags: Double?) {
     self.init(type, { () -> bridge.std__variant_GlyphImage__AssetImage__RemoteImage_ in
       switch image {
         case .first(let __value):
@@ -34,6 +34,12 @@ public extension NitroMapButton {
           let __closureWrapper = Func_void(__unwrappedValue)
           return bridge.create_Func_void(__closureWrapper.toUnsafe())
         }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = flags {
+        return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -76,6 +82,18 @@ public extension NitroMapButton {
             __wrappedFunction.call()
           }
         }()
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var flags: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__flags) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__flags)
+        return __unwrapped
       } else {
         return nil
       }

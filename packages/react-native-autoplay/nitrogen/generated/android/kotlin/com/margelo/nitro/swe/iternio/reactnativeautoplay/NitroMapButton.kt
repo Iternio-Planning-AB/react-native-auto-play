@@ -26,13 +26,16 @@ data class NitroMapButton(
   val image: NitroImage,
   @DoNotStrip
   @Keep
-  val onPress: Func_void?
+  val onPress: Func_void?,
+  @DoNotStrip
+  @Keep
+  val flags: Double?
 ) {
   /**
    * Create a new instance of NitroMapButton from Kotlin
    */
-  constructor(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Unit)?):
-         this(type, image, onPress?.let { Func_void_java(it) })
+  constructor(type: NitroMapButtonType, image: NitroImage, onPress: (() -> Unit)?, flags: Double?):
+         this(type, image, onPress?.let { Func_void_java(it) }, flags)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -40,13 +43,15 @@ data class NitroMapButton(
     return Objects.deepEquals(this.type, other.type)
       && Objects.deepEquals(this.image, other.image)
       && Objects.deepEquals(this.onPress, other.onPress)
+      && Objects.deepEquals(this.flags, other.flags)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
       type,
       image,
-      onPress
+      onPress,
+      flags
     ).contentDeepHashCode()
   }
 
@@ -58,8 +63,8 @@ data class NitroMapButton(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(type: NitroMapButtonType, image: NitroImage, onPress: Func_void?): NitroMapButton {
-      return NitroMapButton(type, image, onPress)
+    private fun fromCpp(type: NitroMapButtonType, image: NitroImage, onPress: Func_void?, flags: Double?): NitroMapButton {
+      return NitroMapButton(type, image, onPress, flags)
     }
   }
 }

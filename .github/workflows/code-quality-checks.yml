@@ -29,6 +29,9 @@ jobs:
       - name: Run typecheck auto-play package
         run: yarn typecheck:auto-play
 
+      - name: Test map control visibility
+        run: yarn workspace @iternio/react-native-auto-play test
+
       - name: Build auto-play
         run: yarn build:auto-play
 

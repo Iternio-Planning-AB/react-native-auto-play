@@ -2,6 +2,12 @@ import type { AutoImage } from './Image';
 
 export type MapButton<T = unknown> = {
   type: 'custom';
+  /**
+   * Android action flags, including Flag.Persistent to prevent auto-hide.
+   * Ignored on iOS; use MapTemplate's group visibility settings instead.
+   * @namespace Android
+   */
+  flags?: Flags;
   image: AutoImage;
   onPress: (template: T) => void;
 };
@@ -15,6 +21,12 @@ export type ButtonStyle = 'normal' | 'confirm' | 'cancel';
  */
 export type MapPanButton = {
   type: 'pan';
+  /**
+   * Android action flags, including Flag.Persistent to prevent auto-hide.
+   * Does not force a pan button to appear on hosts that normally hide it.
+   * @namespace Android
+   */
+  flags?: Flags;
   image: AutoImage;
 };
 

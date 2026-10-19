@@ -80,6 +80,11 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
     without a disconnect after the app was in the background. JS is not notified
     (`onStopNavigation` only reports CarPlay cancelling navigation), so apps have to start
     navigation again after `didConnect`.
+- Map controls can opt out of idle auto-hide: Android map/pan buttons accept `Flag.Persistent`
+  through `flags`, matching header actions. CarPlay uses the root map template's
+  `automaticallyHidesNavigationBar` / `hidesButtonsWithNavigationBar` options (both default
+  to `true`), not individual button flags. Panels temporarily disable auto-hide and the root
+  restores its configured policy when they close.
 - `updateTravelEstimates(steps)` must receive only *future* steps — no origin, no passed steps.
 - `showTripSelector` validates synchronously and **throws** (empty trips, empty
   `routeChoices`, routes with `< 2` steps). In `__DEV__` on Android it also warns about

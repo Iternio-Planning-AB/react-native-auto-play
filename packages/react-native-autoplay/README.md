@@ -656,6 +656,8 @@ Below is a concise overview of the most important props per template. Optional p
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
 | `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton`. While a template with `mapConfig` is shown, it needs its own pan button in `mapConfig.mapButtons`; the gestures then still go to this MapTemplate's `onDidPan`/`onClick`/zoom callbacks. |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |
+| `automaticallyHidesNavigationBar` | `boolean` | ❌ | **iOS only.** Allow the navigation bar to auto-hide. Default `true`. |
+| `hidesButtonsWithNavigationBar` | `boolean` | ❌ | **iOS only.** Hide all map buttons with the navigation bar. Default `true`. |
 | `optionsPanel` | `OptionsPanelConfig<MapTemplate>` | ❌ | **iOS 27+ only, no-op on Android.** Panel shown when tapping the ellipsis button next to the travel estimates during active navigation. See **Options Panel** below. |
 | `onDidPan` / `onDidUpdateZoomGestureWithCenter` | callbacks | ❌ | Map gesture events. |
 | `onAppearanceDidChange` | `(colorScheme) => void` | ❌ | Listen for light/dark mode changes. |
@@ -781,6 +783,36 @@ For InputSignIn the keyboard and input fields can be configured with following p
 
 **TextInputType enum:** `PASSWORD`, `DEFAULT`
 
+
+### Map control visibility
+
+On Android, custom map buttons and pan buttons accept `flags`, just like custom header actions.
+Use `Flag.Persistent` to keep an action visible when the host hides idle controls; omit it or
+use `0` to allow normal host auto-hide. Flags can be bitwise combined. The persistent flag
+requires Car App API 5+ and does not force controls, such as the pan button, to appear on hosts
+that normally omit them. The same map-button configuration works with `setMapButtons()`,
+trip-preview buttons and templates with `mapConfig`.
+
+```ts
+import { Flag } from '@iternio/react-native-auto-play';
+
+mapTemplate.setMapButtons([
+  { type: 'custom', image: recenterImage, onPress: recenter, flags: Flag.Persistent },
+  { type: 'custom', image: zoomInImage, onPress: zoomIn },
+  { type: 'custom', image: zoomOutImage, onPress: zoomOut },
+]);
+```
+
+CarPlay has group-level controls instead of per-button persistence. Set
+`automaticallyHidesNavigationBar: false` when creating a `MapTemplate` to keep its header
+visible. Set `hidesButtonsWithNavigationBar: false` to keep all map buttons visible even if
+the header may hide. Both options default to `true` and are ignored on Android. Android
+button `flags` are ignored on CarPlay; a persistent recenter button cannot be combined with
+independently auto-hiding zoom buttons there.
+
+These CarPlay settings apply at creation and survive template/button refreshes. A map panel
+temporarily keeps its controls visible; dismissing it restores the root template's settings.
+Panning and trip-preview control ownership continue to follow the platform's normal behavior.
 
 ### Header Actions (Important)
 
