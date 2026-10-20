@@ -32,13 +32,39 @@ export function installAutoPlayTimers(): void {
 
   const timing = HybridAutoPlayTiming;
 
+  // Native takes a due timer out of its table before the callback reaches the JS thread, so
+  // a clear that lands in between has nothing left to delete and the callback still runs.
+  // Code that relies on clearTimeout actually cancelling then breaks: axios' progress
+  // throttle, for one, calls its handler with null and throws. Tracking the live ids here
+  // makes a cleared timer never fire, whatever the native side has already queued.
+  const live = new Set<number>();
+
+  const start = (fire: () => void, delay: number, repeats: boolean): number => {
+    const id = timing.createTimer(
+      () => {
+        if (!live.has(id)) {
+          return;
+        }
+        if (!repeats) {
+          live.delete(id);
+        }
+        fire();
+      },
+      delay,
+      repeats
+    );
+    live.add(id);
+    return id;
+  };
+
   const schedule =
     (repeats: boolean) =>
     (callback: TimerCallback, delay?: number, ...args: unknown[]): number =>
-      timing.createTimer(() => callback(...args), delay ?? 0, repeats);
+      start(() => callback(...args), delay ?? 0, repeats);
 
   const clear = (id: unknown): void => {
     if (typeof id === 'number') {
+      live.delete(id);
       timing.deleteTimer(id);
     }
   };
@@ -55,6 +81,6 @@ export function installAutoPlayTimers(): void {
     (globalThis as { performance?: { now(): number } }).performance?.now() ?? Date.now();
 
   globalThis.requestAnimationFrame = ((callback: (timestamp: number) => void): number =>
-    timing.createTimer(() => callback(now()), 0, false)) as unknown as typeof requestAnimationFrame;
+    start(() => callback(now()), 0, false)) as unknown as typeof requestAnimationFrame;
   globalThis.cancelAnimationFrame = clear as unknown as typeof cancelAnimationFrame;
 }
