@@ -165,6 +165,14 @@ class HybridAutoPlay: HybridAutoPlaySpec {
                 if carPlayTemplate is CPMapTemplate {
                     try await MainActor.run {
                         try scene.initRootView()
+                        // Presenting an empty header with auto-hide disabled can leave
+                        // the bar hidden even after the first invalidation adds buttons.
+                        if let headerTemplate = template as? AutoPlayHeaderProviding {
+                            setBarButtons(
+                                template: carPlayTemplate,
+                                barButtons: headerTemplate.barButtons
+                            )
+                        }
                     }
                 }
 

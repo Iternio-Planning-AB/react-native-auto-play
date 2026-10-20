@@ -396,3 +396,115 @@ print("CarPlay visibility behavior passed")
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('CarPlay root maps have their header installed before presentation', {
+  skip:
+    spawnSync('swift', ['--version']).status !== 0 &&
+    'Swift CLI is required for this behavior test',
+}, () => {
+  const setRoot = method(read('ios/hybrid/HybridAutoPlay.swift'), 'func setRootTemplate(');
+  const directory = mkdtempSync(join(tmpdir(), 'autoplay-root-header-'));
+  const swift = `
+import Foundation
+class CPTemplate { var buttons: [String]? }
+class CPMapTemplate: CPTemplate {}
+class AutoPlayTemplate {
+    let native: CPTemplate
+    var refreshes = 0
+    init(_ native: CPTemplate) { self.native = native }
+    func getTemplate() throws -> CPTemplate { native }
+    @MainActor func invalidate() { refreshes += 1 }
+}
+class AutoPlayHeaderProviding: AutoPlayTemplate {
+    var barButtons: [String]? = ["search", "options", "home", "work"]
+}
+class Store {
+    var template: AutoPlayTemplate = AutoPlayHeaderProviding(CPMapTemplate())
+    func getTemplate(templateId: String) async throws -> AutoPlayTemplate { template }
+}
+enum Failure: Error { case initialization }
+class Scene {
+    let templateStore = Store()
+    var rootViewReady = false
+    var failInitialization = false
+    @MainActor func initRootView() throws {
+        if failInitialization { throw Failure.initialization }
+        rootViewReady = true
+    }
+}
+class Controller {
+    var presentations = 0
+    func setRootTemplate(_ template: CPTemplate, animated: Bool) async throws -> Bool {
+        if template is CPMapTemplate {
+            precondition(RootModule.scene.rootViewReady)
+            precondition(template.buttons == (RootModule.scene.templateStore.template as! AutoPlayHeaderProviding).barButtons,
+                         "The map header must be installed before presentation")
+        } else {
+            precondition(template.buttons == nil, "Non-map presentation is unchanged")
+        }
+        precondition(!animated)
+        presentations += 1
+        return true
+    }
+}
+class RootModule {
+    static let scene = Scene()
+    static let controller = Controller()
+    static func withSceneAndInterfaceController(_ body: (Scene, Controller) async throws -> Void) async throws {
+        try await body(scene, controller)
+    }
+}
+class Promise<T> {
+    let task: Task<T, Error>
+    init(_ body: @escaping () async throws -> T) { task = Task { try await body() } }
+    static func async(_ body: @escaping () async throws -> T) -> Promise<T> { Promise(body) }
+}
+@MainActor func setBarButtons(template: CPTemplate, barButtons: [String]?) {
+    precondition(RootModule.scene.rootViewReady)
+    template.buttons = barButtons
+}
+class Hybrid {
+    ${setRoot}
+}
+@main struct Run {
+    static func main() async throws {
+        let hybrid = Hybrid()
+        let map = RootModule.scene.templateStore.template as! AutoPlayHeaderProviding
+        for actions in [["search", "options", "home", "work"], ["overview", "cancel", "options", "steps"], []] {
+            map.barButtons = actions
+            try await hybrid.setRootTemplate(templateId: "map").task.value
+        }
+        precondition(map.refreshes == 3, "Keep post-presentation invalidation")
+        let list = AutoPlayHeaderProviding(CPTemplate())
+        RootModule.scene.templateStore.template = list
+        try await hybrid.setRootTemplate(templateId: "list").task.value
+        precondition(list.refreshes == 1)
+        let failedMap = AutoPlayHeaderProviding(CPMapTemplate())
+        RootModule.scene.templateStore.template = failedMap
+        RootModule.scene.failInitialization = true
+        do {
+            try await hybrid.setRootTemplate(templateId: "failed").task.value
+            preconditionFailure("Initialization failure must propagate")
+        } catch Failure.initialization {}
+        precondition(failedMap.refreshes == 0)
+        precondition(RootModule.controller.presentations == 4)
+        print("CarPlay root header behavior passed")
+    }
+}
+`;
+  try {
+    const file = join(directory, 'RootHeader.swift');
+    const executable = join(directory, 'root-header');
+    writeFileSync(file, swift);
+    const compiled = spawnSync('swiftc', ['-parse-as-library', '-module-cache-path', join(directory, 'cache'), file, '-o', executable], {
+      encoding: 'utf8',
+      timeout: 60000,
+    });
+    assert.equal(compiled.status, 0, compiled.stderr || compiled.error?.message);
+    const result = spawnSync(executable, [], { encoding: 'utf8', timeout: 10000 });
+    assert.equal(result.status, 0, result.stderr || result.error?.message);
+    assert.match(result.stdout, /CarPlay root header behavior passed/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
