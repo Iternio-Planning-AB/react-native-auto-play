@@ -63,6 +63,10 @@ class VirtualRenderer(
     // surface it still delivers must not bring a stopped renderer back to life
     private var isStopped = false
 
+    // A React instance reload keeps the car session alive but destroys every surface rendered in
+    // the old instance, so a renderer is only reusable while this is still the current context
+    private val reactContext = NitroModules.applicationContext
+
     /**
      * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side.
      * The density is derived from the surface container's dpi so it always matches the VirtualDisplay,
@@ -239,7 +243,9 @@ class VirtualRenderer(
         // makes hasRenderer skip the retry.
         virtualRenderer.put(moduleName, this)?.let {
             Log.i(TAG, "$moduleName: stopping the renderer an earlier session left behind")
-            it.stop()
+            // the replacement is registered and working by now, its creation must not fail on this
+            runCatching { it.stop() }
+                .onFailure { e -> Log.w(TAG, "$moduleName: stopping the replaced renderer failed", e) }
         }
     }
 
@@ -600,14 +606,16 @@ class VirtualRenderer(
         private val virtualRenderer = ConcurrentHashMap<String, VirtualRenderer>()
 
         /**
-         * Whether [moduleId] already has a renderer for [carContext]. A renderer of another (ended)
-         * session does not count, the caller has to create a new one.
+         * Whether [moduleId] already has a renderer for [carContext] in the current React instance.
+         * A renderer of another (ended) session or of a reloaded React instance does not count, the
+         * caller has to create a new one, which replaces it.
          *
          * Not `virtualRenderer.contains(moduleId)`: on a ConcurrentHashMap that resolves to the Java
          * member `contains(Object)`, which is `containsValue`, so it was always false.
          */
         fun hasRenderer(moduleId: String, carContext: CarContext): Boolean {
-            return virtualRenderer[moduleId]?.context === carContext
+            val renderer = virtualRenderer[moduleId] ?: return false
+            return renderer.context === carContext && renderer.reactContext === NitroModules.applicationContext
         }
 
         fun getWindowInformation(moduleId: String): WindowInformation? {

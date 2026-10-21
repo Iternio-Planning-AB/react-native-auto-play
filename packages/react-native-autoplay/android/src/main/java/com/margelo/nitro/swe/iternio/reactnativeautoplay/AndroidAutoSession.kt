@@ -191,23 +191,43 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         return Location(lat, lon)
     }
 
+    /**
+     * Sessions are keyed by module name only: once a new session for the same name registered, the
+     * lifecycle of this (ended) one must neither change its state, report it disconnected nor drop it.
+     */
+    private fun isCurrentSession(): Boolean {
+        return sessions[moduleName]?.carContext === carContext
+    }
+
     private val sessionLifecycleObserver = object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
+            if (!isCurrentSession()) {
+                return
+            }
             sessions[moduleName]?.state = VisibilityState.WILLAPPEAR
             HybridAutoPlay.emitRenderState(moduleName, VisibilityState.WILLAPPEAR)
         }
 
         override fun onResume(owner: LifecycleOwner) {
+            if (!isCurrentSession()) {
+                return
+            }
             sessions[moduleName]?.state = VisibilityState.DIDAPPEAR
             HybridAutoPlay.emitRenderState(moduleName, VisibilityState.DIDAPPEAR)
         }
 
         override fun onPause(owner: LifecycleOwner) {
+            if (!isCurrentSession()) {
+                return
+            }
             sessions[moduleName]?.state = VisibilityState.WILLDISAPPEAR
             HybridAutoPlay.emitRenderState(moduleName, VisibilityState.WILLDISAPPEAR)
         }
 
         override fun onStop(owner: LifecycleOwner) {
+            if (!isCurrentSession()) {
+                return
+            }
             sessions[moduleName]?.state = VisibilityState.DIDDISAPPEAR
             HybridAutoPlay.emitRenderState(moduleName, VisibilityState.DIDDISAPPEAR)
         }
@@ -215,9 +235,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         override fun onDestroy(owner: LifecycleOwner) {
             VirtualRenderer.removeRenderer(moduleName, carContext)
 
-            // Sessions are keyed by module name only: when a new session for the same name already
-            // registered, this late teardown must neither drop its state nor report it disconnected.
-            if (sessions[moduleName]?.carContext !== carContext) {
+            if (!isCurrentSession()) {
                 Log.i(TAG, "$moduleName: a newer session took over, skipping session teardown")
                 return
             }
