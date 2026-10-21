@@ -59,6 +59,10 @@ class VirtualRenderer(
 
     private var splashWillDisappear = false
 
+    // set by stop(): the SurfaceCallback stays registered on this renderer's CarContext, and a
+    // surface it still delivers must not bring a stopped renderer back to life
+    private var isStopped = false
+
     /**
      * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side.
      * The density is derived from the surface container's dpi so it always matches the VirtualDisplay,
@@ -73,7 +77,13 @@ class VirtualRenderer(
     }
 
     init {
-        virtualRenderer[moduleName] = this
+        // Renderers are keyed by module name only, so a renderer an earlier session left behind
+        // under the same name would otherwise keep its virtual display and React surface running
+        // with no reference left to stop it.
+        virtualRenderer.put(moduleName, this)?.let {
+            Log.i(TAG, "$moduleName: stopping the renderer an earlier session left behind")
+            it.stop()
+        }
 
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
             val areaDebouncer = Debouncer(200)
@@ -234,6 +244,10 @@ class VirtualRenderer(
 
     @MainThread
     private fun applySurface(surfaceContainer: SurfaceContainer) {
+        if (isStopped) {
+            return
+        }
+
         val surfaceWidth = surfaceContainer.width
         val surfaceHeight = surfaceContainer.height
 
@@ -551,6 +565,8 @@ class VirtualRenderer(
 
     @MainThread
     private fun stop() {
+        isStopped = true
+
         // Current and parked — a stop during a resize must not leak the backdrop whose
         // replacement never drew. Host destroy() is guarded like the factory call: a
         // throwing host must not skip the virtual-display release and surface teardown below.
@@ -572,7 +588,8 @@ class VirtualRenderer(
         try {
             stopReactSurface()
         } finally {
-            virtualRenderer.remove(moduleName)
+            // only if still registered: a replacing renderer may own the name by now
+            virtualRenderer.remove(moduleName, this)
         }
     }
 
@@ -581,8 +598,15 @@ class VirtualRenderer(
 
         private val virtualRenderer = ConcurrentHashMap<String, VirtualRenderer>()
 
-        fun hasRenderer(moduleId: String): Boolean {
-            return virtualRenderer.contains(moduleId)
+        /**
+         * Whether [moduleId] already has a renderer for [carContext]. A renderer of another (ended)
+         * session does not count, the caller has to create a new one.
+         *
+         * Not `virtualRenderer.contains(moduleId)`: on a ConcurrentHashMap that resolves to the Java
+         * member `contains(Object)`, which is `containsValue`, so it was always false.
+         */
+        fun hasRenderer(moduleId: String, carContext: CarContext): Boolean {
+            return virtualRenderer[moduleId]?.context === carContext
         }
 
         fun getWindowInformation(moduleId: String): WindowInformation? {
@@ -598,9 +622,18 @@ class VirtualRenderer(
             )
         }
 
-        fun removeRenderer(moduleId: String) {
-            virtualRenderer[moduleId]?.stop()
-            virtualRenderer.remove(moduleId)
+        /**
+         * Stops the renderer of [moduleId] if it belongs to [carContext]. A session that ends after
+         * its successor already registered under the same name must not stop the successor's.
+         */
+        @MainThread
+        fun removeRenderer(moduleId: String, carContext: CarContext) {
+            val renderer = virtualRenderer[moduleId] ?: return
+            if (renderer.context !== carContext) {
+                Log.i(TAG, "$moduleId: renderer belongs to a newer session, not stopping it")
+                return
+            }
+            renderer.stop()
         }
 
         // Forwarded by AndroidAutoSession.onCarConfigurationChanged

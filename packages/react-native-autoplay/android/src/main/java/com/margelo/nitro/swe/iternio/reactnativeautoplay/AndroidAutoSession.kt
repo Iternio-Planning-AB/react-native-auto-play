@@ -213,8 +213,16 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
+            VirtualRenderer.removeRenderer(moduleName, carContext)
+
+            // Sessions are keyed by module name only: when a new session for the same name already
+            // registered, this late teardown must neither drop its state nor report it disconnected.
+            if (sessions[moduleName]?.carContext !== carContext) {
+                Log.i(TAG, "$moduleName: a newer session took over, skipping session teardown")
+                return
+            }
+
             sessions.remove(moduleName)
-            VirtualRenderer.removeRenderer(moduleName)
             clusterId?.let {
                 HybridCluster.emit(ClusterEventName.DIDDISCONNECT, clusterId)
                 clusterSessions.remove(it)

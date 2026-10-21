@@ -110,7 +110,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
                 screen.applyConfigUpdate(invalidate = true)
 
-                if (!VirtualRenderer.hasRenderer(templateId)) {
+                if (!VirtualRenderer.hasRenderer(templateId, carContext)) {
                     val result = ThreadUtil.postOnUiAndAwait {
                         VirtualRenderer(carContext, templateId)
                     }

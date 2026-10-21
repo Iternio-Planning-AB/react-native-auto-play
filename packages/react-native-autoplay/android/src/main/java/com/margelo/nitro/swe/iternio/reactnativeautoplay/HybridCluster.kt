@@ -29,11 +29,11 @@ class HybridCluster : HybridClusterSpec() {
 
     override fun initRootView(clusterId: String): Promise<Unit> {
         return Promise.async {
-            if (VirtualRenderer.hasRenderer(clusterId)) {
-                return@async
-            }
             val carContext = AndroidAutoSession.getCarContext(clusterId)
                 ?: throw IllegalArgumentException("initRootView failed, carContext for $clusterId cluster not found")
+            if (VirtualRenderer.hasRenderer(clusterId, carContext)) {
+                return@async
+            }
             val result = ThreadUtil.postOnUiAndAwait {
                 VirtualRenderer(carContext, clusterId, isCluster = true)
             }
