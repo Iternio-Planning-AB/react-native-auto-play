@@ -81,7 +81,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         )
 
         clusterId?.let {
-            clusterSessions.add(it)
+            clusterSessions.addIfAbsent(it)
         }
 
         lifecycle.addObserver(sessionLifecycleObserver)

@@ -77,14 +77,6 @@ class VirtualRenderer(
     }
 
     init {
-        // Renderers are keyed by module name only, so a renderer an earlier session left behind
-        // under the same name would otherwise keep its virtual display and React surface running
-        // with no reference left to stop it.
-        virtualRenderer.put(moduleName, this)?.let {
-            Log.i(TAG, "$moduleName: stopping the renderer an earlier session left behind")
-            it.stop()
-        }
-
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
             val areaDebouncer = Debouncer(200)
 
@@ -240,6 +232,15 @@ class VirtualRenderer(
                 }
             }
         })
+
+        // Renderers are keyed by module name only, so a renderer an earlier session left behind
+        // under the same name would otherwise keep its virtual display and React surface running
+        // with no reference left to stop it. Registered last, so a renderer whose init threw never
+        // makes hasRenderer skip the retry.
+        virtualRenderer.put(moduleName, this)?.let {
+            Log.i(TAG, "$moduleName: stopping the renderer an earlier session left behind")
+            it.stop()
+        }
     }
 
     @MainThread
