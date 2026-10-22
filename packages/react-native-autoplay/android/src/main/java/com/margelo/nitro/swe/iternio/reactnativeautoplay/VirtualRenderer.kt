@@ -90,6 +90,20 @@ class VirtualRenderer(
                 }
 
                 applySurface(surfaceContainer)
+
+                // The host only guarantees this runs before the area callbacks, not that the first
+                // surface passes isSurfaceReady: areas that arrived while width/height were still 0
+                // were stored without their negative edges rewritten, so redo that now. Only then: a
+                // new submit cancels a pending one, and with it that area's minMargin update.
+                val rewrittenVisibleArea = surfaceArea(visibleArea)
+                val rewrittenStableArea = surfaceArea(stableArea)
+                if (rewrittenVisibleArea != visibleArea || rewrittenStableArea != stableArea) {
+                    visibleArea = rewrittenVisibleArea
+                    stableArea = rewrittenStableArea
+                    areaDebouncer.submit {
+                        updateSafeAreaInsets()
+                    }
+                }
             }
 
             override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
