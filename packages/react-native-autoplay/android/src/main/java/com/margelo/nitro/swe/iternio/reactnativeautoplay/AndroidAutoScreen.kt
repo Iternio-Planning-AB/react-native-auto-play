@@ -59,12 +59,7 @@ class AndroidAutoScreen(
                     }
 
                     Lifecycle.Event.ON_DESTROY -> {
-                        // Screens are keyed by template id only: a newer screen for the same id (a
-                        // new session, or the same root template set again) owns the listeners now
-                        if (!screens.remove(moduleName, this@AndroidAutoScreen)) {
-                            Log.i(TAG, "$moduleName: a newer screen took over, skipping teardown")
-                            return
-                        }
+                        screens.remove(moduleName)
                         HybridAutoPlay.removeListeners(moduleName)
                         AndroidAutoTemplate.getTemplate(moduleName)?.onPopped()
                     }
