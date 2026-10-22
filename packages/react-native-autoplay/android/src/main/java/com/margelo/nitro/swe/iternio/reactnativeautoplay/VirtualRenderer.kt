@@ -21,6 +21,7 @@ import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
+import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.fabric.FabricUIManager
@@ -59,6 +60,23 @@ class VirtualRenderer(
 
     private var splashWillDisappear = false
 
+    // set by stop(): the SurfaceCallback stays registered on this renderer's CarContext, and a
+    // surface it still delivers must not bring a stopped renderer back to life
+    private var isStopped = false
+
+    // A React instance reload keeps the car session alive but destroys every surface rendered in
+    // the old instance, so a renderer is only reusable while this is still the current context
+    private val reactContext = NitroModules.applicationContext
+
+    // The surface is started on the FabricUIManager directly, so ReactHost does not know about it
+    // and does not stop it on reload. A surface still registered when the instance is destroyed
+    // fails the "Scheduler was destroyed with outstanding Surfaces" assertion and aborts debug builds.
+    private val reactHost = (context.applicationContext as? ReactApplication)?.reactHost
+    private val onBeforeReactDestroy: () -> Unit = {
+        Log.i(TAG, "$moduleName: React instance is being destroyed, stopping its renderer")
+        stop()
+    }
+
     /**
      * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side.
      * The density is derived from the surface container's dpi so it always matches the VirtualDisplay,
@@ -73,8 +91,6 @@ class VirtualRenderer(
     }
 
     init {
-        virtualRenderer[moduleName] = this
-
         context.getCarService(AppManager::class.java).setSurfaceCallback(object : SurfaceCallback {
             val areaDebouncer = Debouncer(200)
 
@@ -246,10 +262,27 @@ class VirtualRenderer(
                 }
             }
         })
+
+        // Renderers are keyed by module name only, so a renderer an earlier session left behind
+        // under the same name would otherwise keep its virtual display and React surface running
+        // with no reference left to stop it. Registered last, so a renderer whose init threw never
+        // makes hasRenderer skip the retry.
+        virtualRenderer.put(moduleName, this)?.let {
+            Log.i(TAG, "$moduleName: stopping the renderer an earlier session left behind")
+            // the replacement is registered and working by now, its creation must not fail on this
+            runCatching { it.stop() }
+                .onFailure { e -> Log.w(TAG, "$moduleName: stopping the replaced renderer failed", e) }
+        }
+
+        reactHost?.addBeforeDestroyListener(onBeforeReactDestroy)
     }
 
     @MainThread
     private fun applySurface(surfaceContainer: SurfaceContainer) {
+        if (isStopped) {
+            return
+        }
+
         val surfaceWidth = surfaceContainer.width
         val surfaceHeight = surfaceContainer.height
 
@@ -323,7 +356,9 @@ class VirtualRenderer(
     }
 
     private fun initRenderer(display: Display) {
-        val reactContext = NitroModules.applicationContext ?: return
+        // the instance this renderer belongs to: after a reload it is no longer active, so nothing
+        // renders here until hasRenderer has a renderer of the current instance replace this one
+        val reactContext = this.reactContext ?: return
 
         val fabricUiManager = UIManagerHelper.getUIManager(
             reactContext, UIManagerType.FABRIC
@@ -560,7 +595,8 @@ class VirtualRenderer(
 
     @MainThread
     private fun stopReactSurface() {
-        val uiManager = NitroModules.applicationContext?.let {
+        // the instance that started the surface; null from getUIManager once it was reloaded
+        val uiManager = reactContext?.let {
             UIManagerHelper.getUIManager(
                 it, UIManagerType.FABRIC
             ) as? FabricUIManager?
@@ -587,6 +623,9 @@ class VirtualRenderer(
 
     @MainThread
     private fun stop() {
+        isStopped = true
+        reactHost?.removeBeforeDestroyListener(onBeforeReactDestroy)
+
         // Current and parked — a stop during a resize must not leak the backdrop whose
         // replacement never drew. Host destroy() is guarded like the factory call: a
         // throwing host must not skip the virtual-display release and surface teardown below.
@@ -608,7 +647,8 @@ class VirtualRenderer(
         try {
             stopReactSurface()
         } finally {
-            virtualRenderer.remove(moduleName)
+            // only if still registered: a replacing renderer may own the name by now
+            virtualRenderer.remove(moduleName, this)
         }
     }
 
@@ -617,8 +657,17 @@ class VirtualRenderer(
 
         private val virtualRenderer = ConcurrentHashMap<String, VirtualRenderer>()
 
-        fun hasRenderer(moduleId: String): Boolean {
-            return virtualRenderer.contains(moduleId)
+        /**
+         * Whether [moduleId] already has a renderer for [carContext] in the current React instance.
+         * A renderer of another (ended) session or of a reloaded React instance does not count, the
+         * caller has to create a new one, which replaces it.
+         *
+         * Not `virtualRenderer.contains(moduleId)`: on a ConcurrentHashMap that resolves to the Java
+         * member `contains(Object)`, which is `containsValue`, so it was always false.
+         */
+        fun hasRenderer(moduleId: String, carContext: CarContext): Boolean {
+            val renderer = virtualRenderer[moduleId] ?: return false
+            return renderer.context === carContext && renderer.reactContext === NitroModules.applicationContext
         }
 
         fun getWindowInformation(moduleId: String): WindowInformation? {
@@ -634,9 +683,18 @@ class VirtualRenderer(
             )
         }
 
-        fun removeRenderer(moduleId: String) {
-            virtualRenderer[moduleId]?.stop()
-            virtualRenderer.remove(moduleId)
+        /**
+         * Stops the renderer of [moduleId] if it belongs to [carContext]. A session that ends after
+         * its successor already registered under the same name must not stop the successor's.
+         */
+        @MainThread
+        fun removeRenderer(moduleId: String, carContext: CarContext) {
+            val renderer = virtualRenderer[moduleId] ?: return
+            if (renderer.context !== carContext) {
+                Log.i(TAG, "$moduleId: renderer belongs to a newer session, not stopping it")
+                return
+            }
+            renderer.stop()
         }
 
         // Forwarded by AndroidAutoSession.onCarConfigurationChanged

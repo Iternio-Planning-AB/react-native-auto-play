@@ -621,6 +621,8 @@ const registerAutoPlay = () => {
 export default registerAutoPlay;
 ```
 
+Set the root template from a `didConnect` listener rather than once at startup. A listener registered while a car is already connected is called right away, so this covers the app starting before or after the car connects, every reconnect, and a JS reload while connected: the reload discards the rendered car screen, and the re-registered listener sets the root template again.
+
 ## API Reference
 
 ### Main Object

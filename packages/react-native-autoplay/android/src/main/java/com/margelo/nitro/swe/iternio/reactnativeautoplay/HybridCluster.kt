@@ -17,10 +17,20 @@ class HybridCluster : HybridClusterSpec() {
         val callbacks = listeners.getOrPut(eventType) { CopyOnWriteArrayList() }
         callbacks.add(callback)
 
-        eventQueue[eventType]?.forEach {
+        val queued = eventQueue[eventType] ?: emptyArray()
+        queued.forEach {
             callback(it)
         }
         eventQueue[eventType] = emptyArray<String>()
+
+        // After a React reload the cluster sessions keep running, but their connect event went to
+        // the previous instance, so the new one would never register the component and create a
+        // renderer for them. initRootView is a no-op for a cluster that already has a renderer.
+        if (eventType == ClusterEventName.DIDCONNECTWITHWINDOW) {
+            AndroidAutoSession.getClusterSessions().filterNot { it in queued }.forEach {
+                callback(it)
+            }
+        }
 
         return {
             listeners[eventType]?.removeAll { it === callback }
@@ -29,11 +39,11 @@ class HybridCluster : HybridClusterSpec() {
 
     override fun initRootView(clusterId: String): Promise<Unit> {
         return Promise.async {
-            if (VirtualRenderer.hasRenderer(clusterId)) {
-                return@async
-            }
             val carContext = AndroidAutoSession.getCarContext(clusterId)
                 ?: throw IllegalArgumentException("initRootView failed, carContext for $clusterId cluster not found")
+            if (VirtualRenderer.hasRenderer(clusterId, carContext)) {
+                return@async
+            }
             val result = ThreadUtil.postOnUiAndAwait {
                 VirtualRenderer(carContext, clusterId, isCluster = true)
             }
