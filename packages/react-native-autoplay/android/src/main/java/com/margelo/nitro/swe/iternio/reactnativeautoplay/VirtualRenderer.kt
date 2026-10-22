@@ -136,7 +136,8 @@ class VirtualRenderer(
                 }
             }
 
-            override fun onVisibleAreaChanged(visibleArea: Rect) {
+            override fun onVisibleAreaChanged(reportedArea: Rect) {
+                val visibleArea = surfaceArea(reportedArea)
                 this.visibleArea = visibleArea
                 areaDebouncer.submit {
                     this.minMargin = minMargin.coerceAtMost(
@@ -148,7 +149,8 @@ class VirtualRenderer(
                 }
             }
 
-            override fun onStableAreaChanged(stableArea: Rect) {
+            override fun onStableAreaChanged(reportedArea: Rect) {
+                val stableArea = surfaceArea(reportedArea)
                 this.stableArea = stableArea
                 areaDebouncer.submit {
                     this.minMargin = minMargin.coerceAtMost(
@@ -275,6 +277,25 @@ class VirtualRenderer(
                 HybridAndroidWindowInformation.emitWindowInformation(moduleName, it)
             }
         }
+    }
+
+    /**
+     * Some hosts report an area whose right/bottom are negative, e.g. Rect(12, 12, -12, -12) on an
+     * Android Automotive cluster: read as offsets from the far edge, that is a 12 px margin on
+     * every side. Taken literally it made the insets larger than the surface itself. An area that
+     * is still empty after that is treated as the whole surface.
+     */
+    private fun surfaceArea(reported: Rect): Rect {
+        if (width <= 0 || height <= 0) {
+            return reported
+        }
+        val area = Rect(
+            reported.left,
+            reported.top,
+            if (reported.right <= 0) width + reported.right else reported.right,
+            if (reported.bottom <= 0) height + reported.bottom else reported.bottom
+        )
+        return if (area.isEmpty || area.left < 0 || area.top < 0) Rect(0, 0, width, height) else area
     }
 
     /**
