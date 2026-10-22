@@ -21,6 +21,7 @@ import androidx.car.app.AppManager
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
+import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.fabric.FabricUIManager
@@ -66,6 +67,15 @@ class VirtualRenderer(
     // A React instance reload keeps the car session alive but destroys every surface rendered in
     // the old instance, so a renderer is only reusable while this is still the current context
     private val reactContext = NitroModules.applicationContext
+
+    // The surface is started on the FabricUIManager directly, so ReactHost does not know about it
+    // and does not stop it on reload. A surface still registered when the instance is destroyed
+    // fails the "Scheduler was destroyed with outstanding Surfaces" assertion and aborts debug builds.
+    private val reactHost = (context.applicationContext as? ReactApplication)?.reactHost
+    private val onBeforeReactDestroy: () -> Unit = {
+        Log.i(TAG, "$moduleName: React instance is being destroyed, stopping its renderer")
+        stop()
+    }
 
     /**
      * scale is the actual scale factor required to calculate proper insets and is passed in initialProperties to js side.
@@ -247,6 +257,8 @@ class VirtualRenderer(
             runCatching { it.stop() }
                 .onFailure { e -> Log.w(TAG, "$moduleName: stopping the replaced renderer failed", e) }
         }
+
+        reactHost?.addBeforeDestroyListener(onBeforeReactDestroy)
     }
 
     @MainThread
@@ -308,7 +320,9 @@ class VirtualRenderer(
     }
 
     private fun initRenderer(display: Display) {
-        val reactContext = NitroModules.applicationContext ?: return
+        // the instance this renderer belongs to: after a reload it is no longer active, so nothing
+        // renders here until hasRenderer has a renderer of the current instance replace this one
+        val reactContext = this.reactContext ?: return
 
         val fabricUiManager = UIManagerHelper.getUIManager(
             reactContext, UIManagerType.FABRIC
@@ -545,7 +559,8 @@ class VirtualRenderer(
 
     @MainThread
     private fun stopReactSurface() {
-        val uiManager = NitroModules.applicationContext?.let {
+        // the instance that started the surface; null from getUIManager once it was reloaded
+        val uiManager = reactContext?.let {
             UIManagerHelper.getUIManager(
                 it, UIManagerType.FABRIC
             ) as? FabricUIManager?
@@ -573,6 +588,7 @@ class VirtualRenderer(
     @MainThread
     private fun stop() {
         isStopped = true
+        reactHost?.removeBeforeDestroyListener(onBeforeReactDestroy)
 
         // Current and parked — a stop during a resize must not leak the backdrop whose
         // replacement never drew. Host destroy() is guarded like the factory call: a

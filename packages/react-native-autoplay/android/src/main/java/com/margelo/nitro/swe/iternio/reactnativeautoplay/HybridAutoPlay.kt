@@ -75,6 +75,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
         callbacks.add(callback)
 
+        lastSafeAreaInsets[moduleName]?.let {
+            callback(it)
+        }
+
         return {
             safeAreaInsetsListeners[moduleName]?.let {
                 it.remove(callback)
@@ -259,9 +263,15 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()
 
+        // Replayed to new listeners: the host only reports areas when they change, so a provider
+        // that subscribes later (after a React reload, the car session keeps running) would
+        // otherwise stay at zero insets. Not cleared in init for that reason.
+        private val lastSafeAreaInsets = ConcurrentHashMap<String, SafeAreaInsets>()
+
         fun removeListeners(templateId: String) {
             renderStateListeners.remove(templateId)
             safeAreaInsetsListeners.remove(templateId)
+            lastSafeAreaInsets.remove(templateId)
             HybridAndroidWindowInformation.removeListeners(templateId)
         }
 
@@ -296,6 +306,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                 right = right,
                 isLegacyLayout = isLegacyLayout
             )
+            lastSafeAreaInsets[moduleName] = insets
             safeAreaInsetsListeners[moduleName]?.forEach {
                 it(insets)
             }

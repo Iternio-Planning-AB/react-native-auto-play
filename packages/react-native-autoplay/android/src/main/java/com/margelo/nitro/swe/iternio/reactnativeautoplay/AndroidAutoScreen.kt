@@ -33,6 +33,14 @@ class AndroidAutoScreen(
             override fun onStateChanged(
                 source: LifecycleOwner, event: Lifecycle.Event
             ) {
+                // Templates are keyed by id only: once a newer screen for the same id registered (a
+                // new session, or the same root template set again), a late pause/stop of this one
+                // must not report the template the newer screen shows as disappearing
+                if (screens[moduleName] !== this@AndroidAutoScreen) {
+                    Log.i(TAG, "$moduleName: a newer screen took over, ignoring $event")
+                    return
+                }
+
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
                         AndroidAutoTemplate.getTemplate(moduleName)?.onWillAppear()
