@@ -25,6 +25,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoService
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoSession
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.HideControls
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.MapTemplateConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroManeuver
@@ -83,14 +84,16 @@ class MapTemplate(
         return NavigationTemplate.Builder().apply {
             setBackgroundColor(cardBackgroundColor)
             config.mapButtons?.let { buttons ->
-                setMapActionStrip(Parser.parseMapActions(context, buttons))
+                setMapActionStrip(Parser.parseMapActions(context, buttons, config.hideControls))
             }
             config.headerActions?.let { headerActions ->
-                setActionStrip(Parser.parseMapHeaderActions(context, headerActions))
+                setActionStrip(
+                    Parser.parseMapHeaderActions(context, headerActions, config.hideControls)
+                )
             } ?: run {
                 setActionStrip(
                     ActionStrip.Builder()
-                        .addAction(Action.APP_ICON)
+                        .addAction(Parser.parseMapAppIconAction(context, config.hideControls))
                         .build()
                 )
             }
@@ -142,6 +145,11 @@ class MapTemplate(
 
     fun setMapActions(buttons: Array<NitroMapButton>?) {
         config = config.copy(mapButtons = buttons)
+        applyConfigUpdate()
+    }
+
+    fun setHideControls(hideControls: HideControls) {
+        config = config.copy(hideControls = hideControls)
         applyConfigUpdate()
     }
 

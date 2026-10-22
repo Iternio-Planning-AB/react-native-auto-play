@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `GridImageSize` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
+// Forward declaration of `HideControls` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class HideControls; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { class HybridAutoPlaySpec; }
 // Forward declaration of `HybridAutoPlayTimingSpec` to properly resolve imports.
@@ -202,6 +204,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "ForkType.hpp"
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
+#include "HideControls.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "HybridAutoPlayTimingSpec.hpp"
 #include "HybridCarPlayDashboardSpec.hpp"
@@ -1196,6 +1199,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return optional.has_value();
   }
   inline VisibleTravelEstimate get_std__optional_VisibleTravelEstimate_(const std::optional<VisibleTravelEstimate>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<HideControls>
+  /**
+   * Specialized version of `std::optional<HideControls>`.
+   */
+  using std__optional_HideControls_ = std::optional<HideControls>;
+  inline std::optional<HideControls> create_std__optional_HideControls_(const HideControls& value) noexcept {
+    return std::optional<HideControls>(value);
+  }
+  inline bool has_value_std__optional_HideControls_(const std::optional<HideControls>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline HideControls get_std__optional_HideControls_(const std::optional<HideControls>& optional) noexcept {
     return optional.value();
   }
   

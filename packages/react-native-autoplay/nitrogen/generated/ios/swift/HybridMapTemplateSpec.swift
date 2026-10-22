@@ -20,6 +20,7 @@ public protocol HybridMapTemplateSpec_protocol: HybridObject {
   func showTripSelector(templateId: String, trips: [TripsConfig], selectedTripId: String?, textConfig: TripPreviewTextConfiguration, onTripSelected: @escaping (_ tripId: String, _ routeId: String) -> Void, onTripStarted: @escaping (_ tripId: String, _ routeId: String) -> Void, onBackPressed: @escaping () -> Void, mapButtons: [NitroMapButton]) throws -> TripSelectorCallback
   func hideTripSelector(templateId: String) throws -> Void
   func setTemplateMapButtons(templateId: String, buttons: [NitroMapButton]?) throws -> Promise<Void>
+  func setTemplateHideControls(templateId: String, hideControls: HideControls) throws -> Promise<Void>
   func updateVisibleTravelEstimate(templateId: String, visibleTravelEstimate: VisibleTravelEstimate) throws -> Void
   func updateTravelEstimates(templateId: String, steps: [TripPoint]) throws -> Void
   func updateManeuvers(templateId: String, maneuvers: NitroManeuver) throws -> Void

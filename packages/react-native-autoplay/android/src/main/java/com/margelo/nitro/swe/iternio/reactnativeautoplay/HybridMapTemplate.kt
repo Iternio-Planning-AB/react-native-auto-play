@@ -128,6 +128,15 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
         }
     }
 
+    override fun setTemplateHideControls(
+        templateId: String, hideControls: HideControls
+    ): Promise<Unit> {
+        return Promise.async {
+            val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
+            template.setHideControls(hideControls)
+        }
+    }
+
     override fun updateVisibleTravelEstimate(
         templateId: String, visibleTravelEstimate: VisibleTravelEstimate
     ) {

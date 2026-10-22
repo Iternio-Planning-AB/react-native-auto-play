@@ -54,6 +54,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.DistanceUnits
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.DurationWithTimeZone
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ForkType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.HideControls
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.KeepType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListImageType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.ListTemplateConfig
@@ -119,15 +120,51 @@ object Parser {
         }.build()
     }
 
-    fun parseMapHeaderActions(context: CarContext, headerActions: Array<NitroAction>): ActionStrip {
+    // FLAG_IS_PERSISTENT keeps an action visible while the host hides idle controls. It
+    // requires Car API 5, older hosts keep hiding all controls.
+    private fun persistentFlag(context: CarContext, persistent: Boolean): Int {
+        if (!persistent || context.carAppApiLevel < CarAppApiLevels.LEVEL_5) {
+            return 0
+        }
+        return Action.FLAG_IS_PERSISTENT
+    }
+
+    private fun withFlags(action: Action, flags: Int): Action {
+        if (flags == 0) {
+            return action
+        }
+        return Action.Builder(action).setFlags(action.flags or flags).build()
+    }
+
+    private fun headerActionFlags(context: CarContext, hideControls: HideControls?): Int {
+        return persistentFlag(context, hideControls == HideControls.NONE)
+    }
+
+    private fun mapButtonFlags(context: CarContext, hideControls: HideControls?): Int {
+        return persistentFlag(
+            context, hideControls == HideControls.HEADER || hideControls == HideControls.NONE
+        )
+    }
+
+    /**
+     * the app icon shown in the header when a map template has no header actions
+     */
+    fun parseMapAppIconAction(context: CarContext, hideControls: HideControls?): Action {
+        return withFlags(Action.APP_ICON, headerActionFlags(context, hideControls))
+    }
+
+    fun parseMapHeaderActions(
+        context: CarContext, headerActions: Array<NitroAction>, hideControls: HideControls?
+    ): ActionStrip {
+        val flags = headerActionFlags(context, hideControls)
         return ActionStrip.Builder().apply {
             headerActions.forEach { action ->
                 if (action.type == NitroActionType.BACK) {
-                    addAction(Action.BACK)
+                    addAction(withFlags(Action.BACK, flags))
                     return@forEach
                 }
                 if (action.type == NitroActionType.APPICON) {
-                    addAction(Action.APP_ICON)
+                    addAction(withFlags(Action.APP_ICON, flags))
                     return@forEach
                 }
                 addAction(Action.Builder().apply {
@@ -141,8 +178,8 @@ object Parser {
                             )
                         )
                     }
-                    action.flags?.let {
-                        setFlags(it.toInt())
+                    if (action.flags != null || flags != 0) {
+                        setFlags((action.flags?.toInt() ?: 0) or flags)
                     }
                     action.onPress.let {
                         setOnClickListener(it)
@@ -152,7 +189,10 @@ object Parser {
         }.build()
     }
 
-    fun parseMapActions(context: CarContext, buttons: Array<NitroMapButton>): ActionStrip {
+    fun parseMapActions(
+        context: CarContext, buttons: Array<NitroMapButton>, hideControls: HideControls?
+    ): ActionStrip {
+        val flags = mapButtonFlags(context, hideControls)
         // make the pan button the first button so it can be access all the time
         // when in pan mode AA locks onto this button
         // once the buttons reappear after the hide timeout AA locks onto the first button
@@ -168,12 +208,13 @@ object Parser {
                             parseImage(
                                 context, button.image
                             )
-                        ).build()
+                        ).setFlags(flags).build()
                     )
                     return@forEach
                 }
 
                 addAction(Action.Builder().apply {
+                    setFlags(flags)
                     button.onPress?.let {
                         setOnClickListener(it)
                     }
@@ -868,7 +909,7 @@ object Parser {
         }
     }
 
-    private fun getRootMapTemplateConfig(): MapTemplateConfig? {
+    fun getRootMapTemplateConfig(): MapTemplateConfig? {
         val marker = AndroidAutoScreen.getScreen(AndroidAutoSession.ROOT_SESSION)?.marker
             ?: return null
         return AndroidAutoTemplate.getTypedConfig<MapTemplateConfig>(marker)
@@ -892,7 +933,11 @@ object Parser {
             mapConfig.mapButtons?.let { mapButtons ->
                 setMapController(
                     MapController.Builder().apply {
-                        setMapActionStrip(parseMapActions(context, mapButtons)).build()
+                        setMapActionStrip(
+                            parseMapActions(
+                                context, mapButtons, getRootMapTemplateConfig()?.hideControls
+                            )
+                        ).build()
                         // the map behind the content belongs to the root MapTemplate, so pan mode is
                         // reported there, like CarPlay does for a panel on the root map template
                         setPanModeListener { isInPanMode ->
@@ -904,7 +949,11 @@ object Parser {
                 )
             }
             mapConfig.headerActions?.let { headerActions ->
-                setActionStrip(parseMapHeaderActions(context, headerActions))
+                setActionStrip(
+                    parseMapHeaderActions(
+                        context, headerActions, getRootMapTemplateConfig()?.hideControls
+                    )
+                )
             }
         }.build()
     }

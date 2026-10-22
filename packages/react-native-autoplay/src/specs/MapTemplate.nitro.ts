@@ -1,5 +1,6 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type {
+  HideControls,
   NitroMapTemplateConfig,
   TripSelectorCallback,
   VisibleTravelEstimate,
@@ -42,6 +43,7 @@ export interface MapTemplate extends HybridObject<{ android: 'kotlin'; ios: 'swi
   ): TripSelectorCallback;
   hideTripSelector(templateId: string): void;
   setTemplateMapButtons(templateId: string, buttons?: Array<NitroMapButton>): Promise<void>;
+  setTemplateHideControls(templateId: string, hideControls: HideControls): Promise<void>;
   updateVisibleTravelEstimate(
     templateId: string,
     visibleTravelEstimate: VisibleTravelEstimate

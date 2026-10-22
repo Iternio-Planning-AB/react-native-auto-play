@@ -74,6 +74,7 @@ export type {
   ChargerOutlet,
   ChargingConnector,
   HeaderActionsAndroidMap,
+  HideControls,
   MapButtons,
   MapConfig,
   MapConfigActionsIos,

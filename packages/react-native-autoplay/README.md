@@ -669,6 +669,7 @@ Below is a concise overview of the most important props per template. Optional p
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
 | `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton`. While a template with `mapConfig` is shown, it needs its own pan button in `mapConfig.mapButtons`; the gestures then still go to this MapTemplate's `onDidPan`/`onClick`/zoom callbacks. |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |
+| `hideControls` | `'all'` `'header'` `'none'` | ❌ | Which map controls auto-hide when the map is idle. Default `'all'`. See **Map control visibility** below. |
 | `optionsPanel` | `OptionsPanelConfig<MapTemplate>` | ❌ | **iOS 27+ only, no-op on Android.** Panel shown when tapping the ellipsis button next to the travel estimates during active navigation. See **Options Panel** below. |
 | `onDidPan` / `onDidUpdateZoomGestureWithCenter` | callbacks | ❌ | Map gesture events. |
 | `onAppearanceDidChange` | `(colorScheme) => void` | ❌ | Listen for light/dark mode changes. |
@@ -794,6 +795,26 @@ For InputSignIn the keyboard and input fields can be configured with following p
 
 **TextInputType enum:** `PASSWORD`, `DEFAULT`
 
+
+### Map control visibility
+
+Both platforms hide the header actions and map buttons after the map has been idle for a while. `hideControls` on the `MapTemplate` controls that, the same way on both platforms:
+
+| `hideControls` | Header actions | Map buttons |
+| --- | --- | --- |
+| `'all'` (default) | auto-hide | auto-hide |
+| `'header'` | auto-hide | always visible |
+| `'none'` | always visible | always visible |
+
+```ts
+const mapTemplate = new MapTemplate({ component: MapScreen, onStopNavigation, hideControls: 'header' });
+
+// change it later, e.g. keep everything visible while navigating
+mapTemplate.setHideControls('none');
+```
+
+- **Android:** applied with `Action.FLAG_IS_PERSISTENT` on every affected action, which requires Car API 5 — older hosts keep hiding all controls. A per-action `flags` value on a header action is kept and combined with it. The root's setting also applies to templates shown with `mapConfig` and to the trip selector's map buttons; a change made while one of those is shown applies the next time it updates. `Persistent` does not make a pan button appear on hosts that normally leave it out.
+- **iOS:** maps to `CPMapTemplate.automaticallyHidesNavigationBar` / `hidesButtonsWithNavigationBar`. While a template with `mapConfig` is shown (iOS 27+) or the trip selector is open, all controls stay visible so the panel doesn't move under the user's finger; the setting is restored when it closes.
 
 ### Header Actions (Important)
 

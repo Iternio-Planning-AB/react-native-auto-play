@@ -83,6 +83,18 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
 - Android matches that: `NavigationManager` also calls `onStopNavigation` when its session is
   destroyed, and `template/MapTemplate.kt` swallows that call (checked against the session
   lifecycle captured at creation). Only host-initiated stops reach JS.
+- `hideControls` is applied natively:
+  - Android: `Parser.parseMapActions` / `parseMapHeaderActions` add `FLAG_IS_PERSISTENT`
+    (Car API 5+). Map-content and trip/route preview templates read the root map's setting
+    through `Parser.getRootMapTemplateConfig()`, so every caller has to pass it.
+  - iOS: `MapTemplate.applyHideControls()` sets the two `CPMapTemplate` properties. The panel
+    delegate and `showTripSelector` turn auto-hide off while a panel or the trip selector is
+    shown, and `_invalidate` restores the mode.
+    CarPlay can't hide map buttons while keeping the bar, which is why there is no such mode.
+    With auto-hide off, CarPlay never shows a bar that was presented empty once buttons are
+    added (header actions set later via `setHeaderActions`, and also the root map, which is
+    presented before `invalidate()` applies its buttons). `_invalidate` works around it by
+    enabling auto-hide right before `applyHideControls()` disables it again — don't remove it.
 - `updateTravelEstimates(steps)` must receive only *future* steps — no origin, no passed steps.
 - `showTripSelector` validates synchronously and **throws** (empty trips, empty
   `routeChoices`, routes with `< 2` steps). In `__DEV__` on Android it also warns about

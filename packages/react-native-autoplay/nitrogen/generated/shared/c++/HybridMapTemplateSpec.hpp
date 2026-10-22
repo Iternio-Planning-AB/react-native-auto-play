@@ -27,6 +27,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripsConfig
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripPreviewTextConfiguration; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroMapButton; }
+// Forward declaration of `HideControls` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class HideControls; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
 // Forward declaration of `TripPoint` to properly resolve imports.
@@ -56,6 +58,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroOption
 #include <functional>
 #include "NitroMapButton.hpp"
 #include <NitroModules/Promise.hpp>
+#include "HideControls.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "TripPoint.hpp"
 #include "NitroRoutingManeuver.hpp"
@@ -104,6 +107,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       virtual TripSelectorCallback showTripSelector(const std::string& templateId, const std::vector<TripsConfig>& trips, const std::optional<std::string>& selectedTripId, const TripPreviewTextConfiguration& textConfig, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripSelected, const std::function<void(const std::string& /* tripId */, const std::string& /* routeId */)>& onTripStarted, const std::function<void()>& onBackPressed, const std::vector<NitroMapButton>& mapButtons) = 0;
       virtual void hideTripSelector(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) = 0;
+      virtual std::shared_ptr<Promise<void>> setTemplateHideControls(const std::string& templateId, HideControls hideControls) = 0;
       virtual void updateVisibleTravelEstimate(const std::string& templateId, VisibleTravelEstimate visibleTravelEstimate) = 0;
       virtual void updateTravelEstimates(const std::string& templateId, const std::vector<TripPoint>& steps) = 0;
       virtual void updateManeuvers(const std::string& templateId, const std::variant<std::vector<NitroRoutingManeuver>, NitroMessageManeuver, NitroLoadingManeuver>& maneuvers) = 0;
