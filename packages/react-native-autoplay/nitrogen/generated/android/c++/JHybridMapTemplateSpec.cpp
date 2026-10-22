@@ -13,6 +13,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct TripSelecto
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct MapTemplateConfig; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `HideControls` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class HideControls; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -139,6 +141,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 #include "JFunc_void_bool.hpp"
 #include "VisibleTravelEstimate.hpp"
 #include "JVisibleTravelEstimate.hpp"
+#include "HideControls.hpp"
+#include "JHideControls.hpp"
 #include "Point.hpp"
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JPoint.hpp"
@@ -349,6 +353,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       }
       return __array;
     }(buttons.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMapTemplateSpec::setTemplateHideControls(const std::string& templateId, HideControls hideControls) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* templateId */, jni::alias_ref<JHideControls> /* hideControls */)>("setTemplateHideControls");
+    auto __result = method(_javaPart, jni::make_jstring(templateId), JHideControls::fromCpp(hideControls));
     return [&]() {
       auto __promise = Promise<void>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {

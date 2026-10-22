@@ -47,6 +47,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 autoDismissMs = null,
                 onDidChangePanningInterface = null,
                 visibleTravelEstimate = null,
+                hideControls = null,
                 onDidPan = null,
                 onDidUpdateZoomGestureWithCenter = null,
                 onClick = null,

@@ -16,6 +16,8 @@ namespace ReactNativeAutoPlay { class HybridMapTemplateSpec_cxx; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct MapTemplateConfig; }
 // Forward declaration of `VisibleTravelEstimate` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibleTravelEstimate; }
+// Forward declaration of `HideControls` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class HideControls; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Point; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -132,6 +134,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroCharge
 #include <optional>
 #include <functional>
 #include "VisibleTravelEstimate.hpp"
+#include "HideControls.hpp"
 #include "Point.hpp"
 #include "ColorScheme.hpp"
 #include "NitroMapButton.hpp"
@@ -281,6 +284,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     }
     inline std::shared_ptr<Promise<void>> setTemplateMapButtons(const std::string& templateId, const std::optional<std::vector<NitroMapButton>>& buttons) override {
       auto __result = _swiftPart.setTemplateMapButtons(templateId, buttons);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> setTemplateHideControls(const std::string& templateId, HideControls hideControls) override {
+      auto __result = _swiftPart.setTemplateHideControls(templateId, static_cast<int>(hideControls));
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

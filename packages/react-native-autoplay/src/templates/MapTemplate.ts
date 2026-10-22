@@ -52,6 +52,14 @@ export type {
 export type Point = { x: number; y: number };
 export type VisibleTravelEstimate = 'first' | 'last';
 
+/**
+ * which map controls auto-hide when the map is idle
+ * - `all` header actions and map buttons hide (platform default)
+ * - `header` only the header actions hide, map buttons stay visible
+ * - `none` nothing hides
+ */
+export type HideControls = 'all' | 'header' | 'none';
+
 export type HeaderActionsAndroidMap<T> = Array<ActionButtonAndroid<T>> & { length: 1 | 2 | 3 | 4 };
 
 export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemplateConfig {
@@ -65,6 +73,15 @@ export interface NitroMapTemplateConfig extends TemplateConfig, NitroBaseMapTemp
    * show either the next or final step travel estimates, defaults to final step so last
    */
   visibleTravelEstimate?: VisibleTravelEstimate;
+
+  /**
+   * which map controls auto-hide when the map is idle, defaults to `all`
+   * @namespace Android - also applies to the map buttons and header actions of templates shown with
+   * `mapConfig` and of the trip selector. Requires Car API 5, older hosts always hide all controls.
+   * @namespace iOS - a template shown with `mapConfig` and the trip selector keep all controls
+   * visible while they are shown
+   */
+  hideControls?: HideControls;
 
   /**
    * callback for single finger pan gesture
@@ -350,6 +367,15 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   public setMapButtons(mapButtons: MapTemplateConfig['mapButtons']) {
     const buttons = NitroMapButton.convert(this.template, mapButtons);
     return HybridMapTemplate.setTemplateMapButtons(this.id, buttons);
+  }
+
+  /**
+   * changes which map controls auto-hide, see `hideControls`
+   * @namespace Android - a template shown with `mapConfig` or the trip selector picks up the change
+   * the next time it updates
+   */
+  public setHideControls(hideControls: HideControls) {
+    return HybridMapTemplate.setTemplateHideControls(this.id, hideControls);
   }
 
   public override setHeaderActions(headerActions: MapTemplateConfig['headerActions']) {

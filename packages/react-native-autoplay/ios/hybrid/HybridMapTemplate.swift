@@ -90,6 +90,16 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         }
     }
 
+    func setTemplateHideControls(templateId: String, hideControls: HideControls)
+        throws -> Promise<Void>
+    {
+        return onMainThread(templateId: templateId) { template, resolve in
+            template.hideControls = hideControls
+            template.invalidate()
+            resolve()
+        }
+    }
+
     func showNavigationAlert(templateId: String, alert: NitroNavigationAlert)
         throws
     {

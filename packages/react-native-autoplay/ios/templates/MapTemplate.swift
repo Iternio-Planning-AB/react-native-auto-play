@@ -29,6 +29,7 @@ class MapTemplate: AutoPlayHeaderProviding,
 
     var mapButtons: [NitroMapButton]?
     var visibleTravelEstimate: VisibleTravelEstimate?
+    var hideControls: HideControls
 
     private var optionsPanel: NitroOptionsPanelConfig?
 
@@ -70,6 +71,7 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         mapButtons = config.mapButtons
         visibleTravelEstimate = config.visibleTravelEstimate
+        hideControls = config.hideControls ?? .all
 
         template = CPMapTemplate(id: config.id)
         if let nitroColor = config.defaultGuidanceBackgroundColor,
@@ -101,8 +103,16 @@ class MapTemplate: AutoPlayHeaderProviding,
 
         super.init()
 
+        applyHideControls()
         barButtons = config.headerActions
         template.mapDelegate = self
+    }
+
+    private func applyHideControls() {
+        // CarPlay can only hide the map buttons together with the navigation bar, so there is no
+        // mode that hides the map buttons but keeps the header.
+        template.automaticallyHidesNavigationBar = hideControls != .none
+        template.hidesButtonsWithNavigationBar = hideControls == .all
     }
 
     func onPanButtonPress() {
@@ -158,9 +168,15 @@ class MapTemplate: AutoPlayHeaderProviding,
             return
         }
 
-        // Restore CarPlay's default auto-hide (disabled while a panel is shown, see panelDidShow).
-        template.automaticallyHidesNavigationBar = true
-        template.hidesButtonsWithNavigationBar = true
+        // With auto-hide off, a bar that was presented empty never shows up again once buttons are
+        // added. Briefly enabling auto-hide before applyHideControls disables it again makes
+        // CarPlay lay out the bar.
+        if barButtons?.isEmpty == false {
+            template.automaticallyHidesNavigationBar = true
+        }
+
+        // Restore the configured auto-hide (disabled while a panel is shown, see panelDidShow).
+        applyHideControls()
 
         setBarButtons(template: template, barButtons: barButtons)
 
@@ -497,6 +513,11 @@ class MapTemplate: AutoPlayHeaderProviding,
                 mapButtons: mapButtons,
                 onPanButtonPress: self.onPanButtonPress
             )
+
+            // A hiding bar would move the trip preview card and its start button under the user's
+            // finger. hideTripSelector invalidates, which restores hideControls.
+            self.template.automaticallyHidesNavigationBar = false
+            self.template.hidesButtonsWithNavigationBar = false
 
             self.template.showTripPreviews(
                 tripPreviews,

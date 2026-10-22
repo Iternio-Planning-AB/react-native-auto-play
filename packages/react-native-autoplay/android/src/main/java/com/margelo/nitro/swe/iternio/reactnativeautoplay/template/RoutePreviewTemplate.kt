@@ -63,7 +63,13 @@ class RoutePreviewTemplate(
             if (mapButtons.isNotEmpty()) {
                 setMapController(
                     MapController.Builder()
-                        .setMapActionStrip(Parser.parseMapActions(carContext, mapButtons)).build()
+                        .setMapActionStrip(
+                            Parser.parseMapActions(
+                                carContext,
+                                mapButtons,
+                                Parser.getRootMapTemplateConfig()?.hideControls
+                            )
+                        ).build()
                 )
             }
         }.build()

@@ -240,6 +240,25 @@ open class HybridMapTemplateSpec_cxx {
   }
   
   @inline(__always)
+  public final func setTemplateHideControls(templateId: std.string, hideControls: Int32) -> bridge.Result_std__shared_ptr_Promise_void___ {
+    do {
+      let __result = try self.__implementation.setTemplateHideControls(templateId: String(templateId), hideControls: margelo.nitro.swe.iternio.reactnativeautoplay.HideControls(rawValue: hideControls)!)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_void__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_void__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_void__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve() })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_void___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func updateVisibleTravelEstimate(templateId: std.string, visibleTravelEstimate: Int32) -> bridge.Result_void_ {
     do {
       try self.__implementation.updateVisibleTravelEstimate(templateId: String(templateId), visibleTravelEstimate: margelo.nitro.swe.iternio.reactnativeautoplay.VisibleTravelEstimate(rawValue: visibleTravelEstimate)!)

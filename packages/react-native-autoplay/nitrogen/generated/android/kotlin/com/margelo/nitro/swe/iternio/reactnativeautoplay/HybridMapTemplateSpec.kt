@@ -65,6 +65,10 @@ abstract class HybridMapTemplateSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
+  abstract fun setTemplateHideControls(templateId: String, hideControls: HideControls): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
   abstract fun updateVisibleTravelEstimate(templateId: String, visibleTravelEstimate: VisibleTravelEstimate): Unit
   
   @DoNotStrip
