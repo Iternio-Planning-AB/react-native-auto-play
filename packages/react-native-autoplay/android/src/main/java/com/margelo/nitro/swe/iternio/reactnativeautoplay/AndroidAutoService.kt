@@ -22,7 +22,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.facebook.react.ReactApplication
 import com.facebook.react.bridge.LifecycleEventListener
 import com.margelo.nitro.NitroModules
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
 
 class AndroidAutoService : CarAppService() {
     private lateinit var notificationManager: NotificationManager
@@ -49,12 +48,13 @@ class AndroidAutoService : CarAppService() {
         NitroModules.applicationContext?.addLifecycleEventListener(reactLifecycleObserver)
 
         notificationManager = getSystemService(NotificationManager::class.java)
-        val appLabel = AppInfo.getApplicationLabel(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getSystemService(NotificationManager::class.java).createNotificationChannel(
                 NotificationChannel(
-                    CHANNEL_ID, appLabel, NotificationManager.IMPORTANCE_DEFAULT
+                    CHANNEL_ID,
+                    getString(R.string.AutoPlayNotificationChannelName),
+                    NotificationManager.IMPORTANCE_DEFAULT
                 )
             )
         }

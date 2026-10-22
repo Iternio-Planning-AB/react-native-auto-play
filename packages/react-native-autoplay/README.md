@@ -321,6 +321,17 @@ You can customize certain behaviors of the library on Android Auto by setting pr
     ```
     The default values are `1000` for the delay and `500` for the duration.
 
+#### Notification channel name
+The navigation notification channel is listed as **Android Auto Navigation** in the system notification settings. To rename or localize it, define the same string resource in your app (e.g. `android/app/src/main/res/values/strings.xml`, plus `values-<lang>/strings.xml` for translations):
+
+```xml
+<resources>
+    <string name="AutoPlayNotificationChannelName">Navigation</string>
+</resources>
+```
+
+Renaming also applies to users who already have the channel: Android updates its name the next time the `CarAppService` starts.
+
 ### Android Automotive
 
 This library also supports Android Automotive. To enable Android Automotive support, you need to configure a few properties in your Android project.
