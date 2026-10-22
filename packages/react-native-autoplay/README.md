@@ -665,7 +665,7 @@ Below is a concise overview of the most important props per template. Optional p
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `component` | `React.ComponentType<RootComponentInitialProps>` | ✅ | React component to render on the map surface. |
-| `onStopNavigation` | `(template: MapTemplate) => void` | ✅ | Called when navigation is stopped by the system. |
+| `onStopNavigation` | `(template: MapTemplate) => void` | ✅ | Called when navigation is stopped by the system. Not called when the car disconnects — listen for `didDisconnect` instead. |
 | `headerActions` | `MapHeaderActions<MapTemplate>` | ❌ | Top action strip. See **Header Actions** below. |
 | `mapButtons` | `MapButtons<MapTemplate>` | ❌ | 1–4 map buttons shown on the map. To get working gestures on the MapTemplate running on Android Auto you have to add a `MapPanButton`. While a template with `mapConfig` is shown, it needs its own pan button in `mapConfig.mapButtons`; the gestures then still go to this MapTemplate's `onDidPan`/`onClick`/zoom callbacks. |
 | `visibleTravelEstimate` | `'first'` `'last'` | ❌ | Which travel estimate to display. |

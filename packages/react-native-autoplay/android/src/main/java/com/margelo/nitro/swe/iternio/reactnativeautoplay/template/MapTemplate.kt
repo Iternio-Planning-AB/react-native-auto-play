@@ -18,6 +18,7 @@ import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.car.app.navigation.model.RoutingInfo
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.car.app.navigation.model.Trip
+import androidx.lifecycle.Lifecycle
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertActionStyle
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AlertDismissalReason
@@ -48,6 +49,9 @@ class MapTemplate(
 
     init {
         if (initNavigationManager) {
+            // Captured now: by the time a stop arrives the session may be gone from the store, or
+            // replaced by a newer one on reconnect.
+            val sessionLifecycle = AndroidAutoSession.getLifecycle(config.id)
             val navigationManagerCallback = object : NavigationManagerCallback {
                 override fun onAutoDriveEnabled() {
                     config.onAutoDriveEnabled?.let {
@@ -57,6 +61,13 @@ class MapTemplate(
 
                 override fun onStopNavigation() {
                     navigationEnded()
+
+                    // NavigationManager also stops navigation when its session is destroyed.
+                    // That is a disconnect, not the user ending navigation, so JS is not told.
+                    if (sessionLifecycle?.currentState == Lifecycle.State.DESTROYED) {
+                        return
+                    }
+
                     config.onStopNavigation()
                 }
             }

@@ -80,6 +80,9 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
     without a disconnect after the app was in the background. JS is not notified
     (`onStopNavigation` only reports CarPlay cancelling navigation), so apps have to start
     navigation again after `didConnect`.
+- Android matches that: `NavigationManager` also calls `onStopNavigation` when its session is
+  destroyed, and `template/MapTemplate.kt` swallows that call (checked against the session
+  lifecycle captured at creation). Only host-initiated stops reach JS.
 - `updateTravelEstimates(steps)` must receive only *future* steps — no origin, no passed steps.
 - `showTripSelector` validates synchronously and **throws** (empty trips, empty
   `routeChoices`, routes with `< 2` steps). In `__DEV__` on Android it also warns about
