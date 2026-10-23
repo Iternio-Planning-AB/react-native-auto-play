@@ -80,6 +80,7 @@ export type AutoImage =
       /**
        * Network timeout in milliseconds before the remote fetch is abandoned and `null` is returned.
        * Defaults to 500ms when not specified.
+       * Uncached remote images delay template updates, prefer glyphs or assets, see README.
        */
       timeoutMs?: number;
       type: 'remote';

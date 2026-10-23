@@ -3,6 +3,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.InformationTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridInformationTemplate : HybridInformationTemplateSpec() {
     override fun createInformationTemplate(config: InformationTemplateConfig) {
@@ -16,7 +17,7 @@ class HybridInformationTemplate : HybridInformationTemplateSpec() {
     override fun updateInformationTemplateSections(
         templateId: String, section: NitroSection
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template = AndroidAutoTemplate.getTemplate<InformationTemplate>(templateId)
             template.updateSection(section)
         }

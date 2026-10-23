@@ -5,6 +5,7 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -92,7 +93,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun setTemplateHeaderActions(
         templateId: String, headerActions: Array<NitroAction>?
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template =
                 AndroidAutoTemplate.getTemplate(templateId) ?: throw IllegalArgumentException(
                     "setTemplateHeaderActions failed, template $templateId not found"
@@ -112,7 +113,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                 val carContext = AndroidAutoSession.getCarContext(templateId)
                     ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
-                screen.applyConfigUpdate(invalidate = true)
+                TemplateUpdateQueue.runAndWait { screen.applyConfigUpdate(invalidate = true) }
 
                 if (!VirtualRenderer.hasRenderer(templateId, carContext)) {
                     val result = ThreadUtil.postOnUiAndAwait {

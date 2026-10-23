@@ -8,7 +8,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TemplateNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
+abstract class AndroidAutoTemplate<T>(val context: CarContext, @Volatile var config: T) {
     abstract fun parse(): Template
     abstract fun setTemplateHeaderActions(headerActions: Array<NitroAction>?)
 
@@ -22,9 +22,16 @@ abstract class AndroidAutoTemplate<T>(val context: CarContext, var config: T) {
     abstract val templateId: String
     abstract val autoDismissMs: Double?
 
-    fun applyConfigUpdate() {
-        val screen = AndroidAutoScreen.getScreen(templateId)
-        screen?.applyConfigUpdate(invalidate = true)
+    /**
+     * applies [update] to the config of the template currently registered for this id and rebuilds
+     * its screen, every rebuild registers a new instance so this one might be outdated already
+     * must run on the TemplateUpdateQueue
+     */
+    protected fun updateConfig(update: (T) -> T) {
+        @Suppress("UNCHECKED_CAST")
+        val current = templates[templateId] as? AndroidAutoTemplate<T> ?: this
+        current.config = update(current.config)
+        AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate(invalidate = true)
     }
 
     companion object {

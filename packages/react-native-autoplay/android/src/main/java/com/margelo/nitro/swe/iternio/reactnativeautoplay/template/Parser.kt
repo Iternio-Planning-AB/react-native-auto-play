@@ -83,6 +83,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.TurnType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.Variant_GlyphImage_AssetImage_RemoteImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.BitmapCache
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.SymbolFont
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.get
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -444,27 +445,31 @@ object Parser {
                 setOnSelectedListener {
                     // onPress is always defined on radio lists
                     rows[it].onPress!!(null)
-                    AndroidAutoTemplate.getTypedConfig<ListTemplateConfig>(templateId)
-                        ?.let { config ->
-                            val items =
-                                config.sections?.get(sectionIndex)?.items?.mapIndexed { index, item ->
-                                    item.copy(selected = it == index)
-                                }?.toTypedArray() ?: return@let
+                    TemplateUpdateQueue.post {
+                        AndroidAutoTemplate.getTypedConfig<ListTemplateConfig>(templateId)
+                            ?.let { config ->
+                                val items =
+                                    config.sections?.get(sectionIndex)?.items?.mapIndexed { index, item ->
+                                        item.copy(selected = it == index)
+                                    }?.toTypedArray() ?: return@let
 
-                            val section = config.sections[sectionIndex].copy(items = items)
-                            config.sections[sectionIndex] = section
+                                val section = config.sections[sectionIndex].copy(items = items)
+                                config.sections[sectionIndex] = section
 
-                            AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
-                        }
+                                AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                            }
+                    }
                 }
             }
             rows.forEachIndexed { index, row ->
                 addItem(parseRow(context, row, onToggle = { isChecked ->
                     // onpPress is always defined on toggle rows
                     row.onPress!!(isChecked)
-                    val item = row.copy(checked = isChecked)
-                    rows[index] = item
-                    AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                    TemplateUpdateQueue.post {
+                        val item = row.copy(checked = isChecked)
+                        rows[index] = item
+                        AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                    }
                 }, onClick = if (selectedIndex == null && row.onPress != null) {
                     { row.onPress(null) }
                 } else {

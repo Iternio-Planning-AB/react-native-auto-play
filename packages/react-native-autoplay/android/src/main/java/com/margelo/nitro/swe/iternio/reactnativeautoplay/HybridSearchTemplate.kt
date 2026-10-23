@@ -3,6 +3,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SearchTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridSearchTemplate : HybridSearchTemplateSpec() {
 
@@ -15,7 +16,7 @@ class HybridSearchTemplate : HybridSearchTemplateSpec() {
     }
 
     override fun updateSearchResults(templateId: String, results: NitroSection): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template = AndroidAutoTemplate.getTemplate<SearchTemplate>(templateId)
             template.updateSearchResults(results)
         }

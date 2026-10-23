@@ -59,13 +59,11 @@ class SearchTemplate(context: CarContext, config: SearchTemplateConfig) :
     }
 
     fun updateSearchResults(results: NitroSection) {
-        config = config.copy(results = results)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(results = results) }
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {

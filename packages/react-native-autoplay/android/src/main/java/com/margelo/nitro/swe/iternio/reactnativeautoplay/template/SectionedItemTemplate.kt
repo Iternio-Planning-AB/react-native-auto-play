@@ -16,6 +16,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroGridSection
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSection
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSectionedItemSection
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.SectionedItemTemplateConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateConfig) :
     AndroidAutoTemplate<SectionedItemTemplateConfig>(context, config) {
@@ -117,8 +118,10 @@ class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateCo
                 onToggle = { isChecked ->
                     // onPress is always defined on toggle rows
                     row.onPress!!(isChecked)
-                    section.items[itemIndex] = row.copy(checked = isChecked)
-                    AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                    TemplateUpdateQueue.post {
+                        section.items[itemIndex] = row.copy(checked = isChecked)
+                        AndroidAutoScreen.getScreen(templateId)?.applyConfigUpdate()
+                    }
                 },
                 onClick = row.onPress?.let { onPress -> { onPress(null) } }
             )
@@ -128,8 +131,7 @@ class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateCo
         section.match(first = { it.title }, second = { it.title })
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {
@@ -154,8 +156,7 @@ class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateCo
     }
 
     fun updateSections(sections: Array<NitroSectionedItemSection>?) {
-        config = config.copy(sections = sections)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(sections = sections) }
     }
 
     companion object {

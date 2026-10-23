@@ -3,6 +3,7 @@ package com.margelo.nitro.swe.iternio.reactnativeautoplay
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SectionedItemTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridSectionedItemTemplate : HybridSectionedItemTemplateSpec() {
 
@@ -17,7 +18,7 @@ class HybridSectionedItemTemplate : HybridSectionedItemTemplateSpec() {
     override fun updateSectionedItemTemplateSections(
         templateId: String, sections: Array<NitroSectionedItemSection>?
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template = AndroidAutoTemplate.getTemplate<SectionedItemTemplate>(templateId)
             template.updateSections(sections)
         }

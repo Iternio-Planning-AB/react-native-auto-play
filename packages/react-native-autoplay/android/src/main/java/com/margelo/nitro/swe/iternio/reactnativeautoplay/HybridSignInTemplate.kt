@@ -6,6 +6,7 @@ import com.margelo.nitro.NitroModules
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SignInTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridSignInTemplate : HybridSignInTemplateSpec() {
     override fun createSignInTemplate(config: SignInTemplateConfig) {
@@ -19,7 +20,7 @@ class HybridSignInTemplate : HybridSignInTemplateSpec() {
     }
 
     override fun updateTemplate(templateId: String, config: SignInTemplateConfig): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             assertSignInMethodAvailable(config)
             val template = AndroidAutoTemplate.getTemplate<SignInTemplate>(templateId)
             template.updateTemplate(config)

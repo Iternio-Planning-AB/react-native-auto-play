@@ -18,6 +18,7 @@ import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -122,7 +123,9 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
 
         if (clusterId != null) {
             HybridCluster.emitColorScheme(clusterId, colorScheme)
-            AndroidAutoScreen.getScreen(clusterId)?.applyConfigUpdate(invalidate = true)
+            TemplateUpdateQueue.post {
+                AndroidAutoScreen.getScreen(clusterId)?.applyConfigUpdate(invalidate = true)
+            }
             return
         }
 
@@ -133,7 +136,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             config.onAppearanceDidChange(colorScheme)
         }
 
-        AndroidAutoScreen.invalidateScreens()
+        TemplateUpdateQueue.post { AndroidAutoScreen.invalidateScreens() }
     }
 
     override fun onNewIntent(intent: Intent) {

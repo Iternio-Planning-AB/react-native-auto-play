@@ -22,7 +22,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.SignInTemplate
 import java.util.concurrent.ConcurrentHashMap
 
 class AndroidAutoScreen(
-    carContext: CarContext, private val moduleName: String, private var template: Template
+    carContext: CarContext, private val moduleName: String, @Volatile private var template: Template
 ) : Screen(carContext) {
 
     init {
@@ -96,6 +96,9 @@ class AndroidAutoScreen(
         })
     }
 
+    /**
+     * rebuilds the template from the registered config, must run on the TemplateUpdateQueue
+     */
     fun applyConfigUpdate(invalidate: Boolean = false) {
         val config = AndroidAutoTemplate.getConfig(moduleName) ?: return
 

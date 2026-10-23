@@ -58,8 +58,7 @@ class MessageTemplate(context: CarContext, config: MessageTemplateConfig) :
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     companion object {

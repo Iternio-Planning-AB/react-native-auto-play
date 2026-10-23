@@ -52,8 +52,7 @@ class InformationTemplate(context: CarContext, config: InformationTemplateConfig
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {
@@ -78,7 +77,6 @@ class InformationTemplate(context: CarContext, config: InformationTemplateConfig
     }
 
     fun updateSection(section: NitroSection) {
-        config = config.copy(section = section)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(section = section) }
     }
 }
