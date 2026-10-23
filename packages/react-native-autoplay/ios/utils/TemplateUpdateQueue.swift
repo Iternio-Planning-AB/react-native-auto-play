@@ -39,6 +39,16 @@ enum TemplateUpdateQueue {
         return promise
     }
 
+    /// Called when the CarPlay scene connects or disconnects. A CarPlay completion that never fires
+    /// for a scene that went away would otherwise block every later call for the rest of the
+    /// process. Operations still running keep going, new ones just stop waiting for them.
+    static func reset() {
+        lock.lock()
+        defer { lock.unlock() }
+
+        tail = nil
+    }
+
     /// For sync hybrid methods, which have no promise to hand back to JS.
     static func post(_ operation: @escaping @MainActor () -> Void) {
         let _: Promise<Void> = enqueue(operation)

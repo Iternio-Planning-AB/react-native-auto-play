@@ -59,7 +59,10 @@ produce no error message at all.
   run while a push is still animating. `enqueue` for `Promise` methods, `post` for sync ones
   (after a synchronous template lookup, so a missing template still throws). A queued
   operation must never await another queued one — it would wait for itself. Voice input
-  stays off the queue since it holds its template on screen for seconds.
+  stays off the queue since it holds its template on screen for seconds. Native-initiated
+  pushes (e.g. `SearchTemplate`'s results list) go through the queue too. The head unit
+  scene calls `TemplateUpdateQueue.reset()` on connect and disconnect, so a CarPlay
+  completion that never fires for a scene that went away can't block every later call.
 - **Two threads reach the Swift side: the main thread (UIKit/CarPlay delegate callbacks)
   and the JS/Nitro thread.** Hybrid spec methods that are plain `throws` — no
   `Promise.async`, no `MainActor.run` — run *on the JS thread*, and `createXTemplate` and
