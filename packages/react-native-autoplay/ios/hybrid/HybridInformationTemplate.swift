@@ -24,12 +24,10 @@ class HybridInformationTemplate: HybridInformationTemplateSpec {
         templateId: String,
         section: NitroSection
     ) throws -> Promise<Void> {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: InformationTemplate) in
-                    template.updateSection(section: section)
-                }
+        return TemplateUpdateQueue.enqueue {
+            try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                (template: InformationTemplate) in
+                template.updateSection(section: section)
             }
         }
     }

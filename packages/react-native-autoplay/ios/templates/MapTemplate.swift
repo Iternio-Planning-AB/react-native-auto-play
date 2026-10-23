@@ -496,7 +496,8 @@ class MapTemplate: AutoPlayHeaderProviding,
             tripPreviews.first(where: { $0.id == tripId })
         }
 
-        DispatchQueue.main.async {
+        // queued so it keeps its order against hideTripSelector and the other HybridMapTemplate calls
+        TemplateUpdateQueue.post {
             self.tripSelectorVisible = true
             self.onTripSelected = onTripSelected
             self.onTripStarted = onTripStarted
@@ -539,7 +540,7 @@ class MapTemplate: AutoPlayHeaderProviding,
             let selectedTrip = tripPreviews.first { trip in
                 trip.id == tripId
             }
-            DispatchQueue.main.async {
+            TemplateUpdateQueue.post {
                 self.template.showTripPreviews(
                     tripPreviews,
                     selectedTrip: selectedTrip,

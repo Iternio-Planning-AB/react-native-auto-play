@@ -151,7 +151,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             try await RootModule.withSceneAndInterfaceController {
                 scene,
                 interfaceController in
@@ -181,7 +181,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     func pushTemplate(templateId: String) throws
         -> Promise<Void>
     {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             try await RootModule.withSceneAndInterfaceController {
                 scene,
                 interfaceController in
@@ -245,7 +245,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func popTemplate(animate: Bool?) throws -> Promise<Void> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             try await RootModule.withInterfaceController {
                 interfaceController in
 
@@ -266,7 +266,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     func popToRootTemplate(animate: Bool?) throws -> Promise<Void> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             try await RootModule.withInterfaceController {
                 interfaceController in
 
@@ -289,7 +289,7 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     func popToTemplate(templateId: String, animate: Bool?) throws -> Promise<
         Void
     > {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             try await RootModule.withInterfaceController {
                 interfaceController in
 
@@ -313,23 +313,21 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         templateId: String,
         headerActions: [NitroAction]?
     ) throws -> Promise<Void> {
-        return Promise.async {
-            try await RootModule.withScene { rootScene in
-                try await MainActor.run {
-                    let template = try rootScene.templateStore.getTemplate(
-                        templateId: templateId
+        return TemplateUpdateQueue.enqueue {
+            try RootModule.withScene { rootScene in
+                let template = try rootScene.templateStore.getTemplate(
+                    templateId: templateId
+                )
+
+                guard let template = template as? AutoPlayHeaderProviding
+                else {
+                    throw AutoPlayError.invalidTemplateType(
+                        "\(templateId) does not support header actions"
                     )
-
-                    guard let template = template as? AutoPlayHeaderProviding
-                    else {
-                        throw AutoPlayError.invalidTemplateType(
-                            "\(templateId) does not support header actions"
-                        )
-                    }
-
-                    template.barButtons = headerActions
-                    template.invalidate()
                 }
+
+                template.barButtons = headerActions
+                template.invalidate()
             }
         }
     }
