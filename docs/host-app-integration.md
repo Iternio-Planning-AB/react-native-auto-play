@@ -114,8 +114,9 @@ produce no error message at all.
   `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures
   come back as rejected promises by design. Per-template mutations are different — every
   config change and rebuild goes through `TemplateUpdateQueue` (`utils/`), a single
-  background thread: `enqueue` for `Promise` methods, `runAndWait` for sync ones so they
-  still throw, `post` from the main thread. **Never mutate a template config from
+  background thread: `enqueue` for `Promise` methods, `post` for sync methods (after a
+  synchronous template lookup, matching iOS) and from the main thread, `runAndWait` only off
+  the JS thread — it waits for everything queued before it. **Never mutate a template config from
   `Promise.async` or the main thread directly** — a setter copies the config and rebuilds
   from the registry, so two running at once silently drop one change (e.g.
   `setHeaderActions` and `setMapButtons` fired from the same React commit). Inside the

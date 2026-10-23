@@ -141,20 +141,20 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun updateVisibleTravelEstimate(
         templateId: String, visibleTravelEstimate: VisibleTravelEstimate
     ) {
-        TemplateUpdateQueue.runAndWait {
-            val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
-            template.updateVisibleTravelEstimate(visibleTravelEstimate)
-        }
+        // same as on iOS: an unknown template throws right away, the update is queued without
+        // waiting so JS never blocks behind slow updates (e.g. remote images) queued before it
+        val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
+        TemplateUpdateQueue.post { template.updateVisibleTravelEstimate(visibleTravelEstimate) }
     }
 
     override fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>) {
-        TemplateUpdateQueue.runAndWait { MapTemplate.updateTravelEstimates(steps) }
+        TemplateUpdateQueue.post { MapTemplate.updateTravelEstimates(steps) }
     }
 
     override fun updateManeuvers(
         templateId: String, maneuvers: NitroManeuver
     ) {
-        TemplateUpdateQueue.runAndWait { MapTemplate.updateManeuvers(maneuvers) }
+        TemplateUpdateQueue.post { MapTemplate.updateManeuvers(maneuvers) }
     }
 
     override fun startNavigation(
@@ -166,7 +166,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     }
 
     override fun stopNavigation(templateId: String) {
-        TemplateUpdateQueue.runAndWait { MapTemplate.stopNavigation() }
+        TemplateUpdateQueue.post { MapTemplate.stopNavigation() }
     }
 
     override fun setManeuverState(templateId: String, state: ManeuverState) {

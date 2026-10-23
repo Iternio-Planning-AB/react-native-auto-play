@@ -44,7 +44,8 @@ object TemplateUpdateQueue {
     }
 
     /**
-     * blocks until the job ran and rethrows its exception, for synchronous hybrid methods
+     * blocks until the job ran and rethrows its exception, for callers that need the update applied
+     * before they continue - not from the JS thread, it waits for everything queued before
      */
     fun <T> runAndWait(job: () -> T): T {
         // a job that ends up in here again would wait for itself forever
