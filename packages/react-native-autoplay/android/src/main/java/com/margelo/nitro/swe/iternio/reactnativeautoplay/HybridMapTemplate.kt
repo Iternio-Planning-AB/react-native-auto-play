@@ -7,6 +7,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTem
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.RoutePreviewTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.TripPreviewTemplate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridMapTemplate : HybridMapTemplateSpec() {
     var navigationAlert: NitroNavigationAlert? = null
@@ -122,7 +123,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun setTemplateMapButtons(
         templateId: String, buttons: Array<NitroMapButton>?
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
             template.setMapActions(buttons)
         }
@@ -131,7 +132,7 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun setTemplateHideControls(
         templateId: String, hideControls: HideControls
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
             template.setHideControls(hideControls)
         }
@@ -140,30 +141,32 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
     override fun updateVisibleTravelEstimate(
         templateId: String, visibleTravelEstimate: VisibleTravelEstimate
     ) {
-        val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
-        template.updateVisibleTravelEstimate(visibleTravelEstimate)
+        TemplateUpdateQueue.runAndWait {
+            val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
+            template.updateVisibleTravelEstimate(visibleTravelEstimate)
+        }
     }
 
     override fun updateTravelEstimates(templateId: String, steps: Array<TripPoint>) {
-        MapTemplate.updateTravelEstimates(steps)
+        TemplateUpdateQueue.runAndWait { MapTemplate.updateTravelEstimates(steps) }
     }
 
     override fun updateManeuvers(
         templateId: String, maneuvers: NitroManeuver
     ) {
-        MapTemplate.updateManeuvers(maneuvers)
+        TemplateUpdateQueue.runAndWait { MapTemplate.updateManeuvers(maneuvers) }
     }
 
     override fun startNavigation(
         templateId: String, trip: TripConfig
     ): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueue {
             MapTemplate.startNavigation(trip)
         }
     }
 
     override fun stopNavigation(templateId: String) {
-        MapTemplate.stopNavigation()
+        TemplateUpdateQueue.runAndWait { MapTemplate.stopNavigation() }
     }
 
     override fun setManeuverState(templateId: String, state: ManeuverState) {

@@ -62,8 +62,7 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {
@@ -88,8 +87,7 @@ class GridTemplate(context: CarContext, config: GridTemplateConfig) :
     }
 
     fun updateButtons(buttons: Array<NitroGridButton>) {
-        config = config.copy(buttons = buttons)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(buttons = buttons) }
     }
 
     companion object {

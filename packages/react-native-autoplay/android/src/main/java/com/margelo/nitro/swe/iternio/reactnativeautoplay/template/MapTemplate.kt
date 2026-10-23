@@ -34,6 +34,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroNavigationAlert
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripPoint
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.VisibleTravelEstimate
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import java.security.InvalidParameterException
 
 class MapTemplate(
@@ -61,7 +62,7 @@ class MapTemplate(
                 }
 
                 override fun onStopNavigation() {
-                    navigationEnded()
+                    TemplateUpdateQueue.post { navigationEnded() }
 
                     // NavigationManager also stops navigation when its session is destroyed.
                     // That is a disconnect, not the user ending navigation, so JS is not told.
@@ -118,8 +119,7 @@ class MapTemplate(
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {
@@ -144,13 +144,11 @@ class MapTemplate(
     }
 
     fun setMapActions(buttons: Array<NitroMapButton>?) {
-        config = config.copy(mapButtons = buttons)
-        applyConfigUpdate()
+        updateConfig { it.copy(mapButtons = buttons) }
     }
 
     fun setHideControls(hideControls: HideControls) {
-        config = config.copy(hideControls = hideControls)
-        applyConfigUpdate()
+        updateConfig { it.copy(hideControls = hideControls) }
     }
 
     fun showAlert(alertConfig: NitroNavigationAlert) {
@@ -236,8 +234,7 @@ class MapTemplate(
     fun updateVisibleTravelEstimate(
         visibleTravelEstimate: VisibleTravelEstimate
     ) {
-        config = config.copy(visibleTravelEstimate = visibleTravelEstimate)
-        applyConfigUpdate()
+        updateConfig { it.copy(visibleTravelEstimate = visibleTravelEstimate) }
     }
 
     companion object {

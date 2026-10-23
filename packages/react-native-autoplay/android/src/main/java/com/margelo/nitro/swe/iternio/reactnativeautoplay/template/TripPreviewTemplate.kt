@@ -22,6 +22,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.R
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripConfig
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripPreviewTextConfiguration
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TripsConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class TripPreviewTemplate(
     carContext: CarContext,
@@ -95,7 +96,7 @@ class TripPreviewTemplate(
                             .toTypedArray()
                         val trip = TripConfig(selectedTrip.id, selectedRoute.copy(steps = steps))
 
-                        MapTemplate.startNavigation(trip)
+                        TemplateUpdateQueue.post { MapTemplate.startNavigation(trip) }
 
                         onTripStarted(selectedTrip.id, selectedRoute.id)
                         finish()

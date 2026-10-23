@@ -29,8 +29,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {
@@ -55,8 +54,7 @@ class ListTemplate(context: CarContext, config: ListTemplateConfig) :
     }
 
     fun updateSections(sections: Array<NitroSection>?) {
-        config = config.copy(sections = sections)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(sections = sections) }
     }
 
     companion object {

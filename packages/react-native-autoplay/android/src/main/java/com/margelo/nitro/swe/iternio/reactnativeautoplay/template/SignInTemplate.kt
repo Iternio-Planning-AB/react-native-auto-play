@@ -43,25 +43,16 @@ class SignInTemplate(
     override val autoDismissMs = config.autoDismissMs
 
     fun updateTemplate(config: SignInTemplateConfig) {
-        config.signInMethod?.let {
-            this.config = this.config.copy(signInMethod = config.signInMethod)
+        updateConfig { current ->
+            current.copy(
+                signInMethod = config.signInMethod ?: current.signInMethod,
+                title = config.title ?: current.title,
+                headerActions = config.headerActions ?: current.headerActions,
+                actions = config.actions ?: current.actions,
+                instructions = config.instructions ?: current.instructions,
+                additionalText = config.additionalText ?: current.additionalText
+            )
         }
-        config.title?.let {
-            this.config = this.config.copy(title = config.title)
-        }
-        config.headerActions?.let {
-            this.config = this.config.copy(headerActions = config.headerActions)
-        }
-        config.actions?.let {
-            this.config = this.config.copy(actions = config.actions)
-        }
-        config.instructions?.let {
-            this.config = this.config.copy(instructions = config.instructions)
-        }
-        config.additionalText?.let {
-            this.config = this.config.copy(additionalText = config.additionalText)
-        }
-        super.applyConfigUpdate()
     }
 
     override fun parse(): Template {
@@ -192,8 +183,7 @@ class SignInTemplate(
     }
 
     override fun setTemplateHeaderActions(headerActions: Array<NitroAction>?) {
-        config = config.copy(headerActions = headerActions)
-        super.applyConfigUpdate()
+        updateConfig { it.copy(headerActions = headerActions) }
     }
 
     override fun onWillAppear() {

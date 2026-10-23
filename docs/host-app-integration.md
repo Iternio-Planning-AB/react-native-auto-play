@@ -112,10 +112,15 @@ produce no error message at all.
 - **Stack operations** (`setRootTemplate`, `pushTemplate`, `popTemplate`,
   `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`) go through
   `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures
-  come back as rejected promises by design. Per-template mutations are different — the
-  `Hybrid*Template` classes use `Promise.async { … }` against the `AndroidAutoTemplate`
-  registry instead. Match whichever pattern the neighbouring method uses rather than
-  assuming one applies everywhere.
+  come back as rejected promises by design. Per-template mutations are different — every
+  config change and rebuild goes through `TemplateUpdateQueue` (`utils/`), a single
+  background thread: `enqueue` for `Promise` methods, `runAndWait` for sync ones so they
+  still throw, `post` from the main thread. **Never mutate a template config from
+  `Promise.async` or the main thread directly** — a setter copies the config and rebuilds
+  from the registry, so two running at once silently drop one change (e.g.
+  `setHeaderActions` and `setMapButtons` fired from the same React commit). Inside the
+  template use `updateConfig { it.copy(…) }`, which applies the change to the currently
+  registered instance. Queued jobs must never wait on the JS or main thread.
 - OS-triggered voice navigation arrives as a hand-parsed `geo:` intent in
   `AndroidAutoSession.onNewIntent`; coordinates `0,0` are a sentinel meaning "no
   coordinates, geocode the query".
