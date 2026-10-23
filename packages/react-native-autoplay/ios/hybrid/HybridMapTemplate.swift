@@ -20,20 +20,23 @@ class HybridMapTemplate: HybridMapTemplateSpec {
         return mapTemplate
     }
 
-    /// CPMapTemplate and CPNavigationSession are main thread only. Calls are queued on the main
-    /// queue in the order JS issued them, so e.g. maneuvers sent right after startNavigation can
-    /// not overtake the session start.
+    /// CPMapTemplate and CPNavigationSession are main thread only. Calls go through the
+    /// TemplateUpdateQueue in the order JS issued them, so e.g. maneuvers sent right after
+    /// startNavigation can not overtake the session start, and map buttons can not overtake a
+    /// header action update or a push.
     private func onMainThread(
         templateId: String,
         perform action: @escaping @MainActor (MapTemplate) -> Void
     ) throws {
         guard let mapTemplate = try getMapTemplate(templateId: templateId) else { return }
 
-        DispatchQueue.main.async {
+        TemplateUpdateQueue.post {
             action(mapTemplate)
         }
     }
 
+    /// The queue moves on once `action` returns, `resolve` may be called later, e.g. when a
+    /// deferred navigation session start ran.
     private func onMainThread(
         templateId: String,
         perform action: @escaping @MainActor (MapTemplate, _ resolve: @escaping () -> Void) -> Void
@@ -46,7 +49,7 @@ class HybridMapTemplate: HybridMapTemplateSpec {
                 return promise
             }
 
-            DispatchQueue.main.async {
+            TemplateUpdateQueue.post {
                 action(mapTemplate) { promise.resolve() }
             }
         }

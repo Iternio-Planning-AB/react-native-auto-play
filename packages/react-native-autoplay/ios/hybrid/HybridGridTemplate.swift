@@ -23,12 +23,10 @@ class HybridGridTemplate: HybridGridTemplateSpec {
         templateId: String,
         buttons: [NitroGridButton]
     ) throws -> Promise<Void> {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: GridTemplate) in
-                    template.updateButtons(buttons: buttons)
-                }
+        return TemplateUpdateQueue.enqueue {
+            try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                (template: GridTemplate) in
+                template.updateButtons(buttons: buttons)
             }
         }
     }

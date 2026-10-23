@@ -22,12 +22,10 @@ class HybridSearchTemplate: HybridSearchTemplateSpec {
     func updateSearchResults(templateId: String, results: NitroSection) throws
         -> Promise<Void>
     {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: SearchTemplate) in
-                    template.updateSearchResults(results: results)
-                }
+        return TemplateUpdateQueue.enqueue {
+            try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                (template: SearchTemplate) in
+                template.updateSearchResults(results: results)
             }
         }
     }

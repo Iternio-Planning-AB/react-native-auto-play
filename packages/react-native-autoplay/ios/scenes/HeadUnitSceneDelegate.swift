@@ -42,6 +42,8 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         _ templateApplicationScene: CPTemplateApplicationScene,
         didConnect interfaceController: CPInterfaceController
     ) {
+        TemplateUpdateQueue.reset()
+
         self.interfaceController = AutoPlayInterfaceController(
             interfaceController: interfaceController
         )
@@ -60,6 +62,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
     ) {
         stopNavigationOnDisconnect()
         disconnect()
+        TemplateUpdateQueue.reset()
 
         HybridAutoPlay.emit(event: .diddisconnect)
     }
@@ -70,6 +73,7 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             CPInterfaceController
     ) {
         disconnect()
+        TemplateUpdateQueue.reset()
         HybridAutoPlay.emit(event: .diddisconnect)
     }
 

@@ -49,6 +49,20 @@ produce no error message at all.
   in the README's `UISceneConfigurations` block.
 - Native template/window mutation is main-thread-only, enforced via `@MainActor`
   annotations rather than manual dispatch. Keep new Swift code annotated the same way.
+- **Template updates and navigation calls (`setRootTemplate`, `pushTemplate`, the pops,
+  `setTemplateHeaderActions`, every `update*`/`set*` on the template hybrids and all of
+  `HybridMapTemplate`) go through `TemplateUpdateQueue` (`ios/utils/`)**, which runs them on
+  the main actor one after another in JS call order, each awaiting CarPlay's completion
+  before the next starts. **Don't use `Promise.async` + `MainActor.run` or
+  `DispatchQueue.main.async` for these**: unstructured tasks reach the main actor in any
+  order, so a later `setHeaderActions` could be overwritten by an earlier one, and a pop could
+  run while a push is still animating. `enqueue` for `Promise` methods, `post` for sync ones
+  (after a synchronous template lookup, so a missing template still throws). A queued
+  operation must never await another queued one — it would wait for itself. Voice input
+  stays off the queue since it holds its template on screen for seconds. Native-initiated
+  pushes (e.g. `SearchTemplate`'s results list) go through the queue too. The head unit
+  scene calls `TemplateUpdateQueue.reset()` on connect and disconnect, so a CarPlay
+  completion that never fires for a scene that went away can't block every later call.
 - **Two threads reach the Swift side: the main thread (UIKit/CarPlay delegate callbacks)
   and the JS/Nitro thread.** Hybrid spec methods that are plain `throws` — no
   `Promise.async`, no `MainActor.run` — run *on the JS thread*, and `createXTemplate` and
