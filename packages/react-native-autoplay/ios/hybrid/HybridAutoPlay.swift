@@ -1,5 +1,6 @@
 import AVFoundation
 import CarPlay
+import MapKit
 import NitroModules
 
 struct StateListener {
@@ -104,6 +105,59 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     func isCarServiceRunning() throws -> Bool {
         return SceneStore.isRootModuleConnected()
+    }
+
+    func navigate(latitude: Double, longitude: Double, label: String) throws
+        -> Promise<Void>
+    {
+        return Promise.async {
+            #if targetEnvironment(simulator)
+                // The CarPlay Simulator has no Maps app, and openInMaps(fromScene:)
+                // never completes its scene transition there, leaving a blank screen.
+                throw AutoPlayError.navigationNotAvailable(
+                    "the CarPlay Simulator has no navigation app"
+                )
+            #else
+                guard
+                    let scene = SceneStore.getRootScene()?.window?.windowScene
+                        as? CPTemplateApplicationScene
+                else {
+                    throw AutoPlayError.navigationNotAvailable(
+                        "CarPlay not connected"
+                    )
+                }
+
+                let placemark = MKPlacemark(
+                    coordinate: CLLocationCoordinate2D(
+                        latitude: latitude,
+                        longitude: longitude
+                    )
+                )
+                let mapItem = MKMapItem(placemark: placemark)
+                mapItem.name = label
+
+                try await withCheckedThrowingContinuation {
+                    (continuation: CheckedContinuation<Void, Error>) in
+                    mapItem.openInMaps(
+                        launchOptions: [
+                            MKLaunchOptionsDirectionsModeKey:
+                                MKLaunchOptionsDirectionsModeDriving
+                        ],
+                        fromScene: scene
+                    ) { success in
+                        if success {
+                            continuation.resume()
+                        } else {
+                            continuation.resume(
+                                throwing: AutoPlayError.navigationFailed(
+                                    "could not open the navigation app"
+                                )
+                            )
+                        }
+                    }
+                }
+            #endif
+        }
     }
 
     func addSafeAreaInsetsListener(
