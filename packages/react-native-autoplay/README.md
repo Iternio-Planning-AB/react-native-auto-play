@@ -498,6 +498,17 @@ It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawa
 - iOS: Add to your `Images.xcassets`
 - Android: Add to `res/drawable`
 
+### Remote images
+
+**Prefer glyphs and bundled assets over remote images.** Templates are built natively in one go, so an uncached remote image is downloaded while the template is built:
+
+- Each uncached remote image waits for its download for up to `timeoutMs` (default 500 ms). Images are loaded one after another, so a template with several uncached remote images can take several times that to show up or update.
+- Template updates are applied in order, so every update queued after a slow one waits too. On Android this includes navigation updates such as `updateManeuvers`, and since those rebuild the `MapTemplate`, remote images on its map buttons and header actions are loaded again on every navigation update until they are cached.
+- A download that times out or fails is not cached and is retried on the next build, so on a slow connection every update waits again. An image that arrives after the timeout is not shown; the template shows a placeholder icon instead.
+- Successfully loaded images are kept in an in-memory cache, so the cost only applies the first time.
+
+If you need remote images, use them for content that is only known at runtime (e.g. logos in search results), keep their number per template low, and lower `timeoutMs` where a placeholder is acceptable.
+
 ### Icon colors and Android Auto light templates
 
 Starting with **Android Auto 17.8** the host can show white (light) templates in day mode. Older versions (e.g. 17.6) always use dark templates, even in day mode. Both report the same car app API level, so an app cannot tell them apart, and a fixed icon color that is readable on one (white on dark) can be invisible on the other (white on white).
