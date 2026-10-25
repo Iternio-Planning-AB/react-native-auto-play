@@ -41,11 +41,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
       static const auto fieldStyle = clazz->getField<JAlertActionStyle>("style");
       jni::local_ref<JAlertActionStyle> style = this->getFieldValue(fieldStyle);
+      static const auto fieldIsDefault = clazz->getField<jni::JBoolean>("isDefault");
+      jni::local_ref<jni::JBoolean> isDefault = this->getFieldValue(fieldIsDefault);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
       return NavigationAlertAction(
         title->toStdString(),
         style != nullptr ? std::make_optional(style->toCpp()) : std::nullopt,
+        isDefault != nullptr ? std::make_optional(static_cast<bool>(isDefault->value())) : std::nullopt,
         [&]() -> std::function<void()> {
           if (onPress->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
             auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(onPress);
@@ -64,13 +67,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNavigationAlertAction::javaobject> fromCpp(const NavigationAlertAction& value) {
-      using JSignature = JNavigationAlertAction(jni::alias_ref<jni::JString>, jni::alias_ref<JAlertActionStyle>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNavigationAlertAction(jni::alias_ref<jni::JString>, jni::alias_ref<JAlertActionStyle>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<JFunc_void::javaobject>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.title),
         value.style.has_value() ? JAlertActionStyle::fromCpp(value.style.value()) : nullptr,
+        value.isDefault.has_value() ? jni::JBoolean::valueOf(value.isDefault.value()) : nullptr,
         JFunc_void_cxx::fromCpp(value.onPress)
       );
     }

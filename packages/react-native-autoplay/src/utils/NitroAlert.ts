@@ -8,6 +8,13 @@ type AlertDismissalReason = 'timeout' | 'user' | 'system';
 export type NavigationAlertAction = {
   title: string;
   style?: AlertActionStyle;
+  /**
+   * Android only. Marks this as the alert's default action. Android Auto triggers the default
+   * action by itself when the alert times out, so `onPress` runs without the user touching
+   * anything. Leave it unset if a timeout should only call `onDidDismiss('timeout')`.
+   * Only the first default action is used. iOS has no default action, so this is ignored there.
+   */
+  isDefault?: boolean;
   onPress: () => void;
 };
 

@@ -26,19 +26,23 @@ data class NavigationAlertAction(
   val style: AlertActionStyle?,
   @DoNotStrip
   @Keep
+  val isDefault: Boolean?,
+  @DoNotStrip
+  @Keep
   val onPress: Func_void
 ) {
   /**
    * Create a new instance of NavigationAlertAction from Kotlin
    */
-  constructor(title: String, style: AlertActionStyle?, onPress: () -> Unit):
-         this(title, style, Func_void_java(onPress))
+  constructor(title: String, style: AlertActionStyle?, isDefault: Boolean?, onPress: () -> Unit):
+         this(title, style, isDefault, Func_void_java(onPress))
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is NavigationAlertAction) return false
     return Objects.deepEquals(this.title, other.title)
       && Objects.deepEquals(this.style, other.style)
+      && Objects.deepEquals(this.isDefault, other.isDefault)
       && Objects.deepEquals(this.onPress, other.onPress)
   }
 
@@ -46,6 +50,7 @@ data class NavigationAlertAction(
     return arrayOf<Any?>(
       title,
       style,
+      isDefault,
       onPress
     ).contentDeepHashCode()
   }
@@ -58,8 +63,8 @@ data class NavigationAlertAction(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: String, style: AlertActionStyle?, onPress: Func_void): NavigationAlertAction {
-      return NavigationAlertAction(title, style, onPress)
+    private fun fromCpp(title: String, style: AlertActionStyle?, isDefault: Boolean?, onPress: Func_void): NavigationAlertAction {
+      return NavigationAlertAction(title, style, isDefault, onPress)
     }
   }
 }
