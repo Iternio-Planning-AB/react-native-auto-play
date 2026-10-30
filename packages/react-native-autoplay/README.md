@@ -645,6 +645,26 @@ export default registerAutoPlay;
 
 Set the root template from a `didConnect` listener rather than once at startup. A listener registered while a car is already connected is called right away, so this covers the app starting before or after the car connects, every reconnect, and a JS reload while connected: the reload discards the rendered car screen, and the re-registered listener sets the root template again.
 
+Templates belong to the session they were shown in, and a disconnect frees them. If your `didConnect` listener awaits anything before building templates, check that its session is still the current one afterwards. On iOS, an app launched from CarPlay only is suspended when CarPlay disconnects, so a pending `await` resumes only when CarPlay reconnects or the app is opened on the phone, by then in a different session or none at all:
+
+```ts
+HybridAutoPlay.addListener('didConnect', async (sessionId) => {
+  const isCurrentSession = () => HybridAutoPlay.getCurrentSessionId() === sessionId;
+
+  // any async work, e.g. loading translations, settings or data from the network
+  await somethingAsync();
+
+  // re-check after every await, before calling any template method
+  if (!isCurrentSession()) {
+    return;
+  }
+
+  new MapTemplate({ ... }).setRootTemplate();
+});
+```
+
+A template from a session that has ended rejects with an error that `ErrorUtil.isTemplateNotFoundError(error)` detects.
+
 ## API Reference
 
 ### Main Object
@@ -898,7 +918,8 @@ This section lists the available listeners and lifecycle callbacks so you can wi
 
 | API | Payload | Notes |
 | --- | --- | --- |
-| `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'` | Connection changes for the head unit. |
+| `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'`, `cb(sessionId)` | Connection changes for the head unit. `sessionId` is the session that connected or disconnected. |
+| `HybridAutoPlay.getCurrentSessionId()` | returns `number \| undefined` | The connected head unit session, `undefined` while disconnected. A new id is assigned on every connect, see [Create the AutoPlay Experience](#2-create-the-autoplay-experience). |
 | `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
 | `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only. Fires when the OS triggers a voice input event (e.g. "Hey Google, navigate to…"). For in-app recording use `startVoiceInput` instead. |
 | `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |

@@ -21,10 +21,38 @@ class SceneStore {
 
     private static var store: [String: AutoPlayScene] = [:]
 
+    private static var lastRootSessionId = 0
+    private static var rootSessionId: Int?
+
     private static func withLock<T>(_ body: () -> T) -> T {
         lock.lock()
         defer { lock.unlock() }
         return body()
+    }
+
+    /// Assigns a new id on every head unit connect, so JS can tell a listener that was suspended
+    /// across a disconnect (the app is suspended when CarPlay disconnects and nothing else is
+    /// in the foreground) from one called for the current session.
+    static func startRootSession() -> Int {
+        return withLock {
+            lastRootSessionId += 1
+            rootSessionId = lastRootSessionId
+            return lastRootSessionId
+        }
+    }
+
+    /// Only clears the id when it still belongs to the ending session, a late disconnect of an
+    /// older scene must not end the session of a newer one.
+    static func endRootSession(sessionId: Int) {
+        withLock {
+            if rootSessionId == sessionId {
+                rootSessionId = nil
+            }
+        }
+    }
+
+    static func getRootSessionId() -> Int? {
+        return withLock { rootSessionId }
     }
 
     static func addScene(moduleName: String, scene: AutoPlayScene) {
