@@ -62,8 +62,14 @@ class SceneStore {
         withLock { store[moduleName] = scene }
     }
 
-    static func removeScene(moduleName: String) {
-        let _ = withLock { store.removeValue(forKey: moduleName) }
+    /// Scenes are keyed by module name only, a late disconnect of an older scene must not remove
+    /// a newer scene that registered under the same name in the meantime.
+    static func removeScene(moduleName: String, scene: AutoPlayScene) {
+        withLock {
+            if store[moduleName] === scene {
+                store.removeValue(forKey: moduleName)
+            }
+        }
     }
 
     static func getScene(moduleName: String) -> AutoPlayScene? {
