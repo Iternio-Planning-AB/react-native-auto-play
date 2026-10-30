@@ -20,9 +20,10 @@ import TelemetryView from './TelemetryView';
 import saveVoiceRecording from './utils/saveVoiceRecording';
 
 const nextDefaultAction: Record<AlertDefaultAction, AlertDefaultAction> = {
+  unset: 'none',
   none: 'primary',
   primary: 'secondary',
-  secondary: 'none',
+  secondary: 'unset',
 };
 
 function App() {
@@ -54,7 +55,7 @@ function AppContent() {
   const [isRootVisible, setIsRootVisible] = useState(false);
   const [savedVoiceRecording, setSavedVoiceRecording] = useState('');
   const [sameAlertId, setSameAlertId] = useState(false);
-  const [alertDefaultAction, setAlertDefaultAction] = useState<AlertDefaultAction>('none');
+  const [alertDefaultAction, setAlertDefaultAction] = useState<AlertDefaultAction>('unset');
   const [alertHasTimer, setAlertHasTimer] = useState(true);
   const alertLog = useAppSelector((state) => state.alert.log);
 

@@ -15,7 +15,7 @@ export type AudioState = {
   recording: string | null;
 };
 
-export type AlertDefaultAction = 'none' | 'primary' | 'secondary';
+export type AlertDefaultAction = 'unset' | 'none' | 'primary' | 'secondary';
 
 export type AlertOptions = {
   priority: AlertPriority;

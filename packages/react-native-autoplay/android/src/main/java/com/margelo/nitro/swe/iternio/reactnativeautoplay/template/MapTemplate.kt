@@ -170,6 +170,10 @@ class MapTemplate(
             }
         }
 
+        // without isDefault on either action the primary stays the default, as before isDefault
+        val isPrimaryDefault = alertConfig.primaryAction.isDefault
+            ?: (alertConfig.secondaryAction?.isDefault == null)
+
         val alert = Alert.Builder(alertConfig.id.toInt(), title, durationMillis).apply {
             var isAutoDismissal = false
 
@@ -178,7 +182,7 @@ class MapTemplate(
             addAction(Action.Builder().apply {
                 setTitle(alertConfig.primaryAction.title)
                 setFlags(Action.FLAG_PRIMARY)
-                if (alertConfig.primaryAction.isDefault == true) {
+                if (isPrimaryDefault) {
                     setFlags(Action.FLAG_DEFAULT)
                 }
                 setOnClickListener(alertConfig.primaryAction.onPress)

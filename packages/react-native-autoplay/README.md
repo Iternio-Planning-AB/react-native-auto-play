@@ -974,11 +974,13 @@ Map-specific callbacks live on `MapTemplateConfig`:
 `onDidDismiss(reason)` reports `timeout`, `user` (an action or the close button) or `system` (the app
 dismissed it, or another alert replaced it).
 
-When the alert times out, CarPlay just dismisses it. Android Auto does the same and shows the
-countdown as a bar under the title, unless an action sets `isDefault: true`: then the countdown fills
-that button and Android Auto presses it on timeout. `onDidDismiss` may then report `timeout` or
-`user`, so put what a timeout should do in that action's `onPress`. Set it on the action that stands
-for doing nothing, e.g. a Dismiss button.
+When the alert times out, CarPlay just dismisses it. Android Auto fills the default action with the
+countdown and presses it on timeout, so `onDidDismiss` may report `timeout` or `user`: put what a
+timeout should do in that action's `onPress`. Without `isDefault` on either action the primary action
+is the default. Set `isDefault: true` on the action that stands for doing nothing, e.g. a Dismiss
+button, or `isDefault: false` on the primary for no default action: a timeout then only reports
+`timeout`, but Android Auto shows the countdown as a bar under the title and restarts it on every
+`updateAlert`.
 
 #### AutoPlayCluster listeners (instrument cluster)
 

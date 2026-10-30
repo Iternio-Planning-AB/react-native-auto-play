@@ -10,9 +10,11 @@ export type NavigationAlertAction = {
   style?: AlertActionStyle;
   onPress: () => void;
   /**
-   * Android Auto shows the alert's countdown on this action and presses it when the alert times
-   * out; onDidDismiss may then report timeout or user. Set it on one action at most. Without it the
-   * countdown is a bar under the title. No effect on CarPlay.
+   * Android Auto shows the alert's countdown on the default action and presses it when the alert
+   * times out; onDidDismiss may then report timeout or user. Without isDefault on either action the
+   * primary action is the default. Set it on one action at most; false on the primary leaves the
+   * alert without one, so a timeout only reports timeout, but the countdown is then a bar under the
+   * title that restarts on every updateAlert. No effect on CarPlay.
    * @namespace Android
    */
   isDefault?: boolean;
