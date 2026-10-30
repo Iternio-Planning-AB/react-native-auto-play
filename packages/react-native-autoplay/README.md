@@ -1499,8 +1499,8 @@ The same no-op surface is what `react-native-web` builds get automatically via `
     // Hide the splash screen for the CarPlay screen
     hideAsync(AutoPlayModules.AutoPlayRoot);
     ```
--   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only secondary button (`mapConfig.ios.secondaryAction`, or the second `actions.ios` entry) does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
--   **Waypoint/options-panel images and toggle-row sizing (iOS 27 beta)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Beta platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
+-   **Navigation alert countdown on update (iOS 27)**: after `mapTemplate.updateAlert(...)`, the countdown on the alert's action jumps to the end instead of carrying on. The alert keeps its full duration on the CarPlay side, but the host redraws the countdown wrong. It works as expected on iOS <= 26. This is a CarPlay host bug, not a bug in this library; the app can't work around it, since passing the remaining time or keeping the duration unchanged both show the same jump.
+-   **Waypoint/options-panel images and toggle-row sizing (iOS 27)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
 ### Android
 -   **Broken exceptions with `react-native`** up to version 0.79
 When using react-native before 0.80.0 exceptions are broken and are reported as `Unknown runtime_error` or similar.
