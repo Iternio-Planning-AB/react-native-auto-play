@@ -43,11 +43,14 @@ class SceneStore {
 
     /// Only clears the id when it still belongs to the ending session, a late disconnect of an
     /// older scene must not end the session of a newer one.
-    static func endRootSession(sessionId: Int) {
-        withLock {
-            if rootSessionId == sessionId {
-                rootSessionId = nil
+    /// - Returns: true if the session was the current one and got cleared
+    static func endRootSession(sessionId: Int) -> Bool {
+        return withLock {
+            if rootSessionId != sessionId {
+                return false
             }
+            rootSessionId = nil
+            return true
         }
     }
 

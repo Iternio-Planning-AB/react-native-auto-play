@@ -24,7 +24,12 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
     private func endSession() {
         guard let sessionId = sessionId else { return }
         self.sessionId = nil
-        SceneStore.endRootSession(sessionId: sessionId)
+
+        /// a newer session is current already, JS must not see it as disconnected
+        if !SceneStore.endRootSession(sessionId: sessionId) {
+            return
+        }
+
         HybridAutoPlay.emit(event: .diddisconnect, sessionId: sessionId)
     }
 
