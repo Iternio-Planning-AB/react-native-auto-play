@@ -48,6 +48,10 @@ class MapTemplate(
 
     private var alertPriority = 0
     private var alertIds: HashSet<Int> = HashSet()
+    private var visibleAlertId: Int? = null
+    private var reportVisibleAlertDismissedByApp: (() -> Unit)? = null
+    // alerts are shown and dismissed from the JS thread, the host calls them back on the main thread
+    private val alertLock = Any()
 
     init {
         if (initNavigationManager) {
@@ -151,14 +155,24 @@ class MapTemplate(
         updateConfig { it.copy(hideControls = hideControls) }
     }
 
-    fun showAlert(alertConfig: NitroNavigationAlert) {
-        if (alertPriority > alertConfig.priority) {
-            // ignore alerts with lower priority than current alert
-            return
-        }
-
+    /**
+     * @return false if the visible alert's priority kept this one from showing
+     */
+    fun showAlert(alertConfig: NitroNavigationAlert): Boolean {
         val title = Parser.parseText(alertConfig.title)
         val durationMillis = alertConfig.durationMs.toLong()
+
+        var isDismissalReported = false
+        val reportDismissal = { reason: AlertDismissalReason ->
+            if (!isDismissalReported) {
+                isDismissalReported = true
+                alertConfig.onDidDismiss?.let { it(reason) }
+            }
+        }
+
+        // without isDefault on either action the primary stays the default, as before isDefault
+        val isPrimaryDefault = alertConfig.primaryAction.isDefault
+            ?: (alertConfig.secondaryAction?.isDefault == null)
 
         val alert = Alert.Builder(alertConfig.id.toInt(), title, durationMillis).apply {
             var isAutoDismissal = false
@@ -168,7 +182,9 @@ class MapTemplate(
             addAction(Action.Builder().apply {
                 setTitle(alertConfig.primaryAction.title)
                 setFlags(Action.FLAG_PRIMARY)
-                setFlags(Action.FLAG_DEFAULT)
+                if (isPrimaryDefault) {
+                    setFlags(Action.FLAG_DEFAULT)
+                }
                 setOnClickListener(alertConfig.primaryAction.onPress)
                 alertConfig.primaryAction.style?.let { style ->
                     if (style == AlertActionStyle.DESTRUCTIVE) {
@@ -179,6 +195,9 @@ class MapTemplate(
             alertConfig.secondaryAction?.let { action ->
                 addAction(Action.Builder().apply {
                     setTitle(action.title)
+                    if (action.isDefault == true) {
+                        setFlags(Action.FLAG_DEFAULT)
+                    }
                     setOnClickListener(action.onPress)
                     action.style?.let { style ->
                         if (style == AlertActionStyle.DESTRUCTIVE) {
@@ -188,18 +207,12 @@ class MapTemplate(
                 }.build())
             }
             setCallback(object : AlertCallback {
-                override fun onCancel(reason: Int) {
+                override fun onCancel(reason: Int) = synchronized(alertLock) {
                     isAutoDismissal = true
                     when (reason) {
-                        AlertCallback.REASON_TIMEOUT -> alertConfig.onDidDismiss?.let {
-                            it(
-                                AlertDismissalReason.TIMEOUT
-                            )
-                        }
+                        AlertCallback.REASON_TIMEOUT -> reportDismissal(AlertDismissalReason.TIMEOUT)
 
-                        AlertCallback.REASON_USER_ACTION -> alertConfig.onDidDismiss?.let {
-                            it(AlertDismissalReason.USER)
-                        }
+                        AlertCallback.REASON_USER_ACTION -> reportDismissal(AlertDismissalReason.USER)
 
                         AlertCallback.REASON_NOT_SUPPORTED -> {
                             // we make sure that this can be called on navigation templates already so this should never happen
@@ -207,28 +220,48 @@ class MapTemplate(
                     }
                 }
 
-                override fun onDismiss() {
+                override fun onDismiss() = synchronized(alertLock) {
                     alertIds.remove(alertConfig.id.toInt())
                     if (alertIds.isEmpty()) {
                         alertPriority = 0
                     }
 
                     if (!isAutoDismissal) {
-                        alertConfig.onDidDismiss?.let {
-                            it(AlertDismissalReason.USER)
-                        }
+                        // an action press; a dismissal by the app has been reported already
+                        reportDismissal(AlertDismissalReason.USER)
                     }
                 }
             })
         }.build()
 
-        if (!alertIds.contains(alert.id)) {
-            alertConfig.onWillShow?.let { it() }
-            alertIds.add(alert.id)
-            alertPriority = alertConfig.priority.toInt()
-        }
+        return synchronized(alertLock) {
+            if (alertPriority > alertConfig.priority) {
+                // ignore alerts with lower priority than current alert
+                return false
+            }
 
-        context.getCarService(AppManager::class.java).showAlert(alert)
+            if (!alertIds.contains(alert.id)) {
+                // the host reports the dismissal of the alert this one replaces only after this one
+                // shows, so report it first, in the order CarPlay does
+                reportVisibleAlertDismissedByApp?.let { it() }
+                alertConfig.onWillShow?.let { it() }
+                alertIds.add(alert.id)
+            }
+            alertPriority = alertConfig.priority.toInt()
+            visibleAlertId = alert.id
+            reportVisibleAlertDismissedByApp = { reportDismissal(AlertDismissalReason.SYSTEM) }
+
+            context.getCarService(AppManager::class.java).showAlert(alert)
+            true
+        }
+    }
+
+    fun dismissAlert(alertId: Int) = synchronized(alertLock) {
+        if (alertId == visibleAlertId) {
+            // the host reports this as it does an action press, so report it here
+            reportVisibleAlertDismissedByApp?.let { it() }
+        }
+        context.getCarService(AppManager::class.java).dismissAlert(alertId)
     }
 
     fun updateVisibleTravelEstimate(

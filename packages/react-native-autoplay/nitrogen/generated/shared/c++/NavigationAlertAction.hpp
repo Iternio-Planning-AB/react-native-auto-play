@@ -46,10 +46,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::string title     SWIFT_PRIVATE;
     std::optional<AlertActionStyle> style     SWIFT_PRIVATE;
     std::function<void()> onPress     SWIFT_PRIVATE;
+    std::optional<bool> isDefault     SWIFT_PRIVATE;
 
   public:
     NavigationAlertAction() = default;
-    explicit NavigationAlertAction(std::string title, std::optional<AlertActionStyle> style, std::function<void()> onPress): title(title), style(style), onPress(onPress) {}
+    explicit NavigationAlertAction(std::string title, std::optional<AlertActionStyle> style, std::function<void()> onPress, std::optional<bool> isDefault): title(title), style(style), onPress(onPress), isDefault(isDefault) {}
 
   public:
     // NavigationAlertAction is not equatable because these properties are not equatable: onPress
@@ -67,7 +68,8 @@ namespace margelo::nitro {
       return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AlertActionStyle>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "style"))),
-        JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))
+        JSIConverter<std::function<void()>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress"))),
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isDefault")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAlertAction& arg) {
@@ -75,6 +77,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::string>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "style"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AlertActionStyle>>::toJSI(runtime, arg.style));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "onPress"), JSIConverter<std::function<void()>>::toJSI(runtime, arg.onPress));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "isDefault"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.isDefault));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -88,6 +91,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::AlertActionStyle>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "style")))) return false;
       if (!JSIConverter<std::function<void()>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "onPress")))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isDefault")))) return false;
       return true;
     }
   };

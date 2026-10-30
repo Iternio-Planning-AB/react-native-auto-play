@@ -43,6 +43,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JAlertActionStyle> style = this->getFieldValue(fieldStyle);
       static const auto fieldOnPress = clazz->getField<JFunc_void::javaobject>("onPress");
       jni::local_ref<JFunc_void::javaobject> onPress = this->getFieldValue(fieldOnPress);
+      static const auto fieldIsDefault = clazz->getField<jni::JBoolean>("isDefault");
+      jni::local_ref<jni::JBoolean> isDefault = this->getFieldValue(fieldIsDefault);
       return NavigationAlertAction(
         title->toStdString(),
         style != nullptr ? std::make_optional(style->toCpp()) : std::nullopt,
@@ -54,7 +56,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             auto onPressRef = jni::make_global(onPress);
             return JNICallable<JFunc_void, void()>(std::move(onPressRef));
           }
-        }()
+        }(),
+        isDefault != nullptr ? std::make_optional(static_cast<bool>(isDefault->value())) : std::nullopt
       );
     }
 
@@ -64,14 +67,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNavigationAlertAction::javaobject> fromCpp(const NavigationAlertAction& value) {
-      using JSignature = JNavigationAlertAction(jni::alias_ref<jni::JString>, jni::alias_ref<JAlertActionStyle>, jni::alias_ref<JFunc_void::javaobject>);
+      using JSignature = JNavigationAlertAction(jni::alias_ref<jni::JString>, jni::alias_ref<JAlertActionStyle>, jni::alias_ref<JFunc_void::javaobject>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.title),
         value.style.has_value() ? JAlertActionStyle::fromCpp(value.style.value()) : nullptr,
-        JFunc_void_cxx::fromCpp(value.onPress)
+        JFunc_void_cxx::fromCpp(value.onPress),
+        value.isDefault.has_value() ? jni::JBoolean::valueOf(value.isDefault.value()) : nullptr
       );
     }
   };

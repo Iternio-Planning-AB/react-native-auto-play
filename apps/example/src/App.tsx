@@ -1,4 +1,5 @@
 import {
+  type AlertPriority,
   AutoPlayModules,
   type CleanupCallback,
   HybridAutoPlay,
@@ -10,15 +11,20 @@ import { Button, Platform, StatusBar, StyleSheet, Text, useColorScheme, View } f
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AutoTrip } from './config/AutoTrip';
 import { playPCM } from './PCMPlayer';
+import { actionDismissAlert, actionShowAlert, clearAlertLog } from './state/alertSlice';
 import { setRecording } from './state/audioSlice';
-import {
-  actionShowAlert,
-  actionStartNavigation,
-  actionStopNavigation,
-} from './state/navigationSlice';
+import { actionStartNavigation, actionStopNavigation } from './state/navigationSlice';
 import { useAppSelector, useAppStore } from './state/store';
+import type { AlertDefaultAction } from './state/types';
 import TelemetryView from './TelemetryView';
 import saveVoiceRecording from './utils/saveVoiceRecording';
+
+const nextDefaultAction: Record<AlertDefaultAction, AlertDefaultAction> = {
+  unset: 'none',
+  none: 'primary',
+  primary: 'secondary',
+  secondary: 'unset',
+};
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -48,6 +54,20 @@ function AppContent() {
   const [sessionId, setSessionId] = useState(HybridAutoPlay.getCurrentSessionId());
   const [isRootVisible, setIsRootVisible] = useState(false);
   const [savedVoiceRecording, setSavedVoiceRecording] = useState('');
+  const [sameAlertId, setSameAlertId] = useState(false);
+  const [alertDefaultAction, setAlertDefaultAction] = useState<AlertDefaultAction>('unset');
+  const [alertHasTimer, setAlertHasTimer] = useState(true);
+  const alertLog = useAppSelector((state) => state.alert.log);
+
+  const showAlert = (priority: AlertPriority) =>
+    dispatch(
+      actionShowAlert({
+        priority,
+        sameId: sameAlertId,
+        defaultAction: alertDefaultAction,
+        noTimer: !alertHasTimer,
+      })
+    );
 
   useEffect(() => {
     const listeners: Array<CleanupCallback> = [];
@@ -99,25 +119,34 @@ function AppContent() {
       <View style={{ marginTop: 16 }}>
         <Text>Navigation alerts</Text>
         <View style={styles.buttonRow}>
+          <Button title="low prio" onPress={() => showAlert('low')} />
+          <Button title="medium prio" onPress={() => showAlert('medium')} />
+          <Button title="high prio" onPress={() => showAlert('high')} />
+          <Button title="dismiss" onPress={() => dispatch(actionDismissAlert())} />
+        </View>
+        <View style={styles.buttonRow}>
           <Button
-            title="low prio"
-            onPress={() => {
-              dispatch(actionShowAlert('low'));
-            }}
+            title={`id: ${sameAlertId ? 'shared' : 'per prio'}`}
+            onPress={() => setSameAlertId((p) => !p)}
           />
           <Button
-            title="medium prio"
-            onPress={() => {
-              dispatch(actionShowAlert('medium'));
-            }}
+            title={`default: ${alertDefaultAction}`}
+            onPress={() => setAlertDefaultAction((p) => nextDefaultAction[p])}
           />
           <Button
-            title="high prio"
-            onPress={() => {
-              dispatch(actionShowAlert('high'));
-            }}
+            title={`timer: ${alertHasTimer ? 'on' : 'off'}`}
+            onPress={() => setAlertHasTimer((p) => !p)}
           />
         </View>
+        {alertLog.map((entry, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: the log only grows at its end
+          <Text key={index} style={styles.alertLog}>
+            {entry}
+          </Text>
+        ))}
+        {alertLog.length > 0 ? (
+          <Button title="clear alert log" onPress={() => dispatch(clearAlertLog())} />
+        ) : null}
         <Text>Saved recording: {savedVoiceRecording}</Text>
         <View style={styles.buttonRow}>
           <Button
@@ -169,6 +198,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     margin: 8,
+  },
+  alertLog: {
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontSize: 11,
   },
   buttonRow: {
     flexDirection: 'row',
