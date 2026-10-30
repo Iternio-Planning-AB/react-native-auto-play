@@ -967,6 +967,10 @@ Map-specific callbacks live on `MapTemplateConfig`:
 - `onAutoDriveEnabled(template)` (Android)
 - `onStopNavigation(template)` (**required**)
 
+#### MapTemplate alerts
+
+`showAlert` takes a `primaryAction` and an optional `secondaryAction`. A timeout calls `onDidDismiss('timeout')` and presses nothing. On Android you can set `isDefault: true` on one action: Android Auto then presses that action when the alert times out, so its `onPress` runs without the user touching anything. iOS has no default action and ignores `isDefault`.
+
 #### AutoPlayCluster listeners (instrument cluster)
 
 | API | Payload | Notes |
