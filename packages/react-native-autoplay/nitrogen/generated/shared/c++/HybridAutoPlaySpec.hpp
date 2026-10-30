@@ -26,10 +26,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction
 
 #include <functional>
 #include "EventName.hpp"
+#include <optional>
 #include <string>
 #include "VisibilityState.hpp"
 #include "Location.hpp"
-#include <optional>
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
@@ -66,7 +66,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
     public:
       // Methods
-      virtual std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) = 0;
+      virtual std::function<void()> addListener(EventName eventType, const std::function<void(double /* sessionId */)>& callback) = 0;
+      virtual std::optional<double> getCurrentSessionId() = 0;
       virtual std::function<void()> addListenerRenderState(const std::string& moduleName, const std::function<void(VisibilityState /* payload */)>& callback) = 0;
       virtual std::function<void()> addListenerVoiceInput(const std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>& callback) = 0;
       virtual std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) = 0;

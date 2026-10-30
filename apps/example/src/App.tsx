@@ -45,15 +45,15 @@ function AppContent() {
   const isNavigating = useAppSelector((state) => state.navigation.isNavigating);
   const selectedTrip = useAppSelector((state) => state.navigation.selectedTrip);
 
-  const [isConnected, setIsConnected] = useState(HybridAutoPlay.isConnected());
+  const [sessionId, setSessionId] = useState(HybridAutoPlay.getCurrentSessionId());
   const [isRootVisible, setIsRootVisible] = useState(false);
   const [savedVoiceRecording, setSavedVoiceRecording] = useState('');
 
   useEffect(() => {
     const listeners: Array<CleanupCallback> = [];
 
-    listeners.push(HybridAutoPlay.addListener('didConnect', () => setIsConnected(true)));
-    listeners.push(HybridAutoPlay.addListener('didDisconnect', () => setIsConnected(false)));
+    listeners.push(HybridAutoPlay.addListener('didConnect', (id) => setSessionId(id)));
+    listeners.push(HybridAutoPlay.addListener('didDisconnect', () => setSessionId(undefined)));
     listeners.push(
       HybridAutoPlay.addListenerRenderState('AutoPlayRoot', (state) =>
         setIsRootVisible(state === 'didAppear')
@@ -69,7 +69,9 @@ function AppContent() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>AutoPlay connected: {String(isConnected)}</Text>
+      <Text>
+        AutoPlay connected: {sessionId === undefined ? 'false' : `true (session ${sessionId})`}
+      </Text>
       <Text>Head unit root visible: {String(isRootVisible)}</Text>
       <Text>isNavigating: {String(isNavigating)}</Text>
       <Text>selectedTrip: {JSON.stringify(selectedTrip)}</Text>

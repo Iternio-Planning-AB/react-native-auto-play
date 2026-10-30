@@ -4,7 +4,7 @@ import NitroModules
 
 struct StateListener {
     let id: UUID
-    let callback: () -> Void
+    let callback: (Double) -> Void
 }
 
 struct RenderStateListener {
@@ -41,17 +41,18 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         super.init()
     }
 
-    func addListener(eventType: EventName, callback: @escaping () -> Void)
-        throws -> () -> Void
-    {
+    func addListener(
+        eventType: EventName,
+        callback: @escaping (_ sessionId: Double) -> Void
+    ) throws -> () -> Void {
         let listener = StateListener(id: UUID(), callback: callback)
 
         HybridAutoPlay.withListenersLock {
             HybridAutoPlay.listeners[eventType, default: []].append(listener)
         }
 
-        if eventType == .didconnect && SceneStore.isRootModuleConnected() {
-            callback()
+        if eventType == .didconnect, let sessionId = SceneStore.getRootSessionId() {
+            callback(Double(sessionId))
         }
 
         return {
@@ -100,6 +101,10 @@ class HybridAutoPlay: HybridAutoPlaySpec {
 
     func isConnected() throws -> Bool {
         return SceneStore.isRootModuleConnected()
+    }
+
+    func getCurrentSessionId() throws -> Double? {
+        return SceneStore.getRootSessionId().map { Double($0) }
     }
 
     func isCarServiceRunning() throws -> Bool {
@@ -335,14 +340,14 @@ class HybridAutoPlay: HybridAutoPlaySpec {
     }
 
     // MARK: events
-    static func emit(event: EventName) {
+    static func emit(event: EventName, sessionId: Int) {
         // Snapshot under the lock, then call out without holding it so a
         // callback that adds or removes a listener cannot deadlock.
         let listeners = HybridAutoPlay.withListenersLock {
             HybridAutoPlay.listeners[event] ?? []
         }
         listeners.forEach { listener in
-            listener.callback()
+            listener.callback(Double(sessionId))
         }
     }
 
