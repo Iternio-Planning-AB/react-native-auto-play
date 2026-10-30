@@ -164,8 +164,13 @@ so a cluster must read its own id from props rather than assume a constant.
    keeps timers running while the car surface is active, replacing a permanently-pending
    headless task that used to exist purely to satisfy Android's `JavaTimerManager`.
 2. The app creates templates and calls `template.setRootTemplate()`.
-3. Connection events: `HybridAutoPlay.addListener('didConnect' | 'didDisconnect', cb)`.
-   Query with `isConnected()` and `isCarServiceRunning()` — the latter distinguishes a
-   car-triggered start from e.g. a notification-triggered one.
+3. Connection events: `HybridAutoPlay.addListener('didConnect' | 'didDisconnect', cb)`,
+   where `cb(sessionId)` gets the id of the head unit session that connected or ended (a new
+   one per connect, none for dashboard and cluster). Query with `getCurrentSessionId()`,
+   `isConnected()` and `isCarServiceRunning()` — the latter distinguishes a car-triggered
+   start from e.g. a notification-triggered one. A disconnect frees the session's templates,
+   so a `didConnect` listener re-checks `getCurrentSessionId() === sessionId` after every
+   `await`: an app launched from CarPlay only is suspended mid-`await` on disconnect and
+   resumes in a later session or none (README → *Create the AutoPlay Experience*).
 4. Per-surface visibility: `addListenerRenderState(moduleName, cb)`; safe area:
    `addSafeAreaInsetsListener(moduleName, cb)`.

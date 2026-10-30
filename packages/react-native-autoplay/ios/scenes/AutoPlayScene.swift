@@ -58,7 +58,7 @@ class AutoPlayScene: UIResponder {
         isConnected = false
 
         templateStore.disconnect()
-        SceneStore.removeScene(moduleName: moduleName)
+        SceneStore.removeScene(moduleName: moduleName, scene: self)
     }
 
     func setState(state: VisibilityState) {

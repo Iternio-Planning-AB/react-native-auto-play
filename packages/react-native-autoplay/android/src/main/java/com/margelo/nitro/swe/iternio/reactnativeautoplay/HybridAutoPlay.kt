@@ -20,13 +20,13 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun addListener(
-        eventType: EventName, callback: () -> Unit
+        eventType: EventName, callback: (sessionId: Double) -> Unit
     ): () -> Unit {
         val callbacks = listeners.getOrPut(eventType) { CopyOnWriteArrayList() }
         callbacks.add(callback)
 
-        if (eventType == EventName.DIDCONNECT && AndroidAutoSession.getIsConnected()) {
-            callback()
+        if (eventType == EventName.DIDCONNECT) {
+            AndroidAutoSession.getSessionId()?.let { callback(it.toDouble()) }
         }
 
         return {
@@ -36,6 +36,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
     override fun isConnected(): Boolean {
         return AndroidAutoSession.getIsConnected()
+    }
+
+    override fun getCurrentSessionId(): Double? {
+        return AndroidAutoSession.getSessionId()?.toDouble()
     }
 
     override fun isCarServiceRunning(): Boolean {
@@ -254,7 +258,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     companion object {
         const val TAG = "HybridAutoPlay"
 
-        private val listeners = ConcurrentHashMap<EventName, CopyOnWriteArrayList<() -> Unit>>()
+        private val listeners =
+            ConcurrentHashMap<EventName, CopyOnWriteArrayList<(sessionId: Double) -> Unit>>()
 
         private val renderStateListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
@@ -276,8 +281,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             HybridAndroidWindowInformation.removeListeners(templateId)
         }
 
-        fun emit(event: EventName) {
-            listeners[event]?.forEach { it() }
+        fun emit(event: EventName, sessionId: Int) {
+            listeners[event]?.forEach { it(sessionId.toDouble()) }
         }
 
         fun emitRenderState(moduleName: String, state: VisibilityState) {

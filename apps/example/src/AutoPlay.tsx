@@ -38,6 +38,10 @@ import {
 import saveVoiceRecording from './utils/saveVoiceRecording';
 import { VoiceInputView } from './VoiceInputView';
 
+// delays building the root template on connect, raise it (e.g. to 10_000) to test that a
+// didConnect listener which outlived its session (disconnect while waiting) bails out
+const CONNECT_DELAY_MS = 0;
+
 const timestamp = () => new Date().toISOString().slice(14, 23);
 
 // one id per priority, so each is an alert of its own; a shared id updates the visible alert
@@ -275,7 +279,17 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
 const registerRunnable = () => {
   setIconFont('material_symbols', glyphMap);
 
-  const onConnect = () => {
+  const onConnect = async (sessionId: number) => {
+    if (CONNECT_DELAY_MS > 0) {
+      await new Promise<void>((resolve) => setTimeout(resolve, CONNECT_DELAY_MS));
+    }
+
+    // the session might have ended while waiting, its templates are freed then
+    if (HybridAutoPlay.getCurrentSessionId() !== sessionId) {
+      console.log(`AutoPlay session ${sessionId} ended before setting the root template`);
+      return;
+    }
+
     const rootTemplate = new MapTemplate({
       component: AutoPlayRoot,
       visibleTravelEstimate: 'first',

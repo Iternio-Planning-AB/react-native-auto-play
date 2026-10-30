@@ -15,6 +15,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     // load custom methods/properties
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("addListener", &HybridAutoPlaySpec::addListener);
+      prototype.registerHybridMethod("getCurrentSessionId", &HybridAutoPlaySpec::getCurrentSessionId);
       prototype.registerHybridMethod("addListenerRenderState", &HybridAutoPlaySpec::addListenerRenderState);
       prototype.registerHybridMethod("addListenerVoiceInput", &HybridAutoPlaySpec::addListenerVoiceInput);
       prototype.registerHybridMethod("setRootTemplate", &HybridAutoPlaySpec::setRootTemplate);
