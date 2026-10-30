@@ -155,7 +155,10 @@ class MapTemplate(
         updateConfig { it.copy(hideControls = hideControls) }
     }
 
-    fun showAlert(alertConfig: NitroNavigationAlert) {
+    /**
+     * @return false if the visible alert's priority kept this one from showing
+     */
+    fun showAlert(alertConfig: NitroNavigationAlert): Boolean {
         val title = Parser.parseText(alertConfig.title)
         val durationMillis = alertConfig.durationMs.toLong()
 
@@ -227,10 +230,10 @@ class MapTemplate(
             })
         }.build()
 
-        synchronized(alertLock) {
+        return synchronized(alertLock) {
             if (alertPriority > alertConfig.priority) {
                 // ignore alerts with lower priority than current alert
-                return
+                return false
             }
 
             if (!alertIds.contains(alert.id)) {
@@ -245,6 +248,7 @@ class MapTemplate(
             reportVisibleAlertDismissedByApp = { reportDismissal(AlertDismissalReason.SYSTEM) }
 
             context.getCarService(AppManager::class.java).showAlert(alert)
+            true
         }
     }
 

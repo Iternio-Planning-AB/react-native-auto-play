@@ -33,9 +33,10 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
             alert.onDidDismiss?.let { it(reason) }
         })
         val template = AndroidAutoTemplate.getTemplate<MapTemplate>(templateId)
-        template.showAlert(alertConfig)
-        navigationAlert = alertConfig
-        navigationAlertShownAt = SystemClock.elapsedRealtime()
+        if (template.showAlert(alertConfig)) {
+            navigationAlert = alertConfig
+            navigationAlertShownAt = SystemClock.elapsedRealtime()
+        }
     }
 
     override fun updateNavigationAlert(
