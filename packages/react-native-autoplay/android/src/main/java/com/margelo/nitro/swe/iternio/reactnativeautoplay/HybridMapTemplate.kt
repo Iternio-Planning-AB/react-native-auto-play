@@ -11,6 +11,8 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.TripPreviewTem
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 
 class HybridMapTemplate : HybridMapTemplateSpec() {
+    // cleared on the main thread by the host's dismissal
+    @Volatile
     var navigationAlert: NitroNavigationAlert? = null
     private var navigationAlertShownAt = 0L
 

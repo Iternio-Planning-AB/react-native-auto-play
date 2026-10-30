@@ -50,6 +50,8 @@ class MapTemplate(
     private var alertIds: HashSet<Int> = HashSet()
     private var visibleAlertId: Int? = null
     private var reportVisibleAlertDismissedByApp: (() -> Unit)? = null
+    // alerts are shown and dismissed from the JS thread, the host calls them back on the main thread
+    private val alertLock = Any()
 
     init {
         if (initNavigationManager) {
@@ -154,11 +156,6 @@ class MapTemplate(
     }
 
     fun showAlert(alertConfig: NitroNavigationAlert) {
-        if (alertPriority > alertConfig.priority) {
-            // ignore alerts with lower priority than current alert
-            return
-        }
-
         val title = Parser.parseText(alertConfig.title)
         val durationMillis = alertConfig.durationMs.toLong()
 
@@ -203,7 +200,7 @@ class MapTemplate(
                 }.build())
             }
             setCallback(object : AlertCallback {
-                override fun onCancel(reason: Int) {
+                override fun onCancel(reason: Int) = synchronized(alertLock) {
                     isAutoDismissal = true
                     when (reason) {
                         AlertCallback.REASON_TIMEOUT -> reportDismissal(AlertDismissalReason.TIMEOUT)
@@ -216,7 +213,7 @@ class MapTemplate(
                     }
                 }
 
-                override fun onDismiss() {
+                override fun onDismiss() = synchronized(alertLock) {
                     alertIds.remove(alertConfig.id.toInt())
                     if (alertIds.isEmpty()) {
                         alertPriority = 0
@@ -230,21 +227,28 @@ class MapTemplate(
             })
         }.build()
 
-        if (!alertIds.contains(alert.id)) {
-            // the host reports the dismissal of the alert this one replaces only after this one
-            // shows, so report it first, in the order CarPlay does
-            reportVisibleAlertDismissedByApp?.let { it() }
-            alertConfig.onWillShow?.let { it() }
-            alertIds.add(alert.id)
-        }
-        alertPriority = alertConfig.priority.toInt()
-        visibleAlertId = alert.id
-        reportVisibleAlertDismissedByApp = { reportDismissal(AlertDismissalReason.SYSTEM) }
+        synchronized(alertLock) {
+            if (alertPriority > alertConfig.priority) {
+                // ignore alerts with lower priority than current alert
+                return
+            }
 
-        context.getCarService(AppManager::class.java).showAlert(alert)
+            if (!alertIds.contains(alert.id)) {
+                // the host reports the dismissal of the alert this one replaces only after this one
+                // shows, so report it first, in the order CarPlay does
+                reportVisibleAlertDismissedByApp?.let { it() }
+                alertConfig.onWillShow?.let { it() }
+                alertIds.add(alert.id)
+            }
+            alertPriority = alertConfig.priority.toInt()
+            visibleAlertId = alert.id
+            reportVisibleAlertDismissedByApp = { reportDismissal(AlertDismissalReason.SYSTEM) }
+
+            context.getCarService(AppManager::class.java).showAlert(alert)
+        }
     }
 
-    fun dismissAlert(alertId: Int) {
+    fun dismissAlert(alertId: Int) = synchronized(alertLock) {
         if (alertId == visibleAlertId) {
             // the host reports this as it does an action press, so report it here
             reportVisibleAlertDismissedByApp?.let { it() }
