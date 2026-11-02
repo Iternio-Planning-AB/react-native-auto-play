@@ -645,6 +645,26 @@ export default registerAutoPlay;
 
 Set the root template from a `didConnect` listener rather than once at startup. A listener registered while a car is already connected is called right away, so this covers the app starting before or after the car connects, every reconnect, and a JS reload while connected: the reload discards the rendered car screen, and the re-registered listener sets the root template again.
 
+Templates belong to the session they were shown in, and a disconnect frees them. If your `didConnect` listener awaits anything before building templates, check that its session is still the current one afterwards. On iOS, an app launched from CarPlay only is suspended when CarPlay disconnects, so a pending `await` resumes only when CarPlay reconnects or the app is opened on the phone, by then in a different session or none at all:
+
+```ts
+HybridAutoPlay.addListener('didConnect', async (sessionId) => {
+  const isCurrentSession = () => HybridAutoPlay.getCurrentSessionId() === sessionId;
+
+  // any async work, e.g. loading translations, settings or data from the network
+  await somethingAsync();
+
+  // re-check after every await, before calling any template method
+  if (!isCurrentSession()) {
+    return;
+  }
+
+  new MapTemplate({ ... }).setRootTemplate();
+});
+```
+
+A template from a session that has ended rejects with an error that `ErrorUtil.isTemplateNotFoundError(error)` detects.
+
 ## API Reference
 
 ### Main Object
@@ -898,7 +918,8 @@ This section lists the available listeners and lifecycle callbacks so you can wi
 
 | API | Payload | Notes |
 | --- | --- | --- |
-| `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'` | Connection changes for the head unit. |
+| `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'`, `cb(sessionId)` | Connection changes for the head unit. `sessionId` is the session that connected or disconnected. |
+| `HybridAutoPlay.getCurrentSessionId()` | returns `number \| undefined` | The connected head unit session, `undefined` while disconnected. A new id is assigned on every connect, see [Create the AutoPlay Experience](#2-create-the-autoplay-experience). |
 | `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
 | `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only. Fires when the OS triggers a voice input event (e.g. "Hey Google, navigate to…"). For in-app recording use `startVoiceInput` instead. |
 | `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |
@@ -1478,8 +1499,8 @@ The same no-op surface is what `react-native-web` builds get automatically via `
     // Hide the splash screen for the CarPlay screen
     hideAsync(AutoPlayModules.AutoPlayRoot);
     ```
--   **CarPlay map panels (iOS 27 beta)**: a panel's optional icon-only secondary button (`mapConfig.ios.secondaryAction`, or the second `actions.ios` entry) does not respond to taps. See **Map + Content** above for details. This is a beta platform limitation, not a bug in this library — re-test against newer iOS 27 betas.
--   **Waypoint/options-panel images and toggle-row sizing (iOS 27 beta)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Beta platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
+-   **Navigation alert countdown on update (iOS 27)**: after `mapTemplate.updateAlert(...)`, the countdown on the alert's action jumps to the end instead of carrying on. The alert keeps its full duration on the CarPlay side, but the host redraws the countdown wrong. It works as expected on iOS <= 26. This is a CarPlay host bug, not a bug in this library; the app can't work around it, since passing the remaining time or keeping the duration unchanged both show the same jump.
+-   **Waypoint/options-panel images and toggle-row sizing (iOS 27)**: custom images on a `waypoint` row/`ChargerLocation` have no reliable size, and `CPListItem.accessoryImage` (`toggle` rows) renders at an undersized fixed footprint regardless of the image supplied. See **Waypoint Rows** above for details. Platform limitations, not bugs in this library — an Apple Feedback report has been filed for the `accessoryImage` issue.
 ### Android
 -   **Broken exceptions with `react-native`** up to version 0.79
 When using react-native before 0.80.0 exceptions are broken and are reported as `Unknown runtime_error` or similar.

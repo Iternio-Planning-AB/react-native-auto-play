@@ -310,6 +310,43 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Func_void_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::function<void(double /* sessionId */)>
+  /**
+   * Specialized version of `std::function<void(double)>`.
+   */
+  using Func_void_double = std::function<void(double /* sessionId */)>;
+  /**
+   * Wrapper class for a `std::function<void(double / * sessionId * /)>`, this can be used from Swift.
+   */
+  class Func_void_double_Wrapper final {
+  public:
+    explicit Func_void_double_Wrapper(std::function<void(double /* sessionId */)>&& func): _function(std::make_unique<std::function<void(double /* sessionId */)>>(std::move(func))) {}
+    inline void call(double sessionId) const noexcept {
+      _function->operator()(sessionId);
+    }
+  private:
+    std::unique_ptr<std::function<void(double /* sessionId */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_double create_Func_void_double(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_double_Wrapper wrap_Func_void_double(Func_void_double value) noexcept {
+    return Func_void_double_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<double>
+  /**
+   * Specialized version of `std::optional<double>`.
+   */
+  using std__optional_double_ = std::optional<double>;
+  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
+    return std::optional<double>(value);
+  }
+  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::function<void(VisibilityState /* payload */)>
   /**
    * Specialized version of `std::function<void(VisibilityState)>`.
@@ -455,21 +492,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Func_void_SafeAreaInsets_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<double>
-  /**
-   * Specialized version of `std::optional<double>`.
-   */
-  using std__optional_double_ = std::optional<double>;
-  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
-    return std::optional<double>(value);
-  }
-  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
-    return optional.value();
-  }
-  
   // pragma MARK: std::optional<NitroColor>
   /**
    * Specialized version of `std::optional<NitroColor>`.
@@ -610,6 +632,15 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   }
   inline Result_std__function_void____ create_Result_std__function_void____(const std::exception_ptr& error) noexcept {
     return Result<std::function<void()>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::optional<double>>
+  using Result_std__optional_double__ = Result<std::optional<double>>;
+  inline Result_std__optional_double__ create_Result_std__optional_double__(std::optional<double> value) noexcept {
+    return Result<std::optional<double>>::withValue(std::move(value));
+  }
+  inline Result_std__optional_double__ create_Result_std__optional_double__(const std::exception_ptr& error) noexcept {
+    return Result<std::optional<double>>::withError(error);
   }
   
   // pragma MARK: Result<std::shared_ptr<Promise<void>>>

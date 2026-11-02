@@ -30,14 +30,18 @@ abstract class HybridAutoPlaySpec: HybridObject() {
   
 
   // Methods
-  abstract fun addListener(eventType: EventName, callback: () -> Unit): () -> Unit
+  abstract fun addListener(eventType: EventName, callback: (sessionId: Double) -> Unit): () -> Unit
   
   @DoNotStrip
   @Keep
-  private fun addListener_cxx(eventType: EventName, callback: Func_void): Func_void {
+  private fun addListener_cxx(eventType: EventName, callback: Func_void_double): Func_void {
     val __result = addListener(eventType, callback)
     return Func_void_java(__result)
   }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getCurrentSessionId(): Double?
   
   abstract fun addListenerRenderState(moduleName: String, callback: (payload: VisibilityState) -> Unit): () -> Unit
   

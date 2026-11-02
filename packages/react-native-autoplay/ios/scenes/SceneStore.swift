@@ -21,18 +21,55 @@ class SceneStore {
 
     private static var store: [String: AutoPlayScene] = [:]
 
+    private static var lastRootSessionId = 0
+    private static var rootSessionId: Int?
+
     private static func withLock<T>(_ body: () -> T) -> T {
         lock.lock()
         defer { lock.unlock() }
         return body()
     }
 
+    /// Assigns a new id on every head unit connect, so JS can tell a listener that was suspended
+    /// across a disconnect (the app is suspended when CarPlay disconnects and nothing else is
+    /// in the foreground) from one called for the current session.
+    static func startRootSession() -> Int {
+        return withLock {
+            lastRootSessionId += 1
+            rootSessionId = lastRootSessionId
+            return lastRootSessionId
+        }
+    }
+
+    /// Only clears the id when it still belongs to the ending session, a late disconnect of an
+    /// older scene must not end the session of a newer one.
+    /// - Returns: true if the session was the current one and got cleared
+    static func endRootSession(sessionId: Int) -> Bool {
+        return withLock {
+            if rootSessionId != sessionId {
+                return false
+            }
+            rootSessionId = nil
+            return true
+        }
+    }
+
+    static func getRootSessionId() -> Int? {
+        return withLock { rootSessionId }
+    }
+
     static func addScene(moduleName: String, scene: AutoPlayScene) {
         withLock { store[moduleName] = scene }
     }
 
-    static func removeScene(moduleName: String) {
-        let _ = withLock { store.removeValue(forKey: moduleName) }
+    /// Scenes are keyed by module name only, a late disconnect of an older scene must not remove
+    /// a newer scene that registered under the same name in the meantime.
+    static func removeScene(moduleName: String, scene: AutoPlayScene) {
+        withLock {
+            if store[moduleName] === scene {
+                store.removeValue(forKey: moduleName)
+            }
+        }
     }
 
     static func getScene(moduleName: String) -> AutoPlayScene? {

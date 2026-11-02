@@ -125,12 +125,12 @@ open class HybridAutoPlaySpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func addListener(eventType: Int32, callback: bridge.Func_void) -> bridge.Result_std__function_void____ {
+  public final func addListener(eventType: Int32, callback: bridge.Func_void_double) -> bridge.Result_std__function_void____ {
     do {
-      let __result = try self.__implementation.addListener(eventType: margelo.nitro.swe.iternio.reactnativeautoplay.EventName(rawValue: eventType)!, callback: { () -> () -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void(callback)
-        return { () -> Void in
-          __wrappedFunction.call()
+      let __result = try self.__implementation.addListener(eventType: margelo.nitro.swe.iternio.reactnativeautoplay.EventName(rawValue: eventType)!, callback: { () -> (Double) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_double(callback)
+        return { (__sessionId: Double) -> Void in
+          __wrappedFunction.call(__sessionId)
         }
       }())
       let __resultCpp = { () -> bridge.Func_void in
@@ -141,6 +141,24 @@ open class HybridAutoPlaySpec_cxx {
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
       return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getCurrentSessionId() -> bridge.Result_std__optional_double__ {
+    do {
+      let __result = try self.__implementation.getCurrentSessionId()
+      let __resultCpp = { () -> bridge.std__optional_double_ in
+        if let __unwrappedValue = __result {
+          return bridge.create_std__optional_double_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+      return bridge.create_Result_std__optional_double__(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__optional_double__(__exceptionPtr)
     }
   }
   

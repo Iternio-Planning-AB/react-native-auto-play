@@ -33,6 +33,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(double /* sessionId */)>
+  Func_void_double create_Func_void_double(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_double::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](double sessionId) mutable -> void {
+      swiftClosure.call(sessionId);
+    };
+  }
+  
   // pragma MARK: std::function<void(VisibilityState /* payload */)>
   Func_void_VisibilityState create_Func_void_VisibilityState(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = ReactNativeAutoPlay::Func_void_VisibilityState::fromUnsafe(swiftClosureWrapper);

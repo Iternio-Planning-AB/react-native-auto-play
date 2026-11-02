@@ -39,10 +39,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 
 #include <functional>
 #include "EventName.hpp"
+#include <optional>
 #include <string>
 #include "VisibilityState.hpp"
 #include "Location.hpp"
-#include <optional>
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
@@ -106,8 +106,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     // Methods
-    inline std::function<void()> addListener(EventName eventType, const std::function<void()>& callback) override {
+    inline std::function<void()> addListener(EventName eventType, const std::function<void(double /* sessionId */)>& callback) override {
       auto __result = _swiftPart.addListener(static_cast<int>(eventType), callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::optional<double> getCurrentSessionId() override {
+      auto __result = _swiftPart.getCurrentSessionId();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
