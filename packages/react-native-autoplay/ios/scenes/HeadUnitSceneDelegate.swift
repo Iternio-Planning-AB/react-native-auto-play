@@ -18,6 +18,8 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         didConnect interfaceController: CPInterfaceController,
         to window: CPWindow
     ) {
+        TemplateUpdateQueue.reset()
+
         self.window = window
         self.interfaceController = AutoPlayInterfaceController(
             interfaceController: interfaceController
