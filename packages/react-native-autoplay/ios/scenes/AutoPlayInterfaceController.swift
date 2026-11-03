@@ -177,9 +177,10 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     /// already gone. For `.template` entries, `popTopEntry` removes the entry directly for
     /// app-initiated pops, and `templateDidDisappear` calls this for CarPlay-initiated pops
     /// (e.g. its built-in back button) that `popTopEntry` never sees. For `.panel` entries,
-    /// `popTopEntry` doesn't touch `navigationStack` at all — `CPMapPanelDelegate.panelDidHide`
-    /// calling this is the only place a panel entry is removed, covering both app-initiated
-    /// and CarPlay-initiated pops alike.
+    /// `popTopEntry` doesn't touch `navigationStack` directly — `handlePanelPopped` calls this,
+    /// whether run by `CPMapPanelDelegate.panelDidHide` (CarPlay-initiated closes), by
+    /// `popTopEntry` or by `popToRootTemplate`. `popToRootTemplate` additionally resets
+    /// `navigationStack` itself.
     func removeNavigationEntryIfPresent(templateId: String) {
         navigationStack.removeAll { $0.id == templateId }
     }
