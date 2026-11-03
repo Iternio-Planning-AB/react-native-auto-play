@@ -274,10 +274,12 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
         // be left to panelDidHide: that runs in its own Task outside TemplateUpdateQueue, so a
         // push queued right after this pop would race the panel's onPopped, and a panel re-pushed
         // from onPopped would then fail with mapTemplateNotVisible.
-        let visiblePanelEntry = visiblePanelId.flatMap { id in entriesToPop.first { $0.id == id } }
         navigationStack = [navigationStack[0]]
 
         if let visiblePanelId, #available(iOS 27.0, *) {
+            // A failed hide is not surfaced: the map template's panel stack can't be inspected, so
+            // there's no telling what is still on screen, and nothing JS could do about it. The pop
+            // completes as if the hide succeeded, so every popped panel still gets its onPopped.
             do {
                 try await RootModule.withInterfaceController { interfaceController in
                     let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
@@ -285,11 +287,7 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
                 }
             }
             catch {
-                // The panel may still be on screen, so keep it tracked to allow popping it later.
-                if let visiblePanelEntry {
-                    navigationStack.append(visiblePanelEntry)
-                }
-                throw error
+                print("[AutoPlay] hidePanel failed while popping to root: \(error)")
             }
 
             await handlePanelPopped(templateId: visiblePanelId, animated: animated)
