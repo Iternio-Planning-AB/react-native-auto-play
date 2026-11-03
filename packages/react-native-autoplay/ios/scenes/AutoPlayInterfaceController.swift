@@ -259,9 +259,9 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             return nil
         })
 
-        // The visible panel is left for panelDidHide to tear down (via hidePanel() below) so its
-        // lifecycle + button reclaim isn't duplicated here; only the already-covered ones (which
-        // already got their disappear pair) need removing now.
+        // The visible panel gets the full handlePanelPopped teardown (lifecycle + button reclaim)
+        // below; only the already-covered ones (which already got their disappear pair) need
+        // removing now.
         let visiblePanelId = panelTemplates.last
         let idsToRemoveNow = poppedIds.filter { $0 != visiblePanelId }
 
@@ -269,15 +269,29 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             templateStore.removeTemplates(templateIds: idsToRemoveNow)
         }
 
-        // Keep the visible panel tracked so panelDidHide still finds it there.
-        let keptEntry = visiblePanelId.flatMap { id in entriesToPop.first { $0.id == id } }
-        navigationStack = [navigationStack[0]] + (keptEntry.map { [$0] } ?? [])
+        // Untracking the visible panel up front makes panelDidHide skip it. Its teardown must not
+        // be left to panelDidHide: that runs in its own Task outside TemplateUpdateQueue, so a
+        // push queued right after this pop would race the panel's onPopped, and a panel re-pushed
+        // from onPopped would then fail with mapTemplateNotVisible.
+        let visiblePanelEntry = visiblePanelId.flatMap { id in entriesToPop.first { $0.id == id } }
+        navigationStack = [navigationStack[0]]
 
-        if visiblePanelId != nil, #available(iOS 27.0, *) {
-            try await RootModule.withInterfaceController { interfaceController in
-                let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
-                try await mapTemplate?.hidePanel()
+        if let visiblePanelId, #available(iOS 27.0, *) {
+            do {
+                try await RootModule.withInterfaceController { interfaceController in
+                    let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
+                    try await mapTemplate?.hidePanel()
+                }
             }
+            catch {
+                // The panel may still be on screen, so keep it tracked to allow popping it later.
+                if let visiblePanelEntry {
+                    navigationStack.append(visiblePanelEntry)
+                }
+                throw error
+            }
+
+            await handlePanelPopped(templateId: visiblePanelId, animated: animated)
         }
 
         return poppedIds

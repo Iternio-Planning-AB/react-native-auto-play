@@ -85,7 +85,7 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
                 stillTracked = interfaceController.panelTemplateIds.contains(templateId)
             }
 
-            // Already torn down elsewhere, e.g. by popToRootTemplate for a covered panel.
+            // Already torn down elsewhere, e.g. by popToRootTemplate, which handles every panel it pops itself.
             guard stillTracked else { return }
 
             await handlePanelPopped(templateId: templateId, animated: true)
