@@ -23,12 +23,10 @@ class HybridListTemplate: HybridListTemplateSpec {
         templateId: String,
         sections: [NitroSection]?
     ) throws -> Promise<Void> {
-        return Promise.async {
-            try await MainActor.run {
-                try RootModule.withAutoPlayTemplate(templateId: templateId) {
-                    (template: ListTemplate) in
-                    template.updateSections(sections: sections)
-                }
+        return TemplateUpdateQueue.enqueue {
+            try RootModule.withAutoPlayTemplate(templateId: templateId) {
+                (template: ListTemplate) in
+                template.updateSections(sections: sections)
             }
         }
     }
