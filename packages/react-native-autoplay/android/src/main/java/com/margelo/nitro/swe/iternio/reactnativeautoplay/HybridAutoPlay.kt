@@ -1,6 +1,5 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
-import android.os.Build
 import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
@@ -8,7 +7,6 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplat
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-import kotlin.coroutines.resume
 
 class HybridAutoPlay : HybridAutoPlaySpec() {
     init {
