@@ -170,22 +170,29 @@ class MapTemplate(
             }
         }
 
-        // without isDefault on either action the primary stays the default, as before isDefault
-        val isPrimaryDefault = alertConfig.primaryAction.isDefault
-            ?: (alertConfig.secondaryAction?.isDefault == null)
+        // highlight as CarPlay does: a cancel primary is plain and the other action stands out; on
+        // the default action, which has the countdown, Android Auto shows no highlight anyway
+        val isPrimaryCancel = alertConfig.primaryAction.style == AlertActionStyle.CANCEL
 
         val alert = Alert.Builder(alertConfig.id.toInt(), title, durationMillis).apply {
             var isAutoDismissal = false
+            // Android Auto presses the default action right after it reports the timeout, CarPlay
+            // presses nothing
+            var isTimedOut = false
 
             alertConfig.subtitle?.let { subtitle -> setSubtitle(Parser.parseText(subtitle)) }
             alertConfig.image?.let { image -> setIcon(Parser.parseImage(context, image)) }
             addAction(Action.Builder().apply {
                 setTitle(alertConfig.primaryAction.title)
-                setFlags(Action.FLAG_PRIMARY)
-                if (isPrimaryDefault) {
-                    setFlags(Action.FLAG_DEFAULT)
+                if (!isPrimaryCancel) {
+                    setFlags(Action.FLAG_PRIMARY)
                 }
-                setOnClickListener(alertConfig.primaryAction.onPress)
+                setFlags(Action.FLAG_DEFAULT)
+                setOnClickListener {
+                    if (!isTimedOut) {
+                        alertConfig.primaryAction.onPress()
+                    }
+                }
                 alertConfig.primaryAction.style?.let { style ->
                     if (style == AlertActionStyle.DESTRUCTIVE) {
                         setBackgroundColor(CarColor.RED)
@@ -195,10 +202,14 @@ class MapTemplate(
             alertConfig.secondaryAction?.let { action ->
                 addAction(Action.Builder().apply {
                     setTitle(action.title)
-                    if (action.isDefault == true) {
-                        setFlags(Action.FLAG_DEFAULT)
+                    if (isPrimaryCancel && action.style != AlertActionStyle.CANCEL) {
+                        setFlags(Action.FLAG_PRIMARY)
                     }
-                    setOnClickListener(action.onPress)
+                    setOnClickListener {
+                        if (!isTimedOut) {
+                            action.onPress()
+                        }
+                    }
                     action.style?.let { style ->
                         if (style == AlertActionStyle.DESTRUCTIVE) {
                             setBackgroundColor(CarColor.RED)
@@ -210,7 +221,10 @@ class MapTemplate(
                 override fun onCancel(reason: Int) = synchronized(alertLock) {
                     isAutoDismissal = true
                     when (reason) {
-                        AlertCallback.REASON_TIMEOUT -> reportDismissal(AlertDismissalReason.TIMEOUT)
+                        AlertCallback.REASON_TIMEOUT -> {
+                            isTimedOut = true
+                            reportDismissal(AlertDismissalReason.TIMEOUT)
+                        }
 
                         AlertCallback.REASON_USER_ACTION -> reportDismissal(AlertDismissalReason.USER)
 

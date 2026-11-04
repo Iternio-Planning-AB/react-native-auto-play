@@ -15,12 +15,10 @@ export type AudioState = {
   recording: string | null;
 };
 
-export type AlertDefaultAction = 'unset' | 'none' | 'primary' | 'secondary';
-
 export type AlertOptions = {
   priority: AlertPriority;
   sameId: boolean;
-  defaultAction: AlertDefaultAction;
+  cancelPrimary: boolean;
   noTimer: boolean;
 };
 

@@ -27,7 +27,6 @@ import {
   setSelectedTrip,
 } from './state/navigationSlice';
 import { startAppListening } from './state/store';
-import type { AlertDefaultAction } from './state/types';
 import TelemetryView from './TelemetryView';
 import { AutoSignInTemplate } from './templates/AutoSignInTemplate';
 import {
@@ -47,13 +46,6 @@ const timestamp = () => new Date().toISOString().slice(14, 23);
 
 // one id per priority, so each is an alert of its own; a shared id updates the visible alert
 const AlertIds = { low: 1, medium: 2, high: 3 } as const;
-// unset leaves isDefault out, which keeps the primary action the default
-const AlertDefaultFlags: Record<AlertDefaultAction, { primary?: boolean; secondary?: boolean }> = {
-  unset: {},
-  none: { primary: false },
-  primary: { primary: true },
-  secondary: { secondary: true },
-};
 const SHARED_ALERT_ID = 4;
 // Android Auto's Alert.DURATION_SHOW_INDEFINITELY, which shows no countdown
 const ALERT_DURATION_INDEFINITE = 2147483647;
@@ -151,7 +143,7 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
           if (mapTemplate == null) {
             return;
           }
-          const { priority, sameId, defaultAction, noTimer } = action.payload;
+          const { priority, sameId, cancelPrimary, noTimer } = action.payload;
           const id = sameId ? SHARED_ALERT_ID : AlertIds[priority];
           const log = (event: string) => {
             console.log(`*** alert ${id} (${priority}) ${event}`);
@@ -164,16 +156,13 @@ const AutoPlayRoot = (props: RootComponentInitialProps) => {
             id,
             title: { text: `Alert ${id}` },
             subtitle: { text: `Prio: ${priority}` },
-            primaryAction: {
-              title: 'OK',
-              isDefault: AlertDefaultFlags[defaultAction].primary,
-              onPress: () => log('OK pressed'),
-            },
-            secondaryAction: {
-              title: 'Dismiss',
-              isDefault: AlertDefaultFlags[defaultAction].secondary,
-              onPress: () => log('Dismiss pressed'),
-            },
+            // the countdown is on the primary action; a cancel primary highlights the secondary
+            primaryAction: cancelPrimary
+              ? { title: 'Dismiss', style: 'cancel', onPress: () => log('Dismiss pressed') }
+              : { title: 'OK', onPress: () => log('OK pressed') },
+            secondaryAction: cancelPrimary
+              ? { title: 'OK', onPress: () => log('OK pressed') }
+              : { title: 'Dismiss', onPress: () => log('Dismiss pressed') },
             durationMs: noTimer ? ALERT_DURATION_INDEFINITE : 10000,
             priority,
             onDidDismiss: (reason) => {

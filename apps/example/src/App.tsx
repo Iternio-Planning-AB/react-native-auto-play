@@ -15,16 +15,8 @@ import { actionDismissAlert, actionShowAlert, clearAlertLog } from './state/aler
 import { setRecording } from './state/audioSlice';
 import { actionStartNavigation, actionStopNavigation } from './state/navigationSlice';
 import { useAppSelector, useAppStore } from './state/store';
-import type { AlertDefaultAction } from './state/types';
 import TelemetryView from './TelemetryView';
 import saveVoiceRecording from './utils/saveVoiceRecording';
-
-const nextDefaultAction: Record<AlertDefaultAction, AlertDefaultAction> = {
-  unset: 'none',
-  none: 'primary',
-  primary: 'secondary',
-  secondary: 'unset',
-};
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -55,7 +47,7 @@ function AppContent() {
   const [isRootVisible, setIsRootVisible] = useState(false);
   const [savedVoiceRecording, setSavedVoiceRecording] = useState('');
   const [sameAlertId, setSameAlertId] = useState(false);
-  const [alertDefaultAction, setAlertDefaultAction] = useState<AlertDefaultAction>('unset');
+  const [alertCancelPrimary, setAlertCancelPrimary] = useState(false);
   const [alertHasTimer, setAlertHasTimer] = useState(true);
   const alertLog = useAppSelector((state) => state.alert.log);
 
@@ -64,7 +56,7 @@ function AppContent() {
       actionShowAlert({
         priority,
         sameId: sameAlertId,
-        defaultAction: alertDefaultAction,
+        cancelPrimary: alertCancelPrimary,
         noTimer: !alertHasTimer,
       })
     );
@@ -130,8 +122,8 @@ function AppContent() {
             onPress={() => setSameAlertId((p) => !p)}
           />
           <Button
-            title={`default: ${alertDefaultAction}`}
-            onPress={() => setAlertDefaultAction((p) => nextDefaultAction[p])}
+            title={`primary: ${alertCancelPrimary ? 'dismiss' : 'ok'}`}
+            onPress={() => setAlertCancelPrimary((p) => !p)}
           />
           <Button
             title={`timer: ${alertHasTimer ? 'on' : 'off'}`}

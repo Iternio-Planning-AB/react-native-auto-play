@@ -18,7 +18,7 @@ public extension NavigationAlertAction {
   /**
    * Create a new instance of `NavigationAlertAction`.
    */
-  init(title: String, style: AlertActionStyle?, onPress: @escaping () -> Void, isDefault: Bool?) {
+  init(title: String, style: AlertActionStyle?, onPress: @escaping () -> Void) {
     self.init(std.string(title), { () -> bridge.std__optional_AlertActionStyle_ in
       if let __unwrappedValue = style {
         return bridge.create_std__optional_AlertActionStyle_(__unwrappedValue)
@@ -28,12 +28,6 @@ public extension NavigationAlertAction {
     }(), { () -> bridge.Func_void in
       let __closureWrapper = Func_void(onPress)
       return bridge.create_Func_void(__closureWrapper.toUnsafe())
-    }(), { () -> bridge.std__optional_bool_ in
-      if let __unwrappedValue = isDefault {
-        return bridge.create_std__optional_bool_(__unwrappedValue)
-      } else {
-        return .init()
-      }
     }())
   }
 
@@ -53,18 +47,6 @@ public extension NavigationAlertAction {
       let __wrappedFunction = bridge.wrap_Func_void(self.__onPress)
       return { () -> Void in
         __wrappedFunction.call()
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var isDefault: Bool? {
-    return { () -> Bool? in
-      if bridge.has_value_std__optional_bool_(self.__isDefault) {
-        let __unwrapped = bridge.get_std__optional_bool_(self.__isDefault)
-        return __unwrapped
-      } else {
-        return nil
       }
     }()
   }
