@@ -177,9 +177,10 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
     /// already gone. For `.template` entries, `popTopEntry` removes the entry directly for
     /// app-initiated pops, and `templateDidDisappear` calls this for CarPlay-initiated pops
     /// (e.g. its built-in back button) that `popTopEntry` never sees. For `.panel` entries,
-    /// `popTopEntry` doesn't touch `navigationStack` at all — `CPMapPanelDelegate.panelDidHide`
-    /// calling this is the only place a panel entry is removed, covering both app-initiated
-    /// and CarPlay-initiated pops alike.
+    /// `popTopEntry` doesn't touch `navigationStack` directly — `handlePanelPopped` calls this,
+    /// whether run by `CPMapPanelDelegate.panelDidHide` (CarPlay-initiated closes), by
+    /// `popTopEntry` or by `popToRootTemplate`. `popToRootTemplate` additionally resets
+    /// `navigationStack` itself.
     func removeNavigationEntryIfPresent(templateId: String) {
         navigationStack.removeAll { $0.id == templateId }
     }
@@ -259,9 +260,9 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             return nil
         })
 
-        // The visible panel is left for panelDidHide to tear down (via hidePanel() below) so its
-        // lifecycle + button reclaim isn't duplicated here; only the already-covered ones (which
-        // already got their disappear pair) need removing now.
+        // The visible panel gets the full handlePanelPopped teardown (lifecycle + button reclaim)
+        // below; only the already-covered ones (which already got their disappear pair) need
+        // removing now.
         let visiblePanelId = panelTemplates.last
         let idsToRemoveNow = poppedIds.filter { $0 != visiblePanelId }
 
@@ -269,15 +270,27 @@ class AutoPlayInterfaceController: NSObject, CPInterfaceControllerDelegate {
             templateStore.removeTemplates(templateIds: idsToRemoveNow)
         }
 
-        // Keep the visible panel tracked so panelDidHide still finds it there.
-        let keptEntry = visiblePanelId.flatMap { id in entriesToPop.first { $0.id == id } }
-        navigationStack = [navigationStack[0]] + (keptEntry.map { [$0] } ?? [])
+        // Untracking the visible panel up front makes panelDidHide skip it. Its teardown must not
+        // be left to panelDidHide: that runs in its own Task outside TemplateUpdateQueue, so a
+        // push queued right after this pop would race the panel's onPopped, and a panel re-pushed
+        // from onPopped would then fail with mapTemplateNotVisible.
+        navigationStack = [navigationStack[0]]
 
-        if visiblePanelId != nil, #available(iOS 27.0, *) {
-            try await RootModule.withInterfaceController { interfaceController in
-                let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
-                try await mapTemplate?.hidePanel()
+        if let visiblePanelId, #available(iOS 27.0, *) {
+            // A failed hide is not surfaced: the map template's panel stack can't be inspected, so
+            // there's no telling what is still on screen, and nothing JS could do about it. The pop
+            // completes as if the hide succeeded, so every popped panel still gets its onPopped.
+            do {
+                try await RootModule.withInterfaceController { interfaceController in
+                    let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
+                    try await mapTemplate?.hidePanel()
+                }
             }
+            catch {
+                print("[AutoPlay] hidePanel failed while popping to root: \(error)")
+            }
+
+            await handlePanelPopped(templateId: visiblePanelId, animated: animated)
         }
 
         return poppedIds
