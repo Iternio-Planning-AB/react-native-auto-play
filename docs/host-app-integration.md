@@ -124,19 +124,26 @@ produce no error message at all.
     so the host app must raise `ReactNativeAutoPlay_minSdkVersion` itself (the library's
     default in `android/gradle.properties` is lower). The host app must also remove its
     launcher activity in that variant, or the Automotive launcher shows two icons.
+- **Every config change, rebuild and stack operation goes through `TemplateUpdateQueue`**
+  (`utils/`), a single background thread that keeps them in JS call order: `enqueue` for
+  `Promise` methods, `post` for sync methods (after a synchronous template lookup, matching
+  iOS) and from the main thread, `runAndWait` only off the JS thread — it waits for
+  everything queued before it. **Never mutate a template config from `Promise.async` or the
+  main thread directly** — a setter copies the config and rebuilds from the registry, so two
+  running at once silently drop one change (e.g. `setHeaderActions` and `setMapButtons`
+  fired from the same React commit). Inside the template use `updateConfig { it.copy(…) }`,
+  which applies the change to the currently registered instance. Queued jobs must never
+  wait on the JS or main thread.
 - **Stack operations** (`setRootTemplate`, `pushTemplate`, `popTemplate`,
-  `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`) go through
-  `ThreadUtil.postOnUiAndAwait`, because `androidx.car.app` is main-thread-only; failures
-  come back as rejected promises by design. Per-template mutations are different — every
-  config change and rebuild goes through `TemplateUpdateQueue` (`utils/`), a single
-  background thread: `enqueue` for `Promise` methods, `post` for sync methods (after a
-  synchronous template lookup, matching iOS) and from the main thread, `runAndWait` only off
-  the JS thread — it waits for everything queued before it. **Never mutate a template config from
-  `Promise.async` or the main thread directly** — a setter copies the config and rebuilds
-  from the registry, so two running at once silently drop one change (e.g.
-  `setHeaderActions` and `setMapButtons` fired from the same React commit). Inside the
-  template use `updateConfig { it.copy(…) }`, which applies the change to the currently
-  registered instance. Queued jobs must never wait on the JS or main thread.
+  `popToRootTemplate`, `popToTemplate` on `HybridAutoPlay`, plus `showTripSelector`,
+  `hideTripSelector` and the trip selector callback) are main-thread-only, so they use
+  `enqueueOnUi` / `postOnUi`: the queue posts them to the main thread without waiting, and
+  both being FIFO keeps JS call order. **Never post a stack operation to the main thread
+  directly** — it overtakes a pop still in the queue, e.g. a message template popped in an
+  effect cleanup followed by `showTripSelector` re-pushed the message above the trip
+  selector, and Android Auto, throttling the burst ("too many refreshes"), stayed on the
+  message. Look the template up inside the job: every config update registers a new
+  instance. Failures come back as rejected promises by design.
 - OS-triggered voice navigation arrives as a hand-parsed `geo:` intent in
   `AndroidAutoSession.onNewIntent`; coordinates `0,0` are a sentinel meaning "no
   coordinates, geocode the query".

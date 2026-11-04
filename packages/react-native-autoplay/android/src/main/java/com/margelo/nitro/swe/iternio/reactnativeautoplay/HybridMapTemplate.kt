@@ -1,7 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import androidx.car.app.AppManager
-import com.facebook.react.bridge.UiThreadUtil
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
@@ -82,7 +81,8 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
             mapButtons
         )
 
-        UiThreadUtil.runOnUiThread {
+        // queued so a pop issued before, e.g. of a message template, lands first
+        TemplateUpdateQueue.postOnUi {
             val topMessageTemplate = AndroidAutoTemplate.getTopMessageTemplate()
 
             screenManager.push(screen)
@@ -94,27 +94,26 @@ class HybridMapTemplate : HybridMapTemplateSpec() {
         }
 
         return TripSelectorCallback { id: String ->
-            UiThreadUtil.runOnUiThread {
+            TemplateUpdateQueue.postOnUi {
                 if (screenManager.top.marker == RoutePreviewTemplate.TAG) {
                     screenManager.popTo(TripPreviewTemplate.TAG)
                 }
-            }
 
-            val selectedTripIndex = trips.indexOfFirst { trip -> trip.id == id }
-            screen.selectedTripIndex = selectedTripIndex
-            screen.invalidate()
+                val selectedTripIndex = trips.indexOfFirst { trip -> trip.id == id }
+                screen.selectedTripIndex = selectedTripIndex
+                screen.invalidate()
+            }
         }
     }
 
     override fun hideTripSelector(templateId: String) {
         val screenManager = AndroidAutoScreen.getScreenManager()
             ?: throw IllegalArgumentException("hideTripSelector failed, screenManager not found")
-        val screens = screenManager.screenStack.filter {
-            it.marker == TripPreviewTemplate.TAG || it.marker == RoutePreviewTemplate.TAG
-        }
 
-        UiThreadUtil.runOnUiThread {
-            screens.forEach {
+        TemplateUpdateQueue.postOnUi {
+            screenManager.screenStack.filter {
+                it.marker == TripPreviewTemplate.TAG || it.marker == RoutePreviewTemplate.TAG
+            }.forEach {
                 it.finish()
             }
         }
