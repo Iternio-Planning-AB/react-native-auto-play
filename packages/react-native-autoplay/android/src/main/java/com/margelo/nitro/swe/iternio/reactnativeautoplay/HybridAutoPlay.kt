@@ -6,7 +6,6 @@ import com.margelo.nitro.core.Promise
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MessageTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.ThreadUtil
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.resume
@@ -107,26 +106,27 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     }
 
     override fun setRootTemplate(templateId: String): Promise<Unit> {
-        return Promise.async {
+        // the template is looked up when the job runs, every config update registers a new instance
+        return TemplateUpdateQueue.enqueueOnUi(prepare = {
             val template = AndroidAutoTemplate.getTemplate(templateId)
                 ?: throw TemplateNotFoundException(templateId)
 
             if (template.isRenderTemplate) {
                 val screen = AndroidAutoScreen.getScreen(templateId)
                     ?: throw IllegalArgumentException("setRootTemplate failed, $templateId screen not found")
+
+                screen.applyConfigUpdate(invalidate = true)
+            }
+        }) {
+            val template = AndroidAutoTemplate.getTemplate(templateId)
+                ?: throw TemplateNotFoundException(templateId)
+
+            if (template.isRenderTemplate) {
                 val carContext = AndroidAutoSession.getCarContext(templateId)
                     ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
-                TemplateUpdateQueue.runAndWait { screen.applyConfigUpdate(invalidate = true) }
-
                 if (!VirtualRenderer.hasRenderer(templateId, carContext)) {
-                    val result = ThreadUtil.postOnUiAndAwait {
-                        VirtualRenderer(carContext, templateId)
-                    }
-                    if (result.isFailure) {
-                        throw result.exceptionOrNull()
-                            ?: UnknownError("unknown error initializing the virtual screen")
-                    }
+                    VirtualRenderer(carContext, templateId)
                 }
             } else {
                 val screenManager = AndroidAutoScreen.getScreenManager()
@@ -134,26 +134,19 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                 val carContext = AndroidAutoSession.getCarContext(AndroidAutoSession.ROOT_SESSION)
                     ?: throw IllegalArgumentException("setRootTemplate failed, carContext for $templateId template not found")
 
-                val result = ThreadUtil.postOnUiAndAwait {
-                    screenManager.popToRoot()
-                    val previousRootScreen = screenManager.top
+                screenManager.popToRoot()
+                val previousRootScreen = screenManager.top
 
-                    val screen = AndroidAutoScreen(carContext, templateId, template.parse())
-                    screenManager.push(screen)
+                val screen = AndroidAutoScreen(carContext, templateId, template.parse())
+                screenManager.push(screen)
 
-                    screenManager.remove(previousRootScreen)
-                }
-
-                if (result.isFailure) {
-                    throw result.exceptionOrNull()
-                        ?: UnknownError("unknown error setting root template")
-                }
+                screenManager.remove(previousRootScreen)
             }
         }
     }
 
     override fun pushTemplate(templateId: String): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueueOnUi {
             val context = AndroidAutoSession.getRootContext()
                 ?: throw IllegalArgumentException("pushTemplate failed, carContext not found")
             val template = AndroidAutoTemplate.getTemplate(templateId)
@@ -161,89 +154,66 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("pushTemplate failed, screenManager not found")
 
-            val result = ThreadUtil.postOnUiAndAwait {
-                val topMessageScreen = AndroidAutoTemplate.getTopMessageTemplate()
+            val topMessageScreen = AndroidAutoTemplate.getTopMessageTemplate()
 
-                val screen = AndroidAutoScreen(context, templateId, template.parse())
-                screenManager.push(screen)
+            val screen = AndroidAutoScreen(context, templateId, template.parse())
+            screenManager.push(screen)
 
-                template.autoDismissMs?.let {
-                    UiThreadUtil.runOnUiThread({
+            template.autoDismissMs?.let {
+                UiThreadUtil.runOnUiThread({
+                    TemplateUpdateQueue.postOnUi {
                         val screen =
                             if (screenManager.screenStack.isNotEmpty()) screenManager.top else null
                         if (screen?.marker == templateId) {
                             screenManager.remove(screen)
                         }
-                    }, it.toLong())
-                }
-
-                topMessageScreen?.let {
-                    if (AndroidAutoTemplate.hasTemplate<MessageTemplate>(templateId)) {
-                        screenManager.remove(topMessageScreen)
-                    } else {
-                        screenManager.push(topMessageScreen)
                     }
-                }
+                }, it.toLong())
             }
 
-            if (result.isFailure) {
-                throw result.exceptionOrNull() ?: UnknownError("unknown error pushing template")
+            topMessageScreen?.let {
+                if (AndroidAutoTemplate.hasTemplate<MessageTemplate>(templateId)) {
+                    screenManager.remove(topMessageScreen)
+                } else {
+                    screenManager.push(topMessageScreen)
+                }
             }
         }
     }
 
     override fun popTemplate(animate: Boolean?): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueueOnUi {
             val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
-                return@async
+                return@enqueueOnUi
             }
 
-            val result = ThreadUtil.postOnUiAndAwait {
-                screenManager.pop()
-            }
-
-            if (result.isFailure) {
-                throw result.exceptionOrNull() ?: UnknownError("unknown error popping template")
-            }
+            screenManager.pop()
         }
     }
 
     override fun popToRootTemplate(animate: Boolean?): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueueOnUi {
             val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popToRootTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
-                return@async
+                return@enqueueOnUi
             }
 
-            val result = ThreadUtil.postOnUiAndAwait {
-                screenManager.popToRoot()
-            }
-
-            if (result.isFailure) {
-                throw result.exceptionOrNull() ?: UnknownError("unknown error popping template")
-            }
+            screenManager.popToRoot()
         }
     }
 
     override fun popToTemplate(templateId: String, animate: Boolean?): Promise<Unit> {
-        return Promise.async {
+        return TemplateUpdateQueue.enqueueOnUi {
             val screenManager = AndroidAutoScreen.getScreenManager()
                 ?: throw IllegalArgumentException("popToTemplate failed, screenManager not found")
             if (screenManager.stackSize == 0) {
-                return@async
+                return@enqueueOnUi
             }
 
-            val result = ThreadUtil.postOnUiAndAwait {
-                screenManager.popTo(templateId)
-            }
-
-            if (result.isFailure) {
-                throw result.exceptionOrNull()
-                    ?: UnknownError("unknown error popping template $templateId")
-            }
+            screenManager.popTo(templateId)
         }
     }
 
