@@ -39,7 +39,20 @@ passed to native. That conversion layer is where most surprises live.
   validation at all.
 - `NitroManeuver` **silently drops** fields that don't match the `maneuverType` (`turnType`
   only for `Turn`, `exitNumber` only for `Roundabout`, …) instead of erroring.
-- Remote images must be HTTPS (iOS ATS). The fetch timeout defaults to 500 ms.
+- Remote images must be HTTPS (iOS ATS). **Without a `placeholder`** an uncached image blocks
+  the template build for up to `timeoutMs` (default 500 ms). **With a `placeholder` glyph** the
+  template builds immediately with the placeholder, the image downloads in the background
+  (`timeoutMs` then limits that download, default 10 s), and the template that requested it is
+  redrawn once it arrives, if still on screen. A failed download is not retried for 30 s. The
+  machinery is `RemoteImageLoader` on both platforms; the template id comes from a thread-local
+  set while a template is built (`AutoPlayTemplate.invalidate` / `AndroidAutoTemplate.render`),
+  so a placeholder image parsed outside a build (CarPlay map panel header actions and map
+  buttons) is loaded blocking for 500 ms, ignoring `timeoutMs`.
+- **Fields drawn outside a template build can't take remote images**, since nothing would redraw
+  them once downloaded. `src/types/Image.ts` has `LocalAutoImage` (`AutoImage` minus remote) for
+  single fields (navigation alerts, CarPlay dashboard buttons, attributed strings) and
+  `WithoutRemoteImages<T>` to strip remote images from a whole config (the trip selector's map
+  buttons, the CarPlay options panel). Use them for any new field of that kind.
 
 ## Icon fonts / glyphs
 
