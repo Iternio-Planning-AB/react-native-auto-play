@@ -112,7 +112,8 @@ enum RemoteImageLoader {
 
     /// Returns the cached image, otherwise `nil` and downloads it in the background for the
     /// template currently being built. Outside of a template build there is nothing to redraw
-    /// later, so it blocks like `load(uri:timeoutSeconds:)` instead.
+    /// later, so it blocks like `load(uri:timeoutSeconds:)` instead, for the blocking default:
+    /// `timeoutSeconds` only limits the background download and would hold up the update here.
     static func loadInBackground(
         uri: String,
         timeoutSeconds: TimeInterval?,
@@ -126,7 +127,7 @@ enum RemoteImageLoader {
         guard let templateId = currentTemplateId else {
             return load(
                 uri: uri,
-                timeoutSeconds: timeoutSeconds ?? defaultBlockingTimeoutSeconds,
+                timeoutSeconds: defaultBlockingTimeoutSeconds,
                 maxPixelSize: maxPixelSize
             )
         }

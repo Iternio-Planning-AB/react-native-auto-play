@@ -82,7 +82,9 @@ export type AutoImage =
        * uncached image delays the template by up to this, defaults to 500ms. The image is shown
        * as an error icon when the download takes longer.
        * With `placeholder`: how long the background download may take before it is given up and
-       * the placeholder stays, defaults to 10s.
+       * the placeholder stays, defaults to 10s. Where an image is drawn outside of a template
+       * build (CarPlay map panel header actions and map buttons) it is ignored and the download
+       * waits for 500ms like without placeholder.
        */
       timeoutMs?: number;
       /**

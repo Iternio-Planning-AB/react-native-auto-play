@@ -525,7 +525,7 @@ Give a remote image a `placeholder` glyph and none of the above applies: the tem
 -   Only the templates that showed the placeholder are redrawn, and only while they are still on screen. A template popped in the meantime is skipped; the image is cached for the next time it is shown. Downloads finishing close together are drawn in one redraw. A finished image is not downloaded again for 10 s, so if the cache drops it before the redraw (many large images), the placeholder stays instead of the template reloading in a loop.
 -   This works for every image drawn while a template is built, which happens when it is pushed or updated, including header actions and map buttons.
 -   Images drawn outside of a template build have nothing to redraw, so they don't accept remote images at all (`LocalAutoImage`, or `WithoutRemoteImages<…>` for whole configs): navigation alerts, CarPlay dashboard buttons, the cluster's attributed descriptions, the trip selector's map buttons and the CarPlay options panel. Maneuver images never accepted remote images.
--   One exception on CarPlay: when a template shows as a map panel (iOS 27+), its header actions and map buttons are applied as the panel appears, outside of a build. A remote image there waits for its download like one without a placeholder and shows the placeholder if that fails.
+-   One exception on CarPlay: when a template shows as a map panel (iOS 27+), its header actions and map buttons are applied as the panel appears, outside of a build. A remote image there waits for its download like one without a placeholder, always for the default 500 ms since `timeoutMs` is meant for the background download, and shows the placeholder if that fails.
 
 #### Images created or downloaded by your app
 

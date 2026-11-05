@@ -27,6 +27,9 @@ object RemoteImageLoader {
     /** how long a background download may take before the placeholder stays */
     const val DEFAULT_BACKGROUND_TIMEOUT_MS = 10_000L
 
+    /** how long building a template waits for an uncached image */
+    const val DEFAULT_BLOCKING_TIMEOUT_MS = 500L
+
     /**
      * a failed download is not retried before this, otherwise every rebuild of a template would
      * start a new download for a broken URL

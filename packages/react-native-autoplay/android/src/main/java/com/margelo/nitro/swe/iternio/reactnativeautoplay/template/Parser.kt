@@ -700,7 +700,13 @@ object Parser {
             }
             return null
         }
-        val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
+        // with a placeholder timeoutMs limits the background download, waiting that long here
+        // would hold up the update
+        val timeoutMs = if (remoteImage.placeholderGlyphImage != null) {
+            RemoteImageLoader.DEFAULT_BLOCKING_TIMEOUT_MS
+        } else {
+            remoteImage.timeoutMs?.toLong() ?: RemoteImageLoader.DEFAULT_BLOCKING_TIMEOUT_MS
+        }
         val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs)
             ?.downscale(maxSizePx) ?: return null
 
