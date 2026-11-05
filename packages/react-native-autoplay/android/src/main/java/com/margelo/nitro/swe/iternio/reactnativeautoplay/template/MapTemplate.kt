@@ -170,9 +170,10 @@ class MapTemplate(
             }
         }
 
-        // highlight as CarPlay does: a cancel primary is plain and the other action stands out; on
-        // the default action, which has the countdown, Android Auto shows no highlight anyway
-        val isPrimaryCancel = alertConfig.primaryAction.style == AlertActionStyle.CANCEL
+        // highlight as CarPlay does: a cancel primary is plain and the other action stands out; a
+        // lone cancel, or two of them, keep the flag on the primary
+        val isPrimaryCancel = alertConfig.primaryAction.style == AlertActionStyle.CANCEL &&
+            alertConfig.secondaryAction?.let { it.style != AlertActionStyle.CANCEL } == true
 
         val alert = Alert.Builder(alertConfig.id.toInt(), title, durationMillis).apply {
             var isAutoDismissal = false
@@ -202,7 +203,7 @@ class MapTemplate(
             alertConfig.secondaryAction?.let { action ->
                 addAction(Action.Builder().apply {
                     setTitle(action.title)
-                    if (isPrimaryCancel && action.style != AlertActionStyle.CANCEL) {
+                    if (isPrimaryCancel) {
                         setFlags(Action.FLAG_PRIMARY)
                     }
                     setOnClickListener {
