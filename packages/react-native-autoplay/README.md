@@ -967,6 +967,23 @@ Map-specific callbacks live on `MapTemplateConfig`:
 - `onAutoDriveEnabled(template)` (Android)
 - `onStopNavigation(template)` (**required**)
 
+#### Navigation alerts
+
+`mapTemplate.showAlert(alert)` shows an alert with a `primaryAction` and an optional
+`secondaryAction`; `updateAlert` changes its title and subtitle and `dismissAlert` removes it.
+`onDidDismiss(reason)` reports `timeout`, `user` (an action or the close button) or `system` (the app
+dismissed it, or another alert replaced it).
+
+Both platforms draw the countdown on the primary action, so make that the action that stands for
+doing nothing, e.g. a Dismiss button. When the alert times out no action is pressed and
+`onDidDismiss` reports `timeout`. Android Auto has been seen to report a timeout only as a press of
+the primary action, though (17.8 on one phone): its `onPress` then runs and `onDidDismiss` reports
+`user`.
+
+A primary action with `style: 'cancel'` is drawn plain and the secondary action highlighted, as
+CarPlay does with any `cancel` action. Otherwise Android Auto highlights nothing. As a best
+practice, don't give both actions the same style.
+
 #### AutoPlayCluster listeners (instrument cluster)
 
 | API | Payload | Notes |

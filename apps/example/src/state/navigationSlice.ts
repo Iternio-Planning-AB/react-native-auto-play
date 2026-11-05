@@ -1,4 +1,3 @@
-import type { AlertPriority } from '@iternio/react-native-auto-play';
 import { createAction, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type NavigationState, SliceName } from './types';
 
@@ -33,9 +32,5 @@ export const actionStartNavigation = createAction(
 );
 
 export const actionStopNavigation = createAction('stopNavigation');
-
-export const actionShowAlert = createAction('showAlert', (payload: AlertPriority) => {
-  return { payload };
-});
 
 export const navigationReducer = navigationSlice.reducer;

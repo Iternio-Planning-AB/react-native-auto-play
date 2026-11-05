@@ -7,6 +7,7 @@ import {
   useSelector,
   useStore,
 } from 'react-redux';
+import { alertReducer } from './alertSlice';
 import { audioReducer } from './audioSlice';
 import { navigationReducer } from './navigationSlice';
 import { SliceName } from './types';
@@ -14,6 +15,7 @@ import { SliceName } from './types';
 const rootReducer = {
   [SliceName.Navigation]: navigationReducer,
   [SliceName.Audio]: audioReducer,
+  [SliceName.Alert]: alertReducer,
 };
 
 export const listenerMiddleware = createListenerMiddleware();
