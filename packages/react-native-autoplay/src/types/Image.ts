@@ -78,13 +78,41 @@ export type AutoImage =
        */
       color?: ThemedColor | string;
       /**
-       * Network timeout in milliseconds before the remote fetch is abandoned and `null` is returned.
-       * Defaults to 500ms when not specified.
-       * Uncached remote images delay template updates, prefer glyphs or assets, see README.
+       * Without `placeholder`: how long building the template waits for the download, an
+       * uncached image delays the template by up to this, defaults to 500ms. The image is shown
+       * as an error icon when the download takes longer.
+       * With `placeholder`: how long the background download may take before it is given up and
+       * the placeholder stays, defaults to 10s.
        */
       timeoutMs?: number;
+      /**
+       * Shown while the image downloads, the template is not delayed by the download and gets
+       * redrawn with the image once it is available. Also stays when the download fails.
+       * Header actions and map buttons of a CarPlay map panel are applied outside of a template
+       * build and still wait like without a placeholder, see README.
+       */
+      placeholder?: AutoGlyph;
       type: 'remote';
     };
+
+/**
+ * `AutoImage` without remote images, for images drawn outside of a template build such as
+ * navigation alerts. A remote image there would hold up the update while it downloads and can not
+ * be redrawn once it arrives, see README.
+ */
+export type LocalAutoImage = Exclude<AutoImage, { type: 'remote' }>;
+
+/**
+ * `T` with every image in it restricted to {@link LocalAutoImage}, for configs drawn outside of a
+ * template build that reuse types with `AutoImage` fields, like map buttons and list rows.
+ */
+export type WithoutRemoteImages<T> = T extends { type: 'remote'; uri: string }
+  ? never
+  : T extends (...args: never[]) => unknown
+    ? T
+    : T extends object
+      ? { [K in keyof T]: WithoutRemoteImages<T[K]> }
+      : T;
 
 /**
  * Image for the CarPlay voice control overlay. Animated GIF, APNG, and WebP all animate.

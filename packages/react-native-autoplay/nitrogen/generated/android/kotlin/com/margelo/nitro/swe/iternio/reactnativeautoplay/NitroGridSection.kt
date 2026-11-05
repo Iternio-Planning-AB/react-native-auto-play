@@ -23,7 +23,10 @@ data class NitroGridSection(
   val title: String?,
   @DoNotStrip
   @Keep
-  val buttons: Array<NitroGridButton>
+  val buttons: Array<NitroGridButton>,
+  @DoNotStrip
+  @Keep
+  val imageSize: GridSectionImageSize?
 ) {
   /* primary constructor */
 
@@ -32,12 +35,14 @@ data class NitroGridSection(
     if (other !is NitroGridSection) return false
     return Objects.deepEquals(this.title, other.title)
       && Objects.deepEquals(this.buttons, other.buttons)
+      && Objects.deepEquals(this.imageSize, other.imageSize)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
       title,
-      buttons
+      buttons,
+      imageSize
     ).contentDeepHashCode()
   }
 
@@ -49,8 +54,8 @@ data class NitroGridSection(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(title: String?, buttons: Array<NitroGridButton>): NitroGridSection {
-      return NitroGridSection(title, buttons)
+    private fun fromCpp(title: String?, buttons: Array<NitroGridButton>, imageSize: GridSectionImageSize?): NitroGridSection {
+      return NitroGridSection(title, buttons, imageSize)
     }
   }
 }

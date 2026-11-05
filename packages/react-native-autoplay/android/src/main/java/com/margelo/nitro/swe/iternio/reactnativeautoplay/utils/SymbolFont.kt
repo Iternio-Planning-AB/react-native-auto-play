@@ -34,6 +34,7 @@ object SymbolFont {
         glyphImage: GlyphImage,
         color: Int,
         backgroundColor: Int,
+        sizeDp: Int,
         cornerRadius: Float = 8f, // TODO: make accessible and add it to GlyphImage.cacheKey
     ): Bitmap? {
         val font =
@@ -44,8 +45,7 @@ object SymbolFont {
         val virtualScreenDensity = context.resources.displayMetrics.density
         val scale = BuildConfig.SCALE_FACTOR * virtualScreenDensity
 
-        // Minimum recommended image size is 36dp according to https://developers.google.com/cars/design/create-apps/ux-requirements/templated-apps#navigation
-        val canvasSize = (36 * scale).toInt()
+        val canvasSize = (sizeDp * scale).toInt()
         val bitmap = createBitmap(canvasSize, canvasSize)
         val canvas = Canvas(bitmap)
 
@@ -86,8 +86,21 @@ object SymbolFont {
         return bitmap
     }
 
-    fun imageFromNitroImage(context: CarContext, image: GlyphImage): Bitmap? {
-        var bitmap = BitmapCache.get(context, image)
+    // Minimum recommended image size is 36dp according to https://developers.google.com/cars/design/create-apps/ux-requirements/templated-apps#navigation
+    const val DEFAULT_SIZE_DP = 36
+
+    /**
+     * placeholders stand in for photos that can be drawn much larger than an icon, e.g. in a large
+     * grid item, Android Auto blurs an upscaled 36dp glyph there but scales a larger one down cleanly
+     */
+    const val PLACEHOLDER_SIZE_DP = 96
+
+    fun imageFromNitroImage(
+        context: CarContext,
+        image: GlyphImage,
+        sizeDp: Int = DEFAULT_SIZE_DP
+    ): Bitmap? {
+        var bitmap = BitmapCache.get(context, image, sizeDp)
 
         if (bitmap != null) {
             return bitmap
@@ -99,10 +112,11 @@ object SymbolFont {
                 glyphImage = image,
                 color = image.color.get(context),
                 backgroundColor = image.backgroundColor.get(context),
+                sizeDp = sizeDp,
             )
 
         bitmap?.let {
-            BitmapCache.put(context, image, it)
+            BitmapCache.put(context, image, sizeDp, it)
         }
 
         return bitmap

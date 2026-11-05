@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `GridImageSize` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
+// Forward declaration of `GridSectionImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridSectionImageSize; }
 // Forward declaration of `HideControls` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class HideControls; }
 // Forward declaration of `HybridAutoPlaySpec` to properly resolve imports.
@@ -204,6 +206,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "ForkType.hpp"
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
+#include "GridSectionImageSize.hpp"
 #include "HideControls.hpp"
 #include "HybridAutoPlaySpec.hpp"
 #include "HybridAutoPlayTimingSpec.hpp"
@@ -1859,6 +1862,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   // pragma MARK: std::weak_ptr<HybridSearchTemplateSpec>
   using std__weak_ptr_HybridSearchTemplateSpec_ = std::weak_ptr<HybridSearchTemplateSpec>;
   inline std__weak_ptr_HybridSearchTemplateSpec_ weakify_std__shared_ptr_HybridSearchTemplateSpec_(const std::shared_ptr<HybridSearchTemplateSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: std::optional<GridSectionImageSize>
+  /**
+   * Specialized version of `std::optional<GridSectionImageSize>`.
+   */
+  using std__optional_GridSectionImageSize_ = std::optional<GridSectionImageSize>;
+  inline std::optional<GridSectionImageSize> create_std__optional_GridSectionImageSize_(const GridSectionImageSize& value) noexcept {
+    return std::optional<GridSectionImageSize>(value);
+  }
+  inline bool has_value_std__optional_GridSectionImageSize_(const std::optional<GridSectionImageSize>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline GridSectionImageSize get_std__optional_GridSectionImageSize_(const std::optional<GridSectionImageSize>& optional) noexcept {
+    return optional.value();
+  }
   
   // pragma MARK: std::variant<NitroSection, NitroGridSection>
   /**

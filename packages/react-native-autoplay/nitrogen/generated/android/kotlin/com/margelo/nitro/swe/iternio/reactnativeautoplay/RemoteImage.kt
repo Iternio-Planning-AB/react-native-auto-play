@@ -26,7 +26,22 @@ data class RemoteImage(
   val color: NitroColor?,
   @DoNotStrip
   @Keep
-  val timeoutMs: Double?
+  val timeoutMs: Double?,
+  @DoNotStrip
+  @Keep
+  val placeholderGlyph: Double?,
+  @DoNotStrip
+  @Keep
+  val placeholderFontName: String?,
+  @DoNotStrip
+  @Keep
+  val placeholderColor: NitroColor?,
+  @DoNotStrip
+  @Keep
+  val placeholderBackgroundColor: NitroColor?,
+  @DoNotStrip
+  @Keep
+  val placeholderFontScale: Double?
 ) {
   /* primary constructor */
 
@@ -36,13 +51,23 @@ data class RemoteImage(
     return Objects.deepEquals(this.uri, other.uri)
       && Objects.deepEquals(this.color, other.color)
       && Objects.deepEquals(this.timeoutMs, other.timeoutMs)
+      && Objects.deepEquals(this.placeholderGlyph, other.placeholderGlyph)
+      && Objects.deepEquals(this.placeholderFontName, other.placeholderFontName)
+      && Objects.deepEquals(this.placeholderColor, other.placeholderColor)
+      && Objects.deepEquals(this.placeholderBackgroundColor, other.placeholderBackgroundColor)
+      && Objects.deepEquals(this.placeholderFontScale, other.placeholderFontScale)
   }
 
   override fun hashCode(): Int {
     return arrayOf<Any?>(
       uri,
       color,
-      timeoutMs
+      timeoutMs,
+      placeholderGlyph,
+      placeholderFontName,
+      placeholderColor,
+      placeholderBackgroundColor,
+      placeholderFontScale
     ).contentDeepHashCode()
   }
 
@@ -54,8 +79,8 @@ data class RemoteImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(uri: String, color: NitroColor?, timeoutMs: Double?): RemoteImage {
-      return RemoteImage(uri, color, timeoutMs)
+    private fun fromCpp(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderFontScale: Double?): RemoteImage {
+      return RemoteImage(uri, color, timeoutMs, placeholderGlyph, placeholderFontName, placeholderColor, placeholderBackgroundColor, placeholderFontScale)
     }
   }
 }

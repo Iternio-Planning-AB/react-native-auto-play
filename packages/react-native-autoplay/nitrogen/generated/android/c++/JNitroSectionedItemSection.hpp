@@ -50,6 +50,8 @@
 #include "JNitroGridButton.hpp"
 #include "JNitroImage.hpp"
 #include "JFunc_void.hpp"
+#include "GridSectionImageSize.hpp"
+#include "JGridSectionImageSize.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 

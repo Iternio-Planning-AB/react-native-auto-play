@@ -82,9 +82,12 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.TravelEstimates
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TurnType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.Variant_GlyphImage_AssetImage_RemoteImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.BitmapCache
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.RemoteImageLoader
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.SymbolFont
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.cacheKey
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.get
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.placeholderGlyphImage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -283,9 +286,21 @@ object Parser {
         context: CarContext,
         glyphImage: GlyphImage?,
         assetImage: AssetImage?,
-        remoteImage: RemoteImage?
+        remoteImage: RemoteImage?,
+        glyphSizeDp: Int = SymbolFont.DEFAULT_SIZE_DP
     ): CarIcon {
-        val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage)
+        // the placeholder gets the tint handling of a glyph, not the one of the remote image
+        remoteImage?.placeholderGlyphImage?.let { placeholder ->
+            if (glyphImage == null && assetImage == null &&
+                parseRemoteImage(context, remoteImage) == null
+            ) {
+                return parseImage(
+                    context, placeholder, null, null, SymbolFont.PLACEHOLDER_SIZE_DP
+                )
+            }
+        }
+
+        val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage, glyphSizeDp)
 
         // the tint recolors every opaque pixel, so it would also fill the background drawn in SymbolFont
         val hasGlyphBackground =
@@ -311,11 +326,12 @@ object Parser {
         context: CarContext,
         glyphImage: GlyphImage?,
         assetImage: AssetImage?,
-        remoteImage: RemoteImage?
+        remoteImage: RemoteImage?,
+        glyphSizeDp: Int = SymbolFont.DEFAULT_SIZE_DP
     ): Bitmap? {
         glyphImage?.let {
             return SymbolFont.imageFromNitroImage(
-                context, it
+                context, it, glyphSizeDp
             )
         }
         assetImage?.let {
@@ -323,6 +339,11 @@ object Parser {
         }
         remoteImage?.let {
             return parseRemoteImage(context, it)
+                ?: it.placeholderGlyphImage?.let { placeholder ->
+                    SymbolFont.imageFromNitroImage(
+                        context, placeholder, SymbolFont.PLACEHOLDER_SIZE_DP
+                    )
+                }
         }
 
         return null
@@ -516,10 +537,14 @@ object Parser {
 
     fun parseGridItem(context: CarContext, button: NitroGridButton): GridItem =
         GridItem.Builder().apply {
-            setTitle(parseText(button.title))
+            setTitle(parseGridButtonTitle(button.title))
             setOnClickListener(button.onPress)
             setImage(parseImage(context, button.image))
         }.build()
+
+    /** Android Auto crashes on an empty grid item or row title, a whitespace is fine */
+    fun parseGridButtonTitle(title: AutoText): CarText =
+        if (title.text.isBlank()) CarText.create(" ") else parseText(title)
 
     private fun ListImageType.toRowImageType(): Int = when (this) {
         ListImageType.LARGE -> Row.IMAGE_TYPE_LARGE
@@ -645,10 +670,32 @@ object Parser {
             cache = { result -> BitmapCache.put(context, assetImage, result) })
     }
 
+    /**
+     * null while an image with placeholder downloads in the background, the template that is
+     * being built gets rebuilt once it is cached, see [RemoteImageLoader]
+     */
     fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
         BitmapCache.get(context, remoteImage)?.let { return it }
 
         val imageRequest = buildImageRequest(remoteImage.uri.toUri())
+
+        if (remoteImage.placeholderGlyphImage != null && RemoteImageLoader.isBuildingTemplate) {
+            val timeoutMs =
+                remoteImage.timeoutMs?.toLong() ?: RemoteImageLoader.DEFAULT_BACKGROUND_TIMEOUT_MS
+
+            RemoteImageLoader.loadInBackground(remoteImage.cacheKey(context)) {
+                val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs)
+                    ?: return@loadInBackground false
+
+                applyTintAndCache(
+                    context = context,
+                    color = remoteImage.color,
+                    bitmap = bitmap,
+                    cache = { result -> BitmapCache.put(context, remoteImage, result) })
+                true
+            }
+            return null
+        }
         val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
         val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs) ?: return null
 

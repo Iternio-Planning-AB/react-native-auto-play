@@ -489,6 +489,7 @@ class Parser {
                     items: [
                         parseImageRowItem(
                             buttons: gridSection.buttons,
+                            imageSize: gridSection.imageSize,
                             pressedButtonIndex: pressedGridButton?.sectionIndex == sectionIndex
                                 ? pressedGridButton?.buttonIndex : nil,
                             onButtonPressed: { buttonIndex in
@@ -955,6 +956,7 @@ class Parser {
         if let remoteImage = image.remoteImage {
             parsedImage = Parser.parseRemoteImage(
                 remoteImage: remoteImage,
+                size: size,
                 traitCollection: traitCollection
             )
         }
@@ -964,17 +966,22 @@ class Parser {
 
     static func parseImageRowItem(
         buttons: [NitroGridButton],
+        imageSize: GridSectionImageSize?,
         pressedButtonIndex: Int?,
         onButtonPressed: @escaping (Int) -> Void,
         traitCollection: UITraitCollection
     ) -> CPListImageRowItem {
-        let imageSize: CGFloat
+        let pointSize: CGFloat
+        let isLarge = imageSize == .large
 
-        if #available(iOS 26.0, *) {
-            imageSize = CPListImageRowItemImageGridElement.maximumImageSize.height
+        if #available(iOS 26.0, *), isLarge {
+            pointSize = CPListImageRowItemRowElement.maximumImageSize.height
+        }
+        else if #available(iOS 26.0, *) {
+            pointSize = CPListImageRowItemImageGridElement.maximumImageSize.height
         }
         else {
-            imageSize = CPListImageRowItem.maximumImageSize.height
+            pointSize = CPListImageRowItem.maximumImageSize.height
         }
 
         let parsedButtons: [(index: Int, button: NitroGridButton, image: UIImage, title: String)] =
@@ -982,7 +989,7 @@ class Parser {
                 guard
                     let image = parseGridButtonImage(
                         image: button.image,
-                        size: imageSize,
+                        size: pointSize,
                         traitCollection: traitCollection
                     ),
                     let title = parseText(text: button.title)
@@ -1001,22 +1008,14 @@ class Parser {
         }
 
         if #available(iOS 26.0, *) {
-            let elements = visibleButtons.map { visibleButton in
-                let element = CPListImageRowItemImageGridElement(
-                    image: visibleButton.image,
-                    imageShape: .roundedRectangle,
-                    title: visibleButton.title,
-                    accessorySymbolName: nil
-                )
-                element.isEnabled = visibleButton.index != pressedButtonIndex
-                return element
-            }
-
-            let rowItem = CPListImageRowItem(
-                text: nil,
-                imageGridElements: elements,
-                allowsMultipleLines: true
+            let (rowItem, elements) = createImageRowItem(
+                visibleButtons: visibleButtons.map { ($0.image, $0.title) },
+                isLarge: isLarge
             )
+
+            for (element, visibleButton) in zip(elements, visibleButtons) {
+                element.isEnabled = visibleButton.index != pressedButtonIndex
+            }
 
             rowItem.listImageRowHandler = { item, index, completion in
                 MainActor.assumeIsolated {
@@ -1061,6 +1060,42 @@ class Parser {
         rowItem.handler = { _, completion in completion() }
 
         return rowItem
+    }
+
+    /// `photo` uses row elements, not card elements: on iOS 27 a row of card thumbnails takes the aspect
+    /// ratio of its first photo and crops all others to it, which ruins mixed portrait and landscape
+    /// photos.
+    @available(iOS 26.0, *)
+    private static func createImageRowItem(
+        visibleButtons: [(image: UIImage, title: String)],
+        isLarge: Bool
+    ) -> (CPListImageRowItem, [CPListImageRowItemElement]) {
+        if isLarge {
+            let elements = visibleButtons.map { button in
+                CPListImageRowItemRowElement(image: button.image, title: button.title, subtitle: nil)
+            }
+            let rowItem = CPListImageRowItem(
+                text: nil,
+                elements: elements,
+                allowsMultipleLines: true
+            )
+            return (rowItem, elements)
+        }
+
+        let elements = visibleButtons.map { button in
+            CPListImageRowItemImageGridElement(
+                image: button.image,
+                imageShape: .roundedRectangle,
+                title: button.title,
+                accessorySymbolName: nil
+            )
+        }
+        let rowItem = CPListImageRowItem(
+            text: nil,
+            imageGridElements: elements,
+            allowsMultipleLines: true
+        )
+        return (rowItem, elements)
     }
 
     static func parseTextButtonStyle(style: NitroButtonStyle?)
@@ -1493,20 +1528,6 @@ class Parser {
         return nil
     }
 
-    // MARK: - Remote image cache
-    private static let remoteImageCache: NSCache<NSString, UIImage> = {
-        let cache = NSCache<NSString, UIImage>()
-        cache.countLimit = 50
-        cache.totalCostLimit = 8 * 1024 * 1024  // 8 MB, matching Android's BitmapCache
-        return cache
-    }()
-
-    /// Shared session — long-lived by design; failed tasks don't invalidate it.
-    private static let remoteImageSession = URLSession(configuration: .default)
-
-    /// Default network timeout for remote images when no `timeoutMs` is provided.
-    private static let defaultRemoteTimeoutSeconds: TimeInterval = 0.5
-
     static func parseAssetImage(
         assetImage: AssetImage,
         traitCollection: UITraitCollection
@@ -1524,12 +1545,40 @@ class Parser {
         )
     }
 
+    /// `size` is the size a placeholder glyph is drawn at.
     static func parseRemoteImage(
         remoteImage: RemoteImage,
+        size: CGFloat = 32,
         traitCollection: UITraitCollection
     ) -> UIImage? {
-        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 } ?? defaultRemoteTimeoutSeconds
-        let uiImage = loadRemoteImage(uri: remoteImage.uri, timeoutSeconds: timeoutSeconds)
+        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 }
+        let uiImage: UIImage?
+
+        if let placeholder = remoteImage.placeholderGlyphImage {
+            guard
+                let loaded = RemoteImageLoader.loadInBackground(
+                    uri: remoteImage.uri,
+                    timeoutSeconds: timeoutSeconds
+                )
+            else {
+                return SymbolFont.imageFromNitroImage(
+                    image: placeholder,
+                    size: size,
+                    traitCollection: traitCollection
+                )
+            }
+            uiImage = loaded
+        }
+        else {
+            uiImage =
+                RemoteImageLoader.load(
+                    uri: remoteImage.uri,
+                    timeoutSeconds: timeoutSeconds
+                        ?? RemoteImageLoader.defaultBlockingTimeoutSeconds
+                )
+                ?? (URL(string: remoteImage.uri) == nil
+                    ? nil : UIImage(systemName: "exclamationmark.circle"))
+        }
 
         return applyTint(
             uiImage: uiImage,
@@ -1551,41 +1600,6 @@ class Parser {
             uiImage: image,
             traitCollection: traitCollection
         )
-    }
-
-    /// Synchronously loads an image from a remote HTTPS URL with in-memory caching.
-    /// `parseRemoteImage` is always invoked on a background thread by the Car App rendering pipeline,
-    /// so the semaphore wait cannot block the main thread.
-    private static func loadRemoteImage(uri: String, timeoutSeconds: TimeInterval) -> UIImage? {
-        let cacheKey = uri as NSString
-        if let cached = remoteImageCache.object(forKey: cacheKey) {
-            return cached
-        }
-
-        guard let url = URL(string: uri) else { return nil }
-
-        var request = URLRequest(url: url)
-        request.timeoutInterval = timeoutSeconds
-
-        var resultData: Data?
-        let semaphore = DispatchSemaphore(value: 0)
-        let task = remoteImageSession.dataTask(with: request) { data, _, _ in
-            resultData = data
-            semaphore.signal()
-        }
-        task.resume()
-        if semaphore.wait(timeout: .now() + timeoutSeconds) == .timedOut {
-            task.cancel()
-            return UIImage(systemName: "exclamationmark.circle")
-        }
-
-        guard let data = resultData, let image = UIImage(data: data) else {
-            return UIImage(systemName: "exclamationmark.circle")
-        }
-
-        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
-        remoteImageCache.setObject(image, forKey: cacheKey, cost: cost)
-        return image
     }
 
     static func getTintedImageAsset(
@@ -1787,5 +1801,22 @@ class Parser {
         asset.register(mergedImage(for: darkTrait), with: darkTrait)
 
         return asset.image(with: traitCollection)
+    }
+}
+
+extension RemoteImage {
+    /// The placeholder glyph, flattened into `placeholder*` fields on the JS side.
+    var placeholderGlyphImage: GlyphImage? {
+        guard let glyph = placeholderGlyph, let fontName = placeholderFontName,
+            let color = placeholderColor, let backgroundColor = placeholderBackgroundColor
+        else { return nil }
+
+        return GlyphImage(
+            glyph: glyph,
+            fontName: fontName,
+            color: color,
+            backgroundColor: backgroundColor,
+            fontScale: placeholderFontScale
+        )
     }
 }

@@ -509,6 +509,60 @@ It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawa
 
 If you need remote images, use them for content that is only known at runtime (e.g. logos in search results), keep their number per template low, and lower `timeoutMs` where a placeholder is acceptable.
 
+#### Placeholders
+
+Give a remote image a `placeholder` glyph and none of the above applies: the template is built right away with the placeholder, the image downloads in the background, and the template is redrawn once it arrives.
+
+```ts
+{
+  type: 'remote',
+  uri: 'https://example.com/charger.jpg',
+  placeholder: { type: 'glyph', name: 'photo', color: 'default' },
+}
+```
+
+-   `timeoutMs` then limits the background download (default 10 s). When it times out or fails, the placeholder stays and the download is not retried for 30 s, so redraws don't hammer a broken URL.
+-   Only the templates that showed the placeholder are redrawn, and only while they are still on screen. A template popped in the meantime is skipped; the image is cached for the next time it is shown. Downloads finishing close together are drawn in one redraw.
+-   This works for every image drawn while a template is built, which happens when it is pushed or updated, including header actions and map buttons.
+-   Images drawn outside of a template build have nothing to redraw, so they don't accept remote images at all (`LocalAutoImage`, or `WithoutRemoteImages<…>` for whole configs): navigation alerts, CarPlay dashboard buttons, the cluster's attributed descriptions, the trip selector's map buttons and the CarPlay options panel. Maneuver images never accepted remote images.
+-   One exception on CarPlay: when a template shows as a map panel (iOS 27+), its header actions and map buttons are applied as the panel appears, outside of a build. A remote image there waits for its download like one without a placeholder and shows the placeholder if that fails.
+
+#### Images created or downloaded by your app
+
+Where only `LocalAutoImage` is accepted, e.g. in a navigation alert, an image your app creates or downloads can still be shown as an `asset` image with a `file://` or `data:` URI. Create the alert (or set the buttons) once the image is ready.
+
+A local file, e.g. a download saved with a file system library:
+
+```ts
+mapTemplate.showAlert({
+  // ...
+  image: { type: 'asset', image: { uri: 'file:///path/to/image.png', scale: 3 } },
+});
+```
+
+Without a file system library, a download can be passed as a `data:` URI instead:
+
+```ts
+async function fetchAsDataUri(uri: string): Promise<string> {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+const image = { type: 'asset', image: { uri: await fetchAsDataUri('https://example.com/charger.jpg') } };
+```
+
+-   **Set `scale` on iOS** to the scale the image was made for, e.g. `3` for an image sized for a 3x screen. Without it iOS uses the image at one pixel per point, so such an image comes out three times too big wherever CarPlay doesn't resize it. Android ignores it.
+-   **Keep the file** as long as a template uses it. iOS doesn't cache asset images and reads the file again on every update that contains it (e.g. on a light/dark switch), Android when it drops out of its cache. A file deleted in the meantime makes the image disappear.
+-   **Use a new file name for new content.** Android caches asset images by URI, so writing a new image to the same path keeps showing the old one there.
+-   **Prefer files over `data:` URIs.** A `data:` URI sends the whole image to native as a string every time it is set, and iOS decodes it again on every update that contains it, so keep those images small.
+
 ### Icon colors and Android Auto light templates
 
 Starting with **Android Auto 17.8** the host can show white (light) templates in day mode. Older versions (e.g. 17.6) always use dark templates, even in day mode. Both report the same car app API level, so an app cannot tell them apart, and a fixed icon color that is readable on one (white on dark) can be invisible on the other (white on white).
@@ -731,7 +785,7 @@ Below is a concise overview of the most important props per template. Optional p
 List and grid sections mixed in one template. A section is one of:
 
 -   `{ type: 'default', title, items }` with `default`, `toggle` and `text` rows, like `ListTemplate`.
--   `{ type: 'grid', title, buttons }` with `GridButton`s, like `GridTemplate`.
+-   `{ type: 'grid', title, buttons, imageSize? }` with `GridButton`s, like `GridTemplate`. `imageSize: 'large'` (default `'small'`) draws the images larger, for photos: large grid items on Android (`GridSection.ITEM_SIZE_LARGE`; where the buttons fall back to rows, below Car API 8 or with `mapConfig` and several sections, large row images via `Row.IMAGE_TYPE_LARGE`; a single grid section with `mapConfig` is a `GridTemplate` and stays unchanged) and photo tiles on iOS, see the table below.
 
 **Radio sections are not supported.** Android Auto accepts a radio group in a `SectionedItemTemplate` (`RowSection.setAsSelectionGroup`, Car API 8+) and reports taps, but shows no selection state: no radio buttons, no highlight (tested on Android Auto 17.7 with `androidx.car.app` 1.8.0-rc01 and 1.9.0-alpha03, [issue 572978190](https://issuetracker.google.com/issues/572978190)). Hosts below Car API 8 can't show a radio group next to other sections at all. For a selection, use a `ListTemplate` with a radio section, which works on both platforms.
 
@@ -751,6 +805,7 @@ How each platform renders it:
 | **Android, `mapConfig` set** | sectioned `ListTemplate` in a `MapWithContentTemplate` | exactly one grid section and nothing else: a `GridTemplate` in a `MapWithContentTemplate`, without the section title. Otherwise **no grid**: the buttons are rendered as list rows, one row per button. A `SectionedItemTemplate` on the map crashes Android Auto at runtime ([issue 572287914](https://issuetracker.google.com/issues/572287914)), so the library uses a `GridTemplate` or `ListTemplate` instead. |
 | **iOS, panel** (`mapConfig` set, iOS 27+) | list items of a `CPMapPanel` section | grid buttons of a `CPMapPanel` section |
 | **iOS 26+** | `CPListTemplate` section | one `CPListImageRowItem` with image grid elements, wrapping onto multiple lines |
+| **iOS 26+, `imageSize: 'large'`** | `CPListTemplate` section | one `CPListImageRowItem` with row elements (photo tiles with the title below), wrapping onto multiple lines. Below iOS 26 and on panels it is drawn like any other grid section. |
 | **iOS below 26** | `CPListTemplate` section | one `CPListImageRowItem`, at most `CPMaximumNumberOfGridImages` buttons in a single line, the rest are dropped. Titles below the images need iOS 17.4+. Below iOS 26 CarPlay shows a chevron on this row that does nothing when tapped and can't be hidden, iOS 26+ shows none. |
 
 In the `CPListTemplate`, a grid section's `title` is shown as the section header, the same as for list sections. An empty `title` (`''`) shows an empty header line on CarPlay and on Android hosts below Car API 8.

@@ -47,6 +47,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWit
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroSectionType; }
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `GridSectionImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridSectionImageSize; }
 // Forward declaration of `NitroBaseMapTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroBaseMapTemplateConfig; }
 // Forward declaration of `NitroMapButton` to properly resolve imports.
@@ -110,6 +112,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroPanelT
 #include "NitroGridButton.hpp"
 #include "JNitroGridButton.hpp"
 #include "JNitroImage.hpp"
+#include "GridSectionImageSize.hpp"
+#include "JGridSectionImageSize.hpp"
 #include "NitroBaseMapTemplateConfig.hpp"
 #include "JNitroBaseMapTemplateConfig.hpp"
 #include "NitroMapButton.hpp"

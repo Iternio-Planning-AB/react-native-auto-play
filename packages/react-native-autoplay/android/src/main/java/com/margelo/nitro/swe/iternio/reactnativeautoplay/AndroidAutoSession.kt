@@ -66,7 +66,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             val template = MapTemplate(context = carContext, config, initNavigationManager = false)
             AndroidAutoTemplate.setTemplate(moduleName, template)
 
-            return template.parse()
+            return template.render()
         }
 
         val appName = AppInfo.getApplicationLabel(carContext)

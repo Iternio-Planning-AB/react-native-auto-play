@@ -30,11 +30,14 @@
 
 // Forward declaration of `NitroGridButton` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroGridButton; }
+// Forward declaration of `GridSectionImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridSectionImageSize; }
 
 #include <string>
 #include <optional>
 #include "NitroGridButton.hpp"
 #include <vector>
+#include "GridSectionImageSize.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -45,10 +48,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   public:
     std::optional<std::string> title     SWIFT_PRIVATE;
     std::vector<NitroGridButton> buttons     SWIFT_PRIVATE;
+    std::optional<GridSectionImageSize> imageSize     SWIFT_PRIVATE;
 
   public:
     NitroGridSection() = default;
-    explicit NitroGridSection(std::optional<std::string> title, std::vector<NitroGridButton> buttons): title(title), buttons(buttons) {}
+    explicit NitroGridSection(std::optional<std::string> title, std::vector<NitroGridButton> buttons, std::optional<GridSectionImageSize> imageSize): title(title), buttons(buttons), imageSize(imageSize) {}
 
   public:
     // NitroGridSection is not equatable because these properties are not equatable: buttons
@@ -65,13 +69,15 @@ namespace margelo::nitro {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridSection(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title"))),
-        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "buttons")))
+        JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "buttons"))),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridSectionImageSize>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageSize")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridSection& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "title"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.title));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "buttons"), JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::toJSI(runtime, arg.buttons));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "imageSize"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridSectionImageSize>>::toJSI(runtime, arg.imageSize));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -84,6 +90,7 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "title")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NitroGridButton>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "buttons")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::GridSectionImageSize>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "imageSize")))) return false;
       return true;
     }
   };

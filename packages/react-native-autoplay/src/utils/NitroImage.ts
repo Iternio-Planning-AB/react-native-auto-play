@@ -81,16 +81,55 @@ interface GlyphImage {
   fontScale?: number;
 }
 
+/**
+ * the placeholder glyph is flattened into placeholder* fields, a nested struct overflows
+ * nitrogen's call stack for the specs that use NitroImage deep inside their config
+ */
 interface RemoteImage {
   uri: string;
   color?: NitroColor;
   timeoutMs?: number;
+  placeholderGlyph?: number;
+  placeholderFontName?: string;
+  placeholderColor?: NitroColor;
+  placeholderBackgroundColor?: NitroColor;
+  placeholderFontScale?: number;
 }
 
 /**
  * NitroModules-compatible image types passed to native.
  */
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
+
+function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage {
+  const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
+
+  return {
+    glyph: resolveGlyph(image),
+    fontName: getIconFont(),
+    color: NitroColorUtil.convert(color),
+    backgroundColor: NitroColorUtil.convert(backgroundColor),
+    fontScale,
+  };
+}
+
+function convertPlaceholder(
+  placeholder?: Extract<AutoImage, { type: 'glyph' }>
+): Partial<RemoteImage> {
+  if (placeholder == null) {
+    return {};
+  }
+
+  const glyph = convertGlyph(placeholder);
+
+  return {
+    placeholderGlyph: glyph.glyph,
+    placeholderFontName: glyph.fontName,
+    placeholderColor: glyph.color,
+    placeholderBackgroundColor: glyph.backgroundColor,
+    placeholderFontScale: glyph.fontScale,
+  };
+}
 
 function convert(image: AutoImage): NitroImage;
 function convert(image?: AutoImage): NitroImage | undefined;
@@ -100,15 +139,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
   }
 
   if (image.type === 'glyph') {
-    const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
-
-    return {
-      glyph: resolveGlyph(image),
-      fontName: getIconFont(),
-      color: NitroColorUtil.convert(color),
-      backgroundColor: NitroColorUtil.convert(backgroundColor),
-      fontScale,
-    };
+    return convertGlyph(image);
   }
 
   if (image.type === 'remote') {
@@ -116,6 +147,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
       uri: image.uri,
       color: NitroColorUtil.convert(image.color),
       timeoutMs: image.timeoutMs,
+      ...convertPlaceholder(image.placeholder),
     };
   }
 

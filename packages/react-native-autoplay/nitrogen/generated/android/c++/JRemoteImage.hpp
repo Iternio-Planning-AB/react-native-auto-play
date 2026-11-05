@@ -40,10 +40,25 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldTimeoutMs = clazz->getField<jni::JDouble>("timeoutMs");
       jni::local_ref<jni::JDouble> timeoutMs = this->getFieldValue(fieldTimeoutMs);
+      static const auto fieldPlaceholderGlyph = clazz->getField<jni::JDouble>("placeholderGlyph");
+      jni::local_ref<jni::JDouble> placeholderGlyph = this->getFieldValue(fieldPlaceholderGlyph);
+      static const auto fieldPlaceholderFontName = clazz->getField<jni::JString>("placeholderFontName");
+      jni::local_ref<jni::JString> placeholderFontName = this->getFieldValue(fieldPlaceholderFontName);
+      static const auto fieldPlaceholderColor = clazz->getField<JNitroColor>("placeholderColor");
+      jni::local_ref<JNitroColor> placeholderColor = this->getFieldValue(fieldPlaceholderColor);
+      static const auto fieldPlaceholderBackgroundColor = clazz->getField<JNitroColor>("placeholderBackgroundColor");
+      jni::local_ref<JNitroColor> placeholderBackgroundColor = this->getFieldValue(fieldPlaceholderBackgroundColor);
+      static const auto fieldPlaceholderFontScale = clazz->getField<jni::JDouble>("placeholderFontScale");
+      jni::local_ref<jni::JDouble> placeholderFontScale = this->getFieldValue(fieldPlaceholderFontScale);
       return RemoteImage(
         uri->toStdString(),
         color != nullptr ? std::make_optional(color->toCpp()) : std::nullopt,
-        timeoutMs != nullptr ? std::make_optional(timeoutMs->value()) : std::nullopt
+        timeoutMs != nullptr ? std::make_optional(timeoutMs->value()) : std::nullopt,
+        placeholderGlyph != nullptr ? std::make_optional(placeholderGlyph->value()) : std::nullopt,
+        placeholderFontName != nullptr ? std::make_optional(placeholderFontName->toStdString()) : std::nullopt,
+        placeholderColor != nullptr ? std::make_optional(placeholderColor->toCpp()) : std::nullopt,
+        placeholderBackgroundColor != nullptr ? std::make_optional(placeholderBackgroundColor->toCpp()) : std::nullopt,
+        placeholderFontScale != nullptr ? std::make_optional(placeholderFontScale->value()) : std::nullopt
       );
     }
 
@@ -53,14 +68,19 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JRemoteImage::javaobject> fromCpp(const RemoteImage& value) {
-      using JSignature = JRemoteImage(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JRemoteImage(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         jni::make_jstring(value.uri),
         value.color.has_value() ? JNitroColor::fromCpp(value.color.value()) : nullptr,
-        value.timeoutMs.has_value() ? jni::JDouble::valueOf(value.timeoutMs.value()) : nullptr
+        value.timeoutMs.has_value() ? jni::JDouble::valueOf(value.timeoutMs.value()) : nullptr,
+        value.placeholderGlyph.has_value() ? jni::JDouble::valueOf(value.placeholderGlyph.value()) : nullptr,
+        value.placeholderFontName.has_value() ? jni::make_jstring(value.placeholderFontName.value()) : nullptr,
+        value.placeholderColor.has_value() ? JNitroColor::fromCpp(value.placeholderColor.value()) : nullptr,
+        value.placeholderBackgroundColor.has_value() ? JNitroColor::fromCpp(value.placeholderBackgroundColor.value()) : nullptr,
+        value.placeholderFontScale.has_value() ? jni::JDouble::valueOf(value.placeholderFontScale.value()) : nullptr
       );
     }
   };
