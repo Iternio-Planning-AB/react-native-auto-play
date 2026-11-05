@@ -902,20 +902,21 @@ class Parser {
         buttons: [NitroGridButton],
         traitCollection: UITraitCollection
     ) -> [CPGridButton] {
-        let gridButtonHeight: CGFloat
+        let maximumImageSize: CGSize
 
         if #available(iOS 26.0, *) {
-            gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
+            maximumImageSize = CPGridTemplate.maximumGridButtonImageSize
         }
         else {
-            gridButtonHeight = 44
+            maximumImageSize = CGSize(width: 44, height: 44)
         }
 
         return buttons.compactMap { button in
             guard
                 let image = parseGridButtonImage(
                     image: button.image,
-                    size: gridButtonHeight,
+                    size: maximumImageSize.height,
+                    maximumImageSize: maximumImageSize,
                     traitCollection: traitCollection
                 )
             else { return nil }
@@ -930,10 +931,12 @@ class Parser {
         }
     }
 
-    /// Glyphs are rendered at `size`, asset and remote images keep their own size.
+    /// Glyphs are rendered at `size`, asset images keep their own size, remote images are decoded
+    /// no larger than `maximumImageSize`.
     private static func parseGridButtonImage(
         image: NitroImage,
         size: CGFloat,
+        maximumImageSize: CGSize,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         var parsedImage: UIImage?
@@ -957,6 +960,7 @@ class Parser {
             parsedImage = Parser.parseRemoteImage(
                 remoteImage: remoteImage,
                 size: size,
+                maximumImageSize: maximumImageSize,
                 traitCollection: traitCollection
             )
         }
@@ -971,17 +975,17 @@ class Parser {
         onButtonPressed: @escaping (Int) -> Void,
         traitCollection: UITraitCollection
     ) -> CPListImageRowItem {
-        let pointSize: CGFloat
+        let maximumImageSize: CGSize
         let isLarge = imageSize == .large
 
         if #available(iOS 26.0, *), isLarge {
-            pointSize = CPListImageRowItemRowElement.maximumImageSize.height
+            maximumImageSize = CPListImageRowItemRowElement.maximumImageSize
         }
         else if #available(iOS 26.0, *) {
-            pointSize = CPListImageRowItemImageGridElement.maximumImageSize.height
+            maximumImageSize = CPListImageRowItemImageGridElement.maximumImageSize
         }
         else {
-            pointSize = CPListImageRowItem.maximumImageSize.height
+            maximumImageSize = CPListImageRowItem.maximumImageSize
         }
 
         let parsedButtons: [(index: Int, button: NitroGridButton, image: UIImage, title: String)] =
@@ -989,7 +993,8 @@ class Parser {
                 guard
                     let image = parseGridButtonImage(
                         image: button.image,
-                        size: pointSize,
+                        size: maximumImageSize.height,
+                        maximumImageSize: maximumImageSize,
                         traitCollection: traitCollection
                     ),
                     let title = parseText(text: button.title)
@@ -1055,7 +1060,7 @@ class Parser {
             }
             completion()
         }
-        
+
         // CarPlay shows a loading indicator until a row tap completes, the row itself has no action
         rowItem.handler = { _, completion in completion() }
 
@@ -1545,20 +1550,49 @@ class Parser {
         )
     }
 
-    /// `size` is the size a placeholder glyph is drawn at.
+    /// The largest size CarPlay draws an image at in the places this library uses, remote images
+    /// whose own size is not known are decoded no larger than this.
+    private static var largestImageSize: CGSize {
+        var sizes = [CPListItem.maximumImageSize, CPButtonMaximumImageSize]
+
+        if #available(iOS 26.0, *) {
+            sizes += [
+                CPListImageRowItemRowElement.maximumImageSize,
+                CPListImageRowItemImageGridElement.maximumImageSize,
+                CPGridTemplate.maximumGridButtonImageSize,
+            ]
+        }
+        else {
+            sizes.append(CPListImageRowItem.maximumImageSize)
+        }
+
+        return CGSize(
+            width: sizes.map(\.width).max() ?? 0,
+            height: sizes.map(\.height).max() ?? 0
+        )
+    }
+
+    /// `size` is the size a placeholder glyph is drawn at. `maximumImageSize` is the size CarPlay
+    /// draws the image at, the downloaded image is decoded no larger than that.
     static func parseRemoteImage(
         remoteImage: RemoteImage,
         size: CGFloat = 32,
+        maximumImageSize: CGSize? = nil,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 }
+        let decodeSize = maximumImageSize ?? largestImageSize
+        let maxPixelSize = Int(
+            (max(decodeSize.width, decodeSize.height) * traitCollection.displayScale).rounded(.up)
+        )
         let uiImage: UIImage?
 
         if let placeholder = remoteImage.placeholderGlyphImage {
             guard
                 let loaded = RemoteImageLoader.loadInBackground(
                     uri: remoteImage.uri,
-                    timeoutSeconds: timeoutSeconds
+                    timeoutSeconds: timeoutSeconds,
+                    maxPixelSize: maxPixelSize
                 )
             else {
                 return SymbolFont.imageFromNitroImage(
@@ -1574,7 +1608,8 @@ class Parser {
                 RemoteImageLoader.load(
                     uri: remoteImage.uri,
                     timeoutSeconds: timeoutSeconds
-                        ?? RemoteImageLoader.defaultBlockingTimeoutSeconds
+                        ?? RemoteImageLoader.defaultBlockingTimeoutSeconds,
+                    maxPixelSize: maxPixelSize
                 )
                 ?? (URL(string: remoteImage.uri) == nil
                     ? nil : UIImage(systemName: "exclamationmark.circle"))

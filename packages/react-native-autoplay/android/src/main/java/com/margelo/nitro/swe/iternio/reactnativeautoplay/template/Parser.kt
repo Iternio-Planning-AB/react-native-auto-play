@@ -38,9 +38,11 @@ import androidx.car.app.versioning.CarAppApiLevels
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.scale
 import androidx.core.net.toUri
 import com.facebook.datasource.DataSources
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableXml
 import com.facebook.imagepipeline.request.ImageRequest
@@ -677,7 +679,8 @@ object Parser {
     fun parseRemoteImage(context: CarContext, remoteImage: RemoteImage): Bitmap? {
         BitmapCache.get(context, remoteImage)?.let { return it }
 
-        val imageRequest = buildImageRequest(remoteImage.uri.toUri())
+        val maxSizePx = RemoteImageLoader.maxImageSizePx(context)
+        val imageRequest = buildImageRequest(remoteImage.uri.toUri(), maxSizePx)
 
         if (remoteImage.placeholderGlyphImage != null && RemoteImageLoader.isBuildingTemplate) {
             val timeoutMs =
@@ -685,6 +688,7 @@ object Parser {
 
             RemoteImageLoader.loadInBackground(remoteImage.cacheKey(context)) {
                 val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs)
+                    ?.downscale(maxSizePx)
                     ?: return@loadInBackground false
 
                 applyTintAndCache(
@@ -697,7 +701,8 @@ object Parser {
             return null
         }
         val timeoutMs = remoteImage.timeoutMs?.toLong() ?: 500L
-        val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs) ?: return null
+        val bitmap = fetchBitmap(context, imageRequest, timeoutMs = timeoutMs)
+            ?.downscale(maxSizePx) ?: return null
 
         return applyTintAndCache(
             context = context,
@@ -707,9 +712,24 @@ object Parser {
     }
 
     // Disable Fresco's own caching — BitmapCache handles all caching uniformly
-    private fun buildImageRequest(uri: android.net.Uri): ImageRequest =
+    private fun buildImageRequest(uri: android.net.Uri, maxSizePx: Int? = null): ImageRequest =
         ImageRequestBuilder.newBuilderWithSource(uri).disableDiskCache().disableMemoryCache()
+            .apply {
+                // decodes JPEGs smaller right away, other formats are scaled after decoding
+                maxSizePx?.let { resizeOptions = ResizeOptions(it, it) }
+            }
             .build()
+
+    private fun Bitmap.downscale(maxSizePx: Int): Bitmap {
+        val longerSide = maxOf(width, height)
+        if (longerSide <= maxSizePx) {
+            return this
+        }
+        val scale = maxSizePx.toFloat() / longerSide
+        return this.scale(
+            (width * scale).toInt().coerceAtLeast(1), (height * scale).toInt().coerceAtLeast(1)
+        )
+    }
 
     /**
      * Fetches a bitmap via Fresco's image pipeline.

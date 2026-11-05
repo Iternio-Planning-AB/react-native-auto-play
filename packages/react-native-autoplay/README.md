@@ -505,7 +505,7 @@ It is also possible to use custom bundled images (e.g. PNG, WEBP or Vector Drawa
 - Each uncached remote image waits for its download for up to `timeoutMs` (default 500 ms). Images are loaded one after another, so a template with several uncached remote images can take several times that to show up or update.
 - Template updates are applied in order, so every update queued after a slow one waits too. On Android this includes navigation updates such as `updateManeuvers`, and since those rebuild the `MapTemplate`, remote images on its map buttons and header actions are loaded again on every navigation update until they are cached.
 - A download that times out or fails is not cached and is retried on the next build, so on a slow connection every update waits again. An image that arrives after the timeout is not shown; the template shows a placeholder icon instead.
-- Successfully loaded images are kept in an in-memory cache, so the cost only applies the first time.
+- Successfully loaded images are downscaled (on iOS to the size CarPlay draws them at; on Android to 224 dp as [recommended for large images](https://developer.android.com/reference/androidx/car/app/model/Row#IMAGE_TYPE_LARGE())) and kept in an in-memory cache (8 MB), so the cost only applies the first time. Serve images close to that size; a full-size photo is downloaded completely just to be scaled down.
 
 If you need remote images, use them for content that is only known at runtime (e.g. logos in search results), keep their number per template low, and lower `timeoutMs` where a placeholder is acceptable.
 
@@ -522,7 +522,7 @@ Give a remote image a `placeholder` glyph and none of the above applies: the tem
 ```
 
 -   `timeoutMs` then limits the background download (default 10 s). When it times out or fails, the placeholder stays and the download is not retried for 30 s, so redraws don't hammer a broken URL.
--   Only the templates that showed the placeholder are redrawn, and only while they are still on screen. A template popped in the meantime is skipped; the image is cached for the next time it is shown. Downloads finishing close together are drawn in one redraw.
+-   Only the templates that showed the placeholder are redrawn, and only while they are still on screen. A template popped in the meantime is skipped; the image is cached for the next time it is shown. Downloads finishing close together are drawn in one redraw. A finished image is not downloaded again for 10 s, so if the cache drops it before the redraw (many large images), the placeholder stays instead of the template reloading in a loop.
 -   This works for every image drawn while a template is built, which happens when it is pushed or updated, including header actions and map buttons.
 -   Images drawn outside of a template build have nothing to redraw, so they don't accept remote images at all (`LocalAutoImage`, or `WithoutRemoteImages<…>` for whole configs): navigation alerts, CarPlay dashboard buttons, the cluster's attributed descriptions, the trip selector's map buttons and the CarPlay options panel. Maneuver images never accepted remote images.
 -   One exception on CarPlay: when a template shows as a map panel (iOS 27+), its header actions and map buttons are applied as the panel appears, outside of a build. A remote image there waits for its download like one without a placeholder and shows the placeholder if that fails.

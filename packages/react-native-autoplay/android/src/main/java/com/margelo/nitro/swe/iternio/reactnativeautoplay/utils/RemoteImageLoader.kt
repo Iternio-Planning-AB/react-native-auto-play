@@ -1,5 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay.utils
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -8,6 +9,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.RemoteImage
 import java.util.concurrent.Executors
+import kotlin.math.roundToInt
 
 /**
  * Background downloads for remote images with a placeholder.
@@ -32,6 +34,26 @@ object RemoteImageLoader {
     private const val FAILURE_RETRY_INTERVAL_MS = 30_000L
 
     /**
+     * a finished download is not repeated before this. The rebuild it triggers should find the image
+     * in the cache, if the cache dropped it already the placeholder stays rather than downloading and
+     * rebuilding in a loop
+     */
+    private const val LOADED_RETRY_INTERVAL_MS = 10_000L
+
+    /**
+     * Android Auto recommends large images to target a 224 x 224 dp bounding box, see
+     * https://developer.android.com/reference/androidx/car/app/model/Row#IMAGE_TYPE_LARGE()
+     */
+    private const val MAX_IMAGE_SIZE_DP = 224
+
+    /**
+     * remote images are downscaled to this size (longer side) before they are cached, the car
+     * screen never draws them larger and full size photos would not fit the BitmapCache
+     */
+    fun maxImageSizePx(context: Context): Int =
+        (MAX_IMAGE_SIZE_DP * context.resources.displayMetrics.density).roundToInt()
+
+    /**
      * downloads finishing within this time after the first one are drawn in one rebuild, which also
      * keeps rebuilds at least this far apart. Android Auto drops template updates sent in quick
      * succession, a grid of photos otherwise kept showing the placeholder for some of them.
@@ -45,6 +67,7 @@ object RemoteImageLoader {
     /** cache key -> ids of the templates that showed its placeholder while it downloads */
     private val waitingTemplateIds = HashMap<String, MutableSet<String>>()
     private val failedAt = HashMap<String, Long>()
+    private val loadedAt = HashMap<String, Long>()
     private val templateIdsToRedraw = HashSet<String>()
 
     private val executor = Executors.newCachedThreadPool { runnable ->
@@ -87,6 +110,12 @@ object RemoteImageLoader {
                 }
                 failedAt.remove(cacheKey)
             }
+            loadedAt[cacheKey]?.let { loaded ->
+                if (SystemClock.elapsedRealtime() - loaded < LOADED_RETRY_INTERVAL_MS) {
+                    return
+                }
+                loadedAt.remove(cacheKey)
+            }
 
             val waiting = waitingTemplateIds[cacheKey]
             if (waiting != null) {
@@ -111,7 +140,9 @@ object RemoteImageLoader {
             }
 
             val templateIds = synchronized(lock) {
-                if (!success) {
+                if (success) {
+                    loadedAt[cacheKey] = SystemClock.elapsedRealtime()
+                } else {
                     failedAt[cacheKey] = SystemClock.elapsedRealtime()
                 }
                 waitingTemplateIds.remove(cacheKey) ?: emptySet()

@@ -3,6 +3,7 @@
 //  Pods
 //
 
+import ImageIO
 import UIKit
 
 /// Downloads and caches remote images.
@@ -33,13 +34,19 @@ enum RemoteImageLoader {
     /// template would start a new download for a broken URL.
     private static let failureRetryIntervalSeconds: TimeInterval = 30
 
+    /// A finished download is not repeated before this. The redraw it triggers should find the
+    /// image in the cache, if the cache dropped it already the placeholder stays rather than
+    /// downloading and redrawing in a loop.
+    private static let loadedRetryIntervalSeconds: TimeInterval = 10
+
     /// Downloads finishing close together are drawn in one go.
     private static let redrawDelaySeconds: TimeInterval = 0.1
 
     private static let lock = NSLock()
-    /// uri -> ids of the templates that showed its placeholder while it downloads
+    /// cache key -> ids of the templates that showed its placeholder while it downloads
     private static var waitingTemplateIds: [String: Set<String>] = [:]
     private static var failedAt: [String: Date] = [:]
+    private static var loadedAt: [String: Date] = [:]
     private static var templateIdsToRedraw = Set<String>()
 
     private static let templateIdKey = "ReactNativeAutoPlayRemoteImageTemplateId"
@@ -66,8 +73,13 @@ enum RemoteImageLoader {
     }
 
     /// Blocks until the image is downloaded, `nil` on failure or timeout.
-    static func load(uri: String, timeoutSeconds: TimeInterval) -> UIImage? {
-        if let cached = cache.object(forKey: uri as NSString) {
+    static func load(
+        uri: String,
+        timeoutSeconds: TimeInterval,
+        maxPixelSize: Int
+    ) -> UIImage? {
+        let key = cacheKey(uri: uri, maxPixelSize: maxPixelSize)
+        if let cached = cache.object(forKey: key as NSString) {
             return cached
         }
 
@@ -88,42 +100,59 @@ enum RemoteImageLoader {
             return nil
         }
 
-        guard let data = resultData, let image = UIImage(data: data) else {
+        guard let data = resultData,
+            let image = decodeImage(data: data, maxPixelSize: maxPixelSize)
+        else {
             return nil
         }
 
-        store(image: image, uri: uri)
+        store(image: image, key: key)
         return image
     }
 
     /// Returns the cached image, otherwise `nil` and downloads it in the background for the
     /// template currently being built. Outside of a template build there is nothing to redraw
     /// later, so it blocks like `load(uri:timeoutSeconds:)` instead.
-    static func loadInBackground(uri: String, timeoutSeconds: TimeInterval?) -> UIImage? {
-        if let cached = cache.object(forKey: uri as NSString) {
+    static func loadInBackground(
+        uri: String,
+        timeoutSeconds: TimeInterval?,
+        maxPixelSize: Int
+    ) -> UIImage? {
+        let key = cacheKey(uri: uri, maxPixelSize: maxPixelSize)
+        if let cached = cache.object(forKey: key as NSString) {
             return cached
         }
 
         guard let templateId = currentTemplateId else {
-            return load(uri: uri, timeoutSeconds: timeoutSeconds ?? defaultBlockingTimeoutSeconds)
+            return load(
+                uri: uri,
+                timeoutSeconds: timeoutSeconds ?? defaultBlockingTimeoutSeconds,
+                maxPixelSize: maxPixelSize
+            )
         }
 
         guard let url = URL(string: uri) else { return nil }
 
         let startDownload = locked {
-            if let failed = failedAt[uri] {
+            if let failed = failedAt[key] {
                 if Date().timeIntervalSince(failed) < failureRetryIntervalSeconds {
                     return false
                 }
-                failedAt[uri] = nil
+                failedAt[key] = nil
+            }
+            if let loaded = loadedAt[key] {
+                if Date().timeIntervalSince(loaded) < loadedRetryIntervalSeconds {
+                    return false
+                }
+                loadedAt[key] = nil
             }
 
-            if waitingTemplateIds[uri] != nil {
-                waitingTemplateIds[uri]?.insert(templateId)
+            if waitingTemplateIds[key] != nil {
+                waitingTemplateIds[key]?.insert(templateId)
                 return false
             }
 
-            waitingTemplateIds[uri] = [templateId]
+            waitingTemplateIds[key] = [templateId]
             return true
         }
 
@@ -133,17 +162,20 @@ enum RemoteImageLoader {
 
         let timeout = timeoutSeconds ?? defaultBackgroundTimeoutSeconds
         let task = session.dataTask(with: URLRequest(url: url)) { data, _, _ in
-            let image = data.flatMap { UIImage(data: $0) }
+            let image = data.flatMap { decodeImage(data: $0, maxPixelSize: maxPixelSize) }
 
             if let image {
-                store(image: image, uri: uri)
+                store(image: image, key: key)
             }
 
             let templateIds = locked {
                 if image == nil {
-                    failedAt[uri] = Date()
+                    failedAt[key] = Date()
                 }
-                return waitingTemplateIds.removeValue(forKey: uri) ?? []
+                else {
+                    loadedAt[key] = Date()
+                }
+                return waitingTemplateIds.removeValue(forKey: key) ?? []
             }
 
             // a failed download keeps the placeholder that is shown already
@@ -161,9 +193,35 @@ enum RemoteImageLoader {
         return nil
     }
 
-    private static func store(image: UIImage, uri: String) {
+    /// Decodes straight to the downscaled size, a full size photo is never held in memory.
+    private static func decodeImage(data: Data, maxPixelSize: Int) -> UIImage? {
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else {
+            return nil
+        }
+
+        let thumbnailOptions =
+            [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceShouldCacheImmediately: true,
+                kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
+            ] as CFDictionary
+
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions) else {
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
+    }
+
+    /// An image used at different sizes is cached once per size.
+    private static func cacheKey(uri: String, maxPixelSize: Int) -> String {
+        return "\(uri)#\(maxPixelSize)"
+    }
+
+    private static func store(image: UIImage, key: String) {
         let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
-        cache.setObject(image, forKey: uri as NSString, cost: cost)
+        cache.setObject(image, forKey: key as NSString, cost: cost)
     }
 
     private static func scheduleRedraw(templateIds: Set<String>) {
