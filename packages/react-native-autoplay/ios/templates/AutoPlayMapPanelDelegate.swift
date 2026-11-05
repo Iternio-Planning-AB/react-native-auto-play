@@ -85,7 +85,7 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
                 stillTracked = interfaceController.panelTemplateIds.contains(templateId)
             }
 
-            // Already torn down elsewhere, e.g. by popToRootTemplate for a covered panel.
+            // Already torn down elsewhere, e.g. by popToRootTemplate, which handles every panel it pops itself.
             guard stillTracked else { return }
 
             await handlePanelPopped(templateId: templateId, animated: true)
@@ -95,8 +95,10 @@ class AutoPlayMapPanelDelegate: NSObject, CPMapPanel.Delegate {
 
 /// Tears down `templateId`'s panel and reveals whatever's now on top (or lets the map template
 /// reclaim its own bar/map buttons if nothing remains). Shared by `panelDidHide` — which only
-/// fires for a `hidePanel()`-triggered close — and `popTopEntry`'s `.panel` case, since
-/// `popPanel()` never triggers `panelDidHide` and so has to run this itself.
+/// fires for a `hidePanel()`-triggered close — `popTopEntry`'s `.panel` case, since
+/// `popPanel()` never triggers `panelDidHide` and so has to run this itself, and
+/// `popToRootTemplate`, which untracks the visible panel before `hidePanel()` and then tears it
+/// down inline so it's done before the pop resolves.
 @available(iOS 27.0, *)
 @MainActor
 func handlePanelPopped(templateId: String, animated: Bool) async {

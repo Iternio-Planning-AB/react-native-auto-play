@@ -30,6 +30,8 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
             return
         }
 
+        /// only for the current session, a late disconnect must not unblock the newer session's queue
+        TemplateUpdateQueue.reset()
         HybridAutoPlay.emit(event: .diddisconnect, sessionId: sessionId)
     }
 
@@ -38,6 +40,8 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         didConnect interfaceController: CPInterfaceController,
         to window: CPWindow
     ) {
+        TemplateUpdateQueue.reset()
+
         self.window = window
         self.interfaceController = AutoPlayInterfaceController(
             interfaceController: interfaceController
@@ -62,6 +66,8 @@ class HeadUnitSceneDelegate: AutoPlayScene, CPTemplateApplicationSceneDelegate {
         _ templateApplicationScene: CPTemplateApplicationScene,
         didConnect interfaceController: CPInterfaceController
     ) {
+        TemplateUpdateQueue.reset()
+
         self.interfaceController = AutoPlayInterfaceController(
             interfaceController: interfaceController
         )

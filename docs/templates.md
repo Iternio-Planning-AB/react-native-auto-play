@@ -74,8 +74,8 @@ Stack operations not tied to a single template live on `HybridAutoPlay`: `popTem
     followed by `startNavigation(B)`. So JS starts are handed to CarPlay on the next main queue
     turn (back to back starts collapse to the last trip), and a session is never replaced, nor
     a new one started after a stop, before it is `minimumSessionAge` (300 ms) old.
-  - All `HybridMapTemplate` calls hop to the main queue in JS call order; session updates sent
-    while a start is pending are replayed once it ran (`performWithNavigationSession`).
+  - All `HybridMapTemplate` calls go through `TemplateUpdateQueue` in JS call order; session
+    updates sent while a start is pending are replayed once it ran (`performWithNavigationSession`).
   - A session still active on scene connect or disconnect is finished; the scene can reconnect
     without a disconnect after the app was in the background. JS is not notified
     (`onStopNavigation` only reports CarPlay cancelling navigation), so apps have to start
