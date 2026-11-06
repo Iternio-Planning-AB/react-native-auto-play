@@ -352,6 +352,7 @@ class Parser {
                 section: section,
                 sectionIndex: sectionIndex,
                 updateSection: updateSection,
+                isPanelItem: false,
                 traitCollection: traitCollection
             )
         }
@@ -364,6 +365,7 @@ class Parser {
         section: NitroSection,
         sectionIndex: Int,
         updateSection: @escaping (NitroSection, Int) -> Void,
+        isPanelItem: Bool,
         traitCollection: UITraitCollection
     ) -> CPListItem {
         let isSelected =
@@ -386,7 +388,10 @@ class Parser {
                 traitCollection: traitCollection
             ),
             accessoryImage: isSelected
-                ? UIImage.checkmark : toggleImage,
+                ? UIImage.makeCheckmarkImage(
+                    isPanelItem: isPanelItem,
+                    traitCollection: traitCollection
+                ) : toggleImage,
             accessoryType: item.browsable == true
                 ? .disclosureIndicator : .none
         )
@@ -559,6 +564,7 @@ class Parser {
                 section: section,
                 sectionIndex: sectionIndex,
                 updateSection: updateSection,
+                isPanelItem: true,
                 traitCollection: traitCollection
             )
 
