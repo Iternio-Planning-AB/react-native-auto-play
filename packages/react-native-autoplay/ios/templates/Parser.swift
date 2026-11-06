@@ -494,6 +494,7 @@ class Parser {
                     items: [
                         parseImageRowItem(
                             buttons: gridSection.buttons,
+                            imageSize: gridSection.imageSize,
                             pressedButtonIndex: pressedGridButton?.sectionIndex == sectionIndex
                                 ? pressedGridButton?.buttonIndex : nil,
                             onButtonPressed: { buttonIndex in
@@ -907,20 +908,21 @@ class Parser {
         buttons: [NitroGridButton],
         traitCollection: UITraitCollection
     ) -> [CPGridButton] {
-        let gridButtonHeight: CGFloat
+        let maximumImageSize: CGSize
 
         if #available(iOS 26.0, *) {
-            gridButtonHeight = CPGridTemplate.maximumGridButtonImageSize.height
+            maximumImageSize = CPGridTemplate.maximumGridButtonImageSize
         }
         else {
-            gridButtonHeight = 44
+            maximumImageSize = CGSize(width: 44, height: 44)
         }
 
         return buttons.compactMap { button in
             guard
                 let image = parseGridButtonImage(
                     image: button.image,
-                    size: gridButtonHeight,
+                    size: maximumImageSize.height,
+                    maximumImageSize: maximumImageSize,
                     traitCollection: traitCollection
                 )
             else { return nil }
@@ -935,10 +937,12 @@ class Parser {
         }
     }
 
-    /// Glyphs are rendered at `size`, asset and remote images keep their own size.
+    /// Glyphs are rendered at `size`, asset images keep their own size, remote images are decoded
+    /// no larger than `maximumImageSize`.
     private static func parseGridButtonImage(
         image: NitroImage,
         size: CGFloat,
+        maximumImageSize: CGSize,
         traitCollection: UITraitCollection
     ) -> UIImage? {
         var parsedImage: UIImage?
@@ -961,6 +965,8 @@ class Parser {
         if let remoteImage = image.remoteImage {
             parsedImage = Parser.parseRemoteImage(
                 remoteImage: remoteImage,
+                size: size,
+                maximumImageSize: maximumImageSize,
                 traitCollection: traitCollection
             )
         }
@@ -970,17 +976,22 @@ class Parser {
 
     static func parseImageRowItem(
         buttons: [NitroGridButton],
+        imageSize: GridSectionImageSize?,
         pressedButtonIndex: Int?,
         onButtonPressed: @escaping (Int) -> Void,
         traitCollection: UITraitCollection
     ) -> CPListImageRowItem {
-        let imageSize: CGFloat
+        let maximumImageSize: CGSize
+        let isLarge = imageSize == .large
 
-        if #available(iOS 26.0, *) {
-            imageSize = CPListImageRowItemImageGridElement.maximumImageSize.height
+        if #available(iOS 26.0, *), isLarge {
+            maximumImageSize = CPListImageRowItemRowElement.maximumImageSize
+        }
+        else if #available(iOS 26.0, *) {
+            maximumImageSize = CPListImageRowItemImageGridElement.maximumImageSize
         }
         else {
-            imageSize = CPListImageRowItem.maximumImageSize.height
+            maximumImageSize = CPListImageRowItem.maximumImageSize
         }
 
         let parsedButtons: [(index: Int, button: NitroGridButton, image: UIImage, title: String)] =
@@ -988,7 +999,8 @@ class Parser {
                 guard
                     let image = parseGridButtonImage(
                         image: button.image,
-                        size: imageSize,
+                        size: maximumImageSize.height,
+                        maximumImageSize: maximumImageSize,
                         traitCollection: traitCollection
                     ),
                     let title = parseText(text: button.title)
@@ -1007,22 +1019,14 @@ class Parser {
         }
 
         if #available(iOS 26.0, *) {
-            let elements = visibleButtons.map { visibleButton in
-                let element = CPListImageRowItemImageGridElement(
-                    image: visibleButton.image,
-                    imageShape: .roundedRectangle,
-                    title: visibleButton.title,
-                    accessorySymbolName: nil
-                )
-                element.isEnabled = visibleButton.index != pressedButtonIndex
-                return element
-            }
-
-            let rowItem = CPListImageRowItem(
-                text: nil,
-                imageGridElements: elements,
-                allowsMultipleLines: true
+            let (rowItem, elements) = createImageRowItem(
+                visibleButtons: visibleButtons.map { ($0.image, $0.title) },
+                isLarge: isLarge
             )
+
+            for (element, visibleButton) in zip(elements, visibleButtons) {
+                element.isEnabled = visibleButton.index != pressedButtonIndex
+            }
 
             rowItem.listImageRowHandler = { item, index, completion in
                 MainActor.assumeIsolated {
@@ -1062,11 +1066,47 @@ class Parser {
             }
             completion()
         }
-        
+
         // CarPlay shows a loading indicator until a row tap completes, the row itself has no action
         rowItem.handler = { _, completion in completion() }
 
         return rowItem
+    }
+
+    /// `photo` uses row elements, not card elements: on iOS 27 a row of card thumbnails takes the aspect
+    /// ratio of its first photo and crops all others to it, which ruins mixed portrait and landscape
+    /// photos.
+    @available(iOS 26.0, *)
+    private static func createImageRowItem(
+        visibleButtons: [(image: UIImage, title: String)],
+        isLarge: Bool
+    ) -> (CPListImageRowItem, [CPListImageRowItemElement]) {
+        if isLarge {
+            let elements = visibleButtons.map { button in
+                CPListImageRowItemRowElement(image: button.image, title: button.title, subtitle: nil)
+            }
+            let rowItem = CPListImageRowItem(
+                text: nil,
+                elements: elements,
+                allowsMultipleLines: true
+            )
+            return (rowItem, elements)
+        }
+
+        let elements = visibleButtons.map { button in
+            CPListImageRowItemImageGridElement(
+                image: button.image,
+                imageShape: .roundedRectangle,
+                title: button.title,
+                accessorySymbolName: nil
+            )
+        }
+        let rowItem = CPListImageRowItem(
+            text: nil,
+            imageGridElements: elements,
+            allowsMultipleLines: true
+        )
+        return (rowItem, elements)
     }
 
     static func parseTextButtonStyle(style: NitroButtonStyle?)
@@ -1499,20 +1539,6 @@ class Parser {
         return nil
     }
 
-    // MARK: - Remote image cache
-    private static let remoteImageCache: NSCache<NSString, UIImage> = {
-        let cache = NSCache<NSString, UIImage>()
-        cache.countLimit = 50
-        cache.totalCostLimit = 8 * 1024 * 1024  // 8 MB, matching Android's BitmapCache
-        return cache
-    }()
-
-    /// Shared session — long-lived by design; failed tasks don't invalidate it.
-    private static let remoteImageSession = URLSession(configuration: .default)
-
-    /// Default network timeout for remote images when no `timeoutMs` is provided.
-    private static let defaultRemoteTimeoutSeconds: TimeInterval = 0.5
-
     static func parseAssetImage(
         assetImage: AssetImage,
         traitCollection: UITraitCollection
@@ -1530,18 +1556,95 @@ class Parser {
         )
     }
 
+    /// The largest size CarPlay draws an image at in the places this library uses, remote images
+    /// whose own size is not known are decoded no larger than this.
+    private static var largestImageSize: CGSize {
+        var sizes = [CPListItem.maximumImageSize, CPButtonMaximumImageSize]
+
+        if #available(iOS 26.0, *) {
+            sizes += [
+                CPListImageRowItemRowElement.maximumImageSize,
+                CPListImageRowItemImageGridElement.maximumImageSize,
+                CPGridTemplate.maximumGridButtonImageSize,
+            ]
+        }
+        else {
+            sizes.append(CPListImageRowItem.maximumImageSize)
+        }
+
+        return CGSize(
+            width: sizes.map(\.width).max() ?? 0,
+            height: sizes.map(\.height).max() ?? 0
+        )
+    }
+
+    /// `size` is the size a placeholder glyph is drawn at. `maximumImageSize` is the size CarPlay
+    /// draws the image at, the downloaded image is decoded no larger than that.
     static func parseRemoteImage(
         remoteImage: RemoteImage,
+        size: CGFloat = 32,
+        maximumImageSize: CGSize? = nil,
         traitCollection: UITraitCollection
     ) -> UIImage? {
-        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 } ?? defaultRemoteTimeoutSeconds
-        let uiImage = loadRemoteImage(uri: remoteImage.uri, timeoutSeconds: timeoutSeconds)
+        let timeoutSeconds = remoteImage.timeoutMs.map { $0 / 1000.0 }
+        let decodeSize = maximumImageSize ?? largestImageSize
+        let maxPixelSize = Int(
+            (max(decodeSize.width, decodeSize.height) * traitCollection.displayScale).rounded(.up)
+        )
+        let uiImage: UIImage?
+
+        if remoteImage.hasPlaceholder {
+            guard
+                let loaded = RemoteImageLoader.loadInBackground(
+                    uri: remoteImage.uri,
+                    timeoutSeconds: timeoutSeconds,
+                    maxPixelSize: maxPixelSize
+                )
+            else {
+                return parsePlaceholder(
+                    remoteImage: remoteImage,
+                    size: size,
+                    traitCollection: traitCollection
+                )
+            }
+            uiImage = loaded
+        }
+        else {
+            uiImage =
+                RemoteImageLoader.load(
+                    uri: remoteImage.uri,
+                    timeoutSeconds: timeoutSeconds
+                        ?? RemoteImageLoader.defaultBlockingTimeoutSeconds,
+                    maxPixelSize: maxPixelSize
+                )
+                ?? (URL(string: remoteImage.uri) == nil
+                    ? nil : UIImage(systemName: "exclamationmark.circle"))
+        }
 
         return applyTint(
             uiImage: uiImage,
             color: remoteImage.color,
             traitCollection: traitCollection
         )
+    }
+
+    /// Glyphs are drawn at `size`, assets keep their own size.
+    private static func parsePlaceholder(
+        remoteImage: RemoteImage,
+        size: CGFloat,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        if let glyph = remoteImage.placeholderGlyphImage {
+            return SymbolFont.imageFromNitroImage(
+                image: glyph,
+                size: size,
+                traitCollection: traitCollection
+            )
+        }
+        if let asset = remoteImage.placeholderAssetImage {
+            return parseAssetImage(assetImage: asset, traitCollection: traitCollection)
+        }
+        return nil
     }
 
     private static func applyTint(
@@ -1557,41 +1660,6 @@ class Parser {
             uiImage: image,
             traitCollection: traitCollection
         )
-    }
-
-    /// Synchronously loads an image from a remote HTTPS URL with in-memory caching.
-    /// `parseRemoteImage` is always invoked on a background thread by the Car App rendering pipeline,
-    /// so the semaphore wait cannot block the main thread.
-    private static func loadRemoteImage(uri: String, timeoutSeconds: TimeInterval) -> UIImage? {
-        let cacheKey = uri as NSString
-        if let cached = remoteImageCache.object(forKey: cacheKey) {
-            return cached
-        }
-
-        guard let url = URL(string: uri) else { return nil }
-
-        var request = URLRequest(url: url)
-        request.timeoutInterval = timeoutSeconds
-
-        var resultData: Data?
-        let semaphore = DispatchSemaphore(value: 0)
-        let task = remoteImageSession.dataTask(with: request) { data, _, _ in
-            resultData = data
-            semaphore.signal()
-        }
-        task.resume()
-        if semaphore.wait(timeout: .now() + timeoutSeconds) == .timedOut {
-            task.cancel()
-            return UIImage(systemName: "exclamationmark.circle")
-        }
-
-        guard let data = resultData, let image = UIImage(data: data) else {
-            return UIImage(systemName: "exclamationmark.circle")
-        }
-
-        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
-        remoteImageCache.setObject(image, forKey: cacheKey, cost: cost)
-        return image
     }
 
     static func getTintedImageAsset(
@@ -1793,5 +1861,43 @@ class Parser {
         asset.register(mergedImage(for: darkTrait), with: darkTrait)
 
         return asset.image(with: traitCollection)
+    }
+}
+
+extension RemoteImage {
+    var hasPlaceholder: Bool {
+        return placeholderGlyphImage != nil || placeholderAssetImage != nil
+    }
+
+    /// The placeholder asset, flattened into `placeholder*` fields on the JS side.
+    var placeholderAssetImage: AssetImage? {
+        guard let uri = placeholderUri, let width = placeholderWidth,
+            let height = placeholderHeight, let scale = placeholderScale,
+            let packagerAsset = placeholderPackagerAsset
+        else { return nil }
+
+        return AssetImage(
+            uri: uri,
+            width: width,
+            height: height,
+            scale: scale,
+            color: placeholderColor,
+            packager_asset: packagerAsset
+        )
+    }
+
+    /// The placeholder glyph, flattened into `placeholder*` fields on the JS side.
+    var placeholderGlyphImage: GlyphImage? {
+        guard let glyph = placeholderGlyph, let fontName = placeholderFontName,
+            let color = placeholderColor, let backgroundColor = placeholderBackgroundColor
+        else { return nil }
+
+        return GlyphImage(
+            glyph: glyph,
+            fontName: fontName,
+            color: color,
+            backgroundColor: backgroundColor,
+            fontScale: placeholderFontScale
+        )
     }
 }

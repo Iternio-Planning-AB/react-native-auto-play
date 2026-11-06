@@ -55,19 +55,27 @@ export type AutoGlyphByCodepoint = GlyphStyleFields & {
 
 export type AutoGlyph = AutoGlyphByName | AutoGlyphByCodepoint;
 
+export type AutoAssetImage = {
+  image: ImageSourcePropType;
+  /**
+   * if specified the image gets tinted, if not it will just use the original image
+   * Might not get applied everywhere like MapTemplate buttons on Android.
+   * Use `'default'` for monochrome icons that must stay readable on both dark and light
+   * Android Auto templates (17.8+), see README.
+   */
+  color?: ThemedColor | string;
+  type: 'asset';
+};
+
+/**
+ * `AutoImage` without remote images, for images drawn outside of a template build such as
+ * navigation alerts. A remote image there would hold up the update while it downloads and can not
+ * be redrawn once it arrives, see README.
+ */
+export type LocalAutoImage = AutoGlyph | AutoAssetImage;
+
 export type AutoImage =
-  | AutoGlyph
-  | {
-      image: ImageSourcePropType;
-      /**
-       * if specified the image gets tinted, if not it will just use the original image
-       * Might not get applied everywhere like MapTemplate buttons on Android.
-       * Use `'default'` for monochrome icons that must stay readable on both dark and light
-       * Android Auto templates (17.8+), see README.
-       */
-      color?: ThemedColor | string;
-      type: 'asset';
-    }
+  | LocalAutoImage
   | {
       /** HTTPS URL to a remote image. HTTP is not supported (blocked by App Transport Security). */
       uri: string;
@@ -78,13 +86,38 @@ export type AutoImage =
        */
       color?: ThemedColor | string;
       /**
-       * Network timeout in milliseconds before the remote fetch is abandoned and `null` is returned.
-       * Defaults to 500ms when not specified.
-       * Uncached remote images delay template updates, prefer glyphs or assets, see README.
+       * Without `placeholder`: how long building the template waits for the download, an
+       * uncached image delays the template by up to this, defaults to 500ms. The image is shown
+       * as an error icon when the download takes longer.
+       * With `placeholder`: how long the background download may take before it is given up and
+       * the placeholder stays, defaults to 10s. Where an image is drawn outside of a template
+       * build (CarPlay map panel header actions and map buttons) it is ignored and the download
+       * waits for 500ms like without placeholder.
        */
       timeoutMs?: number;
+      /**
+       * Shown while the image downloads, the template is not delayed by the download and gets
+       * redrawn with the image once it is available. Also stays when the download fails.
+       * Header actions and map buttons of a CarPlay map panel are applied outside of a template
+       * build and still wait like without a placeholder, see README.
+       * Glyphs are drawn at a larger size so they stay sharp in large grid items, assets at their
+       * own size.
+       */
+      placeholder?: LocalAutoImage;
       type: 'remote';
     };
+
+/**
+ * `T` with every image in it restricted to {@link LocalAutoImage}, for configs drawn outside of a
+ * template build that reuse types with `AutoImage` fields, like map buttons and list rows.
+ */
+export type WithoutRemoteImages<T> = T extends { type: 'remote'; uri: string }
+  ? never
+  : T extends (...args: never[]) => unknown
+    ? T
+    : T extends object
+      ? { [K in keyof T]: WithoutRemoteImages<T[K]> }
+      : T;
 
 /**
  * Image for the CarPlay voice control overlay. Animated GIF, APNG, and WebP all animate.

@@ -135,7 +135,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
                 screenManager.popToRoot()
                 val previousRootScreen = screenManager.top
 
-                val screen = AndroidAutoScreen(carContext, templateId, template.parse())
+                val screen = AndroidAutoScreen(carContext, templateId, template.render())
                 screenManager.push(screen)
 
                 screenManager.remove(previousRootScreen)
@@ -154,7 +154,7 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
 
             val topMessageScreen = AndroidAutoTemplate.getTopMessageTemplate()
 
-            val screen = AndroidAutoScreen(context, templateId, template.parse())
+            val screen = AndroidAutoScreen(context, templateId, template.render())
             screenManager.push(screen)
 
             template.autoDismissMs?.let {

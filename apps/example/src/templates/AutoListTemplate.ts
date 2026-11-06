@@ -11,6 +11,7 @@ import {
   type WaypointRow,
 } from '@iternio/react-native-auto-play';
 import { DefaultTemplateImageColor } from '../config/Color';
+import { AutoChargerPhotosTemplate } from './AutoChargerPhotosTemplate';
 import { AutoGridTemplate } from './AutoGridTemplate';
 import { AutoMessageTemplate } from './AutoMessageTemplate';
 import { AutoSectionedItemTemplate } from './AutoSectionedItemTemplate';
@@ -147,6 +148,19 @@ const getMainSection = (): Section<ListTemplate> => {
       image: {
         type: 'glyph',
         name: 'view_agenda',
+        color: DefaultTemplateImageColor,
+      },
+      browsable: true,
+    },
+    {
+      type: 'default',
+      onPress: () => {
+        void AutoChargerPhotosTemplate.getTemplate().push();
+      },
+      title: { text: 'charger details (photos)' },
+      image: {
+        type: 'glyph',
+        name: 'photo',
         color: DefaultTemplateImageColor,
       },
       browsable: true,

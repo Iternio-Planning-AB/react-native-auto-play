@@ -10,6 +10,10 @@ import CarPlay
 class AutoPlayTemplate: NSObject {
     public private(set) var autoDismissMs: Double?
 
+    /// Set when the template is added to the `TemplateStore`, remote images loaded in the
+    /// background redraw the template by this id.
+    var storeTemplateId: String?
+
     func getTemplate() throws -> CPTemplate {
         fatalError("getTemplate not implemented")
     }
@@ -45,7 +49,9 @@ class AutoPlayTemplate: NSObject {
             return
         }
 
-        _invalidate()
+        RemoteImageLoader.withTemplate(storeTemplateId) {
+            _invalidate()
+        }
     }
 
     /// Override in subclasses to perform template invalidation.

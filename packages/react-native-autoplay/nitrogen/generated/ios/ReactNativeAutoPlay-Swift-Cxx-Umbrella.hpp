@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `GridImageSize` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridImageSize; }
+// Forward declaration of `GridSectionImageSize` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GridSectionImageSize; }
 // Forward declaration of `GridTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GridTemplateConfig; }
 // Forward declaration of `HideControls` to properly resolve imports.
@@ -204,6 +206,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "ForkType.hpp"
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
+#include "GridSectionImageSize.hpp"
 #include "GridTemplateConfig.hpp"
 #include "HideControls.hpp"
 #include "HybridAutoPlaySpec.hpp"

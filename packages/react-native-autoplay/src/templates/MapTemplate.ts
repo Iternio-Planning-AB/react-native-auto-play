@@ -14,6 +14,7 @@ import type {
   MapPanButton,
   TextButton,
 } from '../types/Button';
+import type { WithoutRemoteImages } from '../types/Image';
 import type { AutoManeuver, ManeuverState } from '../types/Maneuver';
 import type { ColorScheme, RootComponentInitialProps } from '../types/RootComponent';
 import type {
@@ -263,10 +264,10 @@ export type MapTemplateConfig = Omit<
 
     /**
      * the panel shown when tapping the ellipsis button next to the travel estimates during active navigation (iOS 27+).
-     * No-op on Android
+     * No-op on Android. No remote images, the panel is not redrawn once a download finishes, see README.
      * @namespace iOS
      */
-    optionsPanel?: OptionsPanelConfig<MapTemplate>;
+    optionsPanel?: WithoutRemoteImages<OptionsPanelConfig<MapTemplate>>;
 
     /**
      * Notification that navigation was stopped. May occur when another source such as the car head unit starts navigating.
@@ -352,8 +353,9 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
   /**
    * @namespace iOS updates the panel shown when tapping the ellipsis button
    * next to the travel estimates during navigation (iOS 27+).
+   * No remote images, the panel is not redrawn once a download finishes, see README.
    */
-  public updateOptionsPanel(optionsPanel?: OptionsPanelConfig<MapTemplate>) {
+  public updateOptionsPanel(optionsPanel?: WithoutRemoteImages<OptionsPanelConfig<MapTemplate>>) {
     if (Platform.OS !== 'ios') {
       return;
     }
@@ -423,8 +425,9 @@ export class MapTemplate extends Template<MapTemplateConfig, MapTemplateConfig['
     /**
      * @namespace iOS - always shown no matter if navigation is started or not
      * @namespace Android - these buttons will only be shown when navigation is not started, otherwise AA will not show them
+     * No remote images, the trip selector is not redrawn once a download finishes, see README.
      */
-    mapButtons?: MapTemplateConfig['mapButtons'];
+    mapButtons?: WithoutRemoteImages<MapTemplateConfig['mapButtons']>;
   }): TripSelectorCallback {
     if (
       trips.length === 0 ||

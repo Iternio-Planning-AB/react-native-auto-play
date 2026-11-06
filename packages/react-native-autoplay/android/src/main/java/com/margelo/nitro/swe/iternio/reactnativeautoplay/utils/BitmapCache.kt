@@ -18,13 +18,13 @@ object BitmapCache {
         }
     }
 
-    fun get(context: CarContext, image: GlyphImage): Bitmap? {
-        val key = image.cacheKey(context)
+    fun get(context: CarContext, image: GlyphImage, sizeDp: Int): Bitmap? {
+        val key = "${image.cacheKey(context)}/$sizeDp"
         return get(key)
     }
 
-    fun put(context: CarContext, image: GlyphImage, bitmap: Bitmap) {
-        val key = image.cacheKey(context)
+    fun put(context: CarContext, image: GlyphImage, sizeDp: Int, bitmap: Bitmap) {
+        val key = "${image.cacheKey(context)}/$sizeDp"
         put(key, bitmap)
     }
 

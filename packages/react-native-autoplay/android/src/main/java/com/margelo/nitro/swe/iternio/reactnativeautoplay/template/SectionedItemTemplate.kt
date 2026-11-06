@@ -11,6 +11,7 @@ import androidx.car.app.model.Template
 import androidx.car.app.versioning.CarAppApiLevels
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.GridSectionImageSize
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroGridSection
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroSection
@@ -81,6 +82,9 @@ class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateCo
     private fun createGridSection(section: NitroGridSection): GridSection =
         GridSection.Builder().apply {
             section.title?.let { setTitle(it) }
+            if (section.imageSize == GridSectionImageSize.LARGE) {
+                setItemSize(GridSection.ITEM_SIZE_LARGE)
+            }
             section.buttons.forEach { button -> addItem(Parser.parseGridItem(context, button)) }
         }.build()
 
@@ -103,8 +107,12 @@ class SectionedItemTemplate(context: CarContext, config: SectionedItemTemplateCo
         ItemList.Builder().apply {
             section.buttons.forEach { button ->
                 addItem(Row.Builder().apply {
-                    setTitle(Parser.parseText(button.title))
-                    setImage(Parser.parseImage(context, button.image))
+                    setTitle(Parser.parseGridButtonTitle(button.title))
+                    if (section.imageSize == GridSectionImageSize.LARGE) {
+                        setImage(Parser.parseImage(context, button.image), Row.IMAGE_TYPE_LARGE)
+                    } else {
+                        setImage(Parser.parseImage(context, button.image))
+                    }
                     setOnClickListener(button.onPress)
                 }.build())
             }

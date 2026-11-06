@@ -15,12 +15,14 @@
 #include "Distance.hpp"
 #include "DistanceUnits.hpp"
 #include "GlyphImage.hpp"
+#include "GridSectionImageSize.hpp"
 #include "JAssetImage.hpp"
 #include "JAutoText.hpp"
 #include "JDistance.hpp"
 #include "JDistanceUnits.hpp"
 #include "JFunc_void.hpp"
 #include "JGlyphImage.hpp"
+#include "JGridSectionImageSize.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroGridButton.hpp"
 #include "JNitroImage.hpp"
@@ -58,6 +60,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
       static const auto fieldButtons = clazz->getField<jni::JArrayClass<JNitroGridButton>>("buttons");
       jni::local_ref<jni::JArrayClass<JNitroGridButton>> buttons = this->getFieldValue(fieldButtons);
+      static const auto fieldImageSize = clazz->getField<JGridSectionImageSize>("imageSize");
+      jni::local_ref<JGridSectionImageSize> imageSize = this->getFieldValue(fieldImageSize);
       return NitroGridSection(
         title != nullptr ? std::make_optional(title->toStdString()) : std::nullopt,
         [&](auto&& __input) {
@@ -69,7 +73,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __vector.push_back(__element->toCpp());
           }
           return __vector;
-        }(buttons)
+        }(buttons),
+        imageSize != nullptr ? std::make_optional(imageSize->toCpp()) : std::nullopt
       );
     }
 
@@ -79,7 +84,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroGridSection::javaobject> fromCpp(const NitroGridSection& value) {
-      using JSignature = JNitroGridSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>);
+      using JSignature = JNitroGridSection(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JArrayClass<JNitroGridButton>>, jni::alias_ref<JGridSectionImageSize>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -94,7 +99,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
             __array->setElement(__i, *__elementJni);
           }
           return __array;
-        }(value.buttons)
+        }(value.buttons),
+        value.imageSize.has_value() ? JGridSectionImageSize::fromCpp(value.imageSize.value()) : nullptr
       );
     }
   };

@@ -1,4 +1,4 @@
-import type { AutoImage } from '../types/Image';
+import type { LocalAutoImage } from '../types/Image';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
 type NitroAttributedStringImage = {
@@ -13,7 +13,10 @@ export type NitroAttributedString = {
 
 export type AutoAttributedString = {
   text: string;
-  images?: Array<{ image: AutoImage; position: number }>;
+  /**
+   * no remote images, attributed strings are not redrawn once a download finishes, see README
+   */
+  images?: Array<{ image: LocalAutoImage; position: number }>;
 };
 
 function convert(attributedStrings: Array<AutoAttributedString>): Array<NitroAttributedString> {

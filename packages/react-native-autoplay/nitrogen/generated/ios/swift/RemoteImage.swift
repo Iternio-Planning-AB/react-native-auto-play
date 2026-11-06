@@ -18,7 +18,7 @@ public extension RemoteImage {
   /**
    * Create a new instance of `RemoteImage`.
    */
-  init(uri: String, color: NitroColor?, timeoutMs: Double?) {
+  init(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderFontScale: Double?, placeholderUri: String?, placeholderWidth: Double?, placeholderHeight: Double?, placeholderScale: Double?, placeholderPackagerAsset: Bool?) {
     self.init(std.string(uri), { () -> bridge.std__optional_NitroColor_ in
       if let __unwrappedValue = color {
         return bridge.create_std__optional_NitroColor_(__unwrappedValue)
@@ -28,6 +28,66 @@ public extension RemoteImage {
     }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = timeoutMs {
         return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderGlyph {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = placeholderFontName {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_NitroColor_ in
+      if let __unwrappedValue = placeholderColor {
+        return bridge.create_std__optional_NitroColor_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_NitroColor_ in
+      if let __unwrappedValue = placeholderBackgroundColor {
+        return bridge.create_std__optional_NitroColor_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderFontScale {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = placeholderUri {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderWidth {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderHeight {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderScale {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = placeholderPackagerAsset {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -49,6 +109,112 @@ public extension RemoteImage {
     return { () -> Double? in
       if bridge.has_value_std__optional_double_(self.__timeoutMs) {
         let __unwrapped = bridge.get_std__optional_double_(self.__timeoutMs)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderGlyph: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderGlyph) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderGlyph)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderFontName: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__placeholderFontName) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__placeholderFontName)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderColor: NitroColor? {
+    return self.__placeholderColor.value
+  }
+  
+  @inline(__always)
+  var placeholderBackgroundColor: NitroColor? {
+    return self.__placeholderBackgroundColor.value
+  }
+  
+  @inline(__always)
+  var placeholderFontScale: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderFontScale) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderFontScale)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderUri: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__placeholderUri) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__placeholderUri)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderWidth: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderWidth) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderWidth)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderHeight: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderHeight) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderHeight)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderScale: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderScale) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderScale)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var placeholderPackagerAsset: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__placeholderPackagerAsset) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__placeholderPackagerAsset)
         return __unwrapped
       } else {
         return nil

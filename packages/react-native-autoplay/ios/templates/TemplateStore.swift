@@ -31,6 +31,7 @@ class TemplateStore {
     }
 
     func addTemplate(template: AutoPlayTemplate, templateId: String) {
+        template.storeTemplateId = templateId
         withLock { store[templateId] = template }
     }
 

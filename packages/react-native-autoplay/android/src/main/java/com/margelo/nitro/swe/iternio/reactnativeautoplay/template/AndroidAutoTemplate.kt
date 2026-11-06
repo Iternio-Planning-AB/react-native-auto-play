@@ -6,10 +6,18 @@ import androidx.car.app.model.Template
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NitroAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.TemplateNotFoundException
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.RemoteImageLoader
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class AndroidAutoTemplate<T>(val context: CarContext, @Volatile var config: T) {
     abstract fun parse(): Template
+
+    /**
+     * [parse] for a screen, remote images with a placeholder that download in the background
+     * rebuild this template once they are available, see [RemoteImageLoader]
+     */
+    fun render(): Template = RemoteImageLoader.withTemplate(templateId) { parse() }
+
     abstract fun setTemplateHeaderActions(headerActions: Array<NitroAction>?)
 
     abstract fun onWillAppear()

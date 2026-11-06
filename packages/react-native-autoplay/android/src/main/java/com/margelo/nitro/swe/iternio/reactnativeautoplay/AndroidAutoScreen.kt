@@ -114,7 +114,7 @@ class AndroidAutoScreen(
             else -> null
         }?.let {
             AndroidAutoTemplate.setTemplate(moduleName, it)
-            this.template = it.parse()
+            this.template = it.render()
 
             if (!invalidate) {
                 return

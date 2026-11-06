@@ -1,4 +1,4 @@
-import type { AutoImage } from '../types/Image';
+import type { LocalAutoImage } from '../types/Image';
 import type { AutoText } from '../types/Text';
 import { type NitroImage, NitroImageUtil } from './NitroImage';
 
@@ -23,7 +23,10 @@ export type NavigationAlert = {
   id: number;
   title: AutoText;
   subtitle?: AutoText;
-  image?: AutoImage;
+  /**
+   * no remote images, alerts are not redrawn once a download finishes, see README
+   */
+  image?: LocalAutoImage;
   primaryAction: NavigationAlertAction;
   secondaryAction?: NavigationAlertAction;
   durationMs: number;

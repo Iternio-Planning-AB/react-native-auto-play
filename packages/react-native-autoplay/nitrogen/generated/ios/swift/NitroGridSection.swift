@@ -18,7 +18,7 @@ public extension NitroGridSection {
   /**
    * Create a new instance of `NitroGridSection`.
    */
-  init(title: String?, buttons: [NitroGridButton]) {
+  init(title: String?, buttons: [NitroGridButton], imageSize: GridSectionImageSize?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = title {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -31,6 +31,12 @@ public extension NitroGridSection {
         __vector.push_back(__item)
       }
       return __vector
+    }(), { () -> bridge.std__optional_GridSectionImageSize_ in
+      if let __unwrappedValue = imageSize {
+        return bridge.create_std__optional_GridSectionImageSize_(__unwrappedValue)
+      } else {
+        return .init()
+      }
     }())
   }
 
@@ -49,5 +55,10 @@ public extension NitroGridSection {
   @inline(__always)
   var buttons: [NitroGridButton] {
     return self.__buttons.map({ __item in __item })
+  }
+  
+  @inline(__always)
+  var imageSize: GridSectionImageSize? {
+    return self.__imageSize.value
   }
 }

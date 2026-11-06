@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import type { AutoImage } from '../types/Image';
+import type { AutoAssetImage, AutoImage, LocalAutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 let _iconFont: string | undefined;
@@ -81,10 +81,25 @@ interface GlyphImage {
   fontScale?: number;
 }
 
+/**
+ * the placeholder glyph or asset is flattened into placeholder* fields, a nested struct overflows
+ * nitrogen's call stack for the specs that use NitroImage deep inside their config.
+ * `placeholderColor` is the glyph color or the asset tint.
+ */
 interface RemoteImage {
   uri: string;
   color?: NitroColor;
   timeoutMs?: number;
+  placeholderGlyph?: number;
+  placeholderFontName?: string;
+  placeholderColor?: NitroColor;
+  placeholderBackgroundColor?: NitroColor;
+  placeholderFontScale?: number;
+  placeholderUri?: string;
+  placeholderWidth?: number;
+  placeholderHeight?: number;
+  placeholderScale?: number;
+  placeholderPackagerAsset?: boolean;
 }
 
 /**
@@ -92,33 +107,19 @@ interface RemoteImage {
  */
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
-function convert(image: AutoImage): NitroImage;
-function convert(image?: AutoImage): NitroImage | undefined;
-function convert(image?: AutoImage): NitroImage | undefined {
-  if (image == null) {
-    return undefined;
-  }
+function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage {
+  const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
 
-  if (image.type === 'glyph') {
-    const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
+  return {
+    glyph: resolveGlyph(image),
+    fontName: getIconFont(),
+    color: NitroColorUtil.convert(color),
+    backgroundColor: NitroColorUtil.convert(backgroundColor),
+    fontScale,
+  };
+}
 
-    return {
-      glyph: resolveGlyph(image),
-      fontName: getIconFont(),
-      color: NitroColorUtil.convert(color),
-      backgroundColor: NitroColorUtil.convert(backgroundColor),
-      fontScale,
-    };
-  }
-
-  if (image.type === 'remote') {
-    return {
-      uri: image.uri,
-      color: NitroColorUtil.convert(image.color),
-      timeoutMs: image.timeoutMs,
-    };
-  }
-
+function convertAsset(image: AutoAssetImage): AssetImage {
   // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
   // so the input allows all optional parameters which are returned as is even though
   // the return type claims to not have any optional parameters...
@@ -131,7 +132,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
     ...rest
   } = Image.resolveAssetSource(image.image) ?? {};
 
-  const assetImage: AssetImage = {
+  return {
     height,
     scale,
     uri,
@@ -139,8 +140,58 @@ function convert(image?: AutoImage): NitroImage | undefined {
     packager_asset: '__packager_asset' in rest ? Boolean(rest.__packager_asset) : false,
     color: NitroColorUtil.convert(image.color),
   };
+}
 
-  return assetImage;
+function convertPlaceholder(placeholder?: LocalAutoImage): Partial<RemoteImage> {
+  if (placeholder == null) {
+    return {};
+  }
+
+  if (placeholder.type === 'asset') {
+    const asset = convertAsset(placeholder);
+
+    return {
+      placeholderUri: asset.uri,
+      placeholderWidth: asset.width,
+      placeholderHeight: asset.height,
+      placeholderScale: asset.scale,
+      placeholderPackagerAsset: asset.packager_asset,
+      placeholderColor: asset.color,
+    };
+  }
+
+  const glyph = convertGlyph(placeholder);
+
+  return {
+    placeholderGlyph: glyph.glyph,
+    placeholderFontName: glyph.fontName,
+    placeholderColor: glyph.color,
+    placeholderBackgroundColor: glyph.backgroundColor,
+    placeholderFontScale: glyph.fontScale,
+  };
+}
+
+function convert(image: AutoImage): NitroImage;
+function convert(image?: AutoImage): NitroImage | undefined;
+function convert(image?: AutoImage): NitroImage | undefined {
+  if (image == null) {
+    return undefined;
+  }
+
+  if (image.type === 'glyph') {
+    return convertGlyph(image);
+  }
+
+  if (image.type === 'remote') {
+    return {
+      uri: image.uri,
+      color: NitroColorUtil.convert(image.color),
+      timeoutMs: image.timeoutMs,
+      ...convertPlaceholder(image.placeholder),
+    };
+  }
+
+  return convertAsset(image);
 }
 
 export const NitroImageUtil = { convert };
