@@ -92,6 +92,10 @@ class ClusterSceneDelegate: AutoPlayScene,
         _ instrumentClusterWindow: UIWindow
     ) {
         // only the window disconnected but it could come back so do not call disconnect in here
+        // Stop the surface here though: disconnect() stops it through self.window, which is
+        // already nil by then, so the React root stayed mounted and never ran its cleanup. A
+        // window that comes back gets a fresh root view from initRootView.
+        NitroSurface.stop(instrumentClusterWindow.rootViewController?.view)
         self.window = nil
         HybridCluster.emit(
             event: .diddisconnectfromwindow,
