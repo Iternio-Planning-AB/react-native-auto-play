@@ -1587,7 +1587,7 @@ class Parser {
         )
         let uiImage: UIImage?
 
-        if let placeholder = remoteImage.placeholderGlyphImage {
+        if remoteImage.hasPlaceholder {
             guard
                 let loaded = RemoteImageLoader.loadInBackground(
                     uri: remoteImage.uri,
@@ -1595,8 +1595,8 @@ class Parser {
                     maxPixelSize: maxPixelSize
                 )
             else {
-                return SymbolFont.imageFromNitroImage(
-                    image: placeholder,
+                return parsePlaceholder(
+                    remoteImage: remoteImage,
                     size: size,
                     traitCollection: traitCollection
                 )
@@ -1620,6 +1620,25 @@ class Parser {
             color: remoteImage.color,
             traitCollection: traitCollection
         )
+    }
+
+    /// Glyphs are drawn at `size`, assets keep their own size.
+    private static func parsePlaceholder(
+        remoteImage: RemoteImage,
+        size: CGFloat,
+        traitCollection: UITraitCollection
+    ) -> UIImage? {
+        if let glyph = remoteImage.placeholderGlyphImage {
+            return SymbolFont.imageFromNitroImage(
+                image: glyph,
+                size: size,
+                traitCollection: traitCollection
+            )
+        }
+        if let asset = remoteImage.placeholderAssetImage {
+            return parseAssetImage(assetImage: asset, traitCollection: traitCollection)
+        }
+        return nil
     }
 
     private static func applyTint(
@@ -1840,6 +1859,27 @@ class Parser {
 }
 
 extension RemoteImage {
+    var hasPlaceholder: Bool {
+        return placeholderGlyphImage != nil || placeholderAssetImage != nil
+    }
+
+    /// The placeholder asset, flattened into `placeholder*` fields on the JS side.
+    var placeholderAssetImage: AssetImage? {
+        guard let uri = placeholderUri, let width = placeholderWidth,
+            let height = placeholderHeight, let scale = placeholderScale,
+            let packagerAsset = placeholderPackagerAsset
+        else { return nil }
+
+        return AssetImage(
+            uri: uri,
+            width: width,
+            height: height,
+            scale: scale,
+            color: placeholderColor,
+            packager_asset: packagerAsset
+        )
+    }
+
     /// The placeholder glyph, flattened into `placeholder*` fields on the JS side.
     var placeholderGlyphImage: GlyphImage? {
         guard let glyph = placeholderGlyph, let fontName = placeholderFontName,

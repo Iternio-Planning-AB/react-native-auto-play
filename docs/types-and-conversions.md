@@ -40,8 +40,9 @@ passed to native. That conversion layer is where most surprises live.
 - `NitroManeuver` **silently drops** fields that don't match the `maneuverType` (`turnType`
   only for `Turn`, `exitNumber` only for `Roundabout`, …) instead of erroring.
 - Remote images must be HTTPS (iOS ATS). **Without a `placeholder`** an uncached image blocks
-  the template build for up to `timeoutMs` (default 500 ms). **With a `placeholder` glyph** the
-  template builds immediately with the placeholder, the image downloads in the background
+  the template build for up to `timeoutMs` (default 500 ms). **With a `placeholder`** (glyph or
+  asset, passed to native as flat `placeholder*` fields on `RemoteImage` because a nested struct
+  overflows nitrogen's stack) the template builds immediately with the placeholder, the image downloads in the background
   (`timeoutMs` then limits that download, default 10 s), and the template that requested it is
   redrawn once it arrives, if still on screen. A failed download is not retried for 30 s. The
   machinery is `RemoteImageLoader` on both platforms; the template id comes from a thread-local

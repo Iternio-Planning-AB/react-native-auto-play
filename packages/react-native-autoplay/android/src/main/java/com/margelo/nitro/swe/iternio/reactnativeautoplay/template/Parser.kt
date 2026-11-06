@@ -89,6 +89,8 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.SymbolFont
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.cacheKey
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.get
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.hasPlaceholder
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.placeholderAssetImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.placeholderGlyphImage
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -291,15 +293,17 @@ object Parser {
         remoteImage: RemoteImage?,
         glyphSizeDp: Int = SymbolFont.DEFAULT_SIZE_DP
     ): CarIcon {
-        // the placeholder gets the tint handling of a glyph, not the one of the remote image
-        remoteImage?.placeholderGlyphImage?.let { placeholder ->
-            if (glyphImage == null && assetImage == null &&
-                parseRemoteImage(context, remoteImage) == null
-            ) {
-                return parseImage(
-                    context, placeholder, null, null, SymbolFont.PLACEHOLDER_SIZE_DP
-                )
-            }
+        // the placeholder gets its own tint handling, not the one of the remote image
+        if (remoteImage != null && remoteImage.hasPlaceholder && glyphImage == null &&
+            assetImage == null && parseRemoteImage(context, remoteImage) == null
+        ) {
+            return parseImage(
+                context,
+                remoteImage.placeholderGlyphImage,
+                remoteImage.placeholderAssetImage,
+                null,
+                SymbolFont.PLACEHOLDER_SIZE_DP
+            )
         }
 
         val bitmap = parseImageToBitmap(context, glyphImage, assetImage, remoteImage, glyphSizeDp)
@@ -345,6 +349,9 @@ object Parser {
                     SymbolFont.imageFromNitroImage(
                         context, placeholder, SymbolFont.PLACEHOLDER_SIZE_DP
                     )
+                }
+                ?: it.placeholderAssetImage?.let { placeholder ->
+                    parseAssetImage(context, placeholder)
                 }
         }
 
@@ -682,7 +689,7 @@ object Parser {
         val maxSizePx = RemoteImageLoader.maxImageSizePx(context)
         val imageRequest = buildImageRequest(remoteImage.uri.toUri(), maxSizePx)
 
-        if (remoteImage.placeholderGlyphImage != null && RemoteImageLoader.isBuildingTemplate) {
+        if (remoteImage.hasPlaceholder && RemoteImageLoader.isBuildingTemplate) {
             val timeoutMs =
                 remoteImage.timeoutMs?.toLong() ?: RemoteImageLoader.DEFAULT_BACKGROUND_TIMEOUT_MS
 
@@ -702,7 +709,7 @@ object Parser {
         }
         // with a placeholder timeoutMs limits the background download, waiting that long here
         // would hold up the update
-        val timeoutMs = if (remoteImage.placeholderGlyphImage != null) {
+        val timeoutMs = if (remoteImage.hasPlaceholder) {
             RemoteImageLoader.DEFAULT_BLOCKING_TIMEOUT_MS
         } else {
             remoteImage.timeoutMs?.toLong() ?: RemoteImageLoader.DEFAULT_BLOCKING_TIMEOUT_MS

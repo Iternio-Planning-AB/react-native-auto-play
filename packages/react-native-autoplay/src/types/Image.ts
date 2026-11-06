@@ -55,19 +55,27 @@ export type AutoGlyphByCodepoint = GlyphStyleFields & {
 
 export type AutoGlyph = AutoGlyphByName | AutoGlyphByCodepoint;
 
+export type AutoAssetImage = {
+  image: ImageSourcePropType;
+  /**
+   * if specified the image gets tinted, if not it will just use the original image
+   * Might not get applied everywhere like MapTemplate buttons on Android.
+   * Use `'default'` for monochrome icons that must stay readable on both dark and light
+   * Android Auto templates (17.8+), see README.
+   */
+  color?: ThemedColor | string;
+  type: 'asset';
+};
+
+/**
+ * `AutoImage` without remote images, for images drawn outside of a template build such as
+ * navigation alerts. A remote image there would hold up the update while it downloads and can not
+ * be redrawn once it arrives, see README.
+ */
+export type LocalAutoImage = AutoGlyph | AutoAssetImage;
+
 export type AutoImage =
-  | AutoGlyph
-  | {
-      image: ImageSourcePropType;
-      /**
-       * if specified the image gets tinted, if not it will just use the original image
-       * Might not get applied everywhere like MapTemplate buttons on Android.
-       * Use `'default'` for monochrome icons that must stay readable on both dark and light
-       * Android Auto templates (17.8+), see README.
-       */
-      color?: ThemedColor | string;
-      type: 'asset';
-    }
+  | LocalAutoImage
   | {
       /** HTTPS URL to a remote image. HTTP is not supported (blocked by App Transport Security). */
       uri: string;
@@ -92,17 +100,12 @@ export type AutoImage =
        * redrawn with the image once it is available. Also stays when the download fails.
        * Header actions and map buttons of a CarPlay map panel are applied outside of a template
        * build and still wait like without a placeholder, see README.
+       * Glyphs are drawn at a larger size so they stay sharp in large grid items, assets at their
+       * own size.
        */
-      placeholder?: AutoGlyph;
+      placeholder?: LocalAutoImage;
       type: 'remote';
     };
-
-/**
- * `AutoImage` without remote images, for images drawn outside of a template build such as
- * navigation alerts. A remote image there would hold up the update while it downloads and can not
- * be redrawn once it arrives, see README.
- */
-export type LocalAutoImage = Exclude<AutoImage, { type: 'remote' }>;
 
 /**
  * `T` with every image in it restricted to {@link LocalAutoImage}, for configs drawn outside of a

@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import type { AutoImage } from '../types/Image';
+import type { AutoAssetImage, AutoImage, LocalAutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 let _iconFont: string | undefined;
@@ -82,8 +82,9 @@ interface GlyphImage {
 }
 
 /**
- * the placeholder glyph is flattened into placeholder* fields, a nested struct overflows
- * nitrogen's call stack for the specs that use NitroImage deep inside their config
+ * the placeholder glyph or asset is flattened into placeholder* fields, a nested struct overflows
+ * nitrogen's call stack for the specs that use NitroImage deep inside their config.
+ * `placeholderColor` is the glyph color or the asset tint.
  */
 interface RemoteImage {
   uri: string;
@@ -94,6 +95,11 @@ interface RemoteImage {
   placeholderColor?: NitroColor;
   placeholderBackgroundColor?: NitroColor;
   placeholderFontScale?: number;
+  placeholderUri?: string;
+  placeholderWidth?: number;
+  placeholderHeight?: number;
+  placeholderScale?: number;
+  placeholderPackagerAsset?: boolean;
 }
 
 /**
@@ -113,11 +119,45 @@ function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage 
   };
 }
 
-function convertPlaceholder(
-  placeholder?: Extract<AutoImage, { type: 'glyph' }>
-): Partial<RemoteImage> {
+function convertAsset(image: AutoAssetImage): AssetImage {
+  // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
+  // so the input allows all optional parameters which are returned as is even though
+  // the return type claims to not have any optional parameters...
+  // we specify some default values to not crash because of proper typing required by nitro-modules
+  const {
+    height = 0,
+    scale = 0,
+    uri = '',
+    width = 0,
+    ...rest
+  } = Image.resolveAssetSource(image.image) ?? {};
+
+  return {
+    height,
+    scale,
+    uri,
+    width,
+    packager_asset: '__packager_asset' in rest ? Boolean(rest.__packager_asset) : false,
+    color: NitroColorUtil.convert(image.color),
+  };
+}
+
+function convertPlaceholder(placeholder?: LocalAutoImage): Partial<RemoteImage> {
   if (placeholder == null) {
     return {};
+  }
+
+  if (placeholder.type === 'asset') {
+    const asset = convertAsset(placeholder);
+
+    return {
+      placeholderUri: asset.uri,
+      placeholderWidth: asset.width,
+      placeholderHeight: asset.height,
+      placeholderScale: asset.scale,
+      placeholderPackagerAsset: asset.packager_asset,
+      placeholderColor: asset.color,
+    };
   }
 
   const glyph = convertGlyph(placeholder);
@@ -151,28 +191,7 @@ function convert(image?: AutoImage): NitroImage | undefined {
     };
   }
 
-  // Image.resolveAssetSource is pretty terrible, it will simply return whatever object you pass it is not a number [require(...)]
-  // so the input allows all optional parameters which are returned as is even though
-  // the return type claims to not have any optional parameters...
-  // we specify some default values to not crash because of proper typing required by nitro-modules
-  const {
-    height = 0,
-    scale = 0,
-    uri = '',
-    width = 0,
-    ...rest
-  } = Image.resolveAssetSource(image.image) ?? {};
-
-  const assetImage: AssetImage = {
-    height,
-    scale,
-    uri,
-    width,
-    packager_asset: '__packager_asset' in rest ? Boolean(rest.__packager_asset) : false,
-    color: NitroColorUtil.convert(image.color),
-  };
-
-  return assetImage;
+  return convertAsset(image);
 }
 
 export const NitroImageUtil = { convert };

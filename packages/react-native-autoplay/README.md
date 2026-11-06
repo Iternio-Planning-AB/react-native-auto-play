@@ -511,7 +511,7 @@ If you need remote images, use them for content that is only known at runtime (e
 
 #### Placeholders
 
-Give a remote image a `placeholder` glyph and none of the above applies: the template is built right away with the placeholder, the image downloads in the background, and the template is redrawn once it arrives.
+Give a remote image a `placeholder` (a glyph or a bundled asset, any `LocalAutoImage`) and none of the above applies: the template is built right away with the placeholder, the image downloads in the background, and the template is redrawn once it arrives. Glyph placeholders are drawn larger than icons so they stay sharp in large grid items; an asset is drawn at its own size, e.g. a blurred photo shown in place of the real one.
 
 ```ts
 {

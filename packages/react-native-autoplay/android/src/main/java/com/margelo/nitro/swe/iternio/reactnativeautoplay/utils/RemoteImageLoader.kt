@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.AndroidAutoScreen
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.AssetImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.RemoteImage
 import java.util.concurrent.Executors
@@ -189,6 +190,21 @@ object RemoteImageLoader {
         }, REDRAW_DELAY_MS)
     }
 }
+
+val RemoteImage.hasPlaceholder: Boolean
+    get() = placeholderGlyphImage != null || placeholderAssetImage != null
+
+/** the placeholder asset, flattened into placeholder* fields on the JS side */
+val RemoteImage.placeholderAssetImage: AssetImage?
+    get() {
+        val uri = placeholderUri ?: return null
+        val width = placeholderWidth ?: return null
+        val height = placeholderHeight ?: return null
+        val scale = placeholderScale ?: return null
+        val packagerAsset = placeholderPackagerAsset ?: return null
+
+        return AssetImage(uri, width, height, scale, placeholderColor, packagerAsset)
+    }
 
 /** the placeholder glyph, flattened into placeholder* fields on the JS side */
 val RemoteImage.placeholderGlyphImage: GlyphImage?
