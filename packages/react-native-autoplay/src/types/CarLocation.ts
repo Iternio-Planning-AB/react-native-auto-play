@@ -41,7 +41,4 @@ export interface CarLocation {
   fixAgeMs?: number;
   /** Age in ms of the CarValue that carried the fix, measured on the phone's monotonic clock */
   carValueAgeMs?: number;
-  /** location provider name reported by the head unit */
-  provider?: string;
-  isMock?: boolean;
 }

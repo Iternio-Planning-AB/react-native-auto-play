@@ -13,7 +13,6 @@
 #include "CarLocationStatus.hpp"
 #include "JCarLocationStatus.hpp"
 #include <optional>
-#include <string>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -54,10 +53,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<jni::JDouble> fixAgeMs = this->getFieldValue(fieldFixAgeMs);
       static const auto fieldCarValueAgeMs = clazz->getField<jni::JDouble>("carValueAgeMs");
       jni::local_ref<jni::JDouble> carValueAgeMs = this->getFieldValue(fieldCarValueAgeMs);
-      static const auto fieldProvider = clazz->getField<jni::JString>("provider");
-      jni::local_ref<jni::JString> provider = this->getFieldValue(fieldProvider);
-      static const auto fieldIsMock = clazz->getField<jni::JBoolean>("isMock");
-      jni::local_ref<jni::JBoolean> isMock = this->getFieldValue(fieldIsMock);
       return CarLocation(
         status->toCpp(),
         latitude != nullptr ? std::make_optional(latitude->value()) : std::nullopt,
@@ -68,9 +63,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         heading != nullptr ? std::make_optional(heading->value()) : std::nullopt,
         timestamp != nullptr ? std::make_optional(timestamp->value()) : std::nullopt,
         fixAgeMs != nullptr ? std::make_optional(fixAgeMs->value()) : std::nullopt,
-        carValueAgeMs != nullptr ? std::make_optional(carValueAgeMs->value()) : std::nullopt,
-        provider != nullptr ? std::make_optional(provider->toStdString()) : std::nullopt,
-        isMock != nullptr ? std::make_optional(static_cast<bool>(isMock->value())) : std::nullopt
+        carValueAgeMs != nullptr ? std::make_optional(carValueAgeMs->value()) : std::nullopt
       );
     }
 
@@ -80,7 +73,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JCarLocation::javaobject> fromCpp(const CarLocation& value) {
-      using JSignature = JCarLocation(jni::alias_ref<JCarLocationStatus>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JCarLocation(jni::alias_ref<JCarLocationStatus>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -94,9 +87,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.heading.has_value() ? jni::JDouble::valueOf(value.heading.value()) : nullptr,
         value.timestamp.has_value() ? jni::JDouble::valueOf(value.timestamp.value()) : nullptr,
         value.fixAgeMs.has_value() ? jni::JDouble::valueOf(value.fixAgeMs.value()) : nullptr,
-        value.carValueAgeMs.has_value() ? jni::JDouble::valueOf(value.carValueAgeMs.value()) : nullptr,
-        value.provider.has_value() ? jni::make_jstring(value.provider.value()) : nullptr,
-        value.isMock.has_value() ? jni::JBoolean::valueOf(value.isMock.value()) : nullptr
+        value.carValueAgeMs.has_value() ? jni::JDouble::valueOf(value.carValueAgeMs.value()) : nullptr
       );
     }
   };

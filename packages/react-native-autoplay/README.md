@@ -1435,7 +1435,7 @@ const remove = HybridAutoPlay.addListenerCarLocation((location) => {
 });
 ```
 
--   **Payload** (`CarLocation`): `status` plus, on `success` only, `latitude`, `longitude`, `accuracy?` (m), `altitude?` (m), `speed?` (m/s), `heading?` (degrees), `timestamp` (head unit UTC ms), `fixAgeMs?`, `carValueAgeMs?`, `provider`, `isMock`.
+-   **Payload** (`CarLocation`): `status` plus, on `success` only, `latitude`, `longitude`, `accuracy?` (m), `altitude?` (m), `speed?` (m/s), `heading?` (degrees), `timestamp` (head unit UTC ms), `fixAgeMs?`, `carValueAgeMs?`.
 -   **Ages**: `fixAgeMs` (from the fix's `elapsedRealtimeNanos`) and `carValueAgeMs` (from the CarValue timestamp) are measured on the phone's monotonic clock when the value is handed to JS. Prefer them over `timestamp`, head unit clocks can be off by tens of seconds.
 -   **Status** (`CarLocationStatus`): `unsupportedApiLevel` (car app API level below 3), `permissionDenied`, `unimplemented` (the head unit has no location), `unavailable` (no fix right now), `error`, `unknown`. Each change is emitted once; a listener added later first receives the current non-success status. Fixes are not replayed, the next one arrives at the head unit's rate.
 -   **Permission**: requires the app's runtime `ACCESS_FINE_LOCATION` grant (already declared in the library manifest). Adding a listener after a `permissionDenied` retries the registration, so add a new one once the permission was granted.

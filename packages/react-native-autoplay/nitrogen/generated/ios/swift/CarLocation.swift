@@ -18,7 +18,7 @@ public extension CarLocation {
   /**
    * Create a new instance of `CarLocation`.
    */
-  init(status: CarLocationStatus, latitude: Double?, longitude: Double?, accuracy: Double?, altitude: Double?, speed: Double?, heading: Double?, timestamp: Double?, fixAgeMs: Double?, carValueAgeMs: Double?, provider: String?, isMock: Bool?) {
+  init(status: CarLocationStatus, latitude: Double?, longitude: Double?, accuracy: Double?, altitude: Double?, speed: Double?, heading: Double?, timestamp: Double?, fixAgeMs: Double?, carValueAgeMs: Double?) {
     self.init(status, { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = latitude {
         return bridge.create_std__optional_double_(__unwrappedValue)
@@ -70,18 +70,6 @@ public extension CarLocation {
     }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = carValueAgeMs {
         return bridge.create_std__optional_double_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_std__string_ in
-      if let __unwrappedValue = provider {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_bool_ in
-      if let __unwrappedValue = isMock {
-        return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -194,30 +182,6 @@ public extension CarLocation {
     return { () -> Double? in
       if bridge.has_value_std__optional_double_(self.__carValueAgeMs) {
         let __unwrapped = bridge.get_std__optional_double_(self.__carValueAgeMs)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var provider: String? {
-    return { () -> String? in
-      if bridge.has_value_std__optional_std__string_(self.__provider) {
-        let __unwrapped = bridge.get_std__optional_std__string_(self.__provider)
-        return String(__unwrapped)
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var isMock: Bool? {
-    return { () -> Bool? in
-      if bridge.has_value_std__optional_bool_(self.__isMock) {
-        let __unwrapped = bridge.get_std__optional_bool_(self.__isMock)
         return __unwrapped
       } else {
         return nil

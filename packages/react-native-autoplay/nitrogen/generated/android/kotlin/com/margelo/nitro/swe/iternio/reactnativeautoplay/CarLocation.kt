@@ -47,13 +47,7 @@ data class CarLocation(
   val fixAgeMs: Double?,
   @DoNotStrip
   @Keep
-  val carValueAgeMs: Double?,
-  @DoNotStrip
-  @Keep
-  val provider: String?,
-  @DoNotStrip
-  @Keep
-  val isMock: Boolean?
+  val carValueAgeMs: Double?
 ) {
   /* primary constructor */
 
@@ -70,8 +64,6 @@ data class CarLocation(
       && Objects.deepEquals(this.timestamp, other.timestamp)
       && Objects.deepEquals(this.fixAgeMs, other.fixAgeMs)
       && Objects.deepEquals(this.carValueAgeMs, other.carValueAgeMs)
-      && Objects.deepEquals(this.provider, other.provider)
-      && Objects.deepEquals(this.isMock, other.isMock)
   }
 
   override fun hashCode(): Int {
@@ -85,9 +77,7 @@ data class CarLocation(
       heading,
       timestamp,
       fixAgeMs,
-      carValueAgeMs,
-      provider,
-      isMock
+      carValueAgeMs
     ).contentDeepHashCode()
   }
 
@@ -99,8 +89,8 @@ data class CarLocation(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(status: CarLocationStatus, latitude: Double?, longitude: Double?, accuracy: Double?, altitude: Double?, speed: Double?, heading: Double?, timestamp: Double?, fixAgeMs: Double?, carValueAgeMs: Double?, provider: String?, isMock: Boolean?): CarLocation {
-      return CarLocation(status, latitude, longitude, accuracy, altitude, speed, heading, timestamp, fixAgeMs, carValueAgeMs, provider, isMock)
+    private fun fromCpp(status: CarLocationStatus, latitude: Double?, longitude: Double?, accuracy: Double?, altitude: Double?, speed: Double?, heading: Double?, timestamp: Double?, fixAgeMs: Double?, carValueAgeMs: Double?): CarLocation {
+      return CarLocation(status, latitude, longitude, accuracy, altitude, speed, heading, timestamp, fixAgeMs, carValueAgeMs)
     }
   }
 }

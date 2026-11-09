@@ -430,21 +430,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Func_void_std__optional_Location__std__optional_std__string__Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<bool>
-  /**
-   * Specialized version of `std::optional<bool>`.
-   */
-  using std__optional_bool_ = std::optional<bool>;
-  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
-    return std::optional<bool>(value);
-  }
-  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
-    return optional.value();
-  }
-  
   // pragma MARK: std::function<void(const CarLocation& /* location */)>
   /**
    * Specialized version of `std::function<void(const CarLocation&)>`.
@@ -499,6 +484,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<bool>
+  /**
+   * Specialized version of `std::optional<bool>`.
+   */
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
+  }
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const SafeAreaInsets& /* insets */)>

@@ -33,7 +33,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class CarLoca
 
 #include "CarLocationStatus.hpp"
 #include <optional>
-#include <string>
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -52,12 +51,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<double> timestamp     SWIFT_PRIVATE;
     std::optional<double> fixAgeMs     SWIFT_PRIVATE;
     std::optional<double> carValueAgeMs     SWIFT_PRIVATE;
-    std::optional<std::string> provider     SWIFT_PRIVATE;
-    std::optional<bool> isMock     SWIFT_PRIVATE;
 
   public:
     CarLocation() = default;
-    explicit CarLocation(CarLocationStatus status, std::optional<double> latitude, std::optional<double> longitude, std::optional<double> accuracy, std::optional<double> altitude, std::optional<double> speed, std::optional<double> heading, std::optional<double> timestamp, std::optional<double> fixAgeMs, std::optional<double> carValueAgeMs, std::optional<std::string> provider, std::optional<bool> isMock): status(status), latitude(latitude), longitude(longitude), accuracy(accuracy), altitude(altitude), speed(speed), heading(heading), timestamp(timestamp), fixAgeMs(fixAgeMs), carValueAgeMs(carValueAgeMs), provider(provider), isMock(isMock) {}
+    explicit CarLocation(CarLocationStatus status, std::optional<double> latitude, std::optional<double> longitude, std::optional<double> accuracy, std::optional<double> altitude, std::optional<double> speed, std::optional<double> heading, std::optional<double> timestamp, std::optional<double> fixAgeMs, std::optional<double> carValueAgeMs): status(status), latitude(latitude), longitude(longitude), accuracy(accuracy), altitude(altitude), speed(speed), heading(heading), timestamp(timestamp), fixAgeMs(fixAgeMs), carValueAgeMs(carValueAgeMs) {}
 
   public:
     friend bool operator==(const CarLocation& lhs, const CarLocation& rhs) = default;
@@ -82,9 +79,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "heading"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "timestamp"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fixAgeMs"))),
-        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "carValueAgeMs"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "provider"))),
-        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isMock")))
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "carValueAgeMs")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::swe::iternio::reactnativeautoplay::CarLocation& arg) {
@@ -99,8 +94,6 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "timestamp"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.timestamp));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fixAgeMs"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.fixAgeMs));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "carValueAgeMs"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.carValueAgeMs));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "provider"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.provider));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "isMock"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.isMock));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -121,8 +114,6 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "timestamp")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fixAgeMs")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "carValueAgeMs")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "provider")))) return false;
-      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "isMock")))) return false;
       return true;
     }
   };

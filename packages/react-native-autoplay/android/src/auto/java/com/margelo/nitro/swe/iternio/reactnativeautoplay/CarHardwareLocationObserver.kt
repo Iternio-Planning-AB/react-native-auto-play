@@ -1,7 +1,6 @@
 package com.margelo.nitro.swe.iternio.reactnativeautoplay
 
 import android.location.Location
-import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
@@ -119,20 +118,12 @@ object CarHardwareLocationObserver {
         heading = null,
         timestamp = null,
         fixAgeMs = null,
-        carValueAgeMs = null,
-        provider = null,
-        isMock = null
+        carValueAgeMs = null
     )
 
     // the ages are measured on the phone's monotonic clock, the head unit's wall clock can be far off
     private fun Location.toCarLocation(carValueTimestampMillis: Long): CarLocation {
         val now = SystemClock.elapsedRealtime()
-        val mock = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            this.isMock
-        } else {
-            @Suppress("DEPRECATION")
-            isFromMockProvider
-        }
 
         return CarLocation(
             status = CarLocationStatus.SUCCESS,
@@ -152,9 +143,7 @@ object CarHardwareLocationObserver {
                 (now - carValueTimestampMillis).toDouble()
             } else {
                 null
-            },
-            provider = provider,
-            isMock = mock
+            }
         )
     }
 }
