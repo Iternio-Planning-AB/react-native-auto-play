@@ -229,10 +229,10 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     override fun addListenerCarLocation(callback: (CarLocation) -> Unit): () -> Unit {
         carLocationListeners.add(callback)
 
-        val isStarted = AndroidAutoSession.getRootContext()?.let {
+        val isStatusEmitted = AndroidAutoSession.getRootContext()?.let {
             CarHardwareLocationObserver.start(it)
         } ?: false
-        if (!isStarted) {
+        if (!isStatusEmitted) {
             CarHardwareLocationObserver.replayStatus(callback)
         }
 

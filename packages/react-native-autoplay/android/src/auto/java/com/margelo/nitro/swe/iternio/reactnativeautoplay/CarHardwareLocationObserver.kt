@@ -48,29 +48,32 @@ object CarHardwareLocationObserver {
     /**
      * Registers the listener on the given context unless it already is.
      * A failed registration is retried on the next call, e.g. after the location permission was granted.
-     * @return true if a registration was attempted, which emits a status on failure
+     * @return true if a changed status was emitted to all listeners
      */
     @Synchronized
     fun start(context: CarContext): Boolean {
         if (carContext === context) {
             return false
         }
+        // kept across the retry so a registration failing the same way again is not re-emitted
+        val previousStatus = lastStatus
         stop()
+        lastStatus = previousStatus
         if (context.carAppApiLevel < CarAppApiLevels.LEVEL_3) {
-            emitStatus(CarLocationStatus.UNSUPPORTEDAPILEVEL)
-            return true
+            return emitStatus(CarLocationStatus.UNSUPPORTEDAPILEVEL)
         }
         try {
             context.getCarService(CarHardwareManager::class.java).carSensors
                 .addCarHardwareLocationListener(CarSensors.UPDATE_RATE_FASTEST, executor, listener)
             carContext = context
+            lastStatus = null
         } catch (_: SecurityException) {
-            emitStatus(CarLocationStatus.PERMISSIONDENIED)
+            return emitStatus(CarLocationStatus.PERMISSIONDENIED)
         } catch (e: Exception) {
             Log.w(TAG, "addCarHardwareLocationListener failed", e)
-            emitStatus(CarLocationStatus.ERROR)
+            return emitStatus(CarLocationStatus.ERROR)
         }
-        return true
+        return false
     }
 
     @Synchronized
@@ -97,12 +100,13 @@ object CarHardwareLocationObserver {
     }
 
     // the head unit keeps reporting e.g. unavailable on every update, only changes reach JS
-    private fun emitStatus(status: CarLocationStatus) {
+    private fun emitStatus(status: CarLocationStatus): Boolean {
         if (status == lastStatus) {
-            return
+            return false
         }
         lastStatus = status
         HybridAutoPlay.emitCarLocation(statusOnly(status))
+        return true
     }
 
     private fun statusOnly(status: CarLocationStatus) = CarLocation(
