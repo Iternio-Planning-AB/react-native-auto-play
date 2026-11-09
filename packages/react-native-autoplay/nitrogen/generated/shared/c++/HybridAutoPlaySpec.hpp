@@ -19,6 +19,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class EventNa
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
 // Forward declaration of `Location` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
+// Forward declaration of `CarLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct CarLocation; }
 // Forward declaration of `SafeAreaInsets` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct SafeAreaInsets; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -30,6 +32,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroAction
 #include <string>
 #include "VisibilityState.hpp"
 #include "Location.hpp"
+#include "CarLocation.hpp"
 #include <NitroModules/Promise.hpp>
 #include "SafeAreaInsets.hpp"
 #include "NitroAction.hpp"
@@ -70,6 +73,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       virtual std::optional<double> getCurrentSessionId() = 0;
       virtual std::function<void()> addListenerRenderState(const std::string& moduleName, const std::function<void(VisibilityState /* payload */)>& callback) = 0;
       virtual std::function<void()> addListenerVoiceInput(const std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>& callback) = 0;
+      virtual std::function<void()> addListenerCarLocation(const std::function<void(const CarLocation& /* location */)>& callback) = 0;
       virtual std::shared_ptr<Promise<void>> setRootTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> pushTemplate(const std::string& templateId) = 0;
       virtual std::shared_ptr<Promise<void>> popTemplate(std::optional<bool> animate) = 0;

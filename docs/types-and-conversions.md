@@ -9,6 +9,7 @@ Core shared types live in `src/types/`:
   `ManeuverType` / `TurnType` / `ManeuverState` enums and lane info
 - `Trip`, `TripPoint`, `TripConfig`, `TripsConfig`, `TravelEstimates`
 - `Telemetry` — Android vehicle data plus telemetry permission enums
+- `CarLocation` — the Android Auto head unit's GPS fix from `HybridAutoPlay.addListenerCarLocation`
 - `Voice` — voice input options/results
 - `RootComponent` — surface props (`RootComponentInitialProps`,
   `AutoPlayClusterInitialProps`, `WindowInformation`, `ColorScheme`)
