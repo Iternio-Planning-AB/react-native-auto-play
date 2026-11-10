@@ -113,6 +113,7 @@ export type {
   TemplateConfig,
 } from './templates/Template';
 export * from './types/Button';
+export * from './types/CarLocation';
 export * from './types/Event';
 export * from './types/Image';
 export * from './types/Maneuver';

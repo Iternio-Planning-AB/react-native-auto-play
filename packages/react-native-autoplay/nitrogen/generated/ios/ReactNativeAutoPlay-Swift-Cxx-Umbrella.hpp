@@ -16,6 +16,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class AlertDi
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
+// Forward declaration of `CarLocationStatus` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class CarLocationStatus; }
+// Forward declaration of `CarLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct CarLocation; }
 // Forward declaration of `ChargingConnector` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
 // Forward declaration of `ClusterEventName` to properly resolve imports.
@@ -196,6 +200,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "AlertDismissalReason.hpp"
 #include "AssetImage.hpp"
 #include "AutoText.hpp"
+#include "CarLocation.hpp"
+#include "CarLocationStatus.hpp"
 #include "ChargingConnector.hpp"
 #include "ClusterEventName.hpp"
 #include "ColorScheme.hpp"

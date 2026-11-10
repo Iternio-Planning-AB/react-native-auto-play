@@ -154,6 +154,13 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         return {}
     }
 
+    func addListenerCarLocation(
+        callback: @escaping (CarLocation) -> Void
+    ) throws -> () -> Void {
+        // CarPlay exposes no head unit location, the phone's location is the only source.
+        return {}
+    }
+
     // MARK: set/push/pop templates
     func setRootTemplate(templateId: String) throws -> Promise<Void> {
         return TemplateUpdateQueue.enqueue {

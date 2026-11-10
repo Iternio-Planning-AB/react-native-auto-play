@@ -18,6 +18,10 @@ namespace NitroModules { class ArrayBufferHolder; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage; }
 // Forward declaration of `AutoText` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AutoText; }
+// Forward declaration of `CarLocationStatus` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class CarLocationStatus; }
+// Forward declaration of `CarLocation` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct CarLocation; }
 // Forward declaration of `ChargingConnector` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ChargingConnector; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
@@ -198,6 +202,8 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "AlertDismissalReason.hpp"
 #include "AssetImage.hpp"
 #include "AutoText.hpp"
+#include "CarLocation.hpp"
+#include "CarLocationStatus.hpp"
 #include "ChargingConnector.hpp"
 #include "ColorScheme.hpp"
 #include "Distance.hpp"
@@ -422,6 +428,28 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_std__optional_Location__std__optional_std__string_ create_Func_void_std__optional_Location__std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__optional_Location__std__optional_std__string__Wrapper wrap_Func_void_std__optional_Location__std__optional_std__string_(Func_void_std__optional_Location__std__optional_std__string_ value) noexcept {
     return Func_void_std__optional_Location__std__optional_std__string__Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const CarLocation& /* location */)>
+  /**
+   * Specialized version of `std::function<void(const CarLocation&)>`.
+   */
+  using Func_void_CarLocation = std::function<void(const CarLocation& /* location */)>;
+  /**
+   * Wrapper class for a `std::function<void(const CarLocation& / * location * /)>`, this can be used from Swift.
+   */
+  class Func_void_CarLocation_Wrapper final {
+  public:
+    explicit Func_void_CarLocation_Wrapper(std::function<void(const CarLocation& /* location */)>&& func): _function(std::make_unique<std::function<void(const CarLocation& /* location */)>>(std::move(func))) {}
+    inline void call(CarLocation location) const noexcept {
+      _function->operator()(location);
+    }
+  private:
+    std::unique_ptr<std::function<void(const CarLocation& /* location */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_CarLocation create_Func_void_CarLocation(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_CarLocation_Wrapper wrap_Func_void_CarLocation(Func_void_CarLocation value) noexcept {
+    return Func_void_CarLocation_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::shared_ptr<Promise<void>>
