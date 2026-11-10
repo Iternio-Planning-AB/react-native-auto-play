@@ -14,6 +14,9 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         renderStateListeners.clear()
         voiceInputListeners.clear()
         safeAreaInsetsListeners.clear()
+        // a React reload drops the old listeners without calling their cleanup
+        carLocationListeners.clear()
+        CarHardwareLocationObserver.stop()
     }
 
     override fun addListener(
@@ -223,6 +226,24 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
+    override fun addListenerCarLocation(callback: (CarLocation) -> Unit): () -> Unit {
+        carLocationListeners.add(callback)
+
+        val isStatusEmitted = AndroidAutoSession.getRootContext()?.let {
+            CarHardwareLocationObserver.start(it)
+        } ?: false
+        if (!isStatusEmitted) {
+            CarHardwareLocationObserver.replayStatus(callback)
+        }
+
+        return {
+            carLocationListeners.remove(callback)
+            if (carLocationListeners.isEmpty()) {
+                CarHardwareLocationObserver.stop()
+            }
+        }
+    }
+
     companion object {
         const val TAG = "HybridAutoPlay"
 
@@ -233,6 +254,8 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
         private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
+
+        private val carLocationListeners = CopyOnWriteArrayList<(CarLocation) -> Unit>()
 
         private val safeAreaInsetsListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(SafeAreaInsets) -> Unit>>()
@@ -262,6 +285,16 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         fun emitVoiceInput(location: Location?, query: String?) {
             voiceInputListeners.forEach {
                 it(location, query)
+            }
+        }
+
+        fun hasCarLocationListeners(): Boolean {
+            return carLocationListeners.isNotEmpty()
+        }
+
+        fun emitCarLocation(location: CarLocation) {
+            carLocationListeners.forEach {
+                it(location)
             }
         }
 

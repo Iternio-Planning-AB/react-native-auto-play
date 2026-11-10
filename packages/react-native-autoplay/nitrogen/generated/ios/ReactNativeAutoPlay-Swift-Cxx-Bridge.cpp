@@ -57,6 +57,14 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const CarLocation& /* location */)>
+  Func_void_CarLocation create_Func_void_CarLocation(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_CarLocation::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const CarLocation& location) mutable -> void {
+      swiftClosure.call(location);
+    };
+  }
+  
   // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = ReactNativeAutoPlay::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);

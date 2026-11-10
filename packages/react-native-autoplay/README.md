@@ -978,6 +978,7 @@ This section lists the available listeners and lifecycle callbacks so you can wi
 | `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
 | `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only. Fires when the OS triggers a voice input event (e.g. "Hey Google, navigate to…"). For in-app recording use `startVoiceInput` instead. |
 | `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |
+| `HybridAutoPlay.addListenerCarLocation(cb)` | `cb(location: CarLocation)` | Android Auto only. The head unit's own GPS fix, see [Head unit location](#head-unit-location-android-auto-only). |
 
 ```ts
 import { AutoPlayModules, HybridAutoPlay } from '@iternio/react-native-auto-play';
@@ -1415,6 +1416,30 @@ const MyScreen = () => {
 ```
 
 ---
+
+### Head unit location (Android Auto only)
+
+`addListenerCarLocation` streams the head unit's own location (`CarSensors.addCarHardwareLocationListener` at `UPDATE_RATE_FASTEST`), apart from the phone's location providers. The listener is registered with the head unit while it is connected and at least one JS listener exists, and is removed on disconnect or when the last listener is removed.
+
+```ts
+import { HybridAutoPlay } from '@iternio/react-native-auto-play';
+
+const remove = HybridAutoPlay.addListenerCarLocation((location) => {
+  if (location.status !== 'success') {
+    console.log('no head unit location:', location.status);
+    return;
+  }
+  // put the fix on the phone's clock, the head unit's clock can be far off
+  const fixTime = Date.now() - (location.fixAgeMs ?? location.carValueAgeMs ?? 0);
+  console.log(location.latitude, location.longitude, location.accuracy, fixTime);
+});
+```
+
+-   **Payload** (`CarLocation`): `status` plus, on `success` only, `latitude`, `longitude`, `accuracy?` (m), `altitude?` (m), `speed?` (m/s), `heading?` (degrees), `timestamp` (head unit UTC ms), `fixAgeMs?`, `carValueAgeMs?`.
+-   **Ages**: `fixAgeMs` (from the fix's `elapsedRealtimeNanos`) and `carValueAgeMs` (from the CarValue timestamp) are measured on the phone's monotonic clock when the value is handed to JS. Prefer them over `timestamp`, head unit clocks can be off by tens of seconds.
+-   **Status** (`CarLocationStatus`): `unsupportedApiLevel` (car app API level below 3), `permissionDenied`, `unimplemented` (the head unit has no location), `unavailable` (no fix right now), `error`, `unknown`. Each change is emitted once; a listener added later first receives the current non-success status. Fixes are not replayed, the next one arrives at the head unit's rate.
+-   **Permission**: requires the app's runtime `ACCESS_FINE_LOCATION` grant (already declared in the library manifest). Adding a listener after a `permissionDenied` retries the registration, so add a new one once the permission was granted.
+-   **iOS / Android Automotive**: no-op, the listener never fires. CarPlay has no head unit location API, and on Automotive the platform location providers already are the car's.
 
 ### Hooks
 

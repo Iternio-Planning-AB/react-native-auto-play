@@ -61,6 +61,15 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
+  abstract fun addListenerCarLocation(callback: (location: CarLocation) -> Unit): () -> Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun addListenerCarLocation_cxx(callback: Func_void_CarLocation): Func_void {
+    val __result = addListenerCarLocation(callback)
+    return Func_void_java(__result)
+  }
+  
   @DoNotStrip
   @Keep
   abstract fun setRootTemplate(templateId: String): Promise<Unit>

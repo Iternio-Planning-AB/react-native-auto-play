@@ -100,6 +100,9 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             HybridCluster.emit(ClusterEventName.DIDCONNECTWITHWINDOW, clusterId)
         } else if (sessionId != null) {
             HybridAutoPlay.emit(EventName.DIDCONNECT, sessionId)
+            if (HybridAutoPlay.hasCarLocationListeners()) {
+                CarHardwareLocationObserver.start(carContext)
+            }
         }
 
         return screen
@@ -258,6 +261,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 return
             }
 
+            CarHardwareLocationObserver.stop()
             sessionId?.let { HybridAutoPlay.emit(EventName.DIDDISCONNECT, it) }
         }
     }
