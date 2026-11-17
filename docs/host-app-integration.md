@@ -64,6 +64,10 @@ produce no error message at all.
     CarPlay cold-starts the app, the phone's URL never reaches React Native's own
     `getInitialURL`, which is why `NitroLinkingManager` and `RCTLinkingManager+Custom.mm`
     stay. The phone's root view controller is created once and reused on scene reconnect.
+  - `NitroLinkingManager` forwards links through `RCTLinkingManager`'s **scene** entry points
+    (`scene:openURLContexts:`, `scene:continueUserActivity:`). Since react-native 0.88 its app
+    delegate entry points return `NO` for scene based apps, which silently dropped every link
+    that arrives while the app is running — cold starts kept working through `launchURL`.
 - **`ios/ReactHelpers/CarPlaySceneWindows.m` gives the CarPlay scene classes an empty
   `windows` (dev-menu builds only).** `-[RCTDevMenu showOnShake]` sends `windows` to every
   connected scene, so shaking the phone while CarPlay is connected crashes with an unrecognized

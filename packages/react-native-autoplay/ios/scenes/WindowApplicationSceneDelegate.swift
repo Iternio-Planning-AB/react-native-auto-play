@@ -34,7 +34,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let urlContext = connectionOptions.urlContexts.first {
             // Linking API -> on app start
-            NitroLinkingManager.shared().openURL(urlContext)
+            NitroLinkingManager.shared().openURL(urlContext, scene: scene)
         }
 
         if let userActivity = connectionOptions.userActivities.first(where: {
@@ -42,7 +42,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
             userActivity.webpageURL != nil
         }) {
             // Universal Links -> on app start
-            NitroLinkingManager.shared().continue(userActivity)
+            NitroLinkingManager.shared().continue(userActivity, scene: scene)
         }
     }
 
@@ -52,7 +52,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         // Linking API -> app already running
         guard let urlContext = URLContexts.first else { return }
-        NitroLinkingManager.shared().openURL(urlContext)
+        NitroLinkingManager.shared().openURL(urlContext, scene: scene)
     }
 
     func scene(
@@ -60,7 +60,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
         continue userActivity: NSUserActivity
     ) {
         // Universal Links -> app already running
-        NitroLinkingManager.shared().continue(userActivity)
+        NitroLinkingManager.shared().continue(userActivity, scene: scene)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
