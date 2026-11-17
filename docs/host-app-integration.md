@@ -68,6 +68,10 @@ produce no error message at all.
     (`scene:openURLContexts:`, `scene:continueUserActivity:`). Since react-native 0.88 its app
     delegate entry points return `NO` for scene based apps, which silently dropped every link
     that arrives while the app is running — cold starts kept working through `launchURL`.
+  - `RCTLinkingManager+Custom.mm`'s `getInitialURL` returns `launchURL` only, **never** the
+    launch options like React Native's own: the phone scene passes its `connectionOptions` to
+    `startReactNative`, those launch options survive a reload, and every reload would replay the
+    link that cold-started the app.
 - **`ios/ReactHelpers/CarPlaySceneWindows.m` gives the CarPlay scene classes an empty
   `windows` (dev-menu builds only).** `-[RCTDevMenu showOnShake]` sends `windows` to every
   connected scene, so shaking the phone while CarPlay is connected crashes with an unrecognized
