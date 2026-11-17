@@ -73,7 +73,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*",
+    "react-native": ">=0.88.0",
     "react-native-nitro-modules": ">=0.37.1"
   },
   "dependencies": {

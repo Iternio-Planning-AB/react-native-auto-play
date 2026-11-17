@@ -21,6 +21,8 @@ class ClusterSceneDelegate: AutoPlayScene,
         super.init(moduleName: clusterId)
     }
 
+    override var nativeBackdropDisplay: String { "cluster" }
+
     // MARK: CPTemplateApplicationInstrumentClusterSceneDelegate
     func templateApplicationInstrumentClusterScene(
         _ templateApplicationInstrumentClusterScene:
