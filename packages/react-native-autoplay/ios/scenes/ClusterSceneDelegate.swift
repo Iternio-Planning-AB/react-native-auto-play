@@ -101,6 +101,9 @@ class ClusterSceneDelegate: AutoPlayScene,
         // window that comes back gets a fresh root view from initRootView.
         SceneStore.setClusterWindowConnected(clusterId: clusterId, connected: false)
         NitroSurface.stop(instrumentClusterWindow.rootViewController?.view)
+        /// initRootView keeps a root view controller that is already on the window, so the stopped
+        /// one must not survive in case CarPlay hands the same window back on reconnect
+        instrumentClusterWindow.rootViewController = nil
         self.window = nil
         HybridCluster.emit(
             event: .diddisconnectfromwindow,
