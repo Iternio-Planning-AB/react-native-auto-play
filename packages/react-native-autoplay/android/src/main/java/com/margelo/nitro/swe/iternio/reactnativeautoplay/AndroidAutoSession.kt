@@ -301,10 +301,11 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         /**
          * Assigned on every head unit connect, so JS can tell a listener that was suspended across a
          * disconnect from one called for the current session. Removed together with the session, which
-         * the isCurrentSession check keeps an older session's late onDestroy from doing.
+         * the isCurrentSession check keeps an older session's late onDestroy from doing. Hidden during
+         * teardown like getIsConnected, so a getCurrentSessionId() guard in onPopped fails too.
          */
         fun getSessionId(): Int? {
-            return sessions[ROOT_SESSION]?.sessionId
+            return sessions[ROOT_SESSION]?.takeUnless { it.session.isTornDown }?.sessionId
         }
 
         fun getState(marker: String): VisibilityState? {
