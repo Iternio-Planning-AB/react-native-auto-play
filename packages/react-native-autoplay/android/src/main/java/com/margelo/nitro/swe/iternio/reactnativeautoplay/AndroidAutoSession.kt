@@ -7,6 +7,7 @@ import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
+import androidx.car.app.isTornDown
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
@@ -294,7 +295,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         private val lastSessionId = AtomicInteger(0)
 
         fun getIsConnected(): Boolean {
-            return sessions.containsKey(ROOT_SESSION)
+            return sessions[ROOT_SESSION]?.let { !it.session.isTornDown } ?: false
         }
 
         /**
@@ -319,7 +320,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         fun getRootContext(): CarContext? {
-            return sessions[ROOT_SESSION]?.carContext
+            return sessions[ROOT_SESSION]?.takeUnless { it.session.isTornDown }?.carContext
         }
 
         fun getClusterSessions(): Array<String> {
