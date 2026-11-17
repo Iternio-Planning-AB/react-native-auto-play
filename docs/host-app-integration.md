@@ -71,6 +71,14 @@ produce no error message at all.
   of every window it gets from `windows`, so real CarPlay windows would follow the phone app's
   forced theme instead of the car's day/night. Remove it once React Native skips non-
   `UIWindowScene`s there; no React Native patch, the prebuilt core must keep working.
+- **A React reload keeps the car surfaces' React Native surfaces and restarts them in the new
+  JS instance**, which only works if that instance registers their components again. The head
+  unit gets this from `HybridAutoPlay.addListener('didConnect')` replaying the current session;
+  clusters from `HybridCluster.addListener('didConnectWithWindow')` replaying every cluster
+  with a window (`SceneStore.getClusterIdsWithWindow()`, same as Android's
+  `getClusterSessions()`), and `HybridCluster.initRootView` keeps a root view that is already
+  there. Without it a cluster's random module name is never registered again and the reload
+  ends in a "has not been registered" red screen.
 - The four scene delegates ship with the library but are referenced by **string class
   name** in the consumer's `Info.plist` (README → *Scene delegates*). Nothing links the two,
   so a typo breaks exactly one surface while the others keep working — a very quiet partial
