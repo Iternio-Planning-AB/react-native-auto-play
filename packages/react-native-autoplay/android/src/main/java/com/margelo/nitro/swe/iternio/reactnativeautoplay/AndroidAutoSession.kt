@@ -312,8 +312,12 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             return sessions[marker]?.state
         }
 
+        /**
+         * Null during teardown like getRootContext, so a root MapTemplate or cluster renderer is not
+         * created on a destroyed context. Teardown code gets its context passed in instead.
+         */
         fun getCarContext(marker: String): CarContext? {
-            return sessions[marker]?.carContext
+            return sessions[marker]?.takeUnless { it.session.isTornDown }?.carContext
         }
 
         fun getLifecycle(marker: String): Lifecycle? {
