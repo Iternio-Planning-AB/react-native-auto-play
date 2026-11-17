@@ -184,6 +184,9 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+  /// set to the phone window by the library, for libraries reading UIApplication.shared.delegate?.window
+  var window: UIWindow?
+
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
@@ -193,7 +196,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 ```
 
-Expo apps keep their `ExpoAppDelegate` subclass and its `var window: UIWindow?`, but drop the factory, `reactNativeDelegate`, `reactNativeFactory`, the `ExpoReactNativeFactoryProvider` conformance and `getRootViewForAutoplay`. The library assigns the phone window to `window` if your `AppDelegate` declares it, the way Expo's own scene delegate does, because expo-system-ui, expo-screen-orientation and expo-updates read it. Bare apps can declare it too if a library they use reads `UIApplication.shared.delegate?.window`.
+Expo apps keep their `ExpoAppDelegate` subclass and its `var window: UIWindow?`, but drop the factory, `reactNativeDelegate`, `reactNativeFactory`, the `ExpoReactNativeFactoryProvider` conformance and `getRootViewForAutoplay`. The library assigns the phone window to `window` if your `AppDelegate` declares it, the way Expo's own scene delegate does, because expo-system-ui, expo-screen-orientation and expo-updates read it. Keep it in bare apps as well: without it, libraries reading `UIApplication.shared.delegate?.window` get `nil`.
 
 Do **not** add the `SceneDelegate.swift` that the React Native 0.88 template generates. The phone scene must be the library's `WindowApplicationSceneDelegate` (see *Scene delegates*), otherwise the phone and CarPlay run in two separate React Native instances.
 
@@ -248,7 +251,7 @@ It is called each time the React root view of a surface is created. The returned
 
 #### Migrating from `getRootViewForAutoplay` (library 0.10 and React Native < 0.88)
 1. Update React Native to 0.88 or newer.
-2. Remove the React Native factory and its delegate property, the `startReactNative` call and `getRootViewForAutoplay` from your `AppDelegate`, so it looks like the one above. Keep `var window: UIWindow?` if anything reads `UIApplication.shared.delegate?.window` (always on Expo).
+2. Remove the React Native factory and its delegate property, the `startReactNative` call and `getRootViewForAutoplay` from your `AppDelegate`, so it looks like the one above. Keep `var window: UIWindow?`, the library assigns the phone window to it.
 3. If your `AppDelegate` used a custom delegate class, move it to its own file and name it in `AutoPlayReactNativeDelegateClass`. Expo apps always do this (see above).
 4. If your main component is not registered as `main`, set `AutoPlayMainModuleName`.
 5. If `getRootViewForAutoplay` returned a custom view hierarchy around the React root view, return only your native part from `autoPlayNativeBackdrop(for:moduleName:)` instead.
