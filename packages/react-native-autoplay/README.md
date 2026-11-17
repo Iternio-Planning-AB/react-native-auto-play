@@ -638,13 +638,15 @@ You need to register your AutoPlay components in your app's entry file (e.g., `i
 // index.js
 import '@iternio/react-native-auto-play/installTimers';
 import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
 import App from './src/App';
 import registerAutoPlay from './src/AutoPlay'; // Your AutoPlay setup
 
-AppRegistry.registerComponent(appName, () => App);
+// must match AutoPlayMainModuleName on iOS (default `main`) and getMainComponentName() on Android
+AppRegistry.registerComponent('main', () => App);
 registerAutoPlay();
 ```
+
+The React Native template registers the `app.json` name instead. Either register `main` as above and return `"main"` from `getMainComponentName()` in your Android `MainActivity`, or keep your name and set it as `AutoPlayMainModuleName` in your `Info.plist` (see *AppDelegate and the React Native factory*).
 
 ### 2. Create the AutoPlay Experience
 
