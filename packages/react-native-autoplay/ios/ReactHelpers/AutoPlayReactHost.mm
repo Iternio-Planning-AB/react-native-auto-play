@@ -152,13 +152,6 @@ static NSString *const kDefaultMainModuleName = @"main";
                                                                  keyboardShortcutsEnabled:YES];
 #endif
 
-  // ExpoAppDelegate forwards app lifecycle events to the factory it is bound to
-  id appDelegate = UIApplication.sharedApplication.delegate;
-  SEL bindSelector = NSSelectorFromString(@"bindReactNativeFactory:");
-  if ([appDelegate respondsToSelector:bindSelector]) {
-    ((void (*)(id, SEL, id))objc_msgSend)(appDelegate, bindSelector, _factory);
-  }
-
   return _factory;
 }
 
