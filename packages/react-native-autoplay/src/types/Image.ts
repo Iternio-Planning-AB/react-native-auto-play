@@ -23,6 +23,23 @@ export type GlyphMapKey = keyof AutoPlayGlyphMap extends never
 
 export type GlyphBackgroundShape = 'circle' | 'roundedRect';
 
+/**
+ * Shape of a glyph's `backgroundColor` fill. Has no visible effect without a `backgroundColor`.
+ * When `backgroundShape` is not specified each platform keeps its previous look: a circle on
+ * CarPlay and a rounded rect with a fixed 8px corner radius on Android Auto.
+ */
+type GlyphBackgroundShapeFields =
+  | {
+      /** Platform default when not specified, `'circle'` draws a circle on both platforms. */
+      backgroundShape?: 'circle';
+      backgroundCornerRadius?: never;
+    }
+  | {
+      backgroundShape: 'roundedRect';
+      /** Corner radius in dp (Android) / pt (iOS), capped at half the image size. */
+      backgroundCornerRadius: number;
+    };
+
 type GlyphStyleFields = {
   /**
    * Sets the icon dark and light mode color or a single color for both.
@@ -38,22 +55,8 @@ type GlyphStyleFields = {
    */
   backgroundColor?: ThemedColor | string;
 
-  /**
-   * Shape of the `backgroundColor` fill. Has no visible effect without a `backgroundColor`.
-   * Defaults to the platform's previous look when not specified: `'circle'` on CarPlay and
-   * `'roundedRect'` with a fixed 8px corner radius on Android Auto.
-   */
-  backgroundShape?: GlyphBackgroundShape;
-
-  /**
-   * Corner radius of a `'roundedRect'` background in dp (Android) / pt (iOS), capped at half the
-   * image size. Ignored for `'circle'`. When not specified a `'roundedRect'` uses a radius of 8px
-   * on Android Auto, the previous look, and 8pt on CarPlay.
-   */
-  backgroundCornerRadius?: number;
-
   fontScale?: number;
-};
+} & GlyphBackgroundShapeFields;
 
 /** Glyph by name — looked up in the glyph map registered via {@link setIconFont}. */
 export type AutoGlyphByName = GlyphStyleFields & {
