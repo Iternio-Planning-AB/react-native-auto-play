@@ -6,21 +6,19 @@
 //
 
 class ViewUtils {
-    // we use reflection to find the method that provides us root views from the app delegate
-    // to avoid issues when importing React_AppDelegate (glog imports break)
-    // or using a common protocol on AppDelegate and react-native-autoplay (c++ interoperability not the same)
-    static func getRootView(moduleName: String, initialProps: [String: Any]) -> UIView? {
-        if let appDelegate = UIApplication.shared.delegate as? NSObject {
-            let selector = NSSelectorFromString("getRootViewForAutoplayWithModuleName:initialProperties:")
-            if appDelegate.responds(to: selector), let methodIMP = appDelegate.method(for: selector) {
-                typealias Func = @convention(c) (AnyObject, Selector, NSString, NSDictionary?) -> UIView?
-                let function = unsafeBitCast(methodIMP, to: Func.self)
-
-                return function(appDelegate, selector, moduleName as NSString, initialProps as NSDictionary)
-            }
+    /// The React root view is opaque by default, it has to be transparent for the backdrop to show
+    /// wherever the React tree does not draw.
+    static func stack(reactView: UIView, onTopOf backdrop: UIView) -> UIView {
+        let container = UIView()
+        for view in [backdrop, reactView] {
+            /// a view the host hands out more than once is still attached to the previous container
+            view.removeFromSuperview()
+            view.frame = container.bounds
+            view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            container.addSubview(view)
         }
-
-        return nil
+        reactView.backgroundColor = .clear
+        return container
     }
 
     static func showLaunchScreen(window: UIWindow) {
