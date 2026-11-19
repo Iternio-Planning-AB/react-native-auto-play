@@ -117,6 +117,8 @@ export * from './types/CarLocation';
 export * from './types/Event';
 export * from './types/Image';
 export * from './types/Maneuver';
+export * from './types/NavigationAction';
+export * from './types/NavigationIntent';
 export * from './types/RootComponent';
 export * from './types/SignInMethod';
 export * from './types/Telemetry';
@@ -145,6 +147,11 @@ export const SafeAreaView = (props: ViewProps) => createElement(View, props);
 export function setIconFont(_name: string, _glyphMap?: Record<string, number>): void {}
 
 export const useFocusedEffect = () => {};
+
+export const useNavigationIntent = () => ({
+  navigationIntent: undefined,
+  resetNavigationIntent: () => {},
+});
 
 export const useVoiceInput = () => ({
   voiceInputResult: undefined,

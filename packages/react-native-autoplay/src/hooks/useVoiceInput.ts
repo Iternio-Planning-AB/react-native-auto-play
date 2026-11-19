@@ -2,6 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Location } from '..';
 import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
 
+/**
+ * @deprecated use useNavigationIntent, which also carries intent, avoid, mode and entry
+ * @namespace Android
+ */
 export const useVoiceInput = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [voiceInputResult, setVoiceInputResult] = useState<

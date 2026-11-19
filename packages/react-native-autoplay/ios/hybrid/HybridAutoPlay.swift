@@ -147,6 +147,20 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
+    func addListenerNavigationIntent(
+        callback: @escaping (NavigationIntent) -> Void
+    ) throws -> () -> Void {
+        // CarPlay hands no navigation intents to the app.
+        return {}
+    }
+
+    func addListenerNavigationAction(
+        callback: @escaping (NavigationAction) -> Void
+    ) throws -> () -> Void {
+        // CarPlay hands no navigation actions to the app.
+        return {}
+    }
+
     func addListenerVoiceInput(
         callback: @escaping (Location?, String?) -> Void
     ) throws -> () -> Void {

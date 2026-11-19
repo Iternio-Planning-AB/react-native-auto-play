@@ -18,7 +18,7 @@
 -   **Template-Based UI:** Utilize a rich set of templates like `MapTemplate`, `ListTemplate`, `GridTemplate`, and more to build UIs that comply with automotive design guidelines.
 -   **Navigation APIs:** Build full-featured navigation experiences with APIs for trip management, maneuvers, and route guidance.
 -   **Dashboard & Cluster Support:** Extend your app's presence to the CarPlay Dashboard (CarPlay only) and instrument cluster displays (CarPlay & Android Auto).
--   **Hooks-Based API:** A modern and intuitive API using React Hooks (`useMapTemplate`, `useVoiceInput`, etc.) for interacting with the automotive system.
+-   **Hooks-Based API:** A modern and intuitive API using React Hooks (`useMapTemplate`, `useNavigationIntent`, etc.) for interacting with the automotive system.
 -   **Headless Operation:** Runs in the background to keep the automotive experience alive even when the main app is not in the foreground.
 -   **Powered by [NitroModules](https://nitro.margelo.com/)**
 
@@ -1401,28 +1401,75 @@ HybridVoice.startVoiceInput().catch((e) => {
 });
 ```
 
-#### OS-triggered voice input (Android only)
+#### Navigation intents (Android only)
 
-`addListenerVoiceInput` fires when the OS itself initiates a voice action (e.g. "Hey Google, navigate to…"). It is a no-op on iOS — use `startVoiceInput` for in-app recording on both platforms.
+When the user asks the car's assistant to "navigate to X with <your app>", "add a stop at X" or "… avoiding tolls", Android Auto and Android Automotive send an `androidx.car.app.action.NAVIGATE` intent with a `geo:` URI (see Google's [navigation intent](https://developer.android.com/training/cars/apps/navigation#navigation-intent) docs). The library declares the intent filter and hands the parsed intent to `addListenerNavigationIntent`. It is a no-op on iOS.
 
 ```ts
-const cleanup = HybridAutoPlay.addListenerVoiceInput((location, query) => {
-  console.log('Voice query:', query, 'near', location);
+const cleanup = HybridAutoPlay.addListenerNavigationIntent((intent) => {
+  if (intent.mode && intent.mode !== 'd') {
+    // only driving is supported
+    return;
+  }
+  console.log(intent.intent, intent.location, intent.query, intent.avoid, intent.entry);
 });
 ```
 
-#### useVoiceInput hook (Android only)
+-   **Payload** (`NavigationIntent`): one or both of `location` (from `geo:lat,lon`, undefined for `0,0`) and `query` (`q`, decoded), plus:
+    -   `intent`: `'navigation'` (replace the destination and start), `'add_a_stop'` or `'directions'` (show the route, don't start). `'navigation'` also when the parameter is absent or unknown.
+    -   `avoid`: any of `'tolls'`, `'highways'`, `'ferries'` (from `t`/`h`/`f`), empty when absent.
+    -   `mode`: the raw travel mode letter (`b` bike, `d` drive, `x` taxi, `l` two-wheeler, `r` transit, `w` walk), not mapped so new values need no library update. Undefined when absent, which it always is on Android Automotive.
+    -   `entry`: the entry source, e.g. `'assistant'`.
+-   **Cold start**: an intent that arrives while no listener is registered (e.g. the one that started the app) is held and delivered to the first `addListenerNavigationIntent` or `addListenerVoiceInput` listener added afterwards, then dropped. It is also dropped when the head unit disconnects.
+-   **Testing on the DHU**: `adb shell am start-service -a androidx.car.app.action.NAVIGATE -d 'geo:0,0?q=Stuttgart&intent=add_a_stop&avoid=tf' <package>/<car app service>` may not reach the session, since the host normally delivers the intent; trigger it by voice if it doesn't.
 
-A convenience hook that wires up `addListenerVoiceInput` and exposes the latest `location` and `query` values reactively.
+#### Navigation actions (Android only)
+
+Commands without a destination, like "mute navigation", "avoid tolls" or "show traffic", arrive as `addListenerNavigationAction` events, never as a navigation intent. It is a no-op on iOS.
+
+```ts
+const cleanup = HybridAutoPlay.addListenerNavigationAction(({ act }) => {
+  switch (act) {
+    case 'mute':
+      muteGuidance();
+      break;
+    case 'avoid_tolls':
+      setAvoidTolls(true);
+      break;
+    default:
+      console.log('unhandled navigation action', act);
+  }
+});
+```
+
+-   **Payload** (`NavigationAction`): `act`, the action name from Google's `geo.action` spec, e.g. `mute`, `unmute`, `avoid_tolls`, `allow_tolls`, `avoid_ferries`, `allow_ferries`, `avoid_highways`, `allow_highways`, `show_traffic`, `exit_navigation`, `report_police` (all known names are in the `NavigationActionName` type). A value the library can't map is passed through as is.
+-   **Format**: Google documents named actions (`geo.action:?act=avoid_tolls`), but the Android Auto host delivers numeric ones: its own conversion produces `geo:0,0?act=35`, and Assistant commands it cannot convert are forwarded as `google.maps://maps.google.com/?act=35&notts=1`. The library maps the numbers to the documented names, so `act` holds the same value whichever form arrives. The numbers are undocumented; the mapping is taken from the Android Auto host app 18.0 and could change, in which case an unknown number arrives unmapped.
+-   **Not held**: unlike navigation intents, an action that arrives while no listener is registered is dropped.
+
+#### useNavigationIntent hook (Android only)
+
+Wires up `addListenerNavigationIntent` and exposes the latest intent reactively. It subscribes on mount, so it also receives the intent that cold-started the app. Call `resetNavigationIntent` once it was handled.
 
 ```tsx
-import { useVoiceInput } from '@iternio/react-native-auto-play';
+import { useNavigationIntent } from '@iternio/react-native-auto-play';
 
 const MyScreen = () => {
-  const { location, query } = useVoiceInput();
-  return <Text>{query ?? 'Say something…'}</Text>;
+  const { navigationIntent, resetNavigationIntent } = useNavigationIntent();
+
+  useEffect(() => {
+    if (navigationIntent) {
+      planTrip(navigationIntent);
+      resetNavigationIntent();
+    }
+  }, [navigationIntent, resetNavigationIntent]);
+
+  return null;
 };
 ```
+
+#### OS-triggered voice input (deprecated, Android only)
+
+`addListenerVoiceInput` and `useVoiceInput` (`{ voiceInputResult: { coordinates, query }, resetVoiceInputResult }`) receive the same intents with only the location and query. Use `addListenerNavigationIntent` / `useNavigationIntent` instead. `useVoiceInput` only subscribes while a head unit is connected.
 
 ---
 
@@ -1453,7 +1500,8 @@ const remove = HybridAutoPlay.addListenerCarLocation((location) => {
 ### Hooks
 
 -   `useMapTemplate()`: Get a reference to the parent `MapTemplate` instance.
--   `useVoiceInput()`: Reactively exposes the latest OS-triggered voice input (`location`, `query`). Android only — for in-app recording use `startVoiceInput` / `stopVoiceInput` directly.
+-   `useNavigationIntent()`: Reactively exposes the latest navigation intent the OS sent (`navigationIntent`, `resetNavigationIntent`). Android only.
+-   `useVoiceInput()`: Deprecated, use `useNavigationIntent()`. Exposes the latest OS-triggered voice input (`voiceInputResult: { coordinates, query }`, `resetVoiceInputResult`). Android only — for in-app recording use `startVoiceInput` / `stopVoiceInput` directly.
 -   `useSafeAreaInsets()`: Get safe area insets for any root component.
 -   `useFocusedEffect()`: A useEffect alternative that executes when the specified component is visible to the user - use any of the `AutoPlayModules` enum or a cluster uuid to sepcify the component the effect should listen for.
 -   `useAndroidAutoTelemetry()`: Access to car telemetry data on Android Auto and Android Automotive.

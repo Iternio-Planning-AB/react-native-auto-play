@@ -19,6 +19,7 @@ import com.margelo.nitro.NitroModules
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.AndroidAutoTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.template.MapTemplate
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.AppInfo
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.NavigationIntentParser
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.utils.TemplateUpdateQueue
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -106,6 +107,8 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             }
         }
 
+        handleNavigationIntent(intent)
+
         return screen
 
         // TODO this is not required for templates that host a component, check if we need this for non-rendering templates
@@ -150,60 +153,43 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     }
 
     override fun onNewIntent(intent: Intent) {
-        val action = intent.action ?: return
-
-        if (action == CarContext.ACTION_NAVIGATE) {
-            intent.data?.schemeSpecificPart?.let { schemeSpecificPart ->
-                try {
-                    // Parse the geo URI format: lat,lon?q=query&mode=x&intent=y
-                    val queryIndex = schemeSpecificPart.indexOf("?q=")
-
-                    val location = if (queryIndex > 0) {
-                        val coordinatesPart = schemeSpecificPart.substring(0, queryIndex)
-                        parseCoordinates(coordinatesPart)
-                    } else {
-                        null
-                    }
-
-                    val query = if (queryIndex >= 0) {
-                        val queryPart = schemeSpecificPart.substring(queryIndex + 3) // Skip "?q="
-                        val additionalParamsIndex = queryPart.indexOf('&')
-
-                        if (additionalParamsIndex >= 0) {
-                            val rawQuery = queryPart.substring(0, additionalParamsIndex)
-                            java.net.URLDecoder.decode(rawQuery, "UTF-8")
-                        } else {
-                            java.net.URLDecoder.decode(queryPart, "UTF-8")
-                        }
-                    } else {
-                        java.net.URLDecoder.decode(schemeSpecificPart, "UTF-8")
-                    }
-
-                    HybridAutoPlay.emitVoiceInput(location, query)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
-                }
-            }
-        }
+        handleNavigationIntent(intent)
     }
 
     /**
-     * Parses coordinates from a string in format "lat,lon".
-     * Returns null for invalid formats or 0,0 coordinates (which indicate "use geocoding").
+     * NAVIGATE carries either a destination (geo:) or a custom action (act parameter, see
+     * NavigationIntentParser.parseAction). A custom action may also come as Google documents it,
+     * VIEW geo.action:?act=<name>.
+     * NAVIGATE arrives in onCreateScreen when it starts the session (cold start, e.g. by voice
+     * with the app not running) and in onNewIntent while the session runs.
      */
-    private fun parseCoordinates(coordinatesPart: String): Location? {
-        val parts = coordinatesPart.split(",")
-        if (parts.size != 2) return null
-
-        val lat = parts[0].toDoubleOrNull() ?: return null
-        val lon = parts[1].toDoubleOrNull() ?: return null
-
-        // Treat 0,0 as "no coordinates" - it means use geocoding for the query
-        if (lat == 0.0 && lon == 0.0) {
-            return null
+    private fun handleNavigationIntent(intent: Intent) {
+        if (isCluster) {
+            return
+        }
+        val data = intent.data ?: return
+        val isGeoAction = intent.action == Intent.ACTION_VIEW && data.scheme == "geo.action"
+        if (intent.action != CarContext.ACTION_NAVIGATE && !isGeoAction) {
+            return
         }
 
-        return Location(lat, lon)
+        try {
+            val action = NavigationIntentParser.parseAction(data.toString())
+            if (action != null) {
+                HybridAutoPlay.emitNavigationAction(action)
+                return
+            }
+            // the host forwards Assistant intents it could not convert, e.g. google.maps:// URLs
+            if (data.scheme != "geo") {
+                Log.w(TAG, "Ignoring navigation intent with unsupported data: $data")
+                return
+            }
+            HybridAutoPlay.emitNavigationIntent(
+                NavigationIntentParser.parse(data.encodedSchemeSpecificPart ?: "")
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
+        }
     }
 
     /**
@@ -263,6 +249,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             }
 
             CarHardwareLocationObserver.stop()
+            HybridAutoPlay.clearPendingNavigationIntent()
             sessionId?.let { HybridAutoPlay.emit(EventName.DIDDISCONNECT, it) }
         }
     }

@@ -8,6 +8,8 @@ import type {
   SafeAreaInsets,
   VisibilityState,
 } from '../types/Event';
+import type { NavigationAction } from '../types/NavigationAction';
+import type { NavigationIntent } from '../types/NavigationIntent';
 import type { NitroAction } from '../utils/NitroAction';
 
 export interface NitroTemplateConfig extends TemplateConfig {
@@ -45,8 +47,33 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   ): CleanupCallback;
 
   /**
+   * Adds a listener for navigation intents sent by the OS, e.g. "navigate to X" or "add a stop at X"
+   * by voice (Android Auto and Android Automotive).
+   * An intent that arrived while no navigation intent or voice input listener was registered, e.g.
+   * the one that cold-started the app, is delivered to the first listener added afterwards and then
+   * dropped. It is also dropped when the head unit disconnects.
+   * On iOS this is a no-op.
+   * @param callback receives every navigation intent
+   * @returns callback to remove the listener
+   * @namespace Android
+   */
+  addListenerNavigationIntent(callback: (intent: NavigationIntent) => void): CleanupCallback;
+
+  /**
+   * Adds a listener for custom navigation actions sent by the OS, e.g. "mute navigation" or
+   * "avoid tolls" by voice (Android Auto). Actions are not held for a later listener; they only
+   * matter while the app navigates, so register it while a head unit is connected.
+   * On iOS this is a no-op.
+   * @param callback receives every action
+   * @returns callback to remove the listener
+   * @namespace Android
+   */
+  addListenerNavigationAction(callback: (action: NavigationAction) => void): CleanupCallback;
+
+  /**
    * Adds a listener for voice input events fired by the OS (Android Auto only).
    * On iOS this is a no-op — use startVoiceInput instead.
+   * @deprecated use addListenerNavigationIntent, which also carries intent, avoid, mode and entry
    * @param callback the callback to receive the voice input
    * @returns callback to remove the listener
    * @namespace Android

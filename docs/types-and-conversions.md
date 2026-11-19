@@ -97,8 +97,20 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
     `AVAudioEngine`.
 - `stopVoiceInput()` — stops early; PCM mode resolves with audio so far, STT mode finalises
   recognition. No-op if idle.
-- `HybridAutoPlay.addListenerVoiceInput(cb)` — Android-only; fires when the OS triggers a
-  voice action ("Hey Google, navigate to…") with `(coordinates, query)`. No-op on iOS.
+- `HybridAutoPlay.addListenerNavigationIntent(cb)` — Android-only; fires with a
+  `NavigationIntent` when the OS sends `androidx.car.app.action.NAVIGATE` ("Hey Google,
+  navigate to…"). Parsed by `utils/NavigationIntentParser.kt` from the *encoded* scheme
+  specific part — the decoded one turns `%26` in `q` into a parameter separator. Unit tests
+  in `android/src/test/`. No-op on iOS.
+- `HybridAutoPlay.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
+  an `act` parameter ("mute navigation", "avoid tolls") under any scheme. The act number
+  table in `NavigationIntentParser.actionCodes` is decompiled from the Android Auto host
+  app (Google does not document it). Numbers are mapped to the documented `geo.action` names
+  natively so JS sees the same value on Auto (numbers) and Automotive (names); unknown values
+  pass through unchanged. A non-`geo:`
+  NAVIGATE without `act` is dropped with a warning.
+- `HybridAutoPlay.addListenerVoiceInput(cb)` — deprecated; the same intents as
+  `(coordinates, query)`.
 
 Native: `ios/utils/VoiceInputManager.swift`, `ios/templates/VoiceInputTemplate.swift`,
 `ios/hybrid/HybridVoice.swift`; `android/.../VoiceInputManager.kt`, `HybridVoice.kt`.

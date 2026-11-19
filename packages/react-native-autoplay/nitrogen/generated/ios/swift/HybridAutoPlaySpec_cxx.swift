@@ -183,6 +183,46 @@ open class HybridAutoPlaySpec_cxx {
   }
   
   @inline(__always)
+  public final func addListenerNavigationIntent(callback: bridge.Func_void_NavigationIntent) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerNavigationIntent(callback: { () -> (NavigationIntent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_NavigationIntent(callback)
+        return { (__intent: NavigationIntent) -> Void in
+          __wrappedFunction.call(__intent)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addListenerNavigationAction(callback: bridge.Func_void_NavigationAction) -> bridge.Result_std__function_void____ {
+    do {
+      let __result = try self.__implementation.addListenerNavigationAction(callback: { () -> (NavigationAction) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_NavigationAction(callback)
+        return { (__action: NavigationAction) -> Void in
+          __wrappedFunction.call(__action)
+        }
+      }())
+      let __resultCpp = { () -> bridge.Func_void in
+        let __closureWrapper = Func_void(__result)
+        return bridge.create_Func_void(__closureWrapper.toUnsafe())
+      }()
+      return bridge.create_Result_std__function_void____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__function_void____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func addListenerVoiceInput(callback: bridge.Func_void_std__optional_Location__std__optional_std__string_) -> bridge.Result_std__function_void____ {
     do {
       let __result = try self.__implementation.addListenerVoiceInput(callback: { () -> (Location?, String?) -> Void in

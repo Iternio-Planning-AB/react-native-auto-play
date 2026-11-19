@@ -49,6 +49,22 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const NavigationIntent& /* intent */)>
+  Func_void_NavigationIntent create_Func_void_NavigationIntent(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_NavigationIntent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const NavigationIntent& intent) mutable -> void {
+      swiftClosure.call(intent);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const NavigationAction& /* action */)>
+  Func_void_NavigationAction create_Func_void_NavigationAction(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativeAutoPlay::Func_void_NavigationAction::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const NavigationAction& action) mutable -> void {
+      swiftClosure.call(action);
+    };
+  }
+  
   // pragma MARK: std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>
   Func_void_std__optional_Location__std__optional_std__string_ create_Func_void_std__optional_Location__std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = ReactNativeAutoPlay::Func_void_std__optional_Location__std__optional_std__string_::fromUnsafe(swiftClosureWrapper);

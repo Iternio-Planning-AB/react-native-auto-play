@@ -92,8 +92,16 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Maneuve
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct MapTemplateConfig; }
 // Forward declaration of `MessageTemplateConfig` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct MessageTemplateConfig; }
+// Forward declaration of `NavigationAction` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAction; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAlertAction; }
+// Forward declaration of `NavigationAvoidOption` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationAvoidOption; }
+// Forward declaration of `NavigationIntentType` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationIntentType; }
+// Forward declaration of `NavigationIntent` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationIntent; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -238,7 +246,11 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "ManeuverType.hpp"
 #include "MapTemplateConfig.hpp"
 #include "MessageTemplateConfig.hpp"
+#include "NavigationAction.hpp"
 #include "NavigationAlertAction.hpp"
+#include "NavigationAvoidOption.hpp"
+#include "NavigationIntent.hpp"
+#include "NavigationIntentType.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
