@@ -148,7 +148,7 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
   without `act`), so listeners never see an empty one. `useNavigationIntent` subscribes on
   mount.
 - Native holds one navigation intent nobody received (the cold-start one) and replays it to
-  the **first** navigation-intent or voice-input listener added, then drops it — a second
+  the **first** navigation-intent listener added, then drops it — a second
   hook mounted later does not get it. Disconnect drops it too.
 
 ## Surface ids (`AutoPlayModules`)
