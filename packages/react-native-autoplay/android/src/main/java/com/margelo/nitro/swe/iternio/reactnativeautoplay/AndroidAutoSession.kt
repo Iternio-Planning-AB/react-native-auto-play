@@ -158,9 +158,10 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
 
     /**
      * NAVIGATE carries either a destination (geo:) or a custom action (act parameter, see
-     * NavigationIntentParser.parseAction). A custom action may also come as Google documents it,
-     * VIEW geo.action:?act=<name>, but only if the host app declares that intent filter; the
-     * library manifests don't, as it is unverified on Android Automotive.
+     * NavigationIntentParser.parseAction). On Android Automotive the car Assistant sends custom
+     * actions as Google documents them, VIEW geo.action:?act=<name>, to CarAppActivity, which
+     * passes the intent on to the session. A VIEW geo: intent is a search ("find charging
+     * stations"), reported with the search intent type.
      * NAVIGATE arrives in onCreateScreen when it starts the session (cold start, e.g. by voice
      * with the app not running) and in onNewIntent while the session runs.
      */
@@ -169,8 +170,10 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             return
         }
         val data = intent.data ?: return
-        val isGeoAction = intent.action == Intent.ACTION_VIEW && data.scheme == "geo.action"
-        if (intent.action != CarContext.ACTION_NAVIGATE && !isGeoAction) {
+        val isView = intent.action == Intent.ACTION_VIEW
+        val isGeoAction = isView && data.scheme == "geo.action"
+        val isSearch = isView && data.scheme == "geo"
+        if (intent.action != CarContext.ACTION_NAVIGATE && !isGeoAction && !isSearch) {
             return
         }
 
@@ -186,7 +189,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 return
             }
             val navigationIntent =
-                NavigationIntentParser.parse(data.encodedSchemeSpecificPart ?: "")
+                NavigationIntentParser.parse(data.encodedSchemeSpecificPart ?: "", isSearch)
             // nothing to navigate to, and it must not replace a pending cold-start intent
             if (navigationIntent.location == null && navigationIntent.query == null) {
                 Log.w(TAG, "Ignoring navigation intent without location and query: $data")

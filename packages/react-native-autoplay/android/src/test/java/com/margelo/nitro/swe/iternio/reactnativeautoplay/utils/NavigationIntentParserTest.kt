@@ -11,6 +11,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.ADD_A_STOP
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.DIRECTIONS
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.NAVIGATION
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.SEARCH
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -178,6 +179,14 @@ class NavigationIntentParserTest {
         assertEquals(intent(query = "X"), parse("geo:91,0?q=X"))
         assertEquals(intent(query = "X"), parse("geo:0,181?q=X"))
         assertEquals(intent(query = "X"), parse("geo:?q=X"))
+    }
+
+    @Test
+    fun searchOverridesIntentParameter() {
+        assertEquals(
+            intent(location = Location(48.2, 16.37), query = "charging stations", type = SEARCH),
+            NavigationIntentParser.parse("48.2,16.37?q=charging+stations&intent=add_a_stop", true)
+        )
     }
 
     // custom actions

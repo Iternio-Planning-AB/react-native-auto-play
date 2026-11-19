@@ -1403,7 +1403,7 @@ HybridVoice.startVoiceInput().catch((e) => {
 
 #### Navigation intents (Android only)
 
-When the user asks the car's assistant to "navigate to X with <your app>", "add a stop at X" or "… avoiding tolls", Android Auto and Android Automotive send an `androidx.car.app.action.NAVIGATE` intent with a `geo:` URI (see Google's [navigation intent](https://developer.android.com/training/cars/apps/navigation#navigation-intent) docs). The library declares the intent filter and hands the parsed intent to `addListenerNavigationIntent`. It is a no-op on iOS.
+When the user asks the car's assistant to "navigate to X with <your app>", "add a stop at X" or "… avoiding tolls", Android Auto and Android Automotive send an `androidx.car.app.action.NAVIGATE` intent with a `geo:` URI (see Google's [navigation intent](https://developer.android.com/training/cars/apps/navigation#navigation-intent) docs). The library declares the intent filters and hands the parsed intent to `addListenerNavigationIntent`. It is a no-op on iOS.
 
 ```ts
 const cleanup = HybridAutoPlay.addListenerNavigationIntent((intent) => {
@@ -1416,7 +1416,7 @@ const cleanup = HybridAutoPlay.addListenerNavigationIntent((intent) => {
 ```
 
 -   **Payload** (`NavigationIntent`): one or both of `location` (from `geo:lat,lon`, undefined for `0,0`) and `query` (`q`, decoded), plus:
-    -   `intent`: `'navigation'` (replace the destination and start), `'add_a_stop'` or `'directions'` (show the route, don't start). `'navigation'` also when the parameter is absent or unknown.
+    -   `intent`: from a NAVIGATE intent `'navigation'` (make it the new destination), `'add_a_stop'` (keep the destination and add another stop) or `'directions'` (show the route, don't start); `'navigation'` also when the parameter is absent or unknown. `'search'` for a search like "find charging stations": show the results, don't navigate. Searches arrive as `VIEW geo:` intents, for which the library declares a filter on Android Automotive only (untested).
     -   `avoid`: any of `'tolls'`, `'highways'`, `'ferries'` (from `t`/`h`/`f`), empty when absent.
     -   `mode`: the raw travel mode letter (`b` bike, `d` drive, `x` taxi, `l` two-wheeler, `r` transit, `w` walk), not mapped so new values need no library update. Undefined when absent, which it always is on Android Automotive.
     -   `entry`: the entry source, e.g. `'assistant'`.
@@ -1444,7 +1444,7 @@ const cleanup = HybridAutoPlay.addListenerNavigationAction(({ act }) => {
 
 -   **Payload** (`NavigationAction`): `act`, the action name from Google's `geo.action` spec, e.g. `mute`, `unmute`, `avoid_tolls`, `allow_tolls`, `avoid_ferries`, `allow_ferries`, `avoid_highways`, `allow_highways`, `show_traffic`, `exit_navigation`, `report_police` (all known names are in the `NavigationActionName` type). A value the library can't map is passed through as is.
 -   **Format**: Google documents named actions (`geo.action:?act=avoid_tolls`), but the Android Auto host delivers numeric ones: its own conversion produces `geo:0,0?act=35`, and Assistant commands it cannot convert are forwarded as `google.maps://maps.google.com/?act=35&notts=1`. The library maps the numbers to the documented names, so `act` holds the same value whichever form arrives. The numbers are undocumented; the mapping is taken from the Android Auto host app 18.0 and could change, in which case an unknown number arrives unmapped.
--   **Android Automotive**: untested. The library declares no intent filter for the documented `VIEW geo.action:` form, so actions are likely not delivered there.
+-   **Android Automotive**: the car's Google Assistant sends the named form, `VIEW geo.action:?act=mute`, to the navigation app chosen in the Assistant's own settings, not to the app on screen. While Google Maps is chosen, Maps gets the actions. It only sends them to a third-party app that has an activity for that intent filter, which the library declares on `CarAppActivity`; otherwise it answers "this action is not supported by your current navigation app". Verified on the Android Automotive emulator with the Google Assistant. Gemini in the car shows no navigation app setting and sends actions to Google Maps (see **Known Issues**).
 -   **Not held**: unlike navigation intents, an action that arrives while no listener is registered is dropped.
 
 #### useNavigationIntent hook (Android only)
@@ -1662,6 +1662,7 @@ When using react-native before 0.80.0 exceptions are broken and are reported as 
 See [this issue](https://github.com/mrousavy/nitro/issues/382) for details.
 - **@rnmapbox/maps** The map view/camera might take the primary screens scale factor into account when interacting with the map.
 This might lead to broken gestures, in case you face this issue try to apply either the `Dimensions.get('window').scale` or `RootComponentInitialProps.window.scale` to your coordinates.
+-   **Navigation actions with Gemini on Android Automotive**: with Gemini as the car's assistant, voice actions like "mute navigation" or "avoid ferries" never reach a third-party navigation app; Gemini sends them to Google Maps. Gemini also has no setting to choose the navigation app. "Navigate to …" works with Gemini, and actions work with the Google Assistant once the app is chosen as navigation app in its settings (see **Navigation actions** above). This is a Gemini limitation, not something this library can work around.
 
 ## Contributing
 

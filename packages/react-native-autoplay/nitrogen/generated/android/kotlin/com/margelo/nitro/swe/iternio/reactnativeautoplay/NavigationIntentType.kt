@@ -18,7 +18,8 @@ import com.facebook.proguard.annotations.DoNotStrip
 enum class NavigationIntentType(@DoNotStrip @Keep val value: Int) {
   NAVIGATION(0),
   ADD_A_STOP(1),
-  DIRECTIONS(2);
+  DIRECTIONS(2),
+  SEARCH(3);
 
   companion object
 }

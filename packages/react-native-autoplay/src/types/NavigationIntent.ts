@@ -1,15 +1,17 @@
 import type { Location } from './Event';
 
 /**
- * What the user asked for, from the intent's `intent` parameter.
- * - `navigation`: replace the destination and start navigating
- * - `add_a_stop`: add the destination as the next stop
+ * What the user asked for. For a NAVIGATE intent from its `intent` parameter:
+ * - `navigation`: make it the new destination
+ * - `add_a_stop`: keep the destination and add it as another stop
  * - `directions`: show the route without starting navigation
  *
  * Also `navigation` when the parameter is absent (Google's default) or holds a value this
  * library does not know.
+ * - `search`: show search results for the query, e.g. "find charging stations". Set for a
+ *   VIEW `geo:` intent, whatever its `intent` parameter says.
  */
-export type NavigationIntentType = 'navigation' | 'add_a_stop' | 'directions';
+export type NavigationIntentType = 'navigation' | 'add_a_stop' | 'directions' | 'search';
 
 /**
  * Route options to avoid, from the intent's `avoid` parameter (`t`, `h`, `f`).
@@ -18,7 +20,8 @@ export type NavigationAvoidOption = 'tolls' | 'highways' | 'ferries';
 
 /**
  * A navigation request the OS sent to the car app, e.g. "navigate to X" or "add a stop at X" by
- * voice. Parsed from the `androidx.car.app.action.NAVIGATE` intent's `geo:` URI.
+ * voice. Parsed from the `geo:` URI of an `androidx.car.app.action.NAVIGATE` intent, or of a
+ * VIEW intent for a search.
  * Carries a location, a query, or both.
  */
 export interface NavigationIntent {

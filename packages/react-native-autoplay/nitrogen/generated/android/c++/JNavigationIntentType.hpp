@@ -51,6 +51,9 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         case NavigationIntentType::DIRECTIONS:
           static const auto fieldDIRECTIONS = clazz->getStaticField<JNavigationIntentType>("DIRECTIONS");
           return clazz->getStaticFieldValue(fieldDIRECTIONS);
+        case NavigationIntentType::SEARCH:
+          static const auto fieldSEARCH = clazz->getStaticField<JNavigationIntentType>("SEARCH");
+          return clazz->getStaticFieldValue(fieldSEARCH);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

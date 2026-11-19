@@ -87,8 +87,10 @@ object NavigationIntentParser {
      * @param encodedSchemeSpecificPart the part after "geo:", still percent-encoded
      * (Uri.getEncodedSchemeSpecificPart). The decoded one would turn an encoded "&" or "=" in q
      * into a parameter separator.
+     * @param isSearch the URI came with a VIEW intent, which is a search whatever its intent
+     * parameter says
      */
-    fun parse(encodedSchemeSpecificPart: String): NavigationIntent {
+    fun parse(encodedSchemeSpecificPart: String, isSearch: Boolean = false): NavigationIntent {
         val queryIndex = encodedSchemeSpecificPart.indexOf('?')
         val coordinatesPart = if (queryIndex >= 0) {
             encodedSchemeSpecificPart.substring(0, queryIndex)
@@ -104,7 +106,11 @@ object NavigationIntentParser {
         return NavigationIntent(
             location = parseCoordinates(coordinatesPart),
             query = parameters["q"]?.trim()?.ifEmpty { null },
-            intent = parseIntentType(parameters["intent"]),
+            intent = if (isSearch) {
+                NavigationIntentType.SEARCH
+            } else {
+                parseIntentType(parameters["intent"])
+            },
             avoid = parseAvoid(parameters["avoid"]),
             mode = parameters["mode"]?.trim()?.ifEmpty { null },
             entry = parameters["entry"]?.trim()?.ifEmpty { null }

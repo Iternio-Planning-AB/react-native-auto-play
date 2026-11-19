@@ -101,16 +101,21 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
   `NavigationIntent` when the OS sends `androidx.car.app.action.NAVIGATE` ("Hey Google,
   navigate to…"). Parsed by `utils/NavigationIntentParser.kt` from the *encoded* scheme
   specific part — the decoded one turns `%26` in `q` into a parameter separator. Unit tests
-  in `android/src/test/`. No-op on iOS.
+  in `android/src/test/`. No-op on iOS. A `VIEW geo:` intent is a search and is reported as
+  `intent: 'search'`; the car Assistant reports a navigation app as able to search only if it has
+  an activity for that filter (`CarAppActivity`, Automotive only, untested).
 - `HybridAutoPlay.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
   an `act` parameter ("mute navigation", "avoid tolls") under any scheme. The act number
   table in `NavigationIntentParser.actionCodes` is decompiled from the Android Auto host
   app (Google does not document it). Numbers are mapped to the documented `geo.action` names
   natively, so a numeric and a named (`geo.action:?act=mute`) act look the same to JS;
-  unknown values pass through unchanged. Android Automotive is untested: the manifests declare
-  no `VIEW geo.action` filter, so the documented form is likely never delivered there. Add the
-  filter (and a note in `docs/host-app-integration.md`) only once that is verified on AAOS. A non-`geo:`
-  NAVIGATE without `act` is dropped with a warning.
+  unknown values pass through unchanged. On Android Automotive the car Assistant sends the
+  named form as `VIEW geo.action:` to the navigation app picked in its settings, but first checks
+  `queryIntentActivities` for that filter and otherwise answers "not supported by your current
+  navigation app". So the `VIEW geo.action` filter on `CarAppActivity` in
+  `src/automotive/AndroidManifest.xml` must stay, and on the activity: the check only looks at
+  activities (verified on the AAOS emulator, Assistant 13.1.618). A non-`geo:` NAVIGATE
+  without `act` is dropped with a warning.
 - `HybridAutoPlay.addListenerVoiceInput(cb)` — deprecated; the same intents as
   `(coordinates, query)`.
 

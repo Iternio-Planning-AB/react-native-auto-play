@@ -32,6 +32,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     NAVIGATION      SWIFT_NAME(navigation) = 0,
     ADD_A_STOP      SWIFT_NAME(addAStop) = 1,
     DIRECTIONS      SWIFT_NAME(directions) = 2,
+    SEARCH      SWIFT_NAME(search) = 3,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::swe::iternio::reactnativeautoplay
@@ -47,6 +48,7 @@ namespace margelo::nitro {
         case hashString("navigation"): return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::NAVIGATION;
         case hashString("add_a_stop"): return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::ADD_A_STOP;
         case hashString("directions"): return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::DIRECTIONS;
+        case hashString("search"): return margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::SEARCH;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum NavigationIntentType - invalid value!");
       }
@@ -56,6 +58,7 @@ namespace margelo::nitro {
         case margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::NAVIGATION: return JSIConverter<std::string>::toJSI(runtime, "navigation");
         case margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::ADD_A_STOP: return JSIConverter<std::string>::toJSI(runtime, "add_a_stop");
         case margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::DIRECTIONS: return JSIConverter<std::string>::toJSI(runtime, "directions");
+        case margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType::SEARCH: return JSIConverter<std::string>::toJSI(runtime, "search");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert NavigationIntentType to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");
@@ -70,6 +73,7 @@ namespace margelo::nitro {
         case hashString("navigation"):
         case hashString("add_a_stop"):
         case hashString("directions"):
+        case hashString("search"):
           return true;
         default:
           return false;

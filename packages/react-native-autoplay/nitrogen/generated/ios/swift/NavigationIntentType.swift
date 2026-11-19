@@ -23,6 +23,8 @@ public extension NavigationIntentType {
         self = .addAStop
       case "directions":
         self = .directions
+      case "search":
+        self = .search
       default:
         return nil
     }
@@ -39,6 +41,8 @@ public extension NavigationIntentType {
         return "add_a_stop"
       case .directions:
         return "directions"
+      case .search:
+        return "search"
     }
   }
 }

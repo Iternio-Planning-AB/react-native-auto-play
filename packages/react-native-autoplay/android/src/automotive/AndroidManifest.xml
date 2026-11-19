@@ -51,6 +51,22 @@
                 <data android:scheme="geo" />
             </intent-filter>
 
+            <!-- search, e.g. "find charging stations"; the car Assistant reports the app as able to
+                 search only with this filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="geo" />
+            </intent-filter>
+
+            <!-- the car Assistant only sends custom actions ("mute navigation") to a third-party
+                 navigation app that has an activity for this filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="geo.action" />
+            </intent-filter>
+
             <meta-data
                 android:name="distractionOptimized"
                 android:value="true" />
