@@ -68,16 +68,6 @@ class HybridCluster: HybridClusterSpec {
         // Drain the queue outside the lock — the callback runs JS.
         queuedClusterIds?.forEach { clusterId in callback(clusterId) }
 
-        /// After a React reload the clusters keep their windows, but their connect event went to
-        /// the previous JS instance, so the new one would never register the component that React
-        /// Native's restarted surface asks for. initRootView keeps the existing root view.
-        if eventType == .didconnectwithwindow {
-            let queued = queuedClusterIds ?? []
-            SceneStore.getClusterIdsWithWindow()
-                .filter { !queued.contains($0) }
-                .forEach { clusterId in callback(clusterId) }
-        }
-
         return {
             HybridCluster.withListenersLock {
                 _ = HybridCluster.listeners[eventType]?.removeValue(
@@ -96,14 +86,6 @@ class HybridCluster: HybridClusterSpec {
                             clusterId: clusterId
                         )
                     else {
-                        return
-                    }
-
-                    /// already rendering, e.g. React Native restarted the surface on a reload
-                    if let viewController = scene.window?.rootViewController
-                        as? AutoPlaySceneViewController,
-                        viewController.moduleName == clusterId
-                    {
                         return
                     }
 

@@ -23,16 +23,12 @@ class AutoPlayScene: UIResponder {
         )
     }
 
-    /// passed to the host's `autoPlayNativeBackdrop(for:moduleName:)`
-    var nativeBackdropDisplay: String { "root" }
-
     init(moduleName: String) {
         self.moduleName = moduleName
         initialProperties["id"] = moduleName
 
         super.init()
 
-        AutoPlayReactHost.shared().start()
         SceneStore.addScene(moduleName: moduleName, scene: self)
     }
 
@@ -77,17 +73,15 @@ class AutoPlayScene: UIResponder {
             )
         }
 
-        let reactView = AutoPlayReactHost.shared().view(
-            moduleName: moduleName,
-            initialProperties: self.initialProperties
-        )
-
-        var rootView = reactView
-        if let backdrop = AutoPlayReactHost.shared().nativeBackdrop(
-            display: nativeBackdropDisplay,
-            moduleName: moduleName
-        ) {
-            rootView = ViewUtils.stack(reactView: reactView, onTopOf: backdrop)
+        guard
+            let rootView = ViewUtils.getRootView(
+                moduleName: moduleName,
+                initialProps: self.initialProperties
+            )
+        else {
+            throw AutoPlayError.initReactRootViewFailed(
+                "could not create react root view for module: \(moduleName)"
+            )
         }
 
         window.rootViewController = AutoPlaySceneViewController(

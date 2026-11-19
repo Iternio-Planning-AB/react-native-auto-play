@@ -20,21 +20,20 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard session.role == .windowApplication else { return }
         guard let windowScene = scene as? UIWindowScene else { return }
+        guard
+            let rootViewController = UIApplication.shared.delegate?.window??
+                .rootViewController
+        else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        self.window = window
+        window.rootViewController = rootViewController
+        window.makeKeyAndVisible()
 
-        /// the URL is passed on to React Native as well, but it only reaches JS when this call
-        /// starts the React instance, not when a CarPlay scene started it already - the linking
-        /// manager below covers that case
-        AutoPlayReactHost.shared().startMain(
-            in: window,
-            connectionOptions: connectionOptions
-        )
+        self.window = window
 
         if let urlContext = connectionOptions.urlContexts.first {
             // Linking API -> on app start
-            NitroLinkingManager.shared().openURL(urlContext, scene: scene)
+            NitroLinkingManager.shared().openURL(urlContext)
         }
 
         if let userActivity = connectionOptions.userActivities.first(where: {
@@ -42,7 +41,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
             userActivity.webpageURL != nil
         }) {
             // Universal Links -> on app start
-            NitroLinkingManager.shared().continue(userActivity, scene: scene)
+            NitroLinkingManager.shared().continue(userActivity)
         }
     }
 
@@ -52,7 +51,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         // Linking API -> app already running
         guard let urlContext = URLContexts.first else { return }
-        NitroLinkingManager.shared().openURL(urlContext, scene: scene)
+        NitroLinkingManager.shared().openURL(urlContext)
     }
 
     func scene(
@@ -60,7 +59,7 @@ class WindowApplicationSceneDelegate: UIResponder, UIWindowSceneDelegate {
         continue userActivity: NSUserActivity
     ) {
         // Universal Links -> app already running
-        NitroLinkingManager.shared().continue(userActivity, scene: scene)
+        NitroLinkingManager.shared().continue(userActivity)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {

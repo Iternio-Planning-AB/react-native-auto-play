@@ -35,7 +35,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'React-jsi'
   s.dependency 'React-callinvoker'
-  # AutoPlayReactHost owns the app's RCTReactNativeFactory
-  s.dependency 'React-RCTAppDelegate'
   install_modules_dependencies(s)
 end
