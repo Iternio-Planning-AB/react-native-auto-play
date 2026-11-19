@@ -19,9 +19,22 @@ RCT_EXPORT_METHOD(getInitialURL:(RCTPromiseResolveBlock)resolve reject:(RCTPromi
     NSURL *initialURL = [NitroLinkingManager shared].launchURL;
     [NitroLinkingManager shared].launchURL = nil;
 
-    // No fallback to the launch options like the original implementation: WindowApplicationSceneDelegate
-    // stores the scene's launch URL in NitroLinkingManager already, and the launch options survive a
-    // reload, so every new JS instance would get the link that cold started the app again.
+    if (initialURL) {
+        resolve(RCTNullIfNil(initialURL.absoluteString));
+        return;
+    }
+  
+    // Fallback to the original implementation
+    if (self.bridge.launchOptions[UIApplicationLaunchOptionsURLKey]) {
+        initialURL = self.bridge.launchOptions[UIApplicationLaunchOptionsURLKey];
+    } else {
+        NSDictionary *userActivityDictionary =
+            self.bridge.launchOptions[UIApplicationLaunchOptionsUserActivityDictionaryKey];
+        if ([userActivityDictionary[UIApplicationLaunchOptionsUserActivityTypeKey] isEqual:NSUserActivityTypeBrowsingWeb]) {
+            initialURL = ((NSUserActivity *)userActivityDictionary[@"UIApplicationLaunchOptionsUserActivityKey"]).webpageURL;
+        }
+    }
+    
     resolve(RCTNullIfNil(initialURL.absoluteString));
 }
 

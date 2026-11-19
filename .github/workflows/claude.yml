@@ -71,8 +71,8 @@ jobs:
             Always report stale documentation (the one documentation exception):
             - Public API, installation or host-app setup changed without updating
               packages/react-native-autoplay/README.md. It is the only documentation
-              consumers get. Watch for renames or changes to the AutoPlay* Info.plist keys,
-              the autoPlayNativeBackdrop selector, any *SceneDelegate class name (referenced by string from
+              consumers get. Watch for renames or changes to the getRootViewForAutoplay
+              AppDelegate method, any *SceneDelegate class name (referenced by string from
               the consumer's Info.plist), any ReactNativeAutoPlay_* Gradle property or its
               default, entitlements, URL schemes, the ProGuard rule, setIconFont, or any
               exported symbol in src/index.ts.

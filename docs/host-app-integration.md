@@ -35,58 +35,13 @@ produce no error message at all.
 
 ## iOS
 
-- **The library owns the app's only `RCTReactNativeFactory`** (`ios/ReactHelpers/AutoPlayReactHost.mm`,
-  README → *AppDelegate and the React Native factory*); the host `AppDelegate` has no React
-  Native code. It is **Objective-C++ on purpose**: Swift in this pod is compiled with C++
-  interop for Nitro, and with the prebuilt React core (the 0.88 default) that cannot import
-  `React_RCTAppDelegate`. Keep React types out of `AutoPlayReactHost.h`, Swift only sees that
-  header. Everything host-specific is resolved at runtime, so a mistake is **no compile
-  error**:
-  - `AutoPlayReactNativeDelegateClass` / `AutoPlayReactNativeFactoryClass` (`Info.plist`) are
-    looked up with `NSClassFromString`. Expo's factory is detected as
-    `Expo.ExpoReactNativeFactory` — **not** `EXReactNativeFactory`, which is its Objective-C
-    base class without the react delegate handlers expo-updates relies on — and it
-    `fatalError`s unless the delegate is an `ExpoReactNativeFactoryDelegate`. CarPlay views go
-    through Expo's `superViewWithModuleName:…launchOptions:…`. Expo is not installed in this
-    repo, so those paths are only exercised in Expo host apps.
-  - `AutoPlayMainModuleName` defaults to `main`. A mismatch with JS `registerComponent` shows
-    React Native's "has not been registered" error on the phone only — CarPlay keeps working.
-  - The native backdrop is the optional `autoPlayNativeBackdropFor:moduleName:` selector on
-    the host's factory delegate. `NitroSurface.stop` looks one level into the container the
-    backdrop is stacked in to find the React root view.
-  - Every CarPlay scene calls `AutoPlayReactHost.start()` on init: it mounts the main
-    component in an off-screen window, as the old `AppDelegate` did on launch. Without it a
-    CarPlay-only cold start never runs JS, and JS is what requests the CarPlay root views.
-  - The phone (or off-screen launch) window is assigned to the `AppDelegate`'s `window` if it
-    declares one, mirroring Expo's `ExpoAppSceneDelegate`: expo-system-ui,
-    expo-screen-orientation and expo-updates read `UIApplication.shared.delegate?.window`.
-  - The first scene to connect creates the React host and fixes its launch options. When
-    CarPlay cold-starts the app, the phone's URL never reaches React Native's own
-    `getInitialURL`, which is why `NitroLinkingManager` and `RCTLinkingManager+Custom.mm`
-    stay. The phone's root view controller is created once and reused on scene reconnect.
-  - `NitroLinkingManager` forwards links through `RCTLinkingManager`'s **scene** entry points
-    (`scene:openURLContexts:`, `scene:continueUserActivity:`). Since react-native 0.88 its app
-    delegate entry points return `NO` for scene based apps, which silently dropped every link
-    that arrives while the app is running — cold starts kept working through `launchURL`.
-  - `RCTLinkingManager+Custom.mm`'s `getInitialURL` returns `launchURL` only, **never** the
-    launch options like React Native's own: the phone scene passes its `connectionOptions` to
-    `startReactNative`, those launch options survive a reload, and every reload would replay the
-    link that cold-started the app.
-- **`ios/ReactHelpers/CarPlaySceneWindows.m` gives the CarPlay scene classes an empty
-  `windows` (dev-menu builds only).** `-[RCTDevMenu showOnShake]` sends `windows` to every
-  connected scene, so shaking the phone while CarPlay is connected crashes with an unrecognized
-  selector otherwise. It must stay **empty**: `RCTAppearance.setColorScheme` overrides the style
-  of every window it gets from `windows`, so real CarPlay windows would follow the phone app's
-  forced theme instead of the car's day/night. Remove it once React Native skips non-
-  `UIWindowScene`s there; no React Native patch, the prebuilt core must keep working.
-- **A React reload keeps the car surfaces' React Native surfaces and restarts them in the new
-  JS instance**, which only works if that instance registers their components again. The head
-  unit gets this from `HybridAutoPlay.addListener('didConnect')` replaying the current session;
-  clusters from `HybridCluster.addListener('didConnectWithWindow')` replaying every cluster
-  with a window (`SceneStore.getClusterIdsWithWindow()`, same as Android's
-  `getClusterSessions()`), and `HybridCluster.initRootView` keeps a root view that is already
-  there. Without it a cluster's random module name is never registered again and the reload
-  ends in a "has not been registered" red screen.
+- **`getRootViewForAutoplay(moduleName:initialProperties:)` on the host `AppDelegate`**
+  (README → *MapTemplate*) is looked up by Objective-C runtime reflection
+  (`ios/utils/ViewUtils.swift`), deliberately not via a protocol, to avoid importing
+  `React_AppDelegate` (glog/C++ ABI conflicts). That is why a missing or misnamed method
+  gives **no compile error** — CarPlay just fails to init the root view at connect time.
+  Keep the reflection call and the README snippet in sync; renaming one silently breaks
+  every consumer. Reference implementation: `apps/example/ios/example/AppDelegate.swift`.
 - The four scene delegates ship with the library but are referenced by **string class
   name** in the consumer's `Info.plist` (README → *Scene delegates*). Nothing links the two,
   so a typo breaks exactly one surface while the others keep working — a very quiet partial

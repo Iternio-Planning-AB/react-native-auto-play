@@ -21,9 +21,6 @@ class SceneStore {
 
     private static var store: [String: AutoPlayScene] = [:]
 
-    /// Clusters whose window is connected, read from the JS thread when a listener is added.
-    private static var clusterIdsWithWindow = Set<String>()
-
     private static var lastRootSessionId = 0
     private static var rootSessionId: Int?
 
@@ -59,21 +56,6 @@ class SceneStore {
 
     static func getRootSessionId() -> Int? {
         return withLock { rootSessionId }
-    }
-
-    static func setClusterWindowConnected(clusterId: String, connected: Bool) {
-        withLock {
-            if connected {
-                clusterIdsWithWindow.insert(clusterId)
-            }
-            else {
-                clusterIdsWithWindow.remove(clusterId)
-            }
-        }
-    }
-
-    static func getClusterIdsWithWindow() -> [String] {
-        return withLock { Array(clusterIdsWithWindow) }
     }
 
     static func addScene(moduleName: String, scene: AutoPlayScene) {

@@ -20,23 +20,33 @@
 }
 
 // Before JS has asked for the initial URL nothing observes RCTLinkingManager's event, so keep the URL for getInitialURL.
-// The scene entry points, RCTLinkingManager's app delegate ones return NO for scene based apps
-// since react-native 0.88 and drop the URL.
-- (void)continueUserActivity:(NSUserActivity *)userActivity scene:(UIScene *)scene {
+- (void)continueUserActivity:(NSUserActivity *)userActivity {
     if (!self.initialURLRequested && [userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]
         && userActivity.webpageURL != nil) {
         self.launchURL = userActivity.webpageURL;
     }
-    [RCTLinkingManager scene:scene continueUserActivity:userActivity];
+    [RCTLinkingManager application:UIApplication.sharedApplication
+              continueUserActivity:userActivity
+                restorationHandler:^(NSArray *_Nullable _){
+                }];
 }
 
-- (void)openURL:(UIOpenURLContext *)urlContext scene:(UIScene *)scene {
+- (void)openURL:(UIOpenURLContext *)urlContext {
     NSURL *url = urlContext.URL;
     if (!self.initialURLRequested && url != nil) {
         self.launchURL = url;
     }
+    NSDictionary<UIApplicationOpenURLOptionsKey, id> *options = @{
+        UIApplicationOpenURLOptionsSourceApplicationKey :
+                urlContext.options.sourceApplication
+            ?: @"",
+        UIApplicationOpenURLOptionsAnnotationKey : urlContext.options.annotation
+            ?: @""
+    };
 
-    [RCTLinkingManager scene:scene openURLContexts:[NSSet setWithObject:urlContext]];
+    [RCTLinkingManager application:UIApplication.sharedApplication
+                           openURL:url
+                           options:options];
 }
 
 @end
