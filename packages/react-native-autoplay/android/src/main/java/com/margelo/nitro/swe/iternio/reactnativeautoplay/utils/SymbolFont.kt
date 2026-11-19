@@ -11,7 +11,6 @@ import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
-import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphBackgroundShape
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 
 object SymbolFont {
@@ -54,16 +53,16 @@ object SymbolFont {
             this.color = backgroundColor
             isAntiAlias = true
         }
-        if (glyphImage.backgroundShape == GlyphBackgroundShape.CIRCLE) {
+        // without an explicit radius keep the fixed 8px (not dp) radius used before the
+        // background shape became configurable, so existing glyphs look unchanged.
+        // backgroundShape 'circle' arrives as an infinite radius and is capped at half the size
+        val cornerRadius =
+            (glyphImage.backgroundCornerRadius?.let { (it * scale).toFloat() } ?: DEFAULT_CORNER_RADIUS_PX)
+                .coerceIn(0f, canvasSize / 2f)
+        if (cornerRadius >= canvasSize / 2f) {
             canvas.drawOval(rectF, paint)
         } else {
-            // without an explicit radius keep the fixed 8px (not dp) radius used before the
-            // background shape became configurable, so existing glyphs look unchanged
-            val cornerRadius =
-                glyphImage.backgroundCornerRadius?.let { (it * scale).toFloat() }
-                    ?: DEFAULT_CORNER_RADIUS_PX
-            val radius = cornerRadius.coerceIn(0f, canvasSize / 2f)
-            canvas.drawRoundRect(rectF, radius, radius, paint)
+            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
         }
 
         val fontScale = (glyphImage.fontScale ?: 1.0).toFloat()

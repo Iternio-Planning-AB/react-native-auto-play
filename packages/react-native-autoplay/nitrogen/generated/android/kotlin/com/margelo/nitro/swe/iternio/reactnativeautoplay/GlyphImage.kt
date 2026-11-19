@@ -32,9 +32,6 @@ data class GlyphImage(
   val backgroundColor: NitroColor,
   @DoNotStrip
   @Keep
-  val backgroundShape: GlyphBackgroundShape?,
-  @DoNotStrip
-  @Keep
   val backgroundCornerRadius: Double?,
   @DoNotStrip
   @Keep
@@ -49,7 +46,6 @@ data class GlyphImage(
       && Objects.deepEquals(this.fontName, other.fontName)
       && Objects.deepEquals(this.color, other.color)
       && Objects.deepEquals(this.backgroundColor, other.backgroundColor)
-      && Objects.deepEquals(this.backgroundShape, other.backgroundShape)
       && Objects.deepEquals(this.backgroundCornerRadius, other.backgroundCornerRadius)
       && Objects.deepEquals(this.fontScale, other.fontScale)
   }
@@ -60,7 +56,6 @@ data class GlyphImage(
       fontName,
       color,
       backgroundColor,
-      backgroundShape,
       backgroundCornerRadius,
       fontScale
     ).contentDeepHashCode()
@@ -74,8 +69,8 @@ data class GlyphImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(glyph: Double, fontName: String, color: NitroColor, backgroundColor: NitroColor, backgroundShape: GlyphBackgroundShape?, backgroundCornerRadius: Double?, fontScale: Double?): GlyphImage {
-      return GlyphImage(glyph, fontName, color, backgroundColor, backgroundShape, backgroundCornerRadius, fontScale)
+    private fun fromCpp(glyph: Double, fontName: String, color: NitroColor, backgroundColor: NitroColor, backgroundCornerRadius: Double?, fontScale: Double?): GlyphImage {
+      return GlyphImage(glyph, fontName, color, backgroundColor, backgroundCornerRadius, fontScale)
     }
   }
 }

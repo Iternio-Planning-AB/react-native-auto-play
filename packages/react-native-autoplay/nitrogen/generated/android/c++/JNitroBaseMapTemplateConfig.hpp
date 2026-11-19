@@ -11,12 +11,10 @@
 #include "NitroBaseMapTemplateConfig.hpp"
 
 #include "AssetImage.hpp"
-#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
-#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroAction.hpp"
 #include "JNitroActionType.hpp"

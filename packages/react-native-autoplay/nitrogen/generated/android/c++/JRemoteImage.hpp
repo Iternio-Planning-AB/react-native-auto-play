@@ -10,8 +10,6 @@
 #include <fbjni/fbjni.h>
 #include "RemoteImage.hpp"
 
-#include "GlyphBackgroundShape.hpp"
-#include "JGlyphBackgroundShape.hpp"
 #include "JNitroColor.hpp"
 #include "NitroColor.hpp"
 #include <optional>
@@ -50,8 +48,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroColor> placeholderColor = this->getFieldValue(fieldPlaceholderColor);
       static const auto fieldPlaceholderBackgroundColor = clazz->getField<JNitroColor>("placeholderBackgroundColor");
       jni::local_ref<JNitroColor> placeholderBackgroundColor = this->getFieldValue(fieldPlaceholderBackgroundColor);
-      static const auto fieldPlaceholderBackgroundShape = clazz->getField<JGlyphBackgroundShape>("placeholderBackgroundShape");
-      jni::local_ref<JGlyphBackgroundShape> placeholderBackgroundShape = this->getFieldValue(fieldPlaceholderBackgroundShape);
       static const auto fieldPlaceholderBackgroundCornerRadius = clazz->getField<jni::JDouble>("placeholderBackgroundCornerRadius");
       jni::local_ref<jni::JDouble> placeholderBackgroundCornerRadius = this->getFieldValue(fieldPlaceholderBackgroundCornerRadius);
       static const auto fieldPlaceholderFontScale = clazz->getField<jni::JDouble>("placeholderFontScale");
@@ -74,7 +70,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         placeholderFontName != nullptr ? std::make_optional(placeholderFontName->toStdString()) : std::nullopt,
         placeholderColor != nullptr ? std::make_optional(placeholderColor->toCpp()) : std::nullopt,
         placeholderBackgroundColor != nullptr ? std::make_optional(placeholderBackgroundColor->toCpp()) : std::nullopt,
-        placeholderBackgroundShape != nullptr ? std::make_optional(placeholderBackgroundShape->toCpp()) : std::nullopt,
         placeholderBackgroundCornerRadius != nullptr ? std::make_optional(placeholderBackgroundCornerRadius->value()) : std::nullopt,
         placeholderFontScale != nullptr ? std::make_optional(placeholderFontScale->value()) : std::nullopt,
         placeholderUri != nullptr ? std::make_optional(placeholderUri->toStdString()) : std::nullopt,
@@ -91,7 +86,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JRemoteImage::javaobject> fromCpp(const RemoteImage& value) {
-      using JSignature = JRemoteImage(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<JGlyphBackgroundShape>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JRemoteImage(jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -103,7 +98,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         value.placeholderFontName.has_value() ? jni::make_jstring(value.placeholderFontName.value()) : nullptr,
         value.placeholderColor.has_value() ? JNitroColor::fromCpp(value.placeholderColor.value()) : nullptr,
         value.placeholderBackgroundColor.has_value() ? JNitroColor::fromCpp(value.placeholderBackgroundColor.value()) : nullptr,
-        value.placeholderBackgroundShape.has_value() ? JGlyphBackgroundShape::fromCpp(value.placeholderBackgroundShape.value()) : nullptr,
         value.placeholderBackgroundCornerRadius.has_value() ? jni::JDouble::valueOf(value.placeholderBackgroundCornerRadius.value()) : nullptr,
         value.placeholderFontScale.has_value() ? jni::JDouble::valueOf(value.placeholderFontScale.value()) : nullptr,
         value.placeholderUri.has_value() ? jni::make_jstring(value.placeholderUri.value()) : nullptr,

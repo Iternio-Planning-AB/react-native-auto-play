@@ -1897,7 +1897,6 @@ extension RemoteImage {
             fontName: fontName,
             color: color,
             backgroundColor: backgroundColor,
-            backgroundShape: placeholderBackgroundShape,
             backgroundCornerRadius: placeholderBackgroundCornerRadius,
             fontScale: placeholderFontScale
         )

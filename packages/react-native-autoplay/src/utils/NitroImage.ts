@@ -1,10 +1,5 @@
 import { Image } from 'react-native';
-import type {
-  AutoAssetImage,
-  AutoImage,
-  GlyphBackgroundShape,
-  LocalAutoImage,
-} from '../types/Image';
+import type { AutoAssetImage, AutoImage, LocalAutoImage } from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 let _iconFont: string | undefined;
@@ -83,7 +78,12 @@ interface GlyphImage {
   fontName: string;
   color: NitroColor;
   backgroundColor: NitroColor;
-  backgroundShape?: GlyphBackgroundShape;
+  /**
+   * `backgroundShape` and `backgroundCornerRadius` combined, native caps the radius at half the
+   * image size and draws a circle there, so `'circle'` is sent as an infinite radius. Unset keeps
+   * the platform default. A separate shape enum pushed nitrogen over its call stack limit for
+   * MapTemplate.
+   */
   backgroundCornerRadius?: number;
   fontScale?: number;
 }
@@ -101,7 +101,6 @@ interface RemoteImage {
   placeholderFontName?: string;
   placeholderColor?: NitroColor;
   placeholderBackgroundColor?: NitroColor;
-  placeholderBackgroundShape?: GlyphBackgroundShape;
   placeholderBackgroundCornerRadius?: number;
   placeholderFontScale?: number;
   placeholderUri?: string;
@@ -130,8 +129,8 @@ function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage 
     fontName: getIconFont(),
     color: NitroColorUtil.convert(color),
     backgroundColor: NitroColorUtil.convert(backgroundColor),
-    backgroundShape,
-    backgroundCornerRadius,
+    backgroundCornerRadius:
+      backgroundShape === 'circle' ? Number.POSITIVE_INFINITY : backgroundCornerRadius,
     fontScale,
   };
 }
@@ -184,7 +183,6 @@ function convertPlaceholder(placeholder?: LocalAutoImage): Partial<RemoteImage> 
     placeholderFontName: glyph.fontName,
     placeholderColor: glyph.color,
     placeholderBackgroundColor: glyph.backgroundColor,
-    placeholderBackgroundShape: glyph.backgroundShape,
     placeholderBackgroundCornerRadius: glyph.backgroundCornerRadius,
     placeholderFontScale: glyph.fontScale,
   };

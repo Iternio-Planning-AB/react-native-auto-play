@@ -11,11 +11,9 @@
 #include "NitroAction.hpp"
 
 #include "AssetImage.hpp"
-#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
-#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroActionType.hpp"
 #include "JNitroAlignment.hpp"

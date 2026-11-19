@@ -11,11 +11,9 @@
 #include "NitroMapButton.hpp"
 
 #include "AssetImage.hpp"
-#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
 #include "JFunc_void.hpp"
-#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroColor.hpp"
 #include "JNitroImage.hpp"

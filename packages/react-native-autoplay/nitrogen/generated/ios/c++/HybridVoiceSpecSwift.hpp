@@ -24,8 +24,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage;
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
-// Forward declaration of `GlyphBackgroundShape` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GlyphBackgroundShape; }
 // Forward declaration of `VoiceInputChunk` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct VoiceInputChunk; }
 // Forward declaration of `VoiceAudioEncoding` to properly resolve imports.
@@ -42,7 +40,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VoiceAu
 #include "RemoteImage.hpp"
 #include <variant>
 #include "NitroColor.hpp"
-#include "GlyphBackgroundShape.hpp"
 #include "VoiceInputChunk.hpp"
 #include <functional>
 #include "VoiceAudioEncoding.hpp"

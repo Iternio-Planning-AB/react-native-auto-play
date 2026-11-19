@@ -24,8 +24,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct AssetImage;
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct RemoteImage; }
 // Forward declaration of `NitroColor` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NitroColor; }
-// Forward declaration of `GlyphBackgroundShape` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GlyphBackgroundShape; }
 // Forward declaration of `ColorScheme` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ColorScheme; }
 
@@ -41,7 +39,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ColorSc
 #include <string>
 #include "NitroColor.hpp"
 #include <optional>
-#include "GlyphBackgroundShape.hpp"
 #include "ColorScheme.hpp"
 
 #include "ReactNativeAutoPlay-Swift-Cxx-Umbrella.hpp"

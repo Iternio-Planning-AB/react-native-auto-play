@@ -12,7 +12,6 @@
 
 #include "AssetImage.hpp"
 #include "ColorScheme.hpp"
-#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "HideControls.hpp"
 #include "JAssetImage.hpp"
@@ -24,7 +23,6 @@
 #include "JFunc_void_Point_std__optional_Point_.hpp"
 #include "JFunc_void_bool.hpp"
 #include "JFunc_void_std__optional_bool_.hpp"
-#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JHideControls.hpp"
 #include "JNitroAction.hpp"

@@ -71,5 +71,4 @@ fun RemoteImage.cacheKey(context: CarContext): String =
     this.color?.let { "${this.uri}/${it.get(context)}" } ?: run { this.uri }
 
 fun GlyphImage.cacheKey(context: CarContext): String =
-    "$glyph/${color.get(context)}/${backgroundColor.get(context)}/$fontScale/" +
-        "$backgroundShape/$backgroundCornerRadius"
+    "$glyph/${color.get(context)}/${backgroundColor.get(context)}/$fontScale/$backgroundCornerRadius"

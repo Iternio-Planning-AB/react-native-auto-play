@@ -219,7 +219,6 @@ val RemoteImage.placeholderGlyphImage: GlyphImage?
             fontName,
             color,
             backgroundColor,
-            placeholderBackgroundShape,
             placeholderBackgroundCornerRadius,
             placeholderFontScale,
         )
