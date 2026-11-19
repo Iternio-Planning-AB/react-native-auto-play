@@ -7,6 +7,7 @@ import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SessionInfo
+import androidx.car.app.isTornDown
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.MessageTemplate
 import androidx.car.app.model.Template
@@ -294,24 +295,29 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         private val lastSessionId = AtomicInteger(0)
 
         fun getIsConnected(): Boolean {
-            return sessions.containsKey(ROOT_SESSION)
+            return sessions[ROOT_SESSION]?.let { !it.session.isTornDown } ?: false
         }
 
         /**
          * Assigned on every head unit connect, so JS can tell a listener that was suspended across a
          * disconnect from one called for the current session. Removed together with the session, which
-         * the isCurrentSession check keeps an older session's late onDestroy from doing.
+         * the isCurrentSession check keeps an older session's late onDestroy from doing. Hidden during
+         * teardown like getIsConnected, so a getCurrentSessionId() guard in onPopped fails too.
          */
         fun getSessionId(): Int? {
-            return sessions[ROOT_SESSION]?.sessionId
+            return sessions[ROOT_SESSION]?.takeUnless { it.session.isTornDown }?.sessionId
         }
 
         fun getState(marker: String): VisibilityState? {
             return sessions[marker]?.state
         }
 
+        /**
+         * Null during teardown like getRootContext, so a root MapTemplate or cluster renderer is not
+         * created on a destroyed context. Teardown code gets its context passed in instead.
+         */
         fun getCarContext(marker: String): CarContext? {
-            return sessions[marker]?.carContext
+            return sessions[marker]?.takeUnless { it.session.isTornDown }?.carContext
         }
 
         fun getLifecycle(marker: String): Lifecycle? {
@@ -319,7 +325,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         }
 
         fun getRootContext(): CarContext? {
-            return sessions[ROOT_SESSION]?.carContext
+            return sessions[ROOT_SESSION]?.takeUnless { it.session.isTornDown }?.carContext
         }
 
         fun getClusterSessions(): Array<String> {
