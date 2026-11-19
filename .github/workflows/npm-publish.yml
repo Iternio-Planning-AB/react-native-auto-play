@@ -21,23 +21,30 @@ jobs:
 
       - name: Determine branch for release tag
         id: release-branch
+        env:
+          # the branch picked as the release target. Guessing it from the branches that contain
+          # the tag picked whichever sorted first, e.g. a feature branch cut from master, and
+          # published that branch's tip instead of the tagged commit
+          TARGET: ${{ github.event.release.target_commitish }}
         run: |
-          echo "Resolving branch for tag: $GITHUB_REF_NAME"
+          echo "Resolving branch for tag: $GITHUB_REF_NAME (release target: $TARGET)"
 
           TAG_COMMIT=$(git rev-list -n 1 "$GITHUB_REF_NAME")
 
-          BRANCH=$(git branch -r --contains "$TAG_COMMIT" \
-            | sed 's|origin/||' \
-            | grep -v 'HEAD' \
-            | head -n 1)
-
-          if [ -z "$BRANCH" ]; then
-            echo "::error::Could not determine branch for tag $GITHUB_REF_NAME"
+          if ! BRANCH_COMMIT=$(git rev-parse --verify --quiet "refs/remotes/origin/$TARGET"); then
+            echo "::error::Release target '$TARGET' is not a branch. Create the release with a branch as target."
             exit 1
           fi
 
-          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-          echo "✅ Release branch: $BRANCH"
+          # the version bump is committed on top of the branch and the branch is published, so it
+          # must not have moved past the tagged commit
+          if [ "$BRANCH_COMMIT" != "$TAG_COMMIT" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME ($TAG_COMMIT) is not the tip of $TARGET ($BRANCH_COMMIT). Tag the current tip of $TARGET."
+            exit 1
+          fi
+
+          echo "branch=$TARGET" >> "$GITHUB_OUTPUT"
+          echo "✅ Release branch: $TARGET"
 
       - name: Checkout release branch
         run: |
