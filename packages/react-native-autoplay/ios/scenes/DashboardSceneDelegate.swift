@@ -28,6 +28,8 @@ class DashboardSceneDelegate: AutoPlayScene,
         super.init(moduleName: SceneStore.dashboardModuleName)
     }
 
+    override var nativeBackdropDisplay: String { "dashboard" }
+
     func templateApplicationDashboardScene(
         _ templateApplicationDashboardScene:
             CPTemplateApplicationDashboardScene,

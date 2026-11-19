@@ -21,6 +21,8 @@ class ClusterSceneDelegate: AutoPlayScene,
         super.init(moduleName: clusterId)
     }
 
+    override var nativeBackdropDisplay: String { "cluster" }
+
     // MARK: CPTemplateApplicationInstrumentClusterSceneDelegate
     func templateApplicationInstrumentClusterScene(
         _ templateApplicationInstrumentClusterScene:
@@ -42,6 +44,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         didDisconnectInstrumentClusterController instrumentClusterController:
             CPInstrumentClusterController
     ) {
+        SceneStore.setClusterWindowConnected(clusterId: clusterId, connected: false)
         disconnect()
         HybridCluster.emit(event: .diddisconnect, clusterId: clusterId)
     }
@@ -85,6 +88,7 @@ class ClusterSceneDelegate: AutoPlayScene,
         ]
 
         connect(props: props)
+        SceneStore.setClusterWindowConnected(clusterId: clusterId, connected: true)
         HybridCluster.emit(event: .didconnectwithwindow, clusterId: clusterId)
     }
 
@@ -95,7 +99,11 @@ class ClusterSceneDelegate: AutoPlayScene,
         // Stop the surface here though: disconnect() stops it through self.window, which is
         // already nil by then, so the React root stayed mounted and never ran its cleanup. A
         // window that comes back gets a fresh root view from initRootView.
+        SceneStore.setClusterWindowConnected(clusterId: clusterId, connected: false)
         NitroSurface.stop(instrumentClusterWindow.rootViewController?.view)
+        /// initRootView keeps a root view controller that is already on the window, so the stopped
+        /// one must not survive in case CarPlay hands the same window back on reconnect
+        instrumentClusterWindow.rootViewController = nil
         self.window = nil
         HybridCluster.emit(
             event: .diddisconnectfromwindow,
