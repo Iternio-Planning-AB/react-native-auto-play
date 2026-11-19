@@ -13,6 +13,8 @@ class SymbolFont {
     /// construction on the JS thread and from `@MainActor` template
     /// invalidation, so the cache is touched from more than one thread.
     private static let cacheLock = NSLock()
+    /// Corner radius of a `roundedRect` glyph background without an explicit radius, in points.
+    private static let defaultCornerRadius = 8.0
     private static var cachedFontName: String?
     private static var cachedPSName: String?
 
@@ -95,9 +97,18 @@ class SymbolFont {
             return nil
         }
 
-        // Fill circular background
         context.setFillColor(backgroundColor.cgColor)
-        context.fillEllipse(in: rect)
+        switch glyphImage.backgroundShape ?? .circle {
+        case .circle:
+            context.fillEllipse(in: rect)
+        case .roundedrect:
+            let cornerRadius = min(
+                max(CGFloat(glyphImage.backgroundCornerRadius ?? defaultCornerRadius), 0),
+                size / 2
+            )
+            context.addPath(UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).cgPath)
+            context.fillPath()
+        }
 
         // Draw glyph
         let textSize = attrString.size()

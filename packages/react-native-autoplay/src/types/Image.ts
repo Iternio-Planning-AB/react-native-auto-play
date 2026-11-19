@@ -21,6 +21,8 @@ export type GlyphMapKey = keyof AutoPlayGlyphMap extends never
   ? string
   : Extract<keyof AutoPlayGlyphMap, string>;
 
+export type GlyphBackgroundShape = 'circle' | 'roundedRect';
+
 type GlyphStyleFields = {
   /**
    * Sets the icon dark and light mode color or a single color for both.
@@ -35,6 +37,21 @@ type GlyphStyleFields = {
    * Defaults to transparent if not specified.
    */
   backgroundColor?: ThemedColor | string;
+
+  /**
+   * Shape of the `backgroundColor` fill. Has no visible effect without a `backgroundColor`.
+   * Defaults to the platform's previous look when not specified: `'circle'` on CarPlay and
+   * `'roundedRect'` with a fixed 8px corner radius on Android Auto.
+   */
+  backgroundShape?: GlyphBackgroundShape;
+
+  /**
+   * Corner radius of a `'roundedRect'` background in dp (Android) / pt (iOS), capped at half the
+   * image size. Ignored for `'circle'`. When not specified a `'roundedRect'` uses a radius of 8px
+   * on Android Auto, the previous look, and 8pt on CarPlay.
+   */
+  backgroundCornerRadius?: number;
+
   fontScale?: number;
 };
 

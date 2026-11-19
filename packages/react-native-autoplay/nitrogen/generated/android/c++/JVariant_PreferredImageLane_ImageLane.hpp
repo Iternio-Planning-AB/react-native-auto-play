@@ -23,6 +23,8 @@
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
 #include <optional>
+#include "GlyphBackgroundShape.hpp"
+#include "JGlyphBackgroundShape.hpp"
 #include "JAssetImage.hpp"
 #include "JRemoteImage.hpp"
 #include <vector>

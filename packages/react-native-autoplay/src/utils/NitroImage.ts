@@ -1,5 +1,10 @@
 import { Image } from 'react-native';
-import type { AutoAssetImage, AutoImage, LocalAutoImage } from '../types/Image';
+import type {
+  AutoAssetImage,
+  AutoImage,
+  GlyphBackgroundShape,
+  LocalAutoImage,
+} from '../types/Image';
 import { type NitroColor, NitroColorUtil } from './NitroColor';
 
 let _iconFont: string | undefined;
@@ -78,6 +83,8 @@ interface GlyphImage {
   fontName: string;
   color: NitroColor;
   backgroundColor: NitroColor;
+  backgroundShape?: GlyphBackgroundShape;
+  backgroundCornerRadius?: number;
   fontScale?: number;
 }
 
@@ -94,6 +101,8 @@ interface RemoteImage {
   placeholderFontName?: string;
   placeholderColor?: NitroColor;
   placeholderBackgroundColor?: NitroColor;
+  placeholderBackgroundShape?: GlyphBackgroundShape;
+  placeholderBackgroundCornerRadius?: number;
   placeholderFontScale?: number;
   placeholderUri?: string;
   placeholderWidth?: number;
@@ -108,13 +117,21 @@ interface RemoteImage {
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
 function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage {
-  const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
+  const {
+    color = 'default',
+    fontScale,
+    backgroundColor = 'transparent',
+    backgroundShape,
+    backgroundCornerRadius,
+  } = image;
 
   return {
     glyph: resolveGlyph(image),
     fontName: getIconFont(),
     color: NitroColorUtil.convert(color),
     backgroundColor: NitroColorUtil.convert(backgroundColor),
+    backgroundShape,
+    backgroundCornerRadius,
     fontScale,
   };
 }
@@ -167,6 +184,8 @@ function convertPlaceholder(placeholder?: LocalAutoImage): Partial<RemoteImage> 
     placeholderFontName: glyph.fontName,
     placeholderColor: glyph.color,
     placeholderBackgroundColor: glyph.backgroundColor,
+    placeholderBackgroundShape: glyph.backgroundShape,
+    placeholderBackgroundCornerRadius: glyph.backgroundCornerRadius,
     placeholderFontScale: glyph.fontScale,
   };
 }

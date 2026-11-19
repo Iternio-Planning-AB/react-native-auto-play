@@ -476,6 +476,15 @@ The library does **not** bundle any icon font — the consuming app must provide
    { type: 'glyph', codepoint: 0xe531 }
    ```
 
+Glyphs can be drawn on a colored background with `backgroundColor`. `backgroundShape` sets its shape, `'circle'` or `'roundedRect'`, with `backgroundCornerRadius` as the corner radius of a `'roundedRect'` in dp (Android) / pt (iOS), capped at half the image size:
+
+```ts
+{ type: 'glyph', name: 'warning', backgroundColor: 'red', backgroundShape: 'circle' }
+{ type: 'glyph', name: 'warning', backgroundColor: 'red', backgroundShape: 'roundedRect', backgroundCornerRadius: 6 }
+```
+
+Without `backgroundShape` each platform keeps its previous look: a circle on CarPlay and a rounded rect with a fixed 8px corner radius on Android Auto. Set it explicitly to get the same shape on both. A `'roundedRect'` without `backgroundCornerRadius` uses 8pt on CarPlay.
+
 `setIconFont` must be called once before the first glyph is used (subsequent calls are ignored). If no font is registered, the library throws an error when a glyph image is rendered.
 
 ### Type-safe glyph names

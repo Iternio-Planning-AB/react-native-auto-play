@@ -11,6 +11,7 @@ import androidx.car.app.CarContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.BuildConfig
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphBackgroundShape
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.GlyphImage
 
 object SymbolFont {
@@ -35,7 +36,6 @@ object SymbolFont {
         color: Int,
         backgroundColor: Int,
         sizeDp: Int,
-        cornerRadius: Float = 8f, // TODO: make accessible and add it to GlyphImage.cacheKey
     ): Bitmap? {
         val font =
             loadTypeface(context, glyphImage.fontName) ?: run {
@@ -54,7 +54,17 @@ object SymbolFont {
             this.color = backgroundColor
             isAntiAlias = true
         }
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
+        if (glyphImage.backgroundShape == GlyphBackgroundShape.CIRCLE) {
+            canvas.drawOval(rectF, paint)
+        } else {
+            // without an explicit radius keep the fixed 8px (not dp) radius used before the
+            // background shape became configurable, so existing glyphs look unchanged
+            val cornerRadius =
+                glyphImage.backgroundCornerRadius?.let { (it * scale).toFloat() }
+                    ?: DEFAULT_CORNER_RADIUS_PX
+            val radius = cornerRadius.coerceIn(0f, canvasSize / 2f)
+            canvas.drawRoundRect(rectF, radius, radius, paint)
+        }
 
         val fontScale = (glyphImage.fontScale ?: 1.0).toFloat()
 
@@ -85,6 +95,8 @@ object SymbolFont {
 
         return bitmap
     }
+
+    private const val DEFAULT_CORNER_RADIUS_PX = 8f
 
     // Minimum recommended image size is 36dp according to https://developers.google.com/cars/design/create-apps/ux-requirements/templated-apps#navigation
     const val DEFAULT_SIZE_DP = 36

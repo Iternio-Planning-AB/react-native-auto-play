@@ -18,8 +18,20 @@ public extension GlyphImage {
   /**
    * Create a new instance of `GlyphImage`.
    */
-  init(glyph: Double, fontName: String, color: NitroColor, backgroundColor: NitroColor, fontScale: Double?) {
-    self.init(glyph, std.string(fontName), color, backgroundColor, { () -> bridge.std__optional_double_ in
+  init(glyph: Double, fontName: String, color: NitroColor, backgroundColor: NitroColor, backgroundShape: GlyphBackgroundShape?, backgroundCornerRadius: Double?, fontScale: Double?) {
+    self.init(glyph, std.string(fontName), color, backgroundColor, { () -> bridge.std__optional_GlyphBackgroundShape_ in
+      if let __unwrappedValue = backgroundShape {
+        return bridge.create_std__optional_GlyphBackgroundShape_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = backgroundCornerRadius {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
       if let __unwrappedValue = fontScale {
         return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
@@ -46,6 +58,23 @@ public extension GlyphImage {
   @inline(__always)
   var backgroundColor: NitroColor {
     return self.__backgroundColor
+  }
+  
+  @inline(__always)
+  var backgroundShape: GlyphBackgroundShape? {
+    return self.__backgroundShape.value
+  }
+  
+  @inline(__always)
+  var backgroundCornerRadius: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__backgroundCornerRadius) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__backgroundCornerRadius)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

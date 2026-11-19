@@ -4,7 +4,10 @@ Core shared types live in `src/types/`:
 
 - `AutoText` — text with variants and placeholders (`TextPlaceholders`, `Distance`, `DistanceUnits`)
 - `AutoImage` — glyph images (`AutoGlyphByName` / `AutoGlyphByCodepoint`) or RN
-  `ImageSourcePropType` assets, with themed `color` / `backgroundColor`
+  `ImageSourcePropType` assets, with themed `color` / `backgroundColor`. A glyph's
+  `backgroundShape` defaults to a circle on iOS and an 8px (not dp) rounded rect on Android when
+  unset, so existing glyphs keep their look; `GlyphImage.cacheKey` on Android includes the shape
+  and corner radius
 - `Maneuver` — discriminated union (`TurnManeuver`, `RoundaboutManeuver`, …) plus
   `ManeuverType` / `TurnType` / `ManeuverState` enums and lane info
 - `Trip`, `TripPoint`, `TripConfig`, `TripsConfig`, `TravelEstimates`

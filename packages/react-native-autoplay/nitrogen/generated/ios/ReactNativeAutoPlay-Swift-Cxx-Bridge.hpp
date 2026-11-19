@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Distance; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWithTimeZone; }
 // Forward declaration of `ForkType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkType; }
+// Forward declaration of `GlyphBackgroundShape` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GlyphBackgroundShape; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `GridImageSize` to properly resolve imports.
@@ -210,6 +212,7 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "DistanceUnits.hpp"
 #include "DurationWithTimeZone.hpp"
 #include "ForkType.hpp"
+#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
 #include "GridSectionImageSize.hpp"
@@ -521,6 +524,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_SafeAreaInsets create_Func_void_SafeAreaInsets(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_SafeAreaInsets_Wrapper wrap_Func_void_SafeAreaInsets(Func_void_SafeAreaInsets value) noexcept {
     return Func_void_SafeAreaInsets_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<GlyphBackgroundShape>
+  /**
+   * Specialized version of `std::optional<GlyphBackgroundShape>`.
+   */
+  using std__optional_GlyphBackgroundShape_ = std::optional<GlyphBackgroundShape>;
+  inline std::optional<GlyphBackgroundShape> create_std__optional_GlyphBackgroundShape_(const GlyphBackgroundShape& value) noexcept {
+    return std::optional<GlyphBackgroundShape>(value);
+  }
+  inline bool has_value_std__optional_GlyphBackgroundShape_(const std::optional<GlyphBackgroundShape>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline GlyphBackgroundShape get_std__optional_GlyphBackgroundShape_(const std::optional<GlyphBackgroundShape>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroColor>

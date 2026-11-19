@@ -36,6 +36,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct DurationWit
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class EventName; }
 // Forward declaration of `ForkType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ForkType; }
+// Forward declaration of `GlyphBackgroundShape` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class GlyphBackgroundShape; }
 // Forward declaration of `GlyphImage` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct GlyphImage; }
 // Forward declaration of `GridImageSize` to properly resolve imports.
@@ -210,6 +212,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ZoomEve
 #include "DurationWithTimeZone.hpp"
 #include "EventName.hpp"
 #include "ForkType.hpp"
+#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "GridImageSize.hpp"
 #include "GridSectionImageSize.hpp"

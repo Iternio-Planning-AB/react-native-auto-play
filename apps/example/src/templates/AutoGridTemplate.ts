@@ -55,6 +55,7 @@ const getButtons = (
       name: 'star',
       color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 3 ? 'rgba(0, 255, 255, 1)' : undefined,
+      backgroundShape: 'circle',
       type: 'glyph',
     },
     onPress: (template) => {
@@ -67,6 +68,8 @@ const getButtons = (
       name: 'star',
       color: { darkColor, lightColor },
       backgroundColor: selectedIdx === 4 ? 'rgba(0, 255, 255, 1)' : undefined,
+      backgroundShape: 'roundedRect',
+      backgroundCornerRadius: 4,
       type: 'glyph',
     },
     onPress: (template) => {

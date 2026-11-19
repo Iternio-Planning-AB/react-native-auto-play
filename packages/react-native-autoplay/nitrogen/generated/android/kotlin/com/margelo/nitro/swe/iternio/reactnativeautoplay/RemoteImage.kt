@@ -41,6 +41,12 @@ data class RemoteImage(
   val placeholderBackgroundColor: NitroColor?,
   @DoNotStrip
   @Keep
+  val placeholderBackgroundShape: GlyphBackgroundShape?,
+  @DoNotStrip
+  @Keep
+  val placeholderBackgroundCornerRadius: Double?,
+  @DoNotStrip
+  @Keep
   val placeholderFontScale: Double?,
   @DoNotStrip
   @Keep
@@ -70,6 +76,8 @@ data class RemoteImage(
       && Objects.deepEquals(this.placeholderFontName, other.placeholderFontName)
       && Objects.deepEquals(this.placeholderColor, other.placeholderColor)
       && Objects.deepEquals(this.placeholderBackgroundColor, other.placeholderBackgroundColor)
+      && Objects.deepEquals(this.placeholderBackgroundShape, other.placeholderBackgroundShape)
+      && Objects.deepEquals(this.placeholderBackgroundCornerRadius, other.placeholderBackgroundCornerRadius)
       && Objects.deepEquals(this.placeholderFontScale, other.placeholderFontScale)
       && Objects.deepEquals(this.placeholderUri, other.placeholderUri)
       && Objects.deepEquals(this.placeholderWidth, other.placeholderWidth)
@@ -87,6 +95,8 @@ data class RemoteImage(
       placeholderFontName,
       placeholderColor,
       placeholderBackgroundColor,
+      placeholderBackgroundShape,
+      placeholderBackgroundCornerRadius,
       placeholderFontScale,
       placeholderUri,
       placeholderWidth,
@@ -104,8 +114,8 @@ data class RemoteImage(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderFontScale: Double?, placeholderUri: String?, placeholderWidth: Double?, placeholderHeight: Double?, placeholderScale: Double?, placeholderPackagerAsset: Boolean?): RemoteImage {
-      return RemoteImage(uri, color, timeoutMs, placeholderGlyph, placeholderFontName, placeholderColor, placeholderBackgroundColor, placeholderFontScale, placeholderUri, placeholderWidth, placeholderHeight, placeholderScale, placeholderPackagerAsset)
+    private fun fromCpp(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderBackgroundShape: GlyphBackgroundShape?, placeholderBackgroundCornerRadius: Double?, placeholderFontScale: Double?, placeholderUri: String?, placeholderWidth: Double?, placeholderHeight: Double?, placeholderScale: Double?, placeholderPackagerAsset: Boolean?): RemoteImage {
+      return RemoteImage(uri, color, timeoutMs, placeholderGlyph, placeholderFontName, placeholderColor, placeholderBackgroundColor, placeholderBackgroundShape, placeholderBackgroundCornerRadius, placeholderFontScale, placeholderUri, placeholderWidth, placeholderHeight, placeholderScale, placeholderPackagerAsset)
     }
   }
 }

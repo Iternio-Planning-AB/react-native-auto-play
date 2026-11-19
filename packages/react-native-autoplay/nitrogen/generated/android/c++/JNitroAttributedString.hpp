@@ -11,8 +11,10 @@
 #include "NitroAttributedString.hpp"
 
 #include "AssetImage.hpp"
+#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "JAssetImage.hpp"
+#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JNitroAttributedStringImage.hpp"
 #include "JNitroColor.hpp"

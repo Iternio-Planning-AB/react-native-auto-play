@@ -29,6 +29,8 @@
 #include "JGlyphImage.hpp"
 #include "NitroColor.hpp"
 #include "JNitroColor.hpp"
+#include "GlyphBackgroundShape.hpp"
+#include "JGlyphBackgroundShape.hpp"
 #include "JAssetImage.hpp"
 #include "JRemoteImage.hpp"
 #include "JVariant_GlyphImage_AssetImage_RemoteImage.hpp"

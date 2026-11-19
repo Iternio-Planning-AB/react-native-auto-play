@@ -11,9 +11,11 @@
 #include "LaneGuidance.hpp"
 
 #include "AssetImage.hpp"
+#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "ImageLane.hpp"
 #include "JAssetImage.hpp"
+#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JImageLane.hpp"
 #include "JNitroColor.hpp"

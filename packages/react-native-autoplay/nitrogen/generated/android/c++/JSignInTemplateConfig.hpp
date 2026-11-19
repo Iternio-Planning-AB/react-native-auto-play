@@ -11,6 +11,7 @@
 #include "SignInTemplateConfig.hpp"
 
 #include "AssetImage.hpp"
+#include "GlyphBackgroundShape.hpp"
 #include "GlyphImage.hpp"
 #include "GoogleSignIn.hpp"
 #include "GoogleSignInAccount.hpp"
@@ -20,6 +21,7 @@
 #include "JFunc_void_std__optional_bool_.hpp"
 #include "JFunc_void_std__optional_std__string__std__optional_GoogleSignInAccount_.hpp"
 #include "JFunc_void_std__string.hpp"
+#include "JGlyphBackgroundShape.hpp"
 #include "JGlyphImage.hpp"
 #include "JGoogleSignIn.hpp"
 #include "JGoogleSignInAccount.hpp"
