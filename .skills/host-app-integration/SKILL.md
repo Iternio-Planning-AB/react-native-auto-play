@@ -1,6 +1,6 @@
 ---
 name: host-app-integration
-description: Changing what a consuming app must wire up to use this library — the iOS AppDelegate hook, Info.plist scene delegates, CarPlay entitlements, URL schemes, or on Android the merged AndroidManifest, the ReactNativeAutoPlay_* Gradle properties, the headless CarAppService, ProGuard rules or the prefab workaround. Use when a change affects host-app setup, or when CarPlay/Android Auto fails to start with no error.
+description: Changing what a consuming app must wire up to use this library — the iOS React Native factory and its Info.plist keys, Info.plist scene delegates, CarPlay entitlements, URL schemes, or on Android the merged AndroidManifest, the ReactNativeAutoPlay_* Gradle properties, the headless CarAppService, ProGuard rules or the prefab workaround. Use when a change affects host-app setup, or when CarPlay/Android Auto fails to start with no error.
 ---
 
 # Host-app integration
@@ -22,12 +22,13 @@ The highlights, so you know what you're looking for:
    updates and telemetry just quietly stop while the car surface is active and the phone is
    locked. This replaced a permanent headless JS task on Android that existed only to keep
    `JavaTimerManager` unpaused.
-2. **iOS:** the host app must implement
-   `@objc func getRootViewForAutoplay(moduleName:initialProperties:) -> UIView?` on its
-   `AppDelegate`. It is found by ObjC runtime reflection, not a protocol, so a missing or
-   misnamed method produces **no compile error** — CarPlay just fails to init at connect
-   time. Scene delegates are referenced by string class name in `Info.plist`, so a typo
-   breaks exactly one surface while the others keep working.
+2. **iOS:** the library owns the app's only React Native factory
+   (`ios/ReactHelpers/AutoPlayReactHost.mm`, Objective-C++ because Swift with Nitro's C++
+   interop cannot import `React_RCTAppDelegate` from the prebuilt core). The host
+   `AppDelegate` has no React Native code; the delegate class, factory class and main module
+   name come from optional `Info.plist` keys and are resolved at runtime, so a mistake is no
+   compile error. Scene delegates are referenced by string class name in `Info.plist`, so a
+   typo breaks exactly one surface while the others keep working.
 3. **Android:** no manifest setup is required in the host app — everything is merged in from
    the library. Behaviour is controlled by `ReactNativeAutoPlay_*` **Gradle properties**, not
    code, and `getExtOrDefault` only reads `rootProject.ext` or the prefixed project property,

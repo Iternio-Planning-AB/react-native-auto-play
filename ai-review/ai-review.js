@@ -83,7 +83,7 @@ line, saying which file needs updating and why.
 
 1. Public API, installation or host-app setup changed, but packages/react-native-autoplay/README.md
    was not updated. That README is the only documentation consumers get. Watch for renames
-   or changes to: the getRootViewForAutoplay AppDelegate method, any *SceneDelegate class
+   or changes to: the AutoPlay* Info.plist keys, the autoPlayNativeBackdrop selector, any *SceneDelegate class
    name (they are referenced by string from the consumer's Info.plist), any
    ReactNativeAutoPlay_* Gradle property or its default, entitlements, URL schemes, the
    ProGuard rule, setIconFont, or any exported symbol in src/index.ts.
