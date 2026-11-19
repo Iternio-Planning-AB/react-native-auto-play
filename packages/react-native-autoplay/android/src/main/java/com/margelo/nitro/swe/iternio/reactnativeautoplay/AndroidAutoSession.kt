@@ -185,9 +185,14 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 Log.w(TAG, "Ignoring navigation intent with unsupported data: $data")
                 return
             }
-            HybridAutoPlay.emitNavigationIntent(
+            val navigationIntent =
                 NavigationIntentParser.parse(data.encodedSchemeSpecificPart ?: "")
-            )
+            // nothing to navigate to, and it must not replace a pending cold-start intent
+            if (navigationIntent.location == null && navigationIntent.query == null) {
+                Log.w(TAG, "Ignoring navigation intent without location and query: $data")
+                return
+            }
+            HybridAutoPlay.emitNavigationIntent(navigationIntent)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
         }
