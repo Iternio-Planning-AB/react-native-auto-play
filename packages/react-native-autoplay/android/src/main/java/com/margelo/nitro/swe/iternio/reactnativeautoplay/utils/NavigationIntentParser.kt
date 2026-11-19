@@ -65,8 +65,8 @@ object NavigationIntentParser {
     /**
      * A custom action when the URI carries an act parameter, under any scheme: numeric act as the
      * host forwards it (google.maps://...?act=35, geo:0,0?act=35) or named (geo.action:?act=mute).
-     * Numeric act is mapped to the documented name, so JS gets the same value on Android Auto
-     * (numbers) and Android Automotive (names). Unknown values are passed through unchanged.
+     * Numeric act is mapped to the documented name, so JS gets the same value for either form.
+     * Unknown values are passed through unchanged.
      * Null when there is no act, i.e. the URI is a destination.
      * @param dataString the full, still encoded intent data (Intent.getDataString)
      */

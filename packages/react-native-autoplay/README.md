@@ -1444,6 +1444,7 @@ const cleanup = HybridAutoPlay.addListenerNavigationAction(({ act }) => {
 
 -   **Payload** (`NavigationAction`): `act`, the action name from Google's `geo.action` spec, e.g. `mute`, `unmute`, `avoid_tolls`, `allow_tolls`, `avoid_ferries`, `allow_ferries`, `avoid_highways`, `allow_highways`, `show_traffic`, `exit_navigation`, `report_police` (all known names are in the `NavigationActionName` type). A value the library can't map is passed through as is.
 -   **Format**: Google documents named actions (`geo.action:?act=avoid_tolls`), but the Android Auto host delivers numeric ones: its own conversion produces `geo:0,0?act=35`, and Assistant commands it cannot convert are forwarded as `google.maps://maps.google.com/?act=35&notts=1`. The library maps the numbers to the documented names, so `act` holds the same value whichever form arrives. The numbers are undocumented; the mapping is taken from the Android Auto host app 18.0 and could change, in which case an unknown number arrives unmapped.
+-   **Android Automotive**: untested. The library declares no intent filter for the documented `VIEW geo.action:` form, so actions are likely not delivered there.
 -   **Not held**: unlike navigation intents, an action that arrives while no listener is registered is dropped.
 
 #### useNavigationIntent hook (Android only)

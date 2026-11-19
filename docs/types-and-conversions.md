@@ -106,8 +106,10 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
   an `act` parameter ("mute navigation", "avoid tolls") under any scheme. The act number
   table in `NavigationIntentParser.actionCodes` is decompiled from the Android Auto host
   app (Google does not document it). Numbers are mapped to the documented `geo.action` names
-  natively so JS sees the same value on Auto (numbers) and Automotive (names); unknown values
-  pass through unchanged. A non-`geo:`
+  natively, so a numeric and a named (`geo.action:?act=mute`) act look the same to JS;
+  unknown values pass through unchanged. Android Automotive is untested: the manifests declare
+  no `VIEW geo.action` filter, so the documented form is likely never delivered there. Add the
+  filter (and a note in `docs/host-app-integration.md`) only once that is verified on AAOS. A non-`geo:`
   NAVIGATE without `act` is dropped with a warning.
 - `HybridAutoPlay.addListenerVoiceInput(cb)` — deprecated; the same intents as
   `(coordinates, query)`.

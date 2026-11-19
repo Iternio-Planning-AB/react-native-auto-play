@@ -159,7 +159,8 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
     /**
      * NAVIGATE carries either a destination (geo:) or a custom action (act parameter, see
      * NavigationIntentParser.parseAction). A custom action may also come as Google documents it,
-     * VIEW geo.action:?act=<name>.
+     * VIEW geo.action:?act=<name>, but only if the host app declares that intent filter; the
+     * library manifests don't, as it is unverified on Android Automotive.
      * NAVIGATE arrives in onCreateScreen when it starts the session (cold start, e.g. by voice
      * with the app not running) and in onNewIntent while the session runs.
      */

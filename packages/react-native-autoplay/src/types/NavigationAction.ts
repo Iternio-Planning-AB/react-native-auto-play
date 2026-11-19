@@ -52,9 +52,11 @@ export type NavigationActionName =
  */
 export interface NavigationAction {
   /**
-   * The documented action name, one of NavigationActionName, the same on Android Auto and Android
-   * Automotive: numeric act values are mapped to their name natively. A number the library does
-   * not know (or a name it does not list) is passed through as is.
+   * The documented action name, one of NavigationActionName: the numeric act values the Android
+   * Auto host delivers are mapped to their name natively, so a numeric and a named act arrive as
+   * the same value. A number the library does not know (or a name it does not list) is passed
+   * through as is. Android Automotive is untested, and the library declares no intent filter for
+   * the documented VIEW geo.action: form, so actions are likely not delivered there.
    * The numbers are not documented by Google; the mapping is taken from the Android Auto host app
    * (18.0) and could change.
    */
