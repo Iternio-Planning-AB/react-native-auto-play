@@ -214,5 +214,12 @@ val RemoteImage.placeholderGlyphImage: GlyphImage?
         val color = placeholderColor ?: return null
         val backgroundColor = placeholderBackgroundColor ?: return null
 
-        return GlyphImage(glyph, fontName, color, backgroundColor, placeholderFontScale)
+        return GlyphImage(
+            glyph,
+            fontName,
+            color,
+            backgroundColor,
+            placeholderBackgroundCornerRadius,
+            placeholderFontScale,
+        )
     }

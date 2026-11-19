@@ -35,7 +35,6 @@ object SymbolFont {
         color: Int,
         backgroundColor: Int,
         sizeDp: Int,
-        cornerRadius: Float = 8f, // TODO: make accessible and add it to GlyphImage.cacheKey
     ): Bitmap? {
         val font =
             loadTypeface(context, glyphImage.fontName) ?: run {
@@ -54,7 +53,17 @@ object SymbolFont {
             this.color = backgroundColor
             isAntiAlias = true
         }
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
+        // without an explicit radius keep the fixed 8px (not dp) radius used before the
+        // background shape became configurable, so existing glyphs look unchanged.
+        // backgroundShape 'circle' arrives as an infinite radius and is capped at half the size
+        val cornerRadius =
+            (glyphImage.backgroundCornerRadius?.let { (it * scale).toFloat() } ?: DEFAULT_CORNER_RADIUS_PX)
+                .coerceIn(0f, canvasSize / 2f)
+        if (cornerRadius >= canvasSize / 2f) {
+            canvas.drawOval(rectF, paint)
+        } else {
+            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
+        }
 
         val fontScale = (glyphImage.fontScale ?: 1.0).toFloat()
 
@@ -85,6 +94,8 @@ object SymbolFont {
 
         return bitmap
     }
+
+    private const val DEFAULT_CORNER_RADIUS_PX = 8f
 
     // Minimum recommended image size is 36dp according to https://developers.google.com/cars/design/create-apps/ux-requirements/templated-apps#navigation
     const val DEFAULT_SIZE_DP = 36

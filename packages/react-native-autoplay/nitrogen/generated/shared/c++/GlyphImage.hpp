@@ -46,11 +46,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::string fontName     SWIFT_PRIVATE;
     NitroColor color     SWIFT_PRIVATE;
     NitroColor backgroundColor     SWIFT_PRIVATE;
+    std::optional<double> backgroundCornerRadius     SWIFT_PRIVATE;
     std::optional<double> fontScale     SWIFT_PRIVATE;
 
   public:
     GlyphImage() = default;
-    explicit GlyphImage(double glyph, std::string fontName, NitroColor color, NitroColor backgroundColor, std::optional<double> fontScale): glyph(glyph), fontName(fontName), color(color), backgroundColor(backgroundColor), fontScale(fontScale) {}
+    explicit GlyphImage(double glyph, std::string fontName, NitroColor color, NitroColor backgroundColor, std::optional<double> backgroundCornerRadius, std::optional<double> fontScale): glyph(glyph), fontName(fontName), color(color), backgroundColor(backgroundColor), backgroundCornerRadius(backgroundCornerRadius), fontScale(fontScale) {}
 
   public:
     friend bool operator==(const GlyphImage& lhs, const GlyphImage& rhs) = default;
@@ -70,6 +71,7 @@ namespace margelo::nitro {
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontName"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundCornerRadius"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontScale")))
       );
     }
@@ -79,6 +81,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fontName"), JSIConverter<std::string>::toJSI(runtime, arg.fontName));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "color"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.color));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::toJSI(runtime, arg.backgroundColor));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "backgroundCornerRadius"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.backgroundCornerRadius));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "fontScale"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.fontScale));
       return obj;
     }
@@ -94,6 +97,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontName")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "color")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundColor")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "backgroundCornerRadius")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "fontScale")))) return false;
       return true;
     }

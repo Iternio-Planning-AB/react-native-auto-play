@@ -49,6 +49,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::string> placeholderFontName     SWIFT_PRIVATE;
     std::optional<NitroColor> placeholderColor     SWIFT_PRIVATE;
     std::optional<NitroColor> placeholderBackgroundColor     SWIFT_PRIVATE;
+    std::optional<double> placeholderBackgroundCornerRadius     SWIFT_PRIVATE;
     std::optional<double> placeholderFontScale     SWIFT_PRIVATE;
     std::optional<std::string> placeholderUri     SWIFT_PRIVATE;
     std::optional<double> placeholderWidth     SWIFT_PRIVATE;
@@ -58,7 +59,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
   public:
     RemoteImage() = default;
-    explicit RemoteImage(std::string uri, std::optional<NitroColor> color, std::optional<double> timeoutMs, std::optional<double> placeholderGlyph, std::optional<std::string> placeholderFontName, std::optional<NitroColor> placeholderColor, std::optional<NitroColor> placeholderBackgroundColor, std::optional<double> placeholderFontScale, std::optional<std::string> placeholderUri, std::optional<double> placeholderWidth, std::optional<double> placeholderHeight, std::optional<double> placeholderScale, std::optional<bool> placeholderPackagerAsset): uri(uri), color(color), timeoutMs(timeoutMs), placeholderGlyph(placeholderGlyph), placeholderFontName(placeholderFontName), placeholderColor(placeholderColor), placeholderBackgroundColor(placeholderBackgroundColor), placeholderFontScale(placeholderFontScale), placeholderUri(placeholderUri), placeholderWidth(placeholderWidth), placeholderHeight(placeholderHeight), placeholderScale(placeholderScale), placeholderPackagerAsset(placeholderPackagerAsset) {}
+    explicit RemoteImage(std::string uri, std::optional<NitroColor> color, std::optional<double> timeoutMs, std::optional<double> placeholderGlyph, std::optional<std::string> placeholderFontName, std::optional<NitroColor> placeholderColor, std::optional<NitroColor> placeholderBackgroundColor, std::optional<double> placeholderBackgroundCornerRadius, std::optional<double> placeholderFontScale, std::optional<std::string> placeholderUri, std::optional<double> placeholderWidth, std::optional<double> placeholderHeight, std::optional<double> placeholderScale, std::optional<bool> placeholderPackagerAsset): uri(uri), color(color), timeoutMs(timeoutMs), placeholderGlyph(placeholderGlyph), placeholderFontName(placeholderFontName), placeholderColor(placeholderColor), placeholderBackgroundColor(placeholderBackgroundColor), placeholderBackgroundCornerRadius(placeholderBackgroundCornerRadius), placeholderFontScale(placeholderFontScale), placeholderUri(placeholderUri), placeholderWidth(placeholderWidth), placeholderHeight(placeholderHeight), placeholderScale(placeholderScale), placeholderPackagerAsset(placeholderPackagerAsset) {}
 
   public:
     friend bool operator==(const RemoteImage& lhs, const RemoteImage& rhs) = default;
@@ -81,6 +82,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontName"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderColor"))),
         JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundColor"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundCornerRadius"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontScale"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderUri"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderWidth"))),
@@ -98,6 +100,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontName"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.placeholderFontName));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderColor"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::toJSI(runtime, arg.placeholderColor));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundColor"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::toJSI(runtime, arg.placeholderBackgroundColor));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundCornerRadius"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.placeholderBackgroundCornerRadius));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontScale"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.placeholderFontScale));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderUri"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.placeholderUri));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "placeholderWidth"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.placeholderWidth));
@@ -121,6 +124,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontName")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderColor")))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NitroColor>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundColor")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderBackgroundCornerRadius")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderFontScale")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderUri")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "placeholderWidth")))) return false;

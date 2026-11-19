@@ -95,9 +95,17 @@ class SymbolFont {
             return nil
         }
 
-        // Fill circular background
         context.setFillColor(backgroundColor.cgColor)
-        context.fillEllipse(in: rect)
+        // backgroundShape 'circle' arrives as an infinite radius, without a radius the
+        // background stays the circle it was before the shape became configurable
+        let cornerRadius = glyphImage.backgroundCornerRadius.map { min(max(CGFloat($0), 0), size / 2) }
+        if let cornerRadius, cornerRadius < size / 2 {
+            context.addPath(UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).cgPath)
+            context.fillPath()
+        }
+        else {
+            context.fillEllipse(in: rect)
+        }
 
         // Draw glyph
         let textSize = attrString.size()

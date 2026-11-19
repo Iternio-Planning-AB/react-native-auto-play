@@ -42,6 +42,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNitroColor> color = this->getFieldValue(fieldColor);
       static const auto fieldBackgroundColor = clazz->getField<JNitroColor>("backgroundColor");
       jni::local_ref<JNitroColor> backgroundColor = this->getFieldValue(fieldBackgroundColor);
+      static const auto fieldBackgroundCornerRadius = clazz->getField<jni::JDouble>("backgroundCornerRadius");
+      jni::local_ref<jni::JDouble> backgroundCornerRadius = this->getFieldValue(fieldBackgroundCornerRadius);
       static const auto fieldFontScale = clazz->getField<jni::JDouble>("fontScale");
       jni::local_ref<jni::JDouble> fontScale = this->getFieldValue(fieldFontScale);
       return GlyphImage(
@@ -49,6 +51,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         fontName->toStdString(),
         color->toCpp(),
         backgroundColor->toCpp(),
+        backgroundCornerRadius != nullptr ? std::make_optional(backgroundCornerRadius->value()) : std::nullopt,
         fontScale != nullptr ? std::make_optional(fontScale->value()) : std::nullopt
       );
     }
@@ -59,7 +62,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JGlyphImage::javaobject> fromCpp(const GlyphImage& value) {
-      using JSignature = JGlyphImage(double, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>);
+      using JSignature = JGlyphImage(double, jni::alias_ref<jni::JString>, jni::alias_ref<JNitroColor>, jni::alias_ref<JNitroColor>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -68,6 +71,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
         jni::make_jstring(value.fontName),
         JNitroColor::fromCpp(value.color),
         JNitroColor::fromCpp(value.backgroundColor),
+        value.backgroundCornerRadius.has_value() ? jni::JDouble::valueOf(value.backgroundCornerRadius.value()) : nullptr,
         value.fontScale.has_value() ? jni::JDouble::valueOf(value.fontScale.value()) : nullptr
       );
     }

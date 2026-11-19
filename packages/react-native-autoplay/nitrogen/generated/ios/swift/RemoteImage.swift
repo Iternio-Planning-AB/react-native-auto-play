@@ -18,7 +18,7 @@ public extension RemoteImage {
   /**
    * Create a new instance of `RemoteImage`.
    */
-  init(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderFontScale: Double?, placeholderUri: String?, placeholderWidth: Double?, placeholderHeight: Double?, placeholderScale: Double?, placeholderPackagerAsset: Bool?) {
+  init(uri: String, color: NitroColor?, timeoutMs: Double?, placeholderGlyph: Double?, placeholderFontName: String?, placeholderColor: NitroColor?, placeholderBackgroundColor: NitroColor?, placeholderBackgroundCornerRadius: Double?, placeholderFontScale: Double?, placeholderUri: String?, placeholderWidth: Double?, placeholderHeight: Double?, placeholderScale: Double?, placeholderPackagerAsset: Bool?) {
     self.init(std.string(uri), { () -> bridge.std__optional_NitroColor_ in
       if let __unwrappedValue = color {
         return bridge.create_std__optional_NitroColor_(__unwrappedValue)
@@ -52,6 +52,12 @@ public extension RemoteImage {
     }(), { () -> bridge.std__optional_NitroColor_ in
       if let __unwrappedValue = placeholderBackgroundColor {
         return bridge.create_std__optional_NitroColor_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = placeholderBackgroundCornerRadius {
+        return bridge.create_std__optional_double_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -148,6 +154,18 @@ public extension RemoteImage {
   @inline(__always)
   var placeholderBackgroundColor: NitroColor? {
     return self.__placeholderBackgroundColor.value
+  }
+  
+  @inline(__always)
+  var placeholderBackgroundCornerRadius: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__placeholderBackgroundCornerRadius) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__placeholderBackgroundCornerRadius)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
   }
   
   @inline(__always)

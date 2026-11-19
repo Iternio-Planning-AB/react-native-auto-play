@@ -70,7 +70,7 @@ class Parser {
                     image = SymbolFont.imageFromNitroImage(
                         image: glypImage,
                         traitCollection: traitCollection
-                    )!
+                    )
                 }
                 if let assetImage = action.image?.assetImage {
                     image = Parser.parseAssetImage(
@@ -1897,6 +1897,7 @@ extension RemoteImage {
             fontName: fontName,
             color: color,
             backgroundColor: backgroundColor,
+            backgroundCornerRadius: placeholderBackgroundCornerRadius,
             fontScale: placeholderFontScale
         )
     }

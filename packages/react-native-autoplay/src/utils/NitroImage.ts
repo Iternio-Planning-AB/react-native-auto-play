@@ -78,6 +78,13 @@ interface GlyphImage {
   fontName: string;
   color: NitroColor;
   backgroundColor: NitroColor;
+  /**
+   * `backgroundShape` and `backgroundCornerRadius` combined, native caps the radius at half the
+   * image size and draws a circle there, so `'circle'` is sent as an infinite radius. Unset keeps
+   * the platform default. A separate shape enum pushed nitrogen over its call stack limit for
+   * MapTemplate.
+   */
+  backgroundCornerRadius?: number;
   fontScale?: number;
 }
 
@@ -94,6 +101,7 @@ interface RemoteImage {
   placeholderFontName?: string;
   placeholderColor?: NitroColor;
   placeholderBackgroundColor?: NitroColor;
+  placeholderBackgroundCornerRadius?: number;
   placeholderFontScale?: number;
   placeholderUri?: string;
   placeholderWidth?: number;
@@ -108,13 +116,21 @@ interface RemoteImage {
 export type NitroImage = GlyphImage | AssetImage | RemoteImage;
 
 function convertGlyph(image: Extract<AutoImage, { type: 'glyph' }>): GlyphImage {
-  const { color = 'default', fontScale, backgroundColor = 'transparent' } = image;
+  const {
+    color = 'default',
+    fontScale,
+    backgroundColor = 'transparent',
+    backgroundShape,
+    backgroundCornerRadius,
+  } = image;
 
   return {
     glyph: resolveGlyph(image),
     fontName: getIconFont(),
     color: NitroColorUtil.convert(color),
     backgroundColor: NitroColorUtil.convert(backgroundColor),
+    backgroundCornerRadius:
+      backgroundShape === 'circle' ? Number.POSITIVE_INFINITY : backgroundCornerRadius,
     fontScale,
   };
 }
@@ -167,6 +183,7 @@ function convertPlaceholder(placeholder?: LocalAutoImage): Partial<RemoteImage> 
     placeholderFontName: glyph.fontName,
     placeholderColor: glyph.color,
     placeholderBackgroundColor: glyph.backgroundColor,
+    placeholderBackgroundCornerRadius: glyph.backgroundCornerRadius,
     placeholderFontScale: glyph.fontScale,
   };
 }
