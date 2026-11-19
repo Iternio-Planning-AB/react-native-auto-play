@@ -132,7 +132,6 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
 | --- | --- | --- |
 | `useMapTemplate()` | both | Current `MapTemplate` instance |
 | `useNavigationIntent()` | Android | Latest OS navigation intent plus `resetNavigationIntent()` |
-| `useVoiceInput()` | Android | Deprecated: location + query of the same intents, plus `resetVoiceInputResult()` |
 | `useSafeAreaInsets()` | both | Screen-safe padding |
 | `useFocusedEffect()` | both | `useEffect` tied to template visibility |
 | `useAndroidAutoTelemetry()` | Android | Vehicle telemetry |
@@ -146,9 +145,8 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
   Telemetry payloads may be **partial** (gear changes are emitted immediately, outside the
   timed update) — consumers must merge, not replace.
 - Native drops a navigation intent with neither location nor query (and non-`geo:` ones
-  without `act`), so listeners never see an empty one; `useVoiceInput`'s reset branch for
-  that case no longer fires. `useVoiceInput` subscribes only while connected; `useNavigationIntent`
-  subscribes on mount.
+  without `act`), so listeners never see an empty one. `useNavigationIntent` subscribes on
+  mount.
 - Native holds one navigation intent nobody received (the cold-start one) and replays it to
   the **first** navigation-intent or voice-input listener added, then drops it — a second
   hook mounted later does not get it. Disconnect drops it too.

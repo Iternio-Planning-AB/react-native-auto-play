@@ -52,33 +52,6 @@ abstract class HybridAutoPlaySpec: HybridObject() {
     return Func_void_java(__result)
   }
   
-  abstract fun addListenerNavigationIntent(callback: (intent: NavigationIntent) -> Unit): () -> Unit
-  
-  @DoNotStrip
-  @Keep
-  private fun addListenerNavigationIntent_cxx(callback: Func_void_NavigationIntent): Func_void {
-    val __result = addListenerNavigationIntent(callback)
-    return Func_void_java(__result)
-  }
-  
-  abstract fun addListenerNavigationAction(callback: (action: NavigationAction) -> Unit): () -> Unit
-  
-  @DoNotStrip
-  @Keep
-  private fun addListenerNavigationAction_cxx(callback: Func_void_NavigationAction): Func_void {
-    val __result = addListenerNavigationAction(callback)
-    return Func_void_java(__result)
-  }
-  
-  abstract fun addListenerVoiceInput(callback: (coordinates: Location?, query: String?) -> Unit): () -> Unit
-  
-  @DoNotStrip
-  @Keep
-  private fun addListenerVoiceInput_cxx(callback: Func_void_std__optional_Location__std__optional_std__string_): Func_void {
-    val __result = addListenerVoiceInput(callback)
-    return Func_void_java(__result)
-  }
-  
   abstract fun addListenerCarLocation(callback: (location: CarLocation) -> Unit): () -> Unit
   
   @DoNotStrip

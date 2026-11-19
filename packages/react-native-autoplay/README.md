@@ -985,7 +985,8 @@ This section lists the available listeners and lifecycle callbacks so you can wi
 | `HybridAutoPlay.addListener(event, cb)` | event: `'didConnect'` `'didDisconnect'`, `cb(sessionId)` | Connection changes for the head unit. `sessionId` is the session that connected or disconnected. |
 | `HybridAutoPlay.getCurrentSessionId()` | returns `number \| undefined` | The connected head unit session, `undefined` while disconnected. A new id is assigned on every connect, see [Create the AutoPlay Experience](#2-create-the-autoplay-experience). |
 | `HybridAutoPlay.addListenerRenderState(moduleName, cb)` | `cb(visibility: 'willAppear' \| 'didAppear' \| 'willDisappear' \| 'didDisappear')` | Use `AutoPlayModules.*` or a cluster UUID. |
-| `HybridAutoPlay.addListenerVoiceInput(cb)` | `cb(location?, query?)` | Android-only. Fires when the OS triggers a voice input event (e.g. "Hey Google, navigate to…"). For in-app recording use `startVoiceInput` instead. |
+| `HybridAndroidAutoNavigation?.addListenerNavigationIntent(cb)` | `cb(intent: NavigationIntent)` | Android-only. Destinations and searches the OS sends, e.g. "Hey Google, navigate to…", see [Navigation intents](#navigation-intents-android-only). For in-app recording use `startVoiceInput` instead. |
+| `HybridAndroidAutoNavigation?.addListenerNavigationAction(cb)` | `cb(action: NavigationAction)` | Android-only. Commands without a destination, e.g. "mute navigation", see [Navigation actions](#navigation-actions-android-only). |
 | `HybridAutoPlay.addSafeAreaInsetsListener(moduleName, cb)` | `cb(insets)` | Safe area inset changes for any module. |
 | `HybridAutoPlay.addListenerCarLocation(cb)` | `cb(location: CarLocation)` | Android Auto only. The head unit's own GPS fix, see [Head unit location](#head-unit-location-android-auto-only). |
 
@@ -1403,10 +1404,10 @@ HybridVoice.startVoiceInput().catch((e) => {
 
 #### Navigation intents (Android only)
 
-When the user asks the car's assistant to "navigate to X with <your app>", "add a stop at X" or "… avoiding tolls", Android Auto and Android Automotive send an `androidx.car.app.action.NAVIGATE` intent with a `geo:` URI (see Google's [navigation intent](https://developer.android.com/training/cars/apps/navigation#navigation-intent) docs). The library declares the intent filters and hands the parsed intent to `addListenerNavigationIntent`. It is a no-op on iOS.
+When the user asks the car's assistant to "navigate to X with <your app>", "add a stop at X" or "… avoiding tolls", Android Auto and Android Automotive send an `androidx.car.app.action.NAVIGATE` intent with a `geo:` URI (see Google's [navigation intent](https://developer.android.com/training/cars/apps/navigation#navigation-intent) docs). The library declares the intent filters and hands the parsed intent to `HybridAndroidAutoNavigation.addListenerNavigationIntent`. `HybridAndroidAutoNavigation` is `null` on iOS.
 
 ```ts
-const cleanup = HybridAutoPlay.addListenerNavigationIntent((intent) => {
+const cleanup = HybridAndroidAutoNavigation?.addListenerNavigationIntent((intent) => {
   if (intent.mode && intent.mode !== 'd') {
     // only driving is supported
     return;
@@ -1416,19 +1417,19 @@ const cleanup = HybridAutoPlay.addListenerNavigationIntent((intent) => {
 ```
 
 -   **Payload** (`NavigationIntent`): one or both of `location` (from `geo:lat,lon`, undefined for `0,0`) and `query` (`q`, decoded), plus:
-    -   `intent`: from a NAVIGATE intent `'navigation'` (make it the new destination), `'add_a_stop'` (keep the destination and add another stop) or `'directions'` (show the route, don't start); `'navigation'` also when the parameter is absent or unknown. `'search'` for a search like "find charging stations": show the results, don't navigate. Searches arrive as `VIEW geo:` intents, for which the library declares a filter on Android Automotive only (untested).
+    -   `intent`: from a NAVIGATE intent `'navigation'` (make it the new destination), `'add_a_stop'` (keep the destination and add another stop) or `'directions'` (show the route, don't start); `'navigation'` also when the parameter is absent or unknown. `'search'` for a search like "find charging stations": show the results, don't navigate. Searches arrive as `VIEW geo:` intents, for which the library declares a filter on Android Automotive only (untested). `VIEW geo:` is also Android's generic map link, so any app can send one, and a search may carry only a location (e.g. `geo:48.2,16.37?z=12`): show that place rather than search results.
     -   `avoid`: any of `'tolls'`, `'highways'`, `'ferries'` (from `t`/`h`/`f`), empty when absent.
     -   `mode`: the raw travel mode letter (`b` bike, `d` drive, `x` taxi, `l` two-wheeler, `r` transit, `w` walk), not mapped so new values need no library update. Undefined when absent, which it always is on Android Automotive.
     -   `entry`: the entry source, e.g. `'assistant'`.
--   **Cold start**: an intent that arrives while no listener is registered (e.g. the one that started the app) is held and delivered to the first `addListenerNavigationIntent` or `addListenerVoiceInput` listener added afterwards, then dropped. It is also dropped when the head unit disconnects.
+-   **Cold start**: an intent that arrives while no listener is registered (e.g. the one that started the app) is held and delivered to the first `addListenerNavigationIntent` listener added afterwards, then dropped. It is also dropped when the head unit disconnects.
 -   **Testing on the DHU**: `adb shell am start-service -a androidx.car.app.action.NAVIGATE -d 'geo:0,0?q=Stuttgart&intent=add_a_stop&avoid=tf' <package>/<car app service>` may not reach the session, since the host normally delivers the intent; trigger it by voice if it doesn't.
 
 #### Navigation actions (Android only)
 
-Commands without a destination, like "mute navigation", "avoid tolls" or "show traffic", arrive as `addListenerNavigationAction` events, never as a navigation intent. It is a no-op on iOS.
+Commands without a destination, like "mute navigation", "avoid tolls" or "show traffic", arrive as `HybridAndroidAutoNavigation.addListenerNavigationAction` events, never as a navigation intent.
 
 ```ts
-const cleanup = HybridAutoPlay.addListenerNavigationAction(({ act }) => {
+const cleanup = HybridAndroidAutoNavigation?.addListenerNavigationAction(({ act }) => {
   switch (act) {
     case 'mute':
       muteGuidance();
@@ -1468,9 +1469,9 @@ const MyScreen = () => {
 };
 ```
 
-#### OS-triggered voice input (deprecated, Android only)
+#### Migrating from `addListenerVoiceInput` / `useVoiceInput`
 
-`addListenerVoiceInput` and `useVoiceInput` (`{ voiceInputResult: { coordinates, query }, resetVoiceInputResult }`) receive the same intents with only the location and query. Use `addListenerNavigationIntent` / `useNavigationIntent` instead. `useVoiceInput` only subscribes while a head unit is connected.
+Both were removed. `HybridAndroidAutoNavigation?.addListenerNavigationIntent` / `useNavigationIntent` deliver the same `location` and `query`, plus the intent type: check `intent` before starting a route, since a search must not be treated as a destination.
 
 ---
 
@@ -1502,7 +1503,6 @@ const remove = HybridAutoPlay.addListenerCarLocation((location) => {
 
 -   `useMapTemplate()`: Get a reference to the parent `MapTemplate` instance.
 -   `useNavigationIntent()`: Reactively exposes the latest navigation intent the OS sent (`navigationIntent`, `resetNavigationIntent`). Android only.
--   `useVoiceInput()`: Deprecated, use `useNavigationIntent()`. Exposes the latest OS-triggered voice input (`voiceInputResult: { coordinates, query }`, `resetVoiceInputResult`). Android only — for in-app recording use `startVoiceInput` / `stopVoiceInput` directly.
 -   `useSafeAreaInsets()`: Get safe area insets for any root component.
 -   `useFocusedEffect()`: A useEffect alternative that executes when the specified component is visible to the user - use any of the `AutoPlayModules` enum or a cluster uuid to sepcify the component the effect should listen for.
 -   `useAndroidAutoTelemetry()`: Access to car telemetry data on Android Auto and Android Automotive.

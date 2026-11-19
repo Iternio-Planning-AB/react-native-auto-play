@@ -16,9 +16,6 @@ public protocol HybridAutoPlaySpec_protocol: HybridObject {
   func addListener(eventType: EventName, callback: @escaping (_ sessionId: Double) -> Void) throws -> () -> Void
   func getCurrentSessionId() throws -> Double?
   func addListenerRenderState(moduleName: String, callback: @escaping (_ payload: VisibilityState) -> Void) throws -> () -> Void
-  func addListenerNavigationIntent(callback: @escaping (_ intent: NavigationIntent) -> Void) throws -> () -> Void
-  func addListenerNavigationAction(callback: @escaping (_ action: NavigationAction) -> Void) throws -> () -> Void
-  func addListenerVoiceInput(callback: @escaping (_ coordinates: Location?, _ query: String?) -> Void) throws -> () -> Void
   func addListenerCarLocation(callback: @escaping (_ location: CarLocation) -> Void) throws -> () -> Void
   func setRootTemplate(templateId: String) throws -> Promise<Void>
   func pushTemplate(templateId: String) throws -> Promise<Void>

@@ -11,16 +11,6 @@
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class EventName; }
 // Forward declaration of `VisibilityState` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class VisibilityState; }
-// Forward declaration of `NavigationIntent` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationIntent; }
-// Forward declaration of `Location` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
-// Forward declaration of `NavigationIntentType` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationIntentType; }
-// Forward declaration of `NavigationAvoidOption` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationAvoidOption; }
-// Forward declaration of `NavigationAction` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAction; }
 // Forward declaration of `CarLocation` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct CarLocation; }
 // Forward declaration of `CarLocationStatus` to properly resolve imports.
@@ -58,20 +48,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 #include "VisibilityState.hpp"
 #include "JFunc_void_VisibilityState.hpp"
 #include "JVisibilityState.hpp"
-#include "NavigationIntent.hpp"
-#include "JFunc_void_NavigationIntent.hpp"
-#include "JNavigationIntent.hpp"
-#include "Location.hpp"
-#include "JLocation.hpp"
-#include "NavigationIntentType.hpp"
-#include "JNavigationIntentType.hpp"
-#include "NavigationAvoidOption.hpp"
-#include <vector>
-#include "JNavigationAvoidOption.hpp"
-#include "NavigationAction.hpp"
-#include "JFunc_void_NavigationAction.hpp"
-#include "JNavigationAction.hpp"
-#include "JFunc_void_std__optional_Location__std__optional_std__string_.hpp"
 #include "CarLocation.hpp"
 #include "JFunc_void_CarLocation.hpp"
 #include "JCarLocation.hpp"
@@ -81,6 +57,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroBu
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JSafeAreaInsets.hpp"
 #include "NitroAction.hpp"
+#include <vector>
 #include "JNitroAction.hpp"
 #include "GlyphImage.hpp"
 #include "AssetImage.hpp"
@@ -153,45 +130,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
   std::function<void()> JHybridAutoPlaySpec::addListenerRenderState(const std::string& moduleName, const std::function<void(VisibilityState /* payload */)>& callback) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<jni::JString> /* moduleName */, jni::alias_ref<JFunc_void_VisibilityState::javaobject> /* callback */)>("addListenerRenderState_cxx");
     auto __result = method(_javaPart, jni::make_jstring(moduleName), JFunc_void_VisibilityState_cxx::fromCpp(callback));
-    return [&]() -> std::function<void()> {
-      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
-        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
-        return downcast->cthis()->getFunction();
-      } else {
-        auto __resultRef = jni::make_global(__result);
-        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
-      }
-    }();
-  }
-  std::function<void()> JHybridAutoPlaySpec::addListenerNavigationIntent(const std::function<void(const NavigationIntent& /* intent */)>& callback) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_NavigationIntent::javaobject> /* callback */)>("addListenerNavigationIntent_cxx");
-    auto __result = method(_javaPart, JFunc_void_NavigationIntent_cxx::fromCpp(callback));
-    return [&]() -> std::function<void()> {
-      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
-        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
-        return downcast->cthis()->getFunction();
-      } else {
-        auto __resultRef = jni::make_global(__result);
-        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
-      }
-    }();
-  }
-  std::function<void()> JHybridAutoPlaySpec::addListenerNavigationAction(const std::function<void(const NavigationAction& /* action */)>& callback) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_NavigationAction::javaobject> /* callback */)>("addListenerNavigationAction_cxx");
-    auto __result = method(_javaPart, JFunc_void_NavigationAction_cxx::fromCpp(callback));
-    return [&]() -> std::function<void()> {
-      if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
-        auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);
-        return downcast->cthis()->getFunction();
-      } else {
-        auto __resultRef = jni::make_global(__result);
-        return JNICallable<JFunc_void, void()>(std::move(__resultRef));
-      }
-    }();
-  }
-  std::function<void()> JHybridAutoPlaySpec::addListenerVoiceInput(const std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>& callback) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JFunc_void::javaobject>(jni::alias_ref<JFunc_void_std__optional_Location__std__optional_std__string_::javaobject> /* callback */)>("addListenerVoiceInput_cxx");
-    auto __result = method(_javaPart, JFunc_void_std__optional_Location__std__optional_std__string__cxx::fromCpp(callback));
     return [&]() -> std::function<void()> {
       if (__result->isInstanceOf(JFunc_void_cxx::javaClassStatic())) [[likely]] {
         auto downcast = jni::static_ref_cast<JFunc_void_cxx::javaobject>(__result);

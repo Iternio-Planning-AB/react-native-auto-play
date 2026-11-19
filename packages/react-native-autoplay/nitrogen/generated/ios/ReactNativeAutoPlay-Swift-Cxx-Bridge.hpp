@@ -74,20 +74,10 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class KeepTyp
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct LaneGuidance; }
 // Forward declaration of `ListImageType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ListImageType; }
-// Forward declaration of `Location` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
 // Forward declaration of `ManeuverType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class ManeuverType; }
-// Forward declaration of `NavigationAction` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAction; }
 // Forward declaration of `NavigationAlertAction` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAlertAction; }
-// Forward declaration of `NavigationAvoidOption` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationAvoidOption; }
-// Forward declaration of `NavigationIntentType` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationIntentType; }
-// Forward declaration of `NavigationIntent` to properly resolve imports.
-namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationIntent; }
 // Forward declaration of `NitroActionType` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NitroActionType; }
 // Forward declaration of `NitroAction` to properly resolve imports.
@@ -238,13 +228,8 @@ namespace ReactNativeAutoPlay { class HybridVoiceSpec_cxx; }
 #include "KeepType.hpp"
 #include "LaneGuidance.hpp"
 #include "ListImageType.hpp"
-#include "Location.hpp"
 #include "ManeuverType.hpp"
-#include "NavigationAction.hpp"
 #include "NavigationAlertAction.hpp"
-#include "NavigationAvoidOption.hpp"
-#include "NavigationIntent.hpp"
-#include "NavigationIntentType.hpp"
 #include "NitroAction.hpp"
 #include "NitroActionType.hpp"
 #include "NitroAlignment.hpp"
@@ -390,113 +375,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
     return Func_void_VisibilityState_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<Location>
-  /**
-   * Specialized version of `std::optional<Location>`.
-   */
-  using std__optional_Location_ = std::optional<Location>;
-  inline std::optional<Location> create_std__optional_Location_(const Location& value) noexcept {
-    return std::optional<Location>(value);
-  }
-  inline bool has_value_std__optional_Location_(const std::optional<Location>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline Location get_std__optional_Location_(const std::optional<Location>& optional) noexcept {
-    return optional.value();
-  }
-  
-  // pragma MARK: std::optional<std::string>
-  /**
-   * Specialized version of `std::optional<std::string>`.
-   */
-  using std__optional_std__string_ = std::optional<std::string>;
-  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
-    return std::optional<std::string>(value);
-  }
-  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
-    return optional.value();
-  }
-  
-  // pragma MARK: std::vector<NavigationAvoidOption>
-  /**
-   * Specialized version of `std::vector<NavigationAvoidOption>`.
-   */
-  using std__vector_NavigationAvoidOption_ = std::vector<NavigationAvoidOption>;
-  inline std::vector<NavigationAvoidOption> create_std__vector_NavigationAvoidOption_(size_t size) noexcept {
-    std::vector<NavigationAvoidOption> vector;
-    vector.reserve(size);
-    return vector;
-  }
-  
-  // pragma MARK: std::function<void(const NavigationIntent& /* intent */)>
-  /**
-   * Specialized version of `std::function<void(const NavigationIntent&)>`.
-   */
-  using Func_void_NavigationIntent = std::function<void(const NavigationIntent& /* intent */)>;
-  /**
-   * Wrapper class for a `std::function<void(const NavigationIntent& / * intent * /)>`, this can be used from Swift.
-   */
-  class Func_void_NavigationIntent_Wrapper final {
-  public:
-    explicit Func_void_NavigationIntent_Wrapper(std::function<void(const NavigationIntent& /* intent */)>&& func): _function(std::make_unique<std::function<void(const NavigationIntent& /* intent */)>>(std::move(func))) {}
-    inline void call(NavigationIntent intent) const noexcept {
-      _function->operator()(intent);
-    }
-  private:
-    std::unique_ptr<std::function<void(const NavigationIntent& /* intent */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_NavigationIntent create_Func_void_NavigationIntent(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_NavigationIntent_Wrapper wrap_Func_void_NavigationIntent(Func_void_NavigationIntent value) noexcept {
-    return Func_void_NavigationIntent_Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::function<void(const NavigationAction& /* action */)>
-  /**
-   * Specialized version of `std::function<void(const NavigationAction&)>`.
-   */
-  using Func_void_NavigationAction = std::function<void(const NavigationAction& /* action */)>;
-  /**
-   * Wrapper class for a `std::function<void(const NavigationAction& / * action * /)>`, this can be used from Swift.
-   */
-  class Func_void_NavigationAction_Wrapper final {
-  public:
-    explicit Func_void_NavigationAction_Wrapper(std::function<void(const NavigationAction& /* action */)>&& func): _function(std::make_unique<std::function<void(const NavigationAction& /* action */)>>(std::move(func))) {}
-    inline void call(NavigationAction action) const noexcept {
-      _function->operator()(action);
-    }
-  private:
-    std::unique_ptr<std::function<void(const NavigationAction& /* action */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_NavigationAction create_Func_void_NavigationAction(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_NavigationAction_Wrapper wrap_Func_void_NavigationAction(Func_void_NavigationAction value) noexcept {
-    return Func_void_NavigationAction_Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>
-  /**
-   * Specialized version of `std::function<void(const std::optional<Location>&, const std::optional<std::string>&)>`.
-   */
-  using Func_void_std__optional_Location__std__optional_std__string_ = std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>;
-  /**
-   * Wrapper class for a `std::function<void(const std::optional<Location>& / * coordinates * /, const std::optional<std::string>& / * query * /)>`, this can be used from Swift.
-   */
-  class Func_void_std__optional_Location__std__optional_std__string__Wrapper final {
-  public:
-    explicit Func_void_std__optional_Location__std__optional_std__string__Wrapper(std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>&& func): _function(std::make_unique<std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>>(std::move(func))) {}
-    inline void call(std::optional<Location> coordinates, std::optional<std::string> query) const noexcept {
-      _function->operator()(coordinates, query);
-    }
-  private:
-    std::unique_ptr<std::function<void(const std::optional<Location>& /* coordinates */, const std::optional<std::string>& /* query */)>> _function;
-  } SWIFT_NONCOPYABLE;
-  Func_void_std__optional_Location__std__optional_std__string_ create_Func_void_std__optional_Location__std__optional_std__string_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__optional_Location__std__optional_std__string__Wrapper wrap_Func_void_std__optional_Location__std__optional_std__string_(Func_void_std__optional_Location__std__optional_std__string_ value) noexcept {
-    return Func_void_std__optional_Location__std__optional_std__string__Wrapper(std::move(value));
-  }
-  
   // pragma MARK: std::function<void(const CarLocation& /* location */)>
   /**
    * Specialized version of `std::function<void(const CarLocation&)>`.
@@ -588,6 +466,21 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay::bridge::swift {
   Func_void_SafeAreaInsets create_Func_void_SafeAreaInsets(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_SafeAreaInsets_Wrapper wrap_Func_void_SafeAreaInsets(Func_void_SafeAreaInsets value) noexcept {
     return Func_void_SafeAreaInsets_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<std::string>
+  /**
+   * Specialized version of `std::optional<std::string>`.
+   */
+  using std__optional_std__string_ = std::optional<std::string>;
+  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
+    return std::optional<std::string>(value);
+  }
+  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::optional<NitroColor>

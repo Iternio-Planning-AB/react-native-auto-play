@@ -180,7 +180,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
         try {
             val action = NavigationIntentParser.parseAction(data.toString())
             if (action != null) {
-                HybridAutoPlay.emitNavigationAction(action)
+                HybridAndroidAutoNavigation.emitNavigationAction(action)
                 return
             }
             // the host forwards Assistant intents it could not convert, e.g. google.maps:// URLs
@@ -195,7 +195,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
                 Log.w(TAG, "Ignoring navigation intent without location and query: $data")
                 return
             }
-            HybridAutoPlay.emitNavigationIntent(navigationIntent)
+            HybridAndroidAutoNavigation.emitNavigationIntent(navigationIntent)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse navigation intent: ${e.message}")
         }
@@ -258,7 +258,7 @@ class AndroidAutoSession(sessionInfo: SessionInfo) :
             }
 
             CarHardwareLocationObserver.stop()
-            HybridAutoPlay.clearPendingNavigationIntent()
+            HybridAndroidAutoNavigation.clearPendingNavigationIntent()
             sessionId?.let { HybridAutoPlay.emit(EventName.DIDDISCONNECT, it) }
         }
     }

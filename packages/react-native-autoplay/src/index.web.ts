@@ -153,11 +153,6 @@ export const useNavigationIntent = () => ({
   resetNavigationIntent: () => {},
 });
 
-export const useVoiceInput = () => ({
-  voiceInputResult: undefined,
-  resetVoiceInputResult: () => {},
-});
-
 export const useAndroidAutoTelemetry = (): {
   permissionsGranted: boolean | null;
   telemetry: Telemetry | undefined;
@@ -172,6 +167,7 @@ export const AutoPlayCluster = createNoopObject<Record<string, unknown>>();
 export const CarPlayDashboard = createNoopObject<Record<string, unknown>>();
 
 export const HybridAndroidAutomotive: AndroidAutomotive | null = null;
+export { HybridAndroidAutoNavigation } from './hybrid/HybridAndroidAutoNavigation';
 export { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
 export { HybridAndroidWindowInformation } from './hybrid/HybridAndroidWindowInformation';
 export const HybridAutoPlay = createNoopObject<AutoPlay>();

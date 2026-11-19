@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { HybridAutoPlay } from '../hybrid/HybridAutoPlay';
+import { HybridAndroidAutoNavigation } from '../hybrid/HybridAndroidAutoNavigation';
 import type { NavigationIntent } from '../types/NavigationIntent';
 
 /**
@@ -15,7 +15,10 @@ export const useNavigationIntent = () => {
     setNavigationIntent(undefined);
   }, []);
 
-  useEffect(() => HybridAutoPlay.addListenerNavigationIntent(setNavigationIntent), []);
+  useEffect(
+    () => HybridAndroidAutoNavigation?.addListenerNavigationIntent(setNavigationIntent),
+    []
+  );
 
   return { navigationIntent, resetNavigationIntent };
 };

@@ -97,14 +97,15 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
     `AVAudioEngine`.
 - `stopVoiceInput()` — stops early; PCM mode resolves with audio so far, STT mode finalises
   recognition. No-op if idle.
-- `HybridAutoPlay.addListenerNavigationIntent(cb)` — Android-only; fires with a
+- `HybridAndroidAutoNavigation.addListenerNavigationIntent(cb)` — Android-only module (`null`
+  on iOS, `src/hybrid/HybridAndroidAutoNavigation{,.android}.ts`); fires with a
   `NavigationIntent` when the OS sends `androidx.car.app.action.NAVIGATE` ("Hey Google,
   navigate to…"). Parsed by `utils/NavigationIntentParser.kt` from the *encoded* scheme
   specific part — the decoded one turns `%26` in `q` into a parameter separator. Unit tests
-  in `android/src/test/`. No-op on iOS. A `VIEW geo:` intent is a search and is reported as
+  in `android/src/test/`. A `VIEW geo:` intent is a search and is reported as
   `intent: 'search'`; the car Assistant reports a navigation app as able to search only if it has
   an activity for that filter (`CarAppActivity`, Automotive only, untested).
-- `HybridAutoPlay.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
+- `HybridAndroidAutoNavigation.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
   an `act` parameter ("mute navigation", "avoid tolls") under any scheme. The act number
   table in `NavigationIntentParser.actionCodes` is decompiled from the Android Auto host
   app (Google does not document it). Numbers are mapped to the documented `geo.action` names
@@ -116,8 +117,6 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
   `src/automotive/AndroidManifest.xml` must stay, and on the activity: the check only looks at
   activities (verified on the AAOS emulator, Assistant 13.1.618). A non-`geo:` NAVIGATE
   without `act` is dropped with a warning.
-- `HybridAutoPlay.addListenerVoiceInput(cb)` — deprecated; the same intents as
-  `(coordinates, query)`.
 
 Native: `ios/utils/VoiceInputManager.swift`, `ios/templates/VoiceInputTemplate.swift`,
 `ios/hybrid/HybridVoice.swift`; `android/.../VoiceInputManager.kt`, `HybridVoice.kt`.

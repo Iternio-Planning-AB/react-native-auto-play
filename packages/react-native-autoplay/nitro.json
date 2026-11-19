@@ -41,6 +41,12 @@
         "language": "kotlin"
       }
     },
+    "AndroidAutoNavigation": {
+      "android": {
+        "implementationClassName": "HybridAndroidAutoNavigation",
+        "language": "kotlin"
+      }
+    },
     "AndroidAutomotive": {
       "android": {
         "implementationClassName": "HybridAndroidAutomotive",

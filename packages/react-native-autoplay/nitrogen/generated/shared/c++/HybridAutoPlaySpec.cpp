@@ -17,9 +17,6 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       prototype.registerHybridMethod("addListener", &HybridAutoPlaySpec::addListener);
       prototype.registerHybridMethod("getCurrentSessionId", &HybridAutoPlaySpec::getCurrentSessionId);
       prototype.registerHybridMethod("addListenerRenderState", &HybridAutoPlaySpec::addListenerRenderState);
-      prototype.registerHybridMethod("addListenerNavigationIntent", &HybridAutoPlaySpec::addListenerNavigationIntent);
-      prototype.registerHybridMethod("addListenerNavigationAction", &HybridAutoPlaySpec::addListenerNavigationAction);
-      prototype.registerHybridMethod("addListenerVoiceInput", &HybridAutoPlaySpec::addListenerVoiceInput);
       prototype.registerHybridMethod("addListenerCarLocation", &HybridAutoPlaySpec::addListenerCarLocation);
       prototype.registerHybridMethod("setRootTemplate", &HybridAutoPlaySpec::setRootTemplate);
       prototype.registerHybridMethod("pushTemplate", &HybridAutoPlaySpec::pushTemplate);
