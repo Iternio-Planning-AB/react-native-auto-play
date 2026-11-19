@@ -22,13 +22,22 @@
     if ([view isKindOfClass:[RCTSurfaceHostingView class]]) {
         RCTSurfaceHostingView *rootView =
             (RCTSurfaceHostingView *)view;
-        
+
         if (rootView == nil) {
             NSLog(@"[AutoPlay] rootView == nil, cannot stop");
             return;
         }
-        
+
         [rootView.surface stop];
+        return;
+    }
+
+    // a native backdrop puts the React root view into a container next to the backdrop
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[RCTSurfaceHostingView class]]) {
+            [self stop:subview];
+            return;
+        }
     }
 
     NSLog(@"[AutoPlay] View is not recognized type, ignoring");

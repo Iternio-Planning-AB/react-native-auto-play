@@ -25,6 +25,7 @@
 ## Requirements
 
 -   **iOS builds require Xcode 27+** (the iOS 27 SDK), even for apps that don't use any `mapConfig`/panel features — the library references `CPMapPanel`/`CPPanel` types internally behind `@available(iOS 27.0, *)` checks, but `@available` only defers *runtime* execution, not compile-time symbol resolution, so the SDK must be present to build at all.
+-   **React Native 0.88 or newer** — on iOS the library starts React Native from its scene delegates using the 0.88 scene APIs. Stay on 0.10.x of this library for older React Native versions.
 -   **`react-native-nitro-modules` 0.37.1 or newer** — the generated native bindings target that runtime shape; an older nitro-modules install fails at native build time.
 
 ## Installation
@@ -175,40 +176,85 @@ export function App() {
 
 React Navigation's `linking` prop already follows this order, so it needs no extra setup.
 
-#### MapTemplate
-if you want to make use of the MapTemplate and render react components you need to add this to your AppDelegate.swift
-This is an example that works for bare react-native (>= 0.82) and Expo SDK 57, check [this](https://github.com/Iternio-Planning-AB/react-native-auto-play/blob/dbd33ff32ee58338282ffe0f8a970e687e1e3520/packages/react-native-autoplay/README.md?plain=1#L139) for older versions.
+#### AppDelegate and the React Native factory
+The library starts React Native itself: it owns the app's single `RCTReactNativeFactory`, mounts your main component in the phone window from `WindowApplicationSceneDelegate`, and creates the CarPlay root views from the same React instance, whichever scene connects first. Your `AppDelegate` contains no React Native code:
 
 ```swift
-  @objc func getRootViewForAutoplay(
-    moduleName: String,
-    initialProperties: [String: Any]?
-  ) -> UIView? {
-    var autoPlayRootView: UIView?
+import UIKit
 
-    if let factory = reactNativeFactory?.rootViewFactory
-      as? ExpoReactRootViewFactory
-    {
-      autoPlayRootView = factory.superView(
-        withModuleName: moduleName,
-        initialProperties: initialProperties,
-        bundleConfiguration: RCTBundleConfiguration(),
-        devMenuConfiguration: RCTDevMenuConfiguration(),
-      )
-    }
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  /// set to the phone window by the library, for libraries reading UIApplication.shared.delegate?.window
+  var window: UIWindow?
 
-    if autoPlayRootView == nil,
-      let factory = reactNativeFactory?.rootViewFactory
-    {
-      autoPlayRootView = factory.view(
-        withModuleName: moduleName,
-        initialProperties: initialProperties
-      )
-    }
-
-    return autoPlayRootView
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    true
   }
+}
 ```
+
+Expo apps keep their `ExpoAppDelegate` subclass and its `var window: UIWindow?`, but drop the factory, `reactNativeDelegate`, `reactNativeFactory`, the `ExpoReactNativeFactoryProvider` conformance and `getRootViewForAutoplay`. The library assigns the phone window to `window` if your `AppDelegate` declares it, the way Expo's own scene delegate does, because expo-system-ui, expo-screen-orientation and expo-updates read it. Keep it in bare apps as well: without it, libraries reading `UIApplication.shared.delegate?.window` get `nil`.
+
+Do **not** add the `SceneDelegate.swift` that the React Native 0.88 template generates. The phone scene must be the library's `WindowApplicationSceneDelegate` (see *Scene delegates*), otherwise the phone and CarPlay run in two separate React Native instances.
+
+Everything else is configured in `Info.plist`, all keys are optional:
+
+| Key | Default | Purpose |
+| --- | --- | --- |
+| `AutoPlayMainModuleName` | `main` | Name of the phone root component. Must match `AppRegistry.registerComponent` in JS and `getMainComponentName()` in your Android `MainActivity`. Expo always registers `main`. |
+| `AutoPlayReactNativeDelegateClass` | the library's delegate | Your own `RCTDefaultReactNativeFactoryDelegate` (or `ExpoReactNativeFactoryDelegate`) subclass, e.g. for `expo-updates` or a custom `bundleURL()`. Swift classes need the module prefix: `$(PRODUCT_MODULE_NAME).ReactNativeDelegate`. |
+| `AutoPlayReactNativeFactoryClass` | Expo's factory when Expo is installed, otherwise `RCTReactNativeFactory` | Only needed if the factory class cannot be detected. Must be an `RCTReactNativeFactory` subclass. |
+
+The default delegate behaves like the React Native template: it loads `index` from Metro in debug builds and `main.jsbundle` in release builds. Expo apps **must** name their delegate: Expo's factory crashes on launch unless the delegate is an `ExpoReactNativeFactoryDelegate`, and Expo's Metro entry point differs:
+
+```swift
+// ReactNativeDelegate.swift, moved out of the AppDelegate unchanged
+import Expo
+import React
+
+class ReactNativeDelegate: ExpoReactNativeFactoryDelegate {
+  override func bundleURL() -> URL? {
+#if DEBUG
+    RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: ".expo/.virtual-metro-entry")
+#else
+    Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+#endif
+  }
+}
+```
+
+```xml
+<key>AutoPlayReactNativeDelegateClass</key>
+<string>$(PRODUCT_MODULE_NAME).ReactNativeDelegate</string>
+```
+
+The delegate is created by the library with `init()`, and `dependencyProvider` is set to the app's generated `RCTAppDependencyProvider` unless your delegate sets one itself.
+
+#### Native backdrop under the CarPlay React content
+To render a native view **under** the React content of a CarPlay surface, e.g. a native map SDK view with your React tree drawn on top as an overlay, implement this optional method on your factory delegate (see above, so the delegate has to be named in `Info.plist`):
+
+```swift
+class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
+  /// display is "root", "dashboard" or "cluster", moduleName is the surface's module name
+  /// (the cluster id for clusters). Return nil to render the React content only.
+  @objc func autoPlayNativeBackdrop(for display: String, moduleName: String) -> UIView? {
+    guard display == "root" else { return nil }
+    return MyNativeMapView()
+  }
+}
+```
+
+It is called each time the React root view of a surface is created. The returned view fills the surface underneath the React root view, which is made transparent so the backdrop shows wherever your React tree does not draw. The view is removed with the surface's window, so tear down anything it owns in `didMoveToWindow` when `window` becomes `nil`. The view follows the car's light and dark mode through its trait collection. This is the iOS counterpart of the Android `NativeBackdrop` (see *Native backdrop under the MapTemplate surface*).
+
+#### Migrating from `getRootViewForAutoplay` (library 0.10 and React Native < 0.88)
+1. Update React Native to 0.88 or newer.
+2. Remove the React Native factory and its delegate property, the `startReactNative` call and `getRootViewForAutoplay` from your `AppDelegate`, so it looks like the one above. Keep `var window: UIWindow?`, the library assigns the phone window to it.
+3. If your `AppDelegate` used a custom delegate class, move it to its own file and name it in `AutoPlayReactNativeDelegateClass`. Expo apps always do this (see above).
+4. If your main component is not registered as `main`, set `AutoPlayMainModuleName`.
+5. If `getRootViewForAutoplay` returned a custom view hierarchy around the React root view, return only your native part from `autoPlayNativeBackdrop(for:moduleName:)` instead.
 
 #### MapTemplate maneuver dark & light mode
 It is recommended to attach a listener to MapTemplate.onAppearanceDidChange and send maneuver updates based on this to make sure the colors are applied properly.
@@ -247,7 +293,7 @@ In case you have ProGuard enabled (`def enableProguardInReleaseBuilds = true` in
 ```
 
 #### Native backdrop under the MapTemplate surface
-On Android the React content of a `MapTemplate` is rendered onto the car screen through a virtual display. Some native views cannot be hosted there as React Native views — Fragment-based map SDK wrappers, for example, are bound to the phone `Activity`. For those the library can place a host-provided native `View` **under** the React surface of a display: the Android counterpart of the iOS `getRootViewForAutoplay` hook above. Your React tree then draws on top of it as an overlay. The factory is asked for the root display and for each cluster display, and may answer `null` for either.
+On Android the React content of a `MapTemplate` is rendered onto the car screen through a virtual display. Some native views cannot be hosted there as React Native views — Fragment-based map SDK wrappers, for example, are bound to the phone `Activity`. For those the library can place a host-provided native `View` **under** the React surface of a display: the Android counterpart of the iOS `autoPlayNativeBackdrop(for:moduleName:)` hook (see *Native backdrop under the CarPlay React content*). Your React tree then draws on top of it as an overlay. The factory is asked for the root display and for each cluster display, and may answer `null` for either.
 
 ```kotlin
 interface NativeBackdrop {
@@ -592,13 +638,15 @@ You need to register your AutoPlay components in your app's entry file (e.g., `i
 // index.js
 import '@iternio/react-native-auto-play/installTimers';
 import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
 import App from './src/App';
 import registerAutoPlay from './src/AutoPlay'; // Your AutoPlay setup
 
-AppRegistry.registerComponent(appName, () => App);
+// must match AutoPlayMainModuleName on iOS (default `main`) and getMainComponentName() on Android
+AppRegistry.registerComponent('main', () => App);
 registerAutoPlay();
 ```
+
+The React Native template registers the `app.json` name instead. Either register `main` as above and return `"main"` from `getMainComponentName()` in your Android `MainActivity`, or keep your name and set it as `AutoPlayMainModuleName` in your `Info.plist` (see *AppDelegate and the React Native factory*).
 
 ### 2. Create the AutoPlay Experience
 
