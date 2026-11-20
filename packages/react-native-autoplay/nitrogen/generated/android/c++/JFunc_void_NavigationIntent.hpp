@@ -23,6 +23,8 @@
 #include "NavigationAvoidOption.hpp"
 #include <vector>
 #include "JNavigationAvoidOption.hpp"
+#include "NavigationTravelMode.hpp"
+#include "JNavigationTravelMode.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 

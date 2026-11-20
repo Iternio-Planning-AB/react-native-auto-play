@@ -15,6 +15,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationIntentType; }
 // Forward declaration of `NavigationAvoidOption` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationAvoidOption; }
+// Forward declaration of `NavigationTravelMode` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationTravelMode; }
 // Forward declaration of `NavigationAction` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationAction; }
 
@@ -33,6 +35,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct NavigationA
 #include "NavigationAvoidOption.hpp"
 #include <vector>
 #include "JNavigationAvoidOption.hpp"
+#include "NavigationTravelMode.hpp"
+#include "JNavigationTravelMode.hpp"
 #include "NavigationAction.hpp"
 #include "JFunc_void_NavigationAction.hpp"
 #include "JNavigationAction.hpp"

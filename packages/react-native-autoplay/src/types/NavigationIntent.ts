@@ -21,9 +21,8 @@ export type NavigationIntentType = 'navigation' | 'add_a_stop' | 'directions' | 
 export type NavigationAvoidOption = 'tolls' | 'highways' | 'ferries';
 
 /**
- * The travel modes this library maps. Mapped natively from the letter of the intent's `mode`
- * parameter as Google documents it: `b` bicycling, `d` driving, `x` taxi, `l` two_wheeler,
- * `r` transit, `w` walking. Compare NavigationIntent.mode against these.
+ * Travel mode. Mapped natively from the letter of the intent's `mode` parameter as Google
+ * documents it: `b` bicycling, `d` driving, `x` taxi, `l` two_wheeler, `r` transit, `w` walking.
  */
 export type NavigationTravelMode =
   | 'bicycling'
@@ -48,12 +47,10 @@ export interface NavigationIntent {
   /** unknown letters are ignored, empty when the parameter is absent */
   avoid: NavigationAvoidOption[];
   /**
-   * The travel mode, one of NavigationTravelMode. A letter the library does not know is passed
-   * through as is, so a mode Google adds later still arrives, just unmapped. Kept a string
-   * rather than the union for that reason.
-   * Undefined when absent, which it always is on Android Automotive.
+   * Undefined when absent, which it always is on Android Automotive, and for a letter the library
+   * does not know, so a mode Google adds later is missing until the library maps it.
    */
-  mode?: string;
+  mode?: NavigationTravelMode;
   /** where the request came from, e.g. `assistant` */
   entry?: string;
 }

@@ -105,9 +105,8 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
   in `android/src/test/`. A `VIEW geo:` intent is a search and is reported as
   `intent: 'search'`; the car Assistant reports a navigation app as able to search only if it has
   an activity for that filter (`CarAppActivity`, Automotive only, untested). `avoid` and `mode`
-  letters are mapped to names natively; unknown `avoid` letters are dropped, an unknown `mode`
-  passes through, which is why `mode` stays `string` in the spec (a union would make nitrogen
-  generate an enum that cannot carry it).
+  letters are mapped to nitrogen enums natively, so unknown letters are dropped: an enum cannot
+  carry them.
 - `HybridAndroidAutoNavigation.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
   an `act` parameter ("mute navigation", "avoid tolls") under any scheme. Google does not
   document the act numbers in `NavigationIntentParser.actionCodes`. Numbers are mapped to the documented `geo.action` names

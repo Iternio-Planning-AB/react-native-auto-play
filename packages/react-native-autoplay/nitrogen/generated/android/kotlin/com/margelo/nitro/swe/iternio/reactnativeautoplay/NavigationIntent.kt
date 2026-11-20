@@ -32,7 +32,7 @@ data class NavigationIntent(
   val avoid: Array<NavigationAvoidOption>,
   @DoNotStrip
   @Keep
-  val mode: String?,
+  val mode: NavigationTravelMode?,
   @DoNotStrip
   @Keep
   val entry: String?
@@ -69,7 +69,7 @@ data class NavigationIntent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(location: Location?, query: String?, intent: NavigationIntentType, avoid: Array<NavigationAvoidOption>, mode: String?, entry: String?): NavigationIntent {
+    private fun fromCpp(location: Location?, query: String?, intent: NavigationIntentType, avoid: Array<NavigationAvoidOption>, mode: NavigationTravelMode?, entry: String?): NavigationIntent {
       return NavigationIntent(location, query, intent, avoid, mode, entry)
     }
   }

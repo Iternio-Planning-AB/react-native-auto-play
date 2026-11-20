@@ -5,6 +5,7 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationAction
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationAvoidOption
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntent
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode
 import java.net.URLDecoder
 
 /**
@@ -63,19 +64,6 @@ object NavigationIntentParser {
     )
 
     /**
-     * Travel mode letters from Google's navigation intent spec, mapped to the names of
-     * NavigationTravelMode. Unknown letters are passed through, like unknown act values.
-     */
-    private val travelModes = mapOf(
-        "b" to "bicycling",
-        "d" to "driving",
-        "x" to "taxi",
-        "l" to "two_wheeler",
-        "r" to "transit",
-        "w" to "walking"
-    )
-
-    /**
      * A custom action when the URI carries an act parameter, under any scheme: numeric act as the
      * host forwards it (google.maps://...?act=35, geo:0,0?act=35) or named (geo.action:?act=mute).
      * Numeric act is mapped to the documented name, so JS gets the same value for either form.
@@ -125,9 +113,7 @@ object NavigationIntentParser {
                 parseIntentType(parameters["intent"])
             },
             avoid = parseAvoid(parameters["avoid"]),
-            mode = parameters["mode"]?.trim()?.ifEmpty { null }?.let {
-                travelModes[it.lowercase()] ?: it
-            },
+            mode = parseTravelMode(parameters["mode"]),
             entry = parameters["entry"]?.trim()?.ifEmpty { null }
         )
     }
@@ -176,6 +162,19 @@ object NavigationIntentParser {
             "add_a_stop" -> NavigationIntentType.ADD_A_STOP
             "directions" -> NavigationIntentType.DIRECTIONS
             else -> NavigationIntentType.NAVIGATION
+        }
+    }
+
+    /** Letters from Google's spec; unknown ones are dropped, like unknown avoid letters. */
+    private fun parseTravelMode(value: String?): NavigationTravelMode? {
+        return when (value?.trim()?.lowercase()) {
+            "b" -> NavigationTravelMode.BICYCLING
+            "d" -> NavigationTravelMode.DRIVING
+            "x" -> NavigationTravelMode.TAXI
+            "l" -> NavigationTravelMode.TWO_WHEELER
+            "r" -> NavigationTravelMode.TRANSIT
+            "w" -> NavigationTravelMode.WALKING
+            else -> null
         }
     }
 

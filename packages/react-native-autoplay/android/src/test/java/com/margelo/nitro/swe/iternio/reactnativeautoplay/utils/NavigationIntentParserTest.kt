@@ -12,6 +12,11 @@ import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.AD
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.DIRECTIONS
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.NAVIGATION
 import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationIntentType.SEARCH
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode.BICYCLING
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode.DRIVING
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode.TRANSIT
+import com.margelo.nitro.swe.iternio.reactnativeautoplay.NavigationTravelMode.WALKING
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -27,7 +32,7 @@ class NavigationIntentParserTest {
         query: String? = null,
         type: NavigationIntentType = NAVIGATION,
         avoid: Array<NavigationAvoidOption> = emptyArray(),
-        mode: String? = null,
+        mode: NavigationTravelMode? = null,
         entry: String? = null
     ) = NavigationIntent(location, query, type, avoid, mode, entry)
 
@@ -41,7 +46,7 @@ class NavigationIntentParserTest {
     @Test
     fun addAStopWithMode() {
         assertEquals(
-            intent(query = "1600 Amphitheatre parkway", type = ADD_A_STOP, mode = "bicycling"),
+            intent(query = "1600 Amphitheatre parkway", type = ADD_A_STOP, mode = BICYCLING),
             parse("geo:0,0?q=1600+Amphitheatre+parkway&mode=b&intent=add_a_stop")
         )
     }
@@ -49,7 +54,7 @@ class NavigationIntentParserTest {
     @Test
     fun navigationWithMode() {
         assertEquals(
-            intent(query = "coffee shop", mode = "walking"),
+            intent(query = "coffee shop", mode = WALKING),
             parse("geo:0,0?q=coffee+shop&mode=w&intent=navigation")
         )
     }
@@ -57,7 +62,7 @@ class NavigationIntentParserTest {
     @Test
     fun coordinatesAndQuery() {
         assertEquals(
-            intent(location = Location(1.1, 2.2), query = "Starbucks on Main Street", mode = "walking"),
+            intent(location = Location(1.1, 2.2), query = "Starbucks on Main Street", mode = WALKING),
             parse("geo:1.1,2.2?q=Starbucks+on+Main+Street&mode=w&intent=navigation")
         )
     }
@@ -65,7 +70,7 @@ class NavigationIntentParserTest {
     @Test
     fun coordinatesWithoutQuery() {
         assertEquals(
-            intent(location = Location(1.1, 2.2), mode = "walking"),
+            intent(location = Location(1.1, 2.2), mode = WALKING),
             parse("geo:1.1,2.2?mode=w&intent=navigation")
         )
     }
@@ -126,7 +131,7 @@ class NavigationIntentParserTest {
     @Test
     fun encodedSeparatorsStayInQuery() {
         assertEquals(
-            intent(query = "Fish & Chips = good", mode = "driving"),
+            intent(query = "Fish & Chips = good", mode = DRIVING),
             parse("geo:0,0?q=Fish+%26+Chips+%3D+good&mode=d")
         )
     }
@@ -134,7 +139,7 @@ class NavigationIntentParserTest {
     @Test
     fun queryNotFirst() {
         assertEquals(
-            intent(query = "Stuttgart", mode = "driving", type = DIRECTIONS),
+            intent(query = "Stuttgart", mode = DRIVING, type = DIRECTIONS),
             parse("geo:0,0?mode=d&intent=directions&q=Stuttgart")
         )
     }
@@ -250,12 +255,12 @@ class NavigationIntentParserTest {
     }
 
     @Test
-    fun unknownModePassedThrough() {
-        assertEquals(intent(query = "Graz", mode = "q"), parse("geo:0,0?q=Graz&mode=q"))
+    fun unknownModeDropped() {
+        assertEquals(intent(query = "Graz"), parse("geo:0,0?q=Graz&mode=q"))
     }
 
     @Test
     fun modeIsCaseInsensitive() {
-        assertEquals(intent(query = "Graz", mode = "transit"), parse("geo:0,0?q=Graz&mode=R"))
+        assertEquals(intent(query = "Graz", mode = TRANSIT), parse("geo:0,0?q=Graz&mode=R"))
     }
 }

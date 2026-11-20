@@ -34,6 +34,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { struct Location; }
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationIntentType; }
 // Forward declaration of `NavigationAvoidOption` to properly resolve imports.
 namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationAvoidOption; }
+// Forward declaration of `NavigationTravelMode` to properly resolve imports.
+namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class NavigationTravelMode; }
 
 #include "Location.hpp"
 #include <optional>
@@ -41,6 +43,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay { enum class Navigat
 #include "NavigationIntentType.hpp"
 #include "NavigationAvoidOption.hpp"
 #include <vector>
+#include "NavigationTravelMode.hpp"
 
 namespace margelo::nitro::swe::iternio::reactnativeautoplay {
 
@@ -53,12 +56,12 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
     std::optional<std::string> query     SWIFT_PRIVATE;
     NavigationIntentType intent     SWIFT_PRIVATE;
     std::vector<NavigationAvoidOption> avoid     SWIFT_PRIVATE;
-    std::optional<std::string> mode     SWIFT_PRIVATE;
+    std::optional<NavigationTravelMode> mode     SWIFT_PRIVATE;
     std::optional<std::string> entry     SWIFT_PRIVATE;
 
   public:
     NavigationIntent() = default;
-    explicit NavigationIntent(std::optional<Location> location, std::optional<std::string> query, NavigationIntentType intent, std::vector<NavigationAvoidOption> avoid, std::optional<std::string> mode, std::optional<std::string> entry): location(location), query(query), intent(intent), avoid(avoid), mode(mode), entry(entry) {}
+    explicit NavigationIntent(std::optional<Location> location, std::optional<std::string> query, NavigationIntentType intent, std::vector<NavigationAvoidOption> avoid, std::optional<NavigationTravelMode> mode, std::optional<std::string> entry): location(location), query(query), intent(intent), avoid(avoid), mode(mode), entry(entry) {}
 
   public:
     friend bool operator==(const NavigationIntent& lhs, const NavigationIntent& rhs) = default;
@@ -78,7 +81,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "query"))),
         JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "intent"))),
         JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAvoidOption>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "avoid"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mode"))),
+        JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationTravelMode>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mode"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "entry")))
       );
     }
@@ -88,7 +91,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "query"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.query));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "intent"), JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType>::toJSI(runtime, arg.intent));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "avoid"), JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAvoidOption>>::toJSI(runtime, arg.avoid));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "mode"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.mode));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "mode"), JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationTravelMode>>::toJSI(runtime, arg.mode));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "entry"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.entry));
       return obj;
     }
@@ -104,7 +107,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "query")))) return false;
       if (!JSIConverter<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationIntentType>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "intent")))) return false;
       if (!JSIConverter<std::vector<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationAvoidOption>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "avoid")))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mode")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::swe::iternio::reactnativeautoplay::NavigationTravelMode>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "mode")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "entry")))) return false;
       return true;
     }

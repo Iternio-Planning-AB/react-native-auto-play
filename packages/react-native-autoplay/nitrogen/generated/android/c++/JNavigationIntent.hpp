@@ -13,9 +13,11 @@
 #include "JLocation.hpp"
 #include "JNavigationAvoidOption.hpp"
 #include "JNavigationIntentType.hpp"
+#include "JNavigationTravelMode.hpp"
 #include "Location.hpp"
 #include "NavigationAvoidOption.hpp"
 #include "NavigationIntentType.hpp"
+#include "NavigationTravelMode.hpp"
 #include <optional>
 #include <string>
 #include <vector>
@@ -47,8 +49,8 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
       jni::local_ref<JNavigationIntentType> intent = this->getFieldValue(fieldIntent);
       static const auto fieldAvoid = clazz->getField<jni::JArrayClass<JNavigationAvoidOption>>("avoid");
       jni::local_ref<jni::JArrayClass<JNavigationAvoidOption>> avoid = this->getFieldValue(fieldAvoid);
-      static const auto fieldMode = clazz->getField<jni::JString>("mode");
-      jni::local_ref<jni::JString> mode = this->getFieldValue(fieldMode);
+      static const auto fieldMode = clazz->getField<JNavigationTravelMode>("mode");
+      jni::local_ref<JNavigationTravelMode> mode = this->getFieldValue(fieldMode);
       static const auto fieldEntry = clazz->getField<jni::JString>("entry");
       jni::local_ref<jni::JString> entry = this->getFieldValue(fieldEntry);
       return NavigationIntent(
@@ -65,7 +67,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __vector;
         }(avoid),
-        mode != nullptr ? std::make_optional(mode->toStdString()) : std::nullopt,
+        mode != nullptr ? std::make_optional(mode->toCpp()) : std::nullopt,
         entry != nullptr ? std::make_optional(entry->toStdString()) : std::nullopt
       );
     }
@@ -76,7 +78,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
      */
     [[maybe_unused]]
     static jni::local_ref<JNavigationIntent::javaobject> fromCpp(const NavigationIntent& value) {
-      using JSignature = JNavigationIntent(jni::alias_ref<JLocation>, jni::alias_ref<jni::JString>, jni::alias_ref<JNavigationIntentType>, jni::alias_ref<jni::JArrayClass<JNavigationAvoidOption>>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
+      using JSignature = JNavigationIntent(jni::alias_ref<JLocation>, jni::alias_ref<jni::JString>, jni::alias_ref<JNavigationIntentType>, jni::alias_ref<jni::JArrayClass<JNavigationAvoidOption>>, jni::alias_ref<JNavigationTravelMode>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -94,7 +96,7 @@ namespace margelo::nitro::swe::iternio::reactnativeautoplay {
           }
           return __array;
         }(value.avoid),
-        value.mode.has_value() ? jni::make_jstring(value.mode.value()) : nullptr,
+        value.mode.has_value() ? JNavigationTravelMode::fromCpp(value.mode.value()) : nullptr,
         value.entry.has_value() ? jni::make_jstring(value.entry.value()) : nullptr
       );
     }
