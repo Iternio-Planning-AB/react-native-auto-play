@@ -63,6 +63,19 @@ object NavigationIntentParser {
     )
 
     /**
+     * Travel mode letters from Google's navigation intent spec, mapped to the names of
+     * NavigationTravelMode. Unknown letters are passed through, like unknown act values.
+     */
+    private val travelModes = mapOf(
+        "b" to "bicycling",
+        "d" to "driving",
+        "x" to "taxi",
+        "l" to "two_wheeler",
+        "r" to "transit",
+        "w" to "walking"
+    )
+
+    /**
      * A custom action when the URI carries an act parameter, under any scheme: numeric act as the
      * host forwards it (google.maps://...?act=35, geo:0,0?act=35) or named (geo.action:?act=mute).
      * Numeric act is mapped to the documented name, so JS gets the same value for either form.
@@ -112,7 +125,9 @@ object NavigationIntentParser {
                 parseIntentType(parameters["intent"])
             },
             avoid = parseAvoid(parameters["avoid"]),
-            mode = parameters["mode"]?.trim()?.ifEmpty { null },
+            mode = parameters["mode"]?.trim()?.ifEmpty { null }?.let {
+                travelModes[it.lowercase()] ?: it
+            },
             entry = parameters["entry"]?.trim()?.ifEmpty { null }
         )
     }

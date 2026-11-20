@@ -1408,7 +1408,7 @@ When the user asks the car's assistant to "navigate to X with <your app>", "add 
 
 ```ts
 const cleanup = HybridAndroidAutoNavigation?.addListenerNavigationIntent((intent) => {
-  if (intent.mode && intent.mode !== 'd') {
+  if (intent.mode && intent.mode !== 'driving') {
     // only driving is supported
     return;
   }
@@ -1418,8 +1418,8 @@ const cleanup = HybridAndroidAutoNavigation?.addListenerNavigationIntent((intent
 
 -   **Payload** (`NavigationIntent`): one or both of `location` (from `geo:lat,lon`, undefined for `0,0`) and `query` (`q`, decoded), plus:
     -   `intent`: from a NAVIGATE intent `'navigation'` (make it the new destination), `'add_a_stop'` (keep the destination and add another stop) or `'directions'` (show the route, don't start); `'navigation'` also when the parameter is absent or unknown. `'search'` for a search like "find charging stations": show the results, don't navigate. Searches arrive as `VIEW geo:` intents, for which the library declares a filter on Android Automotive only (untested). `VIEW geo:` is also Android's generic map link, so any app can send one, and a search may carry only a location (e.g. `geo:48.2,16.37?z=12`): show that place rather than search results.
-    -   `avoid`: any of `'tolls'`, `'highways'`, `'ferries'` (from `t`/`h`/`f`), empty when absent.
-    -   `mode`: the raw travel mode letter (`b` bike, `d` drive, `x` taxi, `l` two-wheeler, `r` transit, `w` walk), not mapped so new values need no library update. Undefined when absent, which it always is on Android Automotive.
+    -   `avoid`: any of `'tolls'`, `'highways'`, `'ferries'`, mapped from Google's documented letters `t`/`h`/`f`; unknown letters are dropped. Empty when absent.
+    -   `mode`: one of `'bicycling'`, `'driving'`, `'taxi'`, `'two_wheeler'`, `'transit'`, `'walking'` (the `NavigationTravelMode` type), mapped from Google's documented letters `b`/`d`/`x`/`l`/`r`/`w`. An unknown letter is passed through as is, so `mode` is typed `string`. Undefined when absent, which it always is on Android Automotive.
     -   `entry`: the entry source, e.g. `'assistant'`.
 -   **Cold start**: an intent that arrives while no listener is registered (e.g. the one that started the app) is held and delivered to the first `addListenerNavigationIntent` listener added afterwards, then dropped. It is also dropped when the head unit disconnects.
 -   **Testing on the DHU**: `adb shell am start-service -a androidx.car.app.action.NAVIGATE -d 'geo:0,0?q=Stuttgart&intent=add_a_stop&avoid=tf' <package>/<car app service>` may not reach the session, since the host normally delivers the intent; trigger it by voice if it doesn't.

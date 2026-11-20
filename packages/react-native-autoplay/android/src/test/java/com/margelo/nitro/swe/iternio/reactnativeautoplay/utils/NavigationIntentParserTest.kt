@@ -41,7 +41,7 @@ class NavigationIntentParserTest {
     @Test
     fun addAStopWithMode() {
         assertEquals(
-            intent(query = "1600 Amphitheatre parkway", type = ADD_A_STOP, mode = "b"),
+            intent(query = "1600 Amphitheatre parkway", type = ADD_A_STOP, mode = "bicycling"),
             parse("geo:0,0?q=1600+Amphitheatre+parkway&mode=b&intent=add_a_stop")
         )
     }
@@ -49,7 +49,7 @@ class NavigationIntentParserTest {
     @Test
     fun navigationWithMode() {
         assertEquals(
-            intent(query = "coffee shop", mode = "w"),
+            intent(query = "coffee shop", mode = "walking"),
             parse("geo:0,0?q=coffee+shop&mode=w&intent=navigation")
         )
     }
@@ -57,7 +57,7 @@ class NavigationIntentParserTest {
     @Test
     fun coordinatesAndQuery() {
         assertEquals(
-            intent(location = Location(1.1, 2.2), query = "Starbucks on Main Street", mode = "w"),
+            intent(location = Location(1.1, 2.2), query = "Starbucks on Main Street", mode = "walking"),
             parse("geo:1.1,2.2?q=Starbucks+on+Main+Street&mode=w&intent=navigation")
         )
     }
@@ -65,7 +65,7 @@ class NavigationIntentParserTest {
     @Test
     fun coordinatesWithoutQuery() {
         assertEquals(
-            intent(location = Location(1.1, 2.2), mode = "w"),
+            intent(location = Location(1.1, 2.2), mode = "walking"),
             parse("geo:1.1,2.2?mode=w&intent=navigation")
         )
     }
@@ -126,7 +126,7 @@ class NavigationIntentParserTest {
     @Test
     fun encodedSeparatorsStayInQuery() {
         assertEquals(
-            intent(query = "Fish & Chips = good", mode = "d"),
+            intent(query = "Fish & Chips = good", mode = "driving"),
             parse("geo:0,0?q=Fish+%26+Chips+%3D+good&mode=d")
         )
     }
@@ -134,7 +134,7 @@ class NavigationIntentParserTest {
     @Test
     fun queryNotFirst() {
         assertEquals(
-            intent(query = "Stuttgart", mode = "d", type = DIRECTIONS),
+            intent(query = "Stuttgart", mode = "driving", type = DIRECTIONS),
             parse("geo:0,0?mode=d&intent=directions&q=Stuttgart")
         )
     }
@@ -247,5 +247,15 @@ class NavigationIntentParserTest {
         assertNull(NavigationIntentParser.parseAction("geo:1.1,2.2"))
         assertNull(NavigationIntentParser.parseAction("geo:0,0?act="))
         assertNull(NavigationIntentParser.parseAction("google.maps://maps.google.com/?notts=1"))
+    }
+
+    @Test
+    fun unknownModePassedThrough() {
+        assertEquals(intent(query = "Graz", mode = "q"), parse("geo:0,0?q=Graz&mode=q"))
+    }
+
+    @Test
+    fun modeIsCaseInsensitive() {
+        assertEquals(intent(query = "Graz", mode = "transit"), parse("geo:0,0?q=Graz&mode=R"))
     }
 }
