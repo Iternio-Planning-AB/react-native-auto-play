@@ -57,8 +57,7 @@ export interface NavigationAction {
    * the same value. A number the library does not know (or a name it does not list) is passed
    * through as is. On Android Automotive the car Assistant sends the named form, only to the
    * navigation app chosen in its settings.
-   * The numbers are not documented by Google; the mapping is taken from the Android Auto host app
-   * (18.0) and could change.
+   * The numbers are not documented by Google and could change.
    */
   act: string;
 }

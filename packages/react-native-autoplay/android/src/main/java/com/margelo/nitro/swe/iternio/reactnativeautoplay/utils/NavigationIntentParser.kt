@@ -15,9 +15,9 @@ import java.net.URLDecoder
  */
 object NavigationIntentParser {
     /**
-     * act numbers of the custom actions, from the Android Auto host app 18.0 (its converter turns
-     * geo.action:?act=<name> into geo:0,0?act=<number>). Not documented by Google. Confirmed on
-     * the DHU for 1, 35, 37 and 38, which arrived as google.maps://maps.google.com/?act=N&notts=1.
+     * act numbers Android Auto sends for the custom actions instead of the documented names. Not
+     * documented by Google, so they could change. Confirmed on the DHU for 1, 2, 35, 37 and 38,
+     * which arrived as google.maps://maps.google.com/?act=N&notts=1.
      */
     private val actionCodes = mapOf(
         1 to "mute",

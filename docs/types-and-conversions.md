@@ -106,16 +106,15 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
   `intent: 'search'`; the car Assistant reports a navigation app as able to search only if it has
   an activity for that filter (`CarAppActivity`, Automotive only, untested).
 - `HybridAndroidAutoNavigation.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
-  an `act` parameter ("mute navigation", "avoid tolls") under any scheme. The act number
-  table in `NavigationIntentParser.actionCodes` is decompiled from the Android Auto host
-  app (Google does not document it). Numbers are mapped to the documented `geo.action` names
+  an `act` parameter ("mute navigation", "avoid tolls") under any scheme. Google does not
+  document the act numbers in `NavigationIntentParser.actionCodes`. Numbers are mapped to the documented `geo.action` names
   natively, so a numeric and a named (`geo.action:?act=mute`) act look the same to JS;
   unknown values pass through unchanged. On Android Automotive the car Assistant sends the
-  named form as `VIEW geo.action:` to the navigation app picked in its settings, but first checks
-  `queryIntentActivities` for that filter and otherwise answers "not supported by your current
-  navigation app". So the `VIEW geo.action` filter on `CarAppActivity` in
-  `src/automotive/AndroidManifest.xml` must stay, and on the activity: the check only looks at
-  activities (verified on the AAOS emulator, Assistant 13.1.618). A non-`geo:` NAVIGATE
+  named form as `VIEW geo.action:` to the navigation app picked in its settings, but only if
+  the app declares that filter; otherwise it answers "not supported by your current navigation
+  app". So the `VIEW geo.action` filter on `CarAppActivity` in
+  `src/automotive/AndroidManifest.xml` must stay, on the activity as Google's docs say for
+  Android Automotive (verified on the AAOS emulator with the Google Assistant). A non-`geo:` NAVIGATE
   without `act` is dropped with a warning.
 
 Native: `ios/utils/VoiceInputManager.swift`, `ios/templates/VoiceInputTemplate.swift`,
