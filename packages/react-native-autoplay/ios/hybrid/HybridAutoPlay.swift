@@ -147,13 +147,6 @@ class HybridAutoPlay: HybridAutoPlaySpec {
         }
     }
 
-    func addListenerVoiceInput(
-        callback: @escaping (Location?, String?) -> Void
-    ) throws -> () -> Void {
-        // iOS does not use the OS-triggered voice input path — use HybridVoice instead.
-        return {}
-    }
-
     func addListenerCarLocation(
         callback: @escaping (CarLocation) -> Void
     ) throws -> () -> Void {

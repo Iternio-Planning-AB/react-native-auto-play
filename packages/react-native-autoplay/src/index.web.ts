@@ -117,6 +117,8 @@ export * from './types/CarLocation';
 export * from './types/Event';
 export * from './types/Image';
 export * from './types/Maneuver';
+export * from './types/NavigationAction';
+export * from './types/NavigationIntent';
 export * from './types/RootComponent';
 export * from './types/SignInMethod';
 export * from './types/Telemetry';
@@ -146,9 +148,9 @@ export function setIconFont(_name: string, _glyphMap?: Record<string, number>): 
 
 export const useFocusedEffect = () => {};
 
-export const useVoiceInput = () => ({
-  voiceInputResult: undefined,
-  resetVoiceInputResult: () => {},
+export const useNavigationIntent = () => ({
+  navigationIntent: undefined,
+  resetNavigationIntent: () => {},
 });
 
 export const useAndroidAutoTelemetry = (): {
@@ -165,6 +167,7 @@ export const AutoPlayCluster = createNoopObject<Record<string, unknown>>();
 export const CarPlayDashboard = createNoopObject<Record<string, unknown>>();
 
 export const HybridAndroidAutomotive: AndroidAutomotive | null = null;
+export { HybridAndroidAutoNavigation } from './hybrid/HybridAndroidAutoNavigation';
 export { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
 export { HybridAndroidWindowInformation } from './hybrid/HybridAndroidWindowInformation';
 export const HybridAutoPlay = createNoopObject<AutoPlay>();

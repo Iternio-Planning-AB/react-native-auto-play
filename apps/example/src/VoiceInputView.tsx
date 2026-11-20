@@ -1,14 +1,19 @@
-import { useVoiceInput } from '@iternio/react-native-auto-play';
+import { useNavigationIntent } from '@iternio/react-native-auto-play';
 import { Text } from 'react-native';
 
 export function VoiceInputView() {
-  const { voiceInputResult } = useVoiceInput();
+  const { navigationIntent } = useNavigationIntent();
 
-  if (!voiceInputResult) {
+  if (!navigationIntent) {
     return null;
   }
 
+  const { location, query, intent, avoid, mode, entry } = navigationIntent;
+  const coordinates = location ? `${location.lat},${location.lon}` : '-';
+
   return (
-    <Text>{`Voice input coordinates: ${voiceInputResult.coordinates}, query: ${voiceInputResult.query}`}</Text>
+    <Text>
+      {`Navigation intent: ${intent}, coordinates: ${coordinates}, query: ${query ?? '-'}, avoid: ${avoid.join(',') || '-'}, mode: ${mode ?? '-'}, entry: ${entry ?? '-'}`}
+    </Text>
   );
 }

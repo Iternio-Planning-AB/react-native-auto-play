@@ -1,13 +1,7 @@
 import type { HybridObject } from 'react-native-nitro-modules';
 import type { TemplateConfig } from '../templates/Template';
 import type { CarLocation } from '../types/CarLocation';
-import type {
-  CleanupCallback,
-  EventName,
-  Location,
-  SafeAreaInsets,
-  VisibilityState,
-} from '../types/Event';
+import type { CleanupCallback, EventName, SafeAreaInsets, VisibilityState } from '../types/Event';
 import type { NitroAction } from '../utils/NitroAction';
 
 export interface NitroTemplateConfig extends TemplateConfig {
@@ -42,17 +36,6 @@ export interface AutoPlay extends HybridObject<{ android: 'kotlin'; ios: 'swift'
   addListenerRenderState(
     moduleName: string,
     callback: (payload: VisibilityState) => void
-  ): CleanupCallback;
-
-  /**
-   * Adds a listener for voice input events fired by the OS (Android Auto only).
-   * On iOS this is a no-op — use startVoiceInput instead.
-   * @param callback the callback to receive the voice input
-   * @returns callback to remove the listener
-   * @namespace Android
-   */
-  addListenerVoiceInput(
-    callback: (coordinates: Location | undefined, query: string | undefined) => void
   ): CleanupCallback;
 
   /**
