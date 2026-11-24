@@ -19,6 +19,9 @@
 #include "JFunc_void.hpp"
 #include "JFunc_void_ActiveCarUxRestrictions.hpp"
 #include "JFunc_void_AppFocusState.hpp"
+#include "JHybridAndroidAutoNavigationSpec.hpp"
+#include "JFunc_void_NavigationIntent.hpp"
+#include "JFunc_void_NavigationAction.hpp"
 #include "JHybridAndroidAutoTelemetrySpec.hpp"
 #include "JFunc_void_std__optional_Telemetry_.hpp"
 #include "JHybridAndroidWindowInformationSpec.hpp"
@@ -26,7 +29,6 @@
 #include "JHybridAutoPlaySpec.hpp"
 #include "JFunc_void_double.hpp"
 #include "JFunc_void_VisibilityState.hpp"
-#include "JFunc_void_std__optional_Location__std__optional_std__string_.hpp"
 #include "JFunc_void_CarLocation.hpp"
 #include "JFunc_void_SafeAreaInsets.hpp"
 #include "JHybridAutoPlayTimingSpec.hpp"
@@ -94,6 +96,14 @@ struct JHybridAndroidAutoTelemetrySpecImpl: public jni::JavaClass<JHybridAndroid
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAndroidAutoTelemetrySpecImpl::javaobject()>();
     jni::local_ref<JHybridAndroidAutoTelemetrySpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridAndroidAutoTelemetrySpec();
+  }
+};
+struct JHybridAndroidAutoNavigationSpecImpl: public jni::JavaClass<JHybridAndroidAutoNavigationSpecImpl, JHybridAndroidAutoNavigationSpec::JavaPart> {
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/swe/iternio/reactnativeautoplay/HybridAndroidAutoNavigation;";
+  static std::shared_ptr<JHybridAndroidAutoNavigationSpec> create() {
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridAndroidAutoNavigationSpecImpl::javaobject()>();
+    jni::local_ref<JHybridAndroidAutoNavigationSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
+    return javaPart->getJHybridAndroidAutoNavigationSpec();
   }
 };
 struct JHybridAndroidAutomotiveSpecImpl: public jni::JavaClass<JHybridAndroidAutomotiveSpecImpl, JHybridAndroidAutomotiveSpec::JavaPart> {
@@ -194,6 +204,9 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_ActiveCarUxRestrictions_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_AppFocusState_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutoNavigationSpec::CxxPart::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_NavigationIntent_cxx::registerNatives();
+  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_NavigationAction_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidAutoTelemetrySpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Telemetry__cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAndroidWindowInformationSpec::CxxPart::registerNatives();
@@ -201,7 +214,6 @@ void registerAllNatives() {
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlaySpec::CxxPart::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_double_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_VisibilityState_cxx::registerNatives();
-  margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_std__optional_Location__std__optional_std__string__cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_CarLocation_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JFunc_void_SafeAreaInsets_cxx::registerNatives();
   margelo::nitro::swe::iternio::reactnativeautoplay::JHybridAutoPlayTimingSpec::CxxPart::registerNatives();
@@ -253,6 +265,12 @@ void registerAllNatives() {
     "AndroidAutoTelemetry",
     []() -> std::shared_ptr<HybridObject> {
       return JHybridAndroidAutoTelemetrySpecImpl::create();
+    }
+  );
+  HybridObjectRegistry::registerHybridObjectConstructor(
+    "AndroidAutoNavigation",
+    []() -> std::shared_ptr<HybridObject> {
+      return JHybridAndroidAutoNavigationSpecImpl::create();
     }
   );
   HybridObjectRegistry::registerHybridObjectConstructor(
