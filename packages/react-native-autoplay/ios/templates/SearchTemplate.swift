@@ -76,6 +76,11 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
     override func onWillDisappear(animated: Bool) {
         config.onWillDisappear?(animated)
         template.delegate = nil
+        // CarPlay waits on every completion handler it handed out, don't leave one unanswered.
+        // CarPlay lifecycle callbacks arrive on the main thread.
+        MainActor.assumeIsolated {
+            answerPendingSearch()
+        }
     }
 
     override func onDidDisappear(animated: Bool) {
@@ -93,6 +98,13 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
         updatedSearchText searchText: String,
         completionHandler: @escaping ([CPListItem]) -> Void
     ) {
+        // a pending handler means results for the current text are still being fetched
+        let hadPendingSearch = self.completionHandler != nil
+
+        // CarPlay expects every completion handler to be called. A newer request replaces the
+        // pending one, so answer that with the current results first instead of dropping it.
+        answerPendingSearch()
+
         self.completionHandler = completionHandler
 
         if !isInitialized {
@@ -103,16 +115,32 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
         }
 
         if searchText == self.searchText {
+            // CarPlay repeats the request for unchanged text (right after appearing and when
+            // closing). With nothing in flight answer with the current results, otherwise keep
+            // the handler pending so the results updateSearchResults delivers still reach it.
+            if !hadPendingSearch {
+                invalidate()
+            }
             return
         }
 
         self.searchText = searchText
 
         if pushedListTemplate != nil {
+            // results go to the pushed list template, the search template keeps what it has
+            invalidate()
             return
         }
 
         config.onSearchTextChanged(searchText)
+    }
+
+    /// Calls a still pending completion handler with the current results, see `_invalidate`.
+    @MainActor
+    private func answerPendingSearch() {
+        if completionHandler != nil {
+            invalidate()
+        }
     }
 
     func searchTemplate(
