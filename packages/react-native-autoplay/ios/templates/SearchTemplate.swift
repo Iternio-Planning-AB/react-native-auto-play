@@ -98,6 +98,9 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
         updatedSearchText searchText: String,
         completionHandler: @escaping ([CPListItem]) -> Void
     ) {
+        // a pending handler means results for the current text are still being fetched
+        let hadPendingSearch = self.completionHandler != nil
+
         // CarPlay expects every completion handler to be called. A newer request replaces the
         // pending one, so answer that with the current results first instead of dropping it.
         answerPendingSearch()
@@ -113,8 +116,11 @@ class SearchTemplate: AutoPlayTemplate, CPSearchTemplateDelegate {
 
         if searchText == self.searchText {
             // CarPlay repeats the request for unchanged text (right after appearing and when
-            // closing), there is nothing new to fetch so answer with the current results
-            invalidate()
+            // closing). With nothing in flight answer with the current results, otherwise keep
+            // the handler pending so the results updateSearchResults delivers still reach it.
+            if !hadPendingSearch {
+                invalidate()
+            }
             return
         }
 
