@@ -34,6 +34,7 @@ target_sources(
   ../nitrogen/generated/android/ReactNativeAutoPlayOnLoad.cpp
   # Shared Nitrogen C++ sources
   ../nitrogen/generated/shared/c++/HybridAndroidAutomotiveSpec.cpp
+  ../nitrogen/generated/shared/c++/HybridAndroidAutoNavigationSpec.cpp
   ../nitrogen/generated/shared/c++/HybridAndroidAutoTelemetrySpec.cpp
   ../nitrogen/generated/shared/c++/HybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/shared/c++/HybridAutoPlaySpec.cpp
@@ -51,6 +52,7 @@ target_sources(
   ../nitrogen/generated/shared/c++/HybridVoiceSpec.cpp
   # Android-specific Nitrogen C++ sources
   ../nitrogen/generated/android/c++/JHybridAndroidAutomotiveSpec.cpp
+  ../nitrogen/generated/android/c++/JHybridAndroidAutoNavigationSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAndroidAutoTelemetrySpec.cpp
   ../nitrogen/generated/android/c++/JHybridAndroidWindowInformationSpec.cpp
   ../nitrogen/generated/android/c++/JHybridAutoPlaySpec.cpp
