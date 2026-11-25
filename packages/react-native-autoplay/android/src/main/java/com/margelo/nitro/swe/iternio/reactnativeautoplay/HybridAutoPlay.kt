@@ -12,7 +12,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
     init {
         listeners.clear()
         renderStateListeners.clear()
-        voiceInputListeners.clear()
         safeAreaInsetsListeners.clear()
         // a React reload drops the old listeners without calling their cleanup
         carLocationListeners.clear()
@@ -218,14 +217,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         }
     }
 
-    override fun addListenerVoiceInput(callback: (Location?, String?) -> Unit): () -> Unit {
-        voiceInputListeners.add(callback)
-
-        return {
-            voiceInputListeners.remove(callback)
-        }
-    }
-
     override fun addListenerCarLocation(callback: (CarLocation) -> Unit): () -> Unit {
         carLocationListeners.add(callback)
 
@@ -253,8 +244,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         private val renderStateListeners =
             ConcurrentHashMap<String, CopyOnWriteArrayList<(VisibilityState) -> Unit>>()
 
-        private val voiceInputListeners = CopyOnWriteArrayList<(Location?, String?) -> Unit>()
-
         private val carLocationListeners = CopyOnWriteArrayList<(CarLocation) -> Unit>()
 
         private val safeAreaInsetsListeners =
@@ -279,12 +268,6 @@ class HybridAutoPlay : HybridAutoPlaySpec() {
         fun emitRenderState(moduleName: String, state: VisibilityState) {
             renderStateListeners[moduleName]?.forEach {
                 it(state)
-            }
-        }
-
-        fun emitVoiceInput(location: Location?, query: String?) {
-            voiceInputListeners.forEach {
-                it(location, query)
             }
         }
 

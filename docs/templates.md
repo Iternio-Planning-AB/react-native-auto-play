@@ -131,7 +131,7 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
 | Hook | Platform | Purpose |
 | --- | --- | --- |
 | `useMapTemplate()` | both | Current `MapTemplate` instance |
-| `useVoiceInput()` | Android | Latest OS-triggered voice input plus `resetVoiceInputResult()` |
+| `useNavigationIntent()` | Android | Latest OS navigation intent plus `resetNavigationIntent()` |
 | `useSafeAreaInsets()` | both | Screen-safe padding |
 | `useFocusedEffect()` | both | `useEffect` tied to template visibility |
 | `useAndroidAutoTelemetry()` | Android | Vehicle telemetry |
@@ -144,8 +144,12 @@ dashboard. `useMapTemplate()` / `useSafeAreaInsets()` / `useFocusedEffect()` wor
   connection events are ignored entirely and `isConnected` comes from the initial prop.
   Telemetry payloads may be **partial** (gear changes are emitted immediately, outside the
   timed update) — consumers must merge, not replace.
-- `useVoiceInput` resets itself to `undefined` when native emits an event with neither
-  coordinates nor query.
+- Native drops a navigation intent with neither location nor query (and non-`geo:` ones
+  without `act`), so listeners never see an empty one. `useNavigationIntent` subscribes on
+  mount.
+- Native holds one navigation intent nobody received (the cold-start one) and replays it to
+  the **first** navigation-intent listener added, then drops it — a second
+  hook mounted later does not get it. Disconnect drops it too.
 
 ## Surface ids (`AutoPlayModules`)
 

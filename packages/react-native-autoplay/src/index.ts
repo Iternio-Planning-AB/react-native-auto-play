@@ -1,12 +1,19 @@
 import { Platform } from 'react-native';
 import { NitroModules } from 'react-native-nitro-modules';
+import { HybridAndroidAutoNavigation } from './hybrid/HybridAndroidAutoNavigation';
 import { HybridAndroidAutoTelemetry } from './hybrid/HybridAndroidAutoTelemetry';
 import { HybridAndroidWindowInformation } from './hybrid/HybridAndroidWindowInformation';
 import { HybridAutoPlay } from './hybrid/HybridAutoPlay';
 import { HybridVoice } from './hybrid/HybridVoice';
 import type { AndroidAutomotive } from './specs/AndroidAutomotive.nitro';
 
-export { HybridAndroidAutoTelemetry, HybridAndroidWindowInformation, HybridAutoPlay, HybridVoice };
+export {
+  HybridAndroidAutoNavigation,
+  HybridAndroidAutoTelemetry,
+  HybridAndroidWindowInformation,
+  HybridAutoPlay,
+  HybridVoice,
+};
 
 export const HybridAndroidAutomotive =
   Platform.OS === 'android'
@@ -28,8 +35,8 @@ export * from './components/SafeAreaView';
 export * from './hooks/useAndroidAutoTelemetry';
 export * from './hooks/useFocusedEffect';
 export * from './hooks/useMapTemplate';
+export * from './hooks/useNavigationIntent';
 export * from './hooks/useSafeAreaInsets';
-export * from './hooks/useVoiceInput';
 export * from './scenes/AutoPlayCluster';
 export * from './scenes/CarPlayDashboardScene';
 export type {
@@ -51,6 +58,8 @@ export * from './types/CarLocation';
 export * from './types/Event';
 export * from './types/Image';
 export * from './types/Maneuver';
+export * from './types/NavigationAction';
+export * from './types/NavigationIntent';
 export * from './types/RootComponent';
 export * from './types/SignInMethod';
 export * from './types/Telemetry';

@@ -97,8 +97,27 @@ spec `src/specs/Voice.nitro.ts`). The wrapper takes a single `VoiceInputOptions`
     `AVAudioEngine`.
 - `stopVoiceInput()` — stops early; PCM mode resolves with audio so far, STT mode finalises
   recognition. No-op if idle.
-- `HybridAutoPlay.addListenerVoiceInput(cb)` — Android-only; fires when the OS triggers a
-  voice action ("Hey Google, navigate to…") with `(coordinates, query)`. No-op on iOS.
+- `HybridAndroidAutoNavigation.addListenerNavigationIntent(cb)` — Android-only module (`null`
+  on iOS, `src/hybrid/HybridAndroidAutoNavigation{,.android}.ts`); fires with a
+  `NavigationIntent` when the OS sends `androidx.car.app.action.NAVIGATE` ("Hey Google,
+  navigate to…"). Parsed by `utils/NavigationIntentParser.kt` from the *encoded* scheme
+  specific part — the decoded one turns `%26` in `q` into a parameter separator. Unit tests
+  in `android/src/test/`. A `VIEW geo:` intent is a search and is reported as
+  `intent: 'search'`; the car Assistant reports a navigation app as able to search only if it has
+  an activity for that filter (`CarAppActivity`, Automotive only, untested). `avoid` and `mode`
+  letters are mapped to nitrogen enums natively, so unknown letters are dropped: an enum cannot
+  carry them.
+- `HybridAndroidAutoNavigation.addListenerNavigationAction(cb)` — Android-only; NAVIGATE intents with
+  an `act` parameter ("mute navigation", "avoid tolls") under any scheme. Google does not
+  document the act numbers in `NavigationIntentParser.actionCodes`. Numbers are mapped to the documented `geo.action` names
+  natively, so a numeric and a named (`geo.action:?act=mute`) act look the same to JS;
+  unknown values pass through unchanged. On Android Automotive the car Assistant sends the
+  named form as `VIEW geo.action:` to the navigation app picked in its settings, but only if
+  the app declares that filter; otherwise it answers "not supported by your current navigation
+  app". So the `VIEW geo.action` filter on `CarAppActivity` in
+  `src/automotive/AndroidManifest.xml` must stay, on the activity as Google's docs say for
+  Android Automotive (verified on the AAOS emulator with the Google Assistant). A non-`geo:` NAVIGATE
+  without `act` is dropped with a warning.
 
 Native: `ios/utils/VoiceInputManager.swift`, `ios/templates/VoiceInputTemplate.swift`,
 `ios/hybrid/HybridVoice.swift`; `android/.../VoiceInputManager.kt`, `HybridVoice.kt`.

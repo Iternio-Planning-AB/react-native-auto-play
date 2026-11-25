@@ -189,9 +189,15 @@ produce no error message at all.
   selector, and Android Auto, throttling the burst ("too many refreshes"), stayed on the
   message. Look the template up inside the job: every config update registers a new
   instance. Failures come back as rejected promises by design.
-- OS-triggered voice navigation arrives as a hand-parsed `geo:` intent in
-  `AndroidAutoSession.onNewIntent`; coordinates `0,0` are a sentinel meaning "no
-  coordinates, geocode the query".
+- OS-triggered navigation intents are handled in `AndroidAutoSession` — `onCreateScreen` for
+  the one that starts the session, `onNewIntent` afterwards — parsed by
+  `NavigationIntentParser` and emitted through `HybridAndroidAutoNavigation`; coordinates
+  `0,0` are a sentinel meaning "no coordinates, geocode the query". The merged manifests
+  declare `NAVIGATE geo:` on the car app service and, on Android Automotive, on
+  `CarAppActivity` together with `VIEW geo:` (search) and `VIEW geo.action:` (custom
+  actions). The car Assistant checks those activity filters before routing to the app, so a
+  host that overrides `CarAppActivity`'s manifest entry must keep them. Details in
+  [`types-and-conversions.md`](types-and-conversions.md#voice-input).
 - Clusters are given a placeholder `APPICON` action because `androidx.car.app` crashes
   without one, even though clusters can't display actions.
 - Release builds need `-keep class com.margelo.nitro.swe.iternio.reactnativeautoplay.** { *; }`

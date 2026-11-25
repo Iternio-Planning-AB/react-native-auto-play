@@ -217,7 +217,7 @@ surfaces: `CarPlayDashboard` (iOS) and `AutoPlayCluster` (both).
 
 - **iOS-only:** `CarPlayDashboard`, scene delegate setup, CarPlay entitlements,
   `listeningText` / `listeningImage`
-- **Android-only:** `SignInTemplate`, `useVoiceInput` (OS-triggered),
+- **Android-only:** `SignInTemplate`, `HybridAndroidAutoNavigation` / `useNavigationIntent`,
   `useAndroidAutoTelemetry`, `HybridAndroidAutomotive`, `HybridAndroidWindowInformation`,
   Android Automotive support
 - Platform-split files use `.android.ts` / `.ios.ts` suffixes; `index.web.ts` is a web stub
