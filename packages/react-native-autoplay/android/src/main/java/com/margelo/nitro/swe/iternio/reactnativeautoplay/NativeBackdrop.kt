@@ -6,7 +6,7 @@ import androidx.car.app.CarContext
 /**
  * An optional host-app-provided native View rendered under the React surface of an
  * Android Auto display (root or cluster) — the Android counterpart of the iOS
- * `getRootViewForAutoplay` AppDelegate hook. Lets a host compose a native map beneath its React overlay, e.g. a
+ * `autoPlayNativeBackdrop(for:moduleName:)` factory delegate hook. Lets a host compose a native map beneath its React overlay, e.g. a
  * native map view that cannot be hosted as a React Native view on the virtual display
  * (Fragment-based map SDK wrappers are bound to the phone Activity).
  *

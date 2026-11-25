@@ -74,9 +74,9 @@ in chat. Keep that in your own global agent config, not here.
 - **A change to the public API, installation steps or host-app setup must update
   [`packages/react-native-autoplay/README.md`](packages/react-native-autoplay/README.md) in
   the same PR.** It is the only documentation consumers get — there is no docs site — and
-  it already covers entitlements, scene delegates, the `AppDelegate` hook, the
+  it already covers entitlements, scene delegates, the `AutoPlay*` `Info.plist` keys, the
   `ReactNativeAutoPlay_*` Gradle properties, icon fonts and the API reference. Renaming a
-  scene delegate, a Gradle property or the `AppDelegate` method silently breaks every
+  scene delegate, a Gradle property or an `Info.plist` key silently breaks every
   consumer whose setup still follows the old README.
 - **This file is the only place the rules live.** Claude Code, Cursor, Devin and Copilot
   (coding agent, code review, CLI, and VS Code chat) all read `AGENTS.md`, so don't add

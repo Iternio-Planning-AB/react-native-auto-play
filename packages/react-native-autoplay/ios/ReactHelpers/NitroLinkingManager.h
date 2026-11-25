@@ -13,7 +13,9 @@
 @property (atomic, assign) BOOL initialURLRequested;
 
 + (instancetype)shared;
-- (void)continueUserActivity:(NSUserActivity *)userActivity;
-- (void)openURL:(UIOpenURLContext *)urlContext;
+- (void)continueUserActivity:(NSUserActivity *)userActivity
+                       scene:(UIScene *)scene NS_SWIFT_NAME(continue(_:scene:));
+- (void)openURL:(UIOpenURLContext *)urlContext
+          scene:(UIScene *)scene NS_SWIFT_NAME(openURL(_:scene:));
 
 @end
